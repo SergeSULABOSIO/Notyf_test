@@ -15,10 +15,9 @@ const notyf = new Notyf({
   types: [
     {
       type: 'info',
-      background: "yellow",
+      background: "gray",
       duration: 5000,
-      dismissible: true,
-      icon:true
+      dismissible: true
     },
     {
       type: 'warning',

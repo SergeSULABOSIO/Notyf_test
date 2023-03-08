@@ -27,11 +27,13 @@ const notyf = new Notyf({
     ]
   });
 
-notyf.error('Please fill out the form');
+//notyf.error('Please fill out the form');
 
-const notification = notyf.success('Données enregistrées avec succès! Cliquez svp!');
-notification.on('click', ({target, event}) => {
-  // target: the notification being clicked
-  // event: the mouseevent
-  window.location.href = '/bobo sula !';
-});
+// const notification = notyf.success('Données enregistrées avec succès! Cliquez svp!');
+// notification.on('click', ({target, event}) => {
+//   // target: the notification being clicked
+//   // event: the mouseevent
+//   window.location.href = '/bobo sula !';
+// });
+
+let message = document.querySelectorAll("message_info");

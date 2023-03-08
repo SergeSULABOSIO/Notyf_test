@@ -13,7 +13,6 @@ class NotyfController extends AbstractController
     {
         return $this->render('notyf/index.html.twig', [
             'notyf' => $notyf,
-            
         ]);
     }
 }

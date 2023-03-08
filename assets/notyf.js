@@ -17,14 +17,24 @@ const notyf = new Notyf({
       type: 'info',
       background: "gray",
       duration: 5000,
-      dismissible: true
+      dismissible: true,
+      icon: {
+        className: 'material-icons',
+        tagName: 'i',
+        text: 'warning'
+      }
     },
     {
       type: 'warning',
       background: 'orange',
       duration: 5000,
       dismissible: true,
-      icon:true
+      icon: true,
+      icon: {
+        className: 'material-icons',
+        tagName: 'i',
+        text: 'warning'
+      }
     }
   ]
 });

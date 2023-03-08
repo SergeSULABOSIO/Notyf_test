@@ -11,6 +11,10 @@ class NotyfController extends AbstractController
     #[Route('/{notyf}', name: 'app_notyf')]
     public function index(?string $notyf = null): Response
     {
+
+        if ($notyf != null) {
+            $this->addFlash($notyf, "Enregistré avec succès!");
+        }
         return $this->render('notyf/index.html.twig', [
             'notyf' => $notyf,
         ]);

@@ -14,13 +14,14 @@ const notyf = new Notyf({
     },
     types: [
       {
-        type: 'success',
-        background: 'green',
+        type: 'info',
+        background: "yellow",
+        duration: 5000,
         dismissible: true
       },
       {
-        type: 'error',
-        background: 'red',
+        type: 'warning',
+        background: 'orange',
         duration: 5000,
         dismissible: true
       }
@@ -29,6 +30,7 @@ const notyf = new Notyf({
 
 //notyf.error('Please fill out the form');
 
+
 // const notification = notyf.success('Données enregistrées avec succès! Cliquez svp!');
 // notification.on('click', ({target, event}) => {
 //   // target: the notification being clicked
@@ -36,4 +38,4 @@ const notyf = new Notyf({
 //   window.location.href = '/bobo sula !';
 // });
 
-let message = document.querySelectorAll("message_info");
+let message = document.querySelectorAll("#message_info");

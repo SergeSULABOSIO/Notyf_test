@@ -13,7 +13,7 @@ class NotyfController extends AbstractController
     {
 
         if ($notyf != null) {
-            $this->addFlash($notyf, "Enregistré avec succès!");
+            $this->addFlash($notyf, "Ceci est un message " . $notyf);
         }
         return $this->render('notyf/index.html.twig', [
             'notyf' => $notyf,

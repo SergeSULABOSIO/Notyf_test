@@ -9,6 +9,6 @@ body {
     font: 18px/1.5 sans-serif; 
 }
 
-.message_info{
+#notyf-message{
     display: none;
 }

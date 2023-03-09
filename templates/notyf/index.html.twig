@@ -3,17 +3,12 @@
 {% block title %}Notyf - Test{% endblock %}
 
 {% block body %}
-
-<div class="example-wrapper">
-    {# <h3>{{ notyf }}</h3> #}
-    <nav>
-        <ul>
-            <li><a href="{{ path('app_notyf', {'notyf':'success'}) }}" role="button">Succès</a></li>
-            <li><a href="{{ path('app_notyf', {'notyf':'info'}) }}" role="button">Info</a></li>
-            <li><a href="{{ path('app_notyf', {'notyf':'warning'}) }}" role="button">Warning</a></li>
-            <li><a href="{{ path('app_notyf', {'notyf':'error'}) }}" role="button">Error</a></li>
-        </ul>
-    </nav>
-
-</div>
+	<div class="example-wrapper">
+		<div>
+			<a class="btn btn-success" href="{{ path('app_notyf', {'notyf':'success'}) }}" role="button">Succès</a>
+			<a class="btn btn-info" href="{{ path('app_notyf', {'notyf':'info'}) }}" role="button">Info</a>
+			<a class="btn btn-warning" href="{{ path('app_notyf', {'notyf':'warning'}) }}" role="button">Warning</a>
+			<a class="btn btn-danger" href="{{ path('app_notyf', {'notyf':'error'}) }}" role="button">Error</a>
+		</div>
+	</div>
 {% endblock %}

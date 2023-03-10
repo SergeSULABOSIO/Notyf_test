@@ -8,7 +8,7 @@ document.getElementById("bt1").addEventListener("click", function () {
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 100000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)

@@ -23,6 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('notyf', './assets/notyf.js')
     .addEntry('sweetalert2', './assets/SweetAlert2.js')
+    .addEntry('adminlte', './assets/adminlte/app.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

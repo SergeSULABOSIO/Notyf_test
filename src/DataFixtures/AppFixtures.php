@@ -27,6 +27,7 @@ class AppFixtures extends Fixture
             //On persiste dans la base de données
             $manager->persist($article);
             $manager->flush();
+            //Test
 
             //On le charge dans le stock
             $entree_stock = new EntreeStock();

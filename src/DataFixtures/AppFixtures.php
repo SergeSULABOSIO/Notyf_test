@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\EntreeStock;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -25,6 +26,17 @@ class AppFixtures extends Fixture
             $article->setDescription("Un savon de lux et de très bonne qualité.");
             //On persiste dans la base de données
             $manager->persist($article);
+            $manager->flush();
+
+            //On le charge dans le stock
+            $entree_stock = new EntreeStock();
+            $entree_stock->setQuantite($faker->randomDigitNotNull());
+            $entree_stock->setPrixUnitaire($faker->randomFloat(2,100,5000));
+            $entree_stock->setDate(new \DateTimeImmutable());
+            $entree_stock->setArticle($article);
+
+            //On persiste dans la base de données
+            $manager->persist($entree_stock);
             $manager->flush();
         }
     }

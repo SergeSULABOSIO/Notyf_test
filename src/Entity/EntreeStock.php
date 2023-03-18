@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EntreeStockRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,6 +31,11 @@ class EntreeStock
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
+
+    public function __construct()
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

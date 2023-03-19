@@ -4,12 +4,21 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\EntreeStock;
+use App\Entity\Utilisateur;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $hasher;
+
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
@@ -38,6 +47,21 @@ class AppFixtures extends Fixture
 
             //On persiste dans la base de données
             $manager->persist($entree_stock);
+            $manager->flush();
+        }
+
+        for ($i=0; $i < 10; $i++) { 
+            $user = new Utilisateur();
+            $user->setNom($faker->name());
+            $user->setPseudo(mt_rand(0, 1) . "PS");
+            $user->setEmail($faker->email());
+            $user->setRoles(['ROLE_USER']);
+            
+            $hashedPassword = $this->hasher->hashPassword($user, "password");
+            $user->setPassword($hashedPassword);
+
+            //On persiste dans la base de données
+            $manager->persist($user);
             $manager->flush();
         }
     }

@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
+#[ORM\EntityListeners()]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -111,6 +112,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getPlainPassword(): string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $password): self
+    {
+        $this->plainPassword = $password;
+
+        return $this;
     }
 
     public function setPassword(string $password): self

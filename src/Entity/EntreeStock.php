@@ -101,4 +101,9 @@ class EntreeStock
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->id . "/" . $this->date;
+    }
 }

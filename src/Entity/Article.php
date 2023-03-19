@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[UniqueEntity('code')]
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
@@ -115,5 +116,10 @@ class Article
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->code . "/" . $this->nom;
     }
 }

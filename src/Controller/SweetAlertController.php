@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SweetAlertController extends AbstractController
 {
-    #[Route('/sweetalert', name: 'app_sweet_alert')]
+    #[Route('/', name: 'app_sweet_alert')]
     public function index(): Response
     {
         

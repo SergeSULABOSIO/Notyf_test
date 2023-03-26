@@ -1,20 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SecurityController!{% endblock %}
+{% block title %}JS Brokers - Connexion{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'E:/Notyf test/Notyf_test/src/Controller/SecurityController.php'|file_link(0) }}">src/Controller/SecurityController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'E:/Notyf test/Notyf_test/templates/security/index.html.twig'|file_link(0) }}">templates/security/index.html.twig</a></code></li>
-    </ul>
-</div>
+	<div class="container">
+		<h1 class="mt-4">
+            JS Brokers - Connexion
+        </h1>
+        <form action="{{path('security.login')}}" method="post">
+            <fieldset>
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="form-label">Address mail</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Entrer votre email">
+                    <small id="emailHelp" class="form-text text-muted">Nous ne partagerons pas vos informations personnelles.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Mot de passe">
+                </div>
+                <button type="submit" class="btn btn-primary">Connexion</button>
+            </fieldset>
+        </form>
+	</div>
 {% endblock %}

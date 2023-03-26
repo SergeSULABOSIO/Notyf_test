@@ -4,6 +4,7 @@
 
 {% block body %}
 	<div class="example-wrapper">
+		{% include 'segments/_mainheader.html.twig' %}
 	    Notyf
 		<div>
 			<a class="btn btn-success" href="{{ path('app_notyf', {'notyf':'success'}) }}" role="button">Succès</a>

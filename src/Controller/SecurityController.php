@@ -14,13 +14,14 @@ class SecurityController extends AbstractController
     #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
+        $last_username = $authenticationUtils->getLastUsername();
         $error = $authenticationUtils->getLastAuthenticationError();
         if($error != null){
             $this->addFlash("error", "Vos identifiants sont incorrects");
         }
         return $this->render('security/login.html.twig', [
             'controller_name' => 'SecurityController',
-            'last_username' => $authenticationUtils->getLastUsername(),
+            'last_username' => $last_username,
             'error' => $error,
         ]);
     }

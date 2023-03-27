@@ -16,6 +16,7 @@ class SecurityController extends AbstractController
     {
         $last_username = $authenticationUtils->getLastUsername();
         $error = $authenticationUtils->getLastAuthenticationError();
+        
         if($error != null){
             $this->addFlash("error", "Vos identifiants sont incorrects");
         }

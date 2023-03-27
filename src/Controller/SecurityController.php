@@ -15,6 +15,7 @@ class SecurityController extends AbstractController
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
         $last_username = $authenticationUtils->getLastUsername();
+        
         $error = $authenticationUtils->getLastAuthenticationError();
         
         if($error != null){

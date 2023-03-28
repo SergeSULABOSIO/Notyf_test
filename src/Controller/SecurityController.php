@@ -2,12 +2,20 @@
 
 namespace App\Controller;
 
-use function PHPSTORM_META\map;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use DateTimeImmutable;
 
+use App\Entity\Utilisateur;
+use App\Form\RegistrationType;
+use Doctrine\ORM\EntityManagerInterface;
+
+use function PHPSTORM_META\map;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -32,5 +40,34 @@ class SecurityController extends AbstractController
     public function logout()
     {
         // Rien à faire ici
+    }
+
+
+    #[Route('/inscription', name: 'security.register', methods: ['GET', 'POST'])]
+    public function registration(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
+    {
+        $user = new Utilisateur();
+        $form = $this->createForm(RegistrationType::class, $user);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $form->getData();
+            $user->setRoles(['ROLE_USER']);
+            $user->setUpdatedAt(new DateTimeImmutable());
+            $hashedPassword = $hasher->hashPassword($user, $user->getPlainPassword());
+            $user->setPassword($hashedPassword);
+
+            $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
+
+            $manager->persist($user);
+            $manager->flush();
+            
+            return $this->redirectToRoute('security.login');
+        }
+
+        return $this->render('security/registration.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

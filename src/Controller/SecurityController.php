@@ -17,8 +17,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
 class SecurityController extends AbstractController
 {
+    public function __construct(private MailerInterface $mailer)
+    {
+        
+    }
+
     #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
@@ -44,7 +52,7 @@ class SecurityController extends AbstractController
 
 
     #[Route('/inscription', name: 'security.register', methods: ['GET', 'POST'])]
-    public function registration(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
+    public function registration(MailerInterface $mailer, Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
     {
         $user = new Utilisateur();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -60,14 +68,34 @@ class SecurityController extends AbstractController
 
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
+            //envoie de l'email de confirmation
+            $this->envoieEmail($mailer);
+
             $manager->persist($user);
             $manager->flush();
             
+
             return $this->redirectToRoute('security.login');
         }
 
         return $this->render('security/registration.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    public function envoieEmail(MailerInterface $mailer)
+    {
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to('you@example.com')
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>See Twig integration for better HTML integration!</p>');
+
+        $mailer->send($email);
     }
 }

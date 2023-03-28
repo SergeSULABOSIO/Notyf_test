@@ -83,7 +83,7 @@ class RegistrationType extends AbstractType
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'CREER UN COMPTE UTILISATEUR',
+                'label' => 'Créer un compte Utilisateur',
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]

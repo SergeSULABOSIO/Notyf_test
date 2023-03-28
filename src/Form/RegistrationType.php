@@ -27,7 +27,7 @@ class RegistrationType extends AbstractType
                 ],
                 'label' => 'Votre nom complet',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
@@ -42,7 +42,7 @@ class RegistrationType extends AbstractType
                     'maxlenght' => '50',
                 ],
                 'required' => false,
-                'label' => 'Votre Pseudo (facultatif)',
+                'label' => 'Votre Pseudo',
                 'label_attr' => [
                     'class' => 'form-label'
                 ]

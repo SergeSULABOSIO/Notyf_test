@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 use App\Entity\Utilisateur;
 use App\Form\RegistrationType;
-
+use App\Service\ServiceMails;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,8 +18,6 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 
 class SecurityController extends AbstractController
 {
@@ -48,7 +46,7 @@ class SecurityController extends AbstractController
 
 
     #[Route('/inscription', name: 'security.register', methods: ['GET', 'POST'])]
-    public function registration(MailerInterface $mailer, Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
+    public function registration(ServiceMails $serviceMails, Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
     {
         $user = new Utilisateur();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -64,12 +62,10 @@ class SecurityController extends AbstractController
 
             
             //envoie de l'email de confirmation
-            $this->envoieEmail($mailer);
+            $serviceMails->sendEmail();
 
             $manager->persist($user);
             $manager->flush();
-            
-            //dd($mailer);
             
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
@@ -79,26 +75,5 @@ class SecurityController extends AbstractController
         return $this->render('security/registration.html.twig', [
             'form' => $form->createView()
         ]);
-    }
-
-    public function envoieEmail(MailerInterface $mailer)
-    {
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to('you@example.com')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
-
-        //$mailer->send($email);
-        try {
-            $mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            dd($e);
-        }
     }
 }

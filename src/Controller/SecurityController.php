@@ -74,11 +74,9 @@ class SecurityController extends AbstractController
             $manager->persist($user);
             $manager->flush();
             
-<<<<<<< HEAD
             //dd($mailer);
-=======
+            
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
->>>>>>> 0ef85a7c13361425493c152cff287feb90e039c7
 
             return $this->redirectToRoute('security.login');
         }

@@ -6,19 +6,20 @@ use DateTimeImmutable;
 
 use App\Entity\Utilisateur;
 use App\Form\RegistrationType;
-use Doctrine\ORM\EntityManagerInterface;
-
 use function PHPSTORM_META\map;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Mime\Email;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -74,6 +75,7 @@ class SecurityController extends AbstractController
             $manager->persist($user);
             $manager->flush();
             
+            //dd($mailer);
 
             return $this->redirectToRoute('security.login');
         }
@@ -96,6 +98,11 @@ class SecurityController extends AbstractController
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
-        $mailer->send($email);
+        //$mailer->send($email);
+        try {
+            $mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+        }
     }
 }

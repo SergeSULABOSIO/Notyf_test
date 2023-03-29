@@ -69,6 +69,7 @@ class SecurityController extends AbstractController
             
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
+            dd($user);
             return $this->redirectToRoute('security.login');
         }
 

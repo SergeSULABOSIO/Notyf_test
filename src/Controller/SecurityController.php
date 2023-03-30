@@ -61,15 +61,17 @@ class SecurityController extends AbstractController
             $user->setPassword($hashedPassword);
 
             
-            //envoie de l'email de confirmation
-            $serviceMails->sendEmail();
+            
 
             $manager->persist($user);
             $manager->flush();
             
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
-            dd($user);
+            //envoie de l'email de confirmation
+            $serviceMails->sendEmail();
+
+            
             return $this->redirectToRoute('security.login');
         }
 

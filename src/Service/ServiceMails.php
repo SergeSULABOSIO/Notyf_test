@@ -33,5 +33,7 @@ class ServiceMails
             ->html('<p>'. $content['content'] .'</p>');
 
         $this->mailer->send($email);
+
+        //dd($email);
     }
 }

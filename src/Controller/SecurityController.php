@@ -70,6 +70,7 @@ class SecurityController extends AbstractController
 
             //envoie de l'email de confirmation
             $serviceMails->sendEmail(
+                from:"sulabosiog@gmail.com",
                 to:$user->getEmail(),
                 subject:"JS-Brokers - Nouveau compte utilisateur - " . $user->getEmail(),
                 content:[

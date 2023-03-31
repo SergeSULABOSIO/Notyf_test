@@ -71,8 +71,9 @@ class SecurityController extends AbstractController
             //envoie de l'email de confirmation
             $serviceMails->sendEmail(
                 to:$user->getEmail(),
+                subject:"JS-Brokers - Nouveau compte utilisateur - " . $user->getEmail(),
                 content:[
-                'content' => "Cher " . $user->getNom() . ". Votre compte vient d'être créer avec succès!"
+                'content' => "Cher " . $user->getNom() . ".\nVotre compte vient d'être créer avec succès!\nVotre mot de passe est '". $user->getPlainPassword() . "' (email:" . $user->getEmail() .")." 
             ]);
             //CA MARCHE COCO !!!!
 

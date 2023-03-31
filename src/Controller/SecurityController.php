@@ -69,7 +69,12 @@ class SecurityController extends AbstractController
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
             //envoie de l'email de confirmation
-            $serviceMails->sendEmail();
+            $serviceMails->sendEmail(
+                to:$user->getEmail(),
+                content:[
+                'content' => "Cher " . $user->getNom() . ". Votre compte vient d'être créer avec succès!"
+            ]);
+            //CA MARCHE COCO !!!!
 
             
             return $this->redirectToRoute('security.login');

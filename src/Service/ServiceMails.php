@@ -13,7 +13,7 @@ class ServiceMails
     }
     
     public function sendEmail(
-        $from = 'sulabosiog@gmail.com',
+        $from = 'marketing@js-brokers.com',
         $to = 'sulabosiog@gmail.com',
         $subject = 'JS Brokers - Message Test',
         $content = [

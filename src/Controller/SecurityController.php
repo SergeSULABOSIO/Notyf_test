@@ -60,24 +60,14 @@ class SecurityController extends AbstractController
             $hashedPassword = $hasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
 
-            
-            
-
             $manager->persist($user);
             $manager->flush();
             
             $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
             //envoie de l'email de confirmation
-            $serviceMails->sendEmail(
-                to:$user->getEmail(),
-                subject:"JS-Brokers - Nouveau compte utilisateur - " . $user->getEmail(),
-                content:[
-                'content' => "Cher " . $user->getNom() . ".\nVotre compte vient d'être créer avec succès!\nVotre mot de passe est '". $user->getPlainPassword() . "' (email:" . $user->getEmail() .")." 
-            ]);
-            //CA MARCHE COCO !!!!
+            $serviceMails->sendEmailBienvenu($user);
 
-            
             return $this->redirectToRoute('security.login');
         }
 

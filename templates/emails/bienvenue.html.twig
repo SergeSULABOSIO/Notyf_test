@@ -1,0 +1,73 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+        <title>JS Brokers - Nouvel utilisateur</title>
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
+        <!-- Bootstrap core CSS -->
+        <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="starter-template.css" rel="stylesheet">
+    </head>
+
+    <body cz-shortcut-listen="true">
+        <div class="example-wrapper">
+            <div class="card card-gray mt-3">
+                <div class="card-header">
+                    <h3 class="card-title">Bien venue Serge,</h3>								
+                </div>
+
+                <div class="card-body">
+                    <p>
+                        Votre compte vient d'être créer avec succès.
+                    </p>
+                    <p>
+                        Voici, ci-dessous, les informations de connexion à votre compte et merci de bien les garder confidentielles. 
+                        Notez que vous pouvez toujours les modifier quand cela vous arrangera.
+                    </p>
+
+                    <strong>
+                        <i class="fas fa-regular fa-envelope mr-1"></i>
+                        Adress mail:
+                    </strong>
+                    <p class="text-muted">
+                        {{ email.toName }}
+                    </p>
+                    <hr>
+                        <strong>
+                        <i class="fas fa-solid fa-lock mr-1"></i>
+                        Mot de passe:
+                        </strong>
+                        <p class="text-muted">
+                            adorer
+                        </p>
+                    <hr>
+                    
+                    <p class="text-muted">
+                        <a href="{{path('security.login')}}">Pour se connecter à votre compte, cliquez ici.</a>
+                    </p>
+                    <p>
+                        Merci de votre confiance!
+                    </p>
+                </div>
+                <div class="card-footer">
+                    © 2023 JS Brokers, Inc.
+                </div>
+            </div>        
+        </div>
+
+
+
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+        <script src="../../assets/js/vendor/popper.min.js"></script>
+        <script src="../../dist/js/bootstrap.min.js"></script>
+</body>
+</html>

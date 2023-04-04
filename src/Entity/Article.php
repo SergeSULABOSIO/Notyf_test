@@ -120,6 +120,6 @@ class Article
 
     public function __toString()
     {
-        return $this->code . "/" . $this->nom;
+        return $this->code . " / " . $this->nom . " / $ " . $this->prix;
     }
 }

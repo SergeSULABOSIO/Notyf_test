@@ -104,6 +104,6 @@ class EntreeStock
 
     public function __toString()
     {
-        return $this->id . "/" . $this->date;
+        return $this->article->getNom()." ($ " . $this->article->getPrix().")";
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Article;
+use App\Entity\EntreeStock;
 use App\Entity\Utilisateur;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +45,9 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-folder-open');//fa-home
-        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', Utilisateur::class);
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-folder-open');
+        yield MenuItem::linkToCrud('Articles', 'fas fa-gift', Article::class);
+        yield MenuItem::linkToCrud('Arrivages', 'fas fa-truck', EntreeStock::class);
+        yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class);
     }
 }

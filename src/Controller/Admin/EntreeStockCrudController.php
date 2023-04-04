@@ -2,23 +2,22 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Utilisateur;
-use DateTime;
+use App\Entity\EntreeStock;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class UtilisateurCrudController extends AbstractCrudController
+class EntreeStockCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Utilisateur::class;
+        return EntreeStock::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -28,9 +27,9 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Utilisateur")
-            ->setEntityLabelInPlural("Utilisateurs")
-            ->setPageTitle("index", "Liste d'utilisateurs")
+            ->setEntityLabelInSingular("Arrivage")
+            ->setEntityLabelInPlural("Arrivages")
+            ->setPageTitle("index", "Liste d'arrivages")
             // ...
         ;
     }
@@ -40,14 +39,13 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         return [
             //IdField::new('id'),
-            TextField::new('nom', 'Nom Complet'),
-            TextField::new('email', 'Adresse mail')
-            ->setFormTypeOption('disabled', 'disabled'),
-            TextField::new('pseudo', 'Pseudo'),
-            ArrayField::new('roles', "Roles"),
+            DateTimeField::new('date', 'Date'),
+            AssociationField::new('article', 'Article'),
+            NumberField::new('quantite', 'Quantité'),
+            NumberField::new('prixUnitaire', 'Prix Unit.'),
             DateTimeField::new('updated_at', 'Date de création')
             ->hideOnform()
         ];
     }
-    
+   
 }

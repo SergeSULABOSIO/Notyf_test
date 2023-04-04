@@ -38,11 +38,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('JS Brokers - Administration')
-            ->renderContentMaximized()
-            ->setLocales([
-                'en', // locale without custom options
-                Locale::new('pl', 'polski', 'far fa-language') // custom label and icon
-            ]);
+            ->renderContentMaximized();
     }
 
     public function configureMenuItems(): iterable

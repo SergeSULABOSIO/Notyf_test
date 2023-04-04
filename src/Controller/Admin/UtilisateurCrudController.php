@@ -41,10 +41,12 @@ class UtilisateurCrudController extends AbstractCrudController
         return [
             //IdField::new('id'),
             TextField::new('nom', 'Nom Complet'),
-            TextField::new('email', 'Adresse mail'),
+            TextField::new('email', 'Adresse mail')
+            ->setFormTypeOption('disabled', 'disabled'),
             TextField::new('pseudo', 'Pseudo'),
             ArrayField::new('roles', "Roles"),
-            DateTimeField::new('updated_at', 'Date')
+            DateTimeField::new('updated_at', 'Date de création')
+            ->hideOnform()
         ];
     }
     

@@ -45,7 +45,7 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setFormTypeOption('disabled', 'disabled'),
             TextField::new('pseudo', 'Pseudo'),
             ArrayField::new('roles', "Roles"),
-            DateTimeField::new('updated_at', 'Date de création')
+            DateTimeField::new('updated_at', 'Last update')
             ->hideOnform()
         ];
     }

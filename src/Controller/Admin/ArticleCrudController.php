@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Article;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -28,6 +29,7 @@ class ArticleCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Article")
             ->setEntityLabelInPlural("Articles")
             ->setPageTitle("index", "Liste d'articles")
+            ->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig')
             // ...
         ;
     }
@@ -42,7 +44,8 @@ class ArticleCrudController extends AbstractCrudController
             TextField::new('nom', 'Nom'),
             MoneyField::new('prix', 'Prix')
                 ->setCurrency('USD'),
-            TextEditorField::new('description', 'Descsription'),
+            TextEditorField::new('description', 'Descsription')
+                ->setFormType(CKEditorType::class),
             DateTimeField::new('updated_at', 'Last update')
             ->hideOnform()
         ];

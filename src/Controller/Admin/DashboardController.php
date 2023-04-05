@@ -10,11 +10,14 @@ use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Locale;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
+    
     #[Route('/admin', name: 'admin')]
+    #[IsGranted("ROLE_ADMIN")]
     public function index(): Response
     {
         //return parent::index();
@@ -45,7 +48,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie');//<i class="fa-solid fa-chart-pie"></i>
+        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie'); //<i class="fa-solid fa-chart-pie"></i>
         yield MenuItem::linkToCrud('Articles', 'fas fa-gift', Article::class);
         yield MenuItem::linkToCrud('Arrivages', 'fas fa-truck', EntreeStock::class);
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class);

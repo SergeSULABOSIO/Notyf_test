@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,10 +48,14 @@ class Entreprise
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'entreprises')]
+    private Collection $utilisateur;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->utilisateur = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -166,6 +172,30 @@ class Entreprise
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getUtilisateur(): Collection
+    {
+        return $this->utilisateur;
+    }
+
+    public function addUtilisateur(Utilisateur $utilisateur): self
+    {
+        if (!$this->utilisateur->contains($utilisateur)) {
+            $this->utilisateur->add($utilisateur);
+        }
+
+        return $this;
+    }
+
+    public function removeUtilisateur(Utilisateur $utilisateur): self
+    {
+        $this->utilisateur->removeElement($utilisateur);
 
         return $this;
     }

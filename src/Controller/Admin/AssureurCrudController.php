@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Assureur;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
@@ -53,6 +54,11 @@ class AssureurCrudController extends AbstractCrudController
             TextField::new('numimpot', 'N° Impôt')->hideOnIndex(),
             DateTimeField::new('updated_at', 'Last update')->hideOnform()
         ];
+    }
+
+    public function persistEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        dd($entityInstance);
     }
    
 }

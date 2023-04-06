@@ -16,6 +16,9 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 10)]
+    private ?string $code = null;
+
     #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -46,6 +49,8 @@ class Produit
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    
 
     public function __construct()
     {
@@ -167,6 +172,18 @@ class Produit
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

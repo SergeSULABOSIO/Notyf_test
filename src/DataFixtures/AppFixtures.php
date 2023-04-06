@@ -213,6 +213,7 @@ class AppFixtures extends Fixture
         foreach ($tabNomsProduits as $nomProduit) {
             $produit = new Produit();
             $produit->setNom($nomProduit);
+            $produit->setCode("PRD" . $faker->randomNumber(5, true));
             $produit->setDescription($faker->sentence(5));
             if ($compteur % 2) {
                 $produit->setIsobligatoire(true);

@@ -3,6 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Assureur;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class AssureurCrudController extends AbstractCrudController
@@ -12,14 +19,18 @@ class AssureurCrudController extends AbstractCrudController
         return Assureur::class;
     }
 
-    /*
+    
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            //IdField::new('id'),
+            TextField::new('nom', 'Nom'),
+            TextField::new('adresse', 'Adresse physique'),
+            TelephoneField::new('telephone', 'Téléphone'),
+            EmailField::new('email', 'Téléphone'),
+            BooleanField::new('isreassureur', 'Réassureur'),
+            UrlField::new('siteweb', 'Site Internet'),
         ];
     }
-    */
+   
 }

@@ -71,20 +71,20 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('MARKETING / CRM', 'fas fa-bars')->setSubItems([]);
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bars')->setSubItems([
-            MenuItem::linkToCrud('Assureurs', 'fas fa-gift', Assureur::class),
-            MenuItem::linkToCrud('Automobiles', 'fas fa-gift', Automobile::class),
-            MenuItem::linkToCrud('Clients', 'fas fa-gift', Client::class),
-            MenuItem::linkToCrud('Partenaires', 'fas fa-gift', Partenaire::class),
-            MenuItem::linkToCrud('Polices', 'fas fa-gift', Police::class),
-            MenuItem::linkToCrud('Produits', 'fas fa-gift', Produit::class)
+            MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),
+            MenuItem::linkToCrud('Automobiles', 'fas fa-car', Automobile::class),
+            MenuItem::linkToCrud('Clients', 'fas fa-handshake', Client::class),
+            MenuItem::linkToCrud('Partenaires', 'fas fa-people-arrows', Partenaire::class),
+            MenuItem::linkToCrud('Polices', 'fas fa-file-shield', Police::class),
+            MenuItem::linkToCrud('Produits', 'fas fa-gifts', Produit::class)
         ]);
 
         yield MenuItem::subMenu('FINANCES', 'fas fa-bars')->setSubItems([
-            MenuItem::linkToCrud('Taxes', 'fas fa-gift', Taxe::class),
-            MenuItem::linkToCrud('Monnaies', 'fas fa-gift', Monnaie::class),
-            MenuItem::linkToCrud('Commissions reçues', 'fas fa-gift', PaiementCommission::class),
-            MenuItem::linkToCrud('Retrocom. payées', 'fas fa-gift', PaiementPartenaire::class),
-            MenuItem::linkToCrud('Taxes payées', 'fas fa-gift', PaiementTaxe::class)
+            MenuItem::linkToCrud('Taxes', 'fas fa-person-military-rifle', Taxe::class),//<i class="fa-solid fa-person-military-rifle"></i>
+            MenuItem::linkToCrud('Monnaies', 'fas fa-money-bill-1', Monnaie::class),//<i class="fa-regular fa-money-bill-1"></i>
+            MenuItem::linkToCrud('Commissions reçues', 'fas fa-money-bill-transfer', PaiementCommission::class),//<i class="fa-solid fa-money-bill-transfer"></i>
+            MenuItem::linkToCrud('Retrocom. payées', 'fas fa-money-bill-transfer', PaiementPartenaire::class),
+            MenuItem::linkToCrud('Taxes payées', 'fas fa-money-bill-transfer', PaiementTaxe::class)
         ]);
 
         yield MenuItem::subMenu('SINISTRE', 'fas fa-bars')->setSubItems([
@@ -94,7 +94,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section("CONFIGURATIONS");
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-bars')->setSubItems([
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
-            MenuItem::linkToCrud('Entreprises', 'fas fa-gift', Entreprise::class)
+            MenuItem::linkToCrud('Entreprises', 'fas fa-shop', Entreprise::class)
         ]);
     }
 }

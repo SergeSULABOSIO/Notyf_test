@@ -48,6 +48,9 @@ class Article
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->updatedAt = new \DateTimeImmutable();
@@ -121,5 +124,17 @@ class Article
     public function __toString()
     {
         return $this->code . " / " . $this->nom . " / $ " . $this->prix;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

@@ -7,6 +7,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -14,6 +15,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ArticleCrudController extends AbstractCrudController
 {
+    public const ARTICLE_BASE_PATH = 'uploads/images/articles';
+    public const ARTICLE_UPLOAD_DIR = 'public/uploads/images/articles';
+
     public static function getEntityFqcn(): string
     {
         return Article::class;
@@ -40,6 +44,10 @@ class ArticleCrudController extends AbstractCrudController
     {
         return [
             //IdField::new('id'),
+            ImageField::new('image', 'Image')
+                ->setBasePath(self::ARTICLE_BASE_PATH)
+                ->setUploadDir(self::ARTICLE_UPLOAD_DIR)
+                ->setSortable(false),
             TextField::new('code', 'Code'),
             TextField::new('nom', 'Nom'),
             MoneyField::new('prix', 'Prix')

@@ -67,6 +67,14 @@ class AssureurCrudController extends AbstractCrudController
     public function persistEntity(EntityManagerInterface $em, $entityInstance): void
     {
         if(!$entityInstance instanceof Assureur)return;
+        $entityInstance->setCreatedAt((new \DateTimeImmutable()));
+        //dd($entityInstance);
+        parent::persistEntity($em, $entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $em, $entityInstance): void
+    {
+        if(!$entityInstance instanceof Assureur)return;
         $entityInstance->setUpdatedAt((new \DateTimeImmutable()));
         //dd($entityInstance);
         parent::persistEntity($em, $entityInstance);

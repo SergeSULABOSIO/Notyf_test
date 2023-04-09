@@ -53,8 +53,6 @@ class Entreprise
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
         $this->utilisateur = new ArrayCollection();
     }
     

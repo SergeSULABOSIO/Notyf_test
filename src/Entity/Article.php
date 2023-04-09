@@ -51,11 +51,6 @@ class Article
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    public function __construct()
-    {
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

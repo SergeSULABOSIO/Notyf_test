@@ -49,12 +49,6 @@ class PaiementPartenaire
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function __construct()
-    {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
-    }
-
     public function getId(): ?int
     {
         return $this->id;

@@ -24,7 +24,7 @@ class AssureurCrudController extends AbstractCrudController
 {
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_OPEN = "Ouvrir";
-
+    
     public static function getEntityFqcn(): string
     {
         return Assureur::class;
@@ -62,16 +62,6 @@ class AssureurCrudController extends AbstractCrudController
             DateTimeField::new('updated_at', 'Last update')->hideOnform(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnindex()
         ];
-    }
-
-    
-
-    public function updateEntity(EntityManagerInterface $em, $entityInstance): void
-    {
-        if(!$entityInstance instanceof Assureur)return;
-        $entityInstance->setUpdatedAt((new \DateTimeImmutable()));
-        //dd($entityInstance);
-        parent::persistEntity($em, $entityInstance);
     }
 
     public function configureActions(Actions $actions): Actions

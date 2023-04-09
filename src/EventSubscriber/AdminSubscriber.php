@@ -1,7 +1,8 @@
 <?php
 namespace App\EventSubscriber;
-use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 
 class AdminSubscriber implements EventSubscriberInterface
 {
@@ -9,7 +10,7 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         return [
             BeforeEntityPersistedEvent::class => ['setCreatedAt'],
-            BeforeEntityUpdatedEvent::class => ['setUpdatedAt'],
+            BeforeEntityUpdatedEvent::class => ['setUpdatedAt']
         ];
     }
 

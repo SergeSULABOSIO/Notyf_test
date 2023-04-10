@@ -108,7 +108,7 @@ class Monnaie
 
     public function __toString()
     {
-        return $this->code . " - " . $this->nom;
+        return $this->code;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

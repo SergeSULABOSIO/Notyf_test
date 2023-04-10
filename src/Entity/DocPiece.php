@@ -18,6 +18,12 @@ class DocPiece
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
+    
+    #[ORM\ManyToMany(targetEntity: DocCategorie::class)]
+    private Collection $categorie;
+
+    #[ORM\ManyToMany(targetEntity: DocClasseur::class)]
+    private Collection $classeur;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -48,11 +54,6 @@ class DocPiece
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: DocCategorie::class)]
-    private Collection $categorie;
-
-    #[ORM\ManyToMany(targetEntity: DocClasseur::class)]
-    private Collection $classeur;
 
     public function __construct()
     {

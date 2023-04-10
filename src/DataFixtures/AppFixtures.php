@@ -14,6 +14,9 @@ use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
+use App\Entity\DocCategorie;
+use App\Entity\DocClasseur;
+use App\Entity\DocPiece;
 use App\Entity\Entreprise;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
@@ -398,6 +401,92 @@ class AppFixtures extends Fixture
 
             $manager->persist($comment);
         }
+
+        //DOC - CATEGORIE
+        $doc_categorie_police = new DocCategorie();
+        $doc_categorie_police->setNom("Police d'assurance");
+        $doc_categorie_police->setUtilisateur($user_admin);
+        $doc_categorie_police->setEntreprise($entreprise);
+        $doc_categorie_police->setCreatedAt(new \DateTimeImmutable());
+        $doc_categorie_police->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_categorie_police);
+
+        $doc_categorie_form = new DocCategorie();
+        $doc_categorie_form->setNom("Formulaire de proposition");
+        $doc_categorie_form->setUtilisateur($user_admin);
+        $doc_categorie_form->setEntreprise($entreprise);
+        $doc_categorie_form->setCreatedAt(new \DateTimeImmutable());
+        $doc_categorie_form->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_categorie_form);
+
+        $doc_categorie_bor = new DocCategorie();
+        $doc_categorie_bor->setNom("Mandat de courtage");
+        $doc_categorie_bor->setUtilisateur($user_admin);
+        $doc_categorie_bor->setEntreprise($entreprise);
+        $doc_categorie_bor->setCreatedAt(new \DateTimeImmutable());
+        $doc_categorie_bor->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_categorie_bor);
+
+        //DOC CLASSEUR
+        $doc_classeur_andy = new DocClasseur();
+        $doc_classeur_andy->setNom("PRODUCTION - ANDY SAMBI");
+        $doc_classeur_andy->setUtilisateur($user_admin);
+        $doc_classeur_andy->setEntreprise($entreprise);
+        $doc_classeur_andy->setCreatedAt(new \DateTimeImmutable());
+        $doc_classeur_andy->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_classeur_andy);
+
+        $doc_classeur_michee = new DocClasseur();
+        $doc_classeur_michee->setNom("PRODUCTION - MICHEE MURUND");
+        $doc_classeur_michee->setUtilisateur($user_admin);
+        $doc_classeur_michee->setEntreprise($entreprise);
+        $doc_classeur_michee->setCreatedAt(new \DateTimeImmutable());
+        $doc_classeur_michee->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_classeur_michee);
+
+        $doc_classeur_syntyche = new DocClasseur();
+        $doc_classeur_syntyche->setNom("PRODUCTION - SYNTYCHE MWEMA");
+        $doc_classeur_syntyche->setUtilisateur($user_admin);
+        $doc_classeur_syntyche->setEntreprise($entreprise);
+        $doc_classeur_syntyche->setCreatedAt(new \DateTimeImmutable());
+        $doc_classeur_syntyche->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_classeur_syntyche);
+
+        //DOC PIECES
+        $doc_piece_a = new DocPiece();
+        $doc_piece_a->setNom("Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_andy);
+        $doc_piece_a->setUtilisateur($user_admin);
+        $doc_piece_a->setEntreprise($entreprise);
+        $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_piece_a);
+
+
+        $doc_piece_a = new DocPiece();
+        $doc_piece_a->setNom("Police 1245787878/2023-10012 - Documentation");
+        $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_michee);
+        $doc_piece_a->setUtilisateur($user_admin);
+        $doc_piece_a->setEntreprise($entreprise);
+        $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_piece_a);
+
+
+        $doc_piece_a = new DocPiece();
+        $doc_piece_a->setNom("Police 1245787878/2023-10145 - Documentation");
+        $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_syntyche);
+        $doc_piece_a->setUtilisateur($user_admin);
+        $doc_piece_a->setEntreprise($entreprise);
+        $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($doc_piece_a);
 
         $manager->flush();
     }

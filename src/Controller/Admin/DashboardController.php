@@ -6,9 +6,12 @@ use App\Entity\Article;
 use App\Entity\Assureur;
 use App\Entity\Automobile;
 use App\Entity\Client;
+use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
 use App\Entity\EntreeStock;
 use App\Entity\Entreprise;
+use App\Entity\EtapeSinistre;
+use App\Entity\Expert;
 use App\Entity\Monnaie;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
@@ -16,8 +19,10 @@ use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
 use App\Entity\Police;
 use App\Entity\Produit;
+use App\Entity\Sinistre;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
+use App\Entity\Victime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -90,8 +95,11 @@ class DashboardController extends AbstractDashboardController
         ]);
 
         yield MenuItem::subMenu('SINISTRE', 'fas fa-fire')->setSubItems([//<i class="fa-solid fa-fire"></i>
-            MenuItem::linkToCrud('Arrivages', 'fas fa-truck', EntreeStock::class),
-            MenuItem::linkToCrud('Articles', 'fas fa-gift', Article::class)
+            MenuItem::linkToCrud('Commentaires', 'fas fa-umbrella', CommentaireSinistre::class),
+            MenuItem::linkToCrud('Etapes', 'fas fa-truck', EtapeSinistre::class),
+            MenuItem::linkToCrud('Expert', 'fas fa-gift', Expert::class),
+            MenuItem::linkToCrud('Sinistre', 'fas fa-gift', Sinistre::class),
+            MenuItem::linkToCrud('Victime', 'fas fa-gift', Victime::class)
         ]);
         yield MenuItem::section("CONFIGURATIONS");
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([//<i class="fa-solid fa-gears"></i>

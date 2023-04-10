@@ -138,6 +138,14 @@ class Police
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
+    private Collection $pieces;
+
+    public function __construct()
+    {
+        $this->pieces = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -564,6 +572,30 @@ class Police
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+
+    public function addPiece(DocPiece $piece): self
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+        }
+
+        return $this;
+    }
+
+    public function removePiece(DocPiece $piece): self
+    {
+        $this->pieces->removeElement($piece);
 
         return $this;
     }

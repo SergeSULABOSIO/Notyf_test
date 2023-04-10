@@ -8,6 +8,9 @@ use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
+use App\Entity\DocCategorie;
+use App\Entity\DocClasseur;
+use App\Entity\DocPiece;
 use App\Entity\EntreeStock;
 use App\Entity\Entreprise;
 use App\Entity\EtapeSinistre;
@@ -101,6 +104,13 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Sinistre', 'fas fa-gift', Sinistre::class),
             MenuItem::linkToCrud('Victime', 'fas fa-gift', Victime::class)
         ]);
+
+        yield MenuItem::subMenu('DOCUMENTS', 'fas fa-fire')->setSubItems([//<i class="fa-solid fa-fire"></i>
+            MenuItem::linkToCrud('Catégories', 'fas fa-umbrella', DocCategorie::class),
+            MenuItem::linkToCrud('Classeurs', 'fas fa-truck', DocClasseur::class),
+            MenuItem::linkToCrud('Pièces', 'fas fa-gift', DocPiece::class)
+        ]);
+        
         yield MenuItem::section("CONFIGURATIONS");
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([//<i class="fa-solid fa-gears"></i>
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),

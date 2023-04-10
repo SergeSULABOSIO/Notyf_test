@@ -68,12 +68,16 @@ class Sinistre
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $paidAt = null;
 
+    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
+    private Collection $pieces;
+
     public function __construct()
     {
         $this->victimes = new ArrayCollection();
         $this->victime = new ArrayCollection();
         $this->experts = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
+        $this->pieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -337,6 +341,30 @@ class Sinistre
     public function setPaidAt(?\DateTimeImmutable $paidAt): self
     {
         $this->paidAt = $paidAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+
+    public function addPiece(DocPiece $piece): self
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+        }
+
+        return $this;
+    }
+
+    public function removePiece(DocPiece $piece): self
+    {
+        $this->pieces->removeElement($piece);
 
         return $this;
     }

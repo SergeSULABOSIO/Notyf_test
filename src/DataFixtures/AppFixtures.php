@@ -14,10 +14,12 @@ use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\Contact;
 use App\Entity\Entreprise;
+use App\Entity\Expert;
 use App\Entity\Monnaie;
 use App\Entity\Partenaire;
 use App\Entity\Produit;
 use App\Entity\Taxe;
+use App\Entity\Victime;
 
 class AppFixtures extends Fixture
 {
@@ -39,6 +41,9 @@ class AppFixtures extends Fixture
             $article->setNom($faker->company(10));
             $article->setPrix(9.99);
             $article->setDescription("Un savon de lux et de très bonne qualité.");
+            $article->setCreatedAt(new \DateTimeImmutable());
+            $article->setUpdatedAt(new \DateTimeImmutable());
+
             //On persiste dans la base de données
             $manager->persist($article);
             $manager->flush();
@@ -50,6 +55,8 @@ class AppFixtures extends Fixture
             $entree_stock->setPrixUnitaire($faker->randomFloat(2, 100, 5000));
             $entree_stock->setDate(new \DateTimeImmutable());
             $entree_stock->setArticle($article);
+            $entree_stock->setCreatedAt(new \DateTimeImmutable());
+            $entree_stock->setUpdatedAt(new \DateTimeImmutable());
 
             //On persiste dans la base de données
             $manager->persist($entree_stock);
@@ -64,6 +71,8 @@ class AppFixtures extends Fixture
 
         $hashedPassword = $this->hasher->hashPassword($user_admin, "admin");
         $user_admin->setPassword($hashedPassword);
+        $user_admin->setCreatedAt(new \DateTimeImmutable());
+        $user_admin->setUpdatedAt(new \DateTimeImmutable());
 
         //On persiste dans la base de données
         $manager->persist($user_admin);
@@ -78,6 +87,8 @@ class AppFixtures extends Fixture
 
             $hashedPassword = $this->hasher->hashPassword($user, "password");
             $user->setPassword($hashedPassword);
+            $user->setCreatedAt(new \DateTimeImmutable());
+            $user->setUpdatedAt(new \DateTimeImmutable());
 
             //On persiste dans la base de données
             $manager->persist($user);
@@ -116,6 +127,9 @@ class AppFixtures extends Fixture
         $entreprise->setRccm("RCCM045CDKIN");
         $entreprise->setSecteur(2);
         $entreprise->setTelephone("+243828727706");
+        $entreprise->setCreatedAt(new \DateTimeImmutable());
+        $entreprise->setUpdatedAt(new \DateTimeImmutable());
+
         $manager->persist($entreprise);
 
         //MONNAIES
@@ -135,6 +149,9 @@ class AppFixtures extends Fixture
             }
             $monnaie->setCode($codeMonnaie);
             $monnaie->setEntreprise($entreprise);
+            $monnaie->setCreatedAt(new \DateTimeImmutable());
+            $monnaie->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($monnaie);
         }
 
@@ -155,6 +172,9 @@ class AppFixtures extends Fixture
                 $taxe->setOrganisation("ARCA - Autorité de Régulation des Assurances");
             }
             $taxe->setEntreprise($entreprise);
+            $taxe->setCreatedAt(new \DateTimeImmutable());
+            $taxe->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($taxe);
         }
 
@@ -171,6 +191,9 @@ class AppFixtures extends Fixture
             $partenaire->setNumimpot("IMP" . $faker->randomNumber(5, true));
             $partenaire->setPart(50);
             $partenaire->setEntreprise($entreprise);
+            $partenaire->setCreatedAt(new \DateTimeImmutable());
+            $partenaire->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($partenaire);
         }
 
@@ -188,6 +211,9 @@ class AppFixtures extends Fixture
             $assureur->setNumimpot("IMP" . $faker->randomNumber(5, true));
             $assureur->setIsreassureur(false);
             $assureur->setEntreprise($entreprise);
+            $assureur->setCreatedAt(new \DateTimeImmutable());
+            $assureur->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($assureur);
         }
 
@@ -205,6 +231,9 @@ class AppFixtures extends Fixture
             $assureur->setNumimpot("IMP" . $faker->randomNumber(5, true));
             $assureur->setIsreassureur(true);
             $assureur->setEntreprise($entreprise);
+            $assureur->setCreatedAt(new \DateTimeImmutable());
+            $assureur->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($assureur);
         }
 
@@ -225,6 +254,9 @@ class AppFixtures extends Fixture
             $produit->setIsabonnement(false);
             $produit->setCategorie(0);
             $produit->setEntreprise($entreprise);
+            $produit->setCreatedAt(new \DateTimeImmutable());
+            $produit->setUpdatedAt(new \DateTimeImmutable());
+            
             $manager->persist($produit);
             $compteur++;
         }
@@ -253,6 +285,9 @@ class AppFixtures extends Fixture
                 $client->setSecteur(2);
             }
             $client->setEntreprise($entreprise);
+            $client->setCreatedAt(new \DateTimeImmutable());
+            $client->setUpdatedAt(new \DateTimeImmutable());
+
             $manager->persist($client);
             $compteur++;
 
@@ -265,6 +300,9 @@ class AppFixtures extends Fixture
                 $contact->setEmail($faker->email());
                 $contact->setClient($client);
                 $contact->setEntreprise($entreprise);
+                $contact->setCreatedAt(new \DateTimeImmutable());
+                $contact->setUpdatedAt(new \DateTimeImmutable());
+
                 $manager->persist($contact);
             }
         }
@@ -285,9 +323,45 @@ class AppFixtures extends Fixture
                 $auto->setUtilite(1);
                 $auto->setPlaque($faker->randomNumber(4, true) . "BG/0". $a);
                 $auto->setChassis("XCD4" . $faker->randomNumber(5, true));
+                $auto->setCreatedAt(new \DateTimeImmutable());
+                $auto->setUpdatedAt(new \DateTimeImmutable());
                 $auto->setEntreprise($entreprise);
                 $manager->persist($auto);
             }
+        }
+
+
+
+
+        //GESTION SINISTRE
+        //VICTIME
+        for ($a = 0; $a < 15; $a++) {
+            $victime = new Victime();
+            $victime->setNom($faker->name());
+            $victime->setAdresse($faker->address());
+            $victime->setTelephone($faker->phoneNumber());
+            $victime->setEmail($faker->email());
+            $victime->setEntreprise($entreprise);
+            $victime->setCreatedAt(new \DateTimeImmutable());
+            $victime->setUpdatedAt(new \DateTimeImmutable());
+
+            $manager->persist($victime);
+        }
+
+        //EXPERT
+        for ($a = 0; $a < 5; $a++) {
+            $expert = new Expert();
+            $expert->setNom($faker->name());
+            $expert->setAdresse($faker->address());
+            $expert->setTelephone($faker->phoneNumber());
+            $expert->setDescription("Blabla blablablablabla Blabla blablablablabla Blabla blablablablabla");
+            $expert->setSiteweb($faker->url());
+            $expert->setEmail($faker->email());
+            $expert->setEntreprise($entreprise);
+            $expert->setCreatedAt(new \DateTimeImmutable());
+            $expert->setUpdatedAt(new \DateTimeImmutable());
+
+            $manager->persist($expert);
         }
 
         $manager->flush();

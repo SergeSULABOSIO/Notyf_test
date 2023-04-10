@@ -32,6 +32,9 @@ class EntreeStock
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,5 +103,17 @@ class EntreeStock
     public function __toString()
     {
         return $this->article->getNom()." ($ " . $this->article->getPrix().")";
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

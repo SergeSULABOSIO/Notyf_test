@@ -15,9 +15,6 @@ class CommentaireSinistre
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createAt = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne]
@@ -37,21 +34,12 @@ class CommentaireSinistre
     #[ORM\ManyToOne(inversedBy: 'commentaire')]
     private ?Sinistre $sinistre = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getCreateAt(): ?\DateTimeImmutable
-    {
-        return $this->createAt;
-    }
-
-    public function setCreateAt(\DateTimeImmutable $createAt): self
-    {
-        $this->createAt = $createAt;
-
-        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
@@ -122,6 +110,18 @@ class CommentaireSinistre
     public function setSinistre(?Sinistre $sinistre): self
     {
         $this->sinistre = $sinistre;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

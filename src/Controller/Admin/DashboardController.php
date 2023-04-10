@@ -104,7 +104,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section("CONFIGURATIONS");
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([//<i class="fa-solid fa-gears"></i>
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
-            MenuItem::linkToCrud('Changer mot de passe', 'fas fa-key', Utilisateur::class),//<i class="fa-solid fa-key"></i>
             MenuItem::linkToCrud('Entreprises', 'fas fa-shop', Entreprise::class)
         ]);
     }

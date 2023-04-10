@@ -12,6 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Assureur;
 use App\Entity\Automobile;
 use App\Entity\Client;
+use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
 use App\Entity\Entreprise;
 use App\Entity\EtapeSinistre;
@@ -384,6 +385,19 @@ class AppFixtures extends Fixture
         $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
 
         $manager->persist($etapeSinistre);
+
+
+        //COMMENTAIRE
+        for ($a = 0; $a < 10; $a++) {
+            $comment = new CommentaireSinistre();
+            $comment->setMessage("Blabla blablablablabla Blabla blablablablabla Blabla blablablablabla");
+            $comment->setEntreprise($entreprise);
+            $comment->setUtilisateur($user_admin);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setUpdatedAt(new \DateTimeImmutable());
+
+            $manager->persist($comment);
+        }
 
         $manager->flush();
     }

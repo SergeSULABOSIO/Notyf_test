@@ -82,10 +82,10 @@ class DashboardController extends AbstractDashboardController
         
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('MARKETING / CRM', 'fas fa-bullseye')->setSubItems([//<i class="fa-solid fa-bullseye"></i>
-            MenuItem::linkToCrud('Actions', 'fas fa-umbrella', Action::class),
-            MenuItem::linkToCrud('Cotations', 'fas fa-truck', Cotation::class),
-            MenuItem::linkToCrud('Etapes', 'fas fa-gift', EtapeCrm::class),
-            MenuItem::linkToCrud('Pistes', 'fas fa-gift', Piste::class)
+            MenuItem::linkToCrud('Actions', 'fas fa-paper-plane', Action::class),//<i class="fa-solid fa-paper-plane"></i>
+            MenuItem::linkToCrud('Cotations', 'fas fa-cash-register', Cotation::class),//<i class="fa-solid fa-cash-register"></i>
+            MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class),//<i class="fa-solid fa-list-check"></i>
+            MenuItem::linkToCrud('Pistes', 'fas fa-location-crosshairs', Piste::class)//<i class="fa-solid fa-location-crosshairs"></i>
         ]);
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bag-shopping')->setSubItems([//<i class="fa-solid fa-bag-shopping"></i>
             MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),

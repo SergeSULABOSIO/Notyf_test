@@ -45,9 +45,13 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Piste $piste = null;
 
+    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
+    private Collection $pieces;
+
     public function __construct()
     {
         $this->assureur = new ArrayCollection();
+        $this->pieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +175,30 @@ class Cotation
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+
+    public function addPiece(DocPiece $piece): self
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+        }
+
+        return $this;
+    }
+
+    public function removePiece(DocPiece $piece): self
+    {
+        $this->pieces->removeElement($piece);
 
         return $this;
     }

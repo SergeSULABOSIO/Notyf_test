@@ -2,17 +2,20 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Action;
 use App\Entity\Article;
 use App\Entity\Assureur;
 use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
+use App\Entity\Cotation;
 use App\Entity\DocCategorie;
 use App\Entity\DocClasseur;
 use App\Entity\DocPiece;
 use App\Entity\EntreeStock;
 use App\Entity\Entreprise;
+use App\Entity\EtapeCrm;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
 use App\Entity\Monnaie;
@@ -20,6 +23,7 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
+use App\Entity\Piste;
 use App\Entity\Police;
 use App\Entity\Produit;
 use App\Entity\Sinistre;
@@ -78,7 +82,10 @@ class DashboardController extends AbstractDashboardController
         
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('MARKETING / CRM', 'fas fa-bullseye')->setSubItems([//<i class="fa-solid fa-bullseye"></i>
-
+            MenuItem::linkToCrud('Actions', 'fas fa-umbrella', Action::class),
+            MenuItem::linkToCrud('Cotations', 'fas fa-truck', Cotation::class),
+            MenuItem::linkToCrud('Etapes', 'fas fa-gift', EtapeCrm::class),
+            MenuItem::linkToCrud('Pistes', 'fas fa-gift', Piste::class)
         ]);
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bag-shopping')->setSubItems([//<i class="fa-solid fa-bag-shopping"></i>
             MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),

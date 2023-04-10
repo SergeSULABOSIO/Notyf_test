@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Action;
 use App\Entity\Article;
 use App\Entity\EntreeStock;
 use App\Entity\Utilisateur;
@@ -14,14 +15,17 @@ use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Contact;
+use App\Entity\Cotation;
 use App\Entity\DocCategorie;
 use App\Entity\DocClasseur;
 use App\Entity\DocPiece;
 use App\Entity\Entreprise;
+use App\Entity\EtapeCrm;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
 use App\Entity\Monnaie;
 use App\Entity\Partenaire;
+use App\Entity\Piste;
 use App\Entity\Produit;
 use App\Entity\Taxe;
 use App\Entity\Victime;
@@ -487,6 +491,60 @@ class AppFixtures extends Fixture
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
         $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
         $manager->persist($doc_piece_a);
+
+
+        //ETAPE CRM
+        $etape_crm_a = new EtapeCrm();
+        $etape_crm_a->setNom("Prospection");
+        $etape_crm_a->setUtilisateur($user_admin);
+        $etape_crm_a->setEntreprise($entreprise);
+        $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($etape_crm_a);
+
+        $etape_crm_a = new EtapeCrm();
+        $etape_crm_a->setNom("RFQ - Demande de cotation");
+        $etape_crm_a->setUtilisateur($user_admin);
+        $etape_crm_a->setEntreprise($entreprise);
+        $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($etape_crm_a);
+
+        $etape_crm_a = new EtapeCrm();
+        $etape_crm_a->setNom("Placement du risque");
+        $etape_crm_a->setUtilisateur($user_admin);
+        $etape_crm_a->setEntreprise($entreprise);
+        $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($etape_crm_a);
+
+        //ACTION
+        $action = new Action();
+        $action->setMission("Organiser un RDV pour discuter des risques potentiels.");
+        $action->setObjectif("Comprendre les risques assurables du client et faire des propositions.");
+        $action->setStartedAt(new \DateTimeImmutable());
+        $action->setEndedAt(new \DateTimeImmutable());
+        $action->addAttributedTo($user_admin);
+        $action->setUtilisateur($user_admin);
+        $action->setEntreprise($entreprise);
+        $action->setCreatedAt(new \DateTimeImmutable());
+        $action->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($action);
+
+
+        //PISTE
+        $piste = new Piste();
+        $piste->setNom("BGFIBank RDC SA - BBB");
+        $piste->setObjectif("Gagner l'affaire BBB - BGFIbank RDC SA");
+        $piste->setMontant(450000);
+        $piste->setExpiredAt(new \DateTimeImmutable());
+        $piste->setEtape($etape_crm_a);
+        $piste->addAction($action);
+        $piste->setUtilisateur($user_admin);
+        $piste->setEntreprise($entreprise);
+        $piste->setCreatedAt(new \DateTimeImmutable());
+        $piste->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($piste);
 
         $manager->flush();
     }

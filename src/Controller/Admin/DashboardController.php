@@ -105,11 +105,11 @@ class DashboardController extends AbstractDashboardController
         ]);
 
         yield MenuItem::subMenu('SINISTRE', 'fas fa-fire')->setSubItems([//<i class="fa-solid fa-fire"></i>
-            MenuItem::linkToCrud('Commentaires', 'fas fa-umbrella', CommentaireSinistre::class),
-            MenuItem::linkToCrud('Etapes', 'fas fa-truck', EtapeSinistre::class),
-            MenuItem::linkToCrud('Expert', 'fas fa-gift', Expert::class),
-            MenuItem::linkToCrud('Sinistre', 'fas fa-gift', Sinistre::class),
-            MenuItem::linkToCrud('Victime', 'fas fa-gift', Victime::class)
+            MenuItem::linkToCrud('Commentaires', 'fas fa-comments', CommentaireSinistre::class),//<i class="fa-solid fa-comments"></i>
+            MenuItem::linkToCrud('Etapes', 'fas fa-arrow-down-short-wide', EtapeSinistre::class),//<i class="fa-solid fa-arrow-down-short-wide"></i>
+            MenuItem::linkToCrud('Expert', 'fas fa-user-graduate', Expert::class),//<i class="fa-solid fa-user-graduate"></i>
+            MenuItem::linkToCrud('Sinistre', 'fas fa-bell', Sinistre::class),//<i class="fa-regular fa-bell"></i>
+            MenuItem::linkToCrud('Victime', 'fas fa-person-falling-burst', Victime::class)//<i class="fa-solid fa-person-falling-burst"></i>
         ]);
 
         yield MenuItem::subMenu('DOCUMENTS', 'fas fa-fire')->setSubItems([//<i class="fa-solid fa-fire"></i>

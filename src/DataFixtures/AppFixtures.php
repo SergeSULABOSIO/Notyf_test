@@ -14,6 +14,7 @@ use App\Entity\Automobile;
 use App\Entity\Client;
 use App\Entity\Contact;
 use App\Entity\Entreprise;
+use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
 use App\Entity\Monnaie;
 use App\Entity\Partenaire;
@@ -218,9 +219,9 @@ class AppFixtures extends Fixture
         }
 
         //Autres assureurs
-        for ($i=0; $i < 50 ; $i++) { 
+        for ($i = 0; $i < 50; $i++) {
             $assureur = new Assureur();
-            $assureur->setNom($faker->company()." Insurance LTD");
+            $assureur->setNom($faker->company() . " Insurance LTD");
             $assureur->setAdresse($faker->address());
             $assureur->setTelephone($faker->phoneNumber());
             $assureur->setEmail($faker->email());
@@ -256,7 +257,7 @@ class AppFixtures extends Fixture
             $produit->setEntreprise($entreprise);
             $produit->setCreatedAt(new \DateTimeImmutable());
             $produit->setUpdatedAt(new \DateTimeImmutable());
-            
+
             $manager->persist($produit);
             $compteur++;
         }
@@ -307,7 +308,7 @@ class AppFixtures extends Fixture
             }
         }
 
-        
+
         //AUTOMOBILES
         foreach ($tabMarquesAutomobiles as $marqueAuto) {
             for ($a = 0; $a < 5; $a++) {
@@ -321,7 +322,7 @@ class AppFixtures extends Fixture
                 $auto->setNbsieges($faker->numberBetween(4, 8));
                 $auto->setNature(1);
                 $auto->setUtilite(1);
-                $auto->setPlaque($faker->randomNumber(4, true) . "BG/0". $a);
+                $auto->setPlaque($faker->randomNumber(4, true) . "BG/0" . $a);
                 $auto->setChassis("XCD4" . $faker->randomNumber(5, true));
                 $auto->setCreatedAt(new \DateTimeImmutable());
                 $auto->setUpdatedAt(new \DateTimeImmutable());
@@ -363,6 +364,26 @@ class AppFixtures extends Fixture
 
             $manager->persist($expert);
         }
+
+        //ETAPE
+        for ($a = 0; $a < 4; $a++) {
+            $etapeSinistre = new EtapeSinistre();
+            $etapeSinistre->setNom("Etape - n°" . $a);
+            $etapeSinistre->setDescription("Blabla blablablablabla Blabla blablablablabla Blabla blablablablabla");
+            $etapeSinistre->setEntreprise($entreprise);
+            $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
+            $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
+
+            $manager->persist($etapeSinistre);
+        }
+        $etapeSinistre = new EtapeSinistre();
+        $etapeSinistre->setNom("Sinistre clos");
+        $etapeSinistre->setDescription("Sinistre indemnisé.");
+        $etapeSinistre->setEntreprise($entreprise);
+        $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
+        $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
+
+        $manager->persist($etapeSinistre);
 
         $manager->flush();
     }

@@ -89,7 +89,7 @@ class AutomobileCrudController extends AbstractCrudController
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
-        parent::persistEntity($em, $entiteDuplique);
+        $this->parent::persistEntity($em, $entiteDuplique);
 
         $url = $adminUrlGenerator
             ->setController(self::class)

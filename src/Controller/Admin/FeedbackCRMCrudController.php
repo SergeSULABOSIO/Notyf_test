@@ -51,7 +51,8 @@ class FeedbackCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextEditorField::new('message', "Feedback"),
+            TextField::new('message', "Feedback")->hideOnForm()->hideOnDetail(),
+            TextEditorField::new('message', "Feedback")->hideOnIndex(),
             AssociationField::new('action', "Action"),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Created at"),

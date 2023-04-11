@@ -540,7 +540,7 @@ class AppFixtures extends Fixture
         $piste->setMontant(450000);
         $piste->setExpiredAt(new \DateTimeImmutable());
         $piste->setEtape($etape_crm_a);
-        $piste->addAction($action);
+        $piste->addActionCRM($action);
         $piste->setUtilisateur($user_admin);
         $piste->setEntreprise($entreprise);
         $piste->setCreatedAt(new \DateTimeImmutable());

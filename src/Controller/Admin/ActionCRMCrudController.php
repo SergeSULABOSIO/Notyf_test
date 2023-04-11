@@ -48,20 +48,25 @@ class ActionCRMCrudController extends AbstractCrudController
     }
 
 
-    /*
+    
     public function configureFields(string $pageName): iterable
     {
         return [
-
-            
-
-
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('mission', "Action"),
+            BooleanField::new('clos', "Clos"),
+            AssociationField::new('piste', "Piste"),
+            TextEditorField::new('objectif', "Objectif"),
+            AssociationField::new('utilisateur', "Utilisateur"),
+            AssociationField::new('attributedTo', "Attribuée à"),
+            AssociationField::new('feedbacks', "Feedbacks"),
+            DateTimeField::new('startedAt', "Date effet"),
+            DateTimeField::new('endedAt', "Echéance"),
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Updated At")
         ];
     }
-    */
+    
 
     public function configureActions(Actions $actions): Actions
     {

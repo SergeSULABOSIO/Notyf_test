@@ -18,6 +18,7 @@ use App\Entity\Entreprise;
 use App\Entity\EtapeCrm;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
+use App\Entity\FeedbackCRM;
 use App\Entity\Monnaie;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
@@ -82,8 +83,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section("ACCEUIL");
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie');
         yield MenuItem::section("DEPARTEMENTS");
-        yield MenuItem::subMenu('MARKETING / CRM', 'fas fa-bullseye')->setSubItems([ //<i class="fa-solid fa-bullseye"></i>
+        yield MenuItem::subMenu('COMMERCIAL / CRM', 'fas fa-bullseye')->setSubItems([ //<i class="fa-solid fa-bullseye"></i>
             MenuItem::linkToCrud('Actions', 'fas fa-paper-plane', ActionCRM::class), //<i class="fa-solid fa-paper-plane"></i>
+            MenuItem::linkToCrud('Feedbacks', 'fas fa-comments', FeedbackCRM::class),
             MenuItem::linkToCrud('Cotations', 'fas fa-cash-register', Cotation::class), //<i class="fa-solid fa-cash-register"></i>
             MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class), //<i class="fa-solid fa-list-check"></i>
             MenuItem::linkToCrud('Pistes', 'fas fa-location-crosshairs', Piste::class) //<i class="fa-solid fa-location-crosshairs"></i>

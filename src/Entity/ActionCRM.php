@@ -48,9 +48,19 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actions')]
     private ?Piste $piste = null;
 
+    #[ORM\ManyToOne(inversedBy: 'action')]
+    private ?FeedbackCRM $feedback = null;
+
+    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class, orphanRemoval: true)]
+    private Collection $feedbacks;
+
+    #[ORM\Column]
+    private ?bool $clos = null;
+
     public function __construct()
     {
         $this->attributedTo = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,4 +199,59 @@ class ActionCRM
 
         return $this;
     }
+
+    public function getFeedback(): ?FeedbackCRM
+    {
+        return $this->feedback;
+    }
+
+    public function setFeedback(?FeedbackCRM $feedback): self
+    {
+        $this->feedback = $feedback;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(FeedbackCRM $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setAction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(FeedbackCRM $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getAction() === $this) {
+                $feedback->setAction(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isClos(): ?bool
+    {
+        return $this->clos;
+    }
+
+    public function setClos(bool $clos): self
+    {
+        $this->clos = $clos;
+
+        return $this;
+    }
+
 }

@@ -24,6 +24,7 @@ use App\Entity\Entreprise;
 use App\Entity\EtapeCrm;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
+use App\Entity\FeedbackCRM;
 use App\Entity\Monnaie;
 use App\Entity\Partenaire;
 use App\Entity\Piste;
@@ -525,6 +526,7 @@ class AppFixtures extends Fixture
         $action->setObjectif("Comprendre les risques assurables du client et faire des propositions.");
         $action->setStartedAt(new \DateTimeImmutable());
         $action->setEndedAt(new \DateTimeImmutable());
+        $action->setClos(true);
         $action->addAttributedTo($user_admin);
         $action->setUtilisateur($user_admin);
         $action->setEntreprise($entreprise);
@@ -532,6 +534,15 @@ class AppFixtures extends Fixture
         $action->setUpdatedAt(new \DateTimeImmutable());
         $manager->persist($action);
 
+        //Feedback
+        $feedback = new FeedbackCRM();
+        $feedback->setMessage("Bjr à tous. Action axécutée avec succès.");
+        $feedback->setAction($action);
+        $feedback->setEntreprise($entreprise);
+        $feedback->setUtilisateur($user_admin);
+        $feedback->setCreatedAt(new \DateTimeImmutable());
+        $feedback->setUpdatedAt(new \DateTimeImmutable());
+        $manager->persist($feedback);
 
         //PISTE
         $piste = new Piste();

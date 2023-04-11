@@ -30,7 +30,7 @@ class FeedbackCRM
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne(inversedBy: 'feedbacks')]
+    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ActionCRM $action = null;
 
@@ -113,5 +113,10 @@ class FeedbackCRM
     public function __toString():string
     {
         return $this->message;
+    }
+
+    public function getAction(): ?ActionCRM
+    {
+        return $this->action;
     }
 }

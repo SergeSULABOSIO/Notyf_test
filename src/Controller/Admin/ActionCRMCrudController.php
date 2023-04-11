@@ -53,7 +53,7 @@ class ActionCRMCrudController extends AbstractCrudController
     {
         return [
             TextField::new('mission', "Action"),
-            BooleanField::new('clos', "Clos"),
+            BooleanField::new('clos', "Terminée"),
             AssociationField::new('piste', "Piste"),
             TextEditorField::new('objectif', "Objectif"),
             AssociationField::new('utilisateur', "Utilisateur"),

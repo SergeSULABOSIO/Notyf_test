@@ -57,10 +57,14 @@ class ActionCRM
     #[ORM\Column]
     private ?bool $clos = null;
 
+    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class, orphanRemoval: true)]
+    private Collection $feedbackCRMs;
+
     public function __construct()
     {
         $this->attributedTo = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
+        $this->feedbackCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -250,6 +254,41 @@ class ActionCRM
     public function setClos(bool $clos): self
     {
         $this->clos = $clos;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->id . " / " . $this->mission;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbackCRMs(): Collection
+    {
+        return $this->feedbackCRMs;
+    }
+
+    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
+            $this->feedbackCRMs->add($feedbackCRM);
+            $feedbackCRM->setAction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackCRM->getAction() === $this) {
+                $feedbackCRM->setAction(null);
+            }
+        }
 
         return $this;
     }

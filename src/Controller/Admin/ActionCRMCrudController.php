@@ -25,6 +25,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_DUPLICATE = "Dupliquer";
+    public const ACTION_TERMINER = "Terminer";
+    public const ACTION_FEEDBACK = "Ajouter un feedback";
     public const ACTION_OPEN = "Ouvrir";
 
     public static function getEntityFqcn(): string
@@ -76,6 +78,12 @@ class ActionCRMCrudController extends AbstractCrudController
         $ouvrir = Action::new(self::ACTION_OPEN)
             ->linkToCrudAction('ouvrirEntite');
 
+        $feedback = Action::new(self::ACTION_FEEDBACK)
+            ->linkToCrudAction('ajouterFeedback');
+
+        $terminer = Action::new(self::ACTION_TERMINER)
+            ->linkToCrudAction('terminerAction');
+
         return $actions
         //Action ouvrir
         ->add(Crud::PAGE_EDIT, $ouvrir)
@@ -84,8 +92,33 @@ class ActionCRMCrudController extends AbstractCrudController
         ->add(Crud::PAGE_DETAIL, $duplicate)
         ->add(Crud::PAGE_EDIT, $duplicate)
         ->add(Crud::PAGE_INDEX, $duplicate)
+        //Action terminer
+        ->add(Crud::PAGE_DETAIL, $terminer)
+        ->add(Crud::PAGE_EDIT, $terminer)
+        ->add(Crud::PAGE_INDEX, $terminer)
+        //Action terminer
+        ->add(Crud::PAGE_DETAIL, $feedback)
+        ->add(Crud::PAGE_EDIT, $feedback)
+        ->add(Crud::PAGE_INDEX, $feedback)
+
         ->reorder(Crud::PAGE_INDEX, [self::ACTION_OPEN, self::ACTION_DUPLICATE])
         ->reorder(Crud::PAGE_EDIT, [self::ACTION_OPEN, self::ACTION_DUPLICATE]);
+    }
+
+    public function terminerAction(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /**@var Assureur $assureur */
+        $entite = $context->getEntity()->getInstance();
+        $entite->setClos(true);
+        parent::persistEntity($em, $entite);
+
+        $url = $adminUrlGenerator
+            ->setController(self::class)
+            ->setAction(Action::INDEX)
+            ->setEntityId($entite->getId())
+            ->generateUrl();
+
+        return $this->redirect($url);
     }
     
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

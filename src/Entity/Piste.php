@@ -51,14 +51,14 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Action::class)]
-    private Collection $actions;
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
+    private Collection $actionsCRM;
 
     public function __construct()
     {
         $this->contact = new ArrayCollection();
         $this->cotations = new ArrayCollection();
-        $this->actions = new ArrayCollection();
+        $this->actionsCRM = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,22 +236,22 @@ class Piste
         return $this->actions;
     }
 
-    public function addAction(Action $action): self
+    public function addActionCRM(ActionCRM $actionCRM): self
     {
-        if (!$this->actions->contains($action)) {
-            $this->actions->add($action);
-            $action->setPiste($this);
+        if (!$this->actionsCRM->contains($actionCRM)) {
+            $this->actionsCRM->add($actionCRM);
+            $actionCRM->setPiste($this);
         }
 
         return $this;
     }
 
-    public function removeAction(Action $action): self
+    public function removeAction(ActionCRM $actionCRM): self
     {
-        if ($this->actions->removeElement($action)) {
+        if ($this->actionsCRM->removeElement($actionCRM)) {
             // set the owning side to null (unless already changed)
-            if ($action->getPiste() === $this) {
-                $action->setPiste(null);
+            if ($actionCRM->getPiste() === $this) {
+                $actionCRM->setPiste(null);
             }
         }
 

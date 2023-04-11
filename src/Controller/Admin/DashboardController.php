@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Action;
+use App\Entity\ActionCRM;
 use App\Entity\Article;
 use App\Entity\Assureur;
 use App\Entity\Automobile;
@@ -83,7 +83,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie');
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('MARKETING / CRM', 'fas fa-bullseye')->setSubItems([ //<i class="fa-solid fa-bullseye"></i>
-            MenuItem::linkToCrud('Actions', 'fas fa-paper-plane', Action::class), //<i class="fa-solid fa-paper-plane"></i>
+            MenuItem::linkToCrud('Actions', 'fas fa-paper-plane', ActionCRM::class), //<i class="fa-solid fa-paper-plane"></i>
             MenuItem::linkToCrud('Cotations', 'fas fa-cash-register', Cotation::class), //<i class="fa-solid fa-cash-register"></i>
             MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class), //<i class="fa-solid fa-list-check"></i>
             MenuItem::linkToCrud('Pistes', 'fas fa-location-crosshairs', Piste::class) //<i class="fa-solid fa-location-crosshairs"></i>

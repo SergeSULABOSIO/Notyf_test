@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Action;
+use App\Entity\ActionCRM;
 use App\Entity\Article;
 use App\Entity\EntreeStock;
 use App\Entity\Utilisateur;
@@ -519,7 +520,7 @@ class AppFixtures extends Fixture
         $manager->persist($etape_crm_a);
 
         //ACTION
-        $action = new Action();
+        $action = new ActionCRM();
         $action->setMission("Organiser un RDV pour discuter des risques potentiels.");
         $action->setObjectif("Comprendre les risques assurables du client et faire des propositions.");
         $action->setStartedAt(new \DateTimeImmutable());

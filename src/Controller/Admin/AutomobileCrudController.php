@@ -21,7 +21,7 @@ class AutomobileCrudController extends AbstractCrudController
 {
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_OPEN = "Ouvrir";
-    
+
     public static function getEntityFqcn(): string
     {
         return Automobile::class;
@@ -45,36 +45,18 @@ class AutomobileCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            /* private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?int $ = null;
-            private ?string $ = null;
-            private ?int $ = null;
-            private ?Entreprise $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?Monnaie $ = null;
-            private Collection $;
-            private ?\DateTimeImmutable $ = null;
-            private ?\DateTimeImmutable $ = null; */
-
-
-            
-            TextField::new('plaque', "Plaque"),
+            TextField::new('plaque', "Plaque"),            
+            TextField::new('chassis', 'N° du chassis'),
             TextField::new('model', 'Modèle')->hideOnIndex(),
             TextField::new('marque', 'Marque'),
-            TextField::new('annee', 'Année de Fab.'),
-            TextField::new('puissance', 'Puissance (en CV)'),
+            TextField::new('annee', 'Année'),
+            TextField::new('puissance', 'Puissance'),
             NumberField::new('valeur', 'Valeur'),
             AssociationField::new('monnaie', 'Monnaie'),
             NumberField::new('nbsieges', 'Nb sièges')->hideOnIndex(),
             AssociationField::new('polices', 'Police'),
             TextField::new('utilite', 'Usage')->hideOnIndex(),
             NumberField::new('nature', 'Nature')->hideOnIndex(),
-            TextField::new('chassis', 'N° du chassis'),
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex(),
             DateTimeField::new('updatedAt', 'Last update'),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()

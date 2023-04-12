@@ -23,7 +23,7 @@ class Sinistre
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createAt = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -71,6 +71,10 @@ class Sinistre
     #[ORM\ManyToMany(targetEntity: DocPiece::class)]
     private Collection $pieces;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Monnaie $monnaie = null;
+
     public function __construct()
     {
         $this->victimes = new ArrayCollection();
@@ -109,14 +113,14 @@ class Sinistre
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->createAt;
+        return $this->createdAt;
     }
 
-    public function setCreateAt(\DateTimeImmutable $createAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->createAt = $createAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -367,5 +371,22 @@ class Sinistre
         $this->pieces->removeElement($piece);
 
         return $this;
+    }
+
+    public function getMonnaie(): ?Monnaie
+    {
+        return $this->monnaie;
+    }
+
+    public function setMonnaie(?Monnaie $monnaie): self
+    {
+        $this->monnaie = $monnaie;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->titre;
     }
 }

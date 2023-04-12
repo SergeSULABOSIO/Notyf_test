@@ -51,22 +51,6 @@ class CotationCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-
-            
-    /*      
-    
-            private ?string $ = null;
-            private Collection $;
-            private ?float $ = null;
-            private ?Produit $ = null;
-            private ?\DateTimeImmutable $ = null;
-            private ?\DateTimeImmutable $ = null;
-            private ?Utilisateur $ = null;
-            private ?Entreprise $ = null;
-            private ?Piste $ = null;
-            private Collection $;
- */
-
             TextField::new('nom', "Titre"),
             AssociationField::new('piste', "Piste"),
             AssociationField::new('risque', "Risque"),

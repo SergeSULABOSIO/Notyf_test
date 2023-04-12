@@ -90,7 +90,7 @@ class AssureurCrudController extends AbstractCrudController
         /**@var Assureur $assureur */
         $assureur = $context->getEntity()->getInstance();
         $assureurDuplique = clone $assureur;
-        $this->parent::persistEntity($em, $assureurDuplique);
+        parent::persistEntity($em, $assureurDuplique);
 
         $url = $adminUrlGenerator
             ->setController(self::class)

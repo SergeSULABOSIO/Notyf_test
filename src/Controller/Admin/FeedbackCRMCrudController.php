@@ -88,7 +88,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
         
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
-        $this->parent::persistEntity($em, $entiteDuplique);
+        parent::persistEntity($em, $entiteDuplique);
 
         $url = $adminUrlGenerator
             ->setController(self::class)

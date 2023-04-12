@@ -62,9 +62,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Entreprise::class, mappedBy: 'utilisateur')]
     private Collection $entreprises;
 
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: FeedbackCRM::class)]
+    private Collection $feedbackCRMs;
+
     public function __construct()
     {
         $this->entreprises = new ArrayCollection();
+        $this->feedbackCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,6 +228,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->entreprises->removeElement($entreprise)) {
             $entreprise->removeUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbackCRMs(): Collection
+    {
+        return $this->feedbackCRMs;
+    }
+
+    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
+            $this->feedbackCRMs->add($feedbackCRM);
+            $feedbackCRM->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackCRM->getUtilisateur() === $this) {
+                $feedbackCRM->setUtilisateur(null);
+            }
         }
 
         return $this;

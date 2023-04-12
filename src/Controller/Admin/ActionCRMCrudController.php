@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ActionCRM;
+use App\Entity\FeedbackCRM;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -42,9 +43,9 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Action")
-            ->setEntityLabelInPlural("Actions")
-            ->setPageTitle("index", "Liste d'actions")
+            ->setEntityLabelInSingular("Mission")
+            ->setEntityLabelInPlural("Missions")
+            ->setPageTitle("index", "Liste des missions")
             // ...
         ;
     }
@@ -54,7 +55,7 @@ class ActionCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('mission', "Action"),
+            TextField::new('mission', "Tâches"),
             BooleanField::new('clos', "Terminée"),
             AssociationField::new('piste', "Piste"),
             TextEditorField::new('objectif', "Objectif"),
@@ -105,9 +106,24 @@ class ActionCRMCrudController extends AbstractCrudController
         ->reorder(Crud::PAGE_EDIT, [self::ACTION_OPEN, self::ACTION_DUPLICATE]);
     }
 
+
+    public function ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite = $context->getEntity()->getInstance();
+        //parent::persistEntity($em, $entite);
+
+        $url = $adminUrlGenerator
+            ->setController(FeedbackCRMCrudController::class)
+            ->setAction(Action::NEW)
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $this->redirect($url);
+    }
+
     public function terminerAction(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        /**@var Assureur $assureur */
+        
         $entite = $context->getEntity()->getInstance();
         $entite->setClos(true);
         parent::persistEntity($em, $entite);

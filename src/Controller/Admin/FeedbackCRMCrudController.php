@@ -39,9 +39,9 @@ class FeedbackCRMCrudController extends AbstractCrudController
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Action")
-            ->setEntityLabelInPlural("Actions")
-            ->setPageTitle("index", "Liste d'actions")
+            ->setEntityLabelInSingular("Feedback")
+            ->setEntityLabelInPlural("Feedbacks")
+            ->setPageTitle("index", "Liste des feedbacks")
             // ...
         ;
     }
@@ -51,9 +51,10 @@ class FeedbackCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('message', "Feedback")->hideOnForm()->hideOnDetail(),
-            TextEditorField::new('message', "Feedback")->hideOnIndex(),
-            AssociationField::new('action', "Action"),
+            TextField::new('message', "Feedback"),
+            AssociationField::new('action', "Mission"),
+            TextField::new('prochaineTache', "Prochaine tâche"),
+            DateTimeField::new('startedAt', "date d'effet"),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Created at"),
             DateTimeField::new('updatedAt', "Updated at"),
@@ -84,7 +85,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
     
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        /**@var Assureur $assureur */
+        
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
         $this->parent::persistEntity($em, $entiteDuplique);
@@ -102,7 +103,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
     {
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
-        
+                
         $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::DETAIL)

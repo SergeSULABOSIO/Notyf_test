@@ -16,28 +16,29 @@ class FeedbackCRM
     #[ORM\Column(length: 255)]
     private ?string $message = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
-
     #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ActionCRM $action = null;
 
-    public function __construct()
-    {
+    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
 
-    }
+    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $prochaineTache = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $startedAt = null;
 
     public function getId(): ?int
     {
@@ -52,18 +53,6 @@ class FeedbackCRM
     public function setMessage(string $message): self
     {
         $this->message = $message;
-
-        return $this;
-    }
-
-    public function getUtilisateur(): ?Utilisateur
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(Utilisateur $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
 
         return $this;
     }
@@ -92,18 +81,6 @@ class FeedbackCRM
         return $this;
     }
 
-    public function getEntreprise(): ?Entreprise
-    {
-        return $this->entreprise;
-    }
-
-    public function setEntreprise(Entreprise $entreprise): self
-    {
-        $this->entreprise = $entreprise;
-
-        return $this;
-    }
-
     public function setAction(?ActionCRM $action): self
     {
         $this->action = $action;
@@ -118,5 +95,53 @@ class FeedbackCRM
     public function getAction(): ?ActionCRM
     {
         return $this->action;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getProchaineTache(): ?string
+    {
+        return $this->prochaineTache;
+    }
+
+    public function setProchaineTache(?string $prochaineTache): self
+    {
+        $this->prochaineTache = $prochaineTache;
+
+        return $this;
+    }
+
+    public function getStartedAt(): ?\DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
+
+    public function setStartedAt(?\DateTimeImmutable $startedAt): self
+    {
+        $this->startedAt = $startedAt;
+
+        return $this;
     }
 }

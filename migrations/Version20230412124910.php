@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230411223033 extends AbstractMigration
+final class Version20230412124910 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,16 +20,12 @@ final class Version20230411223033 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE cotation ADD monnaie_id INT NOT NULL');
-        $this->addSql('ALTER TABLE cotation ADD CONSTRAINT FK_996DA94498D3FE22 FOREIGN KEY (monnaie_id) REFERENCES monnaie (id)');
-        $this->addSql('CREATE INDEX IDX_996DA94498D3FE22 ON cotation (monnaie_id)');
+        $this->addSql('ALTER TABLE feedback_crm ADD prochaine_tache VARCHAR(255) DEFAULT NULL, ADD started_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\'');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE cotation DROP FOREIGN KEY FK_996DA94498D3FE22');
-        $this->addSql('DROP INDEX IDX_996DA94498D3FE22 ON cotation');
-        $this->addSql('ALTER TABLE cotation DROP monnaie_id');
+        $this->addSql('ALTER TABLE feedback_crm DROP prochaine_tache, DROP started_at');
     }
 }

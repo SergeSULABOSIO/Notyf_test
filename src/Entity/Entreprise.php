@@ -51,9 +51,13 @@ class Entreprise
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'entreprises')]
     private Collection $utilisateur;
 
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: FeedbackCRM::class)]
+    private Collection $feedbackCRMs;
+
     public function __construct()
     {
         $this->utilisateur = new ArrayCollection();
+        $this->feedbackCRMs = new ArrayCollection();
     }
     
     public function getId(): ?int
@@ -194,6 +198,36 @@ class Entreprise
     public function removeUtilisateur(Utilisateur $utilisateur): self
     {
         $this->utilisateur->removeElement($utilisateur);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbackCRMs(): Collection
+    {
+        return $this->feedbackCRMs;
+    }
+
+    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
+            $this->feedbackCRMs->add($feedbackCRM);
+            $feedbackCRM->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackCRM->getEntreprise() === $this) {
+                $feedbackCRM->setEntreprise(null);
+            }
+        }
 
         return $this;
     }

@@ -107,6 +107,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
             AssociationField::new('monnaie', "Monnaie"),
             TextField::new('description', "Description"),
             AssociationField::new('police', "Police"),
+            AssociationField::new('pieces', "Pièces"),
             DateTimeField::new('createdAt', "Created At"),
             DateTimeField::new('updatedAt', "Updated At"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()

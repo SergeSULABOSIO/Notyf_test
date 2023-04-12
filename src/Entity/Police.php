@@ -141,9 +141,13 @@ class Police
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToMany(targetEntity: Piste::class)]
+    private Collection $piste;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
+        $this->piste = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -596,6 +600,30 @@ class Police
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPiste(): Collection
+    {
+        return $this->piste;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->piste->contains($piste)) {
+            $this->piste->add($piste);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        $this->piste->removeElement($piste);
 
         return $this;
     }

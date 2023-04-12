@@ -54,6 +54,7 @@ class PoliceCrudController extends AbstractCrudController
             TextField::new('reference', "Référence"),
             DateTimeField::new('dateoperation', "Date de l'opérat°")->hideOnIndex(),
             DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex(),
+            AssociationField::new('piste', "Pistes"),
             DateField::new('dateeffet', "Date d'effet"),
             DateField::new('dateexpiration', "Echéance"),
             AssociationField::new('client', "Assuré"),

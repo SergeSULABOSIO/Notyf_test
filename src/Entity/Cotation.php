@@ -218,4 +218,9 @@ class Cotation
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->nom . " / " . $this->primeTotale . " " . $this->monnaie->getCode();
+    }
 }

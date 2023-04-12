@@ -260,7 +260,7 @@ class ActionCRM
 
     public function __toString()
     {
-        return $this->id . " / " . $this->mission;
+        return $this->mission;
     }
 
     /**

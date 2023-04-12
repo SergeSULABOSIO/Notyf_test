@@ -51,14 +51,15 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
-    private Collection $actionsCRM;
+    #[ORM\ManyToMany(targetEntity: ActionCRM::class)]
+    private Collection $actions;
+
 
     public function __construct()
     {
         $this->contact = new ArrayCollection();
         $this->cotations = new ArrayCollection();
-        $this->actionsCRM = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -228,38 +229,32 @@ class Piste
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->id . " / " . $this->nom;
+    }
+
     /**
-     * @return Collection<int, Action>
+     * @return Collection<int, ActionCRM>
      */
     public function getActions(): Collection
     {
         return $this->actions;
     }
 
-    public function addActionCRM(ActionCRM $actionCRM): self
+    public function addAction(ActionCRM $action): self
     {
-        if (!$this->actionsCRM->contains($actionCRM)) {
-            $this->actionsCRM->add($actionCRM);
-            $actionCRM->setPiste($this);
+        if (!$this->actions->contains($action)) {
+            $this->actions->add($action);
         }
 
         return $this;
     }
 
-    public function removeAction(ActionCRM $actionCRM): self
+    public function removeAction(ActionCRM $action): self
     {
-        if ($this->actionsCRM->removeElement($actionCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($actionCRM->getPiste() === $this) {
-                $actionCRM->setPiste(null);
-            }
-        }
+        $this->actions->removeElement($action);
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->id . " / " . $this->nom;
     }
 }

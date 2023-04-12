@@ -105,7 +105,7 @@ class SinistreCrudController extends AbstractCrudController
             DateField::new('occuredAt', "Date"),
             TextField::new('titre', "Titre"),
             TextEditorField::new('description', "Evènement")->hideOnIndex(),
-            AssociationField::new('victimes', "Victimes"),
+            AssociationField::new('victime', "Victimes"),
             AssociationField::new('experts', "Experts")->hideOnIndex(),
             AssociationField::new('etape', "Etape"),
             AssociationField::new('commentaire', "Commentaires"),

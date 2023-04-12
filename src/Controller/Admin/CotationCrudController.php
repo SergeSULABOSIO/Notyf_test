@@ -39,9 +39,9 @@ class CotationCrudController extends AbstractCrudController
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Action")
-            ->setEntityLabelInPlural("Actions")
-            ->setPageTitle("index", "Liste d'actions")
+            ->setEntityLabelInSingular("Cotation")
+            ->setEntityLabelInPlural("Cotations")
+            ->setPageTitle("index", "Liste des cotations")
             // ...
         ;
     }

@@ -191,7 +191,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString()
     {
-        return $this->email . "/" . $this->nom;
+        return $this->nom;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

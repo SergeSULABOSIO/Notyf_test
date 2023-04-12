@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
@@ -53,7 +54,7 @@ class ProduitCrudController extends AbstractCrudController
             TextField::new('code', "Code"),
             TextField::new('nom', "Intitulé"),
             TextEditorField::new('description', "Description"),
-            NumberField::new('tauxarca', "Taux/Com. (%)"),
+            PercentField::new('tauxarca', "Taux/Com."),
             BooleanField::new('isobligatoire', "Obligatoire?"),
             BooleanField::new('isabonnement', "Abonnement?"),
             NumberField::new('categorie', "Catégorie")->hideOnIndex(),

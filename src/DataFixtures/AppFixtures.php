@@ -173,12 +173,12 @@ class AppFixtures extends Fixture
             $taxe->setNom($nomTaxes);
             if ($nomTaxes == "TVA") {
                 $taxe->setDescription("Taxe sur la Valeur Ajoutée");
-                $taxe->setTaux(16);
+                $taxe->setTaux(0.16);
                 $taxe->setPayableparcourtier(false);
                 $taxe->setOrganisation("DGI - Direction Générale des Impôts");
             } else {
                 $taxe->setDescription("Frais de surveillance");
-                $taxe->setTaux(2);
+                $taxe->setTaux(0.02);
                 $taxe->setPayableparcourtier(true);
                 $taxe->setOrganisation("ARCA - Autorité de Régulation des Assurances");
             }
@@ -257,10 +257,10 @@ class AppFixtures extends Fixture
             $produit->setDescription($faker->sentence(5));
             if ($compteur % 2) {
                 $produit->setIsobligatoire(true);
-                $produit->setTauxarca(10);
+                $produit->setTauxarca(0.10);
             } else {
                 $produit->setIsobligatoire(false);
-                $produit->setTauxarca(15);
+                $produit->setTauxarca(0.15);
             }
             $produit->setIsabonnement(false);
             $produit->setCategorie(0);

@@ -112,7 +112,7 @@ class Taxe
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->nom . " / " . $this->description;
     }
 
     public function isPayableparcourtier(): ?bool

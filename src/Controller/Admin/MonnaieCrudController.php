@@ -38,9 +38,9 @@ class MonnaieCrudController extends AbstractCrudController
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Piste")
-            ->setEntityLabelInPlural("Pistes")
-            ->setPageTitle("index", "Liste des pistes")
+            ->setEntityLabelInSingular("Monnaie")
+            ->setEntityLabelInPlural("Monnaies")
+            ->setPageTitle("index", "Liste des monnaies")
             // ...
         ;
     }

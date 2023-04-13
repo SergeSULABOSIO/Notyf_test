@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -30,6 +31,18 @@ class CotationCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Cotation::class;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('monnaie')
+            ->add('pieces')
+            ->add('piste')
+            ->add('utilisateur')
+            ->add('risque')
+            ->add('assureur')
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud

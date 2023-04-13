@@ -60,7 +60,7 @@ class CotationCrudController extends AbstractCrudController
             AssociationField::new('pieces', "Documents")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
             DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }

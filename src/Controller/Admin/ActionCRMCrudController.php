@@ -22,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters; 
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -35,6 +36,15 @@ class ActionCRMCrudController extends AbstractCrudController
         return ActionCRM::class;
     }
     
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('startedAt')
+            ->add('endedAt')
+            ->add('attributedTo')
+            ->add('utilisateur')
+        ;
+    }
 
     public function configureCrud(Crud $crud): Crud
     {

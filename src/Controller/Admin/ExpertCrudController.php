@@ -110,7 +110,7 @@ class ExpertCrudController extends AbstractCrudController
             TextField::new('description', "Description"),
             AssociationField::new('sinistres', "Sinistre"),
             DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

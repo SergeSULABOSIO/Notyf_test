@@ -107,8 +107,8 @@ class VictimeCrudController extends AbstractCrudController
             EmailField::new('email', "Email"),
             TelephoneField::new('telephone', "Téléphone"),
             AssociationField::new('sinistres', "Sinistre"),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

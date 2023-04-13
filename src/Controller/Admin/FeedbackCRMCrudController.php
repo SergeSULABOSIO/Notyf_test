@@ -57,7 +57,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
             DateTimeField::new('startedAt', "date d'effet"),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Created at"),
-            DateTimeField::new('updatedAt', "Updated at"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

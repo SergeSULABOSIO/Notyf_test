@@ -43,7 +43,7 @@ class EntreeStockCrudController extends AbstractCrudController
             AssociationField::new('article', 'Article'),
             NumberField::new('quantite', 'Quantité'),
             NumberField::new('prixUnitaire', 'Prix Unit.'),
-            DateTimeField::new('updated_at', 'Last update')
+            DateTimeField::new('updated_at', 'Dernière modification')
             ->hideOnform()
         ];
     }

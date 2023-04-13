@@ -59,7 +59,7 @@ class AssureurCrudController extends AbstractCrudController
             TextField::new('idnat', 'Id. Nationale')->hideOnIndex(),
             TextField::new('licence', 'N° Licence'),
             TextField::new('numimpot', 'N° Impôt')->hideOnIndex(),
-            DateTimeField::new('updated_at', 'Last update')->hideOnform(),
+            DateTimeField::new('updated_at', 'Dernière modification')->hideOnform(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnindex()
         ];
     }

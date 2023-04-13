@@ -54,7 +54,7 @@ class ArticleCrudController extends AbstractCrudController
                 ->setCurrency('USD'),
             TextEditorField::new('description', 'Descsription')
                 ->setFormType(CKEditorType::class),
-            DateTimeField::new('updated_at', 'Last update')
+            DateTimeField::new('updated_at', 'Dernière modification')
             ->hideOnform()
         ];
     }

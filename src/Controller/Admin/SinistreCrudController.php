@@ -116,8 +116,8 @@ class SinistreCrudController extends AbstractCrudController
             AssociationField::new('police', "Police"),
             AssociationField::new('pieces', "Pièces"),
             AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

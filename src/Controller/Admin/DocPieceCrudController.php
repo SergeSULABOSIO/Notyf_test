@@ -114,22 +114,26 @@ class DocPieceCrudController extends AbstractCrudController
             ImageField::new('fichierA', 'Fichier A')
                 ->setBasePath(self::ARTICLE_BASE_PATH)
                 ->setUploadDir(self::ARTICLE_UPLOAD_DIR)
-                ->setSortable(false),
+                ->setSortable(false)
+                ->hideOnIndex(),
             ImageField::new('fichierB', 'Fichier B')
                 ->setBasePath(self::ARTICLE_BASE_PATH)
                 ->setUploadDir(self::ARTICLE_UPLOAD_DIR)
-                ->setSortable(false),
+                ->setSortable(false)
+                ->hideOnIndex(),
             ImageField::new('fichierC', 'Fichier C')
                 ->setBasePath(self::ARTICLE_BASE_PATH)
                 ->setUploadDir(self::ARTICLE_UPLOAD_DIR)
-                ->setSortable(false),
+                ->setSortable(false)
+                ->hideOnIndex(),
             ImageField::new('fichierD', 'Fichier D')
                 ->setBasePath(self::ARTICLE_BASE_PATH)
                 ->setUploadDir(self::ARTICLE_UPLOAD_DIR)
-                ->setSortable(false),
+                ->setSortable(false)
+                ->hideOnIndex(),
             AssociationField::new('utilisateur', "Utiliateur")->hideOnIndex(),
             DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

@@ -86,8 +86,8 @@ class PoliceCrudController extends AbstractCrudController
             TextField::new('localcompayableby', "Com. ord. - Débiteur")->hideOnIndex(),
             TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex(),
             AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex(),
-            DateTimeField::new('createdAt', "created at")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "updated at")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }
 

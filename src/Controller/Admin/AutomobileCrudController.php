@@ -58,7 +58,7 @@ class AutomobileCrudController extends AbstractCrudController
             TextField::new('utilite', 'Usage')->hideOnIndex(),
             NumberField::new('nature', 'Nature')->hideOnIndex(),
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex(),
-            DateTimeField::new('updatedAt', 'Last update'),
+            DateTimeField::new('updatedAt', 'Dernière modification'),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()
         ];
     }

@@ -54,7 +54,7 @@ class EtapeCrmCrudController extends AbstractCrudController
             TextField::new('nom', "Titre"),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Created At"),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")
         ];
     }

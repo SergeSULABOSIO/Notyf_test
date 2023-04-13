@@ -60,8 +60,8 @@ class PisteCrudController extends AbstractCrudController
             AssociationField::new('etape', "Etape actuelle"),
             DateTimeField::new('expiredAt', "Echéance"),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Created At"),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('createdAt', "Date création"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")
         ];
     }

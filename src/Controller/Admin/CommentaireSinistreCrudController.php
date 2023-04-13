@@ -118,7 +118,7 @@ class CommentaireSinistreCrudController extends AbstractCrudController
             AssociationField::new('sinistre', "Sinistre"),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

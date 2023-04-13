@@ -105,7 +105,7 @@ class MonnaieCrudController extends AbstractCrudController
             NumberField::new('tauxusd', "Taux@Usd"),
             BooleanField::new('islocale', "Monnaie locale?"),
             DateTimeField::new('createdAt', "Created At"),
-            DateTimeField::new('updatedAt', "Updated At"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

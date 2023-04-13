@@ -56,8 +56,8 @@ class TaxeCrudController extends AbstractCrudController
             PercentField::new('taux', "Taux"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             BooleanField::new('payableparcourtier', "Payable par le courtier?"),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }
     

@@ -59,8 +59,8 @@ class PartenaireCrudController extends AbstractCrudController
             TextField::new('idnat', "Id. Nationale")->hideOnIndex(),
             TextField::new('numimpot', "N°. Impôt")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "updated At")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }
 

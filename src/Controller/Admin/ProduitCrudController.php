@@ -59,8 +59,8 @@ class ProduitCrudController extends AbstractCrudController
             BooleanField::new('isabonnement', "Abonnement?"),
             NumberField::new('categorie', "Catégorie")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Created at")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated at")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
+            DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }
     

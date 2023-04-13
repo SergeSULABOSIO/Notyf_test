@@ -66,7 +66,7 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Updated At")
+            DateTimeField::new('updatedAt', "Dernière modification")
         ];
     }
     

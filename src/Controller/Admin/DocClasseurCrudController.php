@@ -97,14 +97,15 @@ class DocClasseurCrudController extends AbstractCrudController
     }
 
 
+
     
     public function configureFields(string $pageName): iterable
     {
         return [
             TextField::new('nom', "Nom"),
-            AssociationField::new('utilisateur', "Utiliateur"),
-            DateTimeField::new('createdAt', "Created At"),
-            DateTimeField::new('updatedAt', "Updated At"),
+            AssociationField::new('utilisateur', "Utilisateur"),
+            DateTimeField::new('createdAt', "Date création"),
+            DateTimeField::new('updatedAt', "Dernière modification"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

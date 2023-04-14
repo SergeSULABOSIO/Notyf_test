@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -22,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
 class ProduitCrudController extends AbstractCrudController
 {
@@ -31,6 +33,15 @@ class ProduitCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Produit::class;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('isobligatoire')
+            ->add('isabonnement')
+            ->add('tauxarca')
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -53,7 +64,7 @@ class ProduitCrudController extends AbstractCrudController
         return [
             TextField::new('code', "Code"),
             TextField::new('nom', "Intitulé"),
-            TextEditorField::new('description', "Description"),
+            TextareaField::new('description', "Description"),
             PercentField::new('tauxarca', "Taux/Com."),
             BooleanField::new('isobligatoire', "Obligatoire?"),
             BooleanField::new('isabonnement', "Abonnement?"),

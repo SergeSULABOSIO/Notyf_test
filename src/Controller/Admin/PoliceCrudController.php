@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -47,6 +48,26 @@ class PoliceCrudController extends AbstractCrudController
         ;
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('dateeffet')
+            ->add('dateexpiration')
+            ->add('client')
+            ->add('produit')
+            ->add('assureur')
+            ->add('partenaire')
+            ->add('idavenant')
+            ->add('monnaie')
+            ->add('capital')
+            ->add('primenette')
+            ->add('fronting')
+            ->add('primetotale')
+            ->add('cansharericom')
+            ->add('cansharelocalcom')
+            ->add('cansharefrontingcom')
+        ;
+    }
     
     public function configureFields(string $pageName): iterable
     {

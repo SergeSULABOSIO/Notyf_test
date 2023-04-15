@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\ActionCRM;
 use App\Entity\FeedbackCRM;
+use App\Entity\Piste;
+use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -22,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -87,9 +90,11 @@ class ActionCRMCrudController extends AbstractCrudController
             AssociationField::new('piste', "Piste")->setColumns(6),
             
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
-            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
+            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->hideOnForm(),
 
-            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6),
+            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             
             DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),

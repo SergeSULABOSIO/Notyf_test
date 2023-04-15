@@ -48,6 +48,7 @@ class AssureurCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Assureur")
             ->setEntityLabelInPlural("Assureurs")
             ->setPageTitle("index", "Liste d'assureurs")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -67,7 +68,7 @@ class AssureurCrudController extends AbstractCrudController
             TextField::new('idnat', 'Id. Nationale')->hideOnIndex(),
             TextField::new('licence', 'N° Licence'),
             TextField::new('numimpot', 'N° Impôt')->hideOnIndex(),
-            DateTimeField::new('updated_at', 'Dernière modification')->hideOnform(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnform(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnindex()
         ];
     }

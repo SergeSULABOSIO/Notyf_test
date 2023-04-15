@@ -54,6 +54,7 @@ class ProduitCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Produit")
             ->setEntityLabelInPlural("Produits")
             ->setPageTitle("index", "Liste des produits")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -70,8 +71,8 @@ class ProduitCrudController extends AbstractCrudController
             BooleanField::new('isabonnement', "Abonnement?"),
             NumberField::new('categorie', "Catégorie")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
     

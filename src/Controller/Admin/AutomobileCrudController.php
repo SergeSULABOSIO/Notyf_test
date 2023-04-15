@@ -45,6 +45,7 @@ class AutomobileCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Automobile")
             ->setEntityLabelInPlural("Flotte")
             ->setPageTitle("index", "Flotte automobile")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -62,11 +63,11 @@ class AutomobileCrudController extends AbstractCrudController
             NumberField::new('valeur', 'Valeur'),
             AssociationField::new('monnaie', 'Monnaie'),
             NumberField::new('nbsieges', 'Nb sièges')->hideOnIndex(),
-            AssociationField::new('polices', 'Police'),
+            AssociationField::new('polices', "Police d'assurance"),
             TextField::new('utilite', 'Usage')->hideOnIndex(),
             NumberField::new('nature', 'Nature')->hideOnIndex(),
-            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex(),
-            DateTimeField::new('updatedAt', 'Dernière modification'),
+            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()
         ];
     }

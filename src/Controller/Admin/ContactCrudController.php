@@ -51,6 +51,7 @@ class ContactCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Contact")
             ->setEntityLabelInPlural("Contacts")
             ->setPageTitle("index", "Liste des contacts")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -114,8 +115,8 @@ class ContactCrudController extends AbstractCrudController
             TelephoneField::new('telephone', "Téléphone"),
             EmailField::new('email', "Email"),
             AssociationField::new('client', "Client"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

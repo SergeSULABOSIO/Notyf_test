@@ -42,6 +42,7 @@ class ClientCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Client")
             ->setEntityLabelInPlural("Clients")
             ->setPageTitle("index", "Liste des clients")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -68,7 +69,7 @@ class ClientCrudController extends AbstractCrudController
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             NumberField::new('secteur', "Secteur")->hideOnIndex(),
             DateTimeField::new('createdAt', "created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
 

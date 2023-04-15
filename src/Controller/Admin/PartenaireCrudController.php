@@ -43,6 +43,7 @@ class PartenaireCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Partenaire")
             ->setEntityLabelInPlural("Partenaires")
             ->setPageTitle("index", "Liste des partenaires")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -59,8 +60,8 @@ class PartenaireCrudController extends AbstractCrudController
             TextField::new('idnat', "Id. Nationale")->hideOnIndex(),
             TextField::new('numimpot', "N°. Impôt")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
 

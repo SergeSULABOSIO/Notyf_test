@@ -44,6 +44,7 @@ class PoliceCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Police")
             ->setEntityLabelInPlural("Polices")
             ->setPageTitle("index", "Liste des polices")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -107,8 +108,8 @@ class PoliceCrudController extends AbstractCrudController
             TextField::new('localcompayableby', "Com. ord. - Débiteur")->hideOnIndex(),
             TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex(),
             AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
 

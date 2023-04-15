@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -69,18 +70,30 @@ class ActionCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('mission', "Tâches"),
-            BooleanField::new('clos', "Terminée"),
-            AssociationField::new('piste', "Piste"),
-            TextareaField::new('objectif', "Objectif"),
-            AssociationField::new('utilisateur', "Utilisateur"),
-            AssociationField::new('attributedTo', "Attribuée à"),
-            AssociationField::new('feedbacks', "Feedbacks"),
-            DateTimeField::new('startedAt', "Date effet"),
-            DateTimeField::new('endedAt', "Echéance"),
+            FormField::addPanel('Informations générales')
+            ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs."),
+
+            TextareaField::new('objectif', "Objectif")->setColumns(12),
+            
+            BooleanField::new('clos', "Terminée")->setColumns(6),
+
+            FormField::addPanel()->hideOnDetail(),
+            
+            DateTimeField::new('startedAt', "Date effet")->setColumns(6),
+            DateTimeField::new('endedAt', "Echéance")->setColumns(6),
+
+            AssociationField::new('piste', "Piste")->setColumns(6),
+            TextField::new('mission', "Tâches")->setColumns(6),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
+
+            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
     

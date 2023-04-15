@@ -30,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -76,27 +77,39 @@ class ActionCRMCrudController extends AbstractCrudController
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs."),
+
+            //Ligne 01
             TextField::new('mission', "Tâches")->setColumns(12),
             TextareaField::new('objectif', "Objectif")->setColumns(12),
 
+            //ligne 02
             BooleanField::new('clos', "Terminée")->setColumns(6)
             ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas."),
-
+            //Ligne 03
             FormField::addPanel()->hideOnDetail(),
-            
+
+            //Ligne 04
             DateTimeField::new('startedAt', "Date effet")->setColumns(6),
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
 
+            //Ligne 05
             AssociationField::new('piste', "Piste")->setColumns(6),
-            
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
-            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
-            CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->hideOnForm(),
 
-            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
-            CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            //Ligne 06
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
             
+            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),
+            ArrayField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnDetail(),
+
+            //Ligne 07
+            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
+            ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
+
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+
+            //Ligne 08
             DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];

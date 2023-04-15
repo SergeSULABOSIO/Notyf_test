@@ -21,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class EntrepriseCrudController extends AbstractCrudController
 {
@@ -108,7 +109,12 @@ class EntrepriseCrudController extends AbstractCrudController
             TextField::new('rccm', "RCCM"),
             TextField::new('idnat', "Id. Nationale"),
             TextField::new('numimpot', "N° Impôt"),
-            NumberField::new('secteur', "Secteur"),
+            ChoiceField::new('secteur', "Secteur")
+            ->setChoices([
+                'ASSURANCE' => 0,
+                'TELECOMMUNICATION' => 1,
+                'BANQUE' => 2,
+            ]),
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Date création")->hideOnform(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnform()

@@ -89,7 +89,7 @@ class FeedbackCRM
 
     public function __toString():string
     {
-        return $this->message;
+        return "(" . $this->message . ") par ". $this->utilisateur->getNom() . " le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     public function getAction(): ?ActionCRM

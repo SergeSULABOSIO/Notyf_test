@@ -48,6 +48,7 @@ class DocPieceCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Pièce")
             ->setEntityLabelInPlural("Pièces")
             ->setPageTitle("index", "Liste des pièces")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -142,8 +143,8 @@ class DocPieceCrudController extends AbstractCrudController
                 ->setSortable(false)
                 ->hideOnIndex(),
             AssociationField::new('utilisateur', "Utiliateur")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

@@ -43,6 +43,7 @@ class DocClasseurCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Classeur")
             ->setEntityLabelInPlural("Classeurs")
             ->setPageTitle("index", "Liste des classeurs")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -110,8 +111,8 @@ class DocClasseurCrudController extends AbstractCrudController
         return [
             TextField::new('nom', "Nom"),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

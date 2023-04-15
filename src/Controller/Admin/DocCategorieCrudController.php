@@ -43,6 +43,7 @@ class DocCategorieCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Catégorie")
             ->setEntityLabelInPlural("Catégories")
             ->setPageTitle("index", "Liste des catégories")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }

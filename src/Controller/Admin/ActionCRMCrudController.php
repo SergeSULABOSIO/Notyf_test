@@ -75,8 +75,9 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs."),
 
             TextareaField::new('objectif', "Objectif")->setColumns(12),
-            
-            BooleanField::new('clos', "Terminée")->setColumns(6),
+
+            BooleanField::new('clos', "Terminée")->setColumns(6)
+            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas."),
 
             FormField::addPanel()->hideOnDetail(),
             

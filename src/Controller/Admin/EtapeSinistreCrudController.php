@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -44,6 +45,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Etape")
             ->setEntityLabelInPlural("Etapes")
             ->setPageTitle("index", "Liste d'étapes")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -103,9 +105,9 @@ class EtapeSinistreCrudController extends AbstractCrudController
     {
         return [
             TextField::new('nom', "Nom"),
-            TextField::new('description', "Description"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            TextareaField::new('description', "Description"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

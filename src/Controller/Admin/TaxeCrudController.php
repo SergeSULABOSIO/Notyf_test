@@ -43,6 +43,7 @@ class TaxeCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Taxe")
             ->setEntityLabelInPlural("Taxes")
             ->setPageTitle("index", "Liste des taxes")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -64,8 +65,8 @@ class TaxeCrudController extends AbstractCrudController
             PercentField::new('taux', "Taux"),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             BooleanField::new('payableparcourtier', "Payable par le courtier?"),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }
     

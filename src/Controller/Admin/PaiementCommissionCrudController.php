@@ -43,6 +43,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Commission reçue")
             ->setEntityLabelInPlural("Commissions reçues")
             ->setPageTitle("index", "Liste des Commissions reçues")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -117,8 +118,8 @@ class PaiementCommissionCrudController extends AbstractCrudController
             TextField::new('description', "Description"),
             AssociationField::new('police', "Police"),
             AssociationField::new('pieces', "Pièces"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

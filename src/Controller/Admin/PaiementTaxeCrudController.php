@@ -44,6 +44,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Taxe payée")
             ->setEntityLabelInPlural("Taxes payées")
             ->setPageTitle("index", "Liste des Taxes payées")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -121,8 +122,8 @@ class PaiementTaxeCrudController extends AbstractCrudController
             TextField::new('exercice', "Exercice"),
             AssociationField::new('police', "Police"),
             AssociationField::new('pieces', "Pièces"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

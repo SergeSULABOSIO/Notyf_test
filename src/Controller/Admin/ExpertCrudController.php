@@ -43,6 +43,7 @@ class ExpertCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Expert")
             ->setEntityLabelInPlural("Experts")
             ->setPageTitle("index", "Liste d'experts")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -116,8 +117,8 @@ class ExpertCrudController extends AbstractCrudController
             TelephoneField::new('telephone', "Téléphone"),
             TextField::new('description', "Description"),
             AssociationField::new('sinistres', "Sinistre"),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

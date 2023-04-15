@@ -43,6 +43,7 @@ class VictimeCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Victime")
             ->setEntityLabelInPlural("Victimes")
             ->setPageTitle("index", "Liste des Victimes")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -115,8 +116,8 @@ class VictimeCrudController extends AbstractCrudController
             EmailField::new('email', "Email"),
             TelephoneField::new('telephone', "Téléphone"),
             AssociationField::new('sinistres', "Sinistre"),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

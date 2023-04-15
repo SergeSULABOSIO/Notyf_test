@@ -42,6 +42,7 @@ class MonnaieCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Monnaie")
             ->setEntityLabelInPlural("Monnaies")
             ->setPageTitle("index", "Liste des monnaies")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -112,8 +113,8 @@ class MonnaieCrudController extends AbstractCrudController
             TextField::new('code', "Code"),
             NumberField::new('tauxusd', "Taux@Usd"),
             BooleanField::new('islocale', "Monnaie locale?"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

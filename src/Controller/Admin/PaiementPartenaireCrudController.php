@@ -43,6 +43,7 @@ class PaiementPartenaireCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Retrocommission payée")
             ->setEntityLabelInPlural("Retrocommissions payées")
             ->setPageTitle("index", "Liste des Retrocommissions payées")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -118,8 +119,8 @@ class PaiementPartenaireCrudController extends AbstractCrudController
             AssociationField::new('partenaire', "Partenaire"),
             AssociationField::new('police', "Police"),
             AssociationField::new('pieces', "Pièces"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

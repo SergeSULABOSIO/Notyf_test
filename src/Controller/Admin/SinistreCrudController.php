@@ -44,6 +44,7 @@ class SinistreCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Sinistre")
             ->setEntityLabelInPlural("Sinistres")
             ->setPageTitle("index", "Liste des sinistres")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -132,8 +133,8 @@ class SinistreCrudController extends AbstractCrudController
             AssociationField::new('police', "Police"),
             AssociationField::new('pieces', "Pièces"),
             AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

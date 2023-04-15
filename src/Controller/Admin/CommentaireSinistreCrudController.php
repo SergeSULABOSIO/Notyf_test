@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -44,6 +45,7 @@ class CommentaireSinistreCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Commentaire")
             ->setEntityLabelInPlural("Commentaires")
             ->setPageTitle("index", "Liste des commentaires")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -110,11 +112,11 @@ class CommentaireSinistreCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('message', "Message"),
+            TextareaField::new('message', "Message"),
             AssociationField::new('sinistre', "Sinistre"),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

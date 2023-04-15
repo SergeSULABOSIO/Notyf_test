@@ -97,7 +97,7 @@ class ActionCRMCrudController extends AbstractCrudController
 
             //Ligne 06
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
-            
+
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
             CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnDetail(),
@@ -110,7 +110,7 @@ class ActionCRMCrudController extends AbstractCrudController
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
 
             //Ligne 08
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }

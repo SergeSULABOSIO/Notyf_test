@@ -231,7 +231,7 @@ class Piste
 
     public function __toString()
     {
-        return $this->id . " / " . $this->nom;
+        return $this->nom . " // ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     /**

@@ -52,6 +52,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Feedback")
             ->setEntityLabelInPlural("Feedbacks")
             ->setPageTitle("index", "Liste des feedbacks")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -66,8 +67,8 @@ class FeedbackCRMCrudController extends AbstractCrudController
             TextField::new('prochaineTache', "Prochaine tâche"),
             DateTimeField::new('startedAt', "date d'effet"),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

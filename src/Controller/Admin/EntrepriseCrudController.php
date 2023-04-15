@@ -101,15 +101,6 @@ class EntrepriseCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-/* 
-            private ?string $nom = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-            private ?string $ = null;
-
-             */
             TextField::new('nom', "Nom"),
             TextField::new('adresse', "Adresse"),
             TelephoneField::new('telephone', "Téléphone"),

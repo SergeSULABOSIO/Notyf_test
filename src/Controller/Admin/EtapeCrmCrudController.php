@@ -51,6 +51,7 @@ class EtapeCrmCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Etape")
             ->setEntityLabelInPlural("Etapes")
             ->setPageTitle("index", "Liste d'étapes")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -63,7 +64,7 @@ class EtapeCrmCrudController extends AbstractCrudController
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Date création"),
             DateTimeField::new('updatedAt', "Dernière modification"),
-            AssociationField::new('entreprise', "Entreprise")
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }
     

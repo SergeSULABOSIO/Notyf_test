@@ -55,6 +55,7 @@ class CotationCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Cotation")
             ->setEntityLabelInPlural("Cotations")
             ->setPageTitle("index", "Liste des cotations")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }

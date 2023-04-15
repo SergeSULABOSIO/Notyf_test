@@ -54,6 +54,7 @@ class PisteCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Piste")
             ->setEntityLabelInPlural("Pistes")
             ->setPageTitle("index", "Liste des pistes")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -74,7 +75,7 @@ class PisteCrudController extends AbstractCrudController
             AssociationField::new('utilisateur', "Utilisateur"),
             DateTimeField::new('createdAt', "Date création"),
             DateTimeField::new('updatedAt', "Dernière modification"),
-            AssociationField::new('entreprise', "Entreprise")
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }
     

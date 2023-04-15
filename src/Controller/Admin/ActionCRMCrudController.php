@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -16,13 +17,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Filters; 
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -56,6 +59,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Mission")
             ->setEntityLabelInPlural("Missions")
             ->setPageTitle("index", "Liste des missions")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -68,7 +72,7 @@ class ActionCRMCrudController extends AbstractCrudController
             TextField::new('mission', "Tâches"),
             BooleanField::new('clos', "Terminée"),
             AssociationField::new('piste', "Piste"),
-            TextEditorField::new('objectif', "Objectif"),
+            TextareaField::new('objectif', "Objectif"),
             AssociationField::new('utilisateur', "Utilisateur"),
             AssociationField::new('attributedTo', "Attribuée à"),
             AssociationField::new('feedbacks', "Feedbacks"),

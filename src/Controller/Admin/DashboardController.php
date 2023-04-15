@@ -72,8 +72,10 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
+            //->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
             ->setTitle('JS Brokers - Administration')
-            ->renderContentMaximized();
+            //->setFaviconPath('assets/icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
+            ;
     }
 
     public function configureMenuItems(): iterable

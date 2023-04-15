@@ -109,8 +109,8 @@ class DocCategorieCrudController extends AbstractCrudController
         return [
             TextField::new('nom', "Nom"),
             AssociationField::new('utilisateur', "Utiliateur"),
-            DateTimeField::new('createdAt', "Created At"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
+            DateTimeField::new('createdAt', "Date création")->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }

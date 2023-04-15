@@ -73,7 +73,7 @@ class ActionCRMCrudController extends AbstractCrudController
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs."),
-
+            TextField::new('mission', "Tâches")->setColumns(12),
             TextareaField::new('objectif', "Objectif")->setColumns(12),
 
             BooleanField::new('clos', "Terminée")->setColumns(6)
@@ -85,8 +85,7 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
 
             AssociationField::new('piste', "Piste")->setColumns(6),
-            TextField::new('mission', "Tâches")->setColumns(6),
-
+            
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
 

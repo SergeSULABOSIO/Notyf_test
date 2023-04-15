@@ -31,6 +31,7 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Utilisateur")
             ->setEntityLabelInPlural("Utilisateurs")
             ->setPageTitle("index", "Liste d'utilisateurs")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -45,8 +46,7 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setFormTypeOption('disabled', 'disabled'),
             TextField::new('pseudo', 'Pseudo'),
             ArrayField::new('roles', "Roles"),
-            DateTimeField::new('updated_at', 'Dernière modification')
-            ->hideOnform()
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnform()
         ];
     }
     

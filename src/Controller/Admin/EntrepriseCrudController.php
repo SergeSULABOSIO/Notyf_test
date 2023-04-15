@@ -42,6 +42,7 @@ class EntrepriseCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Entreprise")
             ->setEntityLabelInPlural("Entreprises")
             ->setPageTitle("index", "Liste des entreprises")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             // ...
         ;
     }
@@ -109,8 +110,8 @@ class EntrepriseCrudController extends AbstractCrudController
             TextField::new('numimpot', "N° Impôt"),
             NumberField::new('secteur', "Secteur"),
             AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification")
+            DateTimeField::new('createdAt', "Date création")->hideOnform(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnform()
         ];
     }
     

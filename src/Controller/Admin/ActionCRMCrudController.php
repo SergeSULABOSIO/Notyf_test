@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -83,8 +84,12 @@ class ActionCRMCrudController extends AbstractCrudController
             TextareaField::new('objectif', "Objectif")->setColumns(12),
 
             //ligne 02
-            BooleanField::new('clos', "Terminée")->setColumns(6)
-            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas."),
+            ChoiceField::new('clos', "Status")->setColumns(6)
+            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
+            ->setChoices([
+                'Mission achevée avec succès' => 0,
+                'Mission en cours...' => 1
+            ]),
             //Ligne 03
             FormField::addPanel()->hideOnDetail(),
 

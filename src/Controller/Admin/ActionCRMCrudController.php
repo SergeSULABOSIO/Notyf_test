@@ -2,9 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Piste;
 use App\Entity\ActionCRM;
 use App\Entity\FeedbackCRM;
-use App\Entity\Piste;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,8 +16,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -30,8 +33,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -90,6 +91,7 @@ class ActionCRMCrudController extends AbstractCrudController
                 'Mission achevée avec succès' => 0,
                 'Mission en cours...' => 1
             ]),
+            AssociationField::new('piste', "Piste")->setColumns(6),
             //Ligne 03
             FormField::addPanel()->hideOnDetail(),
 
@@ -98,23 +100,20 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
 
             //Ligne 05
-            AssociationField::new('piste', "Piste")->setColumns(6),
-
-            //Ligne 06
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
             CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnDetail(),
 
-            //Ligne 07
+            //Ligne 06
             AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
 
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
 
-            //Ligne 08
+            //Ligne 07
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
@@ -122,20 +121,34 @@ class ActionCRMCrudController extends AbstractCrudController
     
 
     public function configureActions(Actions $actions): Actions
-    {
-        $duplicate = Action::new(self::ACTION_DUPLICATE)
-            ->linkToCrudAction('dupliquerEntite');//->setCssClass("btn btn-warning");
-
-        $ouvrir = Action::new(self::ACTION_OPEN)
-            ->linkToCrudAction('ouvrirEntite');
-
-        $feedback = Action::new(self::ACTION_FEEDBACK)
-            ->linkToCrudAction('ajouterFeedback');
-
-        $terminer = Action::new(self::ACTION_TERMINER)
-            ->linkToCrudAction('terminerAction');
+    {//<i class="fa-regular fa-circle-check"></i>
+        $duplicate = Action::new(self::ACTION_DUPLICATE)->setIcon('fas fa-paper-plane')->linkToCrudAction('dupliquerEntite');
+        $ouvrir = Action::new(self::ACTION_OPEN)->setIcon('fas fa-paper-plane')->linkToCrudAction('ouvrirEntite');
+        $feedback = Action::new(self::ACTION_FEEDBACK)->setIcon('fas fa-comments')->linkToCrudAction('ajouterFeedback');
+        $terminer = Action::new(self::ACTION_TERMINER)->setIcon('fas fa-regular fa-circle-check')->linkToCrudAction('terminerAction');
+        $exporter_ms_excels = Action::new("exporter_ms_excels", "Exporter via MS Excels")->linkToCrudAction('exporterMSExcels')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fa fa-user-check');
 
         return $actions
+        ->addBatchAction($exporter_ms_excels)
+
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel("Ajouter une Mission");
+        })
+        ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
+            return $action->setIcon('fas fa-paper-plane')->setLabel("Supprimer");
+        })
+        ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->setIcon('fas fa-paper-plane')->setLabel("Supprimer");
+        })
+        ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
+            return $action->setIcon('fas fa-paper-plane')->setLabel("Modifier");
+        })
+        ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action->setIcon('fas fa-paper-plane')->setLabel("Modifier");
+        })
+
         //Action ouvrir
         ->add(Crud::PAGE_EDIT, $ouvrir)
         ->add(Crud::PAGE_INDEX, $ouvrir)
@@ -154,6 +167,24 @@ class ActionCRMCrudController extends AbstractCrudController
 
         ->reorder(Crud::PAGE_INDEX, [self::ACTION_OPEN, self::ACTION_DUPLICATE])
         ->reorder(Crud::PAGE_EDIT, [self::ACTION_OPEN, self::ACTION_DUPLICATE]);
+    }
+
+
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
+         $className = $batchActionDto->getEntityFqcn();
+        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        dd($batchActionDto->getEntityIds());
+
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            $user = $entityManager->find($className, $id);
+            $user->approve();
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
 

@@ -38,8 +38,13 @@ class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_SUPPRIMER = "Supprimer";
-    public const ACTION_TERMINER = "Achever cette mission";
-    public const ACTION_FEEDBACK = "Ajouter un feedback";
+    public const ACTION_MODIFIER = "Modifier";
+    public const ACTION_ENREGISTRER = "Enregistrer";
+    public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
+    public const ACTION_ACHEVER_MISSION = "Achever cette mission";
+    public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
+    public const ACTION_AJOUTER_UNE_MISSION = "Ajouter une Mission";
+    public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
     public const ACTION_OPEN = "Ouvrir";
 
     public static function getEntityFqcn(): string
@@ -125,9 +130,9 @@ class ActionCRMCrudController extends AbstractCrudController
     {//<i class="fa-regular fa-circle-check"></i>
         $duplicate = Action::new(self::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(self::ACTION_OPEN)->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
-        $feedback = Action::new(self::ACTION_FEEDBACK)->setIcon('fas fa-comments')->linkToCrudAction('ajouterFeedback');
-        $terminer = Action::new(self::ACTION_TERMINER)->setIcon('fas fa-regular fa-circle-check')->linkToCrudAction('terminerAction');
-        $exporter_ms_excels = Action::new("exporter_ms_excels", "Exporter via MS Excels")->linkToCrudAction('exporterMSExcels')
+        $feedback = Action::new(self::ACTION_AJOUTER_UN_FEEDBACK)->setIcon('fas fa-comments')->linkToCrudAction('ajouterFeedback');
+        $terminer = Action::new(self::ACTION_ACHEVER_MISSION)->setIcon('fas fa-regular fa-circle-check')->linkToCrudAction('terminerAction');
+        $exporter_ms_excels = Action::new("exporter_ms_excels", self::ACTION_EXPORTER_EXCELS)->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-light fa-file-spreadsheet');//<i class="fa-light fa-file-spreadsheet"></i>
 
@@ -139,24 +144,24 @@ class ActionCRMCrudController extends AbstractCrudController
             return $action->setIcon('fa-solid fa-trash')->setLabel(self::ACTION_SUPPRIMER);
         })
         ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
-            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel("Modifier");//<i class="fa-solid fa-pen-to-square"></i>
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(self::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
         })
         //Sur la page Index
         ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-            return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel("Ajouter une Mission");
+            return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel(self::ACTION_AJOUTER_UNE_MISSION);
         })
         ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
             return $action->setIcon('fa-solid fa-trash')->setLabel(self::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
         })
         ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
-            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel("Modifier");
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(self::ACTION_MODIFIER);
         })
         //Sur la page Edit
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
-            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel("Enregistrer");//<i class="fa-solid fa-floppy-disk"></i>
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(self::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
         })
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
-            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel("Enregistrer et continuer");
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(self::ACTION_ENREGISTRER_ET_CONTINUER);
         })
 
         //Action ouvrir

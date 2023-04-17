@@ -85,11 +85,14 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
-        $ouvrir = Action::new(DashboardController::ACTION_OPEN)->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
-        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)->linkToCrudAction('exporterMSExcels')
+        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
+            ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
+        $ouvrir = Action::new(DashboardController::ACTION_OPEN)
+            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+            ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
-            ->setIcon('fa-light fa-file-spreadsheet');//<i class="fa-light fa-file-spreadsheet"></i>
+            ->setIcon('fa-solid fa-file-excel');//<i class="fa-solid fa-file-excel"></i>
 
         return $actions
         //Sur la page Index - Selection
@@ -109,6 +112,9 @@ class FeedbackCRMCrudController extends AbstractCrudController
             return $action->setIcon('fas fa-comments')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
         })
         ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+        })
+        ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $action) {
             return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
         })
         ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {

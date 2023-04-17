@@ -109,7 +109,7 @@ class Contact
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->nom . ", Tél.: " . $this->telephone. ", Email: " . $this->email;
     }
 
     public function getClient(): ?Client

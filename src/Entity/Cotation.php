@@ -221,6 +221,6 @@ class Cotation
 
     public function __toString()
     {
-        return $this->nom . " / " . $this->primeTotale . " " . $this->monnaie->getCode();
+        return $this->nom . ", Prime: " . $this->monnaie->getCode() ." " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 }

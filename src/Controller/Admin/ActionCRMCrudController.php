@@ -183,7 +183,7 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)
     {
-         $className = $batchActionDto->getEntityFqcn();
+        $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 
         dd($batchActionDto->getEntityIds());

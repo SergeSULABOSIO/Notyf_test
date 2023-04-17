@@ -42,7 +42,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
+    public const ACTION_AJOUTER = "Ajouter";
     public const ACTION_OPEN = "Ouvrir";
+    public const ACTION_LISTE = "Liste";
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";

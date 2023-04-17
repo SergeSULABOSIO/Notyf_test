@@ -23,13 +23,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
-    
-
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
-    public const ACTION_AJOUTER_UNE_MISSION = "Ajouter une Mission";
     
-
     public static function getEntityFqcn(): string
     {
         return ActionCRM::class;
@@ -119,16 +115,19 @@ class ActionCRMCrudController extends AbstractCrudController
         return $actions
         //Sur la page Index - Selection
         ->addBatchAction($exporter_ms_excels)
-        //ur la page détail
+        //les Updates sur la page détail
         ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
             return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
         })
         ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
             return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
         })
-        //Sur la page Index
+        ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
+            return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE);//<i class="fa-regular fa-rectangle-list"></i>
+        })
+        //Updates sur la page Index
         ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-            return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel(self::ACTION_AJOUTER_UNE_MISSION);
+            return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
         })
         ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
             return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
@@ -136,14 +135,14 @@ class ActionCRMCrudController extends AbstractCrudController
         ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
             return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
         })
-        //Sur la page Edit
+        //Updates Sur la page Edit
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
             return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
         })
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
             return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
         })
-        //Sur la page NEW
+        //Updates Sur la page NEW
         ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
             return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
         })
@@ -166,7 +165,7 @@ class ActionCRMCrudController extends AbstractCrudController
         ->add(Crud::PAGE_DETAIL, $feedback)
         ->add(Crud::PAGE_EDIT, $feedback)
         ->add(Crud::PAGE_INDEX, $feedback)
-
+        //Reorganisation des boutons
         ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
         ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE]);
     }

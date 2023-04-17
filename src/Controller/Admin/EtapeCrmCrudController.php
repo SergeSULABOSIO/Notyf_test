@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -26,9 +27,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class EtapeCrmCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_OPEN = "Ouvrir";
-
     public static function getEntityFqcn(): string
     {
         return EtapeCrm::class;
@@ -60,34 +58,88 @@ class EtapeCrmCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('nom', "Titre"),
-            AssociationField::new('utilisateur', "Utilisateur"),
-            DateTimeField::new('createdAt', "Date création"),
-            DateTimeField::new('updatedAt', "Dernière modification"),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
-        ];
+            FormField::addPanel('Informations générales')
+            ->setIcon('fas fa-list-check') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes."),
+
+            //Ligne 01
+            TextField::new('nom', "Titre / Nom de la piste")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+
+            //Ligne 02
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
+        
+            //Ligne 03
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
+            ];
     }
     
 
     public function configureActions(Actions $actions): Actions
     {
-        $duplicate = Action::new(self::ACTION_DUPLICATE)
-            ->linkToCrudAction('dupliquerEntite');//->setCssClass("btn btn-warning");
+        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
+            ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
+        $ouvrir = Action::new(DashboardController::ACTION_OPEN)
+            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+            ->linkToCrudAction('exporterMSExcels')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-file-excel');//<i class="fa-solid fa-file-excel"></i>
 
-        $ouvrir = Action::new(self::ACTION_OPEN)
-            ->linkToCrudAction('ouvrirEntite');
 
         return $actions
-        //Action ouvrir Assureur
-        //->add(Crud::PAGE_DETAIL, $ouvrir)
+        //Sur la page Index - Selection
+        ->addBatchAction($exporter_ms_excels)
+        //les Updates sur la page détail
+        ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
+        })
+        ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
+        })
+        ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
+            return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE);//<i class="fa-regular fa-rectangle-list"></i>
+        })
+        //Updates sur la page Index
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action->setIcon('fas fa-list-check')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
+        })
+        ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+        })
+        ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $action) {
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+        })
+        ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
+        })
+        //Updates Sur la page Edit
+        ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+        })
+        ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
+        })
+        //Updates Sur la page NEW
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
+        })
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+        })
+
+        
+        //Action ouvrir
         ->add(Crud::PAGE_EDIT, $ouvrir)
         ->add(Crud::PAGE_INDEX, $ouvrir)
         //action dupliquer Assureur
         ->add(Crud::PAGE_DETAIL, $duplicate)
         ->add(Crud::PAGE_EDIT, $duplicate)
         ->add(Crud::PAGE_INDEX, $duplicate)
-        ->reorder(Crud::PAGE_INDEX, [self::ACTION_OPEN, self::ACTION_DUPLICATE])
-        ->reorder(Crud::PAGE_EDIT, [self::ACTION_OPEN, self::ACTION_DUPLICATE]);
+        //Reorganisation des boutons
+        ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+        ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE]);
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

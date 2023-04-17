@@ -113,7 +113,6 @@ class CotationCrudController extends AbstractCrudController
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');//<i class="fa-solid fa-file-excel"></i>
 
-
         return $actions
         //Sur la page Index - Selection
         ->addBatchAction($exporter_ms_excels)
@@ -154,7 +153,6 @@ class CotationCrudController extends AbstractCrudController
         ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
             return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
         })
-
 
         //Action ouvrir
         ->add(Crud::PAGE_EDIT, $ouvrir)

@@ -68,7 +68,7 @@ class ActionCRMCrudController extends AbstractCrudController
             //Ligne 01
             TextField::new('mission', "Tâches")->setColumns(12),
             TextareaField::new('objectif', "Objectif")->setColumns(12),
-
+            
             //ligne 02
             ChoiceField::new('clos', "Status")->setColumns(6)
             ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")

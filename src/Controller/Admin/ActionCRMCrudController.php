@@ -82,27 +82,24 @@ class ActionCRMCrudController extends AbstractCrudController
             ]),
             AssociationField::new('piste', "Piste")->setColumns(6),
             //Ligne 03
-            FormField::addPanel()->hideOnDetail(),
-
-            //Ligne 04
             DateTimeField::new('startedAt', "Date effet")->setColumns(6),
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
 
-            //Ligne 05
+            //Ligne 04
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
             CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnDetail(),
 
-            //Ligne 06
+            //Ligne 05
             AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
 
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
 
-            //Ligne 07
+            //Ligne 06
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];

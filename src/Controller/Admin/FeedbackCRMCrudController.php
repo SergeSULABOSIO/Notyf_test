@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -25,8 +26,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class FeedbackCRMCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_OPEN = "Ouvrir";
 
     public static function getEntityFqcn(): string
     {
@@ -62,14 +61,23 @@ class FeedbackCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('message', "Feedback"),
-            AssociationField::new('action', "Mission"),
-            TextField::new('prochaineTache', "Prochaine tâche"),
-            DateTimeField::new('startedAt', "date d'effet"),
-            AssociationField::new('utilisateur', "Utilisateur"),
+            FormField::addPanel('Informations générales')
+            ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Un feedback est une réponse ou compte rendu attaché à une mission chaque mission doit avoir un ou plusieurs feedbacks."),
+
+            //Ligne 01
+            TextField::new('message', "Feedback")->setColumns(6),
+            AssociationField::new('action', "Mission")->setColumns(6),
+
+            //Ligne 02
+            TextField::new('prochaineTache', "Prochaine tâche")->setColumns(6),
+            DateTimeField::new('startedAt', "date d'effet")->setColumns(6),
+            
+            //Ligne 03
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
             DateTimeField::new('createdAt', "Date création")->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
         ];
     }
     

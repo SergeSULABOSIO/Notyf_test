@@ -69,10 +69,10 @@ class AssureurCrudController extends AbstractCrudController
             EmailField::new('email', 'E-mail')->setColumns(6),
 
             //Ligne 03
-            ChoiceField::new('isreassureur', 'Catégorie')->setColumns(6)
+            ChoiceField::new('isreassureur', 'Réassureur?')->setColumns(6)
             ->setChoices([
-                'Réassureur' => 1,
-                'Assureur' => 0
+                'Oui' => 1,
+                'Non' => 0
             ]),
             UrlField::new('siteweb', 'Site Internet')->setColumns(6),
 

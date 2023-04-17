@@ -42,6 +42,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
+    public const ACTION_OPEN = "Ouvrir";
+    public const ACTION_DUPLICATE = "Dupliquer";
+    public const ACTION_SUPPRIMER = "Supprimer";
+    public const ACTION_MODIFIER = "Modifier";
+    public const ACTION_ENREGISTRER = "Enregistrer";
+    public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
+    public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
+    
     public function __construct(private AdminUrlGenerator $adminUrlGenerator)
     {
     }

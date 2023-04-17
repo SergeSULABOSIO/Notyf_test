@@ -2,50 +2,33 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Piste;
 use App\Entity\ActionCRM;
-use App\Entity\FeedbackCRM;
-use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_SUPPRIMER = "Supprimer";
-    public const ACTION_MODIFIER = "Modifier";
-    public const ACTION_ENREGISTRER = "Enregistrer";
-    public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
+    
+
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
     public const ACTION_AJOUTER_UNE_MISSION = "Ajouter une Mission";
-    public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
-    public const ACTION_OPEN = "Ouvrir";
+    
 
     public static function getEntityFqcn(): string
     {
@@ -128,11 +111,11 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {//<i class="fa-regular fa-circle-check"></i>
-        $duplicate = Action::new(self::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
-        $ouvrir = Action::new(self::ACTION_OPEN)->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
+        $ouvrir = Action::new(DashboardController::ACTION_OPEN)->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
         $feedback = Action::new(self::ACTION_AJOUTER_UN_FEEDBACK)->setIcon('fas fa-comments')->linkToCrudAction('ajouterFeedback');
         $terminer = Action::new(self::ACTION_ACHEVER_MISSION)->setIcon('fas fa-regular fa-circle-check')->linkToCrudAction('terminerAction');
-        $exporter_ms_excels = Action::new("exporter_ms_excels", self::ACTION_EXPORTER_EXCELS)->linkToCrudAction('exporterMSExcels')
+        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-light fa-file-spreadsheet');//<i class="fa-light fa-file-spreadsheet"></i>
 
@@ -141,27 +124,34 @@ class ActionCRMCrudController extends AbstractCrudController
         ->addBatchAction($exporter_ms_excels)
         //ur la page détail
         ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
-            return $action->setIcon('fa-solid fa-trash')->setLabel(self::ACTION_SUPPRIMER);
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
         })
         ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
-            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(self::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
         })
         //Sur la page Index
         ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
             return $action->setIcon('fas fa-paper-plane')->setCssClass('btn btn-primary')->setLabel(self::ACTION_AJOUTER_UNE_MISSION);
         })
         ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-            return $action->setIcon('fa-solid fa-trash')->setLabel(self::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+            return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
         })
         ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
-            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(self::ACTION_MODIFIER);
+            return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
         })
         //Sur la page Edit
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
-            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(self::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
         })
         ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
-            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(self::ACTION_ENREGISTRER_ET_CONTINUER);
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
+        })
+        //Sur la page NEW
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
+        })
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+            return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
         })
 
         //Action ouvrir
@@ -180,8 +170,8 @@ class ActionCRMCrudController extends AbstractCrudController
         ->add(Crud::PAGE_EDIT, $feedback)
         ->add(Crud::PAGE_INDEX, $feedback)
 
-        ->reorder(Crud::PAGE_INDEX, [self::ACTION_OPEN, self::ACTION_DUPLICATE])
-        ->reorder(Crud::PAGE_EDIT, [self::ACTION_OPEN, self::ACTION_DUPLICATE]);
+        ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+        ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE]);
     }
 
 
@@ -240,7 +230,7 @@ class ActionCRMCrudController extends AbstractCrudController
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
-        $this->parent::persistEntity($em, $entiteDuplique);
+        parent::persistEntity($em, $entiteDuplique);
 
         $url = $adminUrlGenerator
             ->setController(self::class)

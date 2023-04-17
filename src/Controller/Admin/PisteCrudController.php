@@ -73,7 +73,7 @@ class PisteCrudController extends AbstractCrudController
             TextField::new('objectif', "Objectif")->setColumns(6),
 
             //Ligne 02
-            NumberField::new('montant', "Revenu potentiel ($)"),
+            NumberField::new('montant', "Revenu potentiel ($)")->setColumns(6),
             //AssociationField::new('contact', "Contacts")->hideOnIndex()->setColumns(6),
             AssociationField::new('contact', "Contacts")->setColumns(6)->onlyOnForms(),
             CollectionField::new('contact', "Contacts")->setColumns(6)->onlyOnIndex(),

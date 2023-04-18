@@ -22,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class AssureurCrudController extends AbstractCrudController
 {
@@ -33,7 +34,12 @@ class AssureurCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('isreassureur')
+            ->add(ChoiceFilter::new('isreassureur', "Catégorie")
+            ->setChoices([
+                'Réassureur' => 1,
+                'Assureur' => 0 
+            ])
+            )
         ;
     }
 
@@ -69,10 +75,10 @@ class AssureurCrudController extends AbstractCrudController
             EmailField::new('email', 'E-mail')->setColumns(6),
 
             //Ligne 03
-            ChoiceField::new('isreassureur', 'Réassureur?')->setColumns(6)
+            ChoiceField::new('isreassureur', 'Catégorie?')->setColumns(6)
             ->setChoices([
-                'Oui' => 1,
-                'Non' => 0
+                'Réassureur' => 1,
+                'Assureur' => 0
             ]),
             UrlField::new('siteweb', 'Site Internet')->setColumns(6),
 

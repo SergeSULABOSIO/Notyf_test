@@ -24,8 +24,30 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ClientCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_OPEN = "Ouvrir";
+    public const TAB_CLIENT_SECTEUR = [
+        'Agroalimentaire' => 0,
+        'Banque / Assurance' => 0,
+        'Bois / Papier / Carton / Imprimerie' => 0,
+        'BTP / Matériaux de construction' => 0,
+        'Chimie / Parachimie' => 0,
+        'Commerce / Négoce / Distribution' => 0,
+        'Édition / Communication / Multimédia' => 0,
+        'Électronique / Électricité' => 0,
+        'Études et conseils' => 0,
+        'Hôtelerie' => 0,
+        'Industrie pharmaceutique' => 0,
+        'Informatique / Télécoms' => 0,
+        'Machines et équipements / Automobile' => 0,
+        'Métallurgie / Travail du métal' => 0,
+        'Mines' => 0,
+        'Plastique / Caoutchouc' => 0,
+        'Restauration' => 0,
+        'Santé' => 0,
+        'Services aux entreprises' => 0,
+        'Textile / Habillement / Chaussure' => 0,
+        'Transports / Logistique' => 0,
+        'Autres Secteurs' => 0
+    ];
 
     public static function getEntityFqcn(): string
     {

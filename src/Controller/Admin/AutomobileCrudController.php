@@ -38,21 +38,21 @@ class AutomobileCrudController extends AbstractCrudController
 
     public const TAB_AUTO_NATURE = [
         'Avion' => 0,
-                'Barge' => 1,
-                'Bateau' => 2,
-                'Bicyclette' => 3,
-                'Camoion' => 4,
-                'Canot rapide' => 5,
-                'Corbiallard' => 6,
-                'Héloptère' => 7,
-                'Moto' => 8,
-                'Motocyclette' => 9,
-                'Remorque' => 10,
-                'Tracteur' => 11,
-                'Tricyclette' => 12,
-                'Voiture' => 13,
-                'Yacht' => 14,
-                'Autres' => 15
+        'Barge' => 1,
+        'Bateau' => 2,
+        'Bicyclette' => 3,
+        'Camoion' => 4,
+        'Canot rapide' => 5,
+        'Corbiallard' => 6,
+        'Héloptère' => 7,
+        'Moto' => 8,
+        'Motocyclette' => 9,
+        'Remorque' => 10,
+        'Tracteur' => 11,
+        'Tricyclette' => 12,
+        'Voiture' => 13,
+        'Yacht' => 14,
+        'Autres' => 15
     ];
 
 

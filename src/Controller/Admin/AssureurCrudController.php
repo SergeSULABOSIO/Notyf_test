@@ -14,15 +14,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class AssureurCrudController extends AbstractCrudController
 {
@@ -188,6 +189,23 @@ class AssureurCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
+        $className = $batchActionDto->getEntityFqcn();
+        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        dd($batchActionDto->getEntityIds());
+
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            $user = $entityManager->find($className, $id);
+            $user->approve();
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
    
 }

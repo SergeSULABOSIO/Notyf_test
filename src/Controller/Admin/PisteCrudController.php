@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -196,5 +197,22 @@ class PisteCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
+        $className = $batchActionDto->getEntityFqcn();
+        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        dd($batchActionDto->getEntityIds());
+
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            $user = $entityManager->find($className, $id);
+            $user->approve();
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 }

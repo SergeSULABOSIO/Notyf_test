@@ -105,7 +105,7 @@ class DashboardController extends AbstractDashboardController
         ]);
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bag-shopping')->setSubItems([ //<i class="fa-solid fa-bag-shopping"></i>
             MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),
-            MenuItem::linkToCrud('Automobiles', 'fas fa-car', Automobile::class),
+            MenuItem::linkToCrud('Engins', 'fas fa-car', Automobile::class),
             MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class),//<i class="fa-sharp fa-solid fa-address-book"></i>
             MenuItem::linkToCrud('Clients', 'fas fa-person-shelter', Client::class), //<i class="fa-solid fa-person-shelter"></i>
             MenuItem::linkToCrud('Partenaires', 'fas fa-handshake', Partenaire::class),

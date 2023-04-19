@@ -12,11 +12,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -26,8 +28,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PoliceCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_OPEN = "Ouvrir";
+    public const TAB_POLICE_REPONSES_OUI_NON = [
+        'Non' => 0,
+        'Oui' => 1
+    ];
 
     public static function getEntityFqcn(): string
     {
@@ -37,7 +41,7 @@ class PoliceCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
@@ -64,28 +68,50 @@ class PoliceCrudController extends AbstractCrudController
             ->add('primenette')
             ->add('fronting')
             ->add('primetotale')
-            ->add('cansharericom')
-            ->add('cansharelocalcom')
-            ->add('cansharefrontingcom')
+            ->add(ChoiceFilter::new('cansharericom', 'Com. de réa. partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
+            ->add(ChoiceFilter::new('cansharelocalcom', 'Com. locale partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
+            ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
         ;
     }
     
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('reference', "Référence"),
-            DateTimeField::new('dateoperation', "Date de l'opérat°")->hideOnIndex(),
-            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex(),
-            AssociationField::new('piste', "Pistes"),
-            DateField::new('dateeffet', "Date d'effet"),
-            DateField::new('dateexpiration', "Echéance"),
-            AssociationField::new('client', "Assuré"),
-            AssociationField::new('produit', "Couverture / Risque"),
-            AssociationField::new('assureur', "Assureur"),
-            NumberField::new('idavenant', "N° Avenant"),
-            TextField::new('typeavenant', "Type d'avenant")->hideOnIndex(),
+            FormField::addPanel('Informations générales')
+            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Le contrat d'assurance en place."),
+
+            //Ligne 01
+            TextField::new('reference', "Référence")->setColumns(12),
+
+            //Ligne 02
+            AssociationField::new('client', "Assuré")->setColumns(12),
+
+            //Ligne 03
+            DateTimeField::new('dateoperation', "Date de l'opérat°")->hideOnIndex()->setColumns(6),
+            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex()->setColumns(6),
+
+            //Ligne 04
+            DateField::new('dateeffet', "Date d'effet")->setColumns(6),
+            DateField::new('dateexpiration', "Echéance")->setColumns(6),
+
+            //Ligne 05
+            NumberField::new('idavenant', "N° Avenant")->setColumns(6),
+            TextField::new('typeavenant', "Type d'avenant")->hideOnIndex()->setColumns(6),
+
+            //Ligne 06
+            AssociationField::new('produit', "Couverture / Risque")->setColumns(6),
+            AssociationField::new('assureur', "Assureur")->setColumns(6),
+
+            //Ligne 07
+            AssociationField::new('piste', "Pistes")->setColumns(6),
+            TextField::new('reassureurs', "Réassureur")->hideOnIndex()->setColumns(6),
+
+            //Ligne 08
             AssociationField::new('monnaie', "Monnaie"),
             NumberField::new('capital', "Capital"),
+
+            //Ligne 09
             NumberField::new('primenette', "Prime nette")->hideOnIndex(),
             NumberField::new('fronting', "Frais Fronting")->hideOnIndex(),
             NumberField::new('arca', "Frais Arca/régulateur")->hideOnIndex(),
@@ -100,7 +126,7 @@ class PoliceCrudController extends AbstractCrudController
             TextEditorField::new('remarques', "Remarques")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             AssociationField::new('partenaire', "Partenaire")->hideOnIndex(),
-            TextField::new('reassureurs', "Réassureur")->hideOnIndex(),
+            
             BooleanField::new('cansharericom', "Partager Com. de réassurance?")->hideOnIndex(),
             BooleanField::new('cansharelocalcom', "Partager Com. ordinaire?")->hideOnIndex(),
             BooleanField::new('cansharefrontingcom', "Partager Com. sur Fronting?")->hideOnIndex(),

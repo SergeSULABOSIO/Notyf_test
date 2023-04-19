@@ -73,7 +73,7 @@ class AutomobileCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()

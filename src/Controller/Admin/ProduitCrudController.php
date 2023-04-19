@@ -11,24 +11,39 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class ProduitCrudController extends AbstractCrudController
 {
-    public const ACTION_DUPLICATE = "Dupliquer";
-    public const ACTION_OPEN = "Ouvrir";
+    public const TAB_PRODUIT_IS_OBLIGATOIRE = [
+        'Non' => 0,
+        'Oui' => 1
+    ];
+
+    public const TAB_PRODUIT_IS_ABONNEMENT = [
+        'Non' => 0,
+        'Oui' => 1
+    ];
+
+    public const TAB_PRODUIT_CATEGORIE = [
+        'IARD' => 0,
+        'VIE' => 1
+    ];
 
     public static function getEntityFqcn(): string
     {
@@ -38,8 +53,8 @@ class ProduitCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('isobligatoire')
-            ->add('isabonnement')
+            ->add(ChoiceFilter::new('isobligatoire', 'Obligatoire?')->setChoices(self::TAB_PRODUIT_IS_OBLIGATOIRE))
+            ->add(ChoiceFilter::new('isabonnement', 'Abonnement?')->setChoices(self::TAB_PRODUIT_IS_ABONNEMENT))
             ->add('tauxarca')
         ;
     }
@@ -63,12 +78,23 @@ class ProduitCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('code', "Code"),
-            TextField::new('nom', "Intitulé"),
-            TextareaField::new('description', "Description"),
-            PercentField::new('tauxarca', "Taux/Com."),
-            BooleanField::new('isobligatoire', "Obligatoire?"),
-            BooleanField::new('isabonnement', "Abonnement?"),
+            FormField::addPanel('Informations générales')
+            ->setIcon('fas fa-gifts') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Une couverture d'assurance."),
+
+            //Ligne 01
+            TextField::new('code', "Code")->setColumns(6),
+            TextField::new('nom', "Intitulé")->setColumns(6),
+
+            //Ligne 02
+            TextareaField::new('description', "Description")->setColumns(6),
+            PercentField::new('tauxarca', "Taux/Com.")->setColumns(6),
+
+            //Ligne 03
+            ChoiceField::new('isobligatoire', "Obligatoire?")->setColumns(6)->setChoices(self::TAB_PRODUIT_IS_OBLIGATOIRE),
+            ChoiceField::new('isabonnement', "Abonnement?")->setColumns(6)->setChoices(self::TAB_PRODUIT_IS_ABONNEMENT),
+            
+            //Ligne 04
             NumberField::new('categorie', "Catégorie")->hideOnIndex(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),

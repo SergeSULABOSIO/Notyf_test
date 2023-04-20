@@ -113,30 +113,53 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('capital', "Capital")->setColumns(6),
 
             //Ligne 09
-            NumberField::new('primenette', "Prime nette")->hideOnIndex(),
-            NumberField::new('fronting', "Frais Fronting")->hideOnIndex(),
-            NumberField::new('arca', "Frais Arca/régulateur")->hideOnIndex(),
-            NumberField::new('tva', "Tva")->hideOnIndex(),
-            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex(),
-            NumberField::new('primetotale', "Prime totale"),
-            NumberField::new('discount', "Remise")->hideOnIndex(),
-            NumberField::new('modepaiement', "Mode de paiement")->hideOnIndex(),
-            NumberField::new('ricom', "Commission de réassurance (ht)")->hideOnIndex(),
-            NumberField::new('localcom', "Commission ordinaire (ht)")->hideOnIndex(),
-            NumberField::new('frontingcom', "Commission sur Fronting (ht)")->hideOnIndex(),
-            TextEditorField::new('remarques', "Remarques")->hideOnIndex(),
+            NumberField::new('primenette', "Prime nette")->hideOnIndex()->setColumns(6),
+            NumberField::new('fronting', "Frais Fronting")->hideOnIndex()->setColumns(6),
+
+            //Ligne 10
+            NumberField::new('arca', "Frais Arca/régulateur")->hideOnIndex()->setColumns(6),
+            NumberField::new('tva', "Tva")->hideOnIndex()->setColumns(6),
+
+            //Ligne 11
+            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex()->setColumns(6),
+            NumberField::new('primetotale', "Prime totale")->setColumns(6),
+
+            //Ligne 12
+            NumberField::new('discount', "Remise")->hideOnIndex()->setColumns(6),
+            NumberField::new('modepaiement', "Mode de paiement")->hideOnIndex()->setColumns(6),
+
+            //Ligne 13
+            NumberField::new('ricom', "Commission de réassurance (ht)")->hideOnIndex()->setColumns(6),
+            NumberField::new('localcom', "Commission ordinaire (ht)")->hideOnIndex()->setColumns(6),
+
+            //Ligne 14
+            NumberField::new('frontingcom', "Commission sur Fronting (ht)")->hideOnIndex()->setColumns(6),
+            TextEditorField::new('remarques', "Remarques")->hideOnIndex()->setColumns(6),
+
+            //Ligne 15
+            AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6),
+            BooleanField::new('cansharericom', "Partager Com. de réassurance?")->hideOnIndex()->setColumns(6),
+
+            //Ligne 16
+            BooleanField::new('cansharelocalcom', "Partager Com. ordinaire?")->hideOnIndex()->setColumns(6),
+            BooleanField::new('cansharefrontingcom', "Partager Com. sur Fronting?")->hideOnIndex()->setColumns(6),
+
+            //Ligne 17
+            TextField::new('ricompayableby', "Com. de réa. - Débiteur")->hideOnIndex()->setColumns(6),
+            TextField::new('localcompayableby', "Com. ord. - Débiteur")->hideOnIndex()->setColumns(6),
+
+            //Ligne 18
+            TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex()->setColumns(6),
+            AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex()->setColumns(6),
+
+            //Ligne 19
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            AssociationField::new('partenaire', "Partenaire")->hideOnIndex(),
-            
-            BooleanField::new('cansharericom', "Partager Com. de réassurance?")->hideOnIndex(),
-            BooleanField::new('cansharelocalcom', "Partager Com. ordinaire?")->hideOnIndex(),
-            BooleanField::new('cansharefrontingcom', "Partager Com. sur Fronting?")->hideOnIndex(),
-            TextField::new('ricompayableby', "Com. de réa. - Débiteur")->hideOnIndex(),
-            TextField::new('localcompayableby', "Com. ord. - Débiteur")->hideOnIndex(),
-            TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex(),
-            AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex(),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
+
+            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
         ];
     }
 

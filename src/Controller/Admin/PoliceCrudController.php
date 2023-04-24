@@ -100,8 +100,8 @@ class PoliceCrudController extends AbstractCrudController
     {
         return [
             FormField::addTab(' Informations de base')
-            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Le contrat d'assurance en place."),
+            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+            //->setHelp("Le contrat d'assurance en place."),
 
             //Ligne 01
             NumberField::new('idavenant', "N° Avenant")->setColumns(2),
@@ -129,8 +129,8 @@ class PoliceCrudController extends AbstractCrudController
             
 
             FormField::addTab(' Prime & Capitaux')
-            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Le contrat d'assurance en place."),
+            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+            //->setHelp("Le contrat d'assurance en place."),
             
             //Ligne 01
             AssociationField::new('monnaie', "Monnaie")->setColumns(2),
@@ -147,28 +147,34 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('primetotale', "Prime totale"),
             
             //Ligne 13
-            FormField::addTab(' Commissionnement')
-            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Le contrat d'assurance en place."),
-            FormField::addPanel('')->onlyOnForms(),
-            NumberField::new('ricom', "Commission de réassurance (ht)")->hideOnIndex()->setColumns(6),
-            NumberField::new('localcom', "Commission ordinaire (ht)")->hideOnIndex()->setColumns(6),
-
+            FormField::addTab(' Commissions de courtage')
+            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+            //->setHelp("Le contrat d'assurance en place."),
+            
+            AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6),
+            FormField::addPanel('Revenus hors taxes')->onlyOnForms(),
+            NumberField::new('ricom', "Commission de réassurance")->hideOnIndex()->setColumns(2),
+            ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            TextField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3),
+            
+            FormField::addPanel()->onlyOnForms(),
+            NumberField::new('localcom', "Commission ordinaire")->hideOnIndex()->setColumns(2),
+            ChoiceField::new('cansharelocalcom', "Partageable?")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            TextField::new('localcompayableby', "Débiteur")->hideOnIndex()->setColumns(3),
             //Ligne 14
             NumberField::new('frontingcom', "Commission sur Fronting (ht)")->hideOnIndex()->setColumns(6),
             TextEditorField::new('remarques', "Remarques")->hideOnIndex()->setColumns(6),
 
             //Ligne 15
-            AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6),
-            BooleanField::new('cansharericom', "Partager Com. de réassurance?")->hideOnIndex()->setColumns(6),
+            
 
             //Ligne 16
-            BooleanField::new('cansharelocalcom', "Partager Com. ordinaire?")->hideOnIndex()->setColumns(6),
+            
             BooleanField::new('cansharefrontingcom', "Partager Com. sur Fronting?")->hideOnIndex()->setColumns(6),
 
             //Ligne 17
-            TextField::new('ricompayableby', "Com. de réa. - Débiteur")->hideOnIndex()->setColumns(6),
-            TextField::new('localcompayableby', "Com. ord. - Débiteur")->hideOnIndex()->setColumns(6),
+            
+            
 
             //Ligne 18
             TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex()->setColumns(6),

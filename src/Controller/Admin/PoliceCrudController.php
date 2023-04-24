@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\Police;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +15,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -22,6 +25,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -32,6 +36,23 @@ class PoliceCrudController extends AbstractCrudController
     public const TAB_POLICE_REPONSES_OUI_NON = [
         'Non' => 0,
         'Oui' => 1
+    ];
+
+    public const TAB_POLICE_MODE_PAIEMENT = [
+        'Paiement Annuel' => 0,
+        'Paiements Trimestriels' => 1,
+        'Paiements Semestriels' => 2,
+        'Paiements Mensuels' => 3
+    ];
+
+    public const TAB_POLICE_TYPE_AVENANT = [
+        'Souscription' => 0,
+        'Ristourne' => 1,
+        'Résiliation' => 2,
+        'Renouvellement' => 3,
+        'Prorogation' => 4,
+        'Incorporation' => 5,
+        'Annulation' => 6
     ];
 
     public static function getEntityFqcn(): string
@@ -78,54 +99,51 @@ class PoliceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations générales')
+            FormField::addTab(' Informations générales')
             ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Le contrat d'assurance en place."),
 
             //Ligne 01
-            TextField::new('reference', "Référence")->setColumns(12),
-
-            //Ligne 02
-            AssociationField::new('client', "Assuré")->setColumns(12),
-
-            //Ligne 03
-            DateTimeField::new('dateoperation', "Date de l'opérat°")->hideOnIndex()->setColumns(6),
-            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex()->setColumns(6),
-
-            //Ligne 04
-            DateField::new('dateeffet', "Date d'effet")->setColumns(6),
-            DateField::new('dateexpiration', "Echéance")->setColumns(6),
-
-            //Ligne 05
-            NumberField::new('idavenant', "N° Avenant")->setColumns(6),
-            TextField::new('typeavenant', "Type d'avenant")->hideOnIndex()->setColumns(6),
-
-            //Ligne 06
+            NumberField::new('idavenant', "N° Avenant")->setColumns(2),
+            ChoiceField::new('typeavenant', "Type d'avenant")->hideOnIndex()->setColumns(4)->setChoices(self::TAB_POLICE_TYPE_AVENANT),
+            TextField::new('reference', "Référence")->setColumns(6),
+            FormField::addPanel('')->onlyOnForms(),
+            AssociationField::new('client', "Assuré")->setColumns(6),
             AssociationField::new('produit', "Couverture / Risque")->setColumns(6),
+            
+            //Ligne 02
             AssociationField::new('assureur', "Assureur")->setColumns(6),
-
-            //Ligne 07
-            AssociationField::new('piste', "Pistes")->setColumns(6),
             TextField::new('reassureurs', "Réassureur")->hideOnIndex()->setColumns(6),
 
-            //Ligne 08
-            AssociationField::new('monnaie', "Monnaie")->setColumns(6),
-            NumberField::new('capital', "Capital")->setColumns(6),
+            //Ligne 03
+            FormField::addPanel('')->onlyOnForms(),
+            DateTimeField::new('dateeffet', "Date d'effet"),//d-flex ->addCssClass('d-flex flex-column')
+            DateTimeField::new('dateexpiration', "Echéance"),
+            DateTimeField::new('dateoperation', "Date de l'opération")->hideOnIndex(),
+            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex(),
+            FormField::addPanel('')->onlyOnForms(),
+            AssociationField::new('piste', "Pistes")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('piste', "Pistes")->setColumns(6)->onlyOnIndex(),
+            ArrayField::new('piste', "Pistes")->setColumns(6)->onlyOnDetail(),
+            
 
-            //Ligne 09
-            NumberField::new('primenette', "Prime nette")->hideOnIndex()->setColumns(6),
-            NumberField::new('fronting', "Frais Fronting")->hideOnIndex()->setColumns(6),
-
-            //Ligne 10
-            NumberField::new('arca', "Frais Arca/régulateur")->hideOnIndex()->setColumns(6),
-            NumberField::new('tva', "Tva")->hideOnIndex()->setColumns(6),
-
-            //Ligne 11
-            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex()->setColumns(6),
-            NumberField::new('primetotale', "Prime totale")->setColumns(6),
-
-            //Ligne 12
-            NumberField::new('discount', "Remise")->hideOnIndex()->setColumns(6),
+            FormField::addTab(' Offre financière')
+            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Le contrat d'assurance en place."),
+            
+            //Ligne 01
+            AssociationField::new('monnaie', "Monnaie")->setColumns(2),
+            NumberField::new('capital', "Capital")->setColumns(2),
+            FormField::addPanel('')->onlyOnForms(),
+            
+            NumberField::new('primenette', "Prime nette")->hideOnIndex()->setColumns(2),
+            NumberField::new('fronting', "Frais/Fronting")->hideOnIndex()->setColumns(2),
+            NumberField::new('arca', "Frais/Régul.")->hideOnIndex()->setColumns(2),
+            NumberField::new('tva', "Tva")->hideOnIndex()->setColumns(2),
+            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex()->setColumns(2),
+            NumberField::new('discount', "Remise")->hideOnIndex()->setColumns(2),
+            NumberField::new('primetotale', "Prime totale")->setColumns(2),
+            FormField::addPanel('')->onlyOnForms(),
             NumberField::new('modepaiement', "Mode de paiement")->hideOnIndex()->setColumns(6),
 
             //Ligne 13
@@ -153,10 +171,6 @@ class PoliceCrudController extends AbstractCrudController
             AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex()->setColumns(6),
 
             //Ligne 19
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
-
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)

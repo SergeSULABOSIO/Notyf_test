@@ -175,7 +175,7 @@ class PoliceCrudController extends AbstractCrudController
             ChoiceField::new('cansharefrontingcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
-            FormField::addPanel('Autres')->onlyOnForms(),
+            FormField::addPanel('Autres')->onlyOnForms(), 
             AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms(),
             ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
             TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),

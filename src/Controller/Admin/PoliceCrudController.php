@@ -99,7 +99,7 @@ class PoliceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addTab(' Informations générales')
+            FormField::addTab(' Informations de base')
             ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Le contrat d'assurance en place."),
 
@@ -117,36 +117,40 @@ class PoliceCrudController extends AbstractCrudController
 
             //Ligne 03
             FormField::addPanel('')->onlyOnForms(),
-            DateTimeField::new('dateeffet', "Date d'effet"),//d-flex ->addCssClass('d-flex flex-column')
-            DateTimeField::new('dateexpiration', "Echéance"),
-            DateTimeField::new('dateoperation', "Date de l'opération")->hideOnIndex(),
-            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex(),
+            DateTimeField::new('dateoperation', "Date de l'opération")->hideOnIndex()->setColumns(2),
+            DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex()->setColumns(2),
+            FormField::addPanel('')->onlyOnForms(),
+            DateTimeField::new('dateeffet', "Date d'effet")->setColumns(2),//d-flex ->addCssClass('d-flex flex-column')
+            DateTimeField::new('dateexpiration', "Echéance")->setColumns(2),
             FormField::addPanel('')->onlyOnForms(),
             AssociationField::new('piste', "Pistes")->setColumns(6)->onlyOnForms(),
             CollectionField::new('piste', "Pistes")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('piste', "Pistes")->setColumns(6)->onlyOnDetail(),
             
 
-            FormField::addTab(' Offre financière')
+            FormField::addTab(' Prime & Capitaux')
             ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Le contrat d'assurance en place."),
             
             //Ligne 01
             AssociationField::new('monnaie', "Monnaie")->setColumns(2),
             NumberField::new('capital', "Capital")->setColumns(2),
-            FormField::addPanel('')->onlyOnForms(),
-            
-            NumberField::new('primenette', "Prime nette")->hideOnIndex()->setColumns(2),
-            NumberField::new('fronting', "Frais/Fronting")->hideOnIndex()->setColumns(2),
-            NumberField::new('arca', "Frais/Régul.")->hideOnIndex()->setColumns(2),
-            NumberField::new('tva', "Tva")->hideOnIndex()->setColumns(2),
-            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex()->setColumns(2),
-            NumberField::new('discount', "Remise")->hideOnIndex()->setColumns(2),
-            NumberField::new('primetotale', "Prime totale")->setColumns(2),
-            FormField::addPanel('')->onlyOnForms(),
-            NumberField::new('modepaiement', "Mode de paiement")->hideOnIndex()->setColumns(6),
+            ChoiceField::new('modepaiement', "Mode de paiement")->setColumns(2)->hideOnIndex()->setChoices(self::TAB_POLICE_MODE_PAIEMENT),
 
+            FormField::addPanel('Facture client')->onlyOnForms(),
+            NumberField::new('primenette', "Prime nette")->hideOnIndex(),
+            NumberField::new('fronting', "Frais/Fronting")->hideOnIndex(),
+            NumberField::new('arca', "Frais/Régul.")->hideOnIndex(),
+            NumberField::new('tva', "Tva")->hideOnIndex(),
+            NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex(),
+            NumberField::new('discount', "Remise")->hideOnIndex(),
+            NumberField::new('primetotale', "Prime totale"),
+            
             //Ligne 13
+            FormField::addTab(' Commissionnement')
+            ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setHelp("Le contrat d'assurance en place."),
+            FormField::addPanel('')->onlyOnForms(),
             NumberField::new('ricom', "Commission de réassurance (ht)")->hideOnIndex()->setColumns(6),
             NumberField::new('localcom', "Commission ordinaire (ht)")->hideOnIndex()->setColumns(6),
 

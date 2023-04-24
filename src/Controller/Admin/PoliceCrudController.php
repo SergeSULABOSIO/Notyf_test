@@ -30,12 +30,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
 class PoliceCrudController extends AbstractCrudController
 {
     public const TAB_POLICE_REPONSES_OUI_NON = [
         'Non' => 0,
         'Oui' => 1
+    ];
+
+    public const TAB_POLICE_DEBITEUR = [
+        "L'assureur" => 0,
+        "Le client" => 1,
+        "Le courtier de réassurance" => 2,
+        "Le réassureur" => 3
     ];
 
     public const TAB_POLICE_MODE_PAIEMENT = [
@@ -153,37 +161,29 @@ class PoliceCrudController extends AbstractCrudController
             
             AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6),
             FormField::addPanel('Revenus hors taxes')->onlyOnForms(),
-            NumberField::new('ricom', "Commission de réassurance")->hideOnIndex()->setColumns(2),
-            ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
-            TextField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3),
+            NumberField::new('ricom', "Commission de réa.")->hideOnIndex()->setColumns(2),
+            ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
             FormField::addPanel()->onlyOnForms(),
-            NumberField::new('localcom', "Commission ordinaire")->hideOnIndex()->setColumns(2),
-            ChoiceField::new('cansharelocalcom', "Partageable?")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
-            TextField::new('localcompayableby', "Débiteur")->hideOnIndex()->setColumns(3),
+            NumberField::new('localcom', "Commission ord.")->hideOnIndex()->setColumns(2),
+            ChoiceField::new('cansharelocalcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('localcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             //Ligne 14
-            NumberField::new('frontingcom', "Commission sur Fronting (ht)")->hideOnIndex()->setColumns(6),
-            TextEditorField::new('remarques', "Remarques")->hideOnIndex()->setColumns(6),
-
-            //Ligne 15
+            FormField::addPanel()->onlyOnForms(),
+            NumberField::new('frontingcom', "Commission sur Fronting")->hideOnIndex()->setColumns(2),
+            ChoiceField::new('cansharefrontingcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
-
-            //Ligne 16
-            
-            BooleanField::new('cansharefrontingcom', "Partager Com. sur Fronting?")->hideOnIndex()->setColumns(6),
-
-            //Ligne 17
-            
-            
-
-            //Ligne 18
-            TextField::new('frontingcompayableby', "Com. sur Fronting - Débiteur")->hideOnIndex()->setColumns(6),
-            AssociationField::new('pieces', "Documents / pièces justificatives")->hideOnIndex()->setColumns(6),
+            FormField::addPanel('Autres')->onlyOnForms(),
+            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms(),
+            ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
+            TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),
 
             //Ligne 19
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3)
         ];
     }
 

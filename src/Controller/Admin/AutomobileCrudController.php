@@ -111,7 +111,7 @@ class AutomobileCrudController extends AbstractCrudController
 
             //Ligne 05
             NumberField::new('nbsieges', 'Nb sièges')->hideOnIndex()->setColumns(6),
-
+            
             //AssociationField::new('polices', "Police d'assurance")->setColumns(6),
             AssociationField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnForms(),
             CollectionField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnIndex(),

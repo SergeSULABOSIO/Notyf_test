@@ -57,6 +57,7 @@ class SecurityController extends AbstractController
             $user = $form->getData();
             $user->setRoles(['ROLE_USER']);
             $user->setUpdatedAt(new DateTimeImmutable());
+            $user->setCreatedAt(new DateTimeImmutable());
             $hashedPassword = $hasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
 

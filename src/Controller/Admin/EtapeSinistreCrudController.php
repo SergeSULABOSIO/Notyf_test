@@ -14,11 +14,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -28,6 +30,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class EtapeSinistreCrudController extends AbstractCrudController
 {
+
+    public const TAB_ETAPE_INDICE = [
+        'Etape n°01' => 0,
+        'Etape n°02' => 1,
+        'Etape n°03' => 2,
+        'Etape n°04' => 3
+    ];
 
     public static function getEntityFqcn(): string
     {
@@ -44,7 +53,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Etape")
             ->setEntityLabelInPlural("Etapes")
             ->setPageTitle("index", "Liste d'étapes")
-            ->setDefaultSort(['updatedAt' => 'DESC'])
+            ->setDefaultSort(['indice' => 'DESC'])
             // ...
         ;
     }
@@ -52,7 +61,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            //->add('description')
+            ->add(ChoiceFilter::new('indice', 'Ordre')->setChoices(self::TAB_ETAPE_INDICE))
             ->add('createdAt')
         ;
     }
@@ -65,7 +74,9 @@ class EtapeSinistreCrudController extends AbstractCrudController
             ->setHelp("Le traitement d'un sinistre passe par une ou plusieurs étapes. De la déclaration à l'indemnisation."),
 
             //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
+            TextField::new('nom', "Nom")->setColumns(3),
+            //NumberField::new('indice', "Indice")->setColumns(3),
+            ChoiceField::new('indice', "Ordre")->setColumns(3)->setChoices(self::TAB_ETAPE_INDICE),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6),
 
             //Ligne 02

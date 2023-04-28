@@ -30,6 +30,9 @@ class EtapeSinistre
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $indice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,5 +101,17 @@ class EtapeSinistre
     public function __toString()
     {
         return $this->nom;
+    }
+
+    public function getIndice(): ?int
+    {
+        return $this->indice;
+    }
+
+    public function setIndice(?int $indice): self
+    {
+        $this->indice = $indice;
+
+        return $this;
     }
 }

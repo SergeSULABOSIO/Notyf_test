@@ -376,9 +376,10 @@ class AppFixtures extends Fixture
         }
 
         //ETAPE
-        for ($a = 0; $a < 4; $a++) {
+        for ($a = 0; $a <4 ; $a++) {
             $etapeSinistre = new EtapeSinistre();
-            $etapeSinistre->setNom("Etape - n°" . $a);
+            $etapeSinistre->setNom("Etape " . $a);
+            $etapeSinistre->setIndice($a);
             $etapeSinistre->setDescription("Blabla blablablablabla Blabla blablablablabla Blabla blablablablabla");
             $etapeSinistre->setEntreprise($entreprise);
             $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
@@ -386,14 +387,6 @@ class AppFixtures extends Fixture
 
             $manager->persist($etapeSinistre);
         }
-        $etapeSinistre = new EtapeSinistre();
-        $etapeSinistre->setNom("Sinistre clos");
-        $etapeSinistre->setDescription("Sinistre indemnisé.");
-        $etapeSinistre->setEntreprise($entreprise);
-        $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
-        $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
-
-        $manager->persist($etapeSinistre);
 
 
         //COMMENTAIRE

@@ -120,6 +120,7 @@ class SinistreCrudController extends AbstractCrudController
     {
         return [
             DateField::new('occuredAt', "Date"),
+            TextField::new('numero', "N° de Référence"),
             TextField::new('titre', "Titre"),
             TextEditorField::new('description', "Evènement")->hideOnIndex(),
             AssociationField::new('victime', "Victimes"),

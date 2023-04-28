@@ -75,6 +75,9 @@ class Sinistre
     #[ORM\JoinColumn(nullable: false)]
     private ?Monnaie $monnaie = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $numero = null;
+
     public function __construct()
     {
         $this->victimes = new ArrayCollection();
@@ -387,6 +390,18 @@ class Sinistre
 
     public function __toString()
     {
-        return $this->titre;
+        return $this->numero . " / " . $this->titre;
+    }
+
+    public function getNumero(): ?string
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?string $numero): self
+    {
+        $this->numero = $numero;
+
+        return $this;
     }
 }

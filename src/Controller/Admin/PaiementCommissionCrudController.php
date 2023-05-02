@@ -78,7 +78,8 @@ class PaiementCommissionCrudController extends AbstractCrudController
             AssociationField::new('police', "Police")->setColumns(6),
 
             //Ligne 04
-            CollectionField::new('pieces', "Pièces")->setColumns(6)->hideOnDetail(),
+            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
 
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),

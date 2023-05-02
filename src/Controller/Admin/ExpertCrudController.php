@@ -65,12 +65,12 @@ class ExpertCrudController extends AbstractCrudController
             ->setHelp("L'expert est une personne morale ou physique qui a pour rôle d'aider l'assureur à mieux évaluer l'ampleur du dégât (évaluation chiffrée) afin de déterminer le montant réel de la compensation."),
 
             //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
-            TextField::new('adresse', "Adresse")->setColumns(6),
+            TextField::new('nom', "Nom complet de l'expert")->setColumns(6),
+            TextField::new('adresse', "Adresse")->setColumns(6)->hideOnIndex(),
 
             //Ligne 02
             EmailField::new('email', "Email")->setColumns(6),
-            UrlField::new('siteweb', "Site Web")->setColumns(6),
+            UrlField::new('siteweb', "Site Web")->setColumns(6)->hideOnIndex(),
 
             //Ligne 03
             TelephoneField::new('telephone', "Téléphone")->setColumns(6),

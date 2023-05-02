@@ -128,6 +128,6 @@ class CommentaireSinistre
 
     public function __toString()
     {
-        return $this->message;
+        return "Date: " . $this->updatedAt->format('d/m/Y à H:m:s'). " / User: " .$this->utilisateur . " / Comment: " . $this->message;
     }
 }

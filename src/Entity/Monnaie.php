@@ -108,7 +108,7 @@ class Monnaie
 
     public function __toString()
     {
-        return $this->code;
+        return $this->code . " / " . $this->nom . " / taux USD: " . $this->tauxusd;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

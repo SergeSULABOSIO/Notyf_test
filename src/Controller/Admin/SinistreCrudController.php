@@ -69,7 +69,7 @@ class SinistreCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations générales')
+            FormField::addTab('Informations générales')
             ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
 
@@ -82,10 +82,6 @@ class SinistreCrudController extends AbstractCrudController
             TextField::new('description', "Evènement")->setColumns(6),
 
             //Ligne 03
-            AssociationField::new('victime', "Victimes")->setColumns(6)->onlyOnForms(),
-            CollectionField::new('victime', "Victimes")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('victime', "Victimes")->setColumns(6)->onlyOnDetail(),
-            
             AssociationField::new('experts', "Experts")->setColumns(6)->onlyOnForms(),
             CollectionField::new('experts', "Experts")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('experts', "Experts")->setColumns(6)->onlyOnDetail(),
@@ -93,9 +89,6 @@ class SinistreCrudController extends AbstractCrudController
             //Ligne 04
             AssociationField::new('etape', "Status")->setColumns(6),
             
-            AssociationField::new('commentaire', "Commentaires")->setColumns(6)->hideOnDetail(),
-            ArrayField::new('commentaire', "Commentaires")->setColumns(6)->onlyOnDetail(),
-
             //Ligne 05
             NumberField::new('cout', "Valeur perte")->setColumns(6),
             NumberField::new('montantPaye', "Montant payé")->setColumns(6),
@@ -106,16 +99,30 @@ class SinistreCrudController extends AbstractCrudController
 
             //Ligne 07
             AssociationField::new('police', "Police")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex()->setColumns(6),
+            
+            //Ligne 08
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
+            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
+           
+            FormField::addTab('Victimes')
+            ->setIcon('fas fa-bell'),
+            AssociationField::new('victime', "Victimes")->setColumns(6)->onlyOnForms(),
+            CollectionField::new('victime', "Victimes")->setColumns(6)->onlyOnIndex(),
+            ArrayField::new('victime', "Victimes")->setColumns(6)->onlyOnDetail(),
 
+
+            FormField::addTab(' Documents / Pièces justificatives')->setIcon('fas fa-bell'),
+            //Ligne 01
             AssociationField::new('pieces', "Pièces")->onlyOnIndex()->setColumns(6),
             AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms(),
             ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
 
-            //Ligne 08
-            AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex()->setColumns(6),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
+
+            FormField::addTab(' Commentaires')->setIcon('fas fa-bell'),
+            AssociationField::new('commentaire', "Commentaires")->setColumns(6)->hideOnDetail(),
+            ArrayField::new('commentaire', "Commentaires")->setColumns(6)->onlyOnDetail(),
         ];
     }
 

@@ -114,7 +114,7 @@ class PaiementPartenaire
 
     public function __toString()
     {
-        return $this->montant . " - " . $this->refnotededebit;
+        return $this->montant . " " . $this->monnaie->getCode() . " / Facture: " . $this->refnotededebit;
     }
 
     public function getMonnaie(): ?Monnaie

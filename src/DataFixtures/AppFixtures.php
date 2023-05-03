@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Controller\Admin\UtilisateurCrudController;
 use App\Entity\Action;
 use App\Entity\ActionCRM;
 use App\Entity\Article;
@@ -78,7 +79,8 @@ class AppFixtures extends Fixture
         $user_admin->setNom("Admin_" . $faker->name());
         $user_admin->setPseudo("ADM" . mt_rand(0, 1) . "PS");
         $user_admin->setEmail('admin@gmail.com');
-        $user_admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
+        //$user_admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
+        $user_admin->setRoles([UtilisateurCrudController::TAB_POSTES['DIRECTEUR GENERAL']]);
 
         $hashedPassword = $this->hasher->hashPassword($user_admin, "admin");
         $user_admin->setPassword($hashedPassword);
@@ -94,7 +96,8 @@ class AppFixtures extends Fixture
             $user->setNom($faker->name());
             $user->setPseudo(mt_rand(0, 1) . "PS");
             $user->setEmail($faker->email());
-            $user->setRoles(['ROLE_USER']);
+            //$user->setRoles(['ROLE_USER']);
+            $user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
 
             $hashedPassword = $this->hasher->hashPassword($user, "password");
             $user->setPassword($hashedPassword);

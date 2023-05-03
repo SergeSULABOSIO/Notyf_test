@@ -105,7 +105,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = '';
 
         return array_unique($roles);
     }
@@ -133,7 +133,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword(string $password): self
     {
         $this->plainPassword = $password;
-
+        
         return $this;
     }
 

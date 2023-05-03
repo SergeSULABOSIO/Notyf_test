@@ -189,7 +189,7 @@ class PaiementPartenaireCrudController extends AbstractCrudController
     {
         $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
+        
         dd($batchActionDto->getEntityIds());
 
         foreach ($batchActionDto->getEntityIds() as $id) {

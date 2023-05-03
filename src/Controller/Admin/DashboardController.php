@@ -129,7 +129,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Victime', 'fas fa-person-falling-burst', Victime::class) //<i class="fa-solid fa-person-falling-burst"></i>
         ]);
 
-        yield MenuItem::subMenu('DOCUMENTS', 'fas fa-book')->setSubItems([ //<i class="fa-solid fa-books"></i>
+        yield MenuItem::subMenu('BIBLIOTHEQUE', 'fas fa-book')->setSubItems([ //<i class="fa-solid fa-books"></i>
             MenuItem::linkToCrud('Catégories', 'fas fa-tags', DocCategorie::class), //<i class="fa-regular fa-tags"></i>
             MenuItem::linkToCrud('Classeurs', 'fas fa-folder-open', DocClasseur::class), //<i class="fa-solid fa-folder-open"></i>
             MenuItem::linkToCrud('Pièces', 'fas fa-file-word', DocPiece::class) //<i class="fa-regular fa-file-word"></i>

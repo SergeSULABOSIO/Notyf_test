@@ -26,6 +26,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+    
     private ?string $plainPassword = null;
 
     /**

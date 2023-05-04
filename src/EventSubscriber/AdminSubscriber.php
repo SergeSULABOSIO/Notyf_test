@@ -37,8 +37,9 @@ class AdminSubscriber implements EventSubscriberInterface
         //dd($event);
         $entityInstance = $event->getEntityInstance();
         if($entityInstance instanceof Utilisateur){
-            if($entityInstance->getPlainPassword() !== null){
-                dd($entityInstance->getPlainPassword());
+            $newpassword = $entityInstance->getPlainPassword();
+            if($newpassword !== null){
+                dd($newpassword);
                 $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
                 $entityInstance->setPassword($hashedPassword);
             }

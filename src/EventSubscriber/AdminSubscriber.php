@@ -55,11 +55,10 @@ class AdminSubscriber implements EventSubscriberInterface
             }
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-
+        
         //dd($this->security->getUser());
         if($this->security->getUser()->getEmail() == $entityInstance->getEmail()){
             $response = $this->security->logout(false);
-            
         }
     }
 }

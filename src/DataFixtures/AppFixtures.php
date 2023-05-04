@@ -82,15 +82,15 @@ class AppFixtures extends Fixture
         //$user_admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
         $user_admin->setRoles([
             //Accès aux fonctionnalités
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_COMMERCIAL],
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_PRODUCTION],
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_FINANCES],
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_SINISTRES],
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_BIBLIOTHE],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE],
             //Pouvoeir d'action
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACTION_EDITION],
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION],
             //Visibilité
-            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::VISION_GLOBALE]    
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]    
         ]);
 
         $hashedPassword = $this->hasher->hashPassword($user_admin, "admin");
@@ -111,10 +111,10 @@ class AppFixtures extends Fixture
             //$user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
             $user->setRoles([
                 //Accès aux fonctionnalités
-                UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_COMMERCIAL],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
                 //Pouvoeir d'action
                 //Visibilité
-                UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::VISION_LOCALE]    
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_LOCALE]    
             ]);
 
             $hashedPassword = $this->hasher->hashPassword($user, "password");

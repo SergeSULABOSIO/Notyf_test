@@ -38,7 +38,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public const VISION_GLOBALE = 'VISION : GLOBALE';
     public const VISION_LOCALE = 'VISION : LOCALE';
 
-    public const TAB_POSTES = [
+    public const TAB_ROLES = [
         //Les accès aux fonctionalités / Zone de travail
         self::ACCES_COMMERCIAL => 'ROLE_ACCES_CRM',
         self::ACCES_PRODUCTION => 'ROLE_ACCES_PRODUCTION',
@@ -76,7 +76,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(ChoiceFilter::new("roles", "POSTE")->setChoices(self::TAB_POSTES))
+            ->add(ChoiceFilter::new("roles", "POSTE")->setChoices(self::TAB_ROLES))
         ;
     }
 
@@ -96,13 +96,13 @@ class UtilisateurCrudController extends AbstractCrudController
 
             //Ligne 02
             ChoiceField::new('roles', "Roles")->setColumns(6)
-            ->setChoices(self::TAB_POSTES)
+            ->setChoices(self::TAB_ROLES)
             ->allowMultipleChoices()
             ->renderExpanded()
             ->renderAsBadges([
                 // $value => $badgeStyleName
-                self::TAB_POSTES[self::VISION_GLOBALE] => 'success', //info
-                self::TAB_POSTES[self::ACTION_EDITION] => 'danger',
+                self::TAB_ROLES[self::VISION_GLOBALE] => 'success', //info
+                self::TAB_ROLES[self::ACTION_EDITION] => 'danger',
             ]),
 
             //Ligne 03

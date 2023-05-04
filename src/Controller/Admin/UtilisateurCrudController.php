@@ -27,26 +27,29 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class UtilisateurCrudController extends AbstractCrudController
 {
 
+    public const ACCES_COMMERCIAL = 'ACCES : COMMERCIAL / CRM';
+    public const ACCES_PRODUCTION = 'ACCES : PRODUCTION';
+    public const ACCES_FINANCES = 'ACCES : FINANCES';
+    public const ACCES_SINISTRES = 'ACCES : SINISTRES';
+    public const ACCES_BIBLIOTHE = 'ACCES : BIBLIOTHE';
+    public const ACCES_PARAMETRES = 'ACCES : PARAMETRES';
+    //public const ACTION_LECTURE = 'ACTION : LECTURE';
+    public const ACTION_EDITION = 'ACTION : EDITION';
+    public const VISION_GLOBALE = 'VISION : GLOBALE';
+    public const VISION_LOCALE = 'VISION : LOCALE';
+
     public const TAB_POSTES = [
-        //Direction Générale
-        'DIRECTEUR GENERAL' => 'ROLE_CEO',
-
-        //Production
-        'DIRECTEUR DES OPERATIONS' => 'ROLE_OPERATION_DIRECTOR',
-        'ASSISTANT AUX OPERATIONS' => 'ROLE_OPERATION_ASSISTANT',
-        'GESTIONNAIRE DE COMPTE' => 'ROLE_ACCOUNT_MANAGER',
-        'ASSISTANT ADMINISTRATIF' => 'ROLE_ADMIN_ASSISTANT',
-        
-        //Finance
-        'DIRECTEUR FINANCIER' => 'ROLE_FINANCE_DIRECTOR',
-        'ASSISTANT AUX FINANCES' => 'ROLE_FINANCE_ASSISTANT',
-
-        //Commercial
-        'DIRECTEUR COMMERCIAL' => 'ROLE_COMMERCIAL_DIRECTOR',
-        'ASSISTANT COMMECIAL' => 'ROLE_FINANCE_ASSISTANT',
-
-        //Client - Accès au public
-        'CLIENT' => 'ROLE_USER',
+        //Les accès aux fonctionalités / Zone de travail
+        self::ACCES_COMMERCIAL => 'ROLE_ACCES_CRM',
+        self::ACCES_PRODUCTION => 'ROLE_ACCES_PRODUCTION',
+        self::ACCES_FINANCES => 'ROLE_ACCES_FINANCES',
+        self::ACCES_SINISTRES => 'ROLE_ACCES_SINISTRE',
+        self::ACCES_BIBLIOTHE => 'ROLE_ACCES_BIBLIOTHEQUE',
+        self::ACCES_PARAMETRES => 'ROLE_ACCES_PARAMETRES',
+        //Les pouvoir d'action sur les données
+        self::ACTION_EDITION => 'ROLE_ACTION_EDITION',
+        //Visibilité
+        self::VISION_GLOBALE => 'ROLE_VISION_GLOBALE'
     ];
 
 
@@ -86,20 +89,20 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setHelp("L'utilisateur ayant un certain droit d'accès aux données et pouvant utiliser le système."),
 
             //Ligne 01
-            TextField::new('nom', 'Nom Complet')->setColumns(6),
+            TextField::new('nom', 'Nom Complet')->setColumns(4),
+            TextField::new('pseudo', 'Pseudo')->setColumns(2),
             TextField::new('email', 'Adresse mail')->setColumns(3),
-            TextField::new('plainPassword', 'Mot de passe')->setColumns(3),
+            TextField::new('plainPassword', 'Nouveau mot de passe')->onlyOnForms()->setColumns(3),
 
             //Ligne 02
-            TextField::new('pseudo', 'Pseudo')->setColumns(6),
             ChoiceField::new('roles', "Roles")->setColumns(6)
             ->setChoices(self::TAB_POSTES)
             ->allowMultipleChoices()
+            ->renderExpanded()
             ->renderAsBadges([
                 // $value => $badgeStyleName
-                self::TAB_POSTES['CLIENT'] => 'success',
-                self::TAB_POSTES['ASSISTANT ADMINISTRATIF'] => 'warning',
-                self::TAB_POSTES['DIRECTEUR GENERAL'] => 'danger',
+                self::TAB_POSTES[self::VISION_GLOBALE] => 'success', //info
+                self::TAB_POSTES[self::ACTION_EDITION] => 'danger',
             ]),
 
             //Ligne 03

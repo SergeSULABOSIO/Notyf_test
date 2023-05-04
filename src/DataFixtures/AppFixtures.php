@@ -80,7 +80,18 @@ class AppFixtures extends Fixture
         $user_admin->setPseudo("ADM" . mt_rand(0, 1) . "PS");
         $user_admin->setEmail('admin@gmail.com');
         //$user_admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
-        $user_admin->setRoles([UtilisateurCrudController::TAB_POSTES['DIRECTEUR GENERAL']]);
+        $user_admin->setRoles([
+            //Accès aux fonctionnalités
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_COMMERCIAL],
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_PRODUCTION],
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_FINANCES],
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_SINISTRES],
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_BIBLIOTHE],
+            //Pouvoeir d'action
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACTION_EDITION],
+            //Visibilité
+            UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::VISION_GLOBALE]    
+        ]);
 
         $hashedPassword = $this->hasher->hashPassword($user_admin, "admin");
         $user_admin->setPassword($hashedPassword);
@@ -97,7 +108,14 @@ class AppFixtures extends Fixture
             $user->setPseudo(mt_rand(0, 1) . "PS");
             $user->setEmail($faker->email());
             //$user->setRoles(['ROLE_USER']);
-            $user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
+            //$user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
+            $user->setRoles([
+                //Accès aux fonctionnalités
+                UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::ACCES_COMMERCIAL],
+                //Pouvoeir d'action
+                //Visibilité
+                UtilisateurCrudController::TAB_POSTES[UtilisateurCrudController::VISION_LOCALE]    
+            ]);
 
             $hashedPassword = $this->hasher->hashPassword($user, "password");
             $user->setPassword($hashedPassword);

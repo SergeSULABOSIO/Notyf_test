@@ -34,17 +34,16 @@ class AdminSubscriber implements EventSubscriberInterface
 
     public function setUpdatedAt(BeforeEntityUpdatedEvent $event)
     {
-        $entityInstance = $event->getEntityInstance();
-        $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-    }
-
-    public function setPlainPassword(BeforeEntityUpdatedEvent $event)
-    {
+        //dd($event);
         $entityInstance = $event->getEntityInstance();
         if($entityInstance instanceof Utilisateur){
-            //dd($event);
-            $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
-            $entityInstance->setPassword($hashedPassword);
+            dd($entityInstance->getPlainPassword());
+            if($entityInstance->getPlainPassword() !== null){
+                
+                $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
+                $entityInstance->setPassword($hashedPassword);
+            }
         }
+        $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }
 }

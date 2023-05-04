@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use DateTime;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -53,6 +54,10 @@ class UtilisateurCrudController extends AbstractCrudController
     ];
 
 
+    public function __construct(private Security $security){
+        
+    }
+
     public static function getEntityFqcn(): string
     {
         return Utilisateur::class;
@@ -94,7 +99,7 @@ class UtilisateurCrudController extends AbstractCrudController
             TextField::new('email', 'Adresse mail')->setColumns(3),
             TextField::new('plainPassword', 'Nouveau mot de passe')->onlyOnForms()->setColumns(3)
             ->setEmptyData(''),
-            
+
             //Ligne 02
             ChoiceField::new('roles', "Roles")->setColumns(6)
             ->setChoices(self::TAB_ROLES)

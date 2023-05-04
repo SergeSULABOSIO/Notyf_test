@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class NotyfController extends AbstractController
 {
     #[Route('/notyf/{notyf}', name: 'app_notyf')]
-    #[IsGranted('ROLE_USER')]
+    //#[IsGranted('ROLE_USER')]
     public function index(?string $notyf = null): Response
     {
 

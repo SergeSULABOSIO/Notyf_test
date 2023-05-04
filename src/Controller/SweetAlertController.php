@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SweetAlertController extends AbstractController
 {
     #[Route('/', name: 'app_sweet_alert')]
-    #[IsGranted('ROLE_USER')]
+    //#[IsGranted('ROLE_USER')]
     public function index(): Response
     {
         

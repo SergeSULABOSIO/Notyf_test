@@ -190,6 +190,7 @@ class EntrepriseCrudController extends AbstractCrudController
             //Ligne 04
             ChoiceField::new('secteur', "Secteur")->setColumns(6)
             ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR),
+            AssociationField::new('utilisateur', "Utilisateur")->hideOnForm()->setColumns(6),
 
             //Ligne 05
             DateTimeField::new('updatedAt', 'Dernière modification')->setColumns(6)->hideOnform(),

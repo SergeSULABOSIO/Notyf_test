@@ -92,8 +92,9 @@ class UtilisateurCrudController extends AbstractCrudController
             TextField::new('nom', 'Nom Complet')->setColumns(4),
             TextField::new('pseudo', 'Pseudo')->setColumns(2),
             TextField::new('email', 'Adresse mail')->setColumns(3),
-            TextField::new('plainPassword', 'Nouveau mot de passe')->onlyOnForms()->setColumns(3),
-
+            TextField::new('plainPassword', 'Nouveau mot de passe')->onlyOnForms()->setColumns(3)
+            ->setEmptyData(''),
+            
             //Ligne 02
             ChoiceField::new('roles', "Roles")->setColumns(6)
             ->setChoices(self::TAB_ROLES)

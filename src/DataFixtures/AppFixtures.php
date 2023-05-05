@@ -160,7 +160,8 @@ class AppFixtures extends Fixture
         $entreprise->setSecteur(2);
         $entreprise->setTelephone("+243828727706");
         $entreprise->setCreatedAt(new \DateTimeImmutable());
-        $entreprise->setUpdatedAt(new \DateTimeImmutable());
+        $entreprise->setUpdatedAt(new \DateTimeImmutable());//$user_admin->
+        $entreprise->setUtilisateur($user_admin);
 
         $manager->persist($entreprise);
 
@@ -183,6 +184,7 @@ class AppFixtures extends Fixture
             $monnaie->setEntreprise($entreprise);
             $monnaie->setCreatedAt(new \DateTimeImmutable());
             $monnaie->setUpdatedAt(new \DateTimeImmutable());
+            $monnaie->setUtilisateur($user_admin);
 
             $manager->persist($monnaie);
         }
@@ -206,6 +208,7 @@ class AppFixtures extends Fixture
             $taxe->setEntreprise($entreprise);
             $taxe->setCreatedAt(new \DateTimeImmutable());
             $taxe->setUpdatedAt(new \DateTimeImmutable());
+            $taxe->setUtilisateur($user_admin);
 
             $manager->persist($taxe);
         }
@@ -225,6 +228,7 @@ class AppFixtures extends Fixture
             $partenaire->setEntreprise($entreprise);
             $partenaire->setCreatedAt(new \DateTimeImmutable());
             $partenaire->setUpdatedAt(new \DateTimeImmutable());
+            $partenaire->setUtilisateur($user_admin);
 
             $manager->persist($partenaire);
         }
@@ -245,6 +249,7 @@ class AppFixtures extends Fixture
             $assureur->setEntreprise($entreprise);
             $assureur->setCreatedAt(new \DateTimeImmutable());
             $assureur->setUpdatedAt(new \DateTimeImmutable());
+            $assureur->setUtilisateur($user_admin);
 
             $manager->persist($assureur);
         }
@@ -265,6 +270,7 @@ class AppFixtures extends Fixture
             $assureur->setEntreprise($entreprise);
             $assureur->setCreatedAt(new \DateTimeImmutable());
             $assureur->setUpdatedAt(new \DateTimeImmutable());
+            $assureur->setUtilisateur($user_admin);
 
             $manager->persist($assureur);
         }
@@ -288,6 +294,7 @@ class AppFixtures extends Fixture
             $produit->setEntreprise($entreprise);
             $produit->setCreatedAt(new \DateTimeImmutable());
             $produit->setUpdatedAt(new \DateTimeImmutable());
+            $produit->setUtilisateur($user_admin);
 
             $manager->persist($produit);
             $compteur++;
@@ -319,6 +326,7 @@ class AppFixtures extends Fixture
             $client->setEntreprise($entreprise);
             $client->setCreatedAt(new \DateTimeImmutable());
             $client->setUpdatedAt(new \DateTimeImmutable());
+            $client->setUtilisateur($user_admin);
 
             $manager->persist($client);
             $compteur++;
@@ -334,6 +342,7 @@ class AppFixtures extends Fixture
                 $contact->setEntreprise($entreprise);
                 $contact->setCreatedAt(new \DateTimeImmutable());
                 $contact->setUpdatedAt(new \DateTimeImmutable());
+                $contact->setUtilisateur($user_admin);
 
                 $manager->persist($contact);
             }
@@ -357,6 +366,7 @@ class AppFixtures extends Fixture
                 $auto->setChassis("XCD4" . $faker->randomNumber(5, true));
                 $auto->setCreatedAt(new \DateTimeImmutable());
                 $auto->setUpdatedAt(new \DateTimeImmutable());
+                $auto->setUtilisateur($user_admin);
                 $auto->setEntreprise($entreprise);
                 $manager->persist($auto);
             }
@@ -376,6 +386,7 @@ class AppFixtures extends Fixture
             $victime->setEntreprise($entreprise);
             $victime->setCreatedAt(new \DateTimeImmutable());
             $victime->setUpdatedAt(new \DateTimeImmutable());
+            $victime->setUtilisateur($user_admin);
 
             $manager->persist($victime);
         }
@@ -392,6 +403,7 @@ class AppFixtures extends Fixture
             $expert->setEntreprise($entreprise);
             $expert->setCreatedAt(new \DateTimeImmutable());
             $expert->setUpdatedAt(new \DateTimeImmutable());
+            $expert->setUtilisateur($user_admin);
 
             $manager->persist($expert);
         }
@@ -405,6 +417,7 @@ class AppFixtures extends Fixture
             $etapeSinistre->setEntreprise($entreprise);
             $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
             $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
+            $etapeSinistre->setUtilisateur($user_admin);
 
             $manager->persist($etapeSinistre);
         }
@@ -418,6 +431,7 @@ class AppFixtures extends Fixture
             $comment->setUtilisateur($user_admin);
             $comment->setCreatedAt(new \DateTimeImmutable());
             $comment->setUpdatedAt(new \DateTimeImmutable());
+            $comment->setUtilisateur($user_admin);
 
             $manager->persist($comment);
         }
@@ -429,6 +443,7 @@ class AppFixtures extends Fixture
         $doc_categorie_police->setEntreprise($entreprise);
         $doc_categorie_police->setCreatedAt(new \DateTimeImmutable());
         $doc_categorie_police->setUpdatedAt(new \DateTimeImmutable());
+        $doc_categorie_police->setUtilisateur($user_admin);
         $manager->persist($doc_categorie_police);
 
         $doc_categorie_form = new DocCategorie();
@@ -437,6 +452,7 @@ class AppFixtures extends Fixture
         $doc_categorie_form->setEntreprise($entreprise);
         $doc_categorie_form->setCreatedAt(new \DateTimeImmutable());
         $doc_categorie_form->setUpdatedAt(new \DateTimeImmutable());
+        $doc_categorie_form->setUtilisateur($user_admin);
         $manager->persist($doc_categorie_form);
 
         $doc_categorie_bor = new DocCategorie();
@@ -445,6 +461,7 @@ class AppFixtures extends Fixture
         $doc_categorie_bor->setEntreprise($entreprise);
         $doc_categorie_bor->setCreatedAt(new \DateTimeImmutable());
         $doc_categorie_bor->setUpdatedAt(new \DateTimeImmutable());
+        $doc_categorie_bor->setUtilisateur($user_admin);
         $manager->persist($doc_categorie_bor);
 
         //DOC CLASSEUR
@@ -454,6 +471,7 @@ class AppFixtures extends Fixture
         $doc_classeur_andy->setEntreprise($entreprise);
         $doc_classeur_andy->setCreatedAt(new \DateTimeImmutable());
         $doc_classeur_andy->setUpdatedAt(new \DateTimeImmutable());
+        $doc_classeur_andy->setUtilisateur($user_admin);
         $manager->persist($doc_classeur_andy);
 
         $doc_classeur_michee = new DocClasseur();
@@ -462,6 +480,7 @@ class AppFixtures extends Fixture
         $doc_classeur_michee->setEntreprise($entreprise);
         $doc_classeur_michee->setCreatedAt(new \DateTimeImmutable());
         $doc_classeur_michee->setUpdatedAt(new \DateTimeImmutable());
+        $doc_classeur_michee->setUtilisateur($user_admin);
         $manager->persist($doc_classeur_michee);
 
         $doc_classeur_syntyche = new DocClasseur();
@@ -470,6 +489,7 @@ class AppFixtures extends Fixture
         $doc_classeur_syntyche->setEntreprise($entreprise);
         $doc_classeur_syntyche->setCreatedAt(new \DateTimeImmutable());
         $doc_classeur_syntyche->setUpdatedAt(new \DateTimeImmutable());
+        $doc_classeur_syntyche->setUtilisateur($user_admin);
         $manager->persist($doc_classeur_syntyche);
 
         //DOC PIECES
@@ -482,6 +502,7 @@ class AppFixtures extends Fixture
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
         $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUtilisateur($user_admin);
         $manager->persist($doc_piece_a);
 
 
@@ -494,6 +515,7 @@ class AppFixtures extends Fixture
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
         $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUtilisateur($user_admin);
         $manager->persist($doc_piece_a);
 
 
@@ -506,6 +528,7 @@ class AppFixtures extends Fixture
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
         $doc_piece_a->setUpdatedAt(new \DateTimeImmutable());
+        $doc_piece_a->setUtilisateur($user_admin);
         $manager->persist($doc_piece_a);
 
 
@@ -516,6 +539,7 @@ class AppFixtures extends Fixture
         $etape_crm_a->setEntreprise($entreprise);
         $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
         $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUtilisateur($user_admin);
         $manager->persist($etape_crm_a);
 
         $etape_crm_a = new EtapeCrm();
@@ -524,6 +548,7 @@ class AppFixtures extends Fixture
         $etape_crm_a->setEntreprise($entreprise);
         $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
         $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUtilisateur($user_admin);
         $manager->persist($etape_crm_a);
 
         $etape_crm_a = new EtapeCrm();
@@ -532,6 +557,7 @@ class AppFixtures extends Fixture
         $etape_crm_a->setEntreprise($entreprise);
         $etape_crm_a->setCreatedAt(new \DateTimeImmutable());
         $etape_crm_a->setUpdatedAt(new \DateTimeImmutable());
+        $etape_crm_a->setUtilisateur($user_admin);
         $manager->persist($etape_crm_a);
 
         //ACTION
@@ -546,6 +572,7 @@ class AppFixtures extends Fixture
         $action->setEntreprise($entreprise);
         $action->setCreatedAt(new \DateTimeImmutable());
         $action->setUpdatedAt(new \DateTimeImmutable());
+        $action->setUtilisateur($user_admin);
         $manager->persist($action);
 
         //Feedback
@@ -556,6 +583,7 @@ class AppFixtures extends Fixture
         $feedback->setUtilisateur($user_admin);
         $feedback->setCreatedAt(new \DateTimeImmutable());
         $feedback->setUpdatedAt(new \DateTimeImmutable());
+        $feedback->setUtilisateur($user_admin);
         $manager->persist($feedback);
 
         //PISTE
@@ -570,6 +598,7 @@ class AppFixtures extends Fixture
         $piste->setEntreprise($entreprise);
         $piste->setCreatedAt(new \DateTimeImmutable());
         $piste->setUpdatedAt(new \DateTimeImmutable());
+        $piste->setUtilisateur($user_admin);
         $manager->persist($piste);
 
         $manager->flush();

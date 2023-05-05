@@ -144,6 +144,9 @@ class Police
     #[ORM\ManyToMany(targetEntity: Piste::class)]
     private Collection $piste;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
@@ -624,6 +627,18 @@ class Police
     public function removePiste(Piste $piste): self
     {
         $this->piste->removeElement($piste);
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

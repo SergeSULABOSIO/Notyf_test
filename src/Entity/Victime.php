@@ -43,6 +43,9 @@ class Victime
     #[ORM\ManyToMany(targetEntity: Sinistre::class, mappedBy: 'victime')]
     private Collection $sinistres;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     public function __construct()
     {
         $this->sinistres = new ArrayCollection();
@@ -179,5 +182,17 @@ class Victime
     public function __toString()
     {
         return $this->nom;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
     }
 }

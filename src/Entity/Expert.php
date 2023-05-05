@@ -46,6 +46,9 @@ class Expert
     #[ORM\Column(length: 255)]
     private ?string $telephone = null;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     public function __construct()
     {
         $this->sinistres = new ArrayCollection();
@@ -199,5 +202,17 @@ class Expert
     public function __toString()
     {
         return $this->nom . " / " . $this->telephone;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
     }
 }

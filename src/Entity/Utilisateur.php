@@ -66,6 +66,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: FeedbackCRM::class)]
     private Collection $feedbackCRMs;
 
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    private ?self $utilisateur = null;
+
     public function __construct()
     {
         $this->entreprises = new ArrayCollection();
@@ -260,6 +263,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $feedbackCRM->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?self
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?self $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

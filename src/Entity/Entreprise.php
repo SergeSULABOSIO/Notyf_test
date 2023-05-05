@@ -48,17 +48,9 @@ class Entreprise
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'entreprises')]
-    private Collection $utilisateur;
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
 
-    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: FeedbackCRM::class)]
-    private Collection $feedbackCRMs;
-
-    public function __construct()
-    {
-        $this->utilisateur = new ArrayCollection();
-        $this->feedbackCRMs = new ArrayCollection();
-    }
     
     public function getId(): ?int
     {
@@ -178,56 +170,14 @@ class Entreprise
         return $this;
     }
 
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getUtilisateur(): Collection
+    public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
+    public function setUtilisateur(?Utilisateur $utilisateur): self
     {
-        if (!$this->utilisateur->contains($utilisateur)) {
-            $this->utilisateur->add($utilisateur);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        $this->utilisateur->removeElement($utilisateur);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, FeedbackCRM>
-     */
-    public function getFeedbackCRMs(): Collection
-    {
-        return $this->feedbackCRMs;
-    }
-
-    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
-            $this->feedbackCRMs->add($feedbackCRM);
-            $feedbackCRM->setEntreprise($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($feedbackCRM->getEntreprise() === $this) {
-                $feedbackCRM->setEntreprise(null);
-            }
-        }
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

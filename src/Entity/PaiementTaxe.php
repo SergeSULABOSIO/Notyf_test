@@ -56,6 +56,9 @@ class PaiementTaxe
     #[ORM\ManyToMany(targetEntity: DocPiece::class)]
     private Collection $pieces;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
@@ -211,6 +214,18 @@ class PaiementTaxe
     public function removePiece(DocPiece $piece): self
     {
         $this->pieces->removeElement($piece);
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

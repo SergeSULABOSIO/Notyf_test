@@ -33,6 +33,9 @@ class EtapeSinistre
     #[ORM\Column(nullable: true)]
     private ?int $indice = null;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -111,6 +114,18 @@ class EtapeSinistre
     public function setIndice(?int $indice): self
     {
         $this->indice = $indice;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

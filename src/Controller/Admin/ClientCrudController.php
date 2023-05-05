@@ -126,7 +126,7 @@ class ClientCrudController extends AbstractCrudController
 
             //Ligne 06
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-            DateTimeField::new('createdAt', "created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('createdAt', "Date de création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];
     }

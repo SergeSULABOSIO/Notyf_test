@@ -32,6 +32,16 @@ class PartenaireCrudController extends AbstractCrudController
         return Partenaire::class;
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
+        return $filters
+        
+        ;
+    }
+
     public function configureCrud(Crud $crud): Crud
     {
         return $crud

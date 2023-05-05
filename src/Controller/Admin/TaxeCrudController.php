@@ -41,6 +41,9 @@ class TaxeCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add('taux')
             ->add(ChoiceFilter::new('payableparcourtier', 'Payable par le courtier?')->setChoices(self::TAB_TAXE_PAYABLE_PAR_COURTIER))

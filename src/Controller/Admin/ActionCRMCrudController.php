@@ -33,11 +33,13 @@ class ActionCRMCrudController extends AbstractCrudController
     
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
-            ->add('startedAt')
-            ->add('endedAt')
-            ->add('attributedTo')
-        ;
+        ->add('startedAt')
+        ->add('endedAt')
+        ->add('attributedTo');
     }
 
     public function configureCrud(Crud $crud): Crud

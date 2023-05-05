@@ -86,6 +86,9 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add('dateeffet')
             ->add('dateexpiration')

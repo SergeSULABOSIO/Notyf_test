@@ -179,6 +179,9 @@ class EntrepriseCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add(ChoiceFilter::new("secteur", "Secteur d'activité")->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR))
         ;

@@ -40,6 +40,9 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add('tauxusd')
             ->add(ChoiceFilter::new('islocale', 'Monnaie locale?')->setChoices(self::TAB_MONNAIE_MONNAIE_LOCALE))

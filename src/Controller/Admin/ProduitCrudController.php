@@ -53,6 +53,9 @@ class ProduitCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add(ChoiceFilter::new('isobligatoire', 'Obligatoire?')->setChoices(self::TAB_PRODUIT_IS_OBLIGATOIRE))
             ->add(ChoiceFilter::new('isabonnement', 'Abonnement?')->setChoices(self::TAB_PRODUIT_IS_ABONNEMENT))

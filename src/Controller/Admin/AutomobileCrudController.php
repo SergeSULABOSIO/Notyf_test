@@ -63,6 +63,9 @@ class AutomobileCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add('polices')
             ->add(ChoiceFilter::new('utilite', 'Usage')->setChoices(self::TAB_AUTO_UTILITE))

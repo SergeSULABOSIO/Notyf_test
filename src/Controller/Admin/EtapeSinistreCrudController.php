@@ -61,6 +61,9 @@ class EtapeSinistreCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add(ChoiceFilter::new('indice', 'Ordre')->setChoices(self::TAB_ETAPE_INDICE))
             ->add('createdAt')

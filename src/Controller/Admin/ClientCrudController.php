@@ -82,6 +82,9 @@ class ClientCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
+        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+            $filters->add('utilisateur');
+        }
         return $filters
             ->add(ChoiceFilter::new("ispersonnemorale", "Forme Juridique")->setChoices(self::TAB_CLIENT_IS_PERSONNE_MORALE))
             ->add(ChoiceFilter::new("secteur", "Secteur d'activité")->setChoices(self::TAB_CLIENT_SECTEUR))

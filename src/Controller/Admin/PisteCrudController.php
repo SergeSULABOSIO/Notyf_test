@@ -96,7 +96,9 @@ class PisteCrudController extends AbstractCrudController
             DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
 
             //Ligne 05
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+            
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()

@@ -1,8 +1,13 @@
 <?php
 namespace App\EventSubscriber;
 
+use App\Entity\ActionCRM;
+use App\Entity\Cotation;
 use App\Entity\Entreprise;
+use App\Entity\FeedbackCRM;
+use App\Entity\Piste;
 use App\Entity\Utilisateur;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
@@ -39,9 +44,32 @@ class AdminSubscriber implements EventSubscriberInterface
                 $entityInstance->setPassword($hashedPassword);
             }
         }
+        //Si Entreprise
         if($entityInstance instanceof Entreprise){
             $entityInstance->addUtilisateur($this->security->getUser()); //$this->security->getUser()
         }
+
+        //Si Piste
+        if($entityInstance instanceof Piste){
+            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
+        //Si Etape
+        if($entityInstance instanceof Piste){
+            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
+        //Si Cotation
+        if($entityInstance instanceof Cotation){
+            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
+        //Si Feedback
+        if($entityInstance instanceof FeedbackCRM){
+            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
+        //Si Mission/Action
+        if($entityInstance instanceof ActionCRM){
+            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
+
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }

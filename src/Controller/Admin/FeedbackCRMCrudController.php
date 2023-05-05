@@ -76,7 +76,8 @@ class FeedbackCRMCrudController extends AbstractCrudController
             DateTimeField::new('startedAt', "date d'effet")->setColumns(6),
             
             //Ligne 03
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
             DateTimeField::new('createdAt', "Date création")->hideOnForm()->hideOnIndex(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)

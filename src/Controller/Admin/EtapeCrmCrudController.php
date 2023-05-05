@@ -66,7 +66,8 @@ class EtapeCrmCrudController extends AbstractCrudController
 
             //Ligne 01
             TextField::new('nom', "Titre / Nom de la piste")->setColumns(6),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             //Ligne 02
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),

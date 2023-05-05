@@ -94,7 +94,8 @@ class CotationCrudController extends AbstractCrudController
 
             //Ligne 05
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             //Ligne 07
             DateTimeField::new('createdAt', "Date création")->hideOnForm()->hideOnIndex(),

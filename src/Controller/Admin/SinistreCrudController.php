@@ -46,22 +46,22 @@ class SinistreCrudController extends AbstractCrudController
             ->add('montantPaye')
             ->add('monnaie')
             ->add('paidAt')
-            ->add('police')
-        ;
+            ->add('police');
     }
-    
+
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
-            ->setDateFormat ('dd/MM/yyyy')
+            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateFormat('dd/MM/yyyy')
             ->setPaginatorPageSize(30)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Sinistre")
             ->setEntityLabelInPlural("Sinistres")
             ->setPageTitle("index", "Liste des sinistres")
             ->setDefaultSort(['updatedAt' => 'DESC'])
+            ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES])
             // ...
         ;
     }
@@ -70,8 +70,8 @@ class SinistreCrudController extends AbstractCrudController
     {
         return [
             FormField::addTab('Informations générales')
-            ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
+                ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
 
             //Ligne 01
             DateField::new('occuredAt', "Date")->setColumns(6),
@@ -88,7 +88,7 @@ class SinistreCrudController extends AbstractCrudController
 
             //Ligne 04
             AssociationField::new('etape', "Status")->setColumns(6),
-            
+
             //Ligne 05
             NumberField::new('cout', "Valeur perte")->setColumns(6),
             NumberField::new('montantPaye', "Montant payé")->setColumns(6),
@@ -100,14 +100,14 @@ class SinistreCrudController extends AbstractCrudController
             //Ligne 07
             AssociationField::new('police', "Police")->setColumns(6),
             AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex()->setColumns(6),
-            
+
             //Ligne 08
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-           
+
             FormField::addTab('Victimes')
-            ->setIcon('fas fa-bell'),
+                ->setIcon('fas fa-bell'),
             AssociationField::new('victime', "Victimes")->setColumns(6)->onlyOnForms(),
             CollectionField::new('victime', "Victimes")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('victime', "Victimes")->setColumns(6)->onlyOnDetail(),
@@ -129,15 +129,15 @@ class SinistreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
-            ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
+            ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
-            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
 
-            return $actions
+        return $actions
             //Sur la page Index - Selection
             ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
@@ -145,27 +145,27 @@ class SinistreCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
             })
             ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
-                return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
+                return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER); //<i class="fa-solid fa-pen-to-square"></i>
             })
             ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
-                return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE);//<i class="fa-regular fa-rectangle-list"></i>
+                return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE); //<i class="fa-regular fa-rectangle-list"></i>
             })
             //Updates sur la page Index
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('fas fa-bell')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
             })
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER); //<i class="fa-solid fa-trash"></i>
             })
             ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $action) {
-                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER); //<i class="fa-solid fa-trash"></i>
             })
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
             })
             //Updates Sur la page Edit
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
@@ -175,9 +175,9 @@ class SinistreCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
             })
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
-    
+
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
@@ -187,12 +187,25 @@ class SinistreCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $duplicate)
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE]);
+            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+
+            //Application des roles
+            ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::EDIT, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::BATCH_DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+        ;
     }
-    
+
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        
+
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
         parent::persistEntity($em, $entiteDuplique);
@@ -210,7 +223,7 @@ class SinistreCrudController extends AbstractCrudController
     {
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
-                
+
         $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::DETAIL)
@@ -237,5 +250,4 @@ class SinistreCrudController extends AbstractCrudController
 
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-    
 }

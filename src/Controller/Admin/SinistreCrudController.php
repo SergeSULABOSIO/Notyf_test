@@ -99,7 +99,9 @@ class SinistreCrudController extends AbstractCrudController
 
             //Ligne 07
             AssociationField::new('police', "Police")->setColumns(6),
-            AssociationField::new('utilisateur', "Utilisateur")->hideOnIndex()->setColumns(6),
+            
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             //Ligne 08
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),

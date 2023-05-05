@@ -122,6 +122,9 @@ class AutomobileCrudController extends AbstractCrudController
             ChoiceField::new('utilite', 'Usage')->setColumns(6)->setChoices(self::TAB_AUTO_UTILITE),
             ChoiceField::new('nature', 'Nature')->setColumns(6)->setChoices(self::TAB_AUTO_NATURE),
 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
             //Ligne 07
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),

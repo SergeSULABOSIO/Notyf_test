@@ -72,6 +72,10 @@ class ContactCrudController extends AbstractCrudController
 
             //Ligne 03
             AssociationField::new('client', "Client")->setColumns(6),
+            
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
             DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
 
             //Ligne 04

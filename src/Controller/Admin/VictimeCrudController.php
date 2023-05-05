@@ -78,6 +78,9 @@ class VictimeCrudController extends AbstractCrudController
             CollectionField::new('sinistres', "Sinistre")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('sinistres', "Sinistres")->setColumns(6)->onlyOnDetail(),
 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
             //Ligne 04
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),

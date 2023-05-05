@@ -37,7 +37,7 @@ class PisteCrudController extends AbstractCrudController
     {
         return $filters
             ->add('contact')
-            ->add('utilisateur')
+            //->add('utilisateur')
             ->add('expiredAt')
             ->add('etape')
             ->add('cotations')
@@ -96,7 +96,7 @@ class PisteCrudController extends AbstractCrudController
             DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
 
             //Ligne 05
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
             
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),

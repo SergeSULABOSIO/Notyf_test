@@ -113,6 +113,10 @@ class UtilisateurCrudController extends AbstractCrudController
                 self::TAB_ROLES[self::VISION_GLOBALE] => 'success', //info
                 self::TAB_ROLES[self::ACTION_EDITION] => 'danger',
             ]),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
             
             //Ligne 03
             DateTimeField::new('updatedAt', 'Dernière modification')->setColumns(6)->hideOnform(),

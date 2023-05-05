@@ -61,7 +61,7 @@ class DocPieceCrudController extends AbstractCrudController
         return $filters
             ->add('categorie')
             ->add('classeur')
-            ->add('utilisateur')
+            //->add('utilisateur')
         ;
     }
 
@@ -115,8 +115,11 @@ class DocPieceCrudController extends AbstractCrudController
                 ->hideOnIndex()->setColumns(6)->onlyOnForms(),
             TextField::new('fichierD', 'Fichier D')->setColumns(6)->hideOnForm(),
 
-            //Ligne 05
-            AssociationField::new('utilisateur', "Utiliateur")->hideOnIndex()->hideOnForm()->setColumns(6),
+            //Ligne 05 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
             DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)

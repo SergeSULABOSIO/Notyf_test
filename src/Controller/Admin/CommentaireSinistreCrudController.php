@@ -55,7 +55,7 @@ class CommentaireSinistreCrudController extends AbstractCrudController
     {
         return $filters
             ->add('sinistre')
-            ->add('utilisateur')
+            //->add('utilisateur')
             ->add('createdAt')
         ;
     }
@@ -72,7 +72,10 @@ class CommentaireSinistreCrudController extends AbstractCrudController
             AssociationField::new('sinistre', "Sinistre")->setColumns(6),//->onlyOnForms()
             
             //Ligne 02
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6),//->onlyOnForms()
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
             DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
 
             //Ligne 03

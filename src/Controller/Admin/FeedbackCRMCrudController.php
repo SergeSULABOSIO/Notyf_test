@@ -37,7 +37,6 @@ class FeedbackCRMCrudController extends AbstractCrudController
     {
         return $filters
             ->add('action')
-            ->add('utilisateur')
             ->add('startedAt')
         ;
     }
@@ -76,7 +75,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
             DateTimeField::new('startedAt', "date d'effet")->setColumns(6),
             
             //Ligne 03
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
             DateTimeField::new('createdAt', "Date création")->hideOnForm()->hideOnIndex(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),

@@ -177,6 +177,10 @@ class PoliceCrudController extends AbstractCrudController
             ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
             TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),
+            
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
 
             //Ligne 19
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),

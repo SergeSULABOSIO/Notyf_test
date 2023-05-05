@@ -78,12 +78,16 @@ class EtapeSinistreCrudController extends AbstractCrudController
             TextField::new('nom', "Nom")->setColumns(3),
             //NumberField::new('indice', "Indice")->setColumns(3),
             ChoiceField::new('indice', "Ordre")->setColumns(3)->setChoices(self::TAB_ETAPE_INDICE),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6),
+            TextareaField::new('description', "Description")->setColumns(6),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             //Ligne 02
             DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            TextareaField::new('description', "Description")->setColumns(6)
+            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            
         ];
     }
 

@@ -35,6 +35,7 @@ class AssureurCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            //->add('utilisateur')
             ->add(ChoiceFilter::new('isreassureur', "Catégorie")
             ->setChoices([
                 'Réassureur' => 1,
@@ -91,6 +92,10 @@ class AssureurCrudController extends AbstractCrudController
             //Ligne 05
             TextField::new('licence', 'N° Licence')->setColumns(6),
             TextField::new('numimpot', 'N° Impôt')->hideOnIndex()->setColumns(6),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
 
             //Ligne 06
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnform()->setColumns(6),

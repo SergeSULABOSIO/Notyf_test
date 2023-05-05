@@ -77,6 +77,10 @@ class MonnaieCrudController extends AbstractCrudController
             NumberField::new('tauxusd', "Taux (en USD)")->setColumns(6),
             ChoiceField::new('islocale', "Monnaie locale?")->setColumns(6)->setChoices(self::TAB_MONNAIE_MONNAIE_LOCALE),
 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+            
             //Ligne 03
             DateTimeField::new('createdAt', 'Date création')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),

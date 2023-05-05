@@ -37,7 +37,6 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('startedAt')
             ->add('endedAt')
             ->add('attributedTo')
-            ->add('utilisateur')
         ;
     }
 
@@ -83,7 +82,7 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
 
             //Ligne 04
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),

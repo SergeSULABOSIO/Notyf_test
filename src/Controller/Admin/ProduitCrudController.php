@@ -98,6 +98,10 @@ class ProduitCrudController extends AbstractCrudController
             
             //Ligne 04
             ChoiceField::new('categorie', "Catégorie")->setColumns(6)->setChoices(self::TAB_PRODUIT_CATEGORIE),
+            
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6),
 
             //Ligne 05

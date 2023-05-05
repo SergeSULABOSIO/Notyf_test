@@ -116,6 +116,10 @@ class ClientCrudController extends AbstractCrudController
             TextField::new('numipot', "N°. Impôt")->hideOnIndex()->setColumns(6),
             ChoiceField::new('secteur', "Secteur")->setColumns(6)
             ->setChoices(self::TAB_CLIENT_SECTEUR),
+            
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
 
             //Ligne 06
             AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),

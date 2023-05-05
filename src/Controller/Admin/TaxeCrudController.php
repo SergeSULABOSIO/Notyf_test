@@ -84,6 +84,10 @@ class TaxeCrudController extends AbstractCrudController
             //BooleanField::new('payableparcourtier', "Payable par le courtier?"),
             ChoiceField::new('payableparcourtier', "Payable par le courtier?")->setColumns(6)->setChoices(self::TAB_TAXE_PAYABLE_PAR_COURTIER),
 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)

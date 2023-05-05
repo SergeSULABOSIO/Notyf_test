@@ -88,6 +88,10 @@ class PaiementTaxeCrudController extends AbstractCrudController
             CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
             //Ligne 05
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),

@@ -51,7 +51,7 @@ class DocClasseurCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add('utilisateur')
+            //->add('utilisateur')
         ;
     }
 
@@ -64,7 +64,10 @@ class DocClasseurCrudController extends AbstractCrudController
 
             //Ligne 01
             TextField::new('nom', "Nom")->setColumns(6),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm(),
+            //AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm(),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
 
             //Ligne 02
             DateTimeField::new('createdAt', 'Date création')->hideOnForm(),

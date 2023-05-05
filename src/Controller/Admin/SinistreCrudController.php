@@ -55,7 +55,7 @@ class SinistreCrudController extends AbstractCrudController
         return $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
-            ->setPaginatorPageSize(30)
+            ->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Sinistre")
             ->setEntityLabelInPlural("Sinistres")

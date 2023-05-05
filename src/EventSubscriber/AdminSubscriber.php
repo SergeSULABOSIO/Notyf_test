@@ -44,32 +44,8 @@ class AdminSubscriber implements EventSubscriberInterface
                 $entityInstance->setPassword($hashedPassword);
             }
         }
-        //Si Entreprise
-        if($entityInstance instanceof Entreprise){
-            $entityInstance->addUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-
-        //Si Piste
-        if($entityInstance instanceof Piste){
-            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-        //Si Etape
-        if($entityInstance instanceof Piste){
-            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-        //Si Cotation
-        if($entityInstance instanceof Cotation){
-            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-        //Si Feedback
-        if($entityInstance instanceof FeedbackCRM){
-            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-        //Si Mission/Action
-        if($entityInstance instanceof ActionCRM){
-            $entityInstance->setUtilisateur($this->security->getUser()); //$this->security->getUser()
-        }
-
+        
+        $entityInstance->setUtilisateur($this->security->getUser());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }
@@ -88,7 +64,7 @@ class AdminSubscriber implements EventSubscriberInterface
             }
             //S'il s'agit de l'utilisateur actuellement connecté, alors il faut lui déconnecter
             //dd($this->security->getUser());
-            if($this->security->getUser()->getId() == $entityInstance->getId()){
+            if($this->security->getUser() == $entityInstance){
                 $response = $this->security->logout(false);
             }
         }

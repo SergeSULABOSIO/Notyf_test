@@ -51,7 +51,7 @@ class CotationCrudController extends AbstractCrudController
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(30)
+            ->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Cotation")
             ->setEntityLabelInPlural("Cotations")

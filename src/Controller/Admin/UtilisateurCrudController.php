@@ -24,6 +24,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
 class UtilisateurCrudController extends AbstractCrudController
 {
@@ -110,7 +112,7 @@ class UtilisateurCrudController extends AbstractCrudController
                 self::TAB_ROLES[self::VISION_GLOBALE] => 'success', //info
                 self::TAB_ROLES[self::ACTION_EDITION] => 'danger',
             ]),
-
+            
             //Ligne 03
             DateTimeField::new('updatedAt', 'Dernière modification')->setColumns(6)->hideOnform(),
             DateTimeField::new('createdAt', "Date création")->setColumns(6)->hideOnForm()

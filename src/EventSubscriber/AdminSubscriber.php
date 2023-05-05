@@ -1,6 +1,7 @@
 <?php
 namespace App\EventSubscriber;
 
+use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -38,6 +39,9 @@ class AdminSubscriber implements EventSubscriberInterface
                 $entityInstance->setPassword($hashedPassword);
             }
         }
+        if($entityInstance instanceof Entreprise){
+            $entityInstance->addUtilisateur($this->security->getUser()); //$this->security->getUser()
+        }
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }
@@ -48,17 +52,18 @@ class AdminSubscriber implements EventSubscriberInterface
         $entityInstance = $event->getEntityInstance();
         if($entityInstance instanceof Utilisateur){
             $newpassword = $entityInstance->getPlainPassword();
+            //Si le mot de passe n'est pas vide = C'est que l'on désire le modifier
             if($newpassword !== ""){
                 //dd($newpassword);
                 $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
                 $entityInstance->setPassword($hashedPassword);
             }
+            //S'il s'agit de l'utilisateur actuellement connecté, alors il faut lui déconnecter
+            //dd($this->security->getUser());
+            if($this->security->getUser()->getId() == $entityInstance->getId()){
+                $response = $this->security->logout(false);
+            }
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-        
-        //dd($this->security->getUser());
-        if($this->security->getUser()->getEmail() == $entityInstance->getEmail()){
-            $response = $this->security->logout(false);
-        }
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ActionCRM;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -26,6 +29,11 @@ class ActionCRMCrudController extends AbstractCrudController
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
     
+    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
+    {
+        
+    }
+
     public static function getEntityFqcn(): string
     {
         return ActionCRM::class;
@@ -62,6 +70,11 @@ class ActionCRMCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        $someRepository = $this->entityManager->getRepository(ActionCRM::class);
+        //dd($someRepository->findAll());
+        //dd($someRepository);
+        //dd($this->security->getUser());
+
         return [
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
@@ -82,9 +95,9 @@ class ActionCRMCrudController extends AbstractCrudController
             //Ligne 03
             DateTimeField::new('startedAt', "Date effet")->setColumns(6),
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
-
+            
             //Ligne 04
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),

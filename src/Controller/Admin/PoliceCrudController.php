@@ -74,6 +74,19 @@ class PoliceCrudController extends AbstractCrudController
         return Police::class;
     }
 
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        //dd($this->getUser());
+        $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        if ($hasVisionGlobale) {
+            return $defaultQueryBuilder;
+        }
+        return $defaultQueryBuilder
+            ->andWhere('entity.utilisateur = :user')
+            ->setParameter('user', $this->getUser());
+    }
+
     public function configureCrud(Crud $crud): Crud
     {
         return $crud

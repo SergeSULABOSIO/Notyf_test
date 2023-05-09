@@ -28,9 +28,6 @@ class ActionCRM
     #[ORM\Column]
     private ?\DateTimeImmutable $endedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateur::class)]
-    private Collection $attributedTo;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
@@ -60,9 +57,11 @@ class ActionCRM
     #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class, orphanRemoval: true)]
     private Collection $feedbackCRMs;
 
+    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Utilisateur $attributedTo = null;
+
     public function __construct()
     {
-        $this->attributedTo = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
         $this->feedbackCRMs = new ArrayCollection();
     }
@@ -120,30 +119,7 @@ class ActionCRM
         return $this;
     }
 
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getAttributedTo(): Collection
-    {
-        return $this->attributedTo;
-    }
-
-    public function addAttributedTo(Utilisateur $attributedTo): self
-    {
-        if (!$this->attributedTo->contains($attributedTo)) {
-            $this->attributedTo->add($attributedTo);
-        }
-
-        return $this;
-    }
-
-    public function removeAttributedTo(Utilisateur $attributedTo): self
-    {
-        $this->attributedTo->removeElement($attributedTo);
-
-        return $this;
-    }
-
+    
     public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
@@ -289,6 +265,18 @@ class ActionCRM
                 $feedbackCRM->setAction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAttributedTo(): ?Utilisateur
+    {
+        return $this->attributedTo;
+    }
+
+    public function setAttributedTo(?Utilisateur $attributedTo): self
+    {
+        $this->attributedTo = $attributedTo;
 
         return $this;
     }

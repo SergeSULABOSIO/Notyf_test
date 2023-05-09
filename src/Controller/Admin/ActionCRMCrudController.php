@@ -106,10 +106,8 @@ class ActionCRMCrudController extends AbstractCrudController
                     ->setParameter('same_value', $this->security->getUser()->getId());
             }),
 
-            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
-            CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnDetail(),
-
+            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
+            
             //Ligne 05
             AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),

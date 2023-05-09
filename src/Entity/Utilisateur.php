@@ -69,10 +69,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $utilisateur = null;
 
+    #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
+
     public function __construct()
     {
         $this->entreprises = new ArrayCollection();
         $this->feedbackCRMs = new ArrayCollection();
+        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -275,6 +279,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUtilisateur(?self $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionCRM>
+     */
+    public function getActionCRMs(): Collection
+    {
+        return $this->actionCRMs;
+    }
+
+    public function addActionCRM(ActionCRM $actionCRM): self
+    {
+        if (!$this->actionCRMs->contains($actionCRM)) {
+            $this->actionCRMs->add($actionCRM);
+            $actionCRM->setAttributedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionCRM(ActionCRM $actionCRM): self
+    {
+        if ($this->actionCRMs->removeElement($actionCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionCRM->getAttributedTo() === $this) {
+                $actionCRM->setAttributedTo(null);
+            }
+        }
 
         return $this;
     }

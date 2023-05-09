@@ -7,6 +7,9 @@ use App\Entity\ActionCRM;
 use Doctrine\ORM\EntityRepository;
 //use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -24,6 +27,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
@@ -33,6 +38,20 @@ class ActionCRMCrudController extends AbstractCrudController
     public function __construct(private EntityManagerInterface $entityManager, private Security $security)
     {
         
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        //dd($this->getUser());
+        $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        if ($hasVisionGlobale) {
+            return $defaultQueryBuilder;
+        }
+        return $defaultQueryBuilder
+            ->andWhere('entity.utilisateur = :user')
+            ->orWhere('entity.attributedTo = :user')
+            ->setParameter('user', $this->getUser());
     }
 
     public static function getEntityFqcn(): string

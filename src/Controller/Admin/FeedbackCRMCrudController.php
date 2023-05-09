@@ -48,7 +48,6 @@ class FeedbackCRMCrudController extends AbstractCrudController
         }
         return $defaultQueryBuilder
             ->andWhere('entity.utilisateur = :user')
-            //->orWhere('entity.attributedTo = :user')
             ->setParameter('user', $this->getUser());
     }
 

@@ -4,8 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\ActionCRM;
 //use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 //use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -97,8 +98,13 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
             
             //Ligne 04
-           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)//->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository->createQueryBuilder('e')
+                    ->andWhere('e.id = :same_value')
+                    ->setParameter('same_value', $this->security->getUser()->getId());
+            }),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnForms(),
             CollectionField::new('attributedTo', "Attribuée à")->setColumns(6)->onlyOnIndex(),

@@ -102,12 +102,12 @@ class SecurityController extends AbstractController
             $manager->persist($entreprise);
             $manager->flush();
 
-            $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès!");
-
+            $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");
+            
             //envoie de l'email de confirmation
             //$serviceMails->sendEmailBienvenu($utilisateur);
 
-            return $this->redirectToRoute('security.login');
+            return $this->redirectToRoute('admin');
         }
 
         return $this->render('security/registration.entreprise.html.twig', [

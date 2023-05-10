@@ -88,7 +88,7 @@ class SecurityController extends AbstractController
         $entreprise = new Entreprise();
         $utilisateur = $security->getUser();
 
-        dd($utilisateur);
+        //dd($utilisateur);
 
         $form = $this->createForm(EntrepriseRegistrationType::class, $entreprise);
 
@@ -103,7 +103,7 @@ class SecurityController extends AbstractController
             $manager->flush();
 
             $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");
-            
+
             //envoie de l'email de confirmation
             //$serviceMails->sendEmailBienvenu($utilisateur);
 

@@ -136,7 +136,7 @@ class PoliceCrudController extends AbstractCrudController
 
             //Ligne 01
             NumberField::new('idavenant', "N° Avenant")->setColumns(2),
-            ChoiceField::new('typeavenant', "Type d'avenant")->hideOnIndex()->setColumns(4)->setChoices(self::TAB_POLICE_TYPE_AVENANT),
+            ChoiceField::new('typeavenant', "Type d'avenant")->setColumns(4)->setChoices(self::TAB_POLICE_TYPE_AVENANT),
             TextField::new('reference', "Référence")->setColumns(6),
             FormField::addPanel('')->onlyOnForms(),
             AssociationField::new('client', "Assuré")->setColumns(6),

@@ -60,13 +60,13 @@ message.forEach(message => {
   if (message.className === 'info') {
     notyf.open({
       type: "info",
-      message: "Ceci est message " + message.innerHTML
+      message: message.innerHTML
     });
   }
   if (message.className === 'warning') {
     notyf.open({
       type: "warning",
-      message: "Ceci est message " + message.innerHTML
+      message: message.innerHTML
     });
   }
 });

@@ -102,31 +102,6 @@ class AppFixtures extends Fixture
         $manager->persist($user_admin);
         $manager->flush();
 
-        for ($i = 0; $i < 10; $i++) {
-            $user = new Utilisateur();
-            $user->setNom($faker->name());
-            $user->setPseudo(mt_rand(0, 1) . "PS");
-            $user->setEmail($faker->email());
-            //$user->setRoles(['ROLE_USER']);
-            //$user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
-            $user->setRoles([
-                //Accès aux fonctionnalités
-                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
-                //Pouvoeir d'action
-                //Visibilité
-                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_LOCALE]    
-            ]);
-
-            $hashedPassword = $this->hasher->hashPassword($user, "password");
-            $user->setPassword($hashedPassword);
-            $user->setCreatedAt(new \DateTimeImmutable());
-            $user->setUpdatedAt(new \DateTimeImmutable());
-
-            //On persiste dans la base de données
-            $manager->persist($user);
-            $manager->flush();
-        }
-
 
 
         $faker = Factory::create();
@@ -164,6 +139,34 @@ class AppFixtures extends Fixture
         $entreprise->setUtilisateur($user_admin);
 
         $manager->persist($entreprise);
+
+
+        for ($i = 0; $i < 10; $i++) {
+            $user = new Utilisateur();
+            $user->setNom($faker->name());
+            $user->setPseudo(mt_rand(0, 1) . "PS");
+            $user->setEmail($faker->email());
+            //$user->setRoles(['ROLE_USER']);
+            //$user->setRoles([UtilisateurCrudController::TAB_POSTES['CLIENT']]);
+            $user->setRoles([
+                //Accès aux fonctionnalités
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
+                //Pouvoeir d'action
+                //Visibilité
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_LOCALE]    
+            ]);
+
+            $hashedPassword = $this->hasher->hashPassword($user, "password");
+            $user->setPassword($hashedPassword);
+            $user->setCreatedAt(new \DateTimeImmutable());
+            $user->setUpdatedAt(new \DateTimeImmutable());
+            $user->setUtilisateur($user_admin);
+            $user->setEntreprise($entreprise);
+
+            //On persiste dans la base de données
+            $manager->persist($user);
+            $manager->flush();
+        }
 
         //MONNAIES
         $monnaieUSD = null;

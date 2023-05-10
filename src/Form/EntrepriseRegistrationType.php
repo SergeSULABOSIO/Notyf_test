@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
-class RegistrationType extends AbstractType
+class EntrepriseRegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

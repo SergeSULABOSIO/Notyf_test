@@ -31,6 +31,7 @@ use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
+use App\Service\ServiceEntreprise;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -52,7 +53,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
     
-    public function __construct(private AdminUrlGenerator $adminUrlGenerator)
+    public function __construct(private AdminUrlGenerator $adminUrlGenerator, private ServiceEntreprise $serviceEntreprise)
     {
     }
 
@@ -76,15 +77,38 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
-        return $this->render('admin/dashboard.html.twig');
+        
+        //dd($this->serviceEntreprise);
+
+        $connected_entreprise = $this->serviceEntreprise->getEntreprise();
+        $connected_utilisateur = $this->serviceEntreprise->getUtilisateur();
+
+        if($this->serviceEntreprise->hasEntreprise() == true){
+            $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
+            return $this->render('admin/dashboard.html.twig');
+        }else{
+            if($this->serviceEntreprise->isAdministrateur() == true){
+                $this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");
+                return $this->redirectToRoute('security.register.entreprise');
+            }else{
+                return $this->redirectToRoute('security.login');
+            }
+        }
+        //dd($connected_entreprise);
+        //dd($connected_utilisateur);
+        //dd($this->serviceEntreprise);
+
+        //return $this->render('admin/dashboard.html.twig');
         //return $this->redirect($this->adminUrlGenerator->setController(ArticleCrudController::class)->generateUrl());
     }
 
     public function configureDashboard(): Dashboard
     {
+        $nomEntreprise = $this->serviceEntreprise->getEntreprise() == null? "TBA" : $this->serviceEntreprise->getEntreprise();
         return Dashboard::new()
             //->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
-            ->setTitle('JS Brokers - Administration')
+            
+            ->setTitle($nomEntreprise) //$this->serviceEntreprise->getEntreprise()
             //->setFaviconPath('assets/icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
             ;
     }

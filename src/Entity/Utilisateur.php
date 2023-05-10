@@ -60,9 +60,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Entreprise::class, mappedBy: 'utilisateur')]
-    private Collection $entreprises;
-
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: FeedbackCRM::class)]
     private Collection $feedbackCRMs;
 
@@ -72,9 +69,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
+    #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
+    private ?Entreprise $entreprise = null;
+
     public function __construct()
     {
-        $this->entreprises = new ArrayCollection();
         $this->feedbackCRMs = new ArrayCollection();
         $this->actionCRMs = new ArrayCollection();
     }
@@ -215,33 +214,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Entreprise>
-     */
-    public function getEntreprises(): Collection
-    {
-        return $this->entreprises;
-    }
-
-    public function addEntreprise(Entreprise $entreprise): self
-    {
-        if (!$this->entreprises->contains($entreprise)) {
-            $this->entreprises->add($entreprise);
-            $entreprise->addUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEntreprise(Entreprise $entreprise): self
-    {
-        if ($this->entreprises->removeElement($entreprise)) {
-            $entreprise->removeUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, FeedbackCRM>
      */
     public function getFeedbackCRMs(): Collection
@@ -309,6 +281,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $actionCRM->setAttributedTo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

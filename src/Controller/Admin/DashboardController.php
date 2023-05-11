@@ -88,7 +88,7 @@ class DashboardController extends AbstractDashboardController
             return $this->render('admin/dashboard.html.twig');
         }else{
             if($this->serviceEntreprise->isAdministrateur() == true){
-                $this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");
+                //$this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");
                 return $this->redirectToRoute('security.register.entreprise');
             }else{
                 return $this->redirectToRoute('security.login');

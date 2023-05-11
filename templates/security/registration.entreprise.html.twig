@@ -1,13 +1,14 @@
-
-{% extends 'base.html.twig' %}
-
-{% block title %}JS Brokers - Inscription (2/2){% endblock %}
+{% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block body %}
-	<div class="example-wrapper">
+	<div class="container">
 		<h2 class="mt-4">
             Création de l'Entreprise
         </h2>
+        <div class="alert alert-warning" role="alert">
+            Salut <strong>{{ utilisateur.nom }}</strong>,</br>
+            Afin de pouvoir travailler, vous devez créer un espace de travail ou une entreprise en remplissant le formulaire ci-dessous.
+        </div>
         {{ form(form) }}
 	</div>
 {% endblock %}

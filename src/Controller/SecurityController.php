@@ -17,20 +17,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 
-class SecurityController extends AbstractController
+class SecurityController extends AbstractDashboardController//AbstractController
 {
-    #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
-    public function index(AuthenticationUtils $authenticationUtils): Response
-    {
-        $last_username = $authenticationUtils->getLastUsername();
 
-        $error = $authenticationUtils->getLastAuthenticationError();
+    public function __construct(private AuthenticationUtils $authenticationUtils)
+    {
+        
+    }
+
+
+    #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
+    public function index(): Response
+    {
+        $last_username = $this->authenticationUtils->getLastUsername();
+
+        $error = $this->authenticationUtils->getLastAuthenticationError();
 
         if ($error != null) {
             $this->addFlash("error", "Vos identifiants sont incorrects");
@@ -110,8 +119,9 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        return $this->render('security/registration.entreprise.html.twig', [
-            'form' => $form->createView()
+        return $this->render('security/registration.entreprise.html.twig', [//
+            'form' => $form->createView(),
+            'utilisateur' => $utilisateur
         ]);
     }
 }

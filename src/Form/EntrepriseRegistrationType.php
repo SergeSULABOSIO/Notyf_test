@@ -2,14 +2,17 @@
 
 namespace App\Form;
 
+use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
+use App\Controller\Admin\ClientCrudController;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -22,12 +25,12 @@ class EntrepriseRegistrationType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Serge SULA BOSIO',
+                    'class' => 'form-control',
+                    'placeholder' => 'ABCD Insurance Brokers',
                     'minlength' => '4',
                     'maxlenght' => '50',
                 ],
-                'label' => 'Votre nom complet',
+                'label' => "Le nom complet de votre entreprise (Raison Sociale)",
                 'label_attr' => [
                     'class' => 'form-label mt-3'
                 ],
@@ -36,58 +39,101 @@ class EntrepriseRegistrationType extends AbstractType
                     new Assert\Length(['min' => 4, 'max' => 50])
                 ]
             ])
-            ->add('pseudo', TextType::class, [
+            ->add('adresse', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'sul243',
+                    'class' => 'form-control',
+                    'placeholder' => "L'adresse",
                     'minlength' => '4',
                     'maxlenght' => '50',
                 ],
-                'required' => false,
-                'label' => 'Votre Pseudo',
+                'label' => "Votre adresse physique",
                 'label_attr' => [
-                    'class' => 'form-label'
-                ]
-            ])
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'exemple@serveur.com',
-                    'minlength' => '4',
-                    'maxlenght' => '50',
-                ],
-                'label' => 'Votre adresse mail',
-                'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Email(),
                     new Assert\Length(['min' => 4, 'max' => 50])
                 ]
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                    'label' => 'Mot de passe',
-                    'attr' => [
-                        'class' => 'form-control mb-4',
-                        'placeholder' => '*****',
-                    ]
+            ->add('telephone', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => "+244828727706, +244828727707, etc.",
+                    'minlength' => '4',
+                    'maxlenght' => '100',
                 ],
-                'second_options' => [
-                    'label' => 'Confirmez le passe',
-                    'attr' => [
-                        'class' => 'form-control mb-4',
-                        'placeholder' => '*****',
-                    ]
+                'label' => "Numéros de téléphone",
+                'label_attr' => [
+                    'class' => 'form-label mt-3'
                 ],
-                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 4, 'max' => 50])
+                ]
+            ])
+            ->add('rccm', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => "Exemple: CK/BEN/RCCM/16-B-10580",
+                    'minlength' => '4',
+                    'maxlenght' => '100',
+                ],
+                'label' => "Numéros de registre commercial (RCCM) ou l'équivalent.",
+                'label_attr' => [
+                    'class' => 'form-label mt-3'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 4, 'max' => 50])
+                ]
+            ])
+            ->add('idnat', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => "Exemple: 01–62–N15130B",
+                    'minlength' => '4',
+                    'maxlenght' => '100',
+                ],
+                'label' => "Numéros d'identification nationle (IDNAT) ou l'équivalent.",
+                'label_attr' => [
+                    'class' => 'form-label mt-3'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 4, 'max' => 50])
+                ]
+            ])
+            ->add('numimpot', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => "Exemple: A1621859CF",
+                    'minlength' => '4',
+                    'maxlenght' => '100',
+                ],
+                'label' => "Numéros d'identification financière (NIF) ou l'équivalent.",
+                'label_attr' => [
+                    'class' => 'form-label mt-3'
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length(['min' => 4, 'max' => 50])
+                ]
+            ])
+            ->add('secteur', ChoiceType::class, [
+                'choices' => ClientCrudController::TAB_CLIENT_SECTEUR,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => "Séléctionnez ici"
+                ],
+                'label' => "Votre secteur d'Activité.",
+                'label_attr' => [
+                    'class' => 'form-label mt-3'
+                ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Créer un compte Utilisateur',
+                'label' => 'CREER MON ENTREPRISE',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-primary mt-3'
                 ]
             ])
             ->add('captcha', Recaptcha3Type::class, [
@@ -100,7 +146,7 @@ class EntrepriseRegistrationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Utilisateur::class,
+            'data_class' => Entreprise::class,
         ]);
     }
 }

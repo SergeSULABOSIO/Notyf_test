@@ -1,32 +1,38 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %} #}
 
-{% block title %}JS Brokers - Connexion{% endblock %}
+{# {% block title %}JS Brokers - Connexion{% endblock %} #}
+
+{% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block body %}
-	<div class="example-wrapper">
-		<h1 class="mt-4">
+	<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <h2 class="mt-4">
             JS Brokers - Connexion
-        </h1>
+        </h2>
         {% if error %}
             <div class="alert alert-danger">
                 {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
         {% endif %}
         <div class="">
-            <form action="{{path('security.login')}}" method="post">
-                <fieldset>
-                    <div class="form-group">
-                        <label for="username" class="form-label">Addresse mail</label>
-                        <input type="email" name="_username" class="form-control" id="email" placeholder="exemple@serveur.com" value="{{ last_username }}">
-                        <small id="emailHelp" class="form-text text-muted">Nous ne partagerons pas vos informations personnelles.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="motdepasse" class="form-label">Mot de passe</label>
-                        <input type="password" name="_password" class="form-control" id="motdepasse" placeholder="Mot de passe">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Connexion</button>
-                </fieldset>
-            </form>
+                <form action="{{path('security.login')}}" method="post">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="username" class="form-label">Addresse mail</label>
+                            <input type="email" name="_username" class="form-control" id="email" placeholder="exemple@serveur.com" value="{{ last_username }}">
+                            <small id="emailHelp" class="form-text text-muted">Nous ne partagerons pas vos informations personnelles.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="motdepasse" class="form-label">Mot de passe</label>
+                            <input type="password" name="_password" class="form-control" id="motdepasse" placeholder="Mot de passe">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Connexion</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
         </div>
 	</div>
 {% endblock %}

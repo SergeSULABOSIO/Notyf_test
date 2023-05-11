@@ -133,7 +133,7 @@ class EntrepriseRegistrationType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'CREER MON ENTREPRISE',
                 'attr' => [
-                    'class' => 'btn btn-primary mt-3'
+                    'class' => 'btn btn-success mt-3'
                 ]
             ])
             ->add('captcha', Recaptcha3Type::class, [

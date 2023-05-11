@@ -3,10 +3,18 @@
 
 {% block body %}
 	<div class="container">
-		<h2 class="mt-4">
-            Création du compte Administrateur
-        </h2>
-        {{ form(form) }}
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <h2 class="mt-4">
+                    Création du compte Administrateur
+                </h2>
+                <div class="alert alert-info" role="alert">
+                    Salut,</br>
+                    Pour commencer, merci de créer d'abord un compte administrateur. Ce compte vous permettra d'aménager votre espace de travail puis d'inviter les autres utilisateurs à qui vous attibuerez les droits d'accès aux données. 
+                </div>
+                {{ form(form) }}
+            </div>
+        </div>
 	</div>
 {% endblock %}
 

@@ -22,7 +22,7 @@ class AdminRegistrationType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                     'placeholder' => 'Jean-Christopher Lourd',
                     'minlength' => '4',
                     'maxlenght' => '50',
@@ -38,7 +38,7 @@ class AdminRegistrationType extends AbstractType
             ])
             ->add('pseudo', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                     'placeholder' => 'sul243',
                     'minlength' => '4',
                     'maxlenght' => '50',
@@ -51,7 +51,7 @@ class AdminRegistrationType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control mb-3',
                     'placeholder' => 'exemple@serveur.com',
                     'minlength' => '4',
                     'maxlenght' => '50',
@@ -71,14 +71,14 @@ class AdminRegistrationType extends AbstractType
                 'first_options' => [
                     'label' => 'Mot de passe',
                     'attr' => [
-                        'class' => 'form-control mb-4',
+                        'class' => 'form-control mb-3',
                         'placeholder' => '*****',
                     ]
                 ],
                 'second_options' => [
                     'label' => 'Confirmez le passe',
                     'attr' => [
-                        'class' => 'form-control mb-4',
+                        'class' => 'form-control',
                         'placeholder' => '*****',
                     ]
                 ],
@@ -87,7 +87,7 @@ class AdminRegistrationType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'CREER MON COMPTE ADMINISTRATEUR',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-success mt-3'
                 ]
             ])
             ->add('captcha', Recaptcha3Type::class, [

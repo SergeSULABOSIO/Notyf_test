@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -68,7 +69,18 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles([
+                //Accès aux fonctionnalités
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE],
+                //Pouvoeir d'action
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION],
+                //Visibilité
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]    
+            ]);
             $user->setUpdatedAt(new DateTimeImmutable());
             $user->setCreatedAt(new DateTimeImmutable());
             $hashedPassword = $hasher->hashPassword($user, $user->getPlainPassword());
@@ -77,10 +89,15 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $manager->persist($user);
             $manager->flush();
 
-            $this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
+            //$this->addFlash("success", "Félicitation " . $user->getNom() . ", votre comptre vient d'être créé avec succès!");
 
             //envoie de l'email de confirmation
             $serviceMails->sendEmailBienvenu($user);
+
+
+            //On doit créer ici les ingrédients du compte
+
+
 
             return $this->redirectToRoute('security.login');
         }

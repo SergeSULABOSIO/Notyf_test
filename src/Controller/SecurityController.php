@@ -100,7 +100,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
             //envoie de l'email de confirmation
             $serviceMails->sendEmailBienvenu($user);
-            
+
             return $this->redirectToRoute('security.login');
         }
 
@@ -183,7 +183,6 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
         //Construction des objets et persistance
         //MONNAIES
-        $monnaieUSD = null;
         foreach ($tabCodesMonnaies as $codeMonnaie) {
             //Pour chaque element du tableau
             $monnaie = new Monnaie();
@@ -195,7 +194,6 @@ class SecurityController extends AbstractDashboardController//AbstractController
                 $monnaie->setNom("Dollars Américains");
                 $monnaie->setTauxusd(2050);
                 $monnaie->setIslocale(false);
-                $monnaieUSD = $monnaie;
             }
             $monnaie->setCode($codeMonnaie);
             $monnaie->setEntreprise($entreprise);

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Taxe;
 use DateTimeImmutable;
-
+use Faker\Factory;
 use App\Entity\Monnaie;
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
@@ -148,6 +148,8 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
     public function creerIngredients(Utilisateur $utilisateur , Entreprise $entreprise)
     {
+        $faker = Factory::create();
+
         $tabCodesMonnaies = array("USD", "CDF");
         $tabNomsTaxes = array("TVA", "ARCA");
         $tabEtapesCRM = array(

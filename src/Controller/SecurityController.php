@@ -100,12 +100,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
             //envoie de l'email de confirmation
             $serviceMails->sendEmailBienvenu($user);
-
-
-            //On doit créer ici les ingrédients du compte
-
-
-
+            
             return $this->redirectToRoute('security.login');
         }
 

@@ -22,8 +22,8 @@ class AdminRegistrationType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
-                    'placeholder' => 'Serge SULA BOSIO',
+                    'class' => 'form-control',
+                    'placeholder' => 'Jean-Christopher Lourd',
                     'minlength' => '4',
                     'maxlenght' => '50',
                 ],
@@ -38,7 +38,7 @@ class AdminRegistrationType extends AbstractType
             ])
             ->add('pseudo', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
+                    'class' => 'form-control',
                     'placeholder' => 'sul243',
                     'minlength' => '4',
                     'maxlenght' => '50',
@@ -51,7 +51,7 @@ class AdminRegistrationType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
-                    'class' => 'form-control mb-4',
+                    'class' => 'form-control',
                     'placeholder' => 'exemple@serveur.com',
                     'minlength' => '4',
                     'maxlenght' => '50',
@@ -85,7 +85,7 @@ class AdminRegistrationType extends AbstractType
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Créer un compte Utilisateur',
+                'label' => 'CREER MON COMPTE ADMINISTRATEUR',
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]

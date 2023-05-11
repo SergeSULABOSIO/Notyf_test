@@ -2,26 +2,29 @@
 
 namespace App\Controller;
 
+use Faker\Factory;
 use App\Entity\Taxe;
 use DateTimeImmutable;
-use Faker\Factory;
 use App\Entity\Monnaie;
+use App\Entity\Produit;
+use App\Entity\EtapeCrm;
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use App\Service\ServiceMails;
 use App\Form\RegistrationType;
+
 use App\Form\AdminRegistrationType;
 use Doctrine\Persistence\ObjectManager;
-
 use App\Form\EntrepriseRegistrationType;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Entity\EtapeCrm;
+use App\Entity\DocCategorie;
+use App\Entity\EtapeSinistre;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -133,7 +136,9 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $manager->flush();
 
             $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");
-
+            
+            //Creation des ingrédients / objets de base
+            $this->creerIngredients($utilisateur, $entreprise);
             //envoie de l'email de confirmation
             //$serviceMails->sendEmailBienvenu($utilisateur);
 
@@ -205,7 +210,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
             //persistance
             $this->manager->persist($monnaie);
-            $this->manager->flush();
+            //$this->manager->flush();
         }
 
         //TAXES
@@ -230,31 +235,84 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $taxe->setUtilisateur($utilisateur);
 
             $this->manager->persist($taxe);
-            $this->manager->flush();
+            //$this->manager->flush();
         }
 
         //ETAPE CRM
         foreach ($tabEtapesCRM as $nomEtape) {
             $etapeCRM = new EtapeCrm();
+            $etapeCRM->setNom($nomEtape);
+            $etapeCRM->setEntreprise($entreprise);
+            $etapeCRM->setCreatedAt(new \DateTimeImmutable());
+            $etapeCRM->setUpdatedAt(new \DateTimeImmutable());
+            $etapeCRM->setUtilisateur($utilisateur);
+            //persistance
+            $this->manager->persist($etapeCRM);
+            //$this->manager->flush();
+        }
+
+        //PRODUIT
+        foreach ($tabProduits as $nomProduit) {
+            $produit = new Produit();
             $produit->setNom($nomProduit);
             $produit->setCode("PRD" . $faker->randomNumber(5, true));
             $produit->setDescription($faker->sentence(5));
-            if ($compteur % 2) {
-                $produit->setIsobligatoire(true);
-                $produit->setTauxarca(0.10);
-            } else {
-                $produit->setIsobligatoire(false);
-                $produit->setTauxarca(0.15);
-            }
+            $produit->setIsobligatoire(true);
+            $produit->setTauxarca(0.10);
             $produit->setIsabonnement(false);
             $produit->setCategorie(0);
             $produit->setEntreprise($entreprise);
             $produit->setCreatedAt(new \DateTimeImmutable());
             $produit->setUpdatedAt(new \DateTimeImmutable());
-            $produit->setUtilisateur($user_admin);
-
-            $manager->persist($produit);
-            $compteur++;
+            $produit->setUtilisateur($utilisateur);
+            //persistance
+            $this->manager->persist($etapeCRM);
+            //$this->manager->flush();
         }
+
+        //ETAPE SINISTRE
+        $indice = 0;
+        foreach ($tabEtapesSinistre as $nomEtape) {
+            $etapeSinistre = new EtapeSinistre();
+            $etapeSinistre->setNom($nomEtape);
+            $etapeSinistre->setDescription($faker->sentence(10));
+            $etapeSinistre->setIndice($indice);//$indice
+            $etapeSinistre->setEntreprise($entreprise);
+            $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
+            $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
+            $etapeSinistre->setUtilisateur($utilisateur);
+            $indice++;
+            //persistance
+            $this->manager->persist($etapeSinistre);
+            //$this->manager->flush();
+        }
+
+        //CATEGORIE BIBBLIOTHEQUE
+        foreach ($tabBiblioCategorie as $nomCategorie) {
+            $categorieBib = new DocCategorie();
+            $categorieBib->setNom($nomCategorie);
+            $categorieBib->setEntreprise($entreprise);
+            $categorieBib->setCreatedAt(new \DateTimeImmutable());
+            $categorieBib->setUpdatedAt(new \DateTimeImmutable());
+            $categorieBib->setUtilisateur($utilisateur);
+            //persistance
+            $this->manager->persist($categorieBib);
+            //$this->manager->flush();
+        }
+
+        //CLASSEUR BIBBLIOTHEQUE
+        foreach ($tabBiblioClasseur as $nomClasseur) {
+            $classeurBib = new DocCategorie();
+            $classeurBib->setNom($nomClasseur);
+            $classeurBib->setEntreprise($entreprise);
+            $classeurBib->setCreatedAt(new \DateTimeImmutable());
+            $classeurBib->setUpdatedAt(new \DateTimeImmutable());
+            $classeurBib->setUtilisateur($utilisateur);
+            //persistance
+            $this->manager->persist($classeurBib);
+            //$this->manager->flush();
+        }
+
+        $this->manager->flush();
     }
 }

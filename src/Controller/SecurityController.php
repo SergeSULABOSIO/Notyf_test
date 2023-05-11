@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Entity\EtapeCrm;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -228,6 +229,30 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
             $this->manager->persist($taxe);
             $this->manager->flush();
+        }
+
+        //ETAPE CRM
+        foreach ($tabEtapesCRM as $nomEtape) {
+            $etapeCRM = new EtapeCrm();
+            $produit->setNom($nomProduit);
+            $produit->setCode("PRD" . $faker->randomNumber(5, true));
+            $produit->setDescription($faker->sentence(5));
+            if ($compteur % 2) {
+                $produit->setIsobligatoire(true);
+                $produit->setTauxarca(0.10);
+            } else {
+                $produit->setIsobligatoire(false);
+                $produit->setTauxarca(0.15);
+            }
+            $produit->setIsabonnement(false);
+            $produit->setCategorie(0);
+            $produit->setEntreprise($entreprise);
+            $produit->setCreatedAt(new \DateTimeImmutable());
+            $produit->setUpdatedAt(new \DateTimeImmutable());
+            $produit->setUtilisateur($user_admin);
+
+            $manager->persist($produit);
+            $compteur++;
         }
     }
 }

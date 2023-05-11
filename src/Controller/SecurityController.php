@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Taxe;
 use DateTimeImmutable;
-use App\Entity\Entreprise;
 
+use App\Entity\Monnaie;
+use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use App\Service\ServiceMails;
 use App\Form\RegistrationType;
 use App\Form\AdminRegistrationType;
+use Doctrine\Persistence\ObjectManager;
+
 use App\Form\EntrepriseRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,7 +20,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +32,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 class SecurityController extends AbstractDashboardController//AbstractController
 {
 
-    public function __construct(private AuthenticationUtils $authenticationUtils)
+    public function __construct(private AuthenticationUtils $authenticationUtils, private EntityManagerInterface $manager)
     {
         
     }
@@ -140,5 +143,91 @@ class SecurityController extends AbstractDashboardController//AbstractController
             'form' => $form->createView(),
             'utilisateur' => $utilisateur
         ]);
+    }
+
+    public function creerIngredients(Utilisateur $utilisateur , Entreprise $entreprise)
+    {
+        $tabCodesMonnaies = array("USD", "CDF");
+        $tabNomsTaxes = array("TVA", "ARCA");
+        $tabEtapesCRM = array(
+            "PROSPECTION", 
+            "PRODUCTION DE COTAION",
+            "EMISSION DE LA POLICE",
+            "RENOUVELLEMENT"
+        );
+        $tabProduits = array(
+            "VIE ET EPARGNE / LIFE", 
+            "INCENDIE ET RISQUES DIVERS / ASSET / FAP",
+            "RC AUTOMOBILE / MOTOR TPL",
+            "TOUS RISQUES AUTOMOBILES / MOTOR COMP."
+        );
+        $tabEtapesSinistre = array(
+            "OUVERTURE", 
+            "COLLECTE DES DONNEES",
+            "EVALUATION DES DEGATS",
+            "INDEMNISATION ET / OU CLOTURE"
+        );
+        $tabBiblioCategorie = array(
+            "POLICES D'ASSURANCES", 
+            "FORMULAIRES DE PROPOSITION",
+            "MANDATS DE COURTAGE",
+            "FACTURES / NOTES DE DEBIT"
+        );
+        $tabBiblioClasseur = array(
+            "PRODUCTION", 
+            "SINISTRES"
+        );
+
+        //Construction des objets et persistance
+        //MONNAIES
+        $monnaieUSD = null;
+        foreach ($tabCodesMonnaies as $codeMonnaie) {
+            //Pour chaque element du tableau
+            $monnaie = new Monnaie();
+            if ($codeMonnaie == "CDF") {
+                $monnaie->setNom("Franc");
+                $monnaie->setTauxusd(1);
+                $monnaie->setIslocale(true);
+            } else {
+                $monnaie->setNom("Dollars Américains");
+                $monnaie->setTauxusd(2050);
+                $monnaie->setIslocale(false);
+                $monnaieUSD = $monnaie;
+            }
+            $monnaie->setCode($codeMonnaie);
+            $monnaie->setEntreprise($entreprise);
+            $monnaie->setCreatedAt(new \DateTimeImmutable());
+            $monnaie->setUpdatedAt(new \DateTimeImmutable());
+            $monnaie->setUtilisateur($utilisateur);
+
+            //persistance
+            $this->manager->persist($monnaie);
+            $this->manager->flush();
+        }
+
+        //TAXES
+        foreach ($tabNomsTaxes as $nomTaxes) {
+            //Pour chaque element du tableau
+            $taxe = new Taxe();
+            $taxe->setNom($nomTaxes);
+            if ($nomTaxes == "TVA") {
+                $taxe->setDescription("Taxe sur la Valeur Ajoutée");
+                $taxe->setTaux(0.16);
+                $taxe->setPayableparcourtier(false);
+                $taxe->setOrganisation("DGI - Direction Générale des Impôts");
+            } else {
+                $taxe->setDescription("Frais de surveillance");
+                $taxe->setTaux(0.02);
+                $taxe->setPayableparcourtier(true);
+                $taxe->setOrganisation("ARCA - Autorité de Régulation des Assurances");
+            }
+            $taxe->setEntreprise($entreprise);
+            $taxe->setCreatedAt(new \DateTimeImmutable());
+            $taxe->setUpdatedAt(new \DateTimeImmutable());
+            $taxe->setUtilisateur($utilisateur);
+
+            $this->manager->persist($taxe);
+            $this->manager->flush();
+        }
     }
 }

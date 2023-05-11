@@ -136,7 +136,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $manager->flush();
 
             $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");
-            
+
             //Creation des ingrédients / objets de base
             $this->creerIngredients($utilisateur, $entreprise);
             //envoie de l'email de confirmation

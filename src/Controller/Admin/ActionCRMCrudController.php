@@ -4,15 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Entity\ActionCRM;
 //use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-//use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
+//use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -26,32 +27,44 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 
 class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
     
-    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
+    public function __construct(private EntityManagerInterface $entityManager, private Security $security, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
+        $connected_entreprise = $this->serviceEntreprise->getEntreprise();
+        //dd($connected_entreprise);
         //dd($this->getUser());
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        //dd($hasVisionGlobale);
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        if ($hasVisionGlobale) {
-            return $defaultQueryBuilder;
+        if ($hasVisionGlobale == false) {
+            $defaultQueryBuilder
+            //->andWhere('entity.entreprise = :ese')
+            ->Where('entity.utilisateur = :user')
+            //->orWhere('entity.attributedTo = :user')
+            //->setParameter('ese', $connected_entreprise)
+            ->setParameter('user', $this->getUser())
+            ;
         }
         return $defaultQueryBuilder
-            ->andWhere('entity.utilisateur = :user')
+            ->andWhere('entity.entreprise = :ese')
+            //->andWhere('entity.utilisateur = :user')
             ->orWhere('entity.attributedTo = :user')
-            ->setParameter('user', $this->getUser());
+            ->setParameter('ese', $connected_entreprise)
+            ->setParameter('user', $this->getUser())
+            ;
     }
 
     public static function getEntityFqcn(): string

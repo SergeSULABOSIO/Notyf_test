@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
 use App\Entity\DocCategorie;
+use App\Entity\DocClasseur;
 use App\Entity\EtapeSinistre;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -83,6 +84,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
                 UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES],
                 UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES],
                 UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE],
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES],
                 //Pouvoeir d'action
                 UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION],
                 //Visibilité
@@ -150,160 +152,226 @@ class SecurityController extends AbstractDashboardController//AbstractController
     {
         $faker = Factory::create();
 
-        $tabCodesMonnaies = array("USD", "CDF");
-        $tabNomsTaxes = array("TVA", "ARCA");
-        $tabEtapesCRM = array(
+        $taMonnaies = [
+            [
+                "setCode" =>"USD",
+                "setNom" =>"Dollar Américain",
+                "setTauxusd" =>1,
+                "setIslocale" => true
+            ],
+            [
+                "setCode" =>"EUR",
+                "setNom" =>"Euro",
+                "setTauxusd" =>1.09,
+                "setIslocale" => false
+            ]
+        ];//array("USD", "CDF");
+
+        $tabTaxes = [
+            [
+                "setNom" =>"TVA",
+                "setDescription" =>"Taxe sur la Valeur Ajoutée",
+                "setTaux" =>0.16,
+                "setPayableparcourtier" => false,
+                "setOrganisation" => "DGI - Direction Générale des Impôts."
+            ],
+            [
+                "setNom" =>"ARCA",
+                "setDescription" =>"Frais de surveillance",
+                "setTaux" =>0.02,
+                "setPayableparcourtier" => true,
+                "setOrganisation" => "ARCA - Autorité de Régulation et de Contrôle des Assurances."
+            ]
+        ]; //array("TVA", "ARCA");
+
+        $tabEtapesCRM = [
             "PROSPECTION", 
             "PRODUCTION DE COTAION",
             "EMISSION DE LA POLICE",
             "RENOUVELLEMENT"
-        );
-        $tabProduits = array(
-            "VIE ET EPARGNE / LIFE", 
-            "INCENDIE ET RISQUES DIVERS / ASSET / FAP",
-            "RC AUTOMOBILE / MOTOR TPL",
-            "TOUS RISQUES AUTOMOBILES / MOTOR COMP."
-        );
-        $tabEtapesSinistre = array(
-            "OUVERTURE", 
-            "COLLECTE DES DONNEES",
-            "EVALUATION DES DEGATS",
-            "INDEMNISATION ET / OU CLOTURE"
-        );
-        $tabBiblioCategorie = array(
-            "POLICES D'ASSURANCES", 
+        ];
+
+        $tabProduits = [
+            [
+                "setNom" => "VIE ET EPARGNE / LIFE",
+                "setCode" => "VIE",
+                "setDescription" => "L'assurance vie est un contrat par lequel l'assureur s'engage, en contrepartie du paiement de primes, à verser une rente ou un capital à l'assuré ou à ses bénéficiaires.",
+                "setIsobligatoire" => false,
+                "setTauxarca" => 0.10,
+                "setIsabonnement" => false,
+                "setCategorie" => 1
+            ],
+            [
+                "setNom" => "INCENDIE ET RISQUES DIVERS / ASSET / FAP",
+                "setCode" => "IMR",
+                "setDescription" => "Une assurance incendie est avant tout une {assurance de choses}. Ce qui veut dire qu'elle indemnise les dommages causés à vos biens matériels, plus particulièrement à l'habitation et son contenu. Mais elle couvre dans certaines circonstances également votre responsabilité civile à l'égard d'autrui.",
+                "setIsobligatoire" => true,
+                "setTauxarca" => 0.10,
+                "setIsabonnement" => false,
+                "setCategorie" => 0
+            ],
+            [
+                "setNom" => "RC AUTOMOBILE / MOTOR TPL",
+                "setCode" => "RCA",
+                "setDescription" => "La garantie responsabilité civile de votre assurance automobile couvre les dommages causés aux tiers par vous ou par les personnes vivant avec vous (enfants, concubin, époux....).",
+                "setIsobligatoire" => true,
+                "setTauxarca" => 0.10,
+                "setIsabonnement" => false,
+                "setCategorie" => 0
+            ],
+            [
+                "setNom" => "TOUS RISQUES AUTOMOBILES / MOTOR COMP.",
+                "setCode" => "TRA",
+                "setDescription" => "La garantie tous risques vous permet d'être indemnisé pour tous les dommages subis par votre véhicule, quel que soit le type d'accident et quelle que soit votre responsabilité en tant que conducteur.",
+                "setIsobligatoire" => false,
+                "setTauxarca" => 0.15,
+                "setIsabonnement" => false,
+                "setCategorie" => 0
+            ]
+        ];
+
+        $tabSinistres = [
+            [
+                "setNom" => "OUVERTURE",
+                "setDescription" => "La toute prémière étape où l'assureur est notifié de la survénance d'un probable sinistre. La déclaration doit se faire dans le délais contractuel.",
+                "setIndice" => 0
+            ],
+            [
+                "setNom" => "COLLECTE DES DONNEES",
+                "setDescription" => "L'assureur (ou l'espert désigné par celui-ci) éffectue la collecte d'information permettant de mieux comprendre les circonstances de l'incident et de quantifier les dégâts.",
+                "setIndice" => 1
+            ],
+            [
+                "setNom" => "EVALUATION DES DEGATS",
+                "setDescription" => "Analyse de données, évaluation et détermination de la somme compensatoire éventuelle à verser à la victime.",
+                "setIndice" => 2
+            ],
+            [
+                "setNom" => "INDEMNISATION ET / OU CLOTURE",
+                "setDescription" => "En cas de sinistre approvée conformément à la police, l'assuereur effectue le règlement compensatoire et clos le dossier. Au cas contraire, l'assureur informe à l'assuré les raisons du rejet et clos tout de même le dossier.",
+                "setIndice" => 3
+            ]
+        ];
+
+        $tabBiblioCategorie = [
+            "POLICES D'ASSURANCE", 
             "FORMULAIRES DE PROPOSITION",
             "MANDATS DE COURTAGE",
-            "FACTURES / NOTES DE DEBIT"
-        );
-        $tabBiblioClasseur = array(
+            "FACTURES"
+        ];
+
+        $tabBiblioClasseur = [
             "PRODUCTION", 
-            "SINISTRES"
-        );
+            "SINISTRES",
+            "FINANCES"
+        ];
 
         //Construction des objets et persistance
         //MONNAIES
-        foreach ($tabCodesMonnaies as $codeMonnaie) {
-            //Pour chaque element du tableau
+        foreach ($taMonnaies as $O_monnaie) {
             $monnaie = new Monnaie();
-            if ($codeMonnaie == "CDF") {
-                $monnaie->setNom("Franc");
-                $monnaie->setTauxusd(1);
-                $monnaie->setIslocale(true);
-            } else {
-                $monnaie->setNom("Dollars Américains");
-                $monnaie->setTauxusd(2050);
-                $monnaie->setIslocale(false);
-            }
-            $monnaie->setCode($codeMonnaie);
+            $monnaie->setCode($O_monnaie['setCode']);
+            $monnaie->setNom($O_monnaie['setNom']);
+            $monnaie->setTauxusd($O_monnaie['setTauxusd']);
+            $monnaie->setIslocale($O_monnaie['setIslocale']);
+
             $monnaie->setEntreprise($entreprise);
             $monnaie->setCreatedAt(new \DateTimeImmutable());
             $monnaie->setUpdatedAt(new \DateTimeImmutable());
             $monnaie->setUtilisateur($utilisateur);
-
             //persistance
             $this->manager->persist($monnaie);
-            //$this->manager->flush();
         }
 
         //TAXES
-        foreach ($tabNomsTaxes as $nomTaxes) {
-            //Pour chaque element du tableau
+        foreach ($tabTaxes as $O_taxes) {
             $taxe = new Taxe();
-            $taxe->setNom($nomTaxes);
-            if ($nomTaxes == "TVA") {
-                $taxe->setDescription("Taxe sur la Valeur Ajoutée");
-                $taxe->setTaux(0.16);
-                $taxe->setPayableparcourtier(false);
-                $taxe->setOrganisation("DGI - Direction Générale des Impôts");
-            } else {
-                $taxe->setDescription("Frais de surveillance");
-                $taxe->setTaux(0.02);
-                $taxe->setPayableparcourtier(true);
-                $taxe->setOrganisation("ARCA - Autorité de Régulation des Assurances");
-            }
+            $taxe->setNom($O_taxes['setNom']);
+            $taxe->setDescription($O_taxes['setDescription']);
+            $taxe->setTaux($O_taxes['setTaux']);
+            $taxe->setPayableparcourtier($O_taxes['setPayableparcourtier']);
+            $taxe->setOrganisation($O_taxes['setOrganisation']);
+
             $taxe->setEntreprise($entreprise);
             $taxe->setCreatedAt(new \DateTimeImmutable());
             $taxe->setUpdatedAt(new \DateTimeImmutable());
             $taxe->setUtilisateur($utilisateur);
 
             $this->manager->persist($taxe);
-            //$this->manager->flush();
         }
 
         //ETAPE CRM
         foreach ($tabEtapesCRM as $nomEtape) {
             $etapeCRM = new EtapeCrm();
             $etapeCRM->setNom($nomEtape);
+
             $etapeCRM->setEntreprise($entreprise);
             $etapeCRM->setCreatedAt(new \DateTimeImmutable());
             $etapeCRM->setUpdatedAt(new \DateTimeImmutable());
             $etapeCRM->setUtilisateur($utilisateur);
             //persistance
             $this->manager->persist($etapeCRM);
-            //$this->manager->flush();
         }
 
         //PRODUIT
-        foreach ($tabProduits as $nomProduit) {
+        foreach ($tabProduits as $O_produit) {
             $produit = new Produit();
-            $produit->setNom($nomProduit);
-            $produit->setCode("PRD" . $faker->randomNumber(5, true));
-            $produit->setDescription($faker->sentence(5));
-            $produit->setIsobligatoire(true);
-            $produit->setTauxarca(0.10);
-            $produit->setIsabonnement(false);
-            $produit->setCategorie(0);
+            $produit->setNom($O_produit['setNom']);
+            $produit->setCode($O_produit['setCode']);
+            $produit->setDescription($O_produit['setDescription']);
+            $produit->setIsobligatoire($O_produit['setIsobligatoire']);
+            $produit->setTauxarca($O_produit['setTauxarca']);
+            $produit->setIsabonnement($O_produit['setIsabonnement']);
+            $produit->setCategorie($O_produit['setCategorie']);
+
             $produit->setEntreprise($entreprise);
             $produit->setCreatedAt(new \DateTimeImmutable());
             $produit->setUpdatedAt(new \DateTimeImmutable());
             $produit->setUtilisateur($utilisateur);
             //persistance
-            $this->manager->persist($etapeCRM);
+            $this->manager->persist($produit);
             //$this->manager->flush();
         }
 
         //ETAPE SINISTRE
-        $indice = 0;
-        foreach ($tabEtapesSinistre as $nomEtape) {
+        foreach ($tabSinistres as $O_etape) {
             $etapeSinistre = new EtapeSinistre();
-            $etapeSinistre->setNom($nomEtape);
-            $etapeSinistre->setDescription($faker->sentence(10));
-            $etapeSinistre->setIndice($indice);//$indice
+            $etapeSinistre->setNom($O_etape['setNom']);
+            $etapeSinistre->setDescription($O_etape['setDescription']);
+            $etapeSinistre->setIndice($O_etape['setIndice']);//$indice
+
             $etapeSinistre->setEntreprise($entreprise);
             $etapeSinistre->setCreatedAt(new \DateTimeImmutable());
             $etapeSinistre->setUpdatedAt(new \DateTimeImmutable());
             $etapeSinistre->setUtilisateur($utilisateur);
-            $indice++;
             //persistance
             $this->manager->persist($etapeSinistre);
-            //$this->manager->flush();
         }
 
         //CATEGORIE BIBBLIOTHEQUE
-        foreach ($tabBiblioCategorie as $nomCategorie) {
+        foreach ($tabBiblioCategorie as $O_categorie) {
             $categorieBib = new DocCategorie();
-            $categorieBib->setNom($nomCategorie);
+            $categorieBib->setNom($O_categorie);
+
             $categorieBib->setEntreprise($entreprise);
             $categorieBib->setCreatedAt(new \DateTimeImmutable());
             $categorieBib->setUpdatedAt(new \DateTimeImmutable());
             $categorieBib->setUtilisateur($utilisateur);
             //persistance
             $this->manager->persist($categorieBib);
-            //$this->manager->flush();
         }
 
         //CLASSEUR BIBBLIOTHEQUE
-        foreach ($tabBiblioClasseur as $nomClasseur) {
-            $classeurBib = new DocCategorie();
-            $classeurBib->setNom($nomClasseur);
+        foreach ($tabBiblioClasseur as $O_classeur) {
+            $classeurBib = new DocClasseur();
+            $classeurBib->setNom($O_classeur);
+
             $classeurBib->setEntreprise($entreprise);
             $classeurBib->setCreatedAt(new \DateTimeImmutable());
             $classeurBib->setUpdatedAt(new \DateTimeImmutable());
             $classeurBib->setUtilisateur($utilisateur);
             //persistance
             $this->manager->persist($classeurBib);
-            //$this->manager->flush();
         }
 
         $this->manager->flush();

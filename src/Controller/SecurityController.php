@@ -129,7 +129,15 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $entreprise->setCreatedAt(new DateTimeImmutable());
             $entreprise->setUpdatedAt(new DateTimeImmutable()); //$user_admin->
             $entreprise->setUtilisateur($utilisateur);
+
+            //on persiste l'entreprise
             $manager->persist($entreprise);
+
+            //On modifie et persiste aussi l'objet Utilisateur
+            $utilisateur->setEntreprise($entreprise);
+            $utilisateur->setUtilisateur($utilisateur);
+            $manager->persist($utilisateur);
+
             $manager->flush();
 
             $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");

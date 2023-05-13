@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Automobile;
+use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
 use App\Controller\Admin\DashboardController;
@@ -12,7 +14,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Controller\Admin\UtilisateurCrudController;
-use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -29,8 +30,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection as CollectionFilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection as CollectionFilterCollection;
 
 class AutomobileCrudController extends AbstractCrudController
 {
@@ -63,6 +64,10 @@ class AutomobileCrudController extends AbstractCrudController
         'Autres' => 15
     ];
 
+    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    {
+        
+    }
 
     public static function getEntityFqcn(): string
     {
@@ -71,15 +76,19 @@ class AutomobileCrudController extends AbstractCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, CollectionFilterCollection $filters): QueryBuilder
     {
-        //dd($this->getUser());
+        $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        if ($hasVisionGlobale) {
-            return $defaultQueryBuilder;
+        if ($hasVisionGlobale == false) {
+            $defaultQueryBuilder
+            ->Where('entity.utilisateur = :user')
+            ->setParameter('user', $this->getUser())
+            ;
         }
         return $defaultQueryBuilder
-            ->andWhere('entity.utilisateur = :user')
-            ->setParameter('user', $this->getUser());
+            ->andWhere('entity.entreprise = :ese')
+            ->setParameter('ese', $connected_entreprise)
+        ;
     }
 
     public function configureFilters(Filters $filters): Filters

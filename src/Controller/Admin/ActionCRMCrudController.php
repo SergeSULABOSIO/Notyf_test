@@ -51,20 +51,15 @@ class ActionCRMCrudController extends AbstractCrudController
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
-            //->andWhere('entity.entreprise = :ese')
             ->Where('entity.utilisateur = :user')
-            //->orWhere('entity.attributedTo = :user')
-            //->setParameter('ese', $connected_entreprise)
+            ->orWhere('entity.attributedTo = :user')
             ->setParameter('user', $this->getUser())
             ;
         }
         return $defaultQueryBuilder
             ->andWhere('entity.entreprise = :ese')
-            //->andWhere('entity.utilisateur = :user')
-            ->orWhere('entity.attributedTo = :user')
             ->setParameter('ese', $connected_entreprise)
-            ->setParameter('user', $this->getUser())
-            ;
+        ;
     }
 
     public static function getEntityFqcn(): string
@@ -133,9 +128,11 @@ class ActionCRMCrudController extends AbstractCrudController
            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)//->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository->createQueryBuilder('e')
-                    ->andWhere('e.id = :same_value')
-                    ->setParameter('same_value', $this->security->getUser()->getId());
+                return $entityRepository
+                    //->createQueryBuilder('e')
+                    //->andWhere('e.id = :same_value')
+                    //->setParameter('same_value', $this->security->getUser()->getId())
+                    ;
             }),
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),

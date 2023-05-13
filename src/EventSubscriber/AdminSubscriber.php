@@ -1,14 +1,15 @@
 <?php
 namespace App\EventSubscriber;
 
-use App\Entity\ActionCRM;
+use App\Entity\Piste;
 use App\Entity\Cotation;
+use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\FeedbackCRM;
-use App\Entity\Piste;
 use App\Entity\Utilisateur;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use App\Service\ServiceEntreprise;
 use Symfony\Bundle\SecurityBundle\Security;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -17,7 +18,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdminSubscriber implements EventSubscriberInterface
 {
 
-    public function __construct(private UserPasswordHasherInterface $hasher, private Security $security)
+    public function __construct(private UserPasswordHasherInterface $hasher, private ServiceEntreprise $serviceEntreprise)
     {
     }
 
@@ -45,7 +46,8 @@ class AdminSubscriber implements EventSubscriberInterface
             }
         }
         
-        $entityInstance->setUtilisateur($this->security->getUser());
+        $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }

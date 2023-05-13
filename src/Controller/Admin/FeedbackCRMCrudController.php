@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\FeedbackCRM;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -33,6 +34,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class FeedbackCRMCrudController extends AbstractCrudController
 {
 
+    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    {
+        
+    }
+    
     public static function getEntityFqcn(): string
     {
         return FeedbackCRM::class;
@@ -40,15 +46,19 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        //dd($this->getUser());
+        $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        if ($hasVisionGlobale) {
-            return $defaultQueryBuilder;
+        if ($hasVisionGlobale == false) {
+            $defaultQueryBuilder
+            ->Where('entity.utilisateur = :user')
+            ->setParameter('user', $this->getUser())
+            ;
         }
         return $defaultQueryBuilder
-            ->andWhere('entity.utilisateur = :user')
-            ->setParameter('user', $this->getUser());
+            ->andWhere('entity.entreprise = :ese')
+            ->setParameter('ese', $connected_entreprise)
+        ;
     }
 
     public function configureFilters(Filters $filters): Filters

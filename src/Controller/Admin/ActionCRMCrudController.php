@@ -2,13 +2,16 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ActionCRM;
+use DateTimeImmutable;
 //use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
+use Faker\Core\DateTime;
 //use Doctrine\ORM\QueryBuilder;
+use App\Entity\ActionCRM;
+use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -35,6 +38,10 @@ class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
+    public const STATUS_MISSION = [
+        'Mission achevée avec succès' => 1,
+        'Mission en cours...' => 0
+    ];
     
     public function __construct(private EntityManagerInterface $entityManager, private Security $security, private ServiceEntreprise $serviceEntreprise)
     {
@@ -94,15 +101,24 @@ class ActionCRMCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
 
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new ActionCRM();
+        $objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        $objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        $objet->setClos(0);
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {
-        $someRepository = $this->entityManager->getRepository(ActionCRM::class);
-        //dd($someRepository->findAll());
-        //dd($someRepository);
-        //dd($this->security->getUser());
-
         return [
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
@@ -115,36 +131,53 @@ class ActionCRMCrudController extends AbstractCrudController
             //ligne 02
             ChoiceField::new('clos', "Status")->setColumns(6)
             ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
-            ->setChoices([
-                'Mission achevée avec succès' => 1,
-                'Mission en cours...' => 0
-            ]),
-            AssociationField::new('piste', "Piste")->setColumns(6),
+            ->setChoices(self::STATUS_MISSION),
+            
+            AssociationField::new('piste', "Piste")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             //Ligne 03
             DateTimeField::new('startedAt', "Date effet")->setColumns(6),
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
             
             //Ligne 04
-           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-            /* ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    //->createQueryBuilder('e')
-                    //->andWhere('e.id = :same_value')
-                    //->setParameter('same_value', $this->security->getUser()->getId())
-                    ;
-            }), */
+           
 
-            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
+            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             
             //Ligne 05
-            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
 
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            
 
             //Ligne 06
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
         ];

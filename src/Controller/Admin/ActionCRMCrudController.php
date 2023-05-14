@@ -125,15 +125,15 @@ class ActionCRMCrudController extends AbstractCrudController
             DateTimeField::new('endedAt', "Echéance")->setColumns(6),
             
             //Ligne 04
-           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)//->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+           AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+            /* ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     //->createQueryBuilder('e')
                     //->andWhere('e.id = :same_value')
                     //->setParameter('same_value', $this->security->getUser()->getId())
                     ;
-            }),
+            }), */
 
             AssociationField::new('attributedTo', "Attribuée à")->setColumns(6),
             
@@ -142,7 +142,7 @@ class ActionCRMCrudController extends AbstractCrudController
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
 
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
 
             //Ligne 06
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),

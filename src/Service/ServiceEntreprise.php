@@ -24,41 +24,44 @@ class ServiceEntreprise
         //Chargement de l'utilisateur
         $this->utilisateur = $this->security->getUser();
 
-        //Chargement de l'entreprise de cet utilisateur
+        if ($this->utilisateur != null) {
+            //Chargement de l'entreprise de cet utilisateur
 
-        //Si nous somme en face d'un administrateur
-        if ($this->utilisateur->getEntreprise() == null) {
-            $this->isAdmin = true;
-            $this->hasEntreprise = false;
-            foreach (($this->entityManager->getRepository(Entreprise::class))->findAll() as $entreprise) {
-                if ($entreprise->getUtilisateur() == $this->utilisateur) {
-                    $this->entreprise = $entreprise;
-                    $this->hasEntreprise = true;
-                    break;
+            //Si nous somme en face d'un administrateur
+            if ($this->utilisateur->getEntreprise() == null) {
+                $this->isAdmin = true;
+                $this->hasEntreprise = false;
+                foreach (($this->entityManager->getRepository(Entreprise::class))->findAll() as $entreprise) {
+                    if ($entreprise->getUtilisateur() == $this->utilisateur) {
+                        $this->entreprise = $entreprise;
+                        $this->hasEntreprise = true;
+                        break;
+                    }
                 }
+            } else {
+                $this->entreprise = $this->utilisateur->getEntreprise();
+                $this->isAdmin = false;
+                $this->hasEntreprise = true;
             }
-        } else {
-            $this->entreprise = $this->utilisateur->getEntreprise();
-            $this->isAdmin = false;
-            $this->hasEntreprise = true;
         }
-        //dd($someRepository->findAll());
     }
 
-    public function hasEntreprise(){
+    public function hasEntreprise()
+    {
         return $this->hasEntreprise;
     }
 
-    public function isAdministrateur(){
+    public function isAdministrateur()
+    {
         return $this->isAdmin;
     }
 
     public function getEntreprise()
     {
-        return $this->entreprise == null? null : $this->entreprise;
+        return $this->entreprise == null ? null : $this->entreprise;
     }
 
-    public function getUtilisateur(): Utilisateur
+    public function getUtilisateur()
     {
         return $this->utilisateur;
     }

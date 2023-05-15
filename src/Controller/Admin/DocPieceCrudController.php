@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\DocPiece;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -96,6 +97,22 @@ class DocPieceCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new DocPiece();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -108,11 +125,27 @@ class DocPieceCrudController extends AbstractCrudController
             TextField::new('description', "Description")->setColumns(6),
 
             //Ligne 02
-            AssociationField::new('categorie', "Catégorie")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('categorie', "Catégorie")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('categorie', "Catégorie")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('categorie', "Catégorie")->setColumns(6)->onlyOnDetail(),
 
-            AssociationField::new('classeur', "Classeur")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('classeur', "Classeur")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('classeur', "Classeur")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('classeur', "Classeur")->setColumns(6)->onlyOnDetail(),
 
@@ -153,7 +186,7 @@ class DocPieceCrudController extends AbstractCrudController
 
             DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
         ];
     }
 

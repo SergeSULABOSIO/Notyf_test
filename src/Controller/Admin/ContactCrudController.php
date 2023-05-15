@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Contact;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -86,6 +87,22 @@ class ContactCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Contact();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -102,7 +119,15 @@ class ContactCrudController extends AbstractCrudController
             EmailField::new('email', "Email")->setColumns(6),
 
             //Ligne 03
-            AssociationField::new('client', "Client")->setColumns(6),
+            AssociationField::new('client', "Client")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
@@ -111,7 +136,7 @@ class ContactCrudController extends AbstractCrudController
 
             //Ligne 04
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
         ];
     }
 

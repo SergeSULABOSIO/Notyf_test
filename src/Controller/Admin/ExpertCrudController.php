@@ -88,13 +88,29 @@ class ExpertCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Expert();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-user-graduate') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("L'expert est une personne morale ou physique qui a pour rôle d'aider l'assureur à mieux évaluer l'ampleur du dégât (évaluation chiffrée) afin de déterminer le montant réel de la compensation."),
-
+            
             //Ligne 01
             TextField::new('nom', "Nom complet de l'expert")->setColumns(6),
             TextField::new('adresse', "Adresse")->setColumns(6)->hideOnIndex(),
@@ -115,7 +131,7 @@ class ExpertCrudController extends AbstractCrudController
 
             DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
         ];
     }
 

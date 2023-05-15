@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Automobile;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
 use App\Controller\Admin\DashboardController;
@@ -119,6 +120,21 @@ class AutomobileCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Automobile();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {
@@ -147,7 +163,15 @@ class AutomobileCrudController extends AbstractCrudController
             NumberField::new('nbsieges', 'Nb sièges')->hideOnIndex()->setColumns(6),
             
             //AssociationField::new('polices', "Police d'assurance")->setColumns(6),
-            AssociationField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnDetail(),
 
@@ -161,7 +185,7 @@ class AutomobileCrudController extends AbstractCrudController
             //Ligne 07
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
         ];
     }
 

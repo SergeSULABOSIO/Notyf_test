@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Cotation;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -94,6 +95,21 @@ class CotationCrudController extends AbstractCrudController
     }
 
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Cotation();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {
@@ -106,25 +122,65 @@ class CotationCrudController extends AbstractCrudController
             TextField::new('nom', "Titre")->setColumns(12),
 
             //Ligne 02
-            AssociationField::new('piste', "Piste")->setColumns(6),
-            AssociationField::new('risque', "Risque")->setColumns(6),
+            AssociationField::new('piste', "Piste")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            AssociationField::new('risque', "Risque")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
 
             //Ligne 03
             NumberField::new('primeTotale', "Prime totale")->setColumns(6),
-            AssociationField::new('monnaie', "Monnaie")->setColumns(6),       
+            AssociationField::new('monnaie', "Monnaie")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,       
 
             //Ligne 04
             //AssociationField::new('assureur', "Assureur")->setColumns(6),
-            AssociationField::new('assureur', "Assureur")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('assureur', "Assureur")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('assureur', "Assureur")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('assureur', "Assureur")->setColumns(6)->onlyOnDetail(),
             //AssociationField::new('pieces', "Documents")->setColumns(6),
-            AssociationField::new('pieces', "Documents")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('pieces', "Documents")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('pieces', "Documents")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('pieces', "Documents")->setColumns(6)->onlyOnDetail(),
 
             //Ligne 05
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
             
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),

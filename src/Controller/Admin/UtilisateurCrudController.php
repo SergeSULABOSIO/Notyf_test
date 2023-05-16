@@ -128,6 +128,18 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         $objet = new Utilisateur();
         $objet->setPlainPassword("abc");
+        $objet->setRoles([
+            //Accès aux fonctionnalités
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
+            //UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION],
+            //UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES],
+            //UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES],
+            //UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE],
+            //Pouvoeir d'action
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION],
+            //Visibilité
+            //UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]    
+        ]);
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
         return $objet;

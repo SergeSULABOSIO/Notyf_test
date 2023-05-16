@@ -94,7 +94,23 @@ class TaxeCrudController extends AbstractCrudController
         ;
     }
 
-    
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Taxe();
+        $objet->setTaux(0.16);
+        $objet->setPayableparcourtier(true);
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
 
     public function configureFields(string $pageName): iterable
     {
@@ -121,7 +137,7 @@ class TaxeCrudController extends AbstractCrudController
 
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
         ];
     }
     

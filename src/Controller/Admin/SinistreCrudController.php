@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use DateTimeImmutable;
 use App\Entity\Sinistre;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -97,6 +99,24 @@ class SinistreCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Sinistre();
+        $objet->setOccuredAt(new DateTimeImmutable("now"));
+        $objet->setDatePayement(null);
+        $objet->setCout(0);
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -113,23 +133,55 @@ class SinistreCrudController extends AbstractCrudController
             TextField::new('description', "Evènement")->setColumns(6),
 
             //Ligne 03
-            AssociationField::new('experts', "Experts")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('experts', "Experts")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('experts', "Experts")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('experts', "Experts")->setColumns(6)->onlyOnDetail(),
 
             //Ligne 04
-            AssociationField::new('etape', "Status")->setColumns(6),
+            AssociationField::new('etape', "Status")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
 
             //Ligne 05
             NumberField::new('cout', "Valeur perte")->setColumns(6),
             NumberField::new('montantPaye', "Montant payé")->setColumns(6),
 
             //Ligne 06
-            AssociationField::new('monnaie', "Monnaie")->setColumns(6),
+            AssociationField::new('monnaie', "Monnaie")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             DateTimeField::new('paidAt', "Date indemn.")->setColumns(6),
 
             //Ligne 07
-            AssociationField::new('police', "Police")->setColumns(6),
+            AssociationField::new('police', "Police")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
@@ -137,24 +189,49 @@ class SinistreCrudController extends AbstractCrudController
             //Ligne 08
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
 
             FormField::addTab('Victimes')
                 ->setIcon('fas fa-bell'),
-            AssociationField::new('victime', "Victimes")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('victime', "Victimes")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('victime', "Victimes")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('victime', "Victimes")->setColumns(6)->onlyOnDetail(),
 
 
             FormField::addTab(' Documents / Pièces justificatives')->setIcon('fas fa-bell'),
             //Ligne 01
-            AssociationField::new('pieces', "Pièces")->onlyOnIndex()->setColumns(6),
-            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms(),
+            //AssociationField::new('pieces', "Pièces")->onlyOnIndex()->setColumns(6),
+            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
 
 
             FormField::addTab(' Commentaires')->setIcon('fas fa-bell'),
-            AssociationField::new('commentaire', "Commentaires")->setColumns(6)->hideOnDetail(),
+            AssociationField::new('commentaire', "Commentaires")->setColumns(6)->hideOnDetail()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             ArrayField::new('commentaire', "Commentaires")->setColumns(6)->onlyOnDetail(),
         ];
     }

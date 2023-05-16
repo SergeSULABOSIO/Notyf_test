@@ -6,10 +6,13 @@ use App\Entity\Cotation;
 use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\FeedbackCRM;
+use App\Entity\Police;
 use App\Entity\Utilisateur;
+use App\Service\ServiceCalculateur;
 use App\Service\ServiceEntreprise;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -18,16 +21,27 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdminSubscriber implements EventSubscriberInterface
 {
 
-    public function __construct(private UserPasswordHasherInterface $hasher, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private UserPasswordHasherInterface $hasher, private ServiceEntreprise $serviceEntreprise, private ServiceCalculateur $serviceCalculateur)
     {
     }
 
     public static function getSubscribedEvents()
     {
         return [
+            AfterEntityBuiltEvent::class => ['setcalculables'],
             BeforeEntityPersistedEvent::class => ['setCreatedAt'],
             BeforeEntityUpdatedEvent::class => ['setUpdatedAt']
         ];
+    }
+
+    public function setcalculables(AfterEntityBuiltEvent $event)
+    {
+        //dd($event);
+        $entityInstance = $event->getEntity()->getInstance();
+        //dd($entityInstance->getReference());
+        if($entityInstance instanceof Police){
+            $this->serviceCalculateur->calculer($entityInstance);
+        }
     }
 
     public function setCreatedAt(BeforeEntityPersistedEvent $event)

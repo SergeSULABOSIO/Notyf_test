@@ -3,10 +3,13 @@
 namespace App\Controller\Admin;
 
 use DateTime;
+use App\Entity\Piste;
 use App\Entity\Client;
 use App\Entity\Police;
+use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -30,7 +33,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -136,6 +138,50 @@ class PoliceCrudController extends AbstractCrudController
             ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
         ;
     }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Police();
+        $objet->setDateemission(new DateTimeImmutable("now"));
+        $objet->setDateoperation(new DateTimeImmutable("now"));
+        $objet->setDateeffet(new DateTimeImmutable("now"));
+        $objet->setDateexpiration(new DateTimeImmutable("+365 day"));
+        $objet->setIdavenant(0);
+        $objet->setTypeavenant(0);
+        $objet->setReassureurs("Voir le traité de réassurance en place.");
+        $objet->setCapital(100000000);
+        $objet->setPrimenette(0);
+        $objet->setFronting(0);
+        $objet->setArca(0);
+        $objet->setTva(0);
+        $objet->setFraisadmin(0);
+        $objet->setPrimetotale(0);
+        $objet->setModepaiement(0);
+        $objet->setDiscount(0);
+
+        $objet->setRicom(0);
+        $objet->setCansharericom(false);
+        $objet->setRicompayableby(0);
+
+        $objet->setFrontingcom(0);
+        $objet->setCansharefrontingcom(false);
+        $objet->setFrontingcompayableby(0);
+
+        $objet->setLocalcom(0);
+        $objet->setCansharelocalcom(false);
+        $objet->setLocalcompayableby(0);
+        
+        $objet->setPartenaire(null);
+
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {
@@ -148,23 +194,58 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('idavenant', "N° Avenant")->setColumns(2),
             ChoiceField::new('typeavenant', "Type d'avenant")->setColumns(4)->setChoices(self::TAB_POLICE_TYPE_AVENANT),
             TextField::new('reference', "Référence")->setColumns(6),
+
             FormField::addPanel('')->onlyOnForms(),
-            AssociationField::new('client', "Assuré")->setColumns(6),
-            AssociationField::new('produit', "Couverture / Risque")->setColumns(6),
+            AssociationField::new('client', "Assuré")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            AssociationField::new('produit', "Couverture / Risque")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             
             //Ligne 02
-            AssociationField::new('assureur', "Assureur")->setColumns(6),
+            AssociationField::new('assureur', "Assureur")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             TextField::new('reassureurs', "Réassureur")->hideOnIndex()->setColumns(6),
 
             //Ligne 03
             FormField::addPanel('')->onlyOnForms(),
             DateTimeField::new('dateoperation', "Date de l'opération")->hideOnIndex()->setColumns(2),
             DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex()->setColumns(2),
+            
             FormField::addPanel('')->onlyOnForms(),
             DateTimeField::new('dateeffet', "Date d'effet")->setColumns(2),//d-flex ->addCssClass('d-flex flex-column')
             DateTimeField::new('dateexpiration', "Echéance")->setColumns(2),
+
             FormField::addPanel('')->onlyOnForms(),
-            AssociationField::new('piste', "Pistes")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('piste', "Pistes")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('piste', "Pistes")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('piste', "Pistes")->setColumns(6)->onlyOnDetail(),
             
@@ -174,7 +255,15 @@ class PoliceCrudController extends AbstractCrudController
             //->setHelp("Le contrat d'assurance en place."),
             
             //Ligne 01
-            AssociationField::new('monnaie', "Monnaie")->setColumns(2),
+            AssociationField::new('monnaie', "Monnaie")->setColumns(2)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             NumberField::new('capital', "Capital")->setColumns(2),
             ChoiceField::new('modepaiement', "Mode de paiement")->setColumns(2)->hideOnIndex()->setChoices(self::TAB_POLICE_MODE_PAIEMENT),
 
@@ -192,7 +281,16 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
             
-            AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6),
+            AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+
             FormField::addPanel('Revenus hors taxes')->onlyOnForms(),
             NumberField::new('ricom', "Commission de réa.")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
@@ -217,10 +315,18 @@ class PoliceCrudController extends AbstractCrudController
             //Ligne 19
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
             FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 
-            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms(),
+            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
         ];
     }

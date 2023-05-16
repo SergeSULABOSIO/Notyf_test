@@ -43,6 +43,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
     }
 
 
+
     #[Route('/connexion', name: 'security.login', methods: ['GET', 'POST'])]
     public function index(): Response
     {
@@ -59,6 +60,10 @@ class SecurityController extends AbstractDashboardController//AbstractController
             'error' => $error,
         ]);
     }
+
+
+
+    
 
     #[Route('/deconnexion', name: 'security.logout', methods: ['GET', 'POST'])]
     public function logout()

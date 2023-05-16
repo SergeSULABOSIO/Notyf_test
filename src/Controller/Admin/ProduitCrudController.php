@@ -107,6 +107,24 @@ class ProduitCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Produit();
+        $objet->setIsobligatoire(false);
+        $objet->setIsabonnement(false);
+        $objet->setTauxarca(0.1);
+        $objet->setCategorie(0);
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {
@@ -133,7 +151,7 @@ class ProduitCrudController extends AbstractCrudController
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6),
 
             //Ligne 05
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),

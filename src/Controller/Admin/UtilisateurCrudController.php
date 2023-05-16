@@ -116,6 +116,22 @@ class UtilisateurCrudController extends AbstractCrudController
         ;
     }
 
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new Utilisateur();
+        $objet->setPlainPassword("abc");
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
     
     public function configureFields(string $pageName): iterable
     {

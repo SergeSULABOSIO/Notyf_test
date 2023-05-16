@@ -289,6 +289,7 @@ class PoliceCrudController extends AbstractCrudController
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
                     ;
             })
+            //->setEmptyData(" ")
             ,
 
             FormField::addPanel('Revenus hors taxes')->onlyOnForms(),

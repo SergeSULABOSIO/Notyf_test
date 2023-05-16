@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use DateTimeImmutable;
 use App\Entity\PaiementTaxe;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
@@ -104,6 +105,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new PaiementTaxe();
+        $objet->setDate(new DateTimeImmutable("now"));
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\PaiementCommission;
 use App\Service\ServiceEntreprise;
@@ -101,6 +102,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new PaiementCommission();
+        $objet->setDate(new DateTimeImmutable("now"));
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\PaiementPartenaire;
 use App\Service\ServiceEntreprise;
@@ -103,6 +104,7 @@ class PaiementPartenaireCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new PaiementPartenaire();
+        $objet->setDate(new DateTimeImmutable("now"));
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

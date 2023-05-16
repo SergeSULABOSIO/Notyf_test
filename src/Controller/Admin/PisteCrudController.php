@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Piste;
+use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
@@ -104,6 +105,7 @@ class PisteCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Piste();
+        $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

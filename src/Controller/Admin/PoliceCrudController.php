@@ -156,7 +156,7 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setIdavenant(0);
         $objet->setTypeavenant(0);
         $objet->setReassureurs("Voir le traité de réassurance en place.");
-        $objet->setCapital(100000000);
+        $objet->setCapital(1000000.00);
         $objet->setPrimenette(0);
         $objet->setFronting(0);
         $objet->setArca(0);
@@ -177,9 +177,9 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setLocalcom(0);
         $objet->setCansharelocalcom(false);
         $objet->setLocalcompayableby(0);
-        
-        $objet->setPartenaire(null);
 
+        $objet->setPartenaire(null);
+        
         return $objet;
     }
     

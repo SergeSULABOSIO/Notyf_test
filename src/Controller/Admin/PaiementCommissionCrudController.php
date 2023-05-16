@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\PaiementCommission;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -90,6 +91,22 @@ class PaiementCommissionCrudController extends AbstractCrudController
         ;
     }
 
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
+        //dd($entityInstance);
+    }
+
+
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new PaiementCommission();
+        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
+        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
+        //$objet->setClos(0);
+        return $objet;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -103,14 +120,38 @@ class PaiementCommissionCrudController extends AbstractCrudController
 
             //Ligne 02
             NumberField::new('montant', "Montant")->setColumns(6),
-            AssociationField::new('monnaie', "Monnaie")->setColumns(6),
+            AssociationField::new('monnaie', "Monnaie")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
 
             //Ligne 03
             TextField::new('description', "Description")->setColumns(6),
-            AssociationField::new('police', "Police")->setColumns(6),
+            AssociationField::new('police', "Police")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
 
             //Ligne 04
-            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms(),
+            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
             CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
 
@@ -120,7 +161,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
 
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
         ];
     }
 

@@ -147,6 +147,8 @@ class Police
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
+    public $calc_totalNetCommission = 0;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();

@@ -318,6 +318,10 @@ class PoliceCrudController extends AbstractCrudController
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
+            //CHAMPS CALCULABLES
+            NumberField::new('calc_totalNetCommission', "Revenu net total")->onlyOnDetail(),
+
+
             FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 
             AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -329,6 +333,7 @@ class PoliceCrudController extends AbstractCrudController
             })
             ,
             ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
+
         ];
     }
 

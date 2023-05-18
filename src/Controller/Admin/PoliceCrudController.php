@@ -318,39 +318,34 @@ class PoliceCrudController extends AbstractCrudController
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
-            //CHAMPS CALCULABLES
-            NumberField::new('calc_revenu_ht', "Revenu net total")
-            //->onlyOnDetail()
-            ,
-
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
-            NumberField::new('calc_revenu_ht = 0;
-            NumberField::new('calc_revenu_ttc = 0;
-            NumberField::new('calc_revenu_ttc_encaisse = 0;
-            public $calc_revenu_ttc_encaisse_tab_ref_factures = [];
-            public $calc_revenu_ttc_encaisse_tab_dates = [];
-            public $calc_revenu_ttc_solde_restant_du = 0;
+            NumberField::new('calc_revenu_ht', "calc_revenu_ht")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "calc_revenu_ttc")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "calc_revenu_ttc_encaisse")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "calc_revenu_ttc_encaisse_tab_ref_factures")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "calc_revenu_ttc_solde_restant_du")->onlyOnDetail(),
             
             //SECTION - PARTENAIRES
-            public $calc_retrocom = 0;
-            public $calc_retrocom_payees = 0;
-            public $calc_retrocom_payees_tab_factures = [];
-            public $calc_retrocom_payees_tab_dates = [];
-            public $calc_retrocom_solde = 0;
+            NumberField::new('calc_retrocom', "calc_retrocom")->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "calc_retrocom_payees")->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "calc_retrocom_payees_tab_factures")->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_dates', "calc_retrocom_payees_tab_dates")->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "calc_retrocom_solde")->onlyOnDetail(),
 
             //SECTION - TAXES
-            public $calc_taxes_courtier = 0;
-            public $calc_taxes_courtier_payees = 0;
-            public $calc_taxes_courtier_payees_tab_ref_factures = [];
-            public $calc_taxes_courtier_payees_tab_dates = [];
-            public $calc_taxes_courtier_solde = 0;
+            NumberField::new('calc_taxes_courtier', "calc_taxes_courtier")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "calc_taxes_courtier_payees")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "calc_taxes_courtier_payees_tab_ref_factures")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_dates', "calc_taxes_courtier_payees_tab_dates")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "calc_taxes_courtier_solde")->onlyOnDetail(),
 
-            public $calc_taxes_assureurs = 0;
-            public $calc_taxes_assureurs_payees = 0;
-            public $calc_taxes_assureurs_payees_tab_ref_factures = [];
-            public $calc_taxes_assureurs_payees_tab_dates = [];
-            public $calc_taxes_assureurs_solde = 0;
+            NumberField::new('calc_taxes_assureurs', "calc_taxes_assureurs")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "calc_taxes_assureurs_payees")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "calc_taxes_assureurs_payees_tab_ref_factures")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "calc_taxes_assureurs_payees_tab_dates")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "calc_taxes_assureurs_solde")->onlyOnDetail(),
 
 
             FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 

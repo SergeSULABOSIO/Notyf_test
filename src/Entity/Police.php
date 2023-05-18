@@ -168,7 +168,10 @@ class Police
     //SECTION - TAXES
     public $calc_taxes_courtier = 0;
     public $calc_taxes_courtier_payees = 0;
+    public $calc_taxes_courtier_payees_tab_ref_factures = [];
+    public $calc_taxes_courtier_payees_tab_dates = [];
     public $calc_taxes_courtier_solde = 0;
+    
     public $calc_taxes_assureurs = 0;
     public $calc_taxes_assureurs_payees = 0;
     public $calc_taxes_assureurs_solde = 0;

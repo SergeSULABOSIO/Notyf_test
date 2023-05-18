@@ -18,8 +18,8 @@ class ServiceCalculateur
         
     }
 
-    public function calculer(?Police $police){
-        $police->calc_totalNetCommission = $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+    public function updatePoliceCalculableFileds(?Police $police){
+        $police->calc_revenu_ht = $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
     }
 
 }

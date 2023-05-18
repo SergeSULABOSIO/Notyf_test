@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PoliceRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -147,7 +148,34 @@ class Police
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    public $calc_totalNetCommission = 0;
+
+    //LES CHAMPS CALCULABLES
+    //SECTION - REVENU
+    public $calc_revenu_ht = 0;
+    public $calc_revenu_ttc = 0;
+    public $calc_revenu_ttc_encaisse = 0;
+    public $calc_revenu_ttc_encaisse_tab_ref_factures = [];
+    public $calc_revenu_ttc_encaisse_tab_dates = [];
+    public $calc_revenu_ttc_solde_restant_du = 0;
+    
+    
+
+
+    //SECTION - PARTENAIRES
+
+
+
+    //SECTION - TAXES
+    public $calc_taxes_courtier = 0;
+    public $calc_taxes_courtier_payees = 0;
+    public $calc_taxes_courtier_solde = 0;
+    public $calc_taxes_assureurs = 0;
+    public $calc_taxes_assureurs_payees = 0;
+    public $calc_taxes_assureurs_solde = 0;
+
+
+    //SECTION - FACTURES
+    
 
     public function __construct()
     {

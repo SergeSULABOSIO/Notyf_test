@@ -28,19 +28,19 @@ class AdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AfterEntityBuiltEvent::class => ['setcalculables'],
+            AfterEntityBuiltEvent::class => ['updateCalculableFiledsOnPoliceEntity'],
             BeforeEntityPersistedEvent::class => ['setCreatedAt'],
             BeforeEntityUpdatedEvent::class => ['setUpdatedAt']
         ];
     }
 
-    public function setcalculables(AfterEntityBuiltEvent $event)
+    public function updateCalculableFiledsOnPoliceEntity(AfterEntityBuiltEvent $event)
     {
         //dd($event);
         $entityInstance = $event->getEntity()->getInstance();
         //dd($entityInstance->getReference());
         if($entityInstance instanceof Police){
-            $this->serviceCalculateur->calculer($entityInstance);
+            $this->serviceCalculateur->updatePoliceCalculableFileds($entityInstance);
         }
     }
 

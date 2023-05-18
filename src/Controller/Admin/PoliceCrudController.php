@@ -319,7 +319,9 @@ class PoliceCrudController extends AbstractCrudController
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
             //CHAMPS CALCULABLES
-            NumberField::new('calc_totalNetCommission', "Revenu net total")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Revenu net total")
+            //->onlyOnDetail()
+            ,
 
 
             FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 

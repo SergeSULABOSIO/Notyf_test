@@ -158,12 +158,12 @@ class Police
     public $calc_revenu_ttc_encaisse_tab_dates = [];
     public $calc_revenu_ttc_solde_restant_du = 0;
     
-    
-
-
     //SECTION - PARTENAIRES
     public $calc_retrocom = 0;
-
+    public $calc_retrocom_payees = 0;
+    public $calc_retrocom_payees_tab_factures = [];
+    public $calc_retrocom_payees_tab_dates = [];
+    public $calc_retrocom_solde = 0;
 
     //SECTION - TAXES
     public $calc_taxes_courtier = 0;

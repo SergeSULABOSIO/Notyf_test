@@ -343,8 +343,8 @@ class PoliceCrudController extends AbstractCrudController
             FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off'),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
-            NumberField::new('calc_revenu_ht', "Revenu ht")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc', "Revenu ttc")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Revenu hors taxes")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Revenu brut")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_encaisse', "Revenu encaissé")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
@@ -365,6 +365,8 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
             ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->onlyOnDetail(),
+
+            FormField::addPanel(),
 
             NumberField::new('calc_taxes_assureurs', "Dûes par les assureurs")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->onlyOnDetail(),

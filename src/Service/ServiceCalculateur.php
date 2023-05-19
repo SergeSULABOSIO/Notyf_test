@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Police;
 use App\Entity\Entreprise;
+use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
@@ -49,6 +50,15 @@ class ServiceCalculateur
     private function calculerTaxes(?Police $police)
     {
         //SECTION - TAXES
+
+        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+
+        if ($taxes) {
+            dd($taxes);
+        }
+
         $police->calc_taxes_courtier = 0;
         $police->calc_taxes_courtier_payees = 0;
         $police->calc_taxes_courtier_payees_tab_ref_factures = [];

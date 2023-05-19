@@ -345,32 +345,32 @@ class PoliceCrudController extends AbstractCrudController
             //SECTION - REVENU
             NumberField::new('calc_revenu_ht', "Revenu ht")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc', "Revenu ttc")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_encaisse', "calc_revenu_ttc_encaisse")->onlyOnDetail(),
-            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "calc_revenu_ttc_encaisse_tab_ref_factures")->onlyOnDetail(),
-            ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_solde_restant_du', "calc_revenu_ttc_solde_restant_du")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Revenu encaissé")->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->onlyOnDetail(),
             
             FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off'),
             //SECTION - PARTENAIRES
-            NumberField::new('calc_retrocom', "calc_retrocom")->onlyOnDetail(),
-            NumberField::new('calc_retrocom_payees', "calc_retrocom_payees")->onlyOnDetail(),
-            ArrayField::new('calc_retrocom_payees_tab_factures', "calc_retrocom_payees_tab_factures")->onlyOnDetail(),
-            ArrayField::new('calc_retrocom_payees_tab_dates', "calc_retrocom_payees_tab_dates")->onlyOnDetail(),
-            NumberField::new('calc_retrocom_solde', "calc_retrocom_solde")->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes")->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_dates', "Dates")->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû")->onlyOnDetail(),
 
             FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off'),
             //SECTION - TAXES
-            NumberField::new('calc_taxes_courtier', "calc_taxes_courtier")->onlyOnDetail(),
-            NumberField::new('calc_taxes_courtier_payees', "calc_taxes_courtier_payees")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "calc_taxes_courtier_payees_tab_ref_factures")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_courtier_payees_tab_dates', "calc_taxes_courtier_payees_tab_dates")->onlyOnDetail(),
-            NumberField::new('calc_taxes_courtier_solde', "calc_taxes_courtier_solde")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Dûes par le courtier")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->onlyOnDetail(),
 
-            NumberField::new('calc_taxes_assureurs', "calc_taxes_assureurs")->onlyOnDetail(),
-            NumberField::new('calc_taxes_assureurs_payees', "calc_taxes_assureurs_payees")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "calc_taxes_assureurs_payees_tab_ref_factures")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "calc_taxes_assureurs_payees_tab_dates")->onlyOnDetail(),
-            NumberField::new('calc_taxes_assureurs_solde', "calc_taxes_assureurs_solde")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Dûes par les assureurs")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "Dates")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->onlyOnDetail(),
 
         ];
     }

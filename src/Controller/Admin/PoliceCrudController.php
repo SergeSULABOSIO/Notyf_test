@@ -318,10 +318,27 @@ class PoliceCrudController extends AbstractCrudController
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
+
+            FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 
+            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
+
+
+
+            FormField::addTab(' Attributs calculés')->setIcon('fas fa-file-shield'),
+            FormField::addPanel('Revenus'),
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
-            NumberField::new('calc_revenu_ht', "calc_revenu_ht")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc', "calc_revenu_ttc")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Revenu ht")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Revenu ttc")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_encaisse', "calc_revenu_ttc_encaisse")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "calc_revenu_ttc_encaisse_tab_ref_factures")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
@@ -346,19 +363,6 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "calc_taxes_assureurs_payees_tab_ref_factures")->onlyOnDetail(),
             ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "calc_taxes_assureurs_payees_tab_dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_solde', "calc_taxes_assureurs_solde")->onlyOnDetail(),
-
-
-            FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 
-            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
 
         ];
     }

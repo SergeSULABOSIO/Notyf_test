@@ -51,9 +51,12 @@ class ServiceCalculateur
     {
         //SECTION - TAXES
 
-        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
+        $taxes = $this->entityManager->getRepository(Taxe::class)
+        //->findAll()
+        ->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
+        )
+        ;
 
         if ($taxes) {
             dd($taxes);

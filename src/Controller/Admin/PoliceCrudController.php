@@ -323,8 +323,8 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_revenu_ht', "calc_revenu_ht")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc', "calc_revenu_ttc")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_encaisse', "calc_revenu_ttc_encaisse")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "calc_revenu_ttc_encaisse_tab_ref_factures")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "calc_revenu_ttc_encaisse_tab_ref_factures")->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_solde_restant_du', "calc_revenu_ttc_solde_restant_du")->onlyOnDetail(),
             
             //SECTION - PARTENAIRES

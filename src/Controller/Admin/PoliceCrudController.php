@@ -251,7 +251,7 @@ class PoliceCrudController extends AbstractCrudController
             
 
             FormField::addTab(' Prime & Capitaux')
-            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+            ->setIcon('fas fa-bag-shopping'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
             
             //Ligne 01
@@ -277,8 +277,8 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('primetotale', "Prime totale"),
             
             //Ligne 13
-            FormField::addTab(' Commissions de courtage')
-            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+            FormField::addTab(' Structure des revenus')
+            ->setIcon('fas fa-sack-dollar'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
             
             AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6)
@@ -292,18 +292,24 @@ class PoliceCrudController extends AbstractCrudController
             //->setEmptyData(" ")
             ,
 
-            FormField::addPanel('Revenus hors taxes')->onlyOnForms(),
-            NumberField::new('ricom', "Commission de réa.")->hideOnIndex()->setColumns(2),
+            FormField::addPanel('Commission de réassurance')
+            //->onlyOnForms()
+            ,
+            NumberField::new('ricom', "Montant ht")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
-            FormField::addPanel()->onlyOnForms(),
-            NumberField::new('localcom', "Commission ord.")->hideOnIndex()->setColumns(2),
+            FormField::addPanel("Commission locale")
+            //->onlyOnForms()
+            ,
+            NumberField::new('localcom', "Montant ht")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharelocalcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('localcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             //Ligne 14
-            FormField::addPanel()->onlyOnForms(),
-            NumberField::new('frontingcom', "Commission sur Fronting")->hideOnIndex()->setColumns(2),
+            FormField::addPanel("Commission sur Fronting")
+            //->onlyOnForms()
+            ,
+            NumberField::new('frontingcom', "Montant ht")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharefrontingcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
@@ -319,7 +325,7 @@ class PoliceCrudController extends AbstractCrudController
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
 
-            FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-file-shield'), 
+            FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-book'), 
             AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -333,8 +339,8 @@ class PoliceCrudController extends AbstractCrudController
 
 
 
-            FormField::addTab(' Attributs calculés')->setIcon('fas fa-file-shield'),
-            FormField::addPanel('Revenus'),
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high'),
+            FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off'),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
             NumberField::new('calc_revenu_ht', "Revenu ht")->onlyOnDetail(),
@@ -344,6 +350,7 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "calc_revenu_ttc_encaisse_tab_dates")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_solde_restant_du', "calc_revenu_ttc_solde_restant_du")->onlyOnDetail(),
             
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off'),
             //SECTION - PARTENAIRES
             NumberField::new('calc_retrocom', "calc_retrocom")->onlyOnDetail(),
             NumberField::new('calc_retrocom_payees', "calc_retrocom_payees")->onlyOnDetail(),
@@ -351,6 +358,7 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_retrocom_payees_tab_dates', "calc_retrocom_payees_tab_dates")->onlyOnDetail(),
             NumberField::new('calc_retrocom_solde', "calc_retrocom_solde")->onlyOnDetail(),
 
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off'),
             //SECTION - TAXES
             NumberField::new('calc_taxes_courtier', "calc_taxes_courtier")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_payees', "calc_taxes_courtier_payees")->onlyOnDetail(),

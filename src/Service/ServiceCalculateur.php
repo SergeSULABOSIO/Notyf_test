@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Police;
 use App\Entity\Entreprise;
+use App\Entity\PaiementTaxe;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
@@ -50,23 +51,34 @@ class ServiceCalculateur
     private function calculerTaxes(?Police $police)
     {
         //SECTION - TAXES
-
-        $taxes = $this->entityManager->getRepository(Taxe::class)
-        //->findAll()
-        ->findBy(
+        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        )
-        ;
+        );
+        $paiements_taxes = $this->entityManager->getRepository(PaiementTaxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
 
-        if ($taxes) {
-            dd($taxes);
+        foreach ($taxes as $taxe) {
+            if ($taxe->isPayableparcourtier() == true) {
+                //dd($taxe);
+                $police->calc_taxes_courtier += ($police->calc_revenu_ht * $taxe->getTaux());
+
+                foreach ($paiements_taxes as $paiement_taxe) {
+                    
+                }
+
+                $police->calc_taxes_courtier_payees = 0;
+                $police->calc_taxes_courtier_payees_tab_ref_factures = [];
+                $police->calc_taxes_courtier_payees_tab_dates = [];
+
+
+                $police->calc_taxes_courtier_solde = ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
+            }
         }
 
-        $police->calc_taxes_courtier = 0;
-        $police->calc_taxes_courtier_payees = 0;
-        $police->calc_taxes_courtier_payees_tab_ref_factures = [];
-        $police->calc_taxes_courtier_payees_tab_dates = [];
-        $police->calc_taxes_courtier_solde = 0;
+        
+
+        
 
         $police->calc_taxes_assureurs = 0;
         $police->calc_taxes_assureurs_payees = 0;

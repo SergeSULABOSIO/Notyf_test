@@ -337,8 +337,6 @@ class PoliceCrudController extends AbstractCrudController
             ,
             ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
 
-
-
             FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
             FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES

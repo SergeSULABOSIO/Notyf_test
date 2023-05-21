@@ -339,8 +339,8 @@ class PoliceCrudController extends AbstractCrudController
 
 
 
-            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high'),
-            FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off'),//<i class="fa-solid fa-toggle-off"></i>
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+            FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
             NumberField::new('calc_revenu_ht', "Revenu hors taxes")->onlyOnDetail(),
@@ -350,7 +350,7 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->onlyOnDetail(),
             
-            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off'),
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
             //SECTION - PARTENAIRES
             NumberField::new('calc_retrocom', "Retrocommissions dûes")->onlyOnDetail(),
             NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->onlyOnDetail(),
@@ -358,7 +358,7 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_retrocom_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_retrocom_solde', "Solde restant dû")->onlyOnDetail(),
 
-            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off'),
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
             //SECTION - TAXES
             NumberField::new('calc_taxes_courtier', "Dûes par le courtier")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_payees', "Montant payé")->onlyOnDetail(),
@@ -366,7 +366,7 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->onlyOnDetail(),
 
-            FormField::addPanel(),
+            FormField::addPanel()->onlyOnDetail(),
 
             NumberField::new('calc_taxes_assureurs', "Dûes par les assureurs")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->onlyOnDetail(),

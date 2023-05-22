@@ -325,8 +325,8 @@ class PoliceCrudController extends AbstractCrudController
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
 
-            FormField::addTab(' Documents / Pièces Justificatives')->setIcon('fas fa-book'), 
-            AssociationField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnForms()
+            FormField::addTab(' Documents')->setIcon('fas fa-book'), 
+            AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -335,7 +335,7 @@ class PoliceCrudController extends AbstractCrudController
                     ;
             })
             ,
-            ArrayField::new('pieces', "Documents / pièces justificatives")->setColumns(12)->onlyOnDetail(),
+            ArrayField::new('pieces', "Documents")->setColumns(12)->onlyOnDetail(),
 
             FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
             FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>

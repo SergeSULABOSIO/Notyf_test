@@ -27,11 +27,17 @@ class ServiceCalculateur
         $this->calculerTaxes($police);
     }
 
-    private function calculerRevenus(?Police $police)
-    {
+    private function calculerHorsTaxes(?Police $police)
+        {$paiements_com = $this->entityManager->getRepository("")->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+
+    
         //SECTION - REVENU
-        $police->calc_revenu_ht = 1+1;
-        $police->calc_revenu_ttc = 0;
+        $police->calc_revenu_ht = $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+        $police->calc_revenu_ttc = $police->calc_revenu_ht * ($police->calc_taxes_courtier + $police->calc_taxes_assureurs);
+
+        
         $police->calc_revenu_ttc_encaisse = 0;
         $police->calc_revenu_ttc_encaisse_tab_ref_factures = [];
         $police->calc_revenu_ttc_encaisse_tab_dates = [];
@@ -62,29 +68,22 @@ class ServiceCalculateur
             if ($taxe->isPayableparcourtier() == true) {
                 //dd($taxe);
                 $police->calc_taxes_courtier += ($police->calc_revenu_ht * $taxe->getTaux());
-
                 foreach ($paiements_taxes as $paiement_taxe) {
-                    
+                    $police->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
+                    $police->calc_taxes_courtier_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
+                    $police->calc_taxes_courtier_payees_tab_dates[] = $paiement_taxe->getDate();
                 }
-
-                $police->calc_taxes_courtier_payees = 0;
-                $police->calc_taxes_courtier_payees_tab_ref_factures = [];
-                $police->calc_taxes_courtier_payees_tab_dates = [];
-
-
-                $police->calc_taxes_courtier_solde = ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
+                $police->calc_taxes_courtier_solde += ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
+            }else{
+                $police->calc_taxes_assureurs += ($police->calc_revenu_ht * $taxe->getTaux());
+                foreach ($paiements_taxes as $paiement_taxe) {
+                    $police->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
+                    $police->calc_taxes_assureurs_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
+                    $police->calc_taxes_assureurs_payees_tab_dates[] = $paiement_taxe->getDate();
+                }
+                $police->calc_taxes_assureurs_solde += ($police->calc_taxes_assureurs - $police->calc_taxes_assureurs_payees);
             }
         }
-
-        
-
-        
-
-        $police->calc_taxes_assureurs = 0;
-        $police->calc_taxes_assureurs_payees = 0;
-        $police->calc_taxes_assureurs_payees_tab_ref_factures = [];
-        $police->calc_taxes_assureurs_payees_tab_dates = [];
-        $police->calc_taxes_assureurs_solde = 0;
     }
 
 }

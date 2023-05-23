@@ -151,6 +151,7 @@ class Police
 
     //LES CHAMPS CALCULABLES
     //SECTION - REVENU
+    public $calc_revenu_partageable = 0;
     public $calc_revenu_ht = 0;
     public $calc_revenu_ttc = 0;
     public $calc_revenu_ttc_encaisse = 0;

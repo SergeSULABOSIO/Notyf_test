@@ -338,12 +338,13 @@ class PoliceCrudController extends AbstractCrudController
             ArrayField::new('pieces', "Documents")->setColumns(12)->onlyOnDetail(),
 
             FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
-            FormField::addPanel('Revenus')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
-            NumberField::new('calc_revenu_ht', "Revenu hors taxes")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc', "Revenu brut")->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_encaisse', "Revenu encaissé")->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc")->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->onlyOnDetail(),

@@ -28,6 +28,11 @@ class ServiceCalculateur
         $this->calculerTaxes($police);
         $this->calculerRevenusTTC($police);
         $this->calculerRevenusEncaisses($police);
+        $this->calculerRevenusPartageables($police);
+    }
+
+    public function calculerRevenusPartageables(?Police $police){
+        $police->calc_revenu_partageable = $police->calc_revenu_ht - $police->calc_taxes_courtier;
     }
 
     private function calculerRevenusHT(?Police $police)

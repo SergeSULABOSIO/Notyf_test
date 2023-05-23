@@ -296,21 +296,21 @@ class PoliceCrudController extends AbstractCrudController
             //->onlyOnForms()
             ,
             NumberField::new('ricom', "Montant ht")->hideOnIndex()->setColumns(2),
-            ChoiceField::new('cansharericom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('cansharericom', "Est-elle partagée?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
             FormField::addPanel("Commission locale")
             //->onlyOnForms()
             ,
             NumberField::new('localcom', "Montant ht")->hideOnIndex()->setColumns(2),
-            ChoiceField::new('cansharelocalcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('cansharelocalcom', "Est-elle partagée?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('localcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             //Ligne 14
             FormField::addPanel("Commission sur Fronting")
             //->onlyOnForms()
             ,
             NumberField::new('frontingcom', "Montant ht")->hideOnIndex()->setColumns(2),
-            ChoiceField::new('cansharefrontingcom', "Partageable?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
+            ChoiceField::new('cansharefrontingcom', "Est-elle partagée?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
             
             TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),
@@ -318,7 +318,7 @@ class PoliceCrudController extends AbstractCrudController
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
-
+            
             //Ligne 19
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),

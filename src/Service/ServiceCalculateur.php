@@ -6,6 +6,7 @@ use App\Entity\Police;
 use App\Entity\Entreprise;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementTaxe;
+use App\Entity\Partenaire;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
@@ -29,6 +30,7 @@ class ServiceCalculateur
         $this->calculerRevenusTTC($police);
         $this->calculerRevenusEncaisses($police);
         $this->calculerRevenusPartageables($police);
+        $this->calculerRetrocommissions($police);
     }
 
     public function calculerRevenusPartageables(?Police $police){
@@ -60,6 +62,10 @@ class ServiceCalculateur
 
     private function calculerRetrocommissions(?Police $police)
     {
+        $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($partenaires);
         //SECTION - PARTENAIRES
         $police->calc_retrocom = 0;
         $police->calc_retrocom_payees = 0;

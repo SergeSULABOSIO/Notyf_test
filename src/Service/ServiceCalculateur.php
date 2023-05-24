@@ -20,8 +20,25 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class ServiceCalculateur
 {
+    private $paiements_com = null;
+    private $taxes = null;
+    private $paiements_taxes = null;
+    private $paiements_retrocom = null;
+
     public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
+        $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        $this->taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        $this->paiements_taxes = $this->entityManager->getRepository(PaiementTaxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        $this->paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
     }
 
     public function updatePoliceCalculableFileds(?Police $police)
@@ -51,13 +68,13 @@ class ServiceCalculateur
 
     private function calculerRevenusEncaisses(?Police $police)
     {
-        $paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        foreach ($paiements_com as $paiement_com) {
+        foreach ($this->paiements_com as $paiement_com) {
             if ($paiement_com->getPolice() == $police) {
                 $police->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = $paiement_com->getRefnotededebit();
+                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = [
+                    "Note de débit" => $paiement_com->getRefnotededebit(),
+                    "Date" => $paiement_com->getDate()->format('d/m/Y'),
+                ];
                 $police->calc_revenu_ttc_encaisse_tab_dates[] = $paiement_com->getDate()->format('d/m/Y à H:m:s');
             }
         }
@@ -89,10 +106,7 @@ class ServiceCalculateur
         }
         //dd($police->calc_retrocom . " ** " . $police->getLocalcom());
 
-        $paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        foreach ($paiements_retrocom as $paiement_retrocom) {
+        foreach ($this->paiements_retrocom as $paiement_retrocom) {
             //dd($paiement_retrocom->getPolice());
             if ($police == $paiement_retrocom->getPolice()) {
                 $police->calc_retrocom_payees += $paiement_retrocom->getMontant();
@@ -105,11 +119,7 @@ class ServiceCalculateur
 
     private function removeBrokerTaxe($netCommission)
     {
-        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-
-        foreach ($taxes as $taxe) {
+        foreach ($this->taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == true) {
                 //dd($taxe->getTaux());
                 $netCommission = $netCommission - ($netCommission * $taxe->getTaux());
@@ -121,19 +131,11 @@ class ServiceCalculateur
 
     private function calculerTaxes(?Police $police)
     {
-        //SECTION - TAXES
-        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        $paiements_taxes = $this->entityManager->getRepository(PaiementTaxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-
-        foreach ($taxes as $taxe) {
+        foreach ($this->taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == true) {
                 //dd($taxe);
                 $police->calc_taxes_courtier += ($police->calc_revenu_ht * $taxe->getTaux());
-                foreach ($paiements_taxes as $paiement_taxe) {
+                foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
                         $police->calc_taxes_courtier_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
@@ -143,7 +145,7 @@ class ServiceCalculateur
                 $police->calc_taxes_courtier_solde += ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
             } else {
                 $police->calc_taxes_assureurs += ($police->calc_revenu_ht * $taxe->getTaux());
-                foreach ($paiements_taxes as $paiement_taxe) {
+                foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
                         $police->calc_taxes_assureurs_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();

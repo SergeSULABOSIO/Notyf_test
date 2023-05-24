@@ -62,10 +62,25 @@ class ServiceCalculateur
 
     private function calculerRetrocommissions(?Police $police)
     {
-        $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy(
+        /* $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($partenaires);
+        ); */
+        $partenaire = $police->getPartenaire();
+        //dd($partenaire->getNom());
+
+        if ($partenaire != null) {
+            $part = $partenaire->getPart();
+            dd($part . " - " . $partenaire->getNom());
+            $retrocom_ri = 0; //->
+            $retrocom_local = 0;
+            $retrocom_fronting = 0;
+
+            if()
+
+        }
+
+
+
         //SECTION - PARTENAIRES
         $police->calc_retrocom = 0;
         $police->calc_retrocom_payees = 0;

@@ -55,9 +55,11 @@ class ServiceCalculateur
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
         foreach ($paiements_com as $paiement_com) {
-            $police->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-            $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = $paiement_com->getRefnotededebit();
-            $police->calc_revenu_ttc_encaisse_tab_dates[] = $paiement_com->getDate()->format('d/m/Y à H:m:s');
+            if ($paiement_com->getPolice() == $police) {
+                $police->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
+                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = $paiement_com->getRefnotededebit();
+                $police->calc_revenu_ttc_encaisse_tab_dates[] = $paiement_com->getDate()->format('d/m/Y à H:m:s');
+            }
         }
         $police->calc_revenu_ttc_solde_restant_du = $police->calc_revenu_ttc - $police->calc_revenu_ttc_encaisse;
     }
@@ -132,7 +134,7 @@ class ServiceCalculateur
                 //dd($taxe);
                 $police->calc_taxes_courtier += ($police->calc_revenu_ht * $taxe->getTaux());
                 foreach ($paiements_taxes as $paiement_taxe) {
-                    if ($paiement_taxe->getTaxe() == $taxe) {
+                    if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
                         $police->calc_taxes_courtier_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
                         $police->calc_taxes_courtier_payees_tab_dates[] = $paiement_taxe->getDate()->format('d/m/Y à H:m:s');
@@ -142,7 +144,7 @@ class ServiceCalculateur
             } else {
                 $police->calc_taxes_assureurs += ($police->calc_revenu_ht * $taxe->getTaux());
                 foreach ($paiements_taxes as $paiement_taxe) {
-                    if ($paiement_taxe->getTaxe() == $taxe) {
+                    if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
                         $police->calc_taxes_assureurs_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
                         $police->calc_taxes_assureurs_payees_tab_dates[] = $paiement_taxe->getDate()->format('d/m/Y à H:m:s');

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Police;
 use App\Entity\Entreprise;
 use App\Entity\PaiementCommission;
+use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
 use App\Entity\Taxe;
@@ -33,7 +34,8 @@ class ServiceCalculateur
         $this->calculerRetrocommissions($police);
     }
 
-    public function calculerRevenusPartageables(?Police $police){
+    public function calculerRevenusPartageables(?Police $police)
+    {
         $police->calc_revenu_partageable = $police->calc_revenu_ht - $police->calc_taxes_courtier;
     }
 
@@ -62,31 +64,57 @@ class ServiceCalculateur
 
     private function calculerRetrocommissions(?Police $police)
     {
-        /* $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        ); */
+        $retrocom_ri = 0;
+        $retrocom_local = 0;
+        $retrocom_fronting = 0;
+
         $partenaire = $police->getPartenaire();
         //dd($partenaire->getNom());
-
         if ($partenaire != null) {
             $part = $partenaire->getPart();
-            dd($part . " - " . $partenaire->getNom());
-            $retrocom_ri = 0; //->
-            $retrocom_local = 0;
-            $retrocom_fronting = 0;
 
-            if()
+            if ($police->isCansharericom() == true) {
+                $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part) / 100;
+            }
+            if ($police->isCansharelocalcom() == true) {
+                //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
+                $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part) / 100;
+            }
+            if ($police->isCansharefrontingcom() == true) {
+                $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part) / 100;
+            }
+            $police->calc_retrocom = $retrocom_ri + $retrocom_local + $retrocom_fronting;
+        }
+        //dd($police->calc_retrocom . " ** " . $police->getLocalcom());
 
+        $paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        foreach ($paiements_retrocom as $paiement_retrocom) {
+            //dd($paiement_retrocom->getPolice());
+            if ($police == $paiement_retrocom->getPolice()) {
+                $police->calc_retrocom_payees += $paiement_retrocom->getMontant();
+                $police->calc_retrocom_payees_tab_factures[] = $paiement_retrocom->getRefnotededebit();
+                $police->calc_retrocom_payees_tab_dates[] = $paiement_retrocom->getDate()->format('d/m/Y à H:m:s');
+            }
+        }
+        $police->calc_retrocom_solde = $police->calc_retrocom - $police->calc_retrocom_payees;
+    }
+
+    private function removeBrokerTaxe($netCommission)
+    {
+        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+
+        foreach ($taxes as $taxe) {
+            if ($taxe->isPayableparcourtier() == true) {
+                //dd($taxe->getTaux());
+                $netCommission = $netCommission - ($netCommission * $taxe->getTaux());
+            }
         }
 
-
-
-        //SECTION - PARTENAIRES
-        $police->calc_retrocom = 0;
-        $police->calc_retrocom_payees = 0;
-        $police->calc_retrocom_payees_tab_factures = [];
-        $police->calc_retrocom_payees_tab_dates = [];
-        $police->calc_retrocom_solde = 0;
+        return $netCommission;
     }
 
     private function calculerTaxes(?Police $police)

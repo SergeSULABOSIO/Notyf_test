@@ -346,7 +346,7 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_revenu_ttc', "Commissions ttc")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->onlyOnDetail(),
             ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
-            ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
+            //ArrayField::new('calc_revenu_ttc_encaisse_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->onlyOnDetail(),
             
             FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
@@ -354,7 +354,7 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_retrocom', "Retrocommissions dûes")->onlyOnDetail(),
             NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->onlyOnDetail(),
             ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->onlyOnDetail(),
-            ArrayField::new('calc_retrocom_payees_tab_dates', "Dates")->onlyOnDetail(),
+            //ArrayField::new('calc_retrocom_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_retrocom_solde', "Solde restant dû")->onlyOnDetail(),
 
             FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
@@ -362,7 +362,7 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_taxes_courtier', "ARCA")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_payees', "Montant payé")->onlyOnDetail(),
             ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
+            //ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->onlyOnDetail(),
 
             FormField::addPanel()->onlyOnDetail(),
@@ -370,7 +370,7 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_taxes_assureurs', "TVA")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->onlyOnDetail(),
             ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
-            ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "Dates")->onlyOnDetail(),
+            //ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->onlyOnDetail(),
 
         ];
@@ -379,10 +379,12 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
+        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
+            ->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
-            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+            ->setIcon('fa-solid fa-eye')
+            ->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')

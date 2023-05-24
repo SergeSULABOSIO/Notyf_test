@@ -71,11 +71,7 @@ class ServiceCalculateur
         foreach ($this->paiements_com as $paiement_com) {
             if ($paiement_com->getPolice() == $police) {
                 $police->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = [
-                    "Note de débit" => $paiement_com->getRefnotededebit(),
-                    "Date" => $paiement_com->getDate()->format('d/m/Y'),
-                ];
-                $police->calc_revenu_ttc_encaisse_tab_dates[] = $paiement_com->getDate()->format('d/m/Y à H:m:s');
+                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMonnaie()->getCode() . " " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
             }
         }
         $police->calc_revenu_ttc_solde_restant_du = $police->calc_revenu_ttc - $police->calc_revenu_ttc_encaisse;
@@ -110,8 +106,7 @@ class ServiceCalculateur
             //dd($paiement_retrocom->getPolice());
             if ($police == $paiement_retrocom->getPolice()) {
                 $police->calc_retrocom_payees += $paiement_retrocom->getMontant();
-                $police->calc_retrocom_payees_tab_factures[] = $paiement_retrocom->getRefnotededebit();
-                $police->calc_retrocom_payees_tab_dates[] = $paiement_retrocom->getDate()->format('d/m/Y à H:m:s');
+                $police->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMonnaie()->getCode() . " " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
             }
         }
         $police->calc_retrocom_solde = $police->calc_retrocom - $police->calc_retrocom_payees;
@@ -138,8 +133,7 @@ class ServiceCalculateur
                 foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
-                        $police->calc_taxes_courtier_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
-                        $police->calc_taxes_courtier_payees_tab_dates[] = $paiement_taxe->getDate()->format('d/m/Y à H:m:s');
+                        $police->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom();//$paiement_taxe->getRefnotededebit();
                     }
                 }
                 $police->calc_taxes_courtier_solde += ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
@@ -148,8 +142,7 @@ class ServiceCalculateur
                 foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                         $police->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
-                        $police->calc_taxes_assureurs_payees_tab_ref_factures[] = $paiement_taxe->getRefnotededebit();
-                        $police->calc_taxes_assureurs_payees_tab_dates[] = $paiement_taxe->getDate()->format('d/m/Y à H:m:s');
+                        $police->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom();//$paiement_taxe->getRefnotededebit();
                     }
                 }
                 $police->calc_taxes_assureurs_solde += ($police->calc_taxes_assureurs - $police->calc_taxes_assureurs_payees);

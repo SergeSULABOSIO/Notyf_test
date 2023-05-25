@@ -129,6 +129,7 @@ class ServiceCalculateur
         foreach ($this->taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == true) {
                 //dd($taxe);
+                $police->calc_taxes_courtier_tab[] = $taxe;
                 $police->calc_taxes_courtier += ($police->calc_revenu_ht * $taxe->getTaux());
                 foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
@@ -138,6 +139,7 @@ class ServiceCalculateur
                 }
                 $police->calc_taxes_courtier_solde += ($police->calc_taxes_courtier - $police->calc_taxes_courtier_payees);
             } else {
+                $police->calc_taxes_assureurs_tab[] = $taxe;
                 $police->calc_taxes_assureurs += ($police->calc_revenu_ht * $taxe->getTaux());
                 foreach ($this->paiements_taxes as $paiement_taxe) {
                     if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {

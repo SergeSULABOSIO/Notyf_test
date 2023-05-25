@@ -359,15 +359,16 @@ class PoliceCrudController extends AbstractCrudController
 
             FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
             //SECTION - TAXES
-            NumberField::new('calc_taxes_courtier', "ARCA")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées")->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_payees', "Montant payé")->onlyOnDetail(),
             ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
             //ArrayField::new('calc_taxes_courtier_payees_tab_dates', "Dates")->onlyOnDetail(),
             NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->onlyOnDetail(),
 
             FormField::addPanel()->onlyOnDetail(),
-
-            NumberField::new('calc_taxes_assureurs', "TVA")->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées")->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû")->onlyOnDetail(),
             NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->onlyOnDetail(),
             ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->onlyOnDetail(),
             //ArrayField::new('calc_taxes_assureurs_payees_tab_dates', "Dates")->onlyOnDetail(),

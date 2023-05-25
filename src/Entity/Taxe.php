@@ -115,7 +115,7 @@ class Taxe
 
     public function __toString()
     {
-        return $this->nom . " / " . $this->description;
+        return $this->nom . " (" . $this->taux * 100 . "%)" . " : " . $this->description . " pour " . $this->organisation;
     }
 
     public function isPayableparcourtier(): ?bool

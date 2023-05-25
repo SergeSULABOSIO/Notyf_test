@@ -13,6 +13,7 @@ use App\Service\ServiceEntreprise;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -28,13 +29,13 @@ class AdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AfterEntityBuiltEvent::class => ['updateCalculableFiledsOnPoliceEntity'],
+            //AfterEntityBuiltEvent::class => ['updateCalculableFiledsOnPoliceEntity'],
             BeforeEntityPersistedEvent::class => ['setCreatedAt'],
             BeforeEntityUpdatedEvent::class => ['setUpdatedAt']
         ];
     }
 
-    public function updateCalculableFiledsOnPoliceEntity(AfterEntityBuiltEvent $event)
+    /* public function updateCalculableFiledsOnPoliceEntity(AfterEntityBuiltEvent $event)
     {
         //dd($event);
         $entityInstance = $event->getEntity()->getInstance();
@@ -42,7 +43,7 @@ class AdminSubscriber implements EventSubscriberInterface
         if($entityInstance instanceof Police){
             $this->serviceCalculateur->updatePoliceCalculableFileds($entityInstance);
         }
-    }
+    } */
 
     public function setCreatedAt(BeforeEntityPersistedEvent $event)
     {

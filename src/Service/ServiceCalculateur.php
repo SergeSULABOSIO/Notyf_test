@@ -24,7 +24,7 @@ class ServiceCalculateur
     private $taxes = null;
     private $paiements_taxes = null;
     private $paiements_retrocom = null;
-
+    
     public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(

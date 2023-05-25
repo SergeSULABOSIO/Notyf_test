@@ -72,11 +72,7 @@ class PoliceCrudController extends AbstractCrudController
         'Annulation' => 6
     ];
 
-    public function __construct
-    (
-        private EntityManagerInterface $entityManager, 
-        private ServiceEntreprise $serviceEntreprise
-    )
+    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
@@ -190,6 +186,7 @@ class PoliceCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+
         return [
             FormField::addTab(' Informations de base')
             ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>

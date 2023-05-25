@@ -24,6 +24,7 @@ class ServiceCalculateur
     private $taxes = null;
     private $paiements_taxes = null;
     private $paiements_retrocom = null;
+    private $polices = null;
     
     public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
@@ -39,39 +40,81 @@ class ServiceCalculateur
         $this->paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
+        
     }
 
     public function updatePoliceCalculableFileds(?Police $police)
     {
-        $this->calculerRevenusHT($police);
-        $this->calculerTaxes($police);
-        $this->calculerRevenusTTC($police);
-        $this->calculerRevenusEncaisses($police);
-        $this->calculerRevenusPartageables($police);
-        $this->calculerRetrocommissions($police);
-        $this->calculerRevenusReserve($police);
+        $this->calculerPoliceRevenusHT($police);
+        $this->calculerPoliceTaxes($police);
+        $this->calculerPoliceRevenusTTC($police);
+        $this->calculerPoliceRevenusEncaisses($police);
+        $this->calculerPoliceRevenusPartageables($police);
+        $this->calculerPoliceRetrocommissions($police);
+        $this->calculerPoliceRevenusReserve($police);
     }
 
-    public function calculerRevenusReserve(?Police $police){
+    public function updatePartenaireCalculableFileds(?Partenaire $partenaire)
+    {
+        $this->calculerPartenairePolices($partenaire);
+        //dd($this->polices);
+        foreach ($this->polices as $police) {
+            //Meta - police
+            $partenaire->calc_polices_tab[] = $police;
+            $partenaire->calc_polices_primes_nette += $police->getPrimenette();
+            $partenaire->calc_polices_primes_totale += $police->getPrimetotale();
+            $partenaire->calc_polices_fronting += $police->getFronting();
+        }
+
+        $this->calculerPartenaireRevenusHT($partenaire);
+        //$this->calculerPoliceTaxes($police);
+        //$this->calculerPoliceRevenusTTC($police);
+        //$this->calculerPoliceRevenusEncaisses($police);
+        //$this->calculerPoliceRevenusPartageables($police);
+        //$this->calculerPoliceRetrocommissions($police);
+        //$this->calculerPoliceRevenusReserve($police);
+
+        dd($partenaire);
+    }
+
+
+    private function calculerPartenairePolices(?Partenaire $partenaire)
+    {
+        $this->polices = $this->entityManager->getRepository(Police::class)->findBy(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'partenaire' => $this->serviceEntreprise->getEntreprise()
+            ]
+        );
+    }
+
+    public function calculerPoliceRevenusReserve(?Police $police){
         $police->calc_revenu_reserve = $police->calc_revenu_partageable - $police->calc_retrocom;
     }
 
-    public function calculerRevenusPartageables(?Police $police)
+    public function calculerPoliceRevenusPartageables(?Police $police)
     {
         $police->calc_revenu_partageable = $police->calc_revenu_ht - $police->calc_taxes_courtier;
     }
 
-    private function calculerRevenusHT(?Police $police)
+    private function calculerPoliceRevenusHT(?Police $police)
     {
         $police->calc_revenu_ht = $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
     }
 
-    private function calculerRevenusTTC(?Police $police)
+    private function calculerPartenaireRevenusHT(?Partenaire $partenaire)
+    {
+        foreach ($this->polices as $police) {
+            $partenaire->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+        }
+    }
+
+    private function calculerPoliceRevenusTTC(?Police $police)
     {
         $police->calc_revenu_ttc = $police->calc_revenu_ht + $police->calc_taxes_assureurs;
     }
 
-    private function calculerRevenusEncaisses(?Police $police)
+    private function calculerPoliceRevenusEncaisses(?Police $police)
     {
         foreach ($this->paiements_com as $paiement_com) {
             if ($paiement_com->getPolice() == $police) {
@@ -82,7 +125,7 @@ class ServiceCalculateur
         $police->calc_revenu_ttc_solde_restant_du = $police->calc_revenu_ttc - $police->calc_revenu_ttc_encaisse;
     }
 
-    private function calculerRetrocommissions(?Police $police)
+    private function calculerPoliceRetrocommissions(?Police $police)
     {
         $retrocom_ri = 0;
         $retrocom_local = 0;
@@ -129,7 +172,7 @@ class ServiceCalculateur
         return $netCommission;
     }
 
-    private function calculerTaxes(?Police $police)
+    private function calculerPoliceTaxes(?Police $police)
     {
         foreach ($this->taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == true) {

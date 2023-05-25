@@ -6,6 +6,7 @@ use App\Entity\Partenaire;
 
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceCalculateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -33,7 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PartenaireCrudController extends AbstractCrudController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private ServiceCalculateur $serviceCalculateur, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
@@ -102,8 +103,22 @@ class PartenaireCrudController extends AbstractCrudController
         return $objet;
     }
 
+    private function actualiserAttributsCalculables(){
+        $entityManager = $this->container->get('doctrine')->getManagerForClass(Partenaire::class);
+        $liste = $entityManager->getRepository(Partenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($liste);
+        foreach ($liste as $objet) {
+            $this->serviceCalculateur->updatePartenaireCalculableFileds($objet);
+        }
+    }
+
     public function configureFields(string $pageName): iterable
     {
+        //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        $this->actualiserAttributsCalculables();
+
         return [
             FormField::addPanel('Informations générales')
             ->setIcon('fas fa-handshake') //<i class="fa-sharp fa-solid fa-address-book"></i>

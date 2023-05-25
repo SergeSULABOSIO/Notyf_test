@@ -49,6 +49,11 @@ class ServiceCalculateur
         $this->calculerRevenusEncaisses($police);
         $this->calculerRevenusPartageables($police);
         $this->calculerRetrocommissions($police);
+        $this->calculerRevenusReserve($police);
+    }
+
+    public function calculerRevenusReserve(?Police $police){
+        $police->calc_revenu_reserve = $police->calc_revenu_partageable - $police->calc_retrocom;
     }
 
     public function calculerRevenusPartageables(?Police $police)

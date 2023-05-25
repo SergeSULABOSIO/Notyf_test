@@ -151,6 +151,7 @@ class Police
 
     //LES CHAMPS CALCULABLES
     //SECTION - REVENU
+    public $calc_revenu_reserve = 0;
     public $calc_revenu_partageable = 0;
     public $calc_revenu_ht = 0;
     public $calc_revenu_ttc = 0;
@@ -173,7 +174,7 @@ class Police
     public $calc_taxes_courtier_payees_tab_ref_factures = [];
     //public $calc_taxes_courtier_payees_tab_dates = [];
     public $calc_taxes_courtier_solde = 0;
-    
+
     public $calc_taxes_assureurs_tab = [];
     public $calc_taxes_assureurs = 0;
     public $calc_taxes_assureurs_payees = 0;

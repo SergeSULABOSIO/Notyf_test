@@ -341,6 +341,8 @@ class PoliceCrudController extends AbstractCrudController
             FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
             //LES CHAMPS CALCULABLES
             //SECTION - REVENU
+            NumberField::new('calc_revenu_reserve', "Réserve")->onlyOnDetail()
+            ->addCssClass('text-large text-bold'),
             NumberField::new('calc_revenu_partageable', "Commissions partegeables")->onlyOnDetail(),
             NumberField::new('calc_revenu_ht', "Commissions hors taxes")->onlyOnDetail(),
             NumberField::new('calc_revenu_ttc', "Commissions ttc")->onlyOnDetail(),

@@ -72,9 +72,13 @@ class PoliceCrudController extends AbstractCrudController
         'Annulation' => 6
     ];
 
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct
+    (
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise
+    )
     {
-        
+        //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
 
     public static function getEntityFqcn(): string
@@ -115,6 +119,8 @@ class PoliceCrudController extends AbstractCrudController
         ;
     }
 
+
+
     public function configureFilters(Filters $filters): Filters
     {
         if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
@@ -144,7 +150,6 @@ class PoliceCrudController extends AbstractCrudController
         //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
         //dd($entityInstance);
     }
-
 
     public function createEntity(string $entityFqcn)
     {
@@ -460,6 +465,7 @@ class PoliceCrudController extends AbstractCrudController
     
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
+        //dd($context);
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;

@@ -52,13 +52,17 @@ class ServiceCalculateur
             ]
         );
         //dd($this->polices);
+        $this->calculerPrimes($obj);
         $this->calculerRevenuHT($obj);
-        $this->calculerPoliceTaxes($obj);
+        $this->calculerTaxes($obj);
+
+        ici
         $this->calculerPoliceRevenusTTC($obj);
         $this->calculerPoliceRevenusEncaisses($obj);
         $this->calculerPoliceRevenusPartageables($obj);
         $this->calculerPoliceRetrocommissions($obj);
         $this->calculerPoliceRevenusReserve($obj);
+        //dd($obj);
     }
 
     public function updatePartenaireCalculableFileds(?CalculableEntity $obj)
@@ -70,16 +74,10 @@ class ServiceCalculateur
             ]
         );
         //dd($this->polices);
-        foreach ($this->polices as $police) {
-            //Meta - police
-            $obj->calc_polices_tab[] = $police;
-            $obj->calc_polices_primes_nette += $police->getPrimenette();
-            $obj->calc_polices_primes_totale += $police->getPrimetotale();
-            $obj->calc_polices_fronting += $police->getFronting();
-        }
-
-        $this->calculerPartenaireRevenusHT($obj);
-        $this->calculerPartenaireTaxes($obj);
+        $this->calculerPrimes($obj);
+        $this->calculerRevenuHT($obj);
+        $this->calculerTaxes($obj);
+        //$this->calculerPartenaireTaxes($obj);
         //$this->calculerPoliceRevenusTTC($police);
         //$this->calculerPoliceRevenusEncaisses($police);
         //$this->calculerPoliceRevenusPartageables($police);
@@ -123,12 +121,23 @@ class ServiceCalculateur
         }
     }
 
-    private function calculerPartenaireRevenusHT(?CalculableEntity $obj)
+    private function calculerPrimes(?CalculableEntity $obj)
+    {
+        foreach ($this->polices as $police) {
+            //Meta - police
+            $obj->calc_polices_tab[] = $police;
+            $obj->calc_polices_primes_nette += $police->getPrimenette();
+            $obj->calc_polices_primes_totale += $police->getPrimetotale();
+            $obj->calc_polices_fronting += $police->getFronting();
+        }
+    }
+
+    /* private function calculerPartenaireRevenusHT(?CalculableEntity $obj)
     {
         foreach ($this->polices as $police) {
             $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
         }
-    }
+    } */
 
     private function calculerPoliceRevenusTTC(?Police $police)
     {
@@ -193,66 +202,35 @@ class ServiceCalculateur
         return $netCommission;
     }
 
-    private function calculerPoliceTaxes(?CalculableEntity $calculableEntity)
+    private function calculerTaxes(?CalculableEntity $calculableEntity)
     {
-        foreach ($this->taxes as $taxe) {
-            if ($taxe->isPayableparcourtier() == true) {
-                //dd($taxe);
-                $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
-                $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
-                foreach ($this->paiements_taxes as $paiement_taxe) {
-                    if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $calculableEntity) {
-                        $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
-                        $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+        foreach ($this->polices as $police) {
+            foreach ($this->taxes as $taxe) {
+                if ($taxe->isPayableparcourtier() == true) {
+                    //dd($taxe);
+                    $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
+                    $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
+                    foreach ($this->paiements_taxes as $paiement_taxe) {
+                        if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
+                            $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
+                            $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+                        }
                     }
-                }
-                $calculableEntity->calc_taxes_courtier_solde += ($calculableEntity->calc_taxes_courtier - $calculableEntity->calc_taxes_courtier_payees);
-            } else {
-                $calculableEntity->calc_taxes_assureurs_tab[] = $taxe;
-                $calculableEntity->calc_taxes_assureurs += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
-                foreach ($this->paiements_taxes as $paiement_taxe) {
-                    if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $calculableEntity) {
-                        $calculableEntity->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
-                        $calculableEntity->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+                    $calculableEntity->calc_taxes_courtier_solde += ($calculableEntity->calc_taxes_courtier - $calculableEntity->calc_taxes_courtier_payees);
+                } else {
+                    $calculableEntity->calc_taxes_assureurs_tab[] = $taxe;
+                    $calculableEntity->calc_taxes_assureurs += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
+                    foreach ($this->paiements_taxes as $paiement_taxe) {
+                        if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
+                            $calculableEntity->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
+                            $calculableEntity->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+                        }
                     }
+                    $calculableEntity->calc_taxes_assureurs_solde += ($calculableEntity->calc_taxes_assureurs - $calculableEntity->calc_taxes_assureurs_payees);
                 }
-                $calculableEntity->calc_taxes_assureurs_solde += ($calculableEntity->calc_taxes_assureurs - $calculableEntity->calc_taxes_assureurs_payees);
             }
         }
     }
 
-    private function calculerPartenaireTaxes(?Partenaire $partenaire)
-    {
-        //dd($partenaire);
-        foreach ($this->polices as $police) {
-            //dd($police->getPartenaire());
-            if ($police->getPartenaire() == $partenaire) {
-                //dd($police->getPartenaire());
-                foreach ($this->taxes as $taxe) {
-                    if ($taxe->isPayableparcourtier() == true) {
-                        //dd($taxe);
-                        $partenaire->calc_taxes_courtier_tab[] = $taxe;
-                        $partenaire->calc_taxes_courtier += ($partenaire->calc_revenu_ht * $taxe->getTaux());
-                        foreach ($this->paiements_taxes as $paiement_taxe) {
-                            if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
-                                $partenaire->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
-                                $partenaire->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
-                            }
-                        }
-                        $partenaire->calc_taxes_courtier_solde += ($partenaire->calc_taxes_courtier - $partenaire->calc_taxes_courtier_payees);
-                    } else {
-                        $partenaire->calc_taxes_assureurs_tab[] = $taxe;
-                        $partenaire->calc_taxes_assureurs += ($partenaire->calc_revenu_ht * $taxe->getTaux());
-                        foreach ($this->paiements_taxes as $paiement_taxe) {
-                            if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
-                                $partenaire->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
-                                $partenaire->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", reversé le " . $paiement_taxe->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
-                            }
-                        }
-                        $partenaire->calc_taxes_assureurs_solde += ($partenaire->calc_taxes_assureurs - $partenaire->calc_taxes_assureurs_payees);
-                    }
-                }
-            }
-        }
-    }
+    
 }

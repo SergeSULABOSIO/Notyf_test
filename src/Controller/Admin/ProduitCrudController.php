@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Produit;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceCalculateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -17,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -52,7 +54,7 @@ class ProduitCrudController extends AbstractCrudController
         'VIE' => 1
     ];
 
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private ServiceCalculateur $serviceCalculateur, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
@@ -125,11 +127,26 @@ class ProduitCrudController extends AbstractCrudController
         //$objet->setClos(0);
         return $objet;
     }
+
+
+    private function actualiserAttributsCalculables(){
+        $entityManager = $this->container->get('doctrine')->getManagerForClass(Produit::class);
+        $liste = $entityManager->getRepository(Produit::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($liste);
+        foreach ($liste as $objet) {
+            $this->serviceCalculateur->updateProduitCalculableFileds($objet);
+        }
+    }
     
     public function configureFields(string $pageName): iterable
     {
+        //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        $this->actualiserAttributsCalculables();
+
         return [
-            FormField::addPanel('Informations générales')
+            FormField::addTab(' Informations générales')
             ->setIcon('fas fa-gifts') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Une couverture d'assurance."),
 
@@ -155,7 +172,51 @@ class ProduitCrudController extends AbstractCrudController
 
             //Ligne 05
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm()
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+
+
+            //LES CHAMPS CALCULABLES
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+            //SECTION - PRIME
+            FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_polices_tab', "Polices"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_nette', "Prime nette"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_fronting', "Fronting"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_accessoire', "Accéssoires"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_tva', "Taxes"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_totale', "Prime totale"),//->onlyOnDetail(),
+
+            //SECTION - REVENU
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
+            NumberField::new('calc_revenu_reserve', "Réserve"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées"),//->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû"),//->onlyOnDetail(),
+            
+            //SECTION - PARTENAIRES
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes"),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées"),//->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû"),//->onlyOnDetail(),
+
+            //SECTION - TAXES
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé"),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû"),//->onlyOnDetail(),
+
+            FormField::addPanel()->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé"),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû"),//->onlyOnDetail(),
             
         ];
     }

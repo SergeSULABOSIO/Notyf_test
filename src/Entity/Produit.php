@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-class Produit
+class Produit extends CalculableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

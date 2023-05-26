@@ -284,8 +284,8 @@ class PoliceCrudController extends AbstractCrudController
             ChoiceField::new('modepaiement', "Mode de paiement")->setColumns(2)->hideOnIndex()->setChoices(self::TAB_POLICE_MODE_PAIEMENT),
 
             FormField::addPanel('Facture client')->onlyOnForms(),
-            NumberField::new('primenette', "Prime nette")->hideOnIndex(),
-            NumberField::new('fronting', "Frais/Fronting")->hideOnIndex(),
+            NumberField::new('primenette', "Prime nette"),//->hideOnIndex(),
+            NumberField::new('fronting', "Frais/Fronting"),//->hideOnIndex(),
             NumberField::new('arca', "Frais/Régul.")->hideOnIndex(),
             NumberField::new('tva', "Tva")->hideOnIndex(),
             NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex(),

@@ -55,13 +55,11 @@ class ServiceCalculateur
         $this->calculerPrimes($obj);
         $this->calculerRevenuHT($obj);
         $this->calculerTaxes($obj);
-
-        ici
-        $this->calculerPoliceRevenusTTC($obj);
-        $this->calculerPoliceRevenusEncaisses($obj);
-        $this->calculerPoliceRevenusPartageables($obj);
-        $this->calculerPoliceRetrocommissions($obj);
-        $this->calculerPoliceRevenusReserve($obj);
+        $this->calculerRevenusTTC($obj);
+        $this->calculerRevenusEncaisses($obj);
+        $this->calculerRevenusPartageables($obj);
+        $this->calculerRetrocommissions($obj);
+        $this->calculerRevenusReserve($obj);
         //dd($obj);
     }
 
@@ -77,12 +75,11 @@ class ServiceCalculateur
         $this->calculerPrimes($obj);
         $this->calculerRevenuHT($obj);
         $this->calculerTaxes($obj);
-        //$this->calculerPartenaireTaxes($obj);
-        //$this->calculerPoliceRevenusTTC($police);
-        //$this->calculerPoliceRevenusEncaisses($police);
-        //$this->calculerPoliceRevenusPartageables($police);
-        //$this->calculerPoliceRetrocommissions($police);
-        //$this->calculerPoliceRevenusReserve($police);
+        $this->calculerRevenusTTC($obj);
+        $this->calculerRevenusEncaisses($obj);
+        $this->calculerRevenusPartageables($obj);
+        $this->calculerRetrocommissions($obj);
+        $this->calculerRevenusReserve($obj);
 
         dd($obj);
     }
@@ -103,19 +100,18 @@ class ServiceCalculateur
         $this->polices = $this->entityManager->getRepository(Police::class)->findBy($criteres);
     }
 
-    public function calculerPoliceRevenusReserve(?Police $police)
+    public function calculerRevenusReserve(?CalculableEntity $obj)
     {
-        $police->calc_revenu_reserve = $police->calc_revenu_partageable - $police->calc_retrocom;
+        $obj->calc_revenu_reserve = $obj->calc_revenu_partageable - $obj->calc_retrocom;
     }
 
-    public function calculerPoliceRevenusPartageables(?Police $police)
+    public function calculerRevenusPartageables(?CalculableEntity $obj)
     {
-        $police->calc_revenu_partageable = $police->calc_revenu_ht - $police->calc_taxes_courtier;
+        $obj->calc_revenu_partageable = $obj->calc_revenu_ht - $obj->calc_taxes_courtier;
     }
 
     private function calculerRevenuHT(?CalculableEntity $obj)
     {
-        //$obj->calc_revenu_ht = $obj->getLocalcom() + $obj->getFrontingcom() + $obj->getRicom();
         foreach ($this->polices as $police) {
             $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
         }
@@ -132,62 +128,59 @@ class ServiceCalculateur
         }
     }
 
-    /* private function calculerPartenaireRevenusHT(?CalculableEntity $obj)
+    private function calculerRevenusTTC(?CalculableEntity $obj)
+    {
+        $obj->calc_revenu_ttc = $obj->calc_revenu_ht + $obj->calc_taxes_assureurs;
+    }
+
+    private function calculerRevenusEncaisses(?CalculableEntity $obj)
     {
         foreach ($this->polices as $police) {
-            $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+            foreach ($this->paiements_com as $paiement_com) {
+                if ($paiement_com->getPolice() == $police) {
+                    $obj->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
+                    $obj->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMonnaie()->getCode() . " " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
+                }
+            }
+            $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
         }
-    } */
-
-    private function calculerPoliceRevenusTTC(?Police $police)
-    {
-        $police->calc_revenu_ttc = $police->calc_revenu_ht + $police->calc_taxes_assureurs;
     }
 
-    private function calculerPoliceRevenusEncaisses(?Police $police)
+    private function calculerRetrocommissions(?CalculableEntity $obj)
     {
-        foreach ($this->paiements_com as $paiement_com) {
-            if ($paiement_com->getPolice() == $police) {
-                $police->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-                $police->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMonnaie()->getCode() . " " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
+        foreach ($this->polices as $police) {
+            $retrocom_ri = 0;
+            $retrocom_local = 0;
+            $retrocom_fronting = 0;
+
+            $partenaire = $police->getPartenaire();
+            //dd($partenaire->getNom());
+            if ($partenaire != null) {
+                $part = $partenaire->getPart();
+
+                if ($police->isCansharericom() == true) {
+                    $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part) / 100;
+                }
+                if ($police->isCansharelocalcom() == true) {
+                    //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
+                    $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part) / 100;
+                }
+                if ($police->isCansharefrontingcom() == true) {
+                    $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part) / 100;
+                }
+                $obj->calc_retrocom = $retrocom_ri + $retrocom_local + $retrocom_fronting;
             }
+            //dd($police->calc_retrocom . " ** " . $police->getLocalcom());
+
+            foreach ($this->paiements_retrocom as $paiement_retrocom) {
+                //dd($paiement_retrocom->getPolice());
+                if ($police == $paiement_retrocom->getPolice()) {
+                    $obj->calc_retrocom_payees += $paiement_retrocom->getMontant();
+                    $obj->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMonnaie()->getCode() . " " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
+                }
+            }
+            $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
         }
-        $police->calc_revenu_ttc_solde_restant_du = $police->calc_revenu_ttc - $police->calc_revenu_ttc_encaisse;
-    }
-
-    private function calculerPoliceRetrocommissions(?Police $police)
-    {
-        $retrocom_ri = 0;
-        $retrocom_local = 0;
-        $retrocom_fronting = 0;
-
-        $partenaire = $police->getPartenaire();
-        //dd($partenaire->getNom());
-        if ($partenaire != null) {
-            $part = $partenaire->getPart();
-
-            if ($police->isCansharericom() == true) {
-                $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part) / 100;
-            }
-            if ($police->isCansharelocalcom() == true) {
-                //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
-                $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part) / 100;
-            }
-            if ($police->isCansharefrontingcom() == true) {
-                $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part) / 100;
-            }
-            $police->calc_retrocom = $retrocom_ri + $retrocom_local + $retrocom_fronting;
-        }
-        //dd($police->calc_retrocom . " ** " . $police->getLocalcom());
-
-        foreach ($this->paiements_retrocom as $paiement_retrocom) {
-            //dd($paiement_retrocom->getPolice());
-            if ($police == $paiement_retrocom->getPolice()) {
-                $police->calc_retrocom_payees += $paiement_retrocom->getMontant();
-                $police->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMonnaie()->getCode() . " " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
-            }
-        }
-        $police->calc_retrocom_solde = $police->calc_retrocom - $police->calc_retrocom_payees;
     }
 
     private function removeBrokerTaxe($netCommission)
@@ -231,6 +224,4 @@ class ServiceCalculateur
             }
         }
     }
-
-    
 }

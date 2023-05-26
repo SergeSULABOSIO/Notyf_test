@@ -12,7 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
-class Police extends CalculableJS
+class Police extends CalculableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

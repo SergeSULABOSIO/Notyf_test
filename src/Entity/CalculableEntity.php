@@ -4,7 +4,7 @@ namespace App\Entity;
 
 
 
-class CalculableJS
+class CalculableEntity
 {
     //POLICES
     public $calc_polices_tab = [];

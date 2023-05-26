@@ -81,19 +81,9 @@ class ServiceCalculateur
         $this->calculerRetrocommissions($obj);
         $this->calculerRevenusReserve($obj);
 
-        dd($obj);
+        //dd($obj);
     }
 
-
-    /* private function calculerPolices(?Partenaire $partenaire)
-    {
-        $this->polices = $this->entityManager->getRepository(Police::class)->findBy(
-            [
-                'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'partenaire' => $partenaire
-            ]
-        );
-    } */
 
     private function calculerPolices($criteres)
     {

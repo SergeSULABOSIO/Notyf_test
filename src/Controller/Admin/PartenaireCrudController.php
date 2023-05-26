@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
@@ -120,7 +121,8 @@ class PartenaireCrudController extends AbstractCrudController
         $this->actualiserAttributsCalculables();
 
         return [
-            FormField::addPanel('Informations générales')
+            //FormField::addTab(' Acceuil')->setIcon('fas fa-handshake')->onlyOnDetail(),
+            FormField::addTab(' Informations générales')
             ->setIcon('fas fa-handshake') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Partenaire ou intermédiaire à travers lequel un client peut être acquis."),
 
@@ -148,6 +150,49 @@ class PartenaireCrudController extends AbstractCrudController
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+
+            //LES CHAMPS CALCULABLES
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+            //SECTION - PRIME
+            FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_polices_tab', "Polices"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_nette', "Prime nette"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_fronting', "Fronting"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_accessoire', "Accéssoires"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_tva', "Taxes"),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_totale', "Prime totale"),//->onlyOnDetail(),
+
+            //SECTION - REVENU
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
+            NumberField::new('calc_revenu_reserve', "Réserve"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées"),//->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû"),//->onlyOnDetail(),
+            
+            //SECTION - PARTENAIRES
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes"),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées"),//->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû"),//->onlyOnDetail(),
+
+            //SECTION - TAXES
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé"),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû"),//->onlyOnDetail(),
+
+            FormField::addPanel()->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé"),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit"),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû"),//->onlyOnDetail(),
         ];
     }
 

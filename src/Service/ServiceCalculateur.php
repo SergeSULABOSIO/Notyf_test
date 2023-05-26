@@ -51,16 +51,7 @@ class ServiceCalculateur
                 'id' => $obj->getId()
             ]
         );
-        //dd($this->polices);
-        $this->calculerPrimes($obj);
-        $this->calculerRevenuHT($obj);
-        $this->calculerTaxes($obj);
-        $this->calculerRevenusTTC($obj);
-        $this->calculerRevenusEncaisses($obj);
-        $this->calculerRevenusPartageables($obj);
-        $this->calculerRetrocommissions($obj);
-        $this->calculerRevenusReserve($obj);
-        //dd($obj);
+        $this->calculer($obj);
     }
 
     public function updatePartenaireCalculableFileds(?CalculableEntity $obj)
@@ -71,7 +62,12 @@ class ServiceCalculateur
                 'partenaire' => $obj
             ]
         );
-        //dd($this->polices);
+        $this->calculer($obj);
+    }
+
+
+    private function calculer(?CalculableEntity $obj)
+    {
         $this->calculerPrimes($obj);
         $this->calculerRevenuHT($obj);
         $this->calculerTaxes($obj);
@@ -80,8 +76,6 @@ class ServiceCalculateur
         $this->calculerRevenusPartageables($obj);
         $this->calculerRetrocommissions($obj);
         $this->calculerRevenusReserve($obj);
-
-        //dd($obj);
     }
 
 

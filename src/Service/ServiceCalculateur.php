@@ -43,15 +43,22 @@ class ServiceCalculateur
         );
     }
 
-    public function updatePoliceCalculableFileds(?Police $police)
+    public function updatePoliceCalculableFileds(?CalculableEntity $obj)
     {
-        $this->calculerPoliceRevenusHT($police);
-        $this->calculerPoliceTaxes($police);
-        $this->calculerPoliceRevenusTTC($police);
-        $this->calculerPoliceRevenusEncaisses($police);
-        $this->calculerPoliceRevenusPartageables($police);
-        $this->calculerPoliceRetrocommissions($police);
-        $this->calculerPoliceRevenusReserve($police);
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'id' => $obj->getId()
+            ]
+        );
+        //dd($this->polices);
+        $this->calculerRevenuHT($obj);
+        $this->calculerPoliceTaxes($obj);
+        $this->calculerPoliceRevenusTTC($obj);
+        $this->calculerPoliceRevenusEncaisses($obj);
+        $this->calculerPoliceRevenusPartageables($obj);
+        $this->calculerPoliceRetrocommissions($obj);
+        $this->calculerPoliceRevenusReserve($obj);
     }
 
     public function updatePartenaireCalculableFileds(?CalculableEntity $obj)
@@ -108,15 +115,18 @@ class ServiceCalculateur
         $police->calc_revenu_partageable = $police->calc_revenu_ht - $police->calc_taxes_courtier;
     }
 
-    private function calculerPoliceRevenusHT(?CalculableEntity $obj)
+    private function calculerRevenuHT(?CalculableEntity $obj)
     {
-        $obj->calc_revenu_ht = $obj->getLocalcom() + $obj->getFrontingcom() + $obj->getRicom();
+        //$obj->calc_revenu_ht = $obj->getLocalcom() + $obj->getFrontingcom() + $obj->getRicom();
+        foreach ($this->polices as $police) {
+            $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+        }
     }
 
-    private function calculerPartenaireRevenusHT(?Partenaire $partenaire)
+    private function calculerPartenaireRevenusHT(?CalculableEntity $obj)
     {
         foreach ($this->polices as $police) {
-            $partenaire->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+            $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
         }
     }
 

@@ -11,6 +11,8 @@ class CalculableJS
     public $calc_polices_primes_nette = 0;
     public $calc_polices_primes_totale = 0;
     public $calc_polices_fronting = 0;
+    public $calc_polices_accessoire = 0;
+    public $calc_polices_tva = 0;
     //SECTION - REVENU
     public $calc_revenu_reserve = 0;
     public $calc_revenu_partageable = 0;

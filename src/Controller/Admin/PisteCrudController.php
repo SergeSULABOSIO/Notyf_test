@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
+use App\Service\ServiceCalculateur;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -36,7 +37,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PisteCrudController extends AbstractCrudController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private ServiceCalculateur $serviceCalculateur, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
@@ -111,11 +112,22 @@ class PisteCrudController extends AbstractCrudController
         //$objet->setClos(0);
         return $objet;
     }
+
+    private function actualiserAttributsCalculables(){
+        $entityManager = $this->container->get('doctrine')->getManagerForClass(Piste::class);
+        $liste = $entityManager->getRepository(Piste::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($liste);
+        foreach ($liste as $pol) {
+            $this->serviceCalculateur->updatePisteCalculableFileds($pol);
+        }
+    }
     
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations générales')
+            FormField::addTab(' Informations générales')
             ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
             ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
 
@@ -182,7 +194,50 @@ class PisteCrudController extends AbstractCrudController
             
             //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
+
+            //LES CHAMPS CALCULABLES
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+            //SECTION - PRIME
+            FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_accessoire', "Accéssoires")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_tva', "Taxes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_totale', "Prime totale")->hideOnForm(),//->onlyOnDetail(),
+
+            //SECTION - REVENU
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
+            NumberField::new('calc_revenu_reserve', "Réserve")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+            
+            //SECTION - PARTENAIRES
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+
+            //SECTION - TAXES
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+
+            FormField::addPanel()->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
             
         ];
     }

@@ -87,6 +87,27 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
+    public function updateAssureurCalculableFileds(?CalculableEntity $obj)
+    {
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'assureur' => $obj
+            ]
+        );
+        $this->calculer($obj);
+    }
+
+    public function updatePisteCalculableFileds(?CalculableEntity $obj)
+    {
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'piste' => $obj
+            ]
+        );
+        $this->calculer($obj);
+    }
 
     private function calculer(?CalculableEntity $obj)
     {

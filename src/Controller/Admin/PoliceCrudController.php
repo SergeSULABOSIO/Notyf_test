@@ -253,19 +253,16 @@ class PoliceCrudController extends AbstractCrudController
             DateTimeField::new('dateexpiration', "Echéance")->setColumns(2),
 
             FormField::addPanel('')->onlyOnForms(),
-            AssociationField::new('piste', "Pistes")->setColumns(6)->onlyOnForms()
+            AssociationField::new('piste', "Piste")->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
                     ;
-            })
-            ,
-            CollectionField::new('piste', "Pistes")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('piste', "Pistes")->setColumns(6)->onlyOnDetail(),
-            
+            }),
 
+            
             FormField::addTab(' Prime & Capitaux')
             ->setIcon('fas fa-bag-shopping'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),

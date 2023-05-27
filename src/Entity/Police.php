@@ -143,11 +143,12 @@ class Police extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Piste::class)]
-    private Collection $piste;
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne]
+    private ?Piste $piste = null;
 
     
     public function __construct()
@@ -574,30 +575,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getPieces(): Collection
-    {
-        return $this->pieces;
-    }
-
-    public function addPiece(DocPiece $piece): self
-    {
-        if (!$this->pieces->contains($piece)) {
-            $this->pieces->add($piece);
-        }
-
-        return $this;
-    }
-
-    public function removePiece(DocPiece $piece): self
-    {
-        $this->pieces->removeElement($piece);
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -610,29 +587,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, Piste>
-     */
-    public function getPiste(): Collection
-    {
-        return $this->piste;
-    }
-
-    public function addPiste(Piste $piste): self
-    {
-        if (!$this->piste->contains($piste)) {
-            $this->piste->add($piste);
-        }
-
-        return $this;
-    }
-
-    public function removePiste(Piste $piste): self
-    {
-        $this->piste->removeElement($piste);
-
-        return $this;
-    }
 
     public function getUtilisateur(): ?Utilisateur
     {
@@ -642,6 +596,18 @@ class Police extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
 
         return $this;
     }

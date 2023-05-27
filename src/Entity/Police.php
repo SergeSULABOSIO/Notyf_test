@@ -154,7 +154,6 @@ class Police extends CalculableEntity
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
-        $this->piste = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -608,6 +607,30 @@ class Police extends CalculableEntity
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+     /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+
+    public function addPiece(DocPiece $piece): self
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+        }
+
+        return $this;
+    }
+
+    public function removePiece(DocPiece $piece): self
+    {
+        $this->pieces->removeElement($piece);
 
         return $this;
     }

@@ -137,21 +137,11 @@ class ClientCrudController extends AbstractCrudController
         return $objet;
     }
 
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Client::class);
-        $liste = $entityManager->getRepository(Client::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $objet) {
-            $this->serviceCalculateur->updateClientCalculableFileds($objet);
-        }
-    }
     
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_CLIENT);
 
         return [
             FormField::addTab(' Informations générales')

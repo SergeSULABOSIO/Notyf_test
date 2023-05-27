@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\CalculableEntity;
+use App\Entity\Client;
 use App\Entity\Police;
 use App\Entity\Entreprise;
 use App\Entity\PaiementCommission;
@@ -84,6 +85,16 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updateProduitCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_CLIENT:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Client::class);
+                $liste = $entityManager->getRepository(Client::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updateClientCalculableFileds($pol);
                 }
                 break;
 

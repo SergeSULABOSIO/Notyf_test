@@ -27,6 +27,16 @@ class ServiceCalculateur
     private $paiements_retrocom = null;
     private $polices = null;
 
+    public const RUBRIQUE_POLICE = 0;
+    public const RUBRIQUE_PARTENAIRE = 1;
+    public const RUBRIQUE_PRODUIT = 2;
+    public const RUBRIQUE_CLIENT = 3;
+    public const RUBRIQUE_ASSUREUR = 4;
+    public const RUBRIQUE_PISTE = 5;
+    public const RUBRIQUE_TAXE = 6;
+    public const RUBRIQUE_SINISTRE = 7;
+
+
     public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
@@ -41,6 +51,26 @@ class ServiceCalculateur
         $this->paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
+    }
+
+    public function calculate($container, $rubrique)
+    {
+        switch ($rubrique) {
+            case self::RUBRIQUE_POLICE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Police::class);
+                $liste = $entityManager->getRepository(Police::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                //dd($liste);
+                foreach ($liste as $pol) {
+                    $this->updatePoliceCalculableFileds($pol);
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
     }
 
     public function updatePoliceCalculableFileds(?CalculableEntity $obj)

@@ -185,21 +185,11 @@ class PoliceCrudController extends AbstractCrudController
         return $objet;
     }
 
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Police::class);
-        $liste = $entityManager->getRepository(Police::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $pol) {
-            $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
-        }
-    }
     
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
         
         return [
             FormField::addTab(' Informations de base')

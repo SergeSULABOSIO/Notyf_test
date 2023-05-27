@@ -28,7 +28,7 @@ class Sinistre extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: Victime::class)]
+    #[ORM\OneToMany(mappedBy: 'sinistres', targetEntity: Victime::class)]
     private Collection $victimes;
 
     #[ORM\ManyToMany(targetEntity: Victime::class, inversedBy: 'sinistres')]

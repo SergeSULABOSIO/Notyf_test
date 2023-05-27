@@ -112,21 +112,11 @@ class AssureurCrudController extends AbstractCrudController
         return $objet;
     }
 
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Assureur::class);
-        $liste = $entityManager->getRepository(Assureur::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $objet) {
-            $this->serviceCalculateur->updateAssureurCalculableFileds($objet);
-        }
-    }
     
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_ASSUREUR);
 
         return [
             FormField::addTab(' Informations générales')
@@ -169,7 +159,7 @@ class AssureurCrudController extends AbstractCrudController
             FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
             //SECTION - PRIME
             FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-            ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
+            //ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
             NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
             NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
             NumberField::new('calc_polices_accessoire', "Accéssoires")->hideOnForm(),//->onlyOnDetail(),

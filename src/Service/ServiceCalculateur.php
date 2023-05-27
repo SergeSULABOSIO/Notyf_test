@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Assureur;
 use App\Entity\CalculableEntity;
 use App\Entity\Client;
 use App\Entity\Police;
@@ -95,6 +96,16 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updateClientCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_ASSUREUR:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Assureur::class);
+                $liste = $entityManager->getRepository(Assureur::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updateAssureurCalculableFileds($pol);
                 }
                 break;
 

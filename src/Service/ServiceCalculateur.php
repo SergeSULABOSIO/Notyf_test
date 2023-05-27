@@ -109,6 +109,16 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
+    public function updateTaxeCalculableFileds(?CalculableEntity $obj)
+    {
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise()
+            ]
+        );
+        $this->calculer($obj);
+    }
+
     private function calculer(?CalculableEntity $obj)
     {
         $this->calculerPrimes($obj);
@@ -224,9 +234,16 @@ class ServiceCalculateur
 
     private function calculerTaxes(?CalculableEntity $calculableEntity)
     {
+        //dd($calculableEntity);
         foreach ($this->polices as $police) {
             foreach ($this->taxes as $taxe) {
-                if ($taxe->isPayableparcourtier() == true) {
+                $condition = ($taxe->isPayableparcourtier() == true);
+                if ($calculableEntity instanceof Taxe) {
+                    $condition = ($taxe->getId() == $calculableEntity->getId());
+                    dd($condition);
+                }
+
+                if ($condition) {
                     //dd($taxe);
                     $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
                     $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());

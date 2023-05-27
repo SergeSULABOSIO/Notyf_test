@@ -91,6 +91,8 @@ class ContactCrudController extends AbstractCrudController
     {
         //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
         //dd($entityInstance);
+        $entityManager->remove($entityInstance);
+        $entityManager->flush();
     }
 
 

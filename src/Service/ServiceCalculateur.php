@@ -76,6 +76,17 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
+    public function updateClientCalculableFileds(?CalculableEntity $obj)
+    {
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'client' => $obj
+            ]
+        );
+        $this->calculer($obj);
+    }
+
 
     private function calculer(?CalculableEntity $obj)
     {

@@ -61,9 +61,18 @@ class ServiceCalculateur
                 $liste = $entityManager->getRepository(Police::class)->findBy(
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
                 );
-                //dd($liste);
                 foreach ($liste as $pol) {
                     $this->updatePoliceCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_PARTENAIRE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Partenaire::class);
+                $liste = $entityManager->getRepository(Partenaire::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updatePartenaireCalculableFileds($pol);
                 }
                 break;
 

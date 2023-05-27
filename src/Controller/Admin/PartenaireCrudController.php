@@ -104,21 +104,11 @@ class PartenaireCrudController extends AbstractCrudController
         return $objet;
     }
 
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Partenaire::class);
-        $liste = $entityManager->getRepository(Partenaire::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $objet) {
-            $this->serviceCalculateur->updatePartenaireCalculableFileds($objet);
-        }
-    }
 
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PARTENAIRE);
 
         return [
             //FormField::addTab(' Acceuil')->setIcon('fas fa-handshake')->onlyOnDetail(),

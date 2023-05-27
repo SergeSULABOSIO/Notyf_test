@@ -126,6 +126,9 @@ class PisteCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        $this->actualiserAttributsCalculables();
+        
         return [
             FormField::addTab(' Informations générales')
             ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>

@@ -119,6 +119,17 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
+    public function updateSinistreCalculableFileds(?CalculableEntity $obj)
+    {
+        $this->calculerPolices(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'id' => $obj->getPolice(),
+            ]
+        );
+        $this->calculer($obj);
+    }
+
     private function calculer(?CalculableEntity $obj)
     {
         $this->calculerPrimes($obj);

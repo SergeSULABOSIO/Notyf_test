@@ -128,22 +128,11 @@ class ProduitCrudController extends AbstractCrudController
         return $objet;
     }
 
-
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Produit::class);
-        $liste = $entityManager->getRepository(Produit::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $objet) {
-            $this->serviceCalculateur->updateProduitCalculableFileds($objet);
-        }
-    }
     
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PRODUIT);
 
         return [
             FormField::addTab(' Informations générales')

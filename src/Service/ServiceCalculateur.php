@@ -9,6 +9,7 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
+use App\Entity\Produit;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
@@ -73,6 +74,16 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updatePartenaireCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_PRODUIT:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Produit::class);
+                $liste = $entityManager->getRepository(Produit::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updateProduitCalculableFileds($pol);
                 }
                 break;
 

@@ -150,6 +150,9 @@ class Police extends CalculableEntity
     #[ORM\ManyToOne]
     private ?Piste $piste = null;
 
+    #[ORM\ManyToOne]
+    private ?Utilisateur $gestionnaire = null;
+
     
     public function __construct()
     {
@@ -631,6 +634,18 @@ class Police extends CalculableEntity
     public function removePiece(DocPiece $piece): self
     {
         $this->pieces->removeElement($piece);
+
+        return $this;
+    }
+
+    public function getGestionnaire(): ?Utilisateur
+    {
+        return $this->gestionnaire;
+    }
+
+    public function setGestionnaire(?Utilisateur $gestionnaire): self
+    {
+        $this->gestionnaire = $gestionnaire;
 
         return $this;
     }

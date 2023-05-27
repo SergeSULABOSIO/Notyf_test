@@ -90,21 +90,19 @@ class PoliceCrudController extends AbstractCrudController
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
-            ->Where('entity.utilisateur = :user')
-            ->setParameter('user', $this->getUser())
-            ;
+                ->Where('entity.utilisateur = :user')
+                ->setParameter('user', $this->getUser());
         }
         return $defaultQueryBuilder
             ->andWhere('entity.entreprise = :ese')
-            ->setParameter('ese', $connected_entreprise)
-        ;
+            ->setParameter('ese', $connected_entreprise);
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
-            ->setDateFormat ('dd/MM/yyyy')
+            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateFormat('dd/MM/yyyy')
             ->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Police")
@@ -112,7 +110,7 @@ class PoliceCrudController extends AbstractCrudController
             ->setPageTitle("index", "Liste des polices")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
-           // ...
+            // ...
         ;
     }
 
@@ -120,10 +118,11 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+        if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {
             $filters->add('utilisateur');
         }
         return $filters
+            ->add('gestionnaire')
             ->add('dateeffet')
             ->add('dateexpiration')
             ->add('client')
@@ -138,8 +137,7 @@ class PoliceCrudController extends AbstractCrudController
             ->add('primetotale')
             ->add(ChoiceFilter::new('cansharericom', 'Com. de réa. partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
             ->add(ChoiceFilter::new('cansharelocalcom', 'Com. locale partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
-            ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
-        ;
+            ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON));
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -181,19 +179,19 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setLocalcompayableby(0);
 
         $objet->setPartenaire(null);
-        
+
         return $objet;
     }
 
-    
+
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
-        
+
         return [
             FormField::addTab(' Informations de base')
-            ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
 
             //Ligne 01
@@ -203,95 +201,93 @@ class PoliceCrudController extends AbstractCrudController
 
             FormField::addPanel('')->onlyOnForms(),
             AssociationField::new('client', "Assuré")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
             AssociationField::new('produit', "Couverture / Risque")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
+
             //Ligne 02
             AssociationField::new('assureur', "Assureur")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
             TextField::new('reassureurs', "Réassureur")->hideOnIndex()->setColumns(6),
 
             //Ligne 03
             FormField::addPanel('')->onlyOnForms(),
             DateTimeField::new('dateoperation', "Date de l'opération")->hideOnIndex()->setColumns(2),
             DateTimeField::new('dateemission', "Date d'émission")->hideOnIndex()->setColumns(2),
-            
+
             FormField::addPanel('')->onlyOnForms(),
-            DateTimeField::new('dateeffet', "Date d'effet")->setColumns(2),//d-flex ->addCssClass('d-flex flex-column')
+            DateTimeField::new('dateeffet', "Date d'effet")->setColumns(2), //d-flex ->addCssClass('d-flex flex-column')
             DateTimeField::new('dateexpiration', "Echéance")->setColumns(2),
 
             FormField::addPanel('')->onlyOnForms(),
             AssociationField::new('piste', "Piste")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            }),
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
 
-            
+            AssociationField::new('gestionnaire', "Gestionnaire")->setColumns(6)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
+
+
             FormField::addTab(' Prime & Capitaux')
-            ->setIcon('fas fa-bag-shopping'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setIcon('fas fa-bag-shopping'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
-            
+
             //Ligne 01
             AssociationField::new('monnaie', "Monnaie")->setColumns(2)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
             NumberField::new('capital', "Capital")->setColumns(2),
             ChoiceField::new('modepaiement', "Mode de paiement")->setColumns(2)->hideOnIndex()->setChoices(self::TAB_POLICE_MODE_PAIEMENT),
 
             FormField::addPanel('Facture client')->onlyOnForms(),
-            NumberField::new('primenette', "Prime nette"),//->hideOnIndex(),
-            NumberField::new('fronting', "Frais/Fronting"),//->hideOnIndex(),
+            NumberField::new('primenette', "Prime nette"), //->hideOnIndex(),
+            NumberField::new('fronting', "Frais/Fronting"), //->hideOnIndex(),
             NumberField::new('arca', "Frais/Régul.")->hideOnIndex(),
             NumberField::new('tva', "Tva")->hideOnIndex(),
             NumberField::new('fraisadmin', "Frais admin.")->hideOnIndex(),
             NumberField::new('discount', "Remise")->hideOnIndex(),
             NumberField::new('primetotale', "Prime totale"),
-            
+
             //Ligne 13
             FormField::addTab(' Structure des revenus')
-            ->setIcon('fas fa-sack-dollar'), //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setIcon('fas fa-sack-dollar'), //<i class="fa-sharp fa-solid fa-address-book"></i>
             //->setHelp("Le contrat d'assurance en place."),
-            
+
             AssociationField::new('partenaire', "Partenaire")->hideOnIndex()->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                })
             //->setEmptyData(" ")
             ,
 
@@ -301,7 +297,7 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('ricom', "Montant ht")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharericom', "Est-elle partagée?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('ricompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
-            
+
             FormField::addPanel("Commission locale")
             //->onlyOnForms()
             ,
@@ -315,30 +311,28 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('frontingcom', "Montant ht")->hideOnIndex()->setColumns(2),
             ChoiceField::new('cansharefrontingcom', "Est-elle partagée?")->hideOnIndex()->setColumns(2)->setChoices(self::TAB_POLICE_REPONSES_OUI_NON),
             ChoiceField::new('frontingcompayableby', "Débiteur")->hideOnIndex()->setColumns(3)->setChoices(self::TAB_POLICE_DEBITEUR),
-            
-            TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),
-            
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 
-            
+            TextareaField::new('remarques', "Remarques")->hideOnIndex()->setColumns(12),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
             //Ligne 19
             DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
-            FormField::addTab(' Documents')->setIcon('fas fa-book'), 
+            FormField::addTab(' Documents')->setIcon('fas fa-book'),
             AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
             ArrayField::new('pieces', "Documents")->setColumns(12)->onlyOnDetail(),
-            
+
             //LES CHAMPS CALCULABLES
             FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
             //SECTION - PRIME
@@ -351,36 +345,36 @@ class PoliceCrudController extends AbstractCrudController
             NumberField::new('calc_polices_primes_totale', "Prime totale")->hideOnForm(),//->onlyOnDetail(), */
 
             //SECTION - REVENU
-            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
-            NumberField::new('calc_revenu_reserve', "Réserve")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_revenu_partageable', "Commissions partegeables")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_revenu_ht', "Commissions hors taxes")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc', "Commissions ttc")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->hideOnForm(),//->onlyOnDetail(),
-            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
-            
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(), //<i class="fa-solid fa-toggle-off"></i>
+            NumberField::new('calc_revenu_reserve', "Réserve")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->hideOnForm(), //->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->hideOnForm(), //->onlyOnDetail(),
+
             //SECTION - PARTENAIRES
             FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-            NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(),//->onlyOnDetail(),
-            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(), //->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(), //->onlyOnDetail(),
 
             //SECTION - TAXES
             FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_courtier', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_courtier_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
-            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé")->hideOnForm(), //->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->hideOnForm(), //->onlyOnDetail(),
 
             FormField::addPanel()->onlyOnDetail(),
-            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_assureurs', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
-            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->hideOnForm(), //->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(), //->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->hideOnForm(), //->onlyOnDetail(),
         ];
     }
 
@@ -389,16 +383,16 @@ class PoliceCrudController extends AbstractCrudController
     {
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
-            ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
+            ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
-            ->linkToCrudAction('ouvrirEntite');//<i class="fa-solid fa-eye"></i>
+            ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
 
-            return $actions
+        return $actions
             //Sur la page Index - Selection
             ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
@@ -406,27 +400,27 @@ class PoliceCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
             })
             ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
-                return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);//<i class="fa-solid fa-pen-to-square"></i>
+                return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER); //<i class="fa-solid fa-pen-to-square"></i>
             })
             ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
-                return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE);//<i class="fa-regular fa-rectangle-list"></i>
+                return $action->setIcon('fa-regular fa-rectangle-list')->setLabel(DashboardController::ACTION_LISTE); //<i class="fa-regular fa-rectangle-list"></i>
             })
             //Updates sur la page Index
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('fas fa-file-shield')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
             })
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER); //<i class="fa-solid fa-trash"></i>
             })
             ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $action) {
-                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);//<i class="fa-solid fa-trash"></i>
+                return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER); //<i class="fa-solid fa-trash"></i>
             })
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
             })
             //Updates Sur la page Edit
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
@@ -436,9 +430,9 @@ class PoliceCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
             })
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER);//<i class="fa-solid fa-floppy-disk"></i>
+                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
-    
+
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
@@ -449,21 +443,21 @@ class PoliceCrudController extends AbstractCrudController
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-            
+
             //Application des roles
-        ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::EDIT, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::BATCH_DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-;
+            ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::EDIT, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::BATCH_DELETE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+            //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
+        ;
     }
-    
+
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         //dd($context);
@@ -485,7 +479,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         /**@var Assureur $assureur */
         $entite = $context->getEntity()->getInstance();
-        
+
         $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::DETAIL)
@@ -511,5 +505,4 @@ class PoliceCrudController extends AbstractCrudController
 
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-    
 }

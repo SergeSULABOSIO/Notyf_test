@@ -13,6 +13,7 @@ use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
 use App\Entity\Piste;
 use App\Entity\Produit;
+use App\Entity\Sinistre;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
@@ -120,15 +121,25 @@ class ServiceCalculateur
                 }
                 break;
 
-                case self::RUBRIQUE_TAXE:
-                    $entityManager = $container->get('doctrine')->getManagerForClass(Taxe::class);
-                    $liste = $entityManager->getRepository(Taxe::class)->findBy(
-                        ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                    );
-                    foreach ($liste as $pol) {
-                        $this->updateTaxeCalculableFileds($pol);
-                    }
-                    break;
+            case self::RUBRIQUE_TAXE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Taxe::class);
+                $liste = $entityManager->getRepository(Taxe::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updateTaxeCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_SINISTRE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Sinistre::class);
+                $liste = $entityManager->getRepository(Sinistre::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updateSinistreCalculableFileds($pol);
+                }
+                break;
 
             default:
                 # code...

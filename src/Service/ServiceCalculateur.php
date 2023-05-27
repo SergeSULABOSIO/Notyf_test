@@ -120,6 +120,16 @@ class ServiceCalculateur
                 }
                 break;
 
+                case self::RUBRIQUE_TAXE:
+                    $entityManager = $container->get('doctrine')->getManagerForClass(Taxe::class);
+                    $liste = $entityManager->getRepository(Taxe::class)->findBy(
+                        ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                    );
+                    foreach ($liste as $pol) {
+                        $this->updateTaxeCalculableFileds($pol);
+                    }
+                    break;
+
             default:
                 # code...
                 break;

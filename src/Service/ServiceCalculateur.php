@@ -11,6 +11,7 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
 use App\Entity\Partenaire;
+use App\Entity\Piste;
 use App\Entity\Produit;
 use App\Entity\Taxe;
 use App\Entity\Utilisateur;
@@ -106,6 +107,16 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updateAssureurCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_PISTE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Piste::class);
+                $liste = $entityManager->getRepository(Piste::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $pol) {
+                    $this->updatePisteCalculableFileds($pol);
                 }
                 break;
 

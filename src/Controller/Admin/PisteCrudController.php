@@ -112,22 +112,11 @@ class PisteCrudController extends AbstractCrudController
         //$objet->setClos(0);
         return $objet;
     }
-
-    private function actualiserAttributsCalculables(){
-        $entityManager = $this->container->get('doctrine')->getManagerForClass(Piste::class);
-        $liste = $entityManager->getRepository(Piste::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($liste);
-        foreach ($liste as $pol) {
-            $this->serviceCalculateur->updatePisteCalculableFileds($pol);
-        }
-    }
     
     public function configureFields(string $pageName): iterable
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->actualiserAttributsCalculables();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PISTE);
         
         return [
             FormField::addTab(' Informations générales')

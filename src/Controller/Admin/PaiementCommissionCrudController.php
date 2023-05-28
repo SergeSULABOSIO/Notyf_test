@@ -100,7 +100,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAIEMENT_COMMISSION);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::FINANCE_PAIEMENT_COMMISSION);
     }
 
 

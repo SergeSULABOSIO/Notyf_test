@@ -95,7 +95,7 @@ class ContactCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAIEMENT_CONTACT);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CONTACT);
     }
 
 

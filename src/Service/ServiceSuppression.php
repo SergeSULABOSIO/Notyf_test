@@ -94,10 +94,9 @@ class ServiceSuppression
             $this->entityManager->remove($entityInstance);
             $this->entityManager->flush();
         } catch (\Throwable $th) {
-            //dd($th);
             $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
-            $flashBag->add('Message', "Impossible de supprimer cet enregistrement!!!!!");
-            //$this->addFlash("error", "Suppression" . $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer une information qui est déjà utilisée dans une ou plusières rubriques.");
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer '" . $entityInstance . "' car elle est déjà utilisée dans une ou plusières rubriques.";
+            $flashBag->add('danger', $message);
         }
     }
 }

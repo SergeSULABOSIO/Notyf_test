@@ -16,13 +16,13 @@ class ServiceSuppression
 {
 
     public const PAIEMENT_TAXE = 0;
+    public const PAIEMENT_COMMISSION = 1;
 
     public function __construct(
         private ServiceServiceEntreprise $serviceEntreprise,
         private EntityManagerInterface $entityManager,
         private Security $security
     ) {
-        
     }
 
     public function supprimer($entityObject, $entityIndex)
@@ -31,7 +31,10 @@ class ServiceSuppression
             case self::PAIEMENT_TAXE:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
-            
+
+            case self::PAIEMENT_COMMISSION:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
             default:
                 # code...
                 break;
@@ -43,6 +46,4 @@ class ServiceSuppression
         $this->entityManager->remove($entityInstance);
         $this->entityManager->flush();
     }
-
-
 }

@@ -86,6 +86,14 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::PRODUCTION_POLICE: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::PAREMETRE_UTILISATEUR: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
             default:
                 dd("Cette fonction n'est pas encore disponible.");
                 break;
@@ -99,7 +107,7 @@ class ServiceSuppression
             $this->entityManager->flush();
         } catch (\Throwable $th) {
             $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
-            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer '" . $entityInstance . "' car elle est déjà utilisée dans une ou plusières rubriques.";
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques.";
             $flashBag->add('danger', $message);
         }
     }

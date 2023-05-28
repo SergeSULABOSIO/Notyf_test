@@ -10,6 +10,7 @@ use App\Service\ServiceCalculateur;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -73,7 +74,12 @@ class PoliceCrudController extends AbstractCrudController
         'Annulation' => 6
     ];
 
-    public function __construct(private ServiceCalculateur $serviceCalculateur, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private ServiceSuppression $serviceSuppression,
+        private ServiceCalculateur $serviceCalculateur, 
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise
+        )
     {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
@@ -142,8 +148,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
-        //dd($entityInstance);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_POLICE);
     }
 
     public function createEntity(string $entityFqcn)

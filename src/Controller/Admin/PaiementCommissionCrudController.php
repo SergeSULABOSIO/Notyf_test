@@ -95,7 +95,6 @@ class PaiementCommissionCrudController extends AbstractCrudController
             ->setPageTitle("index", "Liste des Commissions reçues")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
-            // ...
         ;
     }
 

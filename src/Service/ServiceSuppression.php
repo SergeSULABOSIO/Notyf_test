@@ -70,7 +70,7 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::FINANCE_MONNAIE:
+            case self::FINANCE_MONNAIE: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
@@ -82,8 +82,12 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            default:
+            case self::FINANCE_TAXE: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
 
+            default:
+                dd("Cette fonction n'est pas encore disponible.");
                 break;
         }
     }

@@ -6,6 +6,7 @@ use App\Entity\Automobile;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
+use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
 use App\Controller\Admin\DashboardController;
@@ -65,7 +66,11 @@ class AutomobileCrudController extends AbstractCrudController
         'Autres' => 15
     ];
 
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private ServiceSuppression $serviceSuppression,
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise
+        )
     {
         
     }
@@ -122,10 +127,7 @@ class AutomobileCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
-        //dd($entityInstance);
-        $entityManager->remove($entityInstance);
-        $entityManager->flush();
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAIEMENT_CONTACT);
     }
 
 

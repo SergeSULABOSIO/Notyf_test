@@ -17,6 +17,8 @@ class ServiceSuppression
 
     public const PAIEMENT_TAXE = 0;
     public const PAIEMENT_COMMISSION = 1;
+    public const PAIEMENT_CONTACT = 2;
+    public const PAIEMENT_ENGIN = 3;
 
     public function __construct(
         private ServiceServiceEntreprise $serviceEntreprise,
@@ -33,6 +35,14 @@ class ServiceSuppression
                 break;
 
             case self::PAIEMENT_COMMISSION:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::PAIEMENT_CONTACT:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::PAIEMENT_ENGIN:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
             default:

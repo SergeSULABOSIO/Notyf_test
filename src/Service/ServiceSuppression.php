@@ -102,31 +102,35 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::PRODUCTION_PRODUIT: 
+            case self::PRODUCTION_PRODUIT:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::PRODUCTION_CLIENT: 
+            case self::PRODUCTION_CLIENT:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::SINISTRE_COMMENTAIRE: 
+            case self::SINISTRE_COMMENTAIRE:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::SINISTRE_ETAPE: 
+            case self::SINISTRE_ETAPE:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::SINISTRE_VICTIME: 
+            case self::SINISTRE_VICTIME:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::SINISTRE_SINISTRE: 
+            case self::SINISTRE_SINISTRE:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
-            case self::CRM_FEEDBACK: 
+            case self::CRM_FEEDBACK:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::CRM_ACTION:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 

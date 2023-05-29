@@ -134,6 +134,10 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::CRM_ETAPE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
             default:
                 dd("Cette fonction n'est pas encore disponible.");
                 break;

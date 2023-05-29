@@ -118,6 +118,10 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::SINISTRE_VICTIME: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
 
             default:
                 dd("Cette fonction n'est pas encore disponible.");

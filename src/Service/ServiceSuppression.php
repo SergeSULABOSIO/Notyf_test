@@ -97,11 +97,15 @@ class ServiceSuppression
             case self::PRODUCTION_ASSUREUR: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
-            
+
             case self::PRODUCTION_PARTENAIRE: //Il faut supprimer les données filles
-                    $this->supprimerEntiteSingleton($entityObject);
-                    break;
-                
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::PRODUCTION_PRODUIT: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
 
             default:
                 dd("Cette fonction n'est pas encore disponible.");

@@ -105,12 +105,16 @@ class ServiceSuppression
             case self::PRODUCTION_PRODUIT: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
-                
+
             case self::PRODUCTION_CLIENT: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
             case self::SINISTRE_COMMENTAIRE: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::SINISTRE_ETAPE: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 

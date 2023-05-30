@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
+use App\Entity\Sinistre;
 use App\Entity\Utilisateur;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
@@ -170,9 +172,8 @@ class ServiceSuppression
             $this->entityManager->remove($entityInstance);
             $this->entityManager->flush();
         } catch (\Throwable $th) {
-            $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
-            $flashBag->add('danger', $message);
+            $this->afficherFlashMessage("danger", $message);
         }
     }
 
@@ -180,22 +181,42 @@ class ServiceSuppression
     public function supprimerEntiteComposee($entityInstance)
     {
         try {
-            // Disable foreign key constraints
-           /*  $this->entityManager->getConnection()->getConfiguration()->setForeignKeyChecks(false);
+            $isAdmin = $entityInstance->getUtilisateur() == $this->serviceEntreprise->getUtilisateur();
+            //dd($isAdmin);
+            if ($isAdmin == true) {
+                $this->entityManager->getConnection()->beginTransaction();
+                $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 0");
 
-            // Do your work here
+                //Delete here
+                /* $this->entityManager->remove($entityInstance);
+                $this->entityManager->flush(); */
 
-            // Re-enable foreign key constraints
-            $this->entityManager->getConnection()->getConfiguration()->setForeignKeyChecks(true);
- */
+                $liste = $this->entityManager->getRepository(ActionCRM::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
 
-            $this->entityManager->remove($entityInstance);
-            $this->entityManager->flush();
+                dd($liste);
+
+                $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 1");
+                $this->entityManager->getConnection()->commit();
+
+                $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
+            } else {
+                $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
+                $this->afficherFlashMessage("danger", $message);
+            }
         } catch (\Throwable $th) {
-            dd($th);
-            /* $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
+            //dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
-            $flashBag->add('danger', $message); */
+            $this->afficherFlashMessage("danger", $message);
         }
+    }
+
+
+
+    public function afficherFlashMessage($type, $message)
+    {
+        $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
+        $flashBag->add($type, $message);
     }
 }

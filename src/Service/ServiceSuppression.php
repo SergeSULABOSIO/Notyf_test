@@ -184,9 +184,8 @@ class ServiceSuppression
             $isAdmin = $entityInstance->getUtilisateur() == $this->serviceEntreprise->getUtilisateur();
             //dd($isAdmin);
             if ($isAdmin == true) {
-                $this->entityManager->getConnection()->beginTransaction();
-                $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 0");
-
+                $this->activerContrainteIntegrite(true);
+                
                 //Delete here
                 /* $this->entityManager->remove($entityInstance);
                 $this->entityManager->flush(); */
@@ -197,9 +196,7 @@ class ServiceSuppression
 
                 dd($liste);
 
-                $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 1");
-                $this->entityManager->getConnection()->commit();
-
+                $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
@@ -218,5 +215,16 @@ class ServiceSuppression
     {
         $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
         $flashBag->add($type, $message);
+    }
+
+    public function activerContrainteIntegrite($activer)
+    {
+        if ($activer == true) {
+            $this->entityManager->getConnection()->beginTransaction();
+            $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 0");
+        } else {
+            $this->entityManager->getConnection()->executeStatement("SET FOREIGN_KEY_CHECKS = 1");
+            $this->entityManager->getConnection()->commit();
+        }
     }
 }

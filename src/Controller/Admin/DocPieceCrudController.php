@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\DocPiece;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -42,7 +43,7 @@ class DocPieceCrudController extends AbstractCrudController
     public const ARTICLE_BASE_PATH = 'uploads/documents';
     public const ARTICLE_UPLOAD_DIR = 'public/uploads/documents';
 
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private ServiceSuppression $serviceSuppression, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
@@ -99,8 +100,7 @@ class DocPieceCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
-        //dd($entityInstance);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::BIBLIOTHEQUE_PIECE);
     }
 
 

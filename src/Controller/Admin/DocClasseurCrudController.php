@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\DocClasseur;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -33,7 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class DocClasseurCrudController extends AbstractCrudController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(private ServiceSuppression $serviceSuppression, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
     {
         
     }
@@ -88,8 +89,7 @@ class DocClasseurCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
-        //dd($entityInstance);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::BIBLIOTHEQUE_CLASSE);
     }
 
 

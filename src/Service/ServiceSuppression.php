@@ -142,6 +142,18 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::BIBLIOTHEQUE_PIECE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::BIBLIOTHEQUE_CATEGORIE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::BIBLIOTHEQUE_CLASSE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
             default:
                 dd("Cette fonction n'est pas encore disponible.");
                 break;

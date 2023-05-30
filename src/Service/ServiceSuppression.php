@@ -155,7 +155,7 @@ class ServiceSuppression
                 break;
 
             case self::PAREMETRE_ENTREPRISE:
-                $this->supprimerEntiteSingleton($entityObject);
+                $this->supprimerEntiteComposee($entityObject);
                 break;
 
             default:
@@ -173,6 +173,29 @@ class ServiceSuppression
             $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $flashBag->add('danger', $message);
+        }
+    }
+
+
+    public function supprimerEntiteComposee($entityInstance)
+    {
+        try {
+            // Disable foreign key constraints
+           /*  $this->entityManager->getConnection()->getConfiguration()->setForeignKeyChecks(false);
+
+            // Do your work here
+
+            // Re-enable foreign key constraints
+            $this->entityManager->getConnection()->getConfiguration()->setForeignKeyChecks(true);
+ */
+
+            $this->entityManager->remove($entityInstance);
+            $this->entityManager->flush();
+        } catch (\Throwable $th) {
+            dd($th);
+            /* $flashBag = $this->requestStack->getMainRequest()->getSession()->getFlashBag();
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
+            $flashBag->add('danger', $message); */
         }
     }
 }

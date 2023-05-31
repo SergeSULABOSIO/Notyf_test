@@ -16,7 +16,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ServiceSuppression
 {
@@ -54,6 +56,7 @@ class ServiceSuppression
     public const PAREMETRE_ENTREPRISE = 26;
 
     public function __construct(
+        private UrlGeneratorInterface $router,
         private RequestStack $requestStack,
         private ServiceServiceEntreprise $serviceEntreprise,
         private EntityManagerInterface $entityManager,
@@ -196,6 +199,9 @@ class ServiceSuppression
 
                 $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
+
+                //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
+                return new RedirectResponse($this->router->generate('security.login'));
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);

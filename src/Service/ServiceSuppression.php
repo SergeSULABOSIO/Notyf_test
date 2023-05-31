@@ -3,7 +3,11 @@
 namespace App\Service;
 
 use App\Entity\ActionCRM;
+use App\Entity\Cotation;
 use App\Entity\Entreprise;
+use App\Entity\EtapeCrm;
+use App\Entity\FeedbackCRM;
+use App\Entity\Piste;
 use App\Entity\Sinistre;
 use App\Entity\Utilisateur;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
@@ -186,11 +190,9 @@ class ServiceSuppression
             if ($isAdmin == true) {
                 $this->activerContrainteIntegrite(true);
 
-                //Suppression des Missions / Actions dans CRM
-                $this->detruireEntites($this->entityManager->getRepository(ActionCRM::class)->findBy(
-                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                ));
-
+                //destruction du CRM
+                $this->detruireCRM();
+                
 
                 $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
@@ -203,6 +205,29 @@ class ServiceSuppression
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
         }
+    }
+
+    private function detruireCRM(){
+        //Suppression des Missions / Actions dans CRM
+        $this->detruireEntites($this->entityManager->getRepository(ActionCRM::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        //Suppression des Feedback dans CRM
+        $this->detruireEntites($this->entityManager->getRepository(FeedbackCRM::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        //Suppression des Cotation dans CRM
+        $this->detruireEntites($this->entityManager->getRepository(Cotation::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        //Suppression des Etape dans CRM
+        $this->detruireEntites($this->entityManager->getRepository(EtapeCrm::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        //Suppression des Piste dans CRM
+        $this->detruireEntites($this->entityManager->getRepository(Piste::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
     }
 
     private function detruireEntites($liste)

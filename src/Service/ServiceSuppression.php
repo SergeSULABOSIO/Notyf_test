@@ -157,7 +157,7 @@ class ServiceSuppression
                 break;
 
             case self::PAREMETRE_ENTREPRISE:
-                $this->supprimerEntiteComposee($entityObject);
+                $this->supprimerEntreprise($entityObject);
                 break;
 
             default:
@@ -178,26 +178,26 @@ class ServiceSuppression
     }
 
 
-    public function supprimerEntiteComposee($entityInstance)
+    public function supprimerEntreprise($entityInstance)
     {
         try {
             $isAdmin = $entityInstance->getUtilisateur() == $this->serviceEntreprise->getUtilisateur();
             //dd($isAdmin);
             if ($isAdmin == true) {
                 $this->activerContrainteIntegrite(true);
-                
-                //Delete here
-                /* $this->entityManager->remove($entityInstance);
-                $this->entityManager->flush(); */
 
+                //Suppression des Missions / Actions dans CRM
                 $liste = $this->entityManager->getRepository(ActionCRM::class)->findBy(
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                );
+                ); 
+                foreach ($liste as $entite) {
+                    $isdeleted = $this->detruireEntite($entite);
+                }
+                
 
-                dd($liste);
 
                 $this->activerContrainteIntegrite(false);
-                $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
+                $this->afficherFlashMessage("success", "Suppression effectuée ave succès! " . $isdeleted);
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);
@@ -207,6 +207,21 @@ class ServiceSuppression
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
         }
+    }
+
+    private function detruireEntite($entityInstance): string
+    {
+        $deleted = false;
+        try {
+            //Delete here
+            $this->entityManager->remove($entityInstance);
+            $this->entityManager->flush();
+            $deleted = true;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $deleted = false;
+        }
+        return $deleted;
     }
 
 

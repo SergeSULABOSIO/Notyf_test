@@ -187,17 +187,13 @@ class ServiceSuppression
                 $this->activerContrainteIntegrite(true);
 
                 //Suppression des Missions / Actions dans CRM
-                $liste = $this->entityManager->getRepository(ActionCRM::class)->findBy(
+                $this->detruireEntites($this->entityManager->getRepository(ActionCRM::class)->findBy(
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                ); 
-                foreach ($liste as $entite) {
-                    $isdeleted = $this->detruireEntite($entite);
-                }
-                
+                ));
 
 
                 $this->activerContrainteIntegrite(false);
-                $this->afficherFlashMessage("success", "Suppression effectuée ave succès! " . $isdeleted);
+                $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);
@@ -206,6 +202,13 @@ class ServiceSuppression
             //dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
+        }
+    }
+
+    private function detruireEntites($liste)
+    {
+        foreach ($liste as $entite) {
+            $this->detruireEntite($entite);
         }
     }
 

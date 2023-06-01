@@ -7,15 +7,12 @@ use App\Entity\Cotation;
 use App\Entity\EtapeCrm;
 use App\Entity\ActionCRM;
 use App\Entity\FeedbackCRM;
-use App\Controller\SecurityController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
-use Symfony\Component\HttpFoundation\Response;
 
 class ServiceSuppression
 {
@@ -198,7 +195,10 @@ class ServiceSuppression
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
 
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
-                //return new RedirectResponse($this->router->generate('security.login'));
+                $url = $this->router->generate('security.login');
+                //dd($url);
+                return new RedirectResponse($url); // ce code ne marche pas!
+                //dd("la redirection ne marche pas!");
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);

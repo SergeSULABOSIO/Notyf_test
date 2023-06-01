@@ -197,12 +197,14 @@ class EntrepriseCrudController extends AbstractCrudController
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         //$this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAREMETRE_ENTREPRISE);
+        
         $this->gotoLogin();
         dd("ne marche pas");
     }
 
     private function gotoLogin(): Response{
-        return $this->redirectToRoute('security.login');
+        return $this->redirect($this->adminUrlGenerator->setController(DashboardController::class)->generateUrl());
+        //return $this->redirectToRoute('security.login');
     }
 
 

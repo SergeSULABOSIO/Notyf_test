@@ -2,23 +2,20 @@
 
 namespace App\Service;
 
-use App\Entity\ActionCRM;
-use App\Entity\Cotation;
-use App\Entity\Entreprise;
-use App\Entity\EtapeCrm;
-use App\Entity\FeedbackCRM;
 use App\Entity\Piste;
-use App\Entity\Sinistre;
-use App\Entity\Utilisateur;
-use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Cotation;
+use App\Entity\EtapeCrm;
+use App\Entity\ActionCRM;
+use App\Entity\FeedbackCRM;
+use App\Controller\SecurityController;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceSuppression
 {
@@ -55,8 +52,9 @@ class ServiceSuppression
     public const PAREMETRE_UTILISATEUR = 25;
     public const PAREMETRE_ENTREPRISE = 26;
 
+
     public function __construct(
-        private UrlGeneratorInterface $router,
+        private RouterInterface $router,
         private RequestStack $requestStack,
         private ServiceServiceEntreprise $serviceEntreprise,
         private EntityManagerInterface $entityManager,
@@ -194,12 +192,11 @@ class ServiceSuppression
                 $this->activerContrainteIntegrite(true);
 
                 //destruction du CRM
-                $this->detruireCRM();
-                
+                //$this->detruireCRM();
 
                 $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
-
+                
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
                 return new RedirectResponse($this->router->generate('security.login'));
             } else {
@@ -207,13 +204,14 @@ class ServiceSuppression
                 $this->afficherFlashMessage("danger", $message);
             }
         } catch (\Throwable $th) {
-            //dd($th);
+            dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
         }
     }
 
-    private function detruireCRM(){
+    private function detruireCRM()
+    {
         //Suppression des Missions / Actions dans CRM
         $this->detruireEntites($this->entityManager->getRepository(ActionCRM::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]

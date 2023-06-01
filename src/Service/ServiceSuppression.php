@@ -196,9 +196,9 @@ class ServiceSuppression
 
                 $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
-                
+
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
-                return new RedirectResponse($this->router->generate('security.login'));
+                //return new RedirectResponse($this->router->generate('security.login'));
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);

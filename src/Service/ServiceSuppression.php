@@ -6,7 +6,27 @@ use App\Entity\Piste;
 use App\Entity\Cotation;
 use App\Entity\EtapeCrm;
 use App\Entity\ActionCRM;
+use App\Entity\Assureur;
+use App\Entity\Automobile;
+use App\Entity\Client;
+use App\Entity\CommentaireSinistre;
+use App\Entity\Contact;
+use App\Entity\DocCategorie;
+use App\Entity\DocClasseur;
+use App\Entity\DocPiece;
+use App\Entity\EtapeSinistre;
+use App\Entity\Expert;
 use App\Entity\FeedbackCRM;
+use App\Entity\Monnaie;
+use App\Entity\PaiementCommission;
+use App\Entity\PaiementPartenaire;
+use App\Entity\PaiementTaxe;
+use App\Entity\Partenaire;
+use App\Entity\Police;
+use App\Entity\Produit;
+use App\Entity\Sinistre;
+use App\Entity\Taxe;
+use App\Entity\Victime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
@@ -189,7 +209,16 @@ class ServiceSuppression
                 $this->activerContrainteIntegrite(true);
 
                 //destruction du CRM
-                //$this->detruireCRM();
+                $this->detruireCRM();
+                $this->detruirePRODUCTION();
+                $this->detruireFINANCES();
+                $this->detruireSINISTRE();
+                $this->detruireBIBLIOTHEQUE();
+
+                //destruction de l'utilisateur et de son entreprise
+                $this->entityManager->remove($this->serviceEntreprise->getUtilisateur());
+                $this->entityManager->remove($this->serviceEntreprise->getEntreprise());
+                $this->entityManager->flush();
 
                 $this->activerContrainteIntegrite(false);
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
@@ -197,7 +226,7 @@ class ServiceSuppression
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
                 $url = $this->router->generate('security.login');
                 //dd($url);
-                return new RedirectResponse($url); // ce code ne marche pas!
+                return new RedirectResponse("http://127.0.0.1:8000/connexion"); // ce code ne marche pas!
                 //dd("la redirection ne marche pas!");
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
@@ -230,6 +259,83 @@ class ServiceSuppression
         ));
         //Suppression des Piste dans CRM
         $this->detruireEntites($this->entityManager->getRepository(Piste::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+    }
+
+
+    private function detruirePRODUCTION()
+    {
+        $this->detruireEntites($this->entityManager->getRepository(Assureur::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Automobile::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Contact::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Client::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Partenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Police::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Produit::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+    }
+
+    private function detruireFINANCES()
+    {
+        $this->detruireEntites($this->entityManager->getRepository(Taxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Monnaie::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(PaiementCommission::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(PaiementTaxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+    }
+
+    private function detruireSINISTRE()
+    {
+        $this->detruireEntites($this->entityManager->getRepository(CommentaireSinistre::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(EtapeSinistre::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Expert::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Sinistre::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(Victime::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+    }
+
+    private function detruireBIBLIOTHEQUE()
+    {
+        $this->detruireEntites($this->entityManager->getRepository(DocCategorie::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(DocClasseur::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        ));
+        $this->detruireEntites($this->entityManager->getRepository(DocPiece::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         ));
     }

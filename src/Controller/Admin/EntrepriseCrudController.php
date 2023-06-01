@@ -198,6 +198,7 @@ class EntrepriseCrudController extends AbstractCrudController
     {
         //$this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAREMETRE_ENTREPRISE);
         $this->gotoLogin();
+        dd("ne marche pas");
     }
 
     private function gotoLogin(): Response{

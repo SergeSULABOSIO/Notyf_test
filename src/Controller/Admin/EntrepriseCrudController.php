@@ -35,6 +35,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\HttpFoundation\Response;
 
 class EntrepriseCrudController extends AbstractCrudController
 {
@@ -195,7 +196,12 @@ class EntrepriseCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAREMETRE_ENTREPRISE);
+        //$this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAREMETRE_ENTREPRISE);
+        $this->gotoLogin();
+    }
+
+    private function gotoLogin(): Response{
+        return $this->redirectToRoute('security.login');
     }
 
 

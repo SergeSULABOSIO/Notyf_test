@@ -224,9 +224,9 @@ class ServiceSuppression
                 $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
 
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
-                $url = $this->router->generate('security.login');
+                //$url = $this->router->generate('security.login');
                 //dd($url);
-                return new RedirectResponse("http://127.0.0.1:8000/connexion"); // ce code ne marche pas!
+                //return new RedirectResponse("http://127.0.0.1:8000/connexion"); // ce code ne marche pas!
                 //dd("la redirection ne marche pas!");
             } else {
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";

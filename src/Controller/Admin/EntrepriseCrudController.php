@@ -210,12 +210,13 @@ class EntrepriseCrudController extends AbstractCrudController
         //return $this->redirectToRoute('security.login');
 
         $url = $adminUrlGenerator
-            ->setController(SomethingCrudController::class)
-            ->setAction('delete')
+            ->setController(SecurityController::class)
+            ->setAction('index')
             ->setEntityId($id)
             ->generateUrl();
-        return $this->redirect($url);
 
+        dd($url);
+        return $this->redirect($url);
     }
 
 

@@ -199,7 +199,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
         $tabEtapesCRM = [
             "PROSPECTION", 
-            "PRODUCTION DE COTAION",
+            "PRODUCTION DE COTATION",
             "EMISSION DE LA POLICE",
             "RENOUVELLEMENT"
         ];

@@ -203,7 +203,10 @@ class EntrepriseCrudController extends AbstractCrudController
     }
 
     private function gotoLogin(): Response{
-        return $this->redirect($this->adminUrlGenerator->setController(DashboardController::class)->generateUrl());
+         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
+         $url = $adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl();
+         dd($url);
+         return $this->redirect($url);
         //return $this->redirectToRoute('security.login');
     }
 

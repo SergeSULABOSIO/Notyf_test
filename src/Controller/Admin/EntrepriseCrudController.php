@@ -38,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\Console\Helper\DialogHelper;
 
 class EntrepriseCrudController extends AbstractCrudController
 {
@@ -68,6 +69,7 @@ class EntrepriseCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        
         //$duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
         //    ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -76,6 +78,8 @@ class EntrepriseCrudController extends AbstractCrudController
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
+        $detruireEntreprise = Action::new(DashboardController::ACTION_DESTROY_ENTREPRISE)
+            ->setIcon('fa-solid fa-trash-can')->linkToCrudAction('detruireEntite'); //<i class="fa-solid fa-trash-can"></i>
 
         return $actions
             //Sur la page Index - Selection
@@ -92,6 +96,7 @@ class EntrepriseCrudController extends AbstractCrudController
             })
             //Updates sur la page Index
             ->remove(Crud::PAGE_INDEX, Action::NEW)
+            ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             //->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
             //    return $action->setIcon('fas fa-shop')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
             //})
@@ -119,9 +124,15 @@ class EntrepriseCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
+            //On enlève le bouton de suppression par defaut
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+
             //Action ouvrir
+            ->add(Crud::PAGE_EDIT, $detruireEntreprise) //$detruireEntreprise
+            ->add(Crud::PAGE_INDEX, $detruireEntreprise)
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
+                        
             //action dupliquer Assureur
             //->add(Crud::PAGE_DETAIL, $duplicate)
             //->add(Crud::PAGE_EDIT, $duplicate)
@@ -142,6 +153,14 @@ class EntrepriseCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
+    }
+
+    //
+    public function detruireEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirectToRoute('security.destroy', [
+            "idEntreprise" => $this->serviceEntreprise->getEntreprise()->getId()
+        ]);
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -191,32 +210,6 @@ class EntrepriseCrudController extends AbstractCrudController
         }
         return $filters
             ->add(ChoiceFilter::new("secteur", "Secteur d'activité")->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR));
-    }
-
-    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
-    {
-        //$this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PAREMETRE_ENTREPRISE);
-
-        $this->gotoLogin($entityInstance->getId());
-    }
-
-    private function gotoLogin($id): Response
-    {
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        /* 
-         $url = $adminUrlGenerator->setController(DashboardController::class)->generateUrl();
-         dd($url);
-         return $this->redirect($url); */
-        //return $this->redirectToRoute('security.login');
-
-        $url = $adminUrlGenerator
-            ->setController(SecurityController::class)
-            ->setAction('index')
-            ->setEntityId($id)
-            ->generateUrl();
-
-        dd($url);
-        return $this->redirect($url);
     }
 
 

@@ -2,35 +2,36 @@
 
 namespace App\Service;
 
+use App\Entity\Taxe;
 use App\Entity\Piste;
-use App\Entity\Cotation;
-use App\Entity\EtapeCrm;
-use App\Entity\ActionCRM;
-use App\Entity\Assureur;
-use App\Entity\Automobile;
 use App\Entity\Client;
-use App\Entity\CommentaireSinistre;
-use App\Entity\Contact;
-use App\Entity\DocCategorie;
-use App\Entity\DocClasseur;
-use App\Entity\DocPiece;
-use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
-use App\Entity\FeedbackCRM;
+use App\Entity\Police;
+use App\Entity\Contact;
 use App\Entity\Monnaie;
+use App\Entity\Produit;
+use App\Entity\Victime;
+use App\Entity\Assureur;
+use App\Entity\Cotation;
+use App\Entity\DocPiece;
+use App\Entity\EtapeCrm;
+use App\Entity\Sinistre;
+use App\Entity\ActionCRM;
+use App\Entity\Automobile;
+use App\Entity\Partenaire;
+use App\Entity\DocClasseur;
+use App\Entity\FeedbackCRM;
+use App\Entity\DocCategorie;
+use App\Entity\PaiementTaxe;
+use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
-use App\Entity\PaiementTaxe;
-use App\Entity\Partenaire;
-use App\Entity\Police;
-use App\Entity\Produit;
-use App\Entity\Sinistre;
-use App\Entity\Taxe;
-use App\Entity\Victime;
+use App\Entity\CommentaireSinistre;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
 
@@ -221,7 +222,12 @@ class ServiceSuppression
                 $this->entityManager->flush();
 
                 $this->activerContrainteIntegrite(false);
-                $this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
+
+                //Il faut detruire la session de cet utilisateur, sinon c'est une erreur qui sera créée
+                $session = new Session();
+                $session->invalidate();
+
+                //$this->afficherFlashMessage("success", "Suppression effectuée ave succès!");
 
                 //On rentre sur la page de login après la destruction de l'entreprise et toutes ses données y compris l'utilisateur 
                 //$url = $this->router->generate('security.login');

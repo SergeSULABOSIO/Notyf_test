@@ -9,24 +9,27 @@ use App\Entity\Monnaie;
 use App\Entity\Produit;
 use App\Entity\EtapeCrm;
 use App\Entity\Entreprise;
+use App\Entity\DocClasseur;
 use App\Entity\Utilisateur;
+use App\Entity\DocCategorie;
+
+use App\Entity\EtapeSinistre;
 use App\Service\ServiceMails;
 use App\Form\RegistrationType;
 
+use App\Service\ServiceEntreprise;
 use App\Form\AdminRegistrationType;
+use App\Service\ServiceSuppression;
 use Doctrine\Persistence\ObjectManager;
 use App\Form\EntrepriseRegistrationType;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Entity\DocCategorie;
-use App\Entity\DocClasseur;
-use App\Entity\EtapeSinistre;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -34,12 +37,22 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 
-class SecurityController extends AbstractDashboardController//AbstractController
+class SecurityController extends AbstractDashboardController //AbstractController
 {
 
     public function __construct(private AuthenticationUtils $authenticationUtils, private EntityManagerInterface $manager)
     {
-        
+    }
+
+
+    #[Route('/destruction/{idEntreprise}', name: 'security.destroy', methods: ['GET', 'POST'])]
+    public function destruction($idEntreprise, ServiceSuppression $serviceSuppression): Response
+    {
+        $entreprise = $this->manager->getRepository(Entreprise::class)->find($idEntreprise);
+        //dd("Utilisateur = " . $idUtilisateur . " et Entreprise = " . $idEntreprise);
+        $serviceSuppression->supprimer($entreprise, ServiceSuppression::PAREMETRE_ENTREPRISE);
+        //dd("Oops!");
+        return $this->redirectToRoute('security.logout'); //app_sweet_alert
     }
 
 
@@ -63,7 +76,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
 
 
-    
+
 
     #[Route('/deconnexion', name: 'security.logout', methods: ['GET', 'POST'])]
     public function logout()
@@ -93,7 +106,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
                 //Pouvoeir d'action
                 UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION],
                 //Visibilité
-                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]    
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]
             ]);
             $user->setUpdatedAt(new DateTimeImmutable());
             $user->setCreatedAt(new DateTimeImmutable());
@@ -145,7 +158,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
 
             $manager->flush();
 
-            $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", ". $entreprise->getNom() ." vient d'être créée avec succès! Vous pouvez maintenant travailler.");
+            $this->addFlash("success", "Félicitation " . $utilisateur->getNom() . ", " . $entreprise->getNom() . " vient d'être créée avec succès! Vous pouvez maintenant travailler.");
 
             //Creation des ingrédients / objets de base
             $this->creerIngredients($utilisateur, $entreprise);
@@ -155,50 +168,50 @@ class SecurityController extends AbstractDashboardController//AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        return $this->render('security/registration.entreprise.html.twig', [//
+        return $this->render('security/registration.entreprise.html.twig', [ //
             'form' => $form->createView(),
             'utilisateur' => $utilisateur
         ]);
     }
 
-    public function creerIngredients(Utilisateur $utilisateur , Entreprise $entreprise)
+    public function creerIngredients(Utilisateur $utilisateur, Entreprise $entreprise)
     {
         $faker = Factory::create();
 
         $taMonnaies = [
             [
-                "setCode" =>"USD",
-                "setNom" =>"Dollar Américain",
-                "setTauxusd" =>1,
+                "setCode" => "USD",
+                "setNom" => "Dollar Américain",
+                "setTauxusd" => 1,
                 "setIslocale" => true
             ],
             [
-                "setCode" =>"EUR",
-                "setNom" =>"Euro",
-                "setTauxusd" =>1.09,
+                "setCode" => "EUR",
+                "setNom" => "Euro",
+                "setTauxusd" => 1.09,
                 "setIslocale" => false
             ]
-        ];//array("USD", "CDF");
+        ]; //array("USD", "CDF");
 
         $tabTaxes = [
             [
-                "setNom" =>"TVA",
-                "setDescription" =>"Taxe sur la Valeur Ajoutée",
-                "setTaux" =>0.16,
+                "setNom" => "TVA",
+                "setDescription" => "Taxe sur la Valeur Ajoutée",
+                "setTaux" => 0.16,
                 "setPayableparcourtier" => false,
                 "setOrganisation" => "DGI - Direction Générale des Impôts."
             ],
             [
-                "setNom" =>"ARCA",
-                "setDescription" =>"Frais de surveillance",
-                "setTaux" =>0.02,
+                "setNom" => "ARCA",
+                "setDescription" => "Frais de surveillance",
+                "setTaux" => 0.02,
                 "setPayableparcourtier" => true,
                 "setOrganisation" => "ARCA - Autorité de Régulation et de Contrôle des Assurances."
             ]
         ]; //array("TVA", "ARCA");
 
         $tabEtapesCRM = [
-            "PROSPECTION", 
+            "PROSPECTION",
             "PRODUCTION DE COTATION",
             "EMISSION DE LA POLICE",
             "RENOUVELLEMENT"
@@ -267,14 +280,14 @@ class SecurityController extends AbstractDashboardController//AbstractController
         ];
 
         $tabBiblioCategorie = [
-            "POLICES D'ASSURANCE", 
+            "POLICES D'ASSURANCE",
             "FORMULAIRES DE PROPOSITION",
             "MANDATS DE COURTAGE",
             "FACTURES"
         ];
 
         $tabBiblioClasseur = [
-            "PRODUCTION", 
+            "PRODUCTION",
             "SINISTRES",
             "FINANCES"
         ];
@@ -351,7 +364,7 @@ class SecurityController extends AbstractDashboardController//AbstractController
             $etapeSinistre = new EtapeSinistre();
             $etapeSinistre->setNom($O_etape['setNom']);
             $etapeSinistre->setDescription($O_etape['setDescription']);
-            $etapeSinistre->setIndice($O_etape['setIndice']);//$indice
+            $etapeSinistre->setIndice($O_etape['setIndice']); //$indice
 
             $etapeSinistre->setEntreprise($entreprise);
             $etapeSinistre->setCreatedAt(new \DateTimeImmutable());

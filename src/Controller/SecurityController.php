@@ -16,10 +16,7 @@ use App\Entity\DocCategorie;
 use App\Entity\EtapeSinistre;
 use App\Service\ServiceMails;
 use App\Form\RegistrationType;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
+use App\Form\AdminDestructionType;
 use App\Service\ServiceEntreprise;
 use App\Form\AdminRegistrationType;
 use App\Service\ServiceSuppression;
@@ -28,11 +25,15 @@ use App\Form\EntrepriseRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
+use Symfony\Component\Console\Input\InputInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -43,17 +44,49 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 class SecurityController extends AbstractDashboardController //AbstractController
 {
 
-    public function __construct(private AuthenticationUtils $authenticationUtils, private EntityManagerInterface $manager)
-    {
+    public function __construct(
+        private AuthenticationUtils $authenticationUtils,
+        private EntityManagerInterface $manager
+    ) {
     }
 
 
-    #[Route('/destruction/{idEntreprise}', name: 'security.destroy', methods: ['GET', 'POST'])]
-    public function destruction($idEntreprise, ServiceSuppression $serviceSuppression): Response
-    {
-        //$entreprise = $this->manager->getRepository(Entreprise::class)->find($idEntreprise);
-        //$serviceSuppression->supprimer($entreprise, ServiceSuppression::PAREMETRE_ENTREPRISE);
-        return $this->redirectToRoute('security.logout'); //app_sweet_alert
+    #[Route('/destruction/{idEntreprise}/{idUtilisateur}', name: 'security.destroy', methods: ['GET', 'POST'])]
+    public function destruction(
+        $idEntreprise,
+        $idUtilisateur,
+        ServiceSuppression $serviceSuppression,
+        ServiceMails $serviceMails,
+        Request $request,
+        UserPasswordHasherInterface $hasher
+    ): Response {
+        $entreprise = $this->manager->getRepository(Entreprise::class)->find($idEntreprise);
+        $utilisateur = $this->manager->getRepository(Utilisateur::class)->find($idUtilisateur);
+        $messageErreur = "";
+
+        $form = $this->createForm(AdminDestructionType::class, new Utilisateur());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            if ($hasher->isPasswordValid($utilisateur, $data->getPlainPassword())) {
+                //dd("Mot de passe CORRECT ! Je supprime...");
+                $serviceSuppression->supprimer($entreprise, ServiceSuppression::PAREMETRE_ENTREPRISE);
+
+                //envoie de l'email de confirmation de suppression effectuée.
+                //$serviceMails->sendEmailBienvenu($user);
+                return $this->redirectToRoute('security.logout');
+            } else {
+                $messageErreur = "Le mot de passe saisi n'est pas correct. Impossible de détruire ce compte !";
+            }
+        }
+
+        return $this->render('security/destruction.html.twig', [
+            'form' => $form->createView(),
+            'utilisateur' => $utilisateur,
+            'entreprise' => $entreprise,
+            'messageErreur' => $messageErreur
+        ]);
     }
 
 
@@ -65,9 +98,9 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
 
         $error = $this->authenticationUtils->getLastAuthenticationError();
 
-        if ($error != null) {
+        /* if ($error != null) {
             $this->addFlash("error", "Vos identifiants sont incorrects");
-        }
+        } */
         return $this->render('security/login.html.twig', [
             'controller_name' => 'SecurityController',
             'last_username' => $last_username,

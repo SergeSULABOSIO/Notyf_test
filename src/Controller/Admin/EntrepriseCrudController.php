@@ -159,7 +159,8 @@ class EntrepriseCrudController extends AbstractCrudController
     public function detruireEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirectToRoute('security.destroy', [
-            "idEntreprise" => $this->serviceEntreprise->getEntreprise()->getId()
+            "idEntreprise" => $this->serviceEntreprise->getEntreprise()->getId(),
+            "idUtilisateur" => $this->serviceEntreprise->getUtilisateur()->getId()
         ]);
     }
 

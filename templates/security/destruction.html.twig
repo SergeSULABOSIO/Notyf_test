@@ -1,0 +1,38 @@
+{# {% extends 'base.html.twig' %} #}
+
+{# {% block title %}JS Brokers - Connexion{% endblock %} #}
+
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <h2 class="mt-4">
+                    JS Brokers - Destruction
+                </h2>
+                
+                <div class="alert alert-warning" role="alert">
+                    {% if messageErreur != "" %}
+                        <p>
+                            <strong>{{ messageErreur }}</strong>
+                        </p>
+                    {% else %}
+                        <p>
+                            Salut <strong>{{ utilisateur.nom }}</strong>,
+                        </p>
+                        <p>
+                            La destruction de <strong>{{ entreprise.nom }}</strong> entraînera la destruction de toutes les données stockées dans la base.</br>
+                        </p>
+                        <p>
+                            Si vous êtes sûr(e) de vouloir continuer, veuillez fournir le mot de passe puis cliquer <strong>DETRUIRE MON COMPTE</strong>.
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="mt-4">
+                    {{ form(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

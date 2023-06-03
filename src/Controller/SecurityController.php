@@ -16,7 +16,10 @@ use App\Entity\DocCategorie;
 use App\Entity\EtapeSinistre;
 use App\Service\ServiceMails;
 use App\Form\RegistrationType;
-
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\Service\ServiceEntreprise;
 use App\Form\AdminRegistrationType;
 use App\Service\ServiceSuppression;
@@ -48,10 +51,8 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
     #[Route('/destruction/{idEntreprise}', name: 'security.destroy', methods: ['GET', 'POST'])]
     public function destruction($idEntreprise, ServiceSuppression $serviceSuppression): Response
     {
-        $entreprise = $this->manager->getRepository(Entreprise::class)->find($idEntreprise);
-        //dd("Utilisateur = " . $idUtilisateur . " et Entreprise = " . $idEntreprise);
-        $serviceSuppression->supprimer($entreprise, ServiceSuppression::PAREMETRE_ENTREPRISE);
-        //dd("Oops!");
+        //$entreprise = $this->manager->getRepository(Entreprise::class)->find($idEntreprise);
+        //$serviceSuppression->supprimer($entreprise, ServiceSuppression::PAREMETRE_ENTREPRISE);
         return $this->redirectToRoute('security.logout'); //app_sweet_alert
     }
 

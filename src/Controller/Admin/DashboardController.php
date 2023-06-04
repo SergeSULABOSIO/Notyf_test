@@ -172,7 +172,7 @@ class DashboardController extends AbstractDashboardController
         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([ //<i class="fa-solid fa-gears"></i>
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
-            MenuItem::linkToCrud('Entreprises', 'fas fa-shop', Entreprise::class)
+            MenuItem::linkToCrud('Entreprise', 'fas fa-shop', Entreprise::class)
                 ->setAction(Action::DETAIL)
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
             MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Entreprise::class)

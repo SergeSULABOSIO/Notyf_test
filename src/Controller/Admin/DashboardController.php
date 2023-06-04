@@ -32,6 +32,8 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
 use App\Service\ServiceEntreprise;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -50,7 +52,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";
-    public const ACTION_ENREGISTRER = "Enregistrer";
+    public const ACTION_ENREGISTRER = "Enregistrer et Retourner";
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
     
@@ -171,8 +173,18 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([ //<i class="fa-solid fa-gears"></i>
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
             MenuItem::linkToCrud('Entreprises', 'fas fa-shop', Entreprise::class)
+                ->setAction(Action::DETAIL)
+                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
+            MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Entreprise::class)
+                ->setAction(Action::DETAIL)
+                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId())//<i class="fa-solid fa-solar-panel"></i>
         ])
         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
+
+        yield MenuItem::linkToCrud("MON PROFIL", "fa-solid fa-user", Utilisateur::class)//<i class="fa-solid fa-user"></i>
+                ->setAction(Action::DETAIL)
+                ->setEntityId($this->serviceEntreprise->getUtilisateur()->getId());
+        yield MenuItem::linkToLogout("DECONNEXION", "fa-solid fa-right-from-bracket");
         //}
     }
 }

@@ -153,6 +153,9 @@ class Police extends CalculableEntity
     #[ORM\ManyToOne]
     private ?Utilisateur $gestionnaire = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $partExceptionnellePartenaire = null;
+
     
     public function __construct()
     {
@@ -646,6 +649,18 @@ class Police extends CalculableEntity
     public function setGestionnaire(?Utilisateur $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    public function getPartExceptionnellePartenaire(): ?float
+    {
+        return $this->partExceptionnellePartenaire;
+    }
+
+    public function setPartExceptionnellePartenaire(?float $partExceptionnellePartenaire): self
+    {
+        $this->partExceptionnellePartenaire = $partExceptionnellePartenaire;
 
         return $this;
     }

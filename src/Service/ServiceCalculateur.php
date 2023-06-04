@@ -308,7 +308,11 @@ class ServiceCalculateur
             $partenaire = $police->getPartenaire();
             //dd($partenaire->getNom());
             if ($partenaire != null) {
-                $part = $partenaire->getPart();
+                if($police->getPartExceptionnellePartenaire() != 0){
+                    $part = $police->getPartExceptionnellePartenaire() * 100;
+                }else{
+                    $part = $partenaire->getPart();
+                }
 
                 if ($police->isCansharericom() == true) {
                     $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part) / 100;

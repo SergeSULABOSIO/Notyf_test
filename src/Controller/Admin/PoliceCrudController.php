@@ -42,6 +42,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 
 class PoliceCrudController extends AbstractCrudController
 {
@@ -158,6 +159,7 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setDateoperation(new DateTimeImmutable("now"));
         $objet->setDateeffet(new DateTimeImmutable("now"));
         $objet->setDateexpiration(new DateTimeImmutable("+365 day"));
+        $objet->setPartExceptionnellePartenaire(0);
         $objet->setIdavenant(0);
         $objet->setTypeavenant(0);
         $objet->setReassureurs("Voir le traité de réassurance en place.");
@@ -295,6 +297,7 @@ class PoliceCrudController extends AbstractCrudController
                 })
             //->setEmptyData(" ")
             ,
+            PercentField::new('partExceptionnellePartenaire', "Part exceptionnelle")->hideOnIndex()->setColumns(2),
 
             FormField::addPanel('Commission de réassurance')
             //->onlyOnForms()

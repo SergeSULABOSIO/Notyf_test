@@ -81,9 +81,9 @@ class AdminSubscriber implements EventSubscriberInterface
             }
             //S'il s'agit de l'utilisateur actuellement connecté, alors il faut lui déconnecter
             //dd($this->security->getUser());
-            if($this->serviceEntreprise->getUtilisateur() == $entityInstance){
+            /* if($this->serviceEntreprise->getUtilisateur() == $entityInstance){
                 $response = $this->security->logout(false);
-            }
+            } */
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }

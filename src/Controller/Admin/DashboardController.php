@@ -31,6 +31,7 @@ use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
+use App\Entity\Preference;
 use App\Service\ServiceEntreprise;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -175,7 +176,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Entreprise', 'fas fa-shop', Entreprise::class)
                 ->setAction(Action::DETAIL)
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
-            MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Entreprise::class)
+            MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Preference::class)
                 ->setAction(Action::DETAIL)
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId())//<i class="fa-solid fa-solar-panel"></i>
         ])

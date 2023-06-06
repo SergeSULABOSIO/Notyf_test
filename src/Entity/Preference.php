@@ -46,6 +46,87 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $crmPistes = [];
 
+    #[ORM\Column]
+    private ?int $apparence = null;
+
+    #[ORM\Column]
+    private ?int $proTaille = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proAssureurs = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proAutomobiles = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proContacts = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proClients = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proPartenaires = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proPolices = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $proProduits = [];
+
+    #[ORM\Column]
+    private ?int $finTaille = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finTaxes = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finMonnaies = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finCommissionsPayees = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finRetrocommissionsPayees = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finTaxesPayees = [];
+
+    #[ORM\Column]
+    private ?int $sinTaille = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sinCommentaires = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sinEtapes = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sinExperts = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sinSinistres = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sinVictimes = [];
+
+    #[ORM\Column]
+    private ?int $bibTaille = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $bibCategories = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $bibClasseurs = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $bibPieces = [];
+
+    #[ORM\Column]
+    private ?int $parTaille = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $parUtilisateurs = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -167,6 +248,330 @@ class Preference
     public function setCrmPistes(?array $crmPistes): self
     {
         $this->crmPistes = $crmPistes;
+
+        return $this;
+    }
+
+    public function getApparence(): ?int
+    {
+        return $this->apparence;
+    }
+
+    public function setApparence(int $apparence): self
+    {
+        $this->apparence = $apparence;
+
+        return $this;
+    }
+
+    public function getProTaille(): ?int
+    {
+        return $this->proTaille;
+    }
+
+    public function setProTaille(int $proTaille): self
+    {
+        $this->proTaille = $proTaille;
+
+        return $this;
+    }
+
+    public function getProAssureurs(): array
+    {
+        return $this->proAssureurs;
+    }
+
+    public function setProAssureurs(?array $proAssureurs): self
+    {
+        $this->proAssureurs = $proAssureurs;
+
+        return $this;
+    }
+
+    public function getProAutomobiles(): array
+    {
+        return $this->proAutomobiles;
+    }
+
+    public function setProAutomobiles(?array $proAutomobiles): self
+    {
+        $this->proAutomobiles = $proAutomobiles;
+
+        return $this;
+    }
+
+    public function getProContacts(): array
+    {
+        return $this->proContacts;
+    }
+
+    public function setProContacts(?array $proContacts): self
+    {
+        $this->proContacts = $proContacts;
+
+        return $this;
+    }
+
+    public function getProClients(): array
+    {
+        return $this->proClients;
+    }
+
+    public function setProClients(?array $proClients): self
+    {
+        $this->proClients = $proClients;
+
+        return $this;
+    }
+
+    public function getProPartenaires(): array
+    {
+        return $this->proPartenaires;
+    }
+
+    public function setProPartenaires(?array $proPartenaires): self
+    {
+        $this->proPartenaires = $proPartenaires;
+
+        return $this;
+    }
+
+    public function getProPolices(): array
+    {
+        return $this->proPolices;
+    }
+
+    public function setProPolices(?array $proPolices): self
+    {
+        $this->proPolices = $proPolices;
+
+        return $this;
+    }
+
+    public function getProProduits(): array
+    {
+        return $this->proProduits;
+    }
+
+    public function setProProduits(?array $proProduits): self
+    {
+        $this->proProduits = $proProduits;
+
+        return $this;
+    }
+
+    public function getFinTaille(): ?int
+    {
+        return $this->finTaille;
+    }
+
+    public function setFinTaille(int $finTaille): self
+    {
+        $this->finTaille = $finTaille;
+
+        return $this;
+    }
+
+    public function getFinTaxes(): array
+    {
+        return $this->finTaxes;
+    }
+
+    public function setFinTaxes(?array $finTaxes): self
+    {
+        $this->finTaxes = $finTaxes;
+
+        return $this;
+    }
+
+    public function getFinMonnaies(): array
+    {
+        return $this->finMonnaies;
+    }
+
+    public function setFinMonnaies(?array $finMonnaies): self
+    {
+        $this->finMonnaies = $finMonnaies;
+
+        return $this;
+    }
+
+    public function getFinCommissionsPayees(): array
+    {
+        return $this->finCommissionsPayees;
+    }
+
+    public function setFinCommissionsPayees(?array $finCommissionsPayees): self
+    {
+        $this->finCommissionsPayees = $finCommissionsPayees;
+
+        return $this;
+    }
+
+    public function getFinRetrocommissionsPayees(): array
+    {
+        return $this->finRetrocommissionsPayees;
+    }
+
+    public function setFinRetrocommissionsPayees(?array $finRetrocommissionsPayees): self
+    {
+        $this->finRetrocommissionsPayees = $finRetrocommissionsPayees;
+
+        return $this;
+    }
+
+    public function getFinTaxesPayees(): array
+    {
+        return $this->finTaxesPayees;
+    }
+
+    public function setFinTaxesPayees(?array $finTaxesPayees): self
+    {
+        $this->finTaxesPayees = $finTaxesPayees;
+
+        return $this;
+    }
+
+    public function getSinTaille(): ?int
+    {
+        return $this->sinTaille;
+    }
+
+    public function setSinTaille(int $sinTaille): self
+    {
+        $this->sinTaille = $sinTaille;
+
+        return $this;
+    }
+
+    public function getSinCommentaires(): array
+    {
+        return $this->sinCommentaires;
+    }
+
+    public function setSinCommentaires(?array $sinCommentaires): self
+    {
+        $this->sinCommentaires = $sinCommentaires;
+
+        return $this;
+    }
+
+    public function getSinEtapes(): array
+    {
+        return $this->sinEtapes;
+    }
+
+    public function setSinEtapes(?array $sinEtapes): self
+    {
+        $this->sinEtapes = $sinEtapes;
+
+        return $this;
+    }
+
+    public function getSinExperts(): array
+    {
+        return $this->sinExperts;
+    }
+
+    public function setSinExperts(?array $sinExperts): self
+    {
+        $this->sinExperts = $sinExperts;
+
+        return $this;
+    }
+
+    public function getSinSinistres(): array
+    {
+        return $this->sinSinistres;
+    }
+
+    public function setSinSinistres(?array $sinSinistres): self
+    {
+        $this->sinSinistres = $sinSinistres;
+
+        return $this;
+    }
+
+    public function getSinVictimes(): array
+    {
+        return $this->sinVictimes;
+    }
+
+    public function setSinVictimes(?array $sinVictimes): self
+    {
+        $this->sinVictimes = $sinVictimes;
+
+        return $this;
+    }
+
+    public function getBibTaille(): ?int
+    {
+        return $this->bibTaille;
+    }
+
+    public function setBibTaille(int $bibTaille): self
+    {
+        $this->bibTaille = $bibTaille;
+
+        return $this;
+    }
+
+    public function getBibCategories(): array
+    {
+        return $this->bibCategories;
+    }
+
+    public function setBibCategories(?array $bibCategories): self
+    {
+        $this->bibCategories = $bibCategories;
+
+        return $this;
+    }
+
+    public function getBibClasseurs(): array
+    {
+        return $this->bibClasseurs;
+    }
+
+    public function setBibClasseurs(?array $bibClasseurs): self
+    {
+        $this->bibClasseurs = $bibClasseurs;
+
+        return $this;
+    }
+
+    public function getBibPieces(): array
+    {
+        return $this->bibPieces;
+    }
+
+    public function setBibPieces(?array $bibPieces): self
+    {
+        $this->bibPieces = $bibPieces;
+
+        return $this;
+    }
+
+    public function getParTaille(): ?int
+    {
+        return $this->parTaille;
+    }
+
+    public function setParTaille(int $parTaille): self
+    {
+        $this->parTaille = $parTaille;
+
+        return $this;
+    }
+
+    public function getParUtilisateurs(): array
+    {
+        return $this->parUtilisateurs;
+    }
+
+    public function setParUtilisateurs(?array $parUtilisateurs): self
+    {
+        $this->parUtilisateurs = $parUtilisateurs;
 
         return $this;
     }

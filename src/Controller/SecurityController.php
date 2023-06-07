@@ -29,6 +29,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Entity\Preference;
 use Symfony\Component\Console\Input\InputInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -433,6 +434,40 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
             //persistance
             $this->manager->persist($classeurBib);
         }
+
+        $preference = new Preference();
+        $preference->setApparence(0);
+        $preference->setUtilisateur($utilisateur);
+        $preference->setEntreprise($entreprise);
+        $preference->setCreatedAt(new DateTimeImmutable());
+        $preference->setUpdatedAt(new DateTimeImmutable());
+        //CRM
+        $preference->setCrmTaille(100);
+        $preference->setCrmMissions([0,1]);
+        $preference->setCrmFeedbacks([0,1]);
+        $preference->setCrmCotations([0,1]);
+        $preference->setCrmEtapes([0,1]);
+        $preference->setCrmPistes([0,1]);
+        //PRO
+        $preference->setProTaille(100);
+        $preference->setProAssureurs([0,1]);
+        $preference->setProAutomobiles([0,1]);
+        $preference->setProContacts([0,1]);
+        $preference->setProClients([0,1]);
+        $preference->setProPartenaires([0,1]);
+        $preference->setProPolices([0,1]);
+        $preference->setProProduits([0,1]);
+        //FIN
+        $preference->setFinTaille(100);
+        //SIN
+        $preference->setSinTaille(100);
+        //BIB
+        $preference->setBibTaille(100);
+        //PAR
+        $preference->setParTaille(100);
+
+        //persistance
+        $this->manager->persist($preference);
 
         $this->manager->flush();
     }

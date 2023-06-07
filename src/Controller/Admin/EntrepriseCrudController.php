@@ -125,10 +125,11 @@ class EntrepriseCrudController extends AbstractCrudController
             })
 
             //On enlève le bouton de suppression par defaut
-            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            //->remove(Crud::PAGE_INDEX, Action::DELETE)
             //->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
 
             //Action ouvrir
+            ->add(Crud::PAGE_DETAIL, $detruireEntreprise)
             ->add(Crud::PAGE_EDIT, $detruireEntreprise) //$detruireEntreprise
             ->add(Crud::PAGE_INDEX, $detruireEntreprise)
             ->add(Crud::PAGE_EDIT, $ouvrir)

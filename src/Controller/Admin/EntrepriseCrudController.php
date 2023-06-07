@@ -124,6 +124,7 @@ class EntrepriseCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
+            ->remove(Crud::PAGE_DETAIL, Action::INDEX)
             //On enlève le bouton de suppression par defaut
             //->remove(Crud::PAGE_INDEX, Action::DELETE)
             //->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)

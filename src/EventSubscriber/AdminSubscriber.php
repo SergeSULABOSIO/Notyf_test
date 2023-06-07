@@ -1,4 +1,5 @@
 <?php
+
 namespace App\EventSubscriber;
 
 use App\Entity\Piste;
@@ -7,9 +8,12 @@ use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\FeedbackCRM;
 use App\Entity\Police;
+use App\Entity\Preference;
 use App\Entity\Utilisateur;
 use App\Service\ServiceCalculateur;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
+use DateTimeImmutable;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -22,7 +26,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AdminSubscriber implements EventSubscriberInterface
 {
 
-    public function __construct(private UserPasswordHasherInterface $hasher, private ServiceEntreprise $serviceEntreprise, private ServiceCalculateur $serviceCalculateur)
+    public function __construct(
+        private UserPasswordHasherInterface $hasher, 
+        private ServiceEntreprise $serviceEntreprise, 
+        private ServiceCalculateur $serviceCalculateur,
+        private ServicePreferences $servicePreferences
+        )
     {
     }
 
@@ -49,18 +58,20 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         //dd($event);
         $entityInstance = $event->getEntityInstance();
-        if($entityInstance instanceof Utilisateur){
+        if ($entityInstance instanceof Utilisateur) {
             $newpassword = $entityInstance->getPlainPassword();
-            if($newpassword !== ""){
+            if ($newpassword !== "") {
                 //dd($newpassword);
                 $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
                 $entityInstance->setPassword($hashedPassword);
-            }else{
+            } else {
                 $hashedPassword = $this->hasher->hashPassword($entityInstance, "abc");
                 $entityInstance->setPassword($hashedPassword);
             }
+            //On ajoute par la même occasion les préférences par défaut de cet User
+            $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
         }
-        
+
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
@@ -71,10 +82,10 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         //dd($event);
         $entityInstance = $event->getEntityInstance();
-        if($entityInstance instanceof Utilisateur){
+        if ($entityInstance instanceof Utilisateur) {
             $newpassword = $entityInstance->getPlainPassword();
             //Si le mot de passe n'est pas vide = C'est que l'on désire le modifier
-            if($newpassword !== ""){
+            if ($newpassword !== "") {
                 //dd($newpassword);
                 $hashedPassword = $this->hasher->hashPassword($entityInstance, $entityInstance->getPlainPassword());
                 $entityInstance->setPassword($hashedPassword);

@@ -136,8 +136,8 @@ class PreferenceCrudController extends AbstractCrudController
     {
         return [
             FormField::addTab(' Généralité')
-                ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
-            //->setHelp("Le contrat d'assurance en place."),
+                ->setIcon('fas fa-file-shield')
+                ->setHelp("Les paramètres qui s'appliquent sur toutes les rubriques de l'espade de travail."),
 
             //Ligne 01
             ChoiceField::new('apparence', "Arrière-plan Sombre")
@@ -163,6 +163,15 @@ class PreferenceCrudController extends AbstractCrudController
             AssociationField::new('entreprise', self::PREF_ENTREPRISE)->onlyOnDetail(),
             DateTimeField::new('createdAt', "Date de création")->onlyOnDetail(),//->setColumns(2),
             DateTimeField::new('updatedAt', "Date de modification")->onlyOnDetail(),//->setColumns(2),
+
+
+            //Onglet CRM
+            FormField::addTab(' COMMERCIAL / CRM')
+                ->setIcon('fas fa-bullseye')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
+            
+            
+
         ];
     }
 

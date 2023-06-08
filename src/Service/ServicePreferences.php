@@ -2,9 +2,12 @@
 
 namespace App\Service;
 
+use App\Entity\Entreprise;
 use App\Entity\Preference;
+use App\Entity\Utilisateur;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 
 class ServicePreferences
 {
@@ -16,6 +19,19 @@ class ServicePreferences
     ) 
     {
 
+    }
+
+    public function appliquerPreferenceApparence(Dashboard $dashboard, Utilisateur $utilisateur, Entreprise $entreprise)
+    {
+        $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
+            [
+                'entreprise' => $entreprise,
+                'utilisateur' => $utilisateur,
+            ]
+        );
+        if ($preferences[0]->getApparence() == 0) {
+            $dashboard->disableDarkMode();
+        }
     }
 
     public function creerPreference($utilisateur, $entreprise)

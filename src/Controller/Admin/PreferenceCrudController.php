@@ -72,8 +72,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
     public const TAB_APPARENCES = [
-        'Désactiver le mode sombre' => self::PREF_APPARENCE_CLAIRE,
-        'Permettre le mode sombre' => self::PREF_APPARENCE_SOMBRE
+        'Mode sombre désactivé' => self::PREF_APPARENCE_CLAIRE,
+        'Mode sombre activé' => self::PREF_APPARENCE_SOMBRE
     ];
     public const PREF_UTILISATEUR = "Utilisateur";
     public const PREF_ENTREPRISE = "Entreprise";
@@ -84,16 +84,7 @@ class PreferenceCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise
     ) {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
-        $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
-            [
-                'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'utilisateur' => $this->serviceEntreprise->getUtilisateur(),
-            ]
-        );
-        //dd($preferences[0]->getApparence());
-        if($preferences[0]->getApparence() == 1){
-            
-        }
+        
     }
 
     public static function getEntityFqcn(): string
@@ -149,9 +140,15 @@ class PreferenceCrudController extends AbstractCrudController
             //->setHelp("Le contrat d'assurance en place."),
 
             //Ligne 01
-            ChoiceField::new('apparence', "Apparence")
+            ChoiceField::new('apparence', "Arrière-plan Sombre")
                 //->setColumns(4)
-                ->setChoices(self::TAB_APPARENCES),
+                ->renderExpanded()
+                ->setChoices(self::TAB_APPARENCES)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    self::PREF_APPARENCE_SOMBRE => 'success', //info
+                    self::PREF_APPARENCE_CLAIRE => 'danger',
+                ]),
 
             AssociationField::new('utilisateur', self::PREF_UTILISATEUR)
                 //->setColumns(6)

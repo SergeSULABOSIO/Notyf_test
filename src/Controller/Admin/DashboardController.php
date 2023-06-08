@@ -33,6 +33,8 @@ use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Preference;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,8 +58,13 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_ENREGISTRER = "Enregistrer et Retourner";
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
-    
-    public function __construct(private AdminUrlGenerator $adminUrlGenerator, private ServiceEntreprise $serviceEntreprise)
+
+    public function __construct(
+        private ServicePreferences $servicePreferences,
+        private EntityManagerInterface $entityManager,
+        private AdminUrlGenerator $adminUrlGenerator, 
+        private ServiceEntreprise $serviceEntreprise
+        )
     {
     }
 
@@ -81,20 +88,20 @@ class DashboardController extends AbstractDashboardController
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
-        
+
         //dd($this->serviceEntreprise);
 
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $connected_utilisateur = $this->serviceEntreprise->getUtilisateur();
 
-        if($this->serviceEntreprise->hasEntreprise() == true){
+        if ($this->serviceEntreprise->hasEntreprise() == true) {
             $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
             return $this->render('admin/dashboard.html.twig');
-        }else{
-            if($this->serviceEntreprise->isAdministrateur() == true){
+        } else {
+            if ($this->serviceEntreprise->isAdministrateur() == true) {
                 //$this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");
                 return $this->redirectToRoute('security.register.entreprise');
-            }else{
+            } else {
                 return $this->redirectToRoute('security.login');
             }
         }
@@ -108,13 +115,17 @@ class DashboardController extends AbstractDashboardController
 
     public function configureDashboard(): Dashboard
     {
-        $nomEntreprise = $this->serviceEntreprise->getEntreprise() == null? "TBA" : $this->serviceEntreprise->getEntreprise();
-        return Dashboard::new()
+        $dashboard = Dashboard::new();
+        //Application de la préférence sur l'apparence
+        $this->servicePreferences->appliquerPreferenceApparence($dashboard, $this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+
+        $nomEntreprise = $this->serviceEntreprise->getEntreprise() == null ? "TBA" : $this->serviceEntreprise->getEntreprise();
+        return $dashboard
             //->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
-            
+
             ->setTitle($nomEntreprise) //$this->serviceEntreprise->getEntreprise()
             //->setFaviconPath('assets/icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
-            ;
+        ;
     }
 
     public function configureMenuItems(): iterable
@@ -131,18 +142,18 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class), //<i class="fa-solid fa-list-check"></i>
             MenuItem::linkToCrud('Pistes', 'fas fa-location-crosshairs', Piste::class) //<i class="fa-solid fa-location-crosshairs"></i>
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL]);
 
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bag-shopping')->setSubItems([ //<i class="fa-solid fa-bag-shopping"></i>
             MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),
             MenuItem::linkToCrud('Engins', 'fas fa-car', Automobile::class),
-            MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class),//<i class="fa-sharp fa-solid fa-address-book"></i>
+            MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class), //<i class="fa-sharp fa-solid fa-address-book"></i>
             MenuItem::linkToCrud('Clients', 'fas fa-person-shelter', Client::class), //<i class="fa-solid fa-person-shelter"></i>
             MenuItem::linkToCrud('Partenaires', 'fas fa-handshake', Partenaire::class),
             MenuItem::linkToCrud('Polices', 'fas fa-file-shield', Police::class),
             MenuItem::linkToCrud('Produits', 'fas fa-gifts', Produit::class)
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION]);;
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION]);;
 
         yield MenuItem::subMenu('FINANCES', 'fas fa-sack-dollar')->setSubItems([ //<i class="fa-solid fa-sack-dollar"></i>
             MenuItem::linkToCrud('Taxes', 'fas fa-landmark-dome', Taxe::class), //<i class="fa-solid fa-landmark-dome"></i>
@@ -151,7 +162,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Retrocom. payées', 'fas fa-person-arrow-up-from-line', PaiementPartenaire::class), //<i class="fa-solid fa-person-arrow-up-from-line"></i>
             MenuItem::linkToCrud('Taxes payées', 'fas fa-person-chalkboard', PaiementTaxe::class) //<i class="fa-solid fa-person-chalkboard"></i>
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES]);
 
         yield MenuItem::subMenu('SINISTRE', 'fas fa-fire')->setSubItems([ //<i class="fa-solid fa-fire"></i>
             MenuItem::linkToCrud('Commentaires', 'fas fa-comments', CommentaireSinistre::class), //<i class="fa-solid fa-comments"></i>
@@ -160,17 +171,17 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Sinistre', 'fas fa-bell', Sinistre::class), //<i class="fa-regular fa-bell"></i>
             MenuItem::linkToCrud('Victime', 'fas fa-person-falling-burst', Victime::class) //<i class="fa-solid fa-person-falling-burst"></i>
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES]);
 
         yield MenuItem::subMenu('BIBLIOTHEQUE', 'fas fa-book')->setSubItems([ //<i class="fa-solid fa-books"></i>
             MenuItem::linkToCrud('Catégories', 'fas fa-tags', DocCategorie::class), //<i class="fa-regular fa-tags"></i>
             MenuItem::linkToCrud('Classeurs', 'fas fa-folder-open', DocClasseur::class), //<i class="fa-solid fa-folder-open"></i>
             MenuItem::linkToCrud('Pièces', 'fas fa-file-word', DocPiece::class) //<i class="fa-regular fa-file-word"></i>
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE]);
 
         yield MenuItem::section("CONFIGURATIONS")
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
         yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([ //<i class="fa-solid fa-gears"></i>
             MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
             MenuItem::linkToCrud('Entreprise', 'fas fa-shop', Entreprise::class)
@@ -178,13 +189,13 @@ class DashboardController extends AbstractDashboardController
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
             MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Preference::class)
                 ->setAction(Action::DETAIL)
-                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId())//<i class="fa-solid fa-solar-panel"></i>
+                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()) //<i class="fa-solid fa-solar-panel"></i>
         ])
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
 
-        yield MenuItem::linkToCrud("MON PROFIL", "fa-solid fa-user", Utilisateur::class)//<i class="fa-solid fa-user"></i>
-                ->setAction(Action::DETAIL)
-                ->setEntityId($this->serviceEntreprise->getUtilisateur()->getId());
+        yield MenuItem::linkToCrud("MON PROFIL", "fa-solid fa-user", Utilisateur::class) //<i class="fa-solid fa-user"></i>
+            ->setAction(Action::DETAIL)
+            ->setEntityId($this->serviceEntreprise->getUtilisateur()->getId());
         yield MenuItem::linkToLogout("DECONNEXION", "fa-solid fa-right-from-bracket");
         //}
     }

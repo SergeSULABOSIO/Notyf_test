@@ -575,4 +575,9 @@ class Preference
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return "Paramètres d'affichage / " . $this->utilisateur;
+    }
 }

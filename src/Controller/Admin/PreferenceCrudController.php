@@ -71,9 +71,11 @@ class PreferenceCrudController extends AbstractCrudController
 
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
+    public const PREF_APPARENCE_AUTOMATIQUE = 2;
     public const TAB_APPARENCES = [
         'Claire (par défaut)' => self::PREF_APPARENCE_CLAIRE,
-        'Sombre' => self::PREF_APPARENCE_SOMBRE
+        'Sombre' => self::PREF_APPARENCE_SOMBRE,
+        'Automatique' => self::PREF_APPARENCE_AUTOMATIQUE
     ];
     public const PREF_UTILISATEUR = "Utilisateur";
     public const PREF_ENTREPRISE = "Entreprise";
@@ -155,7 +157,7 @@ class PreferenceCrudController extends AbstractCrudController
 
             AssociationField::new('entreprise', self::PREF_ENTREPRISE)->onlyOnDetail(),
             DateTimeField::new('createdAt', "Date de création")->onlyOnDetail(),//->setColumns(2),
-            DateTimeField::new('updatedAt', "Date de modification")->setColumns(2),
+            DateTimeField::new('updatedAt', "Date de modification")->onlyOnDetail(),//->setColumns(2),
         ];
     }
 

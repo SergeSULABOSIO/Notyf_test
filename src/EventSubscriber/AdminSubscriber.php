@@ -96,6 +96,11 @@ class AdminSubscriber implements EventSubscriberInterface
                 $response = $this->security->logout(false);
             } */
         }
+
+        if($entityInstance instanceof Preference){
+            //dd($entityInstance);
+        }
+
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }
 }

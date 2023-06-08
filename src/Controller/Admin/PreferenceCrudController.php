@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -35,15 +36,15 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_CREATED_AT = 7;
     public const PREF_CRM_MISSION_UPDATED_AT = 8;
     public const TAB_CRM_MISSION = [
-        self::PREF_CRM_MISSION_ID => "Id",
-        self::PREF_CRM_MISSION_MISSION => "Nom",
-        self::PREF_CRM_MISSION_OBJECTIF => "Objectif",
-        self::PREF_CRM_MISSION_STARTED_AT => "Date d'effet",
-        self::PREF_CRM_MISSION_ENDED_AT => "Echéance",
-        self::PREF_CRM_MISSION_UTILISATEUR => "Utilisateur",
-        self::PREF_CRM_MISSION_ENTREPRISE => "Entreprise",
-        self::PREF_CRM_MISSION_CREATED_AT => "Date de création",
-        self::PREF_CRM_MISSION_UPDATED_AT => "Date de modification"
+        "Id" => self::PREF_CRM_MISSION_ID,
+        "Nom" => self::PREF_CRM_MISSION_MISSION,
+        "Objectif" => self::PREF_CRM_MISSION_OBJECTIF,
+        "Date d'effet" => self::PREF_CRM_MISSION_STARTED_AT,
+        "Echéance" => self::PREF_CRM_MISSION_ENDED_AT,
+        "Utilisateur" => self::PREF_CRM_MISSION_UTILISATEUR,
+        "Entreprise" => self::PREF_CRM_MISSION_ENTREPRISE,
+        "Date de création" => self::PREF_CRM_MISSION_CREATED_AT,
+        "Date de modification" => self::PREF_CRM_MISSION_UPDATED_AT 
     ];
 
     //CRM - FEEDBACK
@@ -57,15 +58,15 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_FEEDBACK_UTILISATEUR = 7;
     public const PREF_CRM_FEEDBACK_ENTREPRISE = 8;
     public const TAB_CRM_FEEDBACK = [
-        self::PREF_CRM_FEEDBACK_ID => "Id",
-        self::PREF_CRM_FEEDBACK_MESAGE => "Message",
-        self::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE => "Mission suivante",
-        self::PREF_CRM_FEEDBACK_DATE_EFFET => "Date d'effet",
-        self::PREF_CRM_FEEDBACK_ACTION => "Mission",
-        self::PREF_CRM_FEEDBACK_UTILISATEUR => "Utilisateur",
-        self::PREF_CRM_FEEDBACK_ENTREPRISE => "Entreprise",
-        self::PREF_CRM_FEEDBACK_DATE_CREATION => "Date de création",
-        self::PREF_CRM_FEEDBACK_DATE_MODIFICATION => "Date de modification",
+        "Id" => self::PREF_CRM_FEEDBACK_ID,
+        "Message" => self::PREF_CRM_FEEDBACK_MESAGE,
+        "Mission suivante" => self::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE,
+        "Date d'effet" => self::PREF_CRM_FEEDBACK_DATE_EFFET,
+        "Mission" => self::PREF_CRM_FEEDBACK_ACTION,
+        "Utilisateur" => self::PREF_CRM_FEEDBACK_UTILISATEUR,
+        "Entreprise" => self::PREF_CRM_FEEDBACK_ENTREPRISE,
+        "Date de création" => self::PREF_CRM_FEEDBACK_DATE_CREATION,
+        "Date de modification" => self::PREF_CRM_FEEDBACK_DATE_MODIFICATION
     ];
 
 
@@ -135,23 +136,19 @@ class PreferenceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            //Onglet 01 - Généralités
             FormField::addTab(' Généralité')
                 ->setIcon('fas fa-file-shield')
                 ->setHelp("Les paramètres qui s'appliquent sur toutes les rubriques de l'espade de travail."),
 
-            //Ligne 01
             ChoiceField::new('apparence', "Arrière-plan Sombre")
-                //->setColumns(4)
                 ->renderExpanded()
                 ->setChoices(self::TAB_APPARENCES)
                 ->renderAsBadges([
-                    // $value => $badgeStyleName
                     self::PREF_APPARENCE_SOMBRE => 'success', //info
                     self::PREF_APPARENCE_CLAIRE => 'danger',
                 ]),
-
             AssociationField::new('utilisateur', self::PREF_UTILISATEUR)
-                //->setColumns(6)
                 ->onlyOnDetail()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -159,19 +156,26 @@ class PreferenceCrudController extends AbstractCrudController
                         ->Where('e.entreprise = :ese')
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 }),
-
             AssociationField::new('entreprise', self::PREF_ENTREPRISE)->onlyOnDetail(),
             DateTimeField::new('createdAt', "Date de création")->onlyOnDetail(),//->setColumns(2),
             DateTimeField::new('updatedAt', "Date de modification")->onlyOnDetail(),//->setColumns(2),
 
 
-            //Onglet CRM
+            //Onglet 02 - CRM
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
             
-            
-
+            NumberField::new('crmTaille', "Eléments par page")->setColumns(3),
+            ChoiceField::new('crmMissions', "Mission")
+                //->onlyOnForms()
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_MISSION),
+            ChoiceField::new('crmFeedbacks', "Feedback")
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_FEEDBACK),
         ];
     }
 

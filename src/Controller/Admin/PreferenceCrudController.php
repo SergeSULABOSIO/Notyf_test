@@ -90,26 +90,75 @@ class PreferenceCrudController extends AbstractCrudController
         'Risque' => self::PREF_CRM_COTATION_RISQUE,
         'Piste' => self::PREF_CRM_COTATION_PISTE,
         'Pièces' => self::PREF_CRM_COTATION_PIECES,
-        'Date de création' => self::PREF_CRM_COTATION_DATE_CREATION,
-        'Date de modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION,
         'Utilisateur' => self::PREF_CRM_COTATION_DATE_UTILISATEUR,
-        'Entreprise' => self::PREF_CRM_COTATION_DATE_ENTREPRISE
+        'Entreprise' => self::PREF_CRM_COTATION_DATE_ENTREPRISE,
+        'Date de création' => self::PREF_CRM_COTATION_DATE_CREATION,
+        'Date de modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID = 0;
     public const PREF_CRM_ETAPES_NOM = 1;
-    public const PREF_CRM_ETAPES_DATE_CREATION = 2;
-    public const PREF_CRM_ETAPES_DATE_MODIFICATION = 3;
-    public const PREF_CRM_ETAPES_UTILISATEUR = 4;
-    public const PREF_CRM_ETAPES_ENTREPRISE = 5;
+    public const PREF_CRM_ETAPES_UTILISATEUR = 2;
+    public const PREF_CRM_ETAPES_ENTREPRISE = 3;
+    public const PREF_CRM_ETAPES_DATE_CREATION = 4;
+    public const PREF_CRM_ETAPES_DATE_MODIFICATION = 5;
     public const TAB_CRM_ETAPES = [
         'Id' => self::PREF_CRM_ETAPES_ID,
         'Nom' => self::PREF_CRM_ETAPES_NOM,
-        'Date de création' => self::PREF_CRM_ETAPES_DATE_CREATION,
-        'Date de modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION,
         'Utilisateur' => self::PREF_CRM_ETAPES_UTILISATEUR,
-        'Entreprise' => self::PREF_CRM_ETAPES_ENTREPRISE
+        'Entreprise' => self::PREF_CRM_ETAPES_ENTREPRISE,
+        'Date de création' => self::PREF_CRM_ETAPES_DATE_CREATION,
+        'Date de modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION
     ];
+    //CRM - PISTE
+    public const PREF_CRM_PISTE_ID = 0;
+    public const PREF_CRM_PISTE_NOM = 1;
+    public const PREF_CRM_PISTE_CONTACT = 2;
+    public const PREF_CRM_PISTE_OBJECTIF = 3;
+    public const PREF_CRM_PISTE_MONTANT = 4;
+    public const PREF_CRM_PISTE_ETAPE = 5;
+    public const PREF_CRM_PISTE_DATE_EXPIRATION = 6;
+    public const PREF_CRM_PISTE_ACTIONS = 7;
+    public const PREF_CRM_PISTE_COTATION = 8;
+    public const PREF_CRM_PISTE_UTILISATEUR = 9;
+    public const PREF_CRM_PISTE_ENTREPRISE = 10;
+    public const PREF_CRM_PISTE_DATE_DE_CREATION = 11;
+    public const PREF_CRM_PISTE_DATE_DE_MODIFICATION = 12;
+    public const TAB_CRM_PISTE = [
+        'Id' => self::PREF_CRM_PISTE_ID,
+    public const PREF_CRM_PISTE_NOM = 1;
+    public const PREF_CRM_PISTE_CONTACT = 2;
+    public const PREF_CRM_PISTE_OBJECTIF = 3;
+    public const PREF_CRM_PISTE_MONTANT = 4;
+    public const PREF_CRM_PISTE_ETAPE = 5;
+    public const PREF_CRM_PISTE_DATE_EXPIRATION = 6;
+    public const PREF_CRM_PISTE_ACTIONS = 7;
+    public const PREF_CRM_PISTE_COTATION = 8;
+    public const PREF_CRM_PISTE_UTILISATEUR = 9;
+    public const PREF_CRM_PISTE_ENTREPRISE = 10;
+    public const PREF_CRM_PISTE_DATE_DE_CREATION = 11;
+    public const PREF_CRM_PISTE_DATE_DE_MODIFICATION = 12;
+    ];
+    
+
+
+    
+
+
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+
 
 
     public const PREF_APPARENCE_CLAIRE = 0;

@@ -44,7 +44,7 @@ class PreferenceCrudController extends AbstractCrudController
         "Utilisateur" => self::PREF_CRM_MISSION_UTILISATEUR,
         "Entreprise" => self::PREF_CRM_MISSION_ENTREPRISE,
         "Date de création" => self::PREF_CRM_MISSION_CREATED_AT,
-        "Date de modification" => self::PREF_CRM_MISSION_UPDATED_AT 
+        "Date de modification" => self::PREF_CRM_MISSION_UPDATED_AT
     ];
 
     //CRM - FEEDBACK
@@ -68,6 +68,48 @@ class PreferenceCrudController extends AbstractCrudController
         "Date de création" => self::PREF_CRM_FEEDBACK_DATE_CREATION,
         "Date de modification" => self::PREF_CRM_FEEDBACK_DATE_MODIFICATION
     ];
+    //CRM - COTATION
+    public const PREF_CRM_COTATION_ID = 0;
+    public const PREF_CRM_COTATION_NOM = 1;
+    public const PREF_CRM_COTATION_ASSUREUR = 2;
+    public const PREF_CRM_COTATION_MONNAIE = 3;
+    public const PREF_CRM_COTATION_PRIME_TOTALE = 4;
+    public const PREF_CRM_COTATION_RISQUE = 5;
+    public const PREF_CRM_COTATION_PISTE = 6;
+    public const PREF_CRM_COTATION_PIECES = 7;
+    public const PREF_CRM_COTATION_DATE_CREATION = 8;
+    public const PREF_CRM_COTATION_DATE_MODIFICATION = 9;
+    public const PREF_CRM_COTATION_DATE_UTILISATEUR = 10;
+    public const PREF_CRM_COTATION_DATE_ENTREPRISE = 11;
+    public const TAB_CRM_COTATIONS = [
+        'Id' => self::PREF_CRM_COTATION_ID,
+        'Nom' => self::PREF_CRM_COTATION_NOM,
+        'Assureur' => self::PREF_CRM_COTATION_ASSUREUR,
+        'Monnaie' => self::PREF_CRM_COTATION_MONNAIE,
+        'Prime totale' => self::PREF_CRM_COTATION_PRIME_TOTALE,
+        'Risque' => self::PREF_CRM_COTATION_RISQUE,
+        'Piste' => self::PREF_CRM_COTATION_PISTE,
+        'Pièces' => self::PREF_CRM_COTATION_PIECES,
+        'Date de création' => self::PREF_CRM_COTATION_DATE_CREATION,
+        'Date de modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION,
+        'Utilisateur' => self::PREF_CRM_COTATION_DATE_UTILISATEUR,
+        'Entreprise' => self::PREF_CRM_COTATION_DATE_ENTREPRISE
+    ];
+    //CRM - ETAPES
+    public const PREF_CRM_ETAPES_ID = 0;
+    public const PREF_CRM_ETAPES_NOM = 1;
+    public const PREF_CRM_ETAPES_DATE_CREATION = 2;
+    public const PREF_CRM_ETAPES_DATE_MODIFICATION = 3;
+    public const PREF_CRM_ETAPES_UTILISATEUR = 4;
+    public const PREF_CRM_ETAPES_ENTREPRISE = 5;
+    public const TAB_CRM_ETAPES = [
+        'Id' => self::PREF_CRM_ETAPES_ID,
+        'Nom' => self::PREF_CRM_ETAPES_NOM,
+        'Date de création' => self::PREF_CRM_ETAPES_DATE_CREATION,
+        'Date de modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION,
+        'Utilisateur' => self::PREF_CRM_ETAPES_UTILISATEUR,
+        'Entreprise' => self::PREF_CRM_ETAPES_ENTREPRISE
+    ];
 
 
     public const PREF_APPARENCE_CLAIRE = 0;
@@ -85,7 +127,7 @@ class PreferenceCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise
     ) {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
-        
+
     }
 
     public static function getEntityFqcn(): string
@@ -157,25 +199,35 @@ class PreferenceCrudController extends AbstractCrudController
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 }),
             AssociationField::new('entreprise', self::PREF_ENTREPRISE)->onlyOnDetail(),
-            DateTimeField::new('createdAt', "Date de création")->onlyOnDetail(),//->setColumns(2),
-            DateTimeField::new('updatedAt', "Date de modification")->onlyOnDetail(),//->setColumns(2),
+            DateTimeField::new('createdAt', "Date de création")->onlyOnDetail(), //->setColumns(2),
+            DateTimeField::new('updatedAt', "Date de modification")->onlyOnDetail(), //->setColumns(2),
 
 
             //Onglet 02 - CRM
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
-            
-            NumberField::new('crmTaille', "Eléments par page")->setColumns(3),
-            ChoiceField::new('crmMissions', "Mission")
-                //->onlyOnForms()
+            NumberField::new('crmTaille', "Eléments par page"),//->setColumns(3),
+            ChoiceField::new('crmMissions', "Attributs Mission")
+                ->setColumns(3)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_MISSION),
-            ChoiceField::new('crmFeedbacks', "Feedback")
+            ChoiceField::new('crmFeedbacks', "Attributs Feedback")
+                ->setColumns(3)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_FEEDBACK),
+            ChoiceField::new('crmCotations', "Attributs Cotations")
+                ->setColumns(3)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_COTATIONS),
+            ChoiceField::new('crmEtapes', "Attributs Etapes")
+                ->setColumns(3)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_ETAPES),
         ];
     }
 
@@ -196,7 +248,6 @@ class PreferenceCrudController extends AbstractCrudController
 
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::INDEX)
-            ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE)
-        ;
+            ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE);
     }
 }

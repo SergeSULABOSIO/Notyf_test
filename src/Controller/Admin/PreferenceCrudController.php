@@ -126,39 +126,20 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_DATE_DE_MODIFICATION = 12;
     public const TAB_CRM_PISTE = [
         'Id' => self::PREF_CRM_PISTE_ID,
-    public const PREF_CRM_PISTE_NOM = 1;
-    public const PREF_CRM_PISTE_CONTACT = 2;
-    public const PREF_CRM_PISTE_OBJECTIF = 3;
-    public const PREF_CRM_PISTE_MONTANT = 4;
-    public const PREF_CRM_PISTE_ETAPE = 5;
-    public const PREF_CRM_PISTE_DATE_EXPIRATION = 6;
-    public const PREF_CRM_PISTE_ACTIONS = 7;
-    public const PREF_CRM_PISTE_COTATION = 8;
-    public const PREF_CRM_PISTE_UTILISATEUR = 9;
-    public const PREF_CRM_PISTE_ENTREPRISE = 10;
-    public const PREF_CRM_PISTE_DATE_DE_CREATION = 11;
-    public const PREF_CRM_PISTE_DATE_DE_MODIFICATION = 12;
+        'Nom' => self::PREF_CRM_PISTE_NOM,
+        'Contact' => self::PREF_CRM_PISTE_CONTACT,
+        'Objectif' => self::PREF_CRM_PISTE_OBJECTIF,
+        'Montant' => self::PREF_CRM_PISTE_MONTANT,
+        'Etape' => self::PREF_CRM_PISTE_ETAPE,
+        'Echéance' => self::PREF_CRM_PISTE_DATE_EXPIRATION,
+        'Actions' => self::PREF_CRM_PISTE_ACTIONS,
+        'Cotactions' => self::PREF_CRM_PISTE_COTATION,
+        'Utilisateur' => self::PREF_CRM_PISTE_UTILISATEUR,
+        'Entreprise' => self::PREF_CRM_PISTE_ENTREPRISE,
+        'Date de création' => self::PREF_CRM_PISTE_DATE_DE_CREATION,
+        'Date de modification' => self::PREF_CRM_PISTE_DATE_DE_MODIFICATION
     ];
     
-
-
-    
-
-
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
-
-
 
 
     public const PREF_APPARENCE_CLAIRE = 0;
@@ -256,27 +237,32 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
-            NumberField::new('crmTaille', "Eléments par page"),//->setColumns(3),
+            NumberField::new('crmTaille', "Eléments par page")->setColumns(2),//->setColumns(3),
             ChoiceField::new('crmMissions', "Attributs Mission")
-                ->setColumns(3)
+                ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_MISSION),
             ChoiceField::new('crmFeedbacks', "Attributs Feedback")
-                ->setColumns(3)
+                ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_FEEDBACK),
             ChoiceField::new('crmCotations', "Attributs Cotations")
-                ->setColumns(3)
+                ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_COTATIONS),
             ChoiceField::new('crmEtapes', "Attributs Etapes")
-                ->setColumns(3)
+                ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_ETAPES),
+            ChoiceField::new('crmPistes', "Attributs Piste")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_PISTE),
         ];
     }
 

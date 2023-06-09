@@ -44,7 +44,7 @@ class PreferenceCrudController extends AbstractCrudController
         "Utilisateur" => self::PREF_CRM_MISSION_UTILISATEUR,
         "Entreprise" => self::PREF_CRM_MISSION_ENTREPRISE,
         "Date de création" => self::PREF_CRM_MISSION_CREATED_AT,
-        "Date de modification" => self::PREF_CRM_MISSION_UPDATED_AT
+        "Dernière modification" => self::PREF_CRM_MISSION_UPDATED_AT
     ];
 
     //CRM - FEEDBACK
@@ -66,7 +66,7 @@ class PreferenceCrudController extends AbstractCrudController
         "Utilisateur" => self::PREF_CRM_FEEDBACK_UTILISATEUR,
         "Entreprise" => self::PREF_CRM_FEEDBACK_ENTREPRISE,
         "Date de création" => self::PREF_CRM_FEEDBACK_DATE_CREATION,
-        "Date de modification" => self::PREF_CRM_FEEDBACK_DATE_MODIFICATION
+        "Dernière modification" => self::PREF_CRM_FEEDBACK_DATE_MODIFICATION
     ];
     //CRM - COTATION
     public const PREF_CRM_COTATION_ID = 0;
@@ -93,7 +93,7 @@ class PreferenceCrudController extends AbstractCrudController
         'Utilisateur' => self::PREF_CRM_COTATION_DATE_UTILISATEUR,
         'Entreprise' => self::PREF_CRM_COTATION_DATE_ENTREPRISE,
         'Date de création' => self::PREF_CRM_COTATION_DATE_CREATION,
-        'Date de modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION
+        'Dernière modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID = 0;
@@ -108,7 +108,7 @@ class PreferenceCrudController extends AbstractCrudController
         'Utilisateur' => self::PREF_CRM_ETAPES_UTILISATEUR,
         'Entreprise' => self::PREF_CRM_ETAPES_ENTREPRISE,
         'Date de création' => self::PREF_CRM_ETAPES_DATE_CREATION,
-        'Date de modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION
+        'Dernière modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION
     ];
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID = 0;
@@ -137,9 +137,9 @@ class PreferenceCrudController extends AbstractCrudController
         'Utilisateur' => self::PREF_CRM_PISTE_UTILISATEUR,
         'Entreprise' => self::PREF_CRM_PISTE_ENTREPRISE,
         'Date de création' => self::PREF_CRM_PISTE_DATE_DE_CREATION,
-        'Date de modification' => self::PREF_CRM_PISTE_DATE_DE_MODIFICATION
+        'Dernière modification' => self::PREF_CRM_PISTE_DATE_DE_MODIFICATION
     ];
-    //PRODUCTION - PISTE
+    //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID = 0;
     public const PREF_PRO_ASSUREUR_NOM = 1;
     public const PREF_PRO_ASSUREUR_ADRESSE = 2;
@@ -170,8 +170,46 @@ class PreferenceCrudController extends AbstractCrudController
         'Utilisateur' => self::PREF_PRO_ASSUREUR_UTILISATEUR,
         'Entreprise' => self::PREF_PRO_ASSUREUR_ENTREPRISE,
         'Date de création' => self::PREF_PRO_ASSUREUR_DATE_DE_CREATION,
-        'Date de modification' => self::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION
+        'Dernière modification' => self::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION
     ];
+    //PRODUCTION - ENGIN
+    public const PREF_PRO_ENGIN_ID = 0;
+    public const PREF_PRO_ENGIN_MODEL = 1;
+    public const PREF_PRO_ENGIN_MARQUE = 2;
+    public const PREF_PRO_ENGIN_ANNEE = 3;
+    public const PREF_PRO_ENGIN_PUISSANCE = 4;
+    public const PREF_PRO_ENGIN_MONNAIE = 5;
+    public const PREF_PRO_ENGIN_VALEUR = 6;
+    public const PREF_PRO_ENGIN_NB_SIEGES = 7;
+    public const PREF_PRO_ENGIN_USAGE = 8;
+    public const PREF_PRO_ENGIN_NATURE = 9;
+    public const PREF_PRO_ENGIN_N°_PLAQUE = 10;
+    public const PREF_PRO_ENGIN_N°_CHASSIS = 11;
+    public const PREF_PRO_ENGIN_POLICE = 12;
+    public const PREF_PRO_ENGIN_UTILISATEUR = 13;
+    public const PREF_PRO_ENGIN_ENTREPRISE = 14;
+    public const PREF_PRO_ENGIN_DATE_DE_CREATION = 15;
+    public const PREF_PRO_ENGIN_DATE_DE_MODIFICATION = 16;
+    public const TAB_PRO_ENGINS = [
+        'Id' => self::PREF_PRO_ENGIN_ID,
+        'Modèle' => self::PREF_PRO_ENGIN_MODEL,
+        'Marque' => self::PREF_PRO_ENGIN_MARQUE,
+        'Année' => self::PREF_PRO_ENGIN_ANNEE,
+        'Puissance' => self::PREF_PRO_ENGIN_PUISSANCE,
+        'Monnaie' => self::PREF_PRO_ENGIN_MONNAIE,
+        'Valeur' => self::PREF_PRO_ENGIN_VALEUR,
+        'Sièges' => self::PREF_PRO_ENGIN_NB_SIEGES,
+        'Usage' => self::PREF_PRO_ENGIN_USAGE,
+        'Nature' => self::PREF_PRO_ENGIN_NATURE,
+        'N° de Plaque' => self::PREF_PRO_ENGIN_N°_PLAQUE,
+        'N° de Chassis' => self::PREF_PRO_ENGIN_N°_CHASSIS,
+        'Police' => self::PREF_PRO_ENGIN_POLICE,
+        'Utilisateur' => self::PREF_PRO_ENGIN_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_ENGIN_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_ENGIN_DATE_DE_CREATION,
+        'Dernière modification' => self::PREF_PRO_ENGIN_DATE_DE_MODIFICATION
+    ];
+
 
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
@@ -305,26 +343,37 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_ASSUREURS),
+            ChoiceField::new('proAutomobiles', "Attributs Engins")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_ENGINS),
+
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')
                 ->setIcon('fas fa-sack-dollar')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section FINANCES."),
-            
+            NumberField::new('finTaille', "Eléments par page")->setColumns(2),
+
             //Onglet 05 - SINISTRE
             FormField::addTab(' SINISTRE')
                 ->setIcon('fas fa-fire')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
-            
+            NumberField::new('sinTaille', "Eléments par page")->setColumns(2),
+
             //Onglet 06 - BIBLIOTHEQUE
             FormField::addTab(' BIBLIOTHEQUE')
                 ->setIcon('fas fa-book')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section BIBLIOTHEQUE."),
-        
+            NumberField::new('bibTaille', "Eléments par page")->setColumns(2),
+
             //Onglet 07 - PARAMETRES
             FormField::addTab(' PARAMETRES')
                 ->setIcon('fas fa-gears')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
+            NumberField::new('parTaille', "Eléments par page")->setColumns(2),
         
+
         ];
     }
 

@@ -209,7 +209,7 @@ class PreferenceCrudController extends AbstractCrudController
     {
         return [
             //Onglet 01 - Généralités
-            FormField::addTab(' Généralité')
+            FormField::addTab(' GENERALITES')
                 ->setIcon('fas fa-file-shield')
                 ->setHelp("Les paramètres qui s'appliquent sur toutes les rubriques de l'espade de travail."),
 
@@ -263,6 +263,32 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_PISTE),
+
+            //Onglet 03 - PRODUCTION
+            FormField::addTab(' PRODUCTION')
+                ->setIcon('fas fa-bag-shopping')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PRODUCTION."),
+            
+            //Onglet 04 - FINANCES
+            FormField::addTab(' FINANCES')
+                ->setIcon('fas fa-sack-dollar')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section FINANCES."),
+            
+            //Onglet 05 - SINISTRE
+            FormField::addTab(' SINISTRE')
+                ->setIcon('fas fa-fire')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
+            
+            //Onglet 06 - BIBLIOTHEQUE
+            FormField::addTab(' BIBLIOTHEQUE')
+                ->setIcon('fas fa-book')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section BIBLIOTHEQUE."),
+        
+            //Onglet 07 - PARAMETRES
+            FormField::addTab(' PARAMETRES')
+                ->setIcon('fas fa-gears')
+                ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
+        
         ];
     }
 

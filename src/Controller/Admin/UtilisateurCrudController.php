@@ -151,7 +151,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations générales')
+            FormField::addPanel(' Profil')
                 ->setIcon('fas fa-user') //<i class="fa-sharp fa-solid fa-address-book"></i>
                 ->setHelp("L'utilisateur ayant un certain droit d'accès aux données et pouvant utiliser le système."),
 

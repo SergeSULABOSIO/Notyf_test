@@ -139,8 +139,39 @@ class PreferenceCrudController extends AbstractCrudController
         'Date de création' => self::PREF_CRM_PISTE_DATE_DE_CREATION,
         'Date de modification' => self::PREF_CRM_PISTE_DATE_DE_MODIFICATION
     ];
-    
-
+    //PRODUCTION - PISTE
+    public const PREF_PRO_ASSUREUR_ID = 0;
+    public const PREF_PRO_ASSUREUR_NOM = 1;
+    public const PREF_PRO_ASSUREUR_ADRESSE = 2;
+    public const PREF_PRO_ASSUREUR_TELEPHONE = 3;
+    public const PREF_PRO_ASSUREUR_EMAIL = 4;
+    public const PREF_PRO_ASSUREUR_SITE_WEB = 5;
+    public const PREF_PRO_ASSUREUR_RCCM = 6;
+    public const PREF_PRO_ASSUREUR_IDNAT = 7;
+    public const PREF_PRO_ASSUREUR_LICENCE = 8;
+    public const PREF_PRO_ASSUREUR_NUM_IMPOT = 9;
+    public const PREF_PRO_ASSUREUR_IS_REASSUREUR = 10;
+    public const PREF_PRO_ASSUREUR_UTILISATEUR = 11;
+    public const PREF_PRO_ASSUREUR_ENTREPRISE = 12;
+    public const PREF_PRO_ASSUREUR_DATE_DE_CREATION = 13;
+    public const PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION = 14;
+    public const TAB_PRO_ASSUREURS = [
+        'Id' => self::PREF_PRO_ASSUREUR_ID,
+        'Nom' => self::PREF_PRO_ASSUREUR_NOM,
+        'Adresse' => self::PREF_PRO_ASSUREUR_ADRESSE,
+        'Téléphone' => self::PREF_PRO_ASSUREUR_TELEPHONE,
+        'Email' => self::PREF_PRO_ASSUREUR_EMAIL,
+        'Site Web' => self::PREF_PRO_ASSUREUR_SITE_WEB,
+        'Rccm' => self::PREF_PRO_ASSUREUR_RCCM,
+        'IdNat' => self::PREF_PRO_ASSUREUR_IDNAT,
+        'Licence' => self::PREF_PRO_ASSUREUR_LICENCE,
+        'N° Impôt' => self::PREF_PRO_ASSUREUR_NUM_IMPOT,
+        'Réassureur?' => self::PREF_PRO_ASSUREUR_IS_REASSUREUR,
+        'Utilisateur' => self::PREF_PRO_ASSUREUR_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_ASSUREUR_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_ASSUREUR_DATE_DE_CREATION,
+        'Date de modification' => self::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION
+    ];
 
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
@@ -268,7 +299,12 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' PRODUCTION')
                 ->setIcon('fas fa-bag-shopping')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PRODUCTION."),
-            
+            NumberField::new('proTaille', "Eléments par page")->setColumns(2),
+            ChoiceField::new('proAssureurs', "Attributs Assureur")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_ASSUREURS),
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')
                 ->setIcon('fas fa-sack-dollar')

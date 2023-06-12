@@ -209,7 +209,29 @@ class PreferenceCrudController extends AbstractCrudController
         'Date de création' => self::PREF_PRO_ENGIN_DATE_DE_CREATION,
         'Dernière modification' => self::PREF_PRO_ENGIN_DATE_DE_MODIFICATION
     ];
-
+    //PRODUCTION - CONTACT
+    public const PREF_PRO_CONTACT_ID = 0;
+    public const PREF_PRO_CONTACT_NOM = 1;
+    public const PREF_PRO_CONTACT_POSTE = 2;
+    public const PREF_PRO_CONTACT_TELEPHONE = 3;
+    public const PREF_PRO_CONTACT_EMAIL = 4;
+    public const PREF_PRO_CONTACT_CLIENT = 5;
+    public const PREF_PRO_CONTACT_UTILISATEUR = 6;
+    public const PREF_PRO_CONTACT_ENTREPRISE = 7;
+    public const PREF_PRO_CONTACT_DATE_DE_CREATION = 8;
+    public const PREF_PRO_CONTACT_DATE_DE_MODIFICATION = 9;
+    public const TAB_PRO_CONTACTS = [
+        'Id' => self::PREF_PRO_CONTACT_ID,
+        'Nom' => self::PREF_PRO_CONTACT_NOM,
+        'Poste' => self::PREF_PRO_CONTACT_POSTE,
+        'Téléphone' => self::PREF_PRO_CONTACT_TELEPHONE,
+        'Email' => self::PREF_PRO_CONTACT_EMAIL,
+        'Client' => self::PREF_PRO_CONTACT_CLIENT,
+        'Utilisateur' => self::PREF_PRO_CONTACT_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_CONTACT_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_CONTACT_DATE_DE_CREATION ,
+        'Dernière modification' => self::PREF_PRO_CONTACT_DATE_DE_MODIFICATION
+    ];
 
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
@@ -348,6 +370,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_ENGINS),
+            ChoiceField::new('proContacts', "Attributs Contact")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_CONTACTS),
 
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')

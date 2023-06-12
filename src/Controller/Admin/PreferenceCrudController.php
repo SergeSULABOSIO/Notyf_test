@@ -229,9 +229,72 @@ class PreferenceCrudController extends AbstractCrudController
         'Client' => self::PREF_PRO_CONTACT_CLIENT,
         'Utilisateur' => self::PREF_PRO_CONTACT_UTILISATEUR,
         'Entreprise' => self::PREF_PRO_CONTACT_ENTREPRISE,
-        'Date de création' => self::PREF_PRO_CONTACT_DATE_DE_CREATION ,
+        'Date de création' => self::PREF_PRO_CONTACT_DATE_DE_CREATION,
         'Dernière modification' => self::PREF_PRO_CONTACT_DATE_DE_MODIFICATION
     ];
+    //PRODUCTION - CLIENT
+    public const PREF_PRO_CLIENT_ID = 0;
+    public const PREF_PRO_CLIENT_NOM = 1;
+    public const PREF_PRO_CLIENT_PERSONNE_MORALE = 2;
+    public const PREF_PRO_CLIENT_ADRESSE = 3;
+    public const PREF_PRO_CLIENT_TELEPHONE = 4;
+    public const PREF_PRO_CLIENT_EMAIL = 5;
+    public const PREF_PRO_CLIENT_SITEWEB = 6;
+    public const PREF_PRO_CLIENT_RCCM = 7;
+    public const PREF_PRO_CLIENT_IDNAT = 8;
+    public const PREF_PRO_CLIENT_NUM_IMPOT = 9;
+    public const PREF_PRO_CLIENT_SECTEUR = 10;
+    public const PREF_PRO_CLIENT_UTILISATEUR = 11;
+    public const PREF_PRO_CLIENT_ENTREPRISE = 12;
+    public const PREF_PRO_CLIENT_DATE_DE_CREATION = 13;
+    public const PREF_PRO_CLIENT_DATE_DE_MODIFICATION = 14;
+    public const TAB_PRO_CLIENTS = [
+        'Id' => self::PREF_PRO_CLIENT_ID,
+        'Nom' => self::PREF_PRO_CLIENT_NOM,
+        'Societé (O/N)?' => self::PREF_PRO_CLIENT_PERSONNE_MORALE,
+        'Adresse' => self::PREF_PRO_CLIENT_ADRESSE,
+        'Téléphone' => self::PREF_PRO_CLIENT_TELEPHONE,
+        'Email' => self::PREF_PRO_CLIENT_EMAIL,
+        'Site Web' => self::PREF_PRO_CLIENT_SITEWEB,
+        'Rccm' => self::PREF_PRO_CLIENT_RCCM,
+        'Id.Nat' => self::PREF_PRO_CLIENT_IDNAT,
+        'Num.Impôt' => self::PREF_PRO_CLIENT_NUM_IMPOT,
+        'Secteur' => self::PREF_PRO_CLIENT_SECTEUR,
+        'Utilisateur' => self::PREF_PRO_CLIENT_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_CLIENT_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_CLIENT_DATE_DE_CREATION,
+        'Dernière modification' => self::PREF_PRO_CLIENT_DATE_DE_MODIFICATION
+    ];
+    //PRODUCTION - PARTENAIRE
+    public const PREF_PRO_PARTENAIRE_ID = 0;
+    public const PREF_PRO_PARTENAIRE_NOM = 1;
+    public const PREF_PRO_PARTENAIRE_PART = 2;
+    public const PREF_PRO_PARTENAIRE_ADRESSE = 3;
+    public const PREF_PRO_PARTENAIRE_EMAIL = 4;
+    public const PREF_PRO_PARTENAIRE_SITEWEB = 5;
+    public const PREF_PRO_PARTENAIRE_RCCM = 6;
+    public const PREF_PRO_PARTENAIRE_IDNAT = 7;
+    public const PREF_PRO_PARTENAIRE_NUM_IMPOT = 8;
+    public const PREF_PRO_PARTENAIRE_UTILISATEUR = 9;
+    public const PREF_PRO_PARTENAIRE_ENTREPRISE = 10;
+    public const PREF_PRO_PARTENAIRE_DATE_DE_CREATION = 11;
+    public const PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION = 12;
+    public const TAB_PRO_PARTENAIRES = [
+        'Id' => self::PREF_PRO_PARTENAIRE_ID,
+        'Nom' => self::PREF_PRO_PARTENAIRE_NOM,
+        'Part (%)' => self::PREF_PRO_PARTENAIRE_PART,
+        'Adresse' => self::PREF_PRO_PARTENAIRE_ADRESSE,
+        'Email' => self::PREF_PRO_PARTENAIRE_EMAIL,
+        'Site Web' => self::PREF_PRO_PARTENAIRE_SITEWEB,
+        'Rccm' => self::PREF_PRO_PARTENAIRE_RCCM,
+        'Id.Nat' => self::PREF_PRO_PARTENAIRE_IDNAT,
+        'Num.Impôt' => self::PREF_PRO_PARTENAIRE_NUM_IMPOT,
+        'Utilisateur' => self::PREF_PRO_PARTENAIRE_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_PARTENAIRE_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_PARTENAIRE_DATE_DE_CREATION,
+        'Dernière modification' => self::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION
+    ];
+
 
     public const PREF_APPARENCE_CLAIRE = 0;
     public const PREF_APPARENCE_SOMBRE = 1;
@@ -328,7 +391,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
-            NumberField::new('crmTaille', "Eléments par page")->setColumns(2),//->setColumns(3),
+            NumberField::new('crmTaille', "Eléments par page")->setColumns(2), //->setColumns(3),
             ChoiceField::new('crmMissions', "Attributs Mission")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -375,6 +438,16 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_CONTACTS),
+            ChoiceField::new('proClients', "Attributs Clients")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_CLIENTS),
+            ChoiceField::new('proPartenaires', "Attributs Partenaires")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_PARTENAIRES),
 
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')
@@ -399,7 +472,7 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setIcon('fas fa-gears')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
             NumberField::new('parTaille', "Eléments par page")->setColumns(2),
-        
+
 
         ];
     }

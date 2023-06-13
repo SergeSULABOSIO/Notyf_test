@@ -337,47 +337,47 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_DATE_DE_CREATION = 39;
     public const PREF_PRO_POLICE_DATE_DE_MODIFICATION = 40;
     public const TAB_PRO_POLICES = [
-        'Id' => self::PREF_PRO_POLICE_ID = 0;
-        'Id' => self::PREF_PRO_POLICE_REFERENCE = 1;
-        'Id' => self::PREF_PRO_POLICE_DATE_OPERATION = 2;
-        'Id' => self::PREF_PRO_POLICE_DATE_EMISSION = 3;
-        'Id' => self::PREF_PRO_POLICE_DATE_EFFET = 4;
-        'Id' => self::PREF_PRO_POLICE_DATE_EXPIRATION = 5;
-        'Id' => self::PREF_PRO_POLICE_ID_AVENANT = 6;
-        'Id' => self::PREF_PRO_POLICE_TYPE_AVENANT = 7;
-        'Id' => self::PREF_PRO_POLICE_CAPITAL = 8;
-        'Id' => self::PREF_PRO_POLICE_PRIME_NETTE = 9;
-        'Id' => self::PREF_PRO_POLICE_FRONTING = 10;
-        'Id' => self::PREF_PRO_POLICE_ARCA = 11;
-        'Id' => self::PREF_PRO_POLICE_TVA = 12;
-        'Id' => self::PREF_PRO_POLICE_FRAIS_ADMIN = 13;
-        'Id' => self::PREF_PRO_POLICE_PRIME_TOTALE = 14;
-        'Id' => self::PREF_PRO_POLICE_DISCOUNT = 15;
-        'Id' => self::PREF_PRO_POLICE_MODE_PAIEMENT = 16;
-        'Id' => self::PREF_PRO_POLICE_RI_COM = 17;
-        'Id' => self::PREF_PRO_POLICE_LOCAL_COM = 18;
-        'Id' => self::PREF_PRO_POLICE_FRONTIN_COM = 19;
-        'Id' => self::PREF_PRO_POLICE_REMARQUE = 20;
-        'Id' => self::PREF_PRO_POLICE_MONNAIE = 21;
-        'Id' => self::PREF_PRO_POLICE_CLIENT = 22;
-        'Id' => self::PREF_PRO_POLICE_PRODUIT = 23;
-        'Id' => self::PREF_PRO_POLICE_PARTENAIRE = 24;
-        'Id' => self::PREF_PRO_POLICE_PART_EXCEPTIONNELLE = 25;
-        'Id' => self::PREF_PRO_POLICE_REASSUREURS = 26;
-        'Id' => self::PREF_PRO_POLICE_ASSUREURS = 27;
-        'Id' => self::PREF_PRO_POLICE_PISTE = 28;
-        'Id' => self::PREF_PRO_POLICE_GESTIONNAIRE = 29;
-        'Id' => self::PREF_PRO_POLICE_CANHSARE_RI_COM = 30;
-    public const PREF_PRO_POLICE_CANHSARE_LOCAL_COM = 31;
-    public const PREF_PRO_POLICE_CANHSARE_FRONTING_COM = 32;
-    public const PREF_PRO_POLICE_RI_COM_PAYABLE_BY = 33;
-    public const PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY = 34;
-    public const PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY = 35;
-    public const PREF_PRO_POLICE_PIECES = 36;
-    public const PREF_PRO_POLICE_UTILISATEUR = 37;
-    public const PREF_PRO_POLICE_ENTREPRISE = 38;
-    public const PREF_PRO_POLICE_DATE_DE_CREATION = 39;
-    public const PREF_PRO_POLICE_DATE_DE_MODIFICATION = 40;
+        'Id' => self::PREF_PRO_POLICE_ID,
+        'Référence' => self::PREF_PRO_POLICE_REFERENCE,
+        "Date de l'opération" => self::PREF_PRO_POLICE_DATE_OPERATION,
+        "Date d'émission" => self::PREF_PRO_POLICE_DATE_EMISSION,
+        "Date d'effet" => self::PREF_PRO_POLICE_DATE_EFFET,
+        "Date d'expiration" => self::PREF_PRO_POLICE_DATE_EXPIRATION,
+        "Avenant" => self::PREF_PRO_POLICE_ID_AVENANT,
+        "Type d'avenant" => self::PREF_PRO_POLICE_TYPE_AVENANT,
+        'Capital' => self::PREF_PRO_POLICE_CAPITAL,
+        'Prime Nette' => self::PREF_PRO_POLICE_PRIME_NETTE,
+        'Fronting' => self::PREF_PRO_POLICE_FRONTING,
+        'Arca' => self::PREF_PRO_POLICE_ARCA,
+        'Tva' => self::PREF_PRO_POLICE_TVA,
+        'Accessoires' => self::PREF_PRO_POLICE_FRAIS_ADMIN,
+        'Prime totale' => self::PREF_PRO_POLICE_PRIME_TOTALE,
+        'Remise' => self::PREF_PRO_POLICE_DISCOUNT,
+        'Mode de paiement' => self::PREF_PRO_POLICE_MODE_PAIEMENT,
+        'Comm. de réassurance' => self::PREF_PRO_POLICE_RI_COM,
+        'Comm. locale' => self::PREF_PRO_POLICE_LOCAL_COM,
+        'Comm. sur Fronting' => self::PREF_PRO_POLICE_FRONTIN_COM,
+        'Remarques' => self::PREF_PRO_POLICE_REMARQUE,
+        'Monnaie' => self::PREF_PRO_POLICE_MONNAIE,
+        'Client' => self::PREF_PRO_POLICE_CLIENT,
+        'Produit' => self::PREF_PRO_POLICE_PRODUIT,
+        'Partenaire' => self::PREF_PRO_POLICE_PARTENAIRE,
+        'Part exceptionnelle' => self::PREF_PRO_POLICE_PART_EXCEPTIONNELLE,
+        'Réassureurs' => self::PREF_PRO_POLICE_REASSUREURS,
+        'Assureur' => self::PREF_PRO_POLICE_ASSUREURS,
+        'Piste' => self::PREF_PRO_POLICE_PISTE,
+        'Gestionnaire' => self::PREF_PRO_POLICE_GESTIONNAIRE,
+        'Partager Com. de réass.?' => self::PREF_PRO_POLICE_CANHSARE_RI_COM,
+        'Partager Com. locale?' => self::PREF_PRO_POLICE_CANHSARE_LOCAL_COM,
+        'Partager Com. sur Front.?' => self::PREF_PRO_POLICE_CANHSARE_FRONTING_COM,
+        'Com. de réass. dûe par' => self::PREF_PRO_POLICE_RI_COM_PAYABLE_BY,
+        'Com. sur Front. dûe par' => self::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY,
+        'Com. locale dûe par' => self::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY,
+        'Pièces/Documents' => self::PREF_PRO_POLICE_PIECES,
+        'Utilisateur' => self::PREF_PRO_POLICE_UTILISATEUR,
+        'Entreprise' => self::PREF_PRO_POLICE_ENTREPRISE,
+        'Date de création' => self::PREF_PRO_POLICE_DATE_DE_CREATION,
+        'Dernière modification' => self::PREF_PRO_POLICE_DATE_DE_MODIFICATION
     ];
     
 
@@ -534,6 +534,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_PARTENAIRES),
+            ChoiceField::new('proPolices', "Attributs Polices")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_POLICES),
 
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')

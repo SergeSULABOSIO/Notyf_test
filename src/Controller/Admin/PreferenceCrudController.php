@@ -294,8 +294,72 @@ class PreferenceCrudController extends AbstractCrudController
         'Date de création' => self::PREF_PRO_PARTENAIRE_DATE_DE_CREATION,
         'Dernière modification' => self::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION
     ];
-    //PRODUCTION - PARTENAIRE
-    //public const PREF_PRO_PARTENAIRE_ID = 0;
+    //PRODUCTION - POLICE
+    public const PREF_PRO_POLICE_ID = 0;
+    public const PREF_PRO_POLICE_REFERENCE = 1;
+    public const PREF_PRO_POLICE_DATE_OPERATION = 2;
+    public const PREF_PRO_POLICE_DATE_EMISSION = 3;
+    public const PREF_PRO_POLICE_DATE_EFFET = 4;
+    public const PREF_PRO_POLICE_DATE_EXPIRATION = 5;
+    public const PREF_PRO_POLICE_ID_AVENANT = 6;
+    public const PREF_PRO_POLICE_TYPE_AVENANT = 7;
+    public const PREF_PRO_POLICE_CAPITAL = 8;
+    public const PREF_PRO_POLICE_PRIME_NETTE = 9;
+    public const PREF_PRO_POLICE_FRONTING = 10;
+    public const PREF_PRO_POLICE_ARCA = 11;
+    public const PREF_PRO_POLICE_TVA = 12;
+    public const PREF_PRO_POLICE_FRAIS_ADMIN = 13;
+    public const PREF_PRO_POLICE_PRIME_TOTALE = 14;
+    public const PREF_PRO_POLICE_DISCOUNT = 15;
+    public const PREF_PRO_POLICE_MODE_PAIEMENT = 16;
+    public const PREF_PRO_POLICE_RI_COM = 17;
+    public const PREF_PRO_POLICE_LOCAL_COM = 18;
+    public const PREF_PRO_POLICE_FRONTIN_COM = 19;
+    public const PREF_PRO_POLICE_REMARQUE = 20;
+    public const PREF_PRO_POLICE_MONNAIE = 21;
+    public const PREF_PRO_POLICE_CLIENT = 22;
+    public const PREF_PRO_POLICE_PRODUIT = 23;
+    public const PREF_PRO_POLICE_PARTENAIRE = 24;
+    public const PREF_PRO_POLICE_PART_EXCEPTIONNELLE = 24;
+    public const PREF_PRO_POLICE_REASSUREURS = 25;
+    public const PREF_PRO_POLICE_ASSUREURS = 26;
+    public const PREF_PRO_POLICE_PISTE = 27;
+    public const PREF_PRO_POLICE_GESTIONNAIRE = 28;
+    public const PREF_PRO_POLICE_CANHSARE_RI_COM = 29;
+    public const PREF_PRO_POLICE_CANHSARE_LOCAL_COM = 29;
+    public const PREF_PRO_POLICE_CANHSARE_FRONTING_COM = 29;
+
+    
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+
+
+    #[ORM\Column(length: 255)]
+    private ?string $ricompayableby = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $localcompayableby = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $frontingcompayableby = null;
+
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
+    private Collection $pieces;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
 
 
     public const PREF_APPARENCE_CLAIRE = 0;

@@ -165,7 +165,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ,
             
             //Ligne 05
-            AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms()
+            /* AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -176,7 +176,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ,
             CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
-
+ */
             
 
             //Ligne 06

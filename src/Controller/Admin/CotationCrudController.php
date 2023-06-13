@@ -166,8 +166,10 @@ class CotationCrudController extends AbstractCrudController
             ,
             CollectionField::new('assureur', "Assureur")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('assureur', "Assureur")->setColumns(6)->onlyOnDetail(),
-            //AssociationField::new('pieces', "Documents")->setColumns(6),
-            AssociationField::new('pieces', "Documents")->setColumns(6)->onlyOnForms()
+            
+            
+
+            /* AssociationField::new('pieces', "Documents")->setColumns(6)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -177,7 +179,7 @@ class CotationCrudController extends AbstractCrudController
             })
             ,
             CollectionField::new('pieces', "Documents")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('pieces', "Documents")->setColumns(6)->onlyOnDetail(),
+            ArrayField::new('pieces', "Documents")->setColumns(6)->onlyOnDetail(), */
 
             //Ligne 05
             //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),

@@ -320,46 +320,66 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_CLIENT = 22;
     public const PREF_PRO_POLICE_PRODUIT = 23;
     public const PREF_PRO_POLICE_PARTENAIRE = 24;
-    public const PREF_PRO_POLICE_PART_EXCEPTIONNELLE = 24;
-    public const PREF_PRO_POLICE_REASSUREURS = 25;
-    public const PREF_PRO_POLICE_ASSUREURS = 26;
-    public const PREF_PRO_POLICE_PISTE = 27;
-    public const PREF_PRO_POLICE_GESTIONNAIRE = 28;
-    public const PREF_PRO_POLICE_CANHSARE_RI_COM = 29;
-    public const PREF_PRO_POLICE_CANHSARE_LOCAL_COM = 29;
-    public const PREF_PRO_POLICE_CANHSARE_FRONTING_COM = 29;
-
+    public const PREF_PRO_POLICE_PART_EXCEPTIONNELLE = 25;
+    public const PREF_PRO_POLICE_REASSUREURS = 26;
+    public const PREF_PRO_POLICE_ASSUREURS = 27;
+    public const PREF_PRO_POLICE_PISTE = 28;
+    public const PREF_PRO_POLICE_GESTIONNAIRE = 29;
+    public const PREF_PRO_POLICE_CANHSARE_RI_COM = 30;
+    public const PREF_PRO_POLICE_CANHSARE_LOCAL_COM = 31;
+    public const PREF_PRO_POLICE_CANHSARE_FRONTING_COM = 32;
+    public const PREF_PRO_POLICE_RI_COM_PAYABLE_BY = 33;
+    public const PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY = 34;
+    public const PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY = 35;
+    public const PREF_PRO_POLICE_PIECES = 36;
+    public const PREF_PRO_POLICE_UTILISATEUR = 37;
+    public const PREF_PRO_POLICE_ENTREPRISE = 38;
+    public const PREF_PRO_POLICE_DATE_DE_CREATION = 39;
+    public const PREF_PRO_POLICE_DATE_DE_MODIFICATION = 40;
+    public const TAB_PRO_POLICES = [
+        'Id' => self::PREF_PRO_POLICE_ID = 0;
+        'Id' => self::PREF_PRO_POLICE_REFERENCE = 1;
+        'Id' => self::PREF_PRO_POLICE_DATE_OPERATION = 2;
+        'Id' => self::PREF_PRO_POLICE_DATE_EMISSION = 3;
+        'Id' => self::PREF_PRO_POLICE_DATE_EFFET = 4;
+        'Id' => self::PREF_PRO_POLICE_DATE_EXPIRATION = 5;
+        'Id' => self::PREF_PRO_POLICE_ID_AVENANT = 6;
+        'Id' => self::PREF_PRO_POLICE_TYPE_AVENANT = 7;
+        'Id' => self::PREF_PRO_POLICE_CAPITAL = 8;
+        'Id' => self::PREF_PRO_POLICE_PRIME_NETTE = 9;
+        'Id' => self::PREF_PRO_POLICE_FRONTING = 10;
+        'Id' => self::PREF_PRO_POLICE_ARCA = 11;
+        'Id' => self::PREF_PRO_POLICE_TVA = 12;
+        'Id' => self::PREF_PRO_POLICE_FRAIS_ADMIN = 13;
+        'Id' => self::PREF_PRO_POLICE_PRIME_TOTALE = 14;
+        'Id' => self::PREF_PRO_POLICE_DISCOUNT = 15;
+        'Id' => self::PREF_PRO_POLICE_MODE_PAIEMENT = 16;
+        'Id' => self::PREF_PRO_POLICE_RI_COM = 17;
+        'Id' => self::PREF_PRO_POLICE_LOCAL_COM = 18;
+        'Id' => self::PREF_PRO_POLICE_FRONTIN_COM = 19;
+        'Id' => self::PREF_PRO_POLICE_REMARQUE = 20;
+        'Id' => self::PREF_PRO_POLICE_MONNAIE = 21;
+        'Id' => self::PREF_PRO_POLICE_CLIENT = 22;
+        'Id' => self::PREF_PRO_POLICE_PRODUIT = 23;
+        'Id' => self::PREF_PRO_POLICE_PARTENAIRE = 24;
+        'Id' => self::PREF_PRO_POLICE_PART_EXCEPTIONNELLE = 25;
+        'Id' => self::PREF_PRO_POLICE_REASSUREURS = 26;
+        'Id' => self::PREF_PRO_POLICE_ASSUREURS = 27;
+        'Id' => self::PREF_PRO_POLICE_PISTE = 28;
+        'Id' => self::PREF_PRO_POLICE_GESTIONNAIRE = 29;
+        'Id' => self::PREF_PRO_POLICE_CANHSARE_RI_COM = 30;
+    public const PREF_PRO_POLICE_CANHSARE_LOCAL_COM = 31;
+    public const PREF_PRO_POLICE_CANHSARE_FRONTING_COM = 32;
+    public const PREF_PRO_POLICE_RI_COM_PAYABLE_BY = 33;
+    public const PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY = 34;
+    public const PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY = 35;
+    public const PREF_PRO_POLICE_PIECES = 36;
+    public const PREF_PRO_POLICE_UTILISATEUR = 37;
+    public const PREF_PRO_POLICE_ENTREPRISE = 38;
+    public const PREF_PRO_POLICE_DATE_DE_CREATION = 39;
+    public const PREF_PRO_POLICE_DATE_DE_MODIFICATION = 40;
+    ];
     
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
-
-
-
-    #[ORM\Column(length: 255)]
-    private ?string $ricompayableby = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $localcompayableby = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $frontingcompayableby = null;
-
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
-    private Collection $pieces;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-
-    #[ORM\ManyToOne]
-    private ?Utilisateur $utilisateur = null;
-
 
 
     public const PREF_APPARENCE_CLAIRE = 0;

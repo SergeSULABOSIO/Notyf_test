@@ -148,7 +148,7 @@ class PisteCrudController extends AbstractCrudController
             ArrayField::new('contact', "Contacts")->setColumns(6)->onlyOnDetail(),
 
             //Ligne 03
-            //AssociationField::new('cotations', "Cotations")->hideOnIndex()->setColumns(6),
+            /* 
             AssociationField::new('cotations', "Cotations")->setColumns(6)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -160,8 +160,8 @@ class PisteCrudController extends AbstractCrudController
             ,
             CollectionField::new('cotations', "Cotations")->setColumns(6)->onlyOnIndex(),
             ArrayField::new('cotations', "Cotations")->setColumns(6)->onlyOnDetail(),
-            //AssociationField::new('actions', "Missions")->setColumns(6),
-            AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
+             */
+            /* AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -171,7 +171,7 @@ class PisteCrudController extends AbstractCrudController
             })
             ,
             CollectionField::new('actions', "Missions")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('actions', "Missions")->setColumns(6)->onlyOnDetail(),
+            ArrayField::new('actions', "Missions")->setColumns(6)->onlyOnDetail(), */
 
             //Ligne 04
             AssociationField::new('etape', "Etape actuelle")->setColumns(6)

@@ -294,6 +294,8 @@ class PreferenceCrudController extends AbstractCrudController
         'Date de création' => self::PREF_PRO_PARTENAIRE_DATE_DE_CREATION,
         'Dernière modification' => self::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION
     ];
+    //PRODUCTION - PARTENAIRE
+    //public const PREF_PRO_PARTENAIRE_ID = 0;
 
 
     public const PREF_APPARENCE_CLAIRE = 0;

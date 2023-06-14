@@ -437,7 +437,32 @@ class PreferenceCrudController extends AbstractCrudController
         'Ac/Taxes/Assur./Solde' => self::PREF_PRO_calc_taxes_assureurs_solde
     ];
     //PRODUCTION - PRODUIT
-    public const PREF_PRO_PRODUIT_ID = 0;
+    public const PREF_PRO_PRODUIT_ID = "Id";
+    public const PREF_PRO_PRODUIT_CODE = "Code";
+    public const PREF_PRO_PRODUIT_NOM = "Nom";
+    public const PREF_PRO_PRODUIT_DESCRIPTION = "Description";
+    public const PREF_PRO_PRODUIT_TAUX_COMMISSION = "Taux/Comm.";
+    public const PREF_PRO_PRODUIT_OBJIGATOIRE = "Obligatoire";
+    public const PREF_PRO_PRODUIT_ABONNEMENT = "Abonnement";
+    public const PREF_PRO_PRODUIT_CATEGORIE = "Catégorie";
+    public const PREF_PRO_PRODUIT_UTILISATEUR = "Utilisateur";
+    public const PREF_PRO_PRODUIT_ENTREPRISE = "Entreprise";
+    public const PREF_PRO_PRODUIT_DATE_DE_CREATION = "Date de création";
+    public const PREF_PRO_PRODUIT_DATE_DE_MODIFICATION = "Dernière modification";
+    public const TAB_PRO_PRODUITS = [
+        self::PREF_PRO_PRODUIT_ID                   => 0,
+        self::PREF_PRO_PRODUIT_CODE                 => 1,
+        self::PREF_PRO_PRODUIT_NOM                  => 2,
+        self::PREF_PRO_PRODUIT_DESCRIPTION          => 3,
+        self::PREF_PRO_PRODUIT_TAUX_COMMISSION      => 4,
+        self::PREF_PRO_PRODUIT_OBJIGATOIRE          => 5,
+        self::PREF_PRO_PRODUIT_ABONNEMENT           => 6,
+        self::PREF_PRO_PRODUIT_CATEGORIE            => 7,
+        self::PREF_PRO_PRODUIT_UTILISATEUR          => 8,
+        self::PREF_PRO_PRODUIT_ENTREPRISE           => 9,
+        self::PREF_PRO_PRODUIT_DATE_DE_CREATION     => 10,
+        self::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION => 11
+    ];
 
 
     public const PREF_APPARENCE_CLAIRE = 0;
@@ -597,6 +622,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_POLICES),
+            ChoiceField::new('proProduits', "Attributs Produits")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_PRO_PRODUITS),
 
             //Onglet 04 - FINANCES
             FormField::addTab(' FINANCES')

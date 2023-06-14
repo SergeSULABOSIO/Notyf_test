@@ -336,6 +336,35 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_ENTREPRISE = 38;
     public const PREF_PRO_POLICE_DATE_DE_CREATION = 39;
     public const PREF_PRO_POLICE_DATE_DE_MODIFICATION = 40;
+    //CHAMPS CALCULABLES AUTOMATIQUEMENT
+    public const PREF_PRO_calc_polices_tab = 41;
+    public const PREF_PRO_calc_polices_primes_nette = 42;
+    public const PREF_PRO_calc_polices_primes_totale = 43;
+    public const PREF_PRO_calc_polices_fronting = 44;
+    public const PREF_PRO_calc_polices_accessoire = 45;
+    public const PREF_PRO_calc_polices_tva = 46;
+    public const PREF_PRO_calc_revenu_reserve = 47;
+    public const PREF_PRO_calc_revenu_partageable = 48;
+    public const PREF_PRO_calc_revenu_ht = 49;
+    public const PREF_PRO_calc_revenu_ttc = 50;
+    public const PREF_PRO_calc_revenu_ttc_encaisse = 51;
+    public const PREF_PRO_calc_revenu_ttc_encaisse_tab_ref_factures = 52;
+    public const PREF_PRO_calc_revenu_ttc_solde_restant_du = 53;
+    public const PREF_PRO_calc_retrocom = 54;
+    public const PREF_PRO_calc_retrocom_payees = 55;
+    public const PREF_PRO_calc_retrocom_payees_tab_factures = 56;
+    public const PREF_PRO_calc_retrocom_solde = 57;
+    public const PREF_PRO_calc_taxes_courtier_tab = 58;
+    public const PREF_PRO_calc_taxes_courtier = 59;
+    public const PREF_PRO_calc_taxes_courtier_payees = 60;
+    public const PREF_PRO_calc_taxes_courtier_payees_tab_ref_factures = 61;
+    public const PREF_PRO_calc_taxes_courtier_solde = 62;
+    public const PREF_PRO_calc_taxes_assureurs_tab = 63;
+    public const PREF_PRO_calc_taxes_assureurs = 64;
+    public const PREF_PRO_calc_taxes_assureurs_payees = 65;
+    public const PREF_PRO_calc_taxes_assureurs_payees_tab_ref_factures = 66;
+    public const PREF_PRO_calc_taxes_assureurs_solde = 67;
+
     public const TAB_PRO_POLICES = [
         'Id' => self::PREF_PRO_POLICE_ID,
         'Référence' => self::PREF_PRO_POLICE_REFERENCE,
@@ -377,7 +406,35 @@ class PreferenceCrudController extends AbstractCrudController
         'Utilisateur' => self::PREF_PRO_POLICE_UTILISATEUR,
         'Entreprise' => self::PREF_PRO_POLICE_ENTREPRISE,
         'Date de création' => self::PREF_PRO_POLICE_DATE_DE_CREATION,
-        'Dernière modification' => self::PREF_PRO_POLICE_DATE_DE_MODIFICATION
+        'Dernière modification' => self::PREF_PRO_POLICE_DATE_DE_MODIFICATION,
+        //CHAMPS CALCULABLES AUTOMATIQUEMENT
+        'Ac/Polices' => self::PREF_PRO_calc_polices_tab,
+        'Ac/Primes nettes' => self::PREF_PRO_calc_polices_primes_nette,
+        'Ac/Primes totales' => self::PREF_PRO_calc_polices_primes_totale,
+        'Ac/Fronting' => self::PREF_PRO_calc_polices_fronting,
+        'Ac/Accessoires' => self::PREF_PRO_calc_polices_accessoire,
+        'Ac/Tva' => self::PREF_PRO_calc_polices_tva,
+        'Ac/Réserve' => self::PREF_PRO_calc_revenu_reserve,
+        'Ac/Rev. partageable' => self::PREF_PRO_calc_revenu_partageable,
+        'Ac/Revenu ht' => self::PREF_PRO_calc_revenu_ht,
+        'Ac/Revenu ttc' => self::PREF_PRO_calc_revenu_ttc,
+        'Ac/Rev. encaissé' => self::PREF_PRO_calc_revenu_ttc_encaisse,
+        'Ac/PDP/Revenu' => self::PREF_PRO_calc_revenu_ttc_encaisse_tab_ref_factures,
+        'Ac/Solde/Rev.' => self::PREF_PRO_calc_revenu_ttc_solde_restant_du,
+        'Ac/Retrocom. total' => self::PREF_PRO_calc_retrocom,
+        'Ac/Retrocom. payée' => self::PREF_PRO_calc_retrocom_payees,
+        'Ac/PDP/Retrocom.' => self::PREF_PRO_calc_retrocom_payees_tab_factures,
+        'Ac/Solde/retrocom.' => self::PREF_PRO_calc_retrocom_solde,
+        'Ac/Tab. Taxes/courtier' => self::PREF_PRO_calc_taxes_courtier_tab,
+        'Ac/Total taxes/courtier' => self::PREF_PRO_calc_taxes_courtier,
+        'Ac/Taxes courtier payée' => self::PREF_PRO_calc_taxes_courtier_payees,
+        'Ac/PDP/Taxes/Courtier' => self::PREF_PRO_calc_taxes_courtier_payees_tab_ref_factures,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_courtier_solde,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_assureurs_tab,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_assureurs,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_assureurs_payees,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_assureurs_payees_tab_ref_factures,
+        'Dernière modification' => self::PREF_PRO_calc_taxes_assureurs_solde
     ];
     
 

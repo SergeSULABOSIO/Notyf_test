@@ -26,89 +26,89 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 class PreferenceCrudController extends AbstractCrudController
 {
     //CRM - ACTION / MISSION
-    public const PREF_CRM_MISSION_ID = 0;
-    public const PREF_CRM_MISSION_MISSION = 1;
-    public const PREF_CRM_MISSION_OBJECTIF = 2;
-    public const PREF_CRM_MISSION_STARTED_AT = 3;
-    public const PREF_CRM_MISSION_ENDED_AT = 4;
-    public const PREF_CRM_MISSION_UTILISATEUR = 5;
-    public const PREF_CRM_MISSION_ENTREPRISE = 6;
-    public const PREF_CRM_MISSION_CREATED_AT = 7;
-    public const PREF_CRM_MISSION_UPDATED_AT = 8;
-    public const TAB_CRM_MISSION = [
-        "Id" => self::PREF_CRM_MISSION_ID,
-        "Nom" => self::PREF_CRM_MISSION_MISSION,
-        "Objectif" => self::PREF_CRM_MISSION_OBJECTIF,
-        "Date d'effet" => self::PREF_CRM_MISSION_STARTED_AT,
-        "Echéance" => self::PREF_CRM_MISSION_ENDED_AT,
-        "Utilisateur" => self::PREF_CRM_MISSION_UTILISATEUR,
-        "Entreprise" => self::PREF_CRM_MISSION_ENTREPRISE,
-        "Date de création" => self::PREF_CRM_MISSION_CREATED_AT,
-        "Dernière modification" => self::PREF_CRM_MISSION_UPDATED_AT
+    public const PREF_CRM_MISSION_ID                = "Id";
+    public const PREF_CRM_MISSION_MISSION           = "Nom";
+    public const PREF_CRM_MISSION_OBJECTIF          = "Objectif";
+    public const PREF_CRM_MISSION_STARTED_AT        = "Date d'effet";
+    public const PREF_CRM_MISSION_ENDED_AT          = "Echéance";
+    public const PREF_CRM_MISSION_UTILISATEUR       = "Utilisateur";
+    public const PREF_CRM_MISSION_ENTREPRISE        = "Entreprise";
+    public const PREF_CRM_MISSION_CREATED_AT        = "Date de création";
+    public const PREF_CRM_MISSION_UPDATED_AT        = "Dernière modification";
+    public const TAB_CRM_MISSIONS = [
+        self::PREF_CRM_MISSION_ID           => 0,
+        self::PREF_CRM_MISSION_MISSION      => 1,
+        self::PREF_CRM_MISSION_OBJECTIF     => 2,
+        self::PREF_CRM_MISSION_STARTED_AT   => 3,
+        self::PREF_CRM_MISSION_ENDED_AT     => 4,
+        self::PREF_CRM_MISSION_UTILISATEUR  => 5,
+        self::PREF_CRM_MISSION_ENTREPRISE   => 6,
+        self::PREF_CRM_MISSION_CREATED_AT   => 7,
+        self::PREF_CRM_MISSION_UPDATED_AT   => 8
     ];
 
     //CRM - FEEDBACK
-    public const PREF_CRM_FEEDBACK_ID = 0;
-    public const PREF_CRM_FEEDBACK_MESAGE = 1;
-    public const PREF_CRM_FEEDBACK_PROCHAINE_ETAPE = 2;
-    public const PREF_CRM_FEEDBACK_DATE_EFFET = 3;
-    public const PREF_CRM_FEEDBACK_ACTION = 4;
-    public const PREF_CRM_FEEDBACK_DATE_CREATION = 5;
-    public const PREF_CRM_FEEDBACK_DATE_MODIFICATION = 6;
-    public const PREF_CRM_FEEDBACK_UTILISATEUR = 7;
-    public const PREF_CRM_FEEDBACK_ENTREPRISE = 8;
-    public const TAB_CRM_FEEDBACK = [
-        "Id" => self::PREF_CRM_FEEDBACK_ID,
-        "Message" => self::PREF_CRM_FEEDBACK_MESAGE,
-        "Mission suivante" => self::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE,
-        "Date d'effet" => self::PREF_CRM_FEEDBACK_DATE_EFFET,
-        "Mission" => self::PREF_CRM_FEEDBACK_ACTION,
-        "Utilisateur" => self::PREF_CRM_FEEDBACK_UTILISATEUR,
-        "Entreprise" => self::PREF_CRM_FEEDBACK_ENTREPRISE,
-        "Date de création" => self::PREF_CRM_FEEDBACK_DATE_CREATION,
-        "Dernière modification" => self::PREF_CRM_FEEDBACK_DATE_MODIFICATION
+    public const PREF_CRM_FEEDBACK_ID                   = "Id";
+    public const PREF_CRM_FEEDBACK_MESAGE               = "Message";
+    public const PREF_CRM_FEEDBACK_PROCHAINE_ETAPE      = "Etape suivante";
+    public const PREF_CRM_FEEDBACK_DATE_EFFET           = "Date d'effet";
+    public const PREF_CRM_FEEDBACK_ACTION               = "Action";
+    public const PREF_CRM_FEEDBACK_DATE_CREATION        = "Date de création";
+    public const PREF_CRM_FEEDBACK_DATE_MODIFICATION    = "Dernière modification";
+    public const PREF_CRM_FEEDBACK_UTILISATEUR          = "Utilisateur";
+    public const PREF_CRM_FEEDBACK_ENTREPRISE           = "Entreprise";
+    public const TAB_CRM_FEEDBACKS = [
+        self::PREF_CRM_FEEDBACK_ID                  => 0,
+        self::PREF_CRM_FEEDBACK_MESAGE              => 1,
+        self::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE     => 2,
+        self::PREF_CRM_FEEDBACK_DATE_EFFET          => 3,
+        self::PREF_CRM_FEEDBACK_ACTION              => 4,
+        self::PREF_CRM_FEEDBACK_UTILISATEUR         => 5,
+        self::PREF_CRM_FEEDBACK_ENTREPRISE          => 6,
+        self::PREF_CRM_FEEDBACK_DATE_CREATION       => 7,
+        self::PREF_CRM_FEEDBACK_DATE_MODIFICATION   => 8
     ];
     //CRM - COTATION
-    public const PREF_CRM_COTATION_ID = 0;
-    public const PREF_CRM_COTATION_NOM = 1;
-    public const PREF_CRM_COTATION_ASSUREUR = 2;
-    public const PREF_CRM_COTATION_MONNAIE = 3;
-    public const PREF_CRM_COTATION_PRIME_TOTALE = 4;
-    public const PREF_CRM_COTATION_RISQUE = 5;
-    public const PREF_CRM_COTATION_PISTE = 6;
-    public const PREF_CRM_COTATION_PIECES = 7;
-    public const PREF_CRM_COTATION_DATE_CREATION = 8;
-    public const PREF_CRM_COTATION_DATE_MODIFICATION = 9;
-    public const PREF_CRM_COTATION_DATE_UTILISATEUR = 10;
-    public const PREF_CRM_COTATION_DATE_ENTREPRISE = 11;
+    public const PREF_CRM_COTATION_ID                   = "Id";
+    public const PREF_CRM_COTATION_NOM                  = "Nom";
+    public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
+    public const PREF_CRM_COTATION_MONNAIE              = "Monnaie";
+    public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
+    public const PREF_CRM_COTATION_RISQUE               = "Risque";
+    public const PREF_CRM_COTATION_PISTE                = "Piste";
+    public const PREF_CRM_COTATION_PIECES               = "Pièces";
+    public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
+    public const PREF_CRM_COTATION_DATE_MODIFICATION    = "Dernière modification";
+    public const PREF_CRM_COTATION_UTILISATEUR          = "Utilisateur";
+    public const PREF_CRM_COTATION_ENTREPRISE           = "Entreprise";
     public const TAB_CRM_COTATIONS = [
-        'Id' => self::PREF_CRM_COTATION_ID,
-        'Nom' => self::PREF_CRM_COTATION_NOM,
-        'Assureur' => self::PREF_CRM_COTATION_ASSUREUR,
-        'Monnaie' => self::PREF_CRM_COTATION_MONNAIE,
-        'Prime totale' => self::PREF_CRM_COTATION_PRIME_TOTALE,
-        'Risque' => self::PREF_CRM_COTATION_RISQUE,
-        'Piste' => self::PREF_CRM_COTATION_PISTE,
-        'Pièces' => self::PREF_CRM_COTATION_PIECES,
-        'Utilisateur' => self::PREF_CRM_COTATION_DATE_UTILISATEUR,
-        'Entreprise' => self::PREF_CRM_COTATION_DATE_ENTREPRISE,
-        'Date de création' => self::PREF_CRM_COTATION_DATE_CREATION,
-        'Dernière modification' => self::PREF_CRM_COTATION_DATE_MODIFICATION
+        self::PREF_CRM_COTATION_ID                                              => 0,
+        self::PREF_CRM_COTATION_NOM                                             => 1,
+        self::PREF_CRM_COTATION_ASSUREUR                                        => 2,
+        self::PREF_CRM_COTATION_MONNAIE                                         => 3,
+        self::PREF_CRM_COTATION_PRIME_TOTALE                                    => 4,
+        self::PREF_CRM_COTATION_RISQUE                                          => 5,
+        self::PREF_CRM_COTATION_PISTE                                           => 6,
+        self::PREF_CRM_COTATION_PIECES                                          => 7,
+        self::PREF_CRM_COTATION_UTILISATEUR                                     => 8,
+        self::PREF_CRM_COTATION_ENTREPRISE                                      => 9,
+        self::PREF_CRM_COTATION_DATE_CREATION                                   => 10,
+        self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 11
     ];
     //CRM - ETAPES
-    public const PREF_CRM_ETAPES_ID = 0;
-    public const PREF_CRM_ETAPES_NOM = 1;
-    public const PREF_CRM_ETAPES_UTILISATEUR = 2;
-    public const PREF_CRM_ETAPES_ENTREPRISE = 3;
-    public const PREF_CRM_ETAPES_DATE_CREATION = 4;
-    public const PREF_CRM_ETAPES_DATE_MODIFICATION = 5;
+    public const PREF_CRM_ETAPES_ID                 = "Id";
+    public const PREF_CRM_ETAPES_NOM                = "Nom";
+    public const PREF_CRM_ETAPES_UTILISATEUR        = "Utilisateur";
+    public const PREF_CRM_ETAPES_ENTREPRISE         = "Entreprise";
+    public const PREF_CRM_ETAPES_DATE_CREATION      = "Date de création";
+    public const PREF_CRM_ETAPES_DATE_MODIFICATION  = "Dernière modification";
     public const TAB_CRM_ETAPES = [
-        'Id' => self::PREF_CRM_ETAPES_ID,
-        'Nom' => self::PREF_CRM_ETAPES_NOM,
-        'Utilisateur' => self::PREF_CRM_ETAPES_UTILISATEUR,
-        'Entreprise' => self::PREF_CRM_ETAPES_ENTREPRISE,
-        'Date de création' => self::PREF_CRM_ETAPES_DATE_CREATION,
-        'Dernière modification' => self::PREF_CRM_ETAPES_DATE_MODIFICATION
+        self::PREF_CRM_ETAPES_ID                    => 0,
+        self::PREF_CRM_ETAPES_NOM                   => 1,
+        self::PREF_CRM_ETAPES_UTILISATEUR           => 2,
+        self::PREF_CRM_ETAPES_ENTREPRISE            => 3,
+        self::PREF_CRM_ETAPES_DATE_CREATION         => 4,
+        self::PREF_CRM_ETAPES_DATE_MODIFICATION     => 5
     ];
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID = 0;
@@ -565,12 +565,12 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
-                ->setChoices(self::TAB_CRM_MISSION),
+                ->setChoices(self::TAB_CRM_MISSIONS),
             ChoiceField::new('crmFeedbacks', "Attributs Feedback")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
-                ->setChoices(self::TAB_CRM_FEEDBACK),
+                ->setChoices(self::TAB_CRM_FEEDBACKS),
             ChoiceField::new('crmCotations', "Attributs Cotations")
                 ->setColumns(2)
                 ->renderExpanded()

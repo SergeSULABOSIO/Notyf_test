@@ -25,6 +25,37 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 
 class PreferenceCrudController extends AbstractCrudController
 {
+
+    //CHAMPS CALCULABLES AUTOMATIQUEMENT
+    public const PREF_calc_polices_tab                                  = 'Ac/Polices/Réf.';
+    public const PREF_calc_polices_primes_nette                         = 'Ac/Prime/Mnt ht';
+    public const PREF_calc_polices_primes_totale                        = 'Ac/Prime/Mnt Total';
+    public const PREF_calc_polices_fronting                             = 'Ac/Prime/Fronting';
+    public const PREF_calc_polices_accessoire                           = 'Ac/Prime/Accessoires';
+    public const PREF_calc_polices_tva                                  = 'Ac/Prime/Taxes';
+    public const PREF_calc_revenu_reserve                               = 'Ac/Comm./Réserve';
+    public const PREF_calc_revenu_partageable                           = 'Ac/Comm./A partager';
+    public const PREF_calc_revenu_ht                                    = 'Ac/Comm./Mnt ht';
+    public const PREF_calc_revenu_ttc                                   = 'Ac/Comm./Mnt dû';
+    public const PREF_calc_revenu_ttc_encaisse                          = 'Ac/Comm./Pymnt';
+    public const PREF_calc_revenu_ttc_encaisse_tab_ref_factures         = 'Ac/Comm./PdP';
+    public const PREF_calc_revenu_ttc_solde_restant_du                  = 'Ac/Comm./Solde dû';
+    public const PREF_calc_retrocom                                     = 'Ac/Retrocom./Mnt dû';
+    public const PREF_calc_retrocom_payees                              = 'Ac/Retrocom./Pymnt';
+    public const PREF_calc_retrocom_payees_tab_factures                 = 'Ac/Retrocom./PdP';
+    public const PREF_calc_retrocom_solde                               = 'Ac/Retrocom./Solde';
+    public const PREF_calc_taxes_courtier_tab                           = 'Ac/Taxes/Court./Réf.';
+    public const PREF_calc_taxes_courtier                               = 'Ac/Taxes/Court./Mnt dû';
+    public const PREF_calc_taxes_courtier_payees                        = 'Ac/Taxes/Court./Pymnt';
+    public const PREF_calc_taxes_courtier_payees_tab_ref_factures       = 'Ac/Taxes/Court./PdP';
+    public const PREF_calc_taxes_courtier_solde                         = 'Ac/Taxes/Court./Solde';
+    public const PREF_calc_taxes_assureurs_tab                          = 'Ac/Taxes/Assur./Réf.';
+    public const PREF_calc_taxes_assureurs                              = 'Ac/Taxes/Assur./Mnt dû';
+    public const PREF_calc_taxes_assureurs_payees                       = 'Ac/Taxes/Assur./Pymnt';
+    public const PREF_calc_taxes_assureurs_payees_tab_ref_factures      = 'Ac/Taxes/Assur./PdP';
+    public const PREF_calc_taxes_assureurs_solde                        = 'Ac/Taxes/Assur./Solde';
+
+
     //CRM - ACTION / MISSION
     public const PREF_CRM_MISSION_ID                = "Id";
     public const PREF_CRM_MISSION_MISSION           = "Nom";

@@ -784,6 +784,54 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION     => 6,
         self::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION => 7
     ];
+    //SINISTRE - ETAPE
+    public const PREF_SIN_ETAPE_ID                      = "Id";
+    public const PREF_SIN_ETAPE_NOM                     = "Nom";
+    public const PREF_SIN_ETAPE_DESCRIPTION             = "Description";
+    public const PREF_SIN_ETAPE_INDICE                  = "Indice";
+    public const PREF_SIN_ETAPE_UTILISATEUR             = "Utilisateur";
+    public const PREF_SIN_ETAPE_ENTREPRISE              = "Entreprise";
+    public const PREF_SIN_ETAPE_DATE_DE_CREATION        = "Date de création";
+    public const PREF_SIN_ETAPE_DERNIRE_MODIFICATION    = "Dernière modification";
+    public const TAB_SIN_ETAPES = [
+        self::PREF_SIN_ETAPE_ID                     => 0,
+        self::PREF_SIN_ETAPE_NOM                    => 1,
+        self::PREF_SIN_ETAPE_DESCRIPTION            => 2,
+        self::PREF_SIN_ETAPE_INDICE                 => 3,
+        self::PREF_SIN_ETAPE_UTILISATEUR            => 4,
+        self::PREF_SIN_ETAPE_ENTREPRISE             => 5,
+        self::PREF_SIN_ETAPE_DATE_DE_CREATION       => 6,
+        self::PREF_SIN_ETAPE_DERNIRE_MODIFICATION   => 7
+    ];
+    //SINISTRE - EXPERT
+    public const PREF_SIN_EXPERT_ID                     = "Id";
+    public const PREF_SIN_EXPERT_NOM                    = "Nom";
+    public const PREF_SIN_EXPERT_ADRESSE                = "Adresse";
+    public const PREF_SIN_EXPERT_SITE_INTERNET          = "Site Internet";
+    public const PREF_SIN_EXPERT_EMAIL                  = "Email";
+    public const PREF_SIN_EXPERT_TELEPHONE              = "Téléphone";
+    public const PREF_SIN_EXPERT_DESCRIPTION            = "Description";
+    public const PREF_SIN_EXPERT_SINISTRES              = "Sinistres";
+    public const PREF_SIN_EXPERT_UTILISATEUR            = "Utilisateur";
+    public const PREF_SIN_EXPERT_ENTREPRISE             = "Entreprise";
+    public const PREF_SIN_EXPERT_DATE_DE_CREATION       = "Date de création";
+    public const PREF_SIN_EXPERT_DERNIRE_MODIFICATION   = "Dernière modification";
+    public const TAB_SIN_EXPERTS = [
+        self::PREF_SIN_EXPERT_ID                    => 0,
+        self::PREF_SIN_EXPERT_NOM                   => 1,
+        self::PREF_SIN_EXPERT_ADRESSE               => 2,
+        self::PREF_SIN_EXPERT_SITE_INTERNET         => 3,
+        self::PREF_SIN_EXPERT_EMAIL                 => 4,
+        self::PREF_SIN_EXPERT_TELEPHONE             => 5,
+        self::PREF_SIN_EXPERT_DESCRIPTION           => 6,
+        self::PREF_SIN_EXPERT_SINISTRES             => 7,
+        self::PREF_SIN_EXPERT_UTILISATEUR           => 8,
+        self::PREF_SIN_EXPERT_ENTREPRISE            => 9,
+        self::PREF_SIN_EXPERT_DATE_DE_CREATION      => 10,
+        self::PREF_SIN_EXPERT_DERNIRE_MODIFICATION  => 11
+    ];
+
+    
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
     public const PREF_APPARENCE_SOMBRE = 'Mode sombre activé';
@@ -881,6 +929,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
             NumberField::new('crmTaille', "Eléments par page")->setColumns(2), //->setColumns(3),
+            ChoiceField::new('crmPistes', "Attributs Piste")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_CRM_PISTE),
             ChoiceField::new('crmMissions', "Attributs Mission")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -901,11 +954,6 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_ETAPES),
-            ChoiceField::new('crmPistes', "Attributs Piste")
-                ->setColumns(2)
-                ->renderExpanded()
-                ->allowMultipleChoices()
-                ->setChoices(self::TAB_CRM_PISTE),
 
             //Onglet 03 - PRODUCTION
             FormField::addTab(' PRODUCTION')
@@ -989,6 +1037,16 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_COMMENTAIRES),
+            ChoiceField::new('sinEtapes', "Attributs Etapes")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_SIN_ETAPES),
+            ChoiceField::new('sinExperts', "Attributs Experts")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_SIN_EXPERTS),
 
             //Onglet 06 - BIBLIOTHEQUE
             FormField::addTab(' BIBLIOTHEQUE')

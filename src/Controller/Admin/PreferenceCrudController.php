@@ -680,6 +680,61 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_MONNAIE_DATE_DE_CREATION                 => 7,
         self::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION             => 8
     ];
+    //FINANCE - PAIEMENTS COMMISSIONS
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_ID                      = "Id";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                    = "Date";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                  = "Police";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                 = "Monnaie";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                 = "Montant";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Note de débit";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION             = "Description";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS               = "Documents";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR             = "Utilisateur";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE              = "Entreprise";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION        = "Date de création";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION    = "Dernière modification";
+    public const TAB_FIN_PAIEMENTS_COMMISSIONS = [
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ID                         => 0,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                       => 1,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                     => 2,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                    => 3,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                    => 4,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE                => 5,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION                => 6,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS                  => 7,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR                => 8,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE                 => 9,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION           => 10,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION       => 11
+    ];
+    //FINANCE - PAIEMENTS RETROCOMMISSIONS
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                      = "Id";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                    = "Date";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                  = "Police";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                 = "Monnaie";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                 = "Montant";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Note de débit";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE              = "Partenaire";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS               = "Documents";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR             = "Utilisateur";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE              = "Entreprise";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION        = "Date de création";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION    = "Dernière modification";
+
+    public const TAB_FIN_PAIEMENTS_RETROCOMMISSIONS = [
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                         => 0,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                       => 1,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                     => 2,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                    => 3,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                    => 4,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE                => 5,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE                 => 6,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS                  => 7,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR                => 8,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE                 => 9,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION           => 10,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION       => 11
+    ];
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
     public const PREF_APPARENCE_SOMBRE = 'Mode sombre activé';
@@ -859,6 +914,16 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_MONNAIES),
+            ChoiceField::new('finCommissionsPayees', "Attributs Com. encaissées")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_FIN_PAIEMENTS_COMMISSIONS),
+            ChoiceField::new('finRetrocommissionsPayees', "Attributs RetroCom. payées")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS),
 
             //Onglet 05 - SINISTRE
             FormField::addTab(' SINISTRE')

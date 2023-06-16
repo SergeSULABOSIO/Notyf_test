@@ -735,6 +735,50 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION           => 10,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION       => 11
     ];
+    //FINANCE - PAIEMENTS TAXES
+    public const PREF_FIN_PAIEMENTS_TAXE_ID = "Id";
+    
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $montant = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $exercice = null;
+
+    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[ORM\Column(length: 255)]
+    private ?string $refnotededebit = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Monnaie $monnaie = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Taxe $taxe = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Police $police = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
+    private Collection $pieces;
+
+    #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
     public const PREF_APPARENCE_SOMBRE = 'Mode sombre activé';

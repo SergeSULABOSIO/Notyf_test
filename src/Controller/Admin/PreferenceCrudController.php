@@ -765,6 +765,26 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION  => 12
     ];
 
+    //SINISTRE - COMMENTAIRE
+    public const PREF_SIN_COMMENTAIRE_ID                    = "Id";
+    public const PREF_SIN_COMMENTAIRE_MESSAGE               = "Message";
+    public const PREF_SIN_COMMENTAIRE_PRECEDENT             = "Précédent Mesg.";
+    public const PREF_SIN_COMMENTAIRE_SINISTRE              = "Sinistre";
+    public const PREF_SIN_COMMENTAIRE_UTILISATEUR           = "Utilisateur";
+    public const PREF_SIN_COMMENTAIRE_ENTREPRISE            = "Entreprise";
+    public const PREF_SIN_COMMENTAIRE_DATE_DE_CREATION      = "Date de création";
+    public const PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION  = "Dernière modification";
+    public const TAB_SIN_COMMENTAIRES = [
+        self::PREF_SIN_COMMENTAIRE_ID                   => 0,
+        self::PREF_SIN_COMMENTAIRE_MESSAGE              => 1,
+        self::PREF_SIN_COMMENTAIRE_PRECEDENT            => 2,
+        self::PREF_SIN_COMMENTAIRE_SINISTRE             => 3,
+        self::PREF_SIN_COMMENTAIRE_UTILISATEUR          => 4,
+        self::PREF_SIN_COMMENTAIRE_ENTREPRISE           => 5,
+        self::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION     => 6,
+        self::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION => 7
+    ];
+
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
     public const PREF_APPARENCE_SOMBRE = 'Mode sombre activé';
     public const TAB_APPARENCES = [
@@ -964,6 +984,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setIcon('fas fa-fire')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
             NumberField::new('sinTaille', "Eléments par page")->setColumns(2),
+            ChoiceField::new('sinCommentaires', "Attributs Commentaires")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_SIN_COMMENTAIRES),
 
             //Onglet 06 - BIBLIOTHEQUE
             FormField::addTab(' BIBLIOTHEQUE')

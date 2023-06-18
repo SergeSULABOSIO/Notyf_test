@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Admin\PreferenceCrudController;
 use App\Entity\Entreprise;
 use App\Entity\Preference;
 use App\Entity\Utilisateur;

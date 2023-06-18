@@ -58,7 +58,7 @@ class PreferenceCrudController extends AbstractCrudController
 
     //CRM - ACTION / MISSION
     public const PREF_CRM_MISSION_ID                = "Id";
-    public const PREF_CRM_MISSION_MISSION           = "Nom";
+    public const PREF_CRM_MISSION_NOM               = "Nom";
     public const PREF_CRM_MISSION_OBJECTIF          = "Objectif";
     public const PREF_CRM_MISSION_STARTED_AT        = "Date d'effet";
     public const PREF_CRM_MISSION_ENDED_AT          = "Echéance";

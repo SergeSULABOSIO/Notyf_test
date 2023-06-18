@@ -899,7 +899,84 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 44,
         self::PREF_calc_taxes_assureurs_solde                   => 45
     ];
-    
+
+    //SINISTRE - VICTIME
+    public const PREF_SIN_VICTIME_ID                    = "Id";
+    public const PREF_SIN_VICTIME_NOM                   = "Nom";
+    public const PREF_SIN_VICTIME_ADRESSE               = "Adresse";
+    public const PREF_SIN_VICTIME_TELEPHONE             = "Téléphone";
+    public const PREF_SIN_VICTIME_EMAIL                 = "Email";
+    public const PREF_SIN_VICTIME_SINISTRE              = "Sinistre";
+    public const PREF_SIN_VICTIME_UTILISATEUR           = "Utilisateur";
+    public const PREF_SIN_VICTIME_ENTREPRISE            = "Entreprise";
+    public const PREF_SIN_VICTIME_DATE_DE_CREATION      = "Date de création";
+    public const PREF_SIN_VICTIME_DERNIRE_MODIFICATION  = "Dernière modification";
+    public const TAB_SIN_VICTIMES = [
+        self::PREF_SIN_VICTIME_ID                   => 0,
+        self::PREF_SIN_VICTIME_NOM                  => 1,
+        self::PREF_SIN_VICTIME_ADRESSE              => 2,
+        self::PREF_SIN_VICTIME_TELEPHONE            => 3,
+        self::PREF_SIN_VICTIME_EMAIL                => 4,
+        self::PREF_SIN_VICTIME_SINISTRE             => 5,
+        self::PREF_SIN_VICTIME_UTILISATEUR          => 6,
+        self::PREF_SIN_VICTIME_ENTREPRISE           => 7,
+        self::PREF_SIN_VICTIME_DATE_DE_CREATION     => 8,
+        self::PREF_SIN_VICTIME_DERNIRE_MODIFICATION => 10
+    ];
+    //BIBLIOTHEQUE - CATEGORIE
+    public const PREF_BIB_CATEGORIE_ID                      = "Id";
+    public const PREF_BIB_CATEGORIE_NOM                     = "Nom";
+    public const PREF_BIB_CATEGORIE_UTILISATEUR             = "Utilisateur";
+    public const PREF_BIB_CATEGORIE_ENTREPRISE              = "Entreprise";
+    public const PREF_BIB_CATEGORIE_DATE_DE_CREATION        = "Date de création";
+    public const PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION    = "Dernière modification";
+    public const TAB_BIB_CATEGORIES = [
+        self::PREF_BIB_CATEGORIE_ID                     => 0,
+        self::PREF_BIB_CATEGORIE_NOM                    => 1,
+        self::PREF_BIB_CATEGORIE_UTILISATEUR            => 2,
+        self::PREF_BIB_CATEGORIE_ENTREPRISE             => 3,
+        self::PREF_BIB_CATEGORIE_DATE_DE_CREATION       => 4,
+        self::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION   => 5
+    ];
+    //BIBLIOTHEQUE - CLASSEUR
+    public const PREF_BIB_CLASSEUR_ID                   = "Id";
+    public const PREF_BIB_CLASSEUR_NOM                  = "Nom";
+    public const PREF_BIB_CLASSEUR_UTILISATEUR          = "Utilisateur";
+    public const PREF_BIB_CLASSEUR_ENTREPRISE           = "Entreprise";
+    public const PREF_BIB_CLASSEUR_DATE_DE_CREATION     = "Date de création";
+    public const PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION = "Dernière modification";
+    public const TAB_BIB_CLASSEURS = [
+        self::PREF_BIB_CLASSEUR_ID                      => 0,
+        self::PREF_BIB_CLASSEUR_NOM                     => 1,
+        self::PREF_BIB_CLASSEUR_UTILISATEUR             => 2,
+        self::PREF_BIB_CLASSEUR_ENTREPRISE              => 3,
+        self::PREF_BIB_CLASSEUR_DATE_DE_CREATION        => 4,
+        self::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION    => 5
+    ];
+    //BIBLIOTHEQUE - DOCUMENT
+    public const PREF_BIB_DOCUMENT_ID                   = "Id";
+    public const PREF_BIB_DOCUMENT_NOM                  = "Nom";
+    public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
+    public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
+    public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
+    public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
+    public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
+    public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";
+    public const PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION = "Dernière modification";
+    public const TAB_BIB_DOCUMENTS = [
+        self::PREF_BIB_DOCUMENT_ID                      => 0,
+        self::PREF_BIB_DOCUMENT_NOM                     => 1,
+        self::PREF_BIB_DOCUMENT_CATEGORIE               => 2,
+        self::PREF_BIB_DOCUMENT_CLASSEUR                => 3,
+        self::PREF_BIB_DOCUMENT_DESCRIPTION             => 4,
+        self::PREF_BIB_DOCUMENT_UTILISATEUR             => 5,
+        self::PREF_BIB_DOCUMENT_ENTREPRISE              => 6,
+        self::PREF_BIB_DOCUMENT_DATE_DE_CREATION        => 7,
+        self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8
+    ];
+    //PARAMETRES - UTILISATEUR
+    public const PREF_PAR_UTILISATEUR_ID= "Id";
+
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
     public const PREF_APPARENCE_SOMBRE = 'Mode sombre activé';
@@ -1100,6 +1177,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setIcon('fas fa-fire')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
             NumberField::new('sinTaille', "Eléments par page")->setColumns(2),
+            ChoiceField::new('sinSinistres', "Attributs Sinistres")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_SIN_SINISTRES),
             ChoiceField::new('sinCommentaires', "Attributs Commentaires")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1115,17 +1197,33 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_EXPERTS),
-            ChoiceField::new('sinSinistres', "Attributs Sinistres")
+            ChoiceField::new('sinVictimes', "Attributs Victimes")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
-                ->setChoices(self::TAB_SIN_SINISTRES),
+                ->setChoices(self::TAB_SIN_VICTIMES),
+
 
             //Onglet 06 - BIBLIOTHEQUE
             FormField::addTab(' BIBLIOTHEQUE')
                 ->setIcon('fas fa-book')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section BIBLIOTHEQUE."),
             NumberField::new('bibTaille', "Eléments par page")->setColumns(2),
+            ChoiceField::new('bibCategories', "Attributs Catégories")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_BIB_CATEGORIES),
+            ChoiceField::new('bibClasseurs', "Attributs Classeurs")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_BIB_CLASSEURS),
+            ChoiceField::new('bibPieces', "Attributs Documents")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_BIB_DOCUMENTS),
 
             //Onglet 07 - PARAMETRES
             FormField::addTab(' PARAMETRES')

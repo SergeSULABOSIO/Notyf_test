@@ -124,7 +124,7 @@ class DashboardController extends AbstractDashboardController
         }
         
         return $dashboard
-            ->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
+            ->setLocales(['fr'])    //Ne fonctionne pas - je ne sais pourquoi
             ->setTitle($nomEntreprise) //$this->serviceEntreprise->getEntreprise()
             ->setFaviconPath('icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
         ;

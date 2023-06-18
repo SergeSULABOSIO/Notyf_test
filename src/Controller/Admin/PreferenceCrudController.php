@@ -975,7 +975,26 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8
     ];
     //PARAMETRES - UTILISATEUR
-    public const PREF_PAR_UTILISATEUR_ID= "Id";
+    public const PREF_PAR_UTILISATEUR_ID                    = "Id";
+    public const PREF_PAR_UTILISATEUR_NOM                   = "Nom";
+    public const PREF_PAR_UTILISATEUR_PSEUDO                = "Speudo";
+    public const PREF_PAR_UTILISATEUR_EMAIL                 = "Email";
+    public const PREF_PAR_UTILISATEUR_ROLES                 = "Rôles";
+    public const PREF_PAR_UTILISATEUR_UTILISATEUR           = "Utilisateur";
+    public const PREF_PAR_UTILISATEUR_ENTREPRISE            = "Entreprise";
+    public const PREF_PAR_UTILISATEUR_DATE_DE_CREATION      = "Date de création";
+    public const PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION  = "Dernière modification";
+    public const TAB_PAR_UTILISATEURS = [
+        self::PREF_PAR_UTILISATEUR_ID                   => 0,
+        self::PREF_PAR_UTILISATEUR_NOM                  => 1,
+        self::PREF_PAR_UTILISATEUR_PSEUDO               => 2,
+        self::PREF_PAR_UTILISATEUR_EMAIL                => 3,
+        self::PREF_PAR_UTILISATEUR_ROLES                => 4,
+        self::PREF_PAR_UTILISATEUR_UTILISATEUR          => 5,
+        self::PREF_PAR_UTILISATEUR_ENTREPRISE           => 6,
+        self::PREF_PAR_UTILISATEUR_DATE_DE_CREATION     => 7,
+        self::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION => 8,
+    ];
 
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
@@ -1230,7 +1249,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->setIcon('fas fa-gears')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
             NumberField::new('parTaille', "Eléments par page")->setColumns(2),
-
+            ChoiceField::new('parUtilisateurs', "Attributs Utilisateurs")
+            ->setColumns(2)
+            ->renderExpanded()
+            ->allowMultipleChoices()
+            ->setChoices(self::TAB_PAR_UTILISATEURS),
 
         ];
     }

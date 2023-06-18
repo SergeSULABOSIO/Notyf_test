@@ -12,6 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 
 class ServicePreferences
 {
+    private Preference $preference;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise
@@ -40,7 +42,8 @@ class ServicePreferences
 
     public function appliquerPreferenceAttributs($tabAttributs)
     {
-
+        $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+        
     }
 
     public function creerPreference($utilisateur, $entreprise)

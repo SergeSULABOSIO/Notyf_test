@@ -116,15 +116,17 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         $dashboard = Dashboard::new();
+        $nomEntreprise = "TBA";
         //Application de la préférence sur l'apparence
-        $this->servicePreferences->appliquerPreferenceApparence($dashboard, $this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-
-        $nomEntreprise = $this->serviceEntreprise->getEntreprise() == null ? "TBA" : $this->serviceEntreprise->getEntreprise();
+        if($this->serviceEntreprise->getEntreprise() != null){
+            $this->servicePreferences->appliquerPreferenceApparence($dashboard, $this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+            $nomEntreprise = $this->serviceEntreprise->getEntreprise();
+        }
+        
         return $dashboard
-            //->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
-
+            ->setLocales(['fr', 'en'])    //Ne fonctionne pas - je ne sais pourquoi
             ->setTitle($nomEntreprise) //$this->serviceEntreprise->getEntreprise()
-            //->setFaviconPath('assets/icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
+            ->setFaviconPath('icones/icon04.png') //Ne fonctionne pas - je ne sais pourquoi
         ;
     }
 

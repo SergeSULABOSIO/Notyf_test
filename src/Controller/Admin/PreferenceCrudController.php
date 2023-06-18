@@ -830,7 +830,75 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_EXPERT_DATE_DE_CREATION      => 10,
         self::PREF_SIN_EXPERT_DERNIRE_MODIFICATION  => 11
     ];
-
+    //SINISTRE - SINISTRE
+    public const PREF_SIN_SINISTRE_ID                   = "Id";
+    public const PREF_SIN_SINISTRE_REFERENCE            = "Numéro";
+    public const PREF_SIN_SINISTRE_ITITRE               = "Titre";
+    public const PREF_SIN_SINISTRE_DATE_OCCURENCE       = "Date";
+    public const PREF_SIN_SINISTRE_DESCRIPTION          = "Description";
+    public const PREF_SIN_SINISTRE_VICTIMES             = "Victimes";
+    public const PREF_SIN_SINISTRE_EXPERT               = "Expert";
+    public const PREF_SIN_SINISTRE_POLICE               = "Police";
+    public const PREF_SIN_SINISTRE_COUT                 = "Coût de réparation";
+    public const PREF_SIN_SINISTRE_MONTANT_PAYE         = "Indemnisation";
+    public const PREF_SIN_SINISTRE_MONNAIE              = "Monnaie";
+    public const PREF_SIN_SINISTRE_DATE_PAIEMENT        = "Date de paiement";
+    public const PREF_SIN_SINISTRE_ETAPE                = "Etape actuelle";
+    public const PREF_SIN_SINISTRE_DOCUMENTS            = "Documents";
+    public const PREF_SIN_SINISTRE_COMMENTAIRE          = "Commentaires";
+    public const PREF_SIN_SINISTRE_UTILISATEUR          = "Utilisateur";
+    public const PREF_SIN_SINISTRE_ENTREPRISE           = "Entreprise";
+    public const PREF_SIN_SINISTRE_DATE_DE_CREATION     = "Date de création";
+    public const PREF_SIN_SINISTRE_DERNIRE_MODIFICATION = "Dernière modification";
+    public const TAB_SIN_SINISTRES = [
+        self::PREF_SIN_SINISTRE_ID                              => 0,
+        self::PREF_SIN_SINISTRE_REFERENCE                       => 1,
+        self::PREF_SIN_SINISTRE_ITITRE                          => 2,
+        self::PREF_SIN_SINISTRE_DATE_OCCURENCE                  => 3,
+        self::PREF_SIN_SINISTRE_DESCRIPTION                     => 4,
+        self::PREF_SIN_SINISTRE_VICTIMES                        => 5,
+        self::PREF_SIN_SINISTRE_EXPERT                          => 6,
+        self::PREF_SIN_SINISTRE_POLICE                          => 7,
+        self::PREF_SIN_SINISTRE_COUT                            => 8,
+        self::PREF_SIN_SINISTRE_MONTANT_PAYE                    => 9,
+        self::PREF_SIN_SINISTRE_MONNAIE                         => 10,
+        self::PREF_SIN_SINISTRE_DATE_PAIEMENT                   => 11,
+        self::PREF_SIN_SINISTRE_ETAPE                           => 12,
+        self::PREF_SIN_SINISTRE_DOCUMENTS                       => 13,
+        self::PREF_SIN_SINISTRE_COMMENTAIRE                     => 14,
+        self::PREF_SIN_SINISTRE_UTILISATEUR                     => 15,
+        self::PREF_SIN_SINISTRE_ENTREPRISE                      => 16,
+        self::PREF_SIN_SINISTRE_DATE_DE_CREATION                => 17,
+        self::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION            => 18,
+        //CHAMPS CALCULABLES AUTOMATIQUEMENT
+        self::PREF_calc_polices_tab                             => 19,
+        self::PREF_calc_polices_primes_nette                    => 20,
+        self::PREF_calc_polices_primes_totale                   => 21,
+        self::PREF_calc_polices_fronting                        => 22,
+        self::PREF_calc_polices_accessoire                      => 23,
+        self::PREF_calc_polices_tva                             => 24,
+        self::PREF_calc_revenu_reserve                          => 25,
+        self::PREF_calc_revenu_partageable                      => 26,
+        self::PREF_calc_revenu_ht                               => 27,
+        self::PREF_calc_revenu_ttc                              => 28,
+        self::PREF_calc_revenu_ttc_encaisse                     => 29,
+        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 30,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 31,
+        self::PREF_calc_retrocom                                => 32,
+        self::PREF_calc_retrocom_payees                         => 33,
+        self::PREF_calc_retrocom_payees_tab_factures            => 34,
+        self::PREF_calc_retrocom_solde                          => 35,
+        self::PREF_calc_taxes_courtier_tab                      => 36,
+        self::PREF_calc_taxes_courtier                          => 37,
+        self::PREF_calc_taxes_courtier_payees                   => 38,
+        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 39,
+        self::PREF_calc_taxes_courtier_solde                    => 40,
+        self::PREF_calc_taxes_assureurs_tab                     => 41,
+        self::PREF_calc_taxes_assureurs                         => 42,
+        self::PREF_calc_taxes_assureurs_payees                  => 43,
+        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 44,
+        self::PREF_calc_taxes_assureurs_solde                   => 45
+    ];
     
 
     public const PREF_APPARENCE_CLAIRE = 'Mode sombre désactivé';
@@ -1047,6 +1115,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_EXPERTS),
+            ChoiceField::new('sinSinistres', "Attributs Sinistres")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_SIN_SINISTRES),
 
             //Onglet 06 - BIBLIOTHEQUE
             FormField::addTab(' BIBLIOTHEQUE')

@@ -68,7 +68,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_UPDATED_AT        = "Dernière modification";
     public const TAB_CRM_MISSIONS = [
         self::PREF_CRM_MISSION_ID           => 0,
-        self::PREF_CRM_MISSION_MISSION      => 1,
+        self::PREF_CRM_MISSION_NOM          => 1,
         self::PREF_CRM_MISSION_OBJECTIF     => 2,
         self::PREF_CRM_MISSION_STARTED_AT   => 3,
         self::PREF_CRM_MISSION_ENDED_AT     => 4,

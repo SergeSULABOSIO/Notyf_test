@@ -12,27 +12,35 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 
 class ServicePreferences
 {
-    //public const PAREMETRE_UTILISATEUR = 25;
-    //public const PAREMETRE_ENTREPRISE = 26;
-
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private ServiceEntreprise $serviceEntreprise
     ) 
     {
-
+        
     }
 
-    public function appliquerPreferenceApparence(Dashboard $dashboard, Utilisateur $utilisateur, Entreprise $entreprise)
+    public function chargerPreference(Utilisateur $utilisateur, Entreprise $entreprise)
     {
-        $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
+        $this->preferences = $this->entityManager->getRepository(Preference::class)->findBy(
             [
                 'entreprise' => $entreprise,
                 'utilisateur' => $utilisateur,
             ]
         );
-        if ($preferences[0]->getApparence() == 0) {
+    }
+
+    public function appliquerPreferenceApparence(Dashboard $dashboard, Utilisateur $utilisateur, Entreprise $entreprise)
+    {
+        $this->chargerPreference($utilisateur, $entreprise);
+        if ($this->preferences[0]->getApparence() == 0) {
             $dashboard->disableDarkMode();
         }
+    }
+
+    public function appliquerPreferenceAttributs($tabAttributs)
+    {
+
     }
 
     public function creerPreference($utilisateur, $entreprise)

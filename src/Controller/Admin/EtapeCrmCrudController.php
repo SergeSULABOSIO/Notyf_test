@@ -6,6 +6,7 @@ use App\Entity\EtapeCrm;
 use App\Entity\FeedbackCRM;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -38,7 +39,8 @@ class EtapeCrmCrudController extends AbstractCrudController
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
     ) {
     }
 
@@ -111,8 +113,8 @@ class EtapeCrmCrudController extends AbstractCrudController
                 ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes.")
         ];
 
-        
-
+        $tabAttributs = $this->servicePreferences->appliquerPreferenceAttributs($tabAttributs);
+        //dd($tabAttributs);
         return $tabAttributs;
         /* return [
 

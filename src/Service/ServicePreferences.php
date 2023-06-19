@@ -74,18 +74,12 @@ class ServicePreferences
     {
         $variables = get_class_vars(get_class($objetInstance));
         //dd($variables[0]);
-        $data = "";
         foreach ($variables as $key => $value) {
-            //$data .= $key . " = exists: "  . class_exists($key) . ", ";
-            if((class_exists("App\Entity\\" . $key, true)) == true){
+            if((class_exists("App\\Entity\\" . $key, true)) == true){
                 $tabAttributs[] = AssociationField::new($key);
             }else{
                 $tabAttributs[] = Field::new($key);
             }
-            //dd($key . " = " . $value . ".");
-            //$tabAttributs[] = Field::new($key);//->onlyOnIndex();
-            //dd($tabAttributs);
-            //$tabAttributs[] = $key;
         }
         //dd(class_exists("App\Entity\utilisateur"));
         

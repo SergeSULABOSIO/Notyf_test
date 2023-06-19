@@ -78,7 +78,7 @@ class EtapeCrmCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new EtapeCrm(), $crud);
-        
+
         return $crud
             ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
@@ -116,7 +116,7 @@ class EtapeCrmCrudController extends AbstractCrudController
                 ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes.")
         ];
 
-        $tabAttributs = $this->servicePreferences->appliquerPreferenceAttributs($tabAttributs);
+        $tabAttributs = $this->servicePreferences->appliquerPreferenceAttributs(new EtapeCrm(), $tabAttributs);
         //dd($tabAttributs);
         return $tabAttributs;
         /* return [

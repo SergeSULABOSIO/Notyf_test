@@ -50,9 +50,9 @@ class ServicePreferences
     public function appliquerPreferenceTaille($instance, Crud $crud)
     {
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-        if($instance instanceof EtapeCrm){
+        if ($instance instanceof EtapeCrm) {
             $taille = 100;
-            if($preference->getCrmTaille() != 0){
+            if ($preference->getCrmTaille() != 0) {
                 $taille = $preference->getCrmTaille();
             }
             $crud->setPaginatorPageSize($taille);
@@ -69,11 +69,8 @@ class ServicePreferences
         return false;
     }
 
-    public function appliquerPreferenceAttributs($tabAttributs)
+    public function definirAttributsPageIndex(Preference $preference, $tabAttributs)
     {
-        $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-        //dd($this->canShow($this->preferences[0]->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_NOM]));//$this->preferences[0]->getCrmEtapes()
-
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();
         }
@@ -93,24 +90,16 @@ class ServicePreferences
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)->onlyOnIndex();
         }
+        return $tabAttributs;
+    }
 
-        /* 
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR)
-            ->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION)
-            ->hideOnIndex()
-            ->hideOnForm();
-
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)
-            ->hideOnForm();
-
-        $tabAttributs[] = AssociationField::new('entreprise', "Entreprise")
-            ->hideOnIndex()
-            ->setColumns(6); */
-
-        //dd($tabAttributs);
+    public function appliquerPreferenceAttributs($objetInstance, $tabAttributs)
+    {
+        $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+        
+        //définition des attributs de la page Index
+        $tabAttributs = $this->definirAttributsPageIndex($preference, $tabAttributs);
+        
         return $tabAttributs;
     }
 

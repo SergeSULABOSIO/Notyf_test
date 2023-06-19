@@ -3,15 +3,16 @@
 namespace App\Service;
 
 use DateTimeImmutable;
+use App\Entity\EtapeCrm;
 use App\Entity\Entreprise;
 use App\Entity\Preference;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Boolean;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Entity\EtapeCrm;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -73,12 +74,22 @@ class ServicePreferences
     {
         $variables = get_class_vars(get_class($objetInstance));
         //dd($variables[0]);
-        //dd($variables);
+        $data = "";
         foreach ($variables as $key => $value) {
-            dd($key . " = " . $value . ".");
+            $data .= $key . " - ";
+            /* if(gettype($key) == "2"){
+                $tabAttributs[] = AssociationField::new($key);
+            }else{
+                $tabAttributs[] = Field::new($key);
+            } */
+            //dd($key . " = " . $value . ".");
+            //$tabAttributs[] = Field::new($key);//->onlyOnIndex();
+            //dd($tabAttributs);
+            //$tabAttributs[] = $key;
         }
-
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
+        dd($data);
+        
+        /* if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_NOM])) {
@@ -96,7 +107,7 @@ class ServicePreferences
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)->onlyOnIndex();
-        }
+        } */
         return $tabAttributs;
     }
 

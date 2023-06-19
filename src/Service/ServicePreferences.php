@@ -220,16 +220,38 @@ class ServicePreferences
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
             $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            });
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
 
             $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnDetail();
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
+            $tabAttributs[] = AssociationField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->setColumns(6)->onlyOnForms()
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+            $tabAttributs[] = CollectionField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->setColumns(6)->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->setColumns(6)->onlyOnDetail();
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
+            $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)->setColumns(6)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])){
+            $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->setColumns(6);
         }
 
         /* 
@@ -266,7 +288,7 @@ class ServicePreferences
         OK == CollectionField::new('cotations', "Cotations")->setColumns(6)->onlyOnIndex(),
         OK == ArrayField::new('cotations', "Cotations")->setColumns(6)->onlyOnDetail(),
         
-        AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
+        OK == AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
         ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
             return $entityRepository
                 ->createQueryBuilder('e')
@@ -275,11 +297,11 @@ class ServicePreferences
                 ;
         })
         ,
-        CollectionField::new('actions', "Missions")->setColumns(6)->onlyOnIndex(),
-        ArrayField::new('actions', "Missions")->setColumns(6)->onlyOnDetail(),
+        OK == CollectionField::new('actions', "Missions")->setColumns(6)->onlyOnIndex(),
+        OK == ArrayField::new('actions', "Missions")->setColumns(6)->onlyOnDetail(),
 
         //Ligne 04
-        AssociationField::new('etape', "Etape actuelle")->setColumns(6)
+        OK == AssociationField::new('etape', "Etape actuelle")->setColumns(6)
         ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
             return $entityRepository
                 ->createQueryBuilder('e')
@@ -288,7 +310,7 @@ class ServicePreferences
                 ;
         })
         ,
-        DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
+        OK == DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
 
         //Ligne 05
         AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()

@@ -69,8 +69,10 @@ class ServicePreferences
         return false;
     }
 
-    public function definirAttributsPageIndex(Preference $preference, $tabAttributs)
+    public function definirAttributsPageIndex($objetInstance, Preference $preference, $tabAttributs)
     {
+        dd($objetInstance[0]);
+
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();
         }
@@ -98,7 +100,7 @@ class ServicePreferences
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         
         //définition des attributs de la page Index
-        $tabAttributs = $this->definirAttributsPageIndex($preference, $tabAttributs);
+        $tabAttributs = $this->definirAttributsPageIndex($objetInstance, $preference, $tabAttributs);
         
         return $tabAttributs;
     }

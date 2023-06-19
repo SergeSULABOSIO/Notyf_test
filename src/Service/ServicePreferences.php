@@ -71,7 +71,12 @@ class ServicePreferences
 
     public function definirAttributsPageIndex($objetInstance, Preference $preference, $tabAttributs)
     {
-        dd($objetInstance[0]);
+        $variables = get_class_vars(get_class($objetInstance));
+        //dd($variables[0]);
+        //dd($variables);
+        foreach ($variables as $key => $value) {
+            dd($key . " = " . $value . ".");
+        }
 
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();

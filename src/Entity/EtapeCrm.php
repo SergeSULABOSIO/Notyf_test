@@ -11,24 +11,24 @@ class EtapeCrm
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    public ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    public ?string $nom = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    public ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    public ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+    public ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
+    public ?Entreprise $entreprise = null;
 
     public function getId(): ?int
     {
@@ -97,6 +97,6 @@ class EtapeCrm
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->nom . "";
     }
 }

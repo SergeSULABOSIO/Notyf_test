@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Entity\Piste;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -70,49 +71,61 @@ class ServicePreferences
         return false;
     }
 
-    public function definirAttributsPageIndex($objetInstance, Preference $preference, $tabAttributs)
+    public function definirAttributsPages($objetInstance, Preference $preference, $tabAttributs)
     {
-        $variables = get_class_vars(get_class($objetInstance));
-        //dd($variables[0]);
-        foreach ($variables as $key => $value) {
-            if((class_exists("App\\Entity\\" . $key, true)) == true){
-                $tabAttributs[] = AssociationField::new($key);
-            }else{
-                $tabAttributs[] = Field::new($key);
-            }
+        if ($objetInstance instanceof EtapeCrm) {
+            $tabAttributs = $this->setEtapeCRM_Fields($preference, $tabAttributs);
         }
-        //dd(class_exists("App\Entity\utilisateur"));
-        
-        
-        /* if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
+        if ($objetInstance instanceof Piste) {
+            $tabAttributs = $this->setPisteCRM_Fields($preference, $tabAttributs);
+        }
+        return $tabAttributs;
+    }
+
+    public function setEtapeCRM_Fields(Preference $preference, $tabAttributs)
+    {
+        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)->onlyOnIndex();
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)->setColumns(6);//->onlyOnIndex();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR)->onlyOnIndex()
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR)->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE)->onlyOnIndex();
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE)->hideOnForm();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION)->onlyOnIndex();
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION)->hideOnForm();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)->onlyOnIndex();
-        } */
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)->hideOnForm();
+        }
+        return $tabAttributs;
+    }
+
+
+    public function setPisteCRM_Fields(Preference $preference, $tabAttributs)
+    {
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)->onlyOnIndex();
+        }
+
+
+
+
+
+
         return $tabAttributs;
     }
 
     public function appliquerPreferenceAttributs($objetInstance, $tabAttributs)
     {
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-        
-        //définition des attributs de la page Index
-        $tabAttributs = $this->definirAttributsPageIndex($objetInstance, $preference, $tabAttributs);
-        
+        //définition des attributs des pages
+        $tabAttributs = $this->definirAttributsPages($objetInstance, $preference, $tabAttributs);
         return $tabAttributs;
     }
 
@@ -129,7 +142,7 @@ class ServicePreferences
         $preference->setCrmMissions([0, 1]);
         $preference->setCrmFeedbacks([0, 1]);
         $preference->setCrmCotations([0, 1]);
-        $preference->setCrmEtapes([0, 1]);
+        $preference->setCrmEtapes([1,2,4,5]);//ok
         $preference->setCrmPistes([0, 1]);
         //PRO
         $preference->setProTaille(100);

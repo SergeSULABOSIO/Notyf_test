@@ -38,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -253,6 +254,28 @@ class ServicePreferences
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])){
             $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->setColumns(6);
         }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR])){
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION])){
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)->hideOnIndex()->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION])){
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)->hideOnForm();
+        }
+        //LES CHAMPS CALCULABLES
+        $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail();
+        $tabAttributs[] = FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail();
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_tab])){
+            $tabAttributs[] = ArrayField::new('calc_polices_tab', PreferenceCrudController::PREF_calc_polices_tab)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_primes_nette])){
+            $tabAttributs[] = NumberField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_fronting])){
+            $tabAttributs[] = NumberField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)->hideOnForm();//->onlyOnDetail(),
+        }
 
         /* 
         //Ligne 01
@@ -313,20 +336,20 @@ class ServicePreferences
         OK == DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
 
         //Ligne 05
-        AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+        OK == AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
         
         //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-        DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-        DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
+        OK == DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+        OK == DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
 
         //LES CHAMPS CALCULABLES
-        FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+        OK == FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
         //SECTION - PRIME
-        FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-        ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
+        OK == FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+        OK == ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
+        OK == NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
+        OK == NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
         NumberField::new('calc_polices_accessoire', "Accéssoires")->hideOnForm(),//->onlyOnDetail(),
         NumberField::new('calc_polices_tva', "Taxes")->hideOnForm(),//->onlyOnDetail(),
         NumberField::new('calc_polices_primes_totale', "Prime totale")->hideOnForm(),//->onlyOnDetail(),

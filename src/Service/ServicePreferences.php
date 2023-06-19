@@ -76,18 +76,19 @@ class ServicePreferences
         //dd($variables[0]);
         $data = "";
         foreach ($variables as $key => $value) {
-            $data .= $key . " - ";
-            /* if(gettype($key) == "2"){
+            //$data .= $key . " = exists: "  . class_exists($key) . ", ";
+            if((class_exists("App\Entity\\" . $key, true)) == true){
                 $tabAttributs[] = AssociationField::new($key);
             }else{
                 $tabAttributs[] = Field::new($key);
-            } */
+            }
             //dd($key . " = " . $value . ".");
             //$tabAttributs[] = Field::new($key);//->onlyOnIndex();
             //dd($tabAttributs);
             //$tabAttributs[] = $key;
         }
-        dd($data);
+        //dd(class_exists("App\Entity\utilisateur"));
+        
         
         /* if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();

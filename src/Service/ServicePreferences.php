@@ -2,45 +2,48 @@
 
 namespace App\Service;
 
+use App\Entity\Taxe;
+use App\Entity\Piste;
+use App\Entity\Client;
+use App\Entity\Expert;
+use App\Entity\Police;
 use DateTimeImmutable;
+use App\Entity\Contact;
+use App\Entity\Monnaie;
+use App\Entity\Produit;
+use App\Entity\Victime;
+use App\Entity\Assureur;
+use App\Entity\Cotation;
+use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
+use App\Entity\Sinistre;
+use App\Entity\ActionCRM;
+use App\Entity\Automobile;
 use App\Entity\Entreprise;
+use App\Entity\Partenaire;
 use App\Entity\Preference;
+use App\Entity\DocClasseur;
+use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
+use App\Entity\DocCategorie;
+use App\Entity\PaiementTaxe;
+use App\Entity\EtapeSinistre;
+use App\Entity\PaiementCommission;
+use App\Entity\PaiementPartenaire;
+use Doctrine\ORM\EntityRepository;
+use App\Entity\CommentaireSinistre;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Boolean;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Entity\ActionCRM;
-use App\Entity\Assureur;
-use App\Entity\Automobile;
-use App\Entity\Client;
-use App\Entity\CommentaireSinistre;
-use App\Entity\Contact;
-use App\Entity\Cotation;
-use App\Entity\DocCategorie;
-use App\Entity\DocClasseur;
-use App\Entity\DocPiece;
-use App\Entity\EtapeSinistre;
-use App\Entity\Expert;
-use App\Entity\FeedbackCRM;
-use App\Entity\Monnaie;
-use App\Entity\PaiementCommission;
-use App\Entity\PaiementPartenaire;
-use App\Entity\PaiementTaxe;
-use App\Entity\Partenaire;
-use App\Entity\Piste;
-use App\Entity\Police;
-use App\Entity\Produit;
-use App\Entity\Sinistre;
-use App\Entity\Taxe;
-use App\Entity\Victime;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class ServicePreferences
@@ -98,13 +101,10 @@ class ServicePreferences
     {
         //GROUPE CRM
         if ($objetInstance instanceof ActionCRM) {
-            
         }
         if ($objetInstance instanceof FeedbackCRM) {
-            
         }
         if ($objetInstance instanceof Cotation) {
-            
         }
         if ($objetInstance instanceof EtapeCrm) {
             $tabAttributs = $this->setCRM_Fields_Etapes($preference, $tabAttributs);
@@ -114,71 +114,50 @@ class ServicePreferences
         }
         //GROUPE PRODUCTION
         if ($objetInstance instanceof Assureur) {
-            
         }
         if ($objetInstance instanceof Automobile) {
-            
         }
         if ($objetInstance instanceof Contact) {
-            
         }
         if ($objetInstance instanceof Client) {
-            
         }
         if ($objetInstance instanceof Partenaire) {
-            
         }
         if ($objetInstance instanceof Police) {
-            
         }
         if ($objetInstance instanceof Produit) {
-            
         }
         //GROUPE FINANCES
         if ($objetInstance instanceof Taxe) {
-            
         }
         if ($objetInstance instanceof Monnaie) {
-            
         }
         if ($objetInstance instanceof PaiementCommission) {
-            
         }
         if ($objetInstance instanceof PaiementPartenaire) {
-            
         }
         if ($objetInstance instanceof PaiementTaxe) {
-            
         }
         //GROUPE SINISTRE
         if ($objetInstance instanceof CommentaireSinistre) {
-            
         }
         if ($objetInstance instanceof EtapeSinistre) {
-            
         }
         if ($objetInstance instanceof Expert) {
-            
         }
         if ($objetInstance instanceof Sinistre) {
-            
         }
         if ($objetInstance instanceof Victime) {
-            
         }
         //GROUPE BIBLIOTHEQUE
         if ($objetInstance instanceof DocCategorie) {
-            
         }
         if ($objetInstance instanceof DocClasseur) {
-            
         }
         if ($objetInstance instanceof DocPiece) {
-            
         }
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
-            
         }
         return $tabAttributs;
     }
@@ -189,7 +168,7 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)->onlyOnIndex();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)->setColumns(6);//->onlyOnIndex();
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)->setColumns(6); //->onlyOnIndex();
         }
         if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR)->hideOnForm()
@@ -213,16 +192,55 @@ class ServicePreferences
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)->onlyOnIndex();
         }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)->setColumns(6);
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
+            $tabAttributs[] = TextField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)->setColumns(6);
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
+            $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)->setColumns(6);
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
+            $tabAttributs[] = AssociationField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+                ->setColumns(6)
+                ->onlyOnForms()
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+            $tabAttributs[] = CollectionField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+                ->setColumns(6)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+                ->setColumns(6)
+                ->onlyOnDetail();
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
+            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            });
 
-/* 
+            $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->setColumns(6)->onlyOnDetail();
+        }
+
+        /* 
         //Ligne 01
-        TextField::new('nom', "Nom")->setColumns(6),
-        TextField::new('objectif', "Objectif")->setColumns(6),
+        OK == TextField::new('nom', "Nom")->setColumns(6),
+        OK ==TextField::new('objectif', "Objectif")->setColumns(6),
 
         //Ligne 02
-        NumberField::new('montant', "Revenu potentiel ($)")->setColumns(6),
+        OK == NumberField::new('montant', "Revenu potentiel ($)")->setColumns(6),
         //AssociationField::new('contact', "Contacts")->hideOnIndex()->setColumns(6),
-        AssociationField::new('contact', "Contacts")->setColumns(6)->onlyOnForms()
+        OK == AssociationField::new('contact', "Contacts")->setColumns(6)->onlyOnForms()
         ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
             return $entityRepository
                 ->createQueryBuilder('e')
@@ -231,12 +249,12 @@ class ServicePreferences
                 ;
         })
         ,
-        CollectionField::new('contact', "Contacts")->setColumns(6)->onlyOnIndex(),
-        ArrayField::new('contact', "Contacts")->setColumns(6)->onlyOnDetail(),
+        OK == CollectionField::new('contact', "Contacts")->setColumns(6)->onlyOnIndex(),
+        OK == ArrayField::new('contact', "Contacts")->setColumns(6)->onlyOnDetail(),
 
         //Ligne 03
         
-        AssociationField::new('cotations', "Cotations")->setColumns(6)->onlyOnForms()
+        OK == AssociationField::new('cotations', "Cotations")->setColumns(6)->onlyOnForms()
         ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
             return $entityRepository
                 ->createQueryBuilder('e')
@@ -245,8 +263,8 @@ class ServicePreferences
                 ;
         })
         ,
-        CollectionField::new('cotations', "Cotations")->setColumns(6)->onlyOnIndex(),
-        ArrayField::new('cotations', "Cotations")->setColumns(6)->onlyOnDetail(),
+        OK == CollectionField::new('cotations', "Cotations")->setColumns(6)->onlyOnIndex(),
+        OK == ArrayField::new('cotations', "Cotations")->setColumns(6)->onlyOnDetail(),
         
         AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
         ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -352,7 +370,7 @@ class ServicePreferences
         $preference->setCrmMissions([0, 1]);
         $preference->setCrmFeedbacks([0, 1]);
         $preference->setCrmCotations([0, 1]);
-        $preference->setCrmEtapes([1,2,4,5]);//ok
+        $preference->setCrmEtapes([1, 2, 4, 5]); //ok
         $preference->setCrmPistes([0, 1]);
         //PRO
         $preference->setProTaille(100);

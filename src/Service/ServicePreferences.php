@@ -7,14 +7,16 @@ use App\Entity\Entreprise;
 use App\Entity\Preference;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Entity\EtapeCrm;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class ServicePreferences
 {
@@ -42,6 +44,18 @@ class ServicePreferences
         $preference = $this->chargerPreference($utilisateur, $entreprise);
         if ($preference->getApparence() == 0) {
             $dashboard->disableDarkMode();
+        }
+    }
+
+    public function appliquerPreferenceTaille($instance, Crud $crud)
+    {
+        $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+        if($instance instanceof EtapeCrm){
+            $taille = 100;
+            if($preference->getCrmTaille() != 0){
+                $taille = $preference->getCrmTaille();
+            }
+            $crud->setPaginatorPageSize($taille);
         }
     }
 

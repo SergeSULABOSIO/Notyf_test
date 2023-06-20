@@ -89,10 +89,13 @@ class PisteCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Piste(), $crud);
+
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Piste")
             ->setEntityLabelInPlural("Pistes")

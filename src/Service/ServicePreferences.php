@@ -38,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -79,13 +80,115 @@ class ServicePreferences
     public function appliquerPreferenceTaille($instance, Crud $crud)
     {
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-        if ($instance instanceof EtapeCrm) {
-            $taille = 100;
-            if ($preference->getCrmTaille() != 0) {
-                $taille = $preference->getCrmTaille();
-            }
-            $crud->setPaginatorPageSize($taille);
+        //GROUPE CRM
+        if ($instance instanceof Action) {
+            $this->setTailleCRM($preference, $crud);
         }
+        if ($instance instanceof FeedbackCRM) {
+            $this->setTailleCRM($preference, $crud);
+        }
+        if ($instance instanceof Cotation) {
+            $this->setTailleCRM($preference, $crud);
+        }
+        if ($instance instanceof EtapeCrm) {
+            $this->setTailleCRM($preference, $crud);
+        }
+        if ($instance instanceof Piste) {
+            $this->setTailleCRM($preference, $crud);
+        }
+        //GROUPE PRODUCTION
+        if ($instance instanceof Assureur) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Automobile) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Contact) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Client) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Partenaire) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Police) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Produit) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        //GROUPE FINANCE
+        if ($instance instanceof Taxe) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof Monnaie) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof PaiementCommission) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof PaiementPartenaire) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof PaiementTaxe) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        //GROUPE SINISTRE
+        if ($instance instanceof CommentaireSinistre) {
+            $this->setTailleSIN($preference, $crud);
+        }
+        if ($instance instanceof EtapeSinistre) {
+            $this->setTailleSIN($preference, $crud);
+        }
+    }
+
+    public function setTailleCRM(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getCrmTaille() != 0) {
+            $taille = $preference->getCrmTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
+    }
+
+    public function setTaillePRO(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getProTaille() != 0) {
+            $taille = $preference->getProTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
+    }
+
+    public function setTailleFIN(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getFinTaille() != 0) {
+            $taille = $preference->getFinTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
+    }
+
+    public function setTailleSIN(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getSinTaille() != 0) {
+            $taille = $preference->getSinTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
+    }
+
+    public function setTailleBIB(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getBibTaille() != 0) {
+            $taille = $preference->getBibTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
+    }
+
+    public function setTaillePAR(Preference $preference, Crud $crud){
+        $taille = 100;
+        if ($preference->getParTaille() != 0) {
+            $taille = $preference->getParTaille();
+        }
+        $crud->setPaginatorPageSize($taille);
     }
 
     public function canShow(array $tab, $indice_attribut)

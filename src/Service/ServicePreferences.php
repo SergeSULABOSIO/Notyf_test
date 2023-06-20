@@ -402,100 +402,61 @@ class ServicePreferences
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_fronting])){
             $tabAttributs[] = NumberField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)->hideOnForm();//->onlyOnDetail(),
         }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_accessoire])){
+            $tabAttributs[] = NumberField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_tva])){
+            $tabAttributs[] = NumberField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_primes_totale])){
+            $tabAttributs[] = NumberField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)->hideOnForm();//->onlyOnDetail(),
+        }
+        //SECTION REVENU
+        $tabAttributs[] = FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail();//<i class="fa-solid fa-toggle-off"></i>
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_reserve])){
+            $tabAttributs[] = NumberField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_partageable])){
+            $tabAttributs[] = NumberField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_ht])){
+            $tabAttributs[] = NumberField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_ttc])){
+            $tabAttributs[] = NumberField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse])){
+            $tabAttributs[] = NumberField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures])){
+            $tabAttributs[] = ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])){
+            $tabAttributs[] = NumberField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)->hideOnForm();//->onlyOnDetail(),
+        }
+        //SECTION PARTENAIRES
+        $tabAttributs[] = FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail();
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_retrocom])){
+            $tabAttributs[] = NumberField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_retrocom_payees])){
+            $tabAttributs[] = NumberField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures])){
+            $tabAttributs[] = ArrayField::new('calc_retrocom_payees_tab_factures', PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures)->hideOnForm();//->onlyOnDetail(),
+        }
+        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_retrocom_solde])){
+            $tabAttributs[] = NumberField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)->hideOnForm();//->onlyOnDetail(),
+        }
 
         /* 
-        //Ligne 01
-        OK == TextField::new('nom', "Nom")->setColumns(6),
-        OK ==TextField::new('objectif', "Objectif")->setColumns(6),
-
-        //Ligne 02
-        OK == NumberField::new('montant', "Revenu potentiel ($)")->setColumns(6),
-        //AssociationField::new('contact', "Contacts")->hideOnIndex()->setColumns(6),
-        OK == AssociationField::new('contact', "Contacts")->setColumns(6)->onlyOnForms()
-        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-            return $entityRepository
-                ->createQueryBuilder('e')
-                ->Where('e.entreprise = :ese')
-                ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                ;
-        })
-        ,
-        OK == CollectionField::new('contact', "Contacts")->setColumns(6)->onlyOnIndex(),
-        OK == ArrayField::new('contact', "Contacts")->setColumns(6)->onlyOnDetail(),
-
-        //Ligne 03
-        
-        OK == AssociationField::new('cotations', "Cotations")->setColumns(6)->onlyOnForms()
-        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-            return $entityRepository
-                ->createQueryBuilder('e')
-                ->Where('e.entreprise = :ese')
-                ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                ;
-        })
-        ,
-        OK == CollectionField::new('cotations', "Cotations")->setColumns(6)->onlyOnIndex(),
-        OK == ArrayField::new('cotations', "Cotations")->setColumns(6)->onlyOnDetail(),
-        
-        OK == AssociationField::new('actions', "Missions")->setColumns(6)->onlyOnForms()
-        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-            return $entityRepository
-                ->createQueryBuilder('e')
-                ->Where('e.entreprise = :ese')
-                ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                ;
-        })
-        ,
-        OK == CollectionField::new('actions', "Missions")->setColumns(6)->onlyOnIndex(),
-        OK == ArrayField::new('actions', "Missions")->setColumns(6)->onlyOnDetail(),
-
-        //Ligne 04
-        OK == AssociationField::new('etape', "Etape actuelle")->setColumns(6)
-        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-            return $entityRepository
-                ->createQueryBuilder('e')
-                ->Where('e.entreprise = :ese')
-                ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                ;
-        })
-        ,
-        OK == DateTimeField::new('expiredAt', "Echéance")->setColumns(6),
-
-        //Ligne 05
-        OK == AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-        
-        //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-        OK == DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-        OK == DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-
-        //LES CHAMPS CALCULABLES
-        OK == FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
-        //SECTION - PRIME
-        OK == FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-        OK == ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
-        OK == NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
-        OK == NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_polices_accessoire', "Accéssoires")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_polices_tva', "Taxes")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_polices_primes_totale', "Prime totale")->hideOnForm(),//->onlyOnDetail(),
-
-        //SECTION - REVENU
-        FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
-        NumberField::new('calc_revenu_reserve', "Réserve")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_revenu_partageable', "Commissions partegeables")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_revenu_ht', "Commissions hors taxes")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_revenu_ttc', "Commissions ttc")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->hideOnForm(),//->onlyOnDetail(),
-        ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
         
         //SECTION - PARTENAIRES
-        FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
-        NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(),//->onlyOnDetail(),
-        ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
-        NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+        OK == FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+        OK == NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(),//->onlyOnDetail(),
+        OK == NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(),//->onlyOnDetail(),
+        OK == ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+        OK == NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
 
         //SECTION - TAXES
         FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),

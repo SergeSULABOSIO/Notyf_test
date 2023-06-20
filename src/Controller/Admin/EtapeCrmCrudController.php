@@ -110,29 +110,7 @@ class EtapeCrmCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $tabAttributs = [
-            FormField::addPanel('Informations générales')
-                ->setIcon('fas fa-list-check') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes.")
-        ];
-
-        $tabAttributs = $this->servicePreferences->appliquerPreferenceAttributs(new EtapeCrm(), $tabAttributs);
-        //dd($tabAttributs);
-        return $tabAttributs;
-        /* return [
-
-            //Ligne 01
-            TextField::new('nom', "Titre / Nom de la piste")->setColumns(6),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            //Ligne 02
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
-
-            //Ligne 03
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
-        ]; */
+        return $this->servicePreferences->getChamps(new EtapeCrm());
     }
 
 

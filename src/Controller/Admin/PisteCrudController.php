@@ -127,14 +127,7 @@ class PisteCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PISTE);
-
-        $tabAttributs = [
-            FormField::addTab(' Informations générales')
-            ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
-        ];
-        $tabAttributs = $this->servicePreferences->appliquerPreferenceAttributs(new Piste(), $tabAttributs);
-        return $tabAttributs;
+        return $this->servicePreferences->getChamps(new Piste());
     }
     
 

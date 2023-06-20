@@ -230,7 +230,7 @@ class ServicePreferences
         return false;
     }
 
-    public function definirAttributsPages($objetInstance, Preference $preference, $tabAttributs)
+    public function definirAttributsPages($objetInstance, Preference $preference)
     {
         //GROUPE CRM
         if ($objetInstance instanceof ActionCRM) {
@@ -240,10 +240,20 @@ class ServicePreferences
         if ($objetInstance instanceof Cotation) {
         }
         if ($objetInstance instanceof EtapeCrm) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-list-check') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes.")
+            ];
             $tabAttributs = $this->setCRM_Fields_Etapes_Index_Details($preference, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Etapes_form($tabAttributs);
         }
         if ($objetInstance instanceof Piste) {
+            $tabAttributs = [
+                FormField::addTab(' Informations générales')
+                ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
+            ];
             $tabAttributs = $this->setCRM_Fields_Pistes_Index_Details($preference, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Pistes_form($tabAttributs);
         }
@@ -589,12 +599,11 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function appliquerPreferenceAttributs($objetInstance, $tabAttributs)
+    public function getChamps($objetInstance)
     {
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //définition des attributs des pages
-        $tabAttributs = $this->definirAttributsPages($objetInstance, $preference, $tabAttributs);
-        return $tabAttributs;
+        return $this->definirAttributsPages($objetInstance, $preference);
     }
 
     public function creerPreference($utilisateur, $entreprise)

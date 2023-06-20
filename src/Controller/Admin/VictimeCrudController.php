@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Victime;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +41,8 @@ class VictimeCrudController extends AbstractCrudController
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager, 
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
         )
     {
         
@@ -80,10 +82,12 @@ class VictimeCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Victime(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Victime")
             ->setEntityLabelInPlural("Victimes")

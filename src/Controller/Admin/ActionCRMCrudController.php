@@ -9,6 +9,7 @@ use Faker\Core\DateTime;
 use App\Entity\ActionCRM;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +49,8 @@ class ActionCRMCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager, 
         private Security $security, 
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
         )
     {
         
@@ -93,10 +95,12 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new ActionCRM(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Mission")
             ->setEntityLabelInPlural("Missions")

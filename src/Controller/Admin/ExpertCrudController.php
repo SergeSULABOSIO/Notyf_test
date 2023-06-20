@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Expert;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -35,7 +36,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ExpertCrudController extends AbstractCrudController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
+        )
     {
         
     }
@@ -74,10 +79,12 @@ class ExpertCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Expert(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Expert")
             ->setEntityLabelInPlural("Experts")

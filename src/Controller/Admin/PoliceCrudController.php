@@ -10,6 +10,7 @@ use App\Service\ServiceCalculateur;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,7 +80,8 @@ class PoliceCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur, 
         private EntityManagerInterface $entityManager, 
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
         )
     {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
@@ -107,10 +109,12 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
         return $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Police")
             ->setEntityLabelInPlural("Polices")

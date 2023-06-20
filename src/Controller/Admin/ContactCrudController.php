@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Contact;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,8 +39,8 @@ class ContactCrudController extends AbstractCrudController
     public function __construct(
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServiceSuppression $serviceSuppression
-        
+        private ServiceSuppression $serviceSuppression,
+        private ServicePreferences $servicePreferences
         )
     {
         
@@ -79,10 +80,12 @@ class ContactCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Contact(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Contact")
             ->setEntityLabelInPlural("Contacts")

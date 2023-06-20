@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -44,7 +45,8 @@ class SinistreCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur, 
         private EntityManagerInterface $entityManager, 
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences        
         )
     {
         
@@ -92,10 +94,12 @@ class SinistreCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Sinistre(), $crud);
         return $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Sinistre")
             ->setEntityLabelInPlural("Sinistres")

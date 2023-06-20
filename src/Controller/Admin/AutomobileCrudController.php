@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Service\ServicePreferences;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -69,7 +70,8 @@ class AutomobileCrudController extends AbstractCrudController
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager, 
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
         )
     {
         
@@ -111,10 +113,12 @@ class AutomobileCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Automobile(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Engin")
             ->setEntityLabelInPlural("Flotte")

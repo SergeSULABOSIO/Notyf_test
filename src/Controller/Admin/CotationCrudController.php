@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Cotation;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -36,7 +37,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class CotationCrudController extends AbstractCrudController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
+        )
     {
         
     }
@@ -80,10 +85,12 @@ class CotationCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Cotation(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Cotation")
             ->setEntityLabelInPlural("Cotations")

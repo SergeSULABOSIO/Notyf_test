@@ -6,6 +6,7 @@ use DateTime;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -66,7 +67,8 @@ class UtilisateurCrudController extends AbstractCrudController
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
     ) {
     }
 
@@ -77,10 +79,12 @@ class UtilisateurCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Utilisateur(), $crud);
         return $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Utilisateur")
             ->setEntityLabelInPlural("Utilisateurs")

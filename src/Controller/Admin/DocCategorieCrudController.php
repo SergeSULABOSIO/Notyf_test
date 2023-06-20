@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\DocCategorie;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -34,7 +35,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class DocCategorieCrudController extends AbstractCrudController
 {
-    public function __construct(private ServiceSuppression $serviceSuppression, private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private ServiceSuppression $serviceSuppression, 
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise,
+        private ServicePreferences $servicePreferences
+        )
     {
         
     }
@@ -46,10 +52,12 @@ class DocCategorieCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new DocCategorie(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Catégorie")
             ->setEntityLabelInPlural("Catégories")

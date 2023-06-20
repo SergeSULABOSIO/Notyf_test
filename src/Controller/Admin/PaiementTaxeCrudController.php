@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use App\Entity\PaiementTaxe;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +44,8 @@ class PaiementTaxeCrudController extends AbstractCrudController
     (
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServiceSuppression $serviceSuppression        
+        private ServiceSuppression $serviceSuppression,
+        private ServicePreferences $servicePreferences        
     )
     {
         
@@ -56,10 +58,12 @@ class PaiementTaxeCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new PaiementTaxe(), $crud);
         return $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
-            ->setPaginatorPageSize(100)
+            //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Taxe payée")
             ->setEntityLabelInPlural("Taxes payées")

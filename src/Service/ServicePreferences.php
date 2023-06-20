@@ -141,6 +141,29 @@ class ServicePreferences
         if ($instance instanceof EtapeSinistre) {
             $this->setTailleSIN($preference, $crud);
         }
+        if ($instance instanceof Expert) {
+            $this->setTailleSIN($preference, $crud);
+        }
+        if ($instance instanceof Sinistre) {
+            $this->setTailleSIN($preference, $crud);
+        }
+        if ($instance instanceof Victime) {
+            $this->setTailleSIN($preference, $crud);
+        }
+        //GROUPE BIBLIOTHEQUE
+        if ($instance instanceof DocCategorie) {
+            $this->setTailleBIB($preference, $crud);
+        }
+        if ($instance instanceof DocClasseur) {
+            $this->setTailleBIB($preference, $crud);
+        }
+        if ($instance instanceof DocPiece) {
+            $this->setTailleBIB($preference, $crud);
+        }
+        //GROUPE PARAMETRES
+        if ($instance instanceof Utilisateur) {
+            $this->setTaillePAR($preference, $crud);
+        }
     }
 
     public function setTailleCRM(Preference $preference, Crud $crud){

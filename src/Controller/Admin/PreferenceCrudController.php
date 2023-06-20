@@ -1273,6 +1273,7 @@ class PreferenceCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
             })
 
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::INDEX)
             ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE);

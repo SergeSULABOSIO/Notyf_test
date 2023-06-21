@@ -328,6 +328,39 @@ class ServicePreferences
 
     public function setCRM_Fields_Action_Index_Details(Preference $preference, $tabAttributs)
     {
+        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_MISSION_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_MISSION_NOM])) {
+            $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
+                ->hideOnForm();
+        }
+
+
+        $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+            ->hideOnForm();
+        $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
+            ->hideOnForm()
+            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
+            ->setChoices(ActionCRMCrudController::STATUS_MISSION);
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
+            ->hideOnForm();
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
+            ->hideOnForm();
+        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
+            ->hideOnForm();
+        $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
+            ->hideOnForm();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE)
+            ->hideOnForm();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_MISSION_UTILISATEUR)
+            ->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_MISSION_CREATED_AT)
+            ->hideOnForm();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT)
+            ->hideOnForm();
 
         return $tabAttributs;
     }

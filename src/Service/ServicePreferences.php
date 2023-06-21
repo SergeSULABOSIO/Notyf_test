@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Admin\ActionCRMCrudController;
 use App\Entity\Taxe;
 use App\Entity\Piste;
 use App\Entity\Client;
@@ -37,14 +38,16 @@ use phpDocumentor\Reflection\Types\Boolean;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\PreferenceCrudController;
-use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
@@ -234,6 +237,13 @@ class ServicePreferences
     {
         //GROUPE CRM
         if ($objetInstance instanceof ActionCRM) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Action_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Action_form($tabAttributs);
         }
         if ($objetInstance instanceof FeedbackCRM) {
         }
@@ -251,8 +261,8 @@ class ServicePreferences
         if ($objetInstance instanceof Piste) {
             $tabAttributs = [
                 FormField::addTab(' Informations générales')
-                ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
+                    ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
             ];
             $tabAttributs = $this->setCRM_Fields_Pistes_Index_Details($preference, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Pistes_form($tabAttributs);
@@ -312,6 +322,61 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)
             ->onlyOnForms()
             ->setColumns(6);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Action_Index_Details(Preference $preference, $tabAttributs)
+    {
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Action_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
+            ->setChoices(ActionCRMCrudController::STATUS_MISSION);
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
+            ->setColumns(6)
+            ->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        /* 
+            
+            //Ligne 06
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm() */
 
         return $tabAttributs;
     }

@@ -60,8 +60,11 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_ID                = "Id";
     public const PREF_CRM_MISSION_NOM               = "Nom";
     public const PREF_CRM_MISSION_OBJECTIF          = "Objectif";
+    public const PREF_CRM_MISSION_STATUS            = "Status";
+    public const PREF_CRM_MISSION_PISTE             = "Piste";
     public const PREF_CRM_MISSION_STARTED_AT        = "Date d'effet";
     public const PREF_CRM_MISSION_ENDED_AT          = "Echéance";
+    public const PREF_CRM_MISSION_ATTRIBUE_A        = "Attribuée à";
     public const PREF_CRM_MISSION_UTILISATEUR       = "Utilisateur";
     public const PREF_CRM_MISSION_ENTREPRISE        = "Entreprise";
     public const PREF_CRM_MISSION_CREATED_AT        = "Date de création";
@@ -70,12 +73,15 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_MISSION_ID           => 0,
         self::PREF_CRM_MISSION_NOM          => 1,
         self::PREF_CRM_MISSION_OBJECTIF     => 2,
-        self::PREF_CRM_MISSION_STARTED_AT   => 3,
-        self::PREF_CRM_MISSION_ENDED_AT     => 4,
-        self::PREF_CRM_MISSION_UTILISATEUR  => 5,
-        self::PREF_CRM_MISSION_ENTREPRISE   => 6,
-        self::PREF_CRM_MISSION_CREATED_AT   => 7,
-        self::PREF_CRM_MISSION_UPDATED_AT   => 8
+        self::PREF_CRM_MISSION_STATUS       => 3,
+        self::PREF_CRM_MISSION_PISTE        => 4,
+        self::PREF_CRM_MISSION_STARTED_AT   => 5,
+        self::PREF_CRM_MISSION_ENDED_AT     => 6,
+        self::PREF_CRM_MISSION_ATTRIBUE_A   => 7,
+        self::PREF_CRM_MISSION_UTILISATEUR  => 8,
+        self::PREF_CRM_MISSION_ENTREPRISE   => 9,
+        self::PREF_CRM_MISSION_CREATED_AT   => 10,
+        self::PREF_CRM_MISSION_UPDATED_AT   => 11
     ];
 
     //CRM - FEEDBACK

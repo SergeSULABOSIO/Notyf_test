@@ -128,11 +128,10 @@ class ActionCRMCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        return $this->servicePreferences->getChamps(new ActionCRM());
+/* 
         return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs."),
-
+            
             //Ligne 01
             TextField::new('mission', "Tâches")->setColumns(12),
             TextareaField::new('objectif', "Objectif")->setColumns(12),
@@ -168,28 +167,13 @@ class ActionCRMCrudController extends AbstractCrudController
             })
             ,
             
-            //Ligne 05
-            /* AssociationField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            CollectionField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('feedbacks', "Feedbacks")->setColumns(6)->onlyOnDetail(),
- */
-            
-
             //Ligne 06
             //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
             DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
             DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
-        ];
+        ]; */
     }
     
 

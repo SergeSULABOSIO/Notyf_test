@@ -118,32 +118,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
-        return [
-            
-            //Ligne 01
-            TextField::new('message', "Feedback")->setColumns(6),
-            AssociationField::new('action', "Mission")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-
-            //Ligne 02
-            TextField::new('prochaineTache', "Prochaine tâche")->setColumns(6),
-            DateTimeField::new('startedAt', "date d'effet")->setColumns(6),
-            
-            //Ligne 03
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-            
-            DateTimeField::new('createdAt', "Date création")->hideOnForm()->hideOnIndex(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new FeedbackCRM());
     }
     
 

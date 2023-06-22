@@ -246,6 +246,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Action_form($tabAttributs);
         }
         if ($objetInstance instanceof FeedbackCRM) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Un feedback est une réponse ou compte rendu attaché à une mission. Chaque mission doit avoir un ou plusieurs feedbacks.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Feedback_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Feedback_form($tabAttributs);
         }
         if ($objetInstance instanceof Cotation) {
         }

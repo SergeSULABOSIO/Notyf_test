@@ -119,10 +119,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Un feedback est une réponse ou compte rendu attaché à une mission. Chaque mission doit avoir un ou plusieurs feedbacks."),
-
+            
             //Ligne 01
             TextField::new('message', "Feedback")->setColumns(6),
             AssociationField::new('action', "Mission")->setColumns(6)

@@ -326,6 +326,48 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_Index_Details(Preference $preference, $tabAttributs)
     {
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_FEEDBACK_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE])) {
+            $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE])) {
+            $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION])) {
+            $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET])) {
+            $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR)
+                ->hideOnForm()
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
+                ->hideOnForm();
+        }
+        return $tabAttributs;
     }
 
     public function setCRM_Fields_Feedback_form($tabAttributs)

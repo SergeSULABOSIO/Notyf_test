@@ -326,30 +326,36 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_Index_Details(Preference $preference, $tabAttributs)
     {
-        
     }
 
     public function setCRM_Fields_Feedback_form($tabAttributs)
     {
-        $tabAttributs[] = TextField::new('message', "Feedback")
+        $tabAttributs[] = TextField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
             ->onlyOnForms()
             ->setColumns(6);
-
+        $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)
+            ->onlyOnForms()
+            ->setColumns(6);
         /* //Ligne 01
         ,
-        AssociationField::new('action', "Mission")->setColumns(6)
-        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-            return $entityRepository
-                ->createQueryBuilder('e')
-                ->Where('e.entreprise = :ese')
-                ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                ;
-        })
+        
         ,
 
         //Ligne 02
-        TextField::new('prochaineTache', "Prochaine tâche")->setColumns(6),
-        DateTimeField::new('startedAt', "date d'effet")->setColumns(6),
+        
+        ,
         
         //Ligne 03
         AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()

@@ -410,6 +410,10 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->hideOnForm();
         }
+        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
+            $tabAttributs[] = ArrayField::new('pieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
+                ->hideOnForm();
+        }
         if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
                 ->hideOnForm()

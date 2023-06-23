@@ -404,17 +404,23 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
             ->hideOnForm();
         }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE])) {
+            $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
+            ->hideOnForm();
+        }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE])) {
+            $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
+            ->hideOnForm();
+        }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL])) {
+            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
+            ->hideOnForm();
+        }
 
+        /* 
         
-        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
-            ->onlyOnForms()
-            ->setColumns(6);
+        
+        
         $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
             ->onlyOnForms()
             ->setColumns(6)
@@ -436,7 +442,7 @@ class ServicePreferences
             ->setColumns(6);
         $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(6); */
 
         /* return [
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()

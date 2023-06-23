@@ -50,15 +50,28 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use PhpParser\Node\Expr\Cast\Array_;
+
+use function PHPUnit\Framework\returnSelf;
 
 class ServicePreferences
 {
     private $preferences;
+    private $taxes = [];
+    public const INDICE_TAXE_COURTIER = 0;
+    public const INDICE_TAXE_ASSUREUR = 1;
 
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise
     ) {
+    }
+
+    public function chargerTaxes()
+    {
+        $this->taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
     }
 
     public function chargerPreference(Utilisateur $utilisateur, Entreprise $entreprise): Preference
@@ -283,7 +296,6 @@ class ServicePreferences
         }
         //GROUPE PRODUCTION
         if ($objetInstance instanceof Assureur) {
-            
         }
         if ($objetInstance instanceof Automobile) {
         }
@@ -502,23 +514,6 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)
             ->onlyOnForms()
             ->setColumns(6);
-        /* //Ligne 01
-        ,
-        
-        ,
-
-        //Ligne 02
-        
-        ,
-        
-        //Ligne 03
-        AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-        
-        DateTimeField::new('createdAt', "Date création")->hideOnForm()->hideOnIndex(),
-        DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-        //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6) */
-
         return $tabAttributs;
     }
 
@@ -625,15 +620,6 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        /* 
-            
-            //Ligne 06
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm() */
-
         return $tabAttributs;
     }
 
@@ -747,6 +733,13 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_tva])) {
+            //dd($this->taxes);
+            $txtTaxe = "";
+            $tabT = $this->getTaxes(self::INDICE_TAXE_ASSUREUR);
+            if (count($tabT) == 1) {
+                dd($tabT[0]->getNom());
+            }
+            
             $tabAttributs[] = NumberField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
                 ->hideOnForm();
         }
@@ -864,6 +857,32 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function getTaxes($indiceTaxe): array
+    {
+        $tabTaxesResultat = [];
+        switch ($indiceTaxe) {
+            case self::INDICE_TAXE_ASSUREUR:
+                foreach ($this->taxes as $taxe) {
+                    if ($taxe->isPayableparcourtier() == false) {
+                        $tabTaxesResultat[] = $taxe;
+                    }
+                }
+                break;
+            case self::INDICE_TAXE_COURTIER:
+                foreach ($this->taxes as $taxe) {
+                    if ($taxe->isPayableparcourtier() == true) {
+                        $tabTaxesResultat[] = $taxe;
+                    }
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        return $tabTaxesResultat;
+    }
+
     public function setCRM_Fields_Pistes_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
@@ -922,6 +941,7 @@ class ServicePreferences
 
     public function getChamps($objetInstance)
     {
+        $taxes = $this->chargerTaxes();
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //définition des attributs des pages
         return $this->definirAttributsPages($objetInstance, $preference);

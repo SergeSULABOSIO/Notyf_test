@@ -296,6 +296,7 @@ class ServicePreferences
         }
         //GROUPE PRODUCTION
         if ($objetInstance instanceof Assureur) {
+            
         }
         if ($objetInstance instanceof Automobile) {
         }

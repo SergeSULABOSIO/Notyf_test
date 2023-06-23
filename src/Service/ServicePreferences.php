@@ -733,13 +733,6 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_polices_tva])) {
-            //dd($this->taxes);
-            $txtTaxe = "";
-            $tabT = $this->getTaxes(self::INDICE_TAXE_ASSUREUR);
-            if (count($tabT) == 1) {
-                dd($tabT[0]->getNom());
-            }
-            
             $tabAttributs[] = NumberField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
                 ->hideOnForm();
         }
@@ -809,23 +802,23 @@ class ServicePreferences
             ->hideOnForm();
 
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', PreferenceCrudController::PREF_calc_taxes_courtier_tab)
+            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab))//
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_courtier', PreferenceCrudController::PREF_calc_taxes_courtier)
+            $tabAttributs[] = NumberField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier_payees])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_courtier_payees', PreferenceCrudController::PREF_calc_taxes_courtier_payees)
+            $tabAttributs[] = NumberField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures)
+            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "PdP", PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_courtier_solde', PreferenceCrudController::PREF_calc_taxes_courtier_solde)
+            $tabAttributs[] = NumberField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
                 ->hideOnForm();
         }
 
@@ -835,26 +828,36 @@ class ServicePreferences
             ->hideOnForm();
 
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_assureurs_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', PreferenceCrudController::PREF_calc_taxes_assureurs_tab)
+            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Desc", PreferenceCrudController::PREF_calc_taxes_assureurs_tab))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_assureurs])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_assureurs', PreferenceCrudController::PREF_calc_taxes_assureurs)
+            $tabAttributs[] = NumberField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_assureurs_payees', PreferenceCrudController::PREF_calc_taxes_assureurs_payees)
+            $tabAttributs[] = NumberField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures)
+            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "PdP", PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures))
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
-            $tabAttributs[] = NumberField::new('calc_taxes_assureurs_solde', PreferenceCrudController::PREF_calc_taxes_assureurs_solde)
+            $tabAttributs[] = NumberField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
                 ->hideOnForm();
         }
         return $tabAttributs;
+    }
+
+
+    private function getTitreAttributTaxe($indiceTaxe, $sufixe, $defaultLabel):string{
+        $txtTaxe = $defaultLabel;
+        $tabT = $this->getTaxes($indiceTaxe);
+        if (count($tabT) == 1) {
+            $txtTaxe = "Ac/" . $tabT[0]->getNom() . " (" . $tabT[0]->getTaux() * 100 . "%)/" . $sufixe;
+        }
+        return $txtTaxe;
     }
 
     public function getTaxes($indiceTaxe): array

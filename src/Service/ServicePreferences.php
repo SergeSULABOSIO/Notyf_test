@@ -416,21 +416,25 @@ class ServicePreferences
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
             ->hideOnForm();
         }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR])) {
+            $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
+            ->hideOnForm()
+            ->setChoices([
+                'Réassureur' => 1,
+                'Assureur' => 0
+            ]);
+        }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR])) {
+            $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
+            ->hideOnForm();
+        }
 
         /* 
         
         
         
-        $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setChoices([
-                'Réassureur' => 1,
-                'Assureur' => 0
-            ]);
-        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)
-            ->onlyOnForms()
-            ->setColumns(6);
+        
+        
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM)
             ->onlyOnForms()
             ->setColumns(6);

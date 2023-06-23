@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Controller\Admin\ActionCRMCrudController;
 use App\Entity\Taxe;
 use App\Entity\Piste;
 use App\Entity\Client;
@@ -33,10 +32,13 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use Doctrine\ORM\EntityRepository;
 use App\Entity\CommentaireSinistre;
+use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
+use function PHPUnit\Framework\returnSelf;
 use phpDocumentor\Reflection\Types\Boolean;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -48,11 +50,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use PhpParser\Node\Expr\Cast\Array_;
-
-use function PHPUnit\Framework\returnSelf;
 
 class ServicePreferences
 {
@@ -296,7 +297,13 @@ class ServicePreferences
         }
         //GROUPE PRODUCTION
         if ($objetInstance instanceof Assureur) {
-            
+            $tabAttributs = [
+                FormField::addTab(' Informations générales')
+                    ->setIcon('fas fa-umbrella') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Le preneur des risques en contre partie du versement d'une prime d'assurance et selon les condtions bien spécifiées dans la police.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Assureur_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Assureur_form($tabAttributs);
         }
         if ($objetInstance instanceof Automobile) {
         }
@@ -342,6 +349,103 @@ class ServicePreferences
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
         }
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Assureur_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        /* return [
+            
+            //Ligne 01
+            ,
+            ,
+
+            //Ligne 02
+            ,
+            EmailField::new('email', 'E-mail')->setColumns(6),
+
+            //Ligne 03
+            ChoiceField::new('isreassureur', 'Catégorie')->setColumns(6)
+            ->setChoices([
+                'Réassureur' => 1,
+                'Assureur' => 0
+            ]),
+            UrlField::new('siteweb', 'Site Internet')->setColumns(6),
+
+            //Ligne 04
+            TextField::new('rccm', 'RCCM')->hideOnIndex()->setColumns(6),
+            TextField::new('idnat', 'Id. Nationale')->hideOnIndex()->setColumns(6),
+
+            //Ligne 05
+            TextField::new('licence', 'N° Licence')->setColumns(6),
+            TextField::new('numimpot', 'N° Impôt')->hideOnIndex()->setColumns(6),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
+            //Ligne 06
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnform()->setColumns(6),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnindex()->setColumns(6)
+
+            //LES CHAMPS CALCULABLES
+            FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail(),
+            //SECTION - PRIME
+            FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            //ArrayField::new('calc_polices_tab', "Polices")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_nette', "Prime nette")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_fronting', "Fronting")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_accessoire', "Accéssoires")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_tva', "Taxes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_polices_primes_totale', "Prime totale")->hideOnForm(),//->onlyOnDetail(),
+
+            //SECTION - REVENU
+            FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),//<i class="fa-solid fa-toggle-off"></i>
+            NumberField::new('calc_revenu_reserve', "Réserve")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_partageable', "Commissions partegeables")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ht', "Commissions hors taxes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc', "Commissions ttc")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_encaisse', "Commissions encaissées")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_revenu_ttc_solde_restant_du', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+            
+            //SECTION - PARTENAIRES
+            FormField::addPanel('Retrocommossions')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            NumberField::new('calc_retrocom', "Retrocommissions dûes")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_payees', "Retrocommissions payées")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_retrocom_payees_tab_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_retrocom_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+
+            //SECTION - TAXES
+            FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_courtier_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+
+            FormField::addPanel()->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_tab', "Taxes concernées")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs', "Montant dû")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_payees', "Montant payé")->hideOnForm(),//->onlyOnDetail(),
+            ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', "Factures / Notes de débit")->hideOnForm(),//->onlyOnDetail(),
+            NumberField::new('calc_taxes_assureurs_solde', "Solde restant dû")->hideOnForm(),//->onlyOnDetail(),
+        ];
+         */
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Assureur_Index_Details(Preference $preference, $tabAttributs)
+    {
         return $tabAttributs;
     }
 
@@ -803,7 +907,7 @@ class ServicePreferences
             ->hideOnForm();
 
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab))//
+            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab)) //
                 ->hideOnForm();
         }
         if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_calc_taxes_courtier])) {
@@ -852,7 +956,8 @@ class ServicePreferences
     }
 
 
-    private function getTitreAttributTaxe($indiceTaxe, $sufixe, $defaultLabel):string{
+    private function getTitreAttributTaxe($indiceTaxe, $sufixe, $defaultLabel): string
+    {
         $txtTaxe = $defaultLabel;
         $tabT = $this->getTaxes($indiceTaxe);
         if (count($tabT) == 1) {

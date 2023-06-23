@@ -202,8 +202,8 @@ class PoliceCrudController extends AbstractCrudController
 
         return [
             FormField::addTab(' Informations de base')
-                ->setIcon('fas fa-file-shield'), //<i class="fa-sharp fa-solid fa-address-book"></i>
-            //->setHelp("Le contrat d'assurance en place."),
+                ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setHelp("Le contrat d'assurance en place."),
 
             //Ligne 01
             NumberField::new('idavenant', "N° Avenant")->setColumns(2),

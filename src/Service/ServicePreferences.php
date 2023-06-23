@@ -391,6 +391,53 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(6);
 
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Assureur_Index_Details(Preference $preference, $tabAttributs)
+    {
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)
+            ->hideOnForm();
+        }
+        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
+            ->hideOnForm();
+        }
+
+        
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setChoices([
+                'Réassureur' => 1,
+                'Assureur' => 0
+            ]);
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('licence', PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT)
+            ->onlyOnForms()
+            ->setColumns(6);
+
         /* return [
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
@@ -401,11 +448,6 @@ class ServicePreferences
 
             //CHAMPS CALCULABLES ICI EN BAS !!!!!
          */
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_Assureur_Index_Details(Preference $preference, $tabAttributs)
-    {
         return $tabAttributs;
     }
 

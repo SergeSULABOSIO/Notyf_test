@@ -259,7 +259,7 @@ class ServicePreferences
                     ->setIcon('fas fa-paper-plane') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une mission est une ou un ensembles d'actions attribuée(s) à un ou plusieurs utilisateurs.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Action_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Action_Index_Details($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Action_form($tabAttributs);
         }
         if ($objetInstance instanceof FeedbackCRM) {
@@ -268,7 +268,7 @@ class ServicePreferences
                     ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Un feedback est une réponse ou compte rendu attaché à une mission. Chaque mission doit avoir un ou plusieurs feedbacks.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Feedback_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Feedback_Index_Details($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Feedback_form($tabAttributs);
         }
         if ($objetInstance instanceof Cotation) {
@@ -277,7 +277,7 @@ class ServicePreferences
                     ->setIcon('fas fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une cotation est tout simplement un dévis/une offre financière relative à un risque précis. Ce n'est pas une police d'assurance.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Cotation_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Cotation_Index_Details($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Cotation_form($tabAttributs);
         }
         if ($objetInstance instanceof EtapeCrm) {
@@ -286,7 +286,7 @@ class ServicePreferences
                     ->setIcon('fas fa-list-check') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une étape (ou phase) dans le traitement d'une pistre. Le traitement d'une piste (càd sa conversion en client) est un processus qui peut passer par un certain nombre d'étapes.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Etapes_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Etapes_Index_Details($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Etapes_form($tabAttributs);
         }
         if ($objetInstance instanceof Piste) {
@@ -295,7 +295,7 @@ class ServicePreferences
                     ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
             ];
-            $tabAttributs = $this->setCRM_Fields_Pistes_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Pistes_Index_Details($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Pistes_form($tabAttributs);
         }
         //GROUPE PRODUCTION
@@ -305,7 +305,7 @@ class ServicePreferences
                     ->setIcon('fas fa-umbrella') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le preneur des risques en contre partie du versement d'une prime d'assurance et selon les condtions bien spécifiées dans la police.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Assureur_Index_Details($preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Assureur_Index_Details($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Assureur_form($tabAttributs);
         }
         if ($objetInstance instanceof Automobile) {
@@ -314,7 +314,7 @@ class ServicePreferences
                     ->setIcon('fas fa-car') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Engin auto-moteur.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Engins_Index_Details($preference->getProAutomobiles(), PreferenceCrudController::TAB_PRO_ENGINS, $preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Engins_Index_Details($preference->getProAutomobiles(), PreferenceCrudController::TAB_PRO_ENGINS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Engins_form($tabAttributs);
         }
         if ($objetInstance instanceof Contact) {
@@ -403,7 +403,7 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Engins_Index_Details(array $tabPreferences, array $tabDefaultAttributs, Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Engins_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ENGIN_ID)
@@ -520,29 +520,29 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Assureur_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Assureur_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_NOM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE])) {
             $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL])) {
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR])) {
             $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
                 ->hideOnForm()
                 ->setChoices([
@@ -550,46 +550,46 @@ class ServicePreferences
                     'Assureur' => 0
                 ]);
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB])) {
             $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM])) {
             $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE])) {
             $tabAttributs[] = TextField::new('licence', PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT])) {
             $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT])) {
             $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION)
                 ->hideOnform();
         }
-        if ($this->canShow($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION)
                 ->hideOnform();
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS);
+        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }
@@ -774,101 +774,101 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Cotation_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Cotation_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_NOM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_PISTE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PISTE])) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_RISQUE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_RISQUE])) {
             $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
             $tabAttributs[] = NumberField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_MONNAIE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_MONNAIE])) {
             $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_CRM_COTATION_MONNAIE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR])) {
             $tabAttributs[] = ArrayField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
             $tabAttributs[] = ArrayField::new('pieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS[PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)
                 ->hideOnForm();
         }
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Feedback_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Feedback_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_FEEDBACK_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE])) {
             $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE])) {
             $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION])) {
             $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET])) {
             $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmFeedbacks(), PreferenceCrudController::TAB_CRM_FEEDBACKS[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
                 ->hideOnForm();
         }
@@ -907,56 +907,56 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Action_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Action_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_MISSION_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_NOM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_NOM])) {
             $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF])) {
             $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_STATUS])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_STATUS])) {
             $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
                 ->hideOnForm()
                 ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
                 ->setChoices(ActionCRMCrudController::STATUS_MISSION);
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_PISTE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_PISTE])) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT])) {
             $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT])) {
             $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
             $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_MISSION_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_CREATED_AT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_CREATED_AT])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_MISSION_CREATED_AT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmMissions(), PreferenceCrudController::TAB_CRM_MISSIONS[PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT)
                 ->hideOnForm();
         }
@@ -1004,30 +1004,30 @@ class ServicePreferences
     }
 
 
-    public function setCRM_Fields_Etapes_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Etapes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_ETAPES_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_NOM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_ETAPES_NOM)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_ETAPES_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_ETAPES_ENTREPRISE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_CREATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmEtapes(), PreferenceCrudController::TAB_CRM_ETAPES[PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_ETAPES_DATE_MODIFICATION)
                 ->hideOnForm();
         }
@@ -1037,60 +1037,60 @@ class ServicePreferences
 
 
 
-    public function setCRM_Fields_Pistes_Index_Details(Preference $preference, $tabAttributs)
+    public function setCRM_Fields_Pistes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ID])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_NOM])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
                 ->hideOnForm(); //->setColumns(6);
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
             $tabAttributs[] = TextField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
                 ->hideOnForm(); //->setColumns(6);
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
             $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
                 ->hideOnForm(); //->setColumns(6);
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
             $tabAttributs[] = CollectionField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
             $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
             $tabAttributs[] = CollectionField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])) {
             $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
                 ->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)
                 ->hideOnForm();
         }
-        if ($this->canShow($preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)
                 ->onlyOnIndex();
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $preference->getCrmPistes(), PreferenceCrudController::TAB_CRM_PISTE);
+        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }

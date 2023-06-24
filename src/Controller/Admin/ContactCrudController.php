@@ -113,39 +113,7 @@ class ContactCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-address-book') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Tout simple un contact au sens littéral du terme. Une personne à contacter dans le cadre des assurances."),
-
-            //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
-            TextField::new('poste', "Poste")->setColumns(6),
-
-            //Ligne 02
-            TelephoneField::new('telephone', "Téléphone")->setColumns(6),
-            EmailField::new('email', "Email")->setColumns(6),
-
-            //Ligne 03
-            AssociationField::new('client', "Client")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
-
-            //Ligne 04
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()
-        ];
+        return $this->servicePreferences->getChamps(new Contact());
     }
 
     public function configureActions(Actions $actions): Actions

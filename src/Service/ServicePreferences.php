@@ -318,6 +318,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Engins_form($tabAttributs);
         }
         if ($objetInstance instanceof Contact) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-address-book') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Tout simple un contact au sens littéral du terme. Une personne à contacter dans le cadre des assurances."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_Contacts_Index_Details($preference->getProContacts(), PreferenceCrudController::TAB_PRO_CONTACTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Contacts_form($tabAttributs);
         }
         if ($objetInstance instanceof Client) {
         }
@@ -399,6 +406,71 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(6)
             ->setChoices(AutomobileCrudController::TAB_AUTO_NATURE);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Contacts_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_CONTACT_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CONTACT_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_POSTE])) {
+            $tabAttributs[] = TextField::new('poste', PreferenceCrudController::PREF_PRO_CONTACT_POSTE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE])) {
+            $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_EMAIL])) {
+            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_CLIENT])) {
+            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR)
+                ->hideOnForm()
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CONTACT_ENTREPRISE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_MODIFICATION)
+                ->hideOnForm();
+        }
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Contacts_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CONTACT_NOM)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('poste', PreferenceCrudController::PREF_PRO_CONTACT_POSTE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
+            ->onlyOnForms()
+            ->setColumns(6);
 
         return $tabAttributs;
     }

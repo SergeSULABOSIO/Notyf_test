@@ -129,51 +129,6 @@ class ActionCRMCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return $this->servicePreferences->getChamps(new ActionCRM());
-/* 
-        return [
-            
-            //Ligne 01
-            TextField::new('mission', "Tâches")->setColumns(12),
-            TextareaField::new('objectif', "Objectif")->setColumns(12),
-            
-            //ligne 02
-            ChoiceField::new('clos', "Status")->setColumns(6)
-            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
-            ->setChoices(self::STATUS_MISSION),
-            
-            AssociationField::new('piste', "Piste")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            //Ligne 03
-            DateTimeField::new('startedAt', "Date effet")->setColumns(6),
-            DateTimeField::new('endedAt', "Echéance")->setColumns(6),
-            
-            //Ligne 04
-           
-
-            AssociationField::new('attributedTo', "Attribuée à")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            
-            //Ligne 06
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex(),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()
-        ]; */
     }
     
 

@@ -64,7 +64,11 @@ class AutomobileCrudController extends AbstractCrudController
         'Tricyclette' => 12,
         'Voiture' => 13,
         'Yacht' => 14,
-        'Autres' => 15
+        'Jeep' => 15,
+        'Pick-up' => 16,
+        'Mini-bus' => 17,
+        'Bus' => 18,
+        'Autres' => 19
     ];
 
     public function __construct(
@@ -146,55 +150,7 @@ class AutomobileCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-car') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Engin auto-moteur."),
-
-            //Ligne 01
-            TextField::new('plaque', "Plaque")->setColumns(6),            
-            TextField::new('chassis', 'N° du chassis')->setColumns(6),
-
-            //Ligne 02
-            TextField::new('model', 'Modèle')->hideOnIndex()->setColumns(6),
-            TextField::new('marque', 'Marque')->setColumns(6),
-
-            //Ligne 03
-            TextField::new('annee', 'Année')->setColumns(6),
-            TextField::new('puissance', 'Puissance')->setColumns(6),
-
-            //Ligne 04
-            NumberField::new('valeur', 'Valeur')->setColumns(6),
-            AssociationField::new('monnaie', 'Monnaie')->setColumns(6),
-
-            //Ligne 05
-            NumberField::new('nbsieges', 'Nb sièges')->hideOnIndex()->setColumns(6),
-            
-            //AssociationField::new('polices', "Police d'assurance")->setColumns(6),
-            AssociationField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            CollectionField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('polices', "Police d'assurance")->setColumns(6)->onlyOnDetail(),
-
-            //Ligne 06
-            ChoiceField::new('utilite', 'Usage')->setColumns(6)->setChoices(self::TAB_AUTO_UTILITE),
-            ChoiceField::new('nature', 'Nature')->setColumns(6)->setChoices(self::TAB_AUTO_NATURE),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            //Ligne 07
-            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new Automobile());
     }
 
     public function configureActions(Actions $actions): Actions

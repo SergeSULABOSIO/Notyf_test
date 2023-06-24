@@ -39,6 +39,7 @@ use phpDocumentor\Reflection\Types\Boolean;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\AutomobileCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -308,6 +309,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Assureur_form($tabAttributs);
         }
         if ($objetInstance instanceof Automobile) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-car') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Engin auto-moteur.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Engins_Index_Details($preference->getProAutomobiles(), PreferenceCrudController::TAB_PRO_ENGINS, $preference, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Engins_form($tabAttributs);
         }
         if ($objetInstance instanceof Contact) {
         }
@@ -351,6 +359,124 @@ class ServicePreferences
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
         }
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Engins_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('plaque', PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('chassis', PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('model', PreferenceCrudController::PREF_PRO_ENGIN_MODEL)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('marque', PreferenceCrudController::PREF_PRO_ENGIN_MARQUE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('annee', PreferenceCrudController::PREF_PRO_ENGIN_ANNEE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = TextField::new('puissance', PreferenceCrudController::PREF_PRO_ENGIN_PUISSANCE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = NumberField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = NumberField::new('nbsieges', PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = ChoiceField::new('utilite', PreferenceCrudController::PREF_PRO_ENGIN_USAGE)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setChoices(AutomobileCrudController::TAB_AUTO_UTILITE);
+        $tabAttributs[] = ChoiceField::new('nature', PreferenceCrudController::PREF_PRO_ENGIN_NATURE)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setChoices(AutomobileCrudController::TAB_AUTO_NATURE);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Engins_Index_Details(array $tabPreferences, array $tabDefaultAttributs, Preference $preference, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ENGIN_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE])) {
+            $tabAttributs[] = TextField::new('plaque', PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS])) {
+            $tabAttributs[] = TextField::new('chassis', PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_MODEL])) {
+            $tabAttributs[] = TextField::new('model', PreferenceCrudController::PREF_PRO_ENGIN_MODEL)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_MARQUE])) {
+            $tabAttributs[] = TextField::new('marque', PreferenceCrudController::PREF_PRO_ENGIN_MARQUE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_ANNEE])) {
+            $tabAttributs[] = TextField::new('annee', PreferenceCrudController::PREF_PRO_ENGIN_ANNEE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_PUISSANCE])) {
+            $tabAttributs[] = TextField::new('puissance', PreferenceCrudController::PREF_PRO_ENGIN_PUISSANCE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE])) {
+            $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_VALEUR])) {
+            $tabAttributs[] = NumberField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES])) {
+            $tabAttributs[] = NumberField::new('nbsieges', PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_USAGE])) {
+            $tabAttributs[] = ChoiceField::new('utilite', PreferenceCrudController::PREF_PRO_ENGIN_USAGE)
+                ->hideOnForm()
+                ->setChoices(AutomobileCrudController::TAB_AUTO_UTILITE);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_NATURE])) {
+            $tabAttributs[] = ChoiceField::new('nature', PreferenceCrudController::PREF_PRO_ENGIN_NATURE)
+                ->hideOnForm()
+                ->setChoices(AutomobileCrudController::TAB_AUTO_NATURE);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_POLICE])) {
+            $tabAttributs[] = ArrayField::new('polices', PreferenceCrudController::PREF_PRO_ENGIN_POLICE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_ENGIN_UTILISATEUR)
+                ->hideOnForm()
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_ENGIN_ENTREPRISE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_ENGIN_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_DATE_DE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_ENGIN_DATE_DE_MODIFICATION)
+                ->hideOnForm();
+        }
+
         return $tabAttributs;
     }
 
@@ -464,7 +590,7 @@ class ServicePreferences
 
         //LES CHAMPS CALCULABLES
         $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS);
-        
+
         return $tabAttributs;
     }
 
@@ -834,7 +960,6 @@ class ServicePreferences
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT)
                 ->hideOnForm();
         }
-
         return $tabAttributs;
     }
 

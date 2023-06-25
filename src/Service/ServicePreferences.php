@@ -423,111 +423,119 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
                 ->hideOnForm();
         }
-
-
-
-
-
-
-
-
-        $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_POLICE_PISTE)
-            ->onlyOnForms()
-            ->setColumns(4)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
+            $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION])) {
+            $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION])) {
+            $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET])) {
+            $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION])) {
+            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PISTE])) {
+            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_POLICE_PISTE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PISTE])) {
+            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->hideOnForm();
+        }
         $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
             ->setIcon('fas fa-bag-shopping')
             ->setHelp("Le contrat d'assurance en place.")
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_POLICE_MONNAIE)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = NumberField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-            ->setColumns(2)
-            ->onlyOnForms()
-            ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
-        $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnForms();
-        $tabAttributs[] = NumberField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('arca', PreferenceCrudController::PREF_PRO_POLICE_ARCA)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('tva', PreferenceCrudController::PREF_PRO_POLICE_TVA)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = FormField::addTab(' Structure des revenus')->setIcon('fas fa-sack-dollar');
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-            ->onlyOnForms()
-            ->setColumns(4)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setHelp("Précisez le taux exceptionnel si, pour ce compte spécifique, le taux est différent du standard.");
-        $tabAttributs[] = FormField::addPanel('Commission de réassurance')->onlyOnForms();
-        $tabAttributs[] = NumberField::new('ricom', "Montant ht")
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-            ->onlyOnForms()
-            ->setColumns(2)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
+            ->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE])) {
+            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_MONNAIE])) {
+            $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_POLICE_MONNAIE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CAPITAL])) {
+            $tabAttributs[] = NumberField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT])) {
+            $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+                ->hideOnForm()
+                ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
+        }
+        $tabAttributs[] = FormField::addPanel('Facture client')->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE])) {
+            $tabAttributs[] = NumberField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTING])) {
+            $tabAttributs[] = NumberField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ARCA])) {
+            $tabAttributs[] = NumberField::new('arca', PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_TVA])) {
+            $tabAttributs[] = NumberField::new('tva', PreferenceCrudController::PREF_PRO_POLICE_TVA)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN])) {
+            $tabAttributs[] = NumberField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT])) {
+            $tabAttributs[] = NumberField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE])) {
+            $tabAttributs[] = NumberField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+                ->hideOnForm();
+        }
+        $tabAttributs[] = FormField::addTab(' Structure des revenus')->setIcon('fas fa-sack-dollar')->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE])) {
+            $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+                ->hideOnForm();
+        }
+        $tabAttributs[] = FormField::addPanel('Commission de réassurance')->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_RI_COM])) {
+            $tabAttributs[] = NumberField::new('ricom', PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM])) {
+            $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+                ->hideOnForm()
+                ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
             ->onlyOnForms()
             ->setColumns(3)

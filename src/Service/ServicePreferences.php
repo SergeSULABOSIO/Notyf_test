@@ -568,6 +568,14 @@ class ServicePreferences
         $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
             ->onlyOnForms()
             ->setColumns(12);
+        $tabAttributs[] = FormField::addTab(' Documents')->setIcon('fas fa-book');
+        $tabAttributs[] = AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         /* 
             AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
@@ -578,14 +586,8 @@ class ServicePreferences
             DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
             //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
 
-            FormField::addTab(' Documents')->setIcon('fas fa-book'),
-            AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                }),
+            
+            
             ArrayField::new('pieces', "Documents")->setColumns(12)->onlyOnDetail(),
 
             //LES CHAMPS CALCULABLES */

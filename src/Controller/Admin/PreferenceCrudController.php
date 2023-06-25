@@ -455,7 +455,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_CAPITAL                                    = "Capital assuré";
     public const PREF_PRO_POLICE_PRIME_NETTE                                = "Prime nette";
     public const PREF_PRO_POLICE_FRONTING                                   = "Fronting";
-    public const PREF_PRO_POLICE_ARCA                                       = "Taxe du Regulateur";
+    public const PREF_PRO_POLICE_ARCA                                       = "Taxe du Reg.";
     public const PREF_PRO_POLICE_TVA                                        = "Tva";
     public const PREF_PRO_POLICE_FRAIS_ADMIN                                = "Accessoire";
     public const PREF_PRO_POLICE_PRIME_TOTALE                               = "Prime totale";

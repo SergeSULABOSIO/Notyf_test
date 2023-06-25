@@ -36,11 +36,12 @@ use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use function PHPUnit\Framework\returnSelf;
 use phpDocumentor\Reflection\Types\Boolean;
+use App\Controller\Admin\ClientCrudController;
+use App\Controller\Admin\PoliceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -52,6 +53,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
@@ -345,6 +347,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Partenaires_form($tabAttributs);
         }
         if ($objetInstance instanceof Police) {
+            $tabAttributs = [
+                FormField::addTab(' Informations de base')
+                    ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Le contrat d'assurance en place.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Polices_Index_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs);
         }
         if ($objetInstance instanceof Produit) {
         }
@@ -380,6 +389,207 @@ class ServicePreferences
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
         }
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Polices_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Polices_form($tabAttributs)
+    {
+
+        $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+            ->setColumns(4)
+            ->onlyOnForms()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = FormField::addPanel('')
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+            ->onlyOnForms()
+            ->setColumns(6);
+        $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_POLICE_PISTE)
+            ->onlyOnForms()
+            ->setColumns(4)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
+            ->setIcon('fas fa-bag-shopping')
+            ->setHelp("Le contrat d'assurance en place.")
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_POLICE_MONNAIE)
+            ->onlyOnForms()
+            ->setColumns(3)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = NumberField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+            ->setColumns(2)
+            ->onlyOnForms()
+            ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
+        $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnForms();
+        $tabAttributs[] = NumberField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('arca', PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('tva', PreferenceCrudController::PREF_PRO_POLICE_TVA)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = NumberField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            ->onlyOnForms()
+            ->setColumns(1);
+        $tabAttributs[] = FormField::addTab(' Structure des revenus')->setIcon('fas fa-sack-dollar');
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+            ->onlyOnForms()
+            ->setColumns(4)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+            ->onlyOnForms()
+            ->setColumns(3)
+            ->setHelp("Précisez le taux exceptionnel si, pour ce compte spécifique, le taux est différent du standard.");
+        $tabAttributs[] = FormField::addPanel('Commission de réassurance')->onlyOnForms();
+        $tabAttributs[] = NumberField::new('ricom', "Montant ht")
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+            ->onlyOnForms()
+            ->setColumns(2)
+            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
+        $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+            ->onlyOnForms()
+            ->setColumns(3)
+            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
+        $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnForms();
+        $tabAttributs[] = NumberField::new('localcom', "Montant ht")
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
+            ->onlyOnForms()
+            ->setColumns(2)
+            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
+        $tabAttributs[] = ChoiceField::new('localcompayableby', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
+            ->onlyOnForms()
+            ->setColumns(3)
+            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
+        $tabAttributs[] = FormField::addPanel("Commission sur Fronting");
+        $tabAttributs[] = NumberField::new('frontingcom', "Montant ht")
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
+            ->onlyOnForms()
+            ->setColumns(2)
+            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
+        $tabAttributs[] = ChoiceField::new('frontingcompayableby', PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
+            ->onlyOnForms()
+            ->setColumns(3)
+            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
+        $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
+            ->onlyOnForms()
+            ->setColumns(12);
+        /* 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
+            //Ligne 19
+            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(3),
+
+            FormField::addTab(' Documents')->setIcon('fas fa-book'),
+            AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }),
+            ArrayField::new('pieces', "Documents")->setColumns(12)->onlyOnDetail(),
+
+            //LES CHAMPS CALCULABLES */
+
         return $tabAttributs;
     }
 

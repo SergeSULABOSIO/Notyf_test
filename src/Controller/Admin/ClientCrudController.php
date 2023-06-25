@@ -151,7 +151,6 @@ class ClientCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_CLIENT);
-
         return $this->servicePreferences->getChamps(new Client());
     }
 

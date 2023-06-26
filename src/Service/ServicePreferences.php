@@ -520,6 +520,16 @@ class ServicePreferences
                 ->hideOnForm()
                 ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY])) {
+            $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+                ->hideOnForm()
+                ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
+        }
+        $tabAttributs[] = FormField::addPanel("Commission locale")->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM])) {
+            $tabAttributs[] = NumberField::new('localcom', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
+                ->hideOnForm();
+        }
 
 
 
@@ -536,14 +546,9 @@ class ServicePreferences
 
 
 
-        $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnForms();
-        $tabAttributs[] = NumberField::new('localcom', "Montant ht")
-            ->onlyOnForms()
-            ->setColumns(2);
+
+
+
         $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
             ->onlyOnForms()
             ->setColumns(2)

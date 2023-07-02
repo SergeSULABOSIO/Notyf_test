@@ -645,6 +645,7 @@ class ServicePreferences
             ->setColumns(2);
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_POLICE_PISTE)
             ->onlyOnForms()
+            ->setRequired(false)
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -654,6 +655,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
             ->onlyOnForms()
+            ->setRequired(false)
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -708,7 +710,7 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
             ->onlyOnForms()
-            ->setRequired(false) ici
+            ->setRequired(false)
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository

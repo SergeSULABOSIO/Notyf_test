@@ -583,6 +583,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->hideOnForm();
         }
+
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+
         return $tabAttributs;
     }
 

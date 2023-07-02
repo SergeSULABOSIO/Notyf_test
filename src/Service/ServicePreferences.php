@@ -452,6 +452,28 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REMARQUE])) {
+            $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
+                ->hideOnForm();
+        }
+        //Onglet Prime & Capitaux
         $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
             ->setIcon('fas fa-bag-shopping')
             ->setHelp("Le contrat d'assurance en place.")
@@ -498,6 +520,8 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
                 ->hideOnForm();
         }
+
+        //Onglet Structure des revenus
         $tabAttributs[] = FormField::addTab(' Structure des revenus')->setIcon('fas fa-sack-dollar')->hideOnForm();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
@@ -537,7 +561,7 @@ class ServicePreferences
                 ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
                 ->hideOnForm();
         }
-        $tabAttributs[] = FormField::addPanel("Commission sur Fronting");
+        $tabAttributs[] = FormField::addPanel("Commission sur Fronting")->hideOnForm();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM])) {
             $tabAttributs[] = NumberField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
                 ->hideOnForm();
@@ -552,28 +576,9 @@ class ServicePreferences
                 ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REMARQUE])) {
-            $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
-                ->hideOnForm();
-        }
-        $tabAttributs[] = FormField::addTab(' Documents')->setIcon('fas fa-book');
+
+        //Onglet Documents
+        $tabAttributs[] = FormField::addTab(' Documents')->setIcon('fas fa-book')->hideOnForm();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
             $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->hideOnForm();
@@ -683,10 +688,10 @@ class ServicePreferences
         $tabAttributs[] = NumberField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
             ->onlyOnForms()
             ->setColumns(1);
-        $tabAttributs[] = NumberField::new('arca', PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+        $tabAttributs[] = NumberField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
             ->onlyOnForms()
             ->setColumns(1);
-        $tabAttributs[] = NumberField::new('tva', PreferenceCrudController::PREF_PRO_POLICE_TVA)
+        $tabAttributs[] = NumberField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
             ->onlyOnForms()
             ->setColumns(1);
         $tabAttributs[] = NumberField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
@@ -755,7 +760,8 @@ class ServicePreferences
         $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
             ->onlyOnForms()
             ->setColumns(12);
-        $tabAttributs[] = FormField::addTab(' Documents')
+
+        /* $tabAttributs[] = FormField::addTab(' Documents')
             ->setIcon('fas fa-book')
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('pieces', "Documents")->setColumns(12)->onlyOnForms()
@@ -764,7 +770,7 @@ class ServicePreferences
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+            }); */
 
         return $tabAttributs;
     }
@@ -1788,7 +1794,7 @@ class ServicePreferences
         $txtTaxe = $defaultLabel;
         $tabT = $this->getTaxes($indiceTaxe);
         if (count($tabT) == 1) {
-            $txtTaxe = $tabT[0]->getNom() . " (" . $tabT[0]->getTaux() * 100 . "%).";
+            $txtTaxe = $tabT[0]->getNom() . " (" . $tabT[0]->getTaux() * 100 . "%)";
         }
         return $txtTaxe;
     }

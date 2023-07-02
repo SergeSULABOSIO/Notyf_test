@@ -107,6 +107,7 @@ class Police extends CalculableEntity
     private ?Produit $produit = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Partenaire $partenaire = null;
 
     #[ORM\Column(length: 255, nullable: true)]

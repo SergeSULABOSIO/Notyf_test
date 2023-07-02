@@ -708,6 +708,7 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
             ->onlyOnForms()
+            ->setRequired(false) ici
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository

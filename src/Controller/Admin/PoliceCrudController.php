@@ -190,6 +190,7 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setLocalcompayableby(0);
 
         $objet->setPartenaire(null);
+        $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
 
         return $objet;
     }

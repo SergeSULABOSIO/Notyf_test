@@ -356,7 +356,6 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs);
         }
         if ($objetInstance instanceof Produit) {
-
         }
         //GROUPE FINANCES
         if ($objetInstance instanceof Taxe) {
@@ -585,7 +584,7 @@ class ServicePreferences
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_Calculables(true, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }
@@ -607,6 +606,7 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             ->onlyOnForms()
+            ->setRequired(false)
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -659,7 +659,6 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
             ->onlyOnForms()
-            ->setRequired(false)
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -869,7 +868,7 @@ class ServicePreferences
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }
@@ -940,7 +939,7 @@ class ServicePreferences
                 ->hideOnForm();
         }
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }
@@ -1278,42 +1277,46 @@ class ServicePreferences
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }
 
-    public function setAttributs_Calculables(array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
+    public function setAttributs_Calculables($isPolice, array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
     {
         //LES CHAMPS CALCULABLES
         $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')
             ->hideOnForm();
-        $tabAttributs[] = FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')
+
+        if ($isPolice == false) {
+            $tabAttributs[] = FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')
             ->hideOnForm();
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_polices_tab', PreferenceCrudController::PREF_calc_polices_tab)
-                ->hideOnForm();
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tab])) {
+                $tabAttributs[] = ArrayField::new('calc_polices_tab', PreferenceCrudController::PREF_calc_polices_tab)
+                    ->hideOnForm();
+            }
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_nette])) {
+                $tabAttributs[] = NumberField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
+                    ->hideOnForm();
+            }
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_fronting])) {
+                $tabAttributs[] = NumberField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
+                    ->hideOnForm();
+            }
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_accessoire])) {
+                $tabAttributs[] = NumberField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
+                    ->hideOnForm();
+            }
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tva])) {
+                $tabAttributs[] = NumberField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
+                    ->hideOnForm();
+            }
+            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_totale])) {
+                $tabAttributs[] = NumberField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
+                    ->hideOnForm();
+            }
         }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_nette])) {
-            $tabAttributs[] = NumberField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_fronting])) {
-            $tabAttributs[] = NumberField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_accessoire])) {
-            $tabAttributs[] = NumberField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tva])) {
-            $tabAttributs[] = NumberField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_totale])) {
-            $tabAttributs[] = NumberField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
-                ->hideOnForm();
-        }
+
         //SECTION REVENU
         $tabAttributs[] = FormField::addPanel('Commissions')->setIcon('fa-solid fa-toggle-off')
             ->hideOnForm();

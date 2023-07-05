@@ -817,18 +817,18 @@ class ServicePreferences
             ->setColumns(6)
             ->onlyOnForms();
         $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
-            ->setColumns(6)
+            ->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
-            ->setColumns(6)
+            ->setColumns(1)
             ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
-            ->setColumns(6)
+            ->setColumns(1)
             ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
-            ->setColumns(6)
+            ->setColumns(2)
             ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
             ->onlyOnForms();
 

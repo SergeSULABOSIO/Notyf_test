@@ -44,6 +44,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
 use App\Controller\Admin\PreferenceCrudController;
+use App\Controller\Admin\TaxeCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
@@ -362,11 +363,18 @@ class ServicePreferences
                     ->setIcon('fas fa-gifts') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une couverture d'assurance.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Produits_Index_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_PRODUITS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Produits_Index_Details($preference->getProProduits(), PreferenceCrudController::TAB_PRO_PRODUITS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Produits_form($tabAttributs);
         }
         //GROUPE FINANCES
         if ($objetInstance instanceof Taxe) {
+            $tabAttributs = [
+                FormField::addTab(' Informations générales')
+                    ->setIcon('fas fa-landmark-dome') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Taxes ou Impôts dûes aux autorités étatiques.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Taxes_Index_Details($preference->getFinTaxes(), PreferenceCrudController::TAB_FIN_TAXES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Taxes_form($tabAttributs);
         }
         if ($objetInstance instanceof Monnaie) {
         }
@@ -659,6 +667,53 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_Taxes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_TAXE_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX])) {
+            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION])) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION])) {
+            $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER])) {
+            $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
+                ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
+                ->hideOnForm();
+        }
+
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+
+        return $tabAttributs;
+    }
+
     public function setCRM_Fields_Polices_form($tabAttributs)
     {
 
@@ -877,6 +932,29 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
             ->setColumns(2)
             ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Taxes_form($tabAttributs)
+    {
+
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
+            ->setColumns(1)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
+            ->setColumns(2)
+            ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
             ->onlyOnForms();
 
         return $tabAttributs;

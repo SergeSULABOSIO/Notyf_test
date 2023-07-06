@@ -400,7 +400,7 @@ class ServicePreferences
             $tabAttributs = [
                 FormField::addPanel('Informations générales')
                     ->setIcon('fas fa-person-arrow-up-from-line') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("retrocommission de courtage décaissée ou payée au partenaire.")
+                    ->setHelp("Retrocommission de courtage décaissée ou payée au partenaire.")
             ];
             $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_Index_Details($preference->getFinRetrocommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_form($tabAttributs);

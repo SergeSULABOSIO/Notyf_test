@@ -119,60 +119,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-person-arrow-down-to-line') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Commission de courtage encaissée."),
-
-            //Ligne 01
-            DateField::new('date', "Date")->setColumns(6),
-            TextField::new('refnotededebit', "Réf. Facture")->setColumns(6),
-
-            //Ligne 02
-            NumberField::new('montant', "Montant")->setColumns(6),
-            AssociationField::new('monnaie', "Monnaie")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-
-            //Ligne 03
-            TextField::new('description', "Description")->setColumns(6),
-            AssociationField::new('police', "Police")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-
-            //Ligne 04
-            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new PaiementCommission());
     }
 
     public function configureActions(Actions $actions): Actions

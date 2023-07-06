@@ -36,19 +36,20 @@ use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use function PHPUnit\Framework\returnSelf;
 use phpDocumentor\Reflection\Types\Boolean;
+use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PoliceCrudController;
+use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ProduitCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\PreferenceCrudController;
-use App\Controller\Admin\TaxeCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -387,6 +388,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Monnaies_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-person-arrow-down-to-line') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Commission de courtage encaissée.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_PaiementCommissions_Index_Details($preference->getFinCommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_COMMISSIONS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_PaiementCommissions_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementPartenaire) {
         }
@@ -986,6 +994,42 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_PaiementCommissions_form($tabAttributs)
+    {
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
+            ->setColumns(12)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE)
+            ->setColumns(2)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
+            ->setColumns(2)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1027,6 +1071,68 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_MONNAIE_ENTREPRISE)
                 ->hideOnForm();
         }
+        return $tabAttributs;
+    }
+
+
+    public function setCRM_Fields_PaiementCommissions_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                })
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE])) {
+            $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT])) {
+            $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE])) {
+            $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE])) {
+            $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION])) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS])) {
+            $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE)
+                ->hideOnForm();
+        }
+
         return $tabAttributs;
     }
 

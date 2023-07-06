@@ -406,6 +406,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementTaxe) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-person-chalkboard') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Taxe payée.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_PaiementTaxes_Index_Details($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_TAXES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_PaiementTaxes_form($tabAttributs);
         }
         //GROUPE SINISTRE
         if ($objetInstance instanceof CommentaireSinistre) {
@@ -1079,6 +1086,88 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_PaiementTaxes_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONNAIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
+            ->setColumns(2)
+            ->onlyOnForms();
+
+
+
+        /*             
+            //Ligne 01
+            ,
+            ->setColumns(6),
+
+            //Ligne 02
+            ->setColumns(6),
+            
+            ,
+
+            //Ligne 03
+            AssociationField::new('taxe', "Taxe")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            TextField::new('exercice', "Exercice")->setColumns(6),
+
+            //Ligne 04
+            AssociationField::new('police', "Police")->setColumns(6)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            //AssociationField::new('pieces', "Pièces")->setColumns(6),
+            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
+                    ;
+            })
+            ,
+            CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
+            ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
+            //Ligne 05
+            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
+ */
+
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1249,6 +1338,17 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE)
                 ->hideOnForm();
         }
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_PaiementTaxes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID)
+                ->hideOnForm();
+        }
+
 
         return $tabAttributs;
     }

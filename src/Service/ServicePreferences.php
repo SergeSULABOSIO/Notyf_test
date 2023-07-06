@@ -43,6 +43,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\TaxeCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -377,6 +378,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Taxes_form($tabAttributs);
         }
         if ($objetInstance instanceof Monnaie) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-money-bill-1') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Monnaie de change.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Monnaies_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
         }
@@ -956,6 +964,69 @@ class ServicePreferences
             ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
             ->onlyOnForms();
 
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Monnaies_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
+            ->setColumns(1)
+            ->onlyOnForms();
+        $tabAttributs[] = NumberField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
+            ->setColumns(1)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
+
+    public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_MONNAIE_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_CODE])) {
+            $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD])) {
+            $tabAttributs[] = NumberField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE])) {
+            $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
+                ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_MONNAIE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_MONNAIE_ENTREPRISE)
+                ->hideOnForm();
+        }
         return $tabAttributs;
     }
 

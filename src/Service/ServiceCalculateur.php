@@ -308,9 +308,9 @@ class ServiceCalculateur
             $partenaire = $police->getPartenaire();
             //dd($partenaire->getNom());
             if ($partenaire != null) {
-                if($police->getPartExceptionnellePartenaire() != 0){
+                if ($police->getPartExceptionnellePartenaire() != 0) {
                     $part = $police->getPartExceptionnellePartenaire() * 100;
-                }else{
+                } else {
                     $part = $partenaire->getPart();
                 }
 
@@ -358,8 +358,12 @@ class ServiceCalculateur
             foreach ($this->taxes as $taxe) {
                 if ($calculableEntity instanceof Taxe) {
                     if ($taxe->getId() == $calculableEntity->getId()) {
-                        //dd($taxe);
-                        $this->updateDataTaxeCourtier($calculableEntity, $taxe, $police);
+                        if ($taxe->isPayableparcourtier() == true) {
+                            //dd($taxe);
+                            $this->updateDataTaxeCourtier($calculableEntity, $taxe, $police);
+                        } else {
+                            $this->updateDataTaxeAssureur($calculableEntity, $taxe, $police);
+                        }
                     }
                 } else {
                     if ($taxe->isPayableparcourtier() == true) {

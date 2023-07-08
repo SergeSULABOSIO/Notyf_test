@@ -1140,11 +1140,11 @@ class ServicePreferences
 
     public function setCRM_Fields_CommentaireSinistres_form($tabAttributs)
     {
-        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
-            ->setColumns(6)
-            ->onlyOnForms();
         $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
             ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
+            ->setColumns(6)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -1381,29 +1381,31 @@ class ServicePreferences
 
     public function setCRM_Fields_CommentaireSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE])) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
-                ->hideOnForm();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE])) {
             $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
                 ->hideOnForm();
         }
-
-
-
-
-        /*             
-            //Ligne 02
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
-
-            //Ligne 03
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()->setColumns(6),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
- */
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_COMMENTAIRE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_COMMENTAIRE_ENTREPRISE)
+                ->hideOnForm();
+        }
 
         return $tabAttributs;
     }

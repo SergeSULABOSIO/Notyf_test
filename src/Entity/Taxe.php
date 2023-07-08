@@ -115,7 +115,7 @@ class Taxe extends CalculableEntity
 
     public function __toString()
     {
-        return $this->nom . " (" . $this->taux * 100 . "%)" . " : " . $this->description . " pour " . $this->organisation;
+        return $this->nom . " (" . $this->taux * 100 . "%)" . " : " . $this->description;
     }
 
     public function isPayableparcourtier(): ?bool

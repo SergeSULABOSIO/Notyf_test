@@ -1088,13 +1088,7 @@ class ServicePreferences
 
     public function setCRM_Fields_PaiementTaxes_form($tabAttributs)
     {
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
-            ->setColumns(3)
-            ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONNAIE)
+        $tabAttributs[] = AssociationField::new('taxe', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1103,67 +1097,36 @@ class ServicePreferences
             })
             ->setColumns(3)
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(9)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
+            ->setColumns(1)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONNAIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('exercice', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE)
+            ->setColumns(2)
+            ->onlyOnForms();
         $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
             ->setColumns(2)
             ->onlyOnForms();
-
-
-
-        /*             
-            //Ligne 01
-            ,
-            ->setColumns(6),
-
-            //Ligne 02
-            ->setColumns(6),
-            
-            ,
-
-            //Ligne 03
-            AssociationField::new('taxe', "Taxe")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            TextField::new('exercice', "Exercice")->setColumns(6),
-
-            //Ligne 04
-            AssociationField::new('police', "Police")->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            //AssociationField::new('pieces', "Pièces")->setColumns(6),
-            AssociationField::new('pieces', "Pièces")->setColumns(6)->onlyOnForms()
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise())
-                    ;
-            })
-            ,
-            CollectionField::new('pieces', "Pièces")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('pieces', "Pièces")->setColumns(6)->onlyOnDetail(),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            //Ligne 05
-            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
- */
-
 
         return $tabAttributs;
     }
@@ -1344,11 +1307,55 @@ class ServicePreferences
 
     public function setCRM_Fields_PaiementTaxes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ID)
                 ->hideOnForm();
         }
-
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT])) {
+            $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE])) {
+            $tabAttributs[] = AssociationField::new('taxe', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT])) {
+            $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONNAIE])) {
+            $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONNAIE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE])) {
+            $tabAttributs[] = TextField::new('exercice', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE])) {
+            $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE)
+                ->hideOnForm();
+        }
 
         return $tabAttributs;
     }

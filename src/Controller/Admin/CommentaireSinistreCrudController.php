@@ -117,26 +117,7 @@ class CommentaireSinistreCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Commentaires."),
-
-            //Ligne 01
-            TextareaField::new('message', "Message")->setColumns(6),
-            AssociationField::new('sinistre', "Sinistre")->setColumns(6),//->onlyOnForms()
-            
-            //Ligne 02
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
-
-            //Ligne 03
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()->setColumns(6),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new CommentaireSinistre());
     }
 
 

@@ -416,6 +416,13 @@ class ServicePreferences
         }
         //GROUPE SINISTRE
         if ($objetInstance instanceof CommentaireSinistre) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Commentaires.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_CommentaireSinistres_Index_Details($preference->getSinCommentaires(), PreferenceCrudController::TAB_SIN_COMMENTAIRES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_CommentaireSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof EtapeSinistre) {
         }
@@ -1131,6 +1138,18 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_CommentaireSinistres_form($tabAttributs)
+    {
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1356,6 +1375,35 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE)
                 ->hideOnForm();
         }
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_CommentaireSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE])) {
+            $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
+                ->hideOnForm();
+        }
+
+
+
+
+        /*             
+            //Ligne 02
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+            DateTimeField::new('createdAt', "Date création")->hideOnForm()->setColumns(6),
+
+            //Ligne 03
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm()->setColumns(6),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
+ */
 
         return $tabAttributs;
     }

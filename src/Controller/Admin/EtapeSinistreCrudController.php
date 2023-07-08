@@ -126,26 +126,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-arrow-down-short-wide') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Le traitement d'un sinistre passe par une ou plusieurs étapes. De la déclaration à l'indemnisation."),
-
-            //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(3),
-            //NumberField::new('indice', "Indice")->setColumns(3),
-            ChoiceField::new('indice', "Ordre")->setColumns(3)->setChoices(self::TAB_ETAPE_INDICE),
-            TextareaField::new('description', "Description")->setColumns(6),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            //Ligne 02
-            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-            
-        ];
+        return $this->servicePreferences->getChamps(new EtapeSinistre());
     }
 
 

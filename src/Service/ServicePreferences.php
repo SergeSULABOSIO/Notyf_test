@@ -45,6 +45,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\EtapeSinistreCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -425,6 +426,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_CommentaireSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof EtapeSinistre) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-arrow-down-short-wide') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Le traitement d'un sinistre passe par une ou plusieurs étapes. De la déclaration à l'indemnisation.")
+            ];
+            $tabAttributs = $this->setCRM_Fields_EtapeSinistres_Index_Details($preference->getSinEtapes(), PreferenceCrudController::TAB_SIN_ETAPES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_EtapeSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Expert) {
         }
@@ -1151,6 +1159,23 @@ class ServicePreferences
     }
 
 
+    public function setCRM_Fields_EtapeSinistres_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('indice', PreferenceCrudController::PREF_SIN_ETAPE_INDICE)
+            ->setColumns(2)
+            ->setChoices(EtapeSinistreCrudController::TAB_ETAPE_INDICE)
+            ->onlyOnForms();
+        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
+
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_ID])) {
@@ -1381,6 +1406,10 @@ class ServicePreferences
 
     public function setCRM_Fields_CommentaireSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_COMMENTAIRE_ID)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE])) {
             $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
                 ->hideOnForm();
@@ -1409,6 +1438,46 @@ class ServicePreferences
 
         return $tabAttributs;
     }
+
+
+    public function setCRM_Fields_EtapeSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_ETAPE_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_INDICE])) {
+            $tabAttributs[] = ChoiceField::new('indice', PreferenceCrudController::PREF_SIN_ETAPE_INDICE)
+                ->setChoices(EtapeSinistreCrudController::TAB_ETAPE_INDICE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION])) {
+            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
+                ->hideOnForm();
+        }
+
+
+
+
+
+
+        /*   
+         AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+         //Ligne 02
+         DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
+         DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+         //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
+
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Partenaires_form($tabAttributs)
     {

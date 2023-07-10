@@ -51,10 +51,10 @@ class EtapeSinistreCrudController extends AbstractCrudController
     }
     
     public const TAB_ETAPE_INDICE = [
-        'Etape n°01' => 0,
-        'Etape n°02' => 1,
-        'Etape n°03' => 2,
-        'Etape n°04' => 3
+        '#1' => 0,
+        '#2' => 1,
+        '#3' => 2,
+        '#4' => 3
     ];
 
     public static function getEntityFqcn(): string

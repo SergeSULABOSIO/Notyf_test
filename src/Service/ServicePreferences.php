@@ -435,6 +435,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_EtapeSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Expert) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-user-graduate') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("L'expert est une personne morale ou physique qui a pour rôle d'aider l'assureur à mieux évaluer l'ampleur du dégât (évaluation chiffrée) afin de déterminer le montant réel de la compensation."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_ExpertSinistres_Index_Details($preference->getSinExperts(), PreferenceCrudController::TAB_SIN_EXPERTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ExpertSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Sinistre) {
         }
@@ -1175,6 +1182,44 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_ExpertSinistres_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_EXPERT_NOM)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE)
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+
+
+        /* 
+
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6) */
+
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1476,6 +1521,18 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE)
                 ->hideOnForm();
         }
+
+        return $tabAttributs;
+    }
+
+
+    public function setCRM_Fields_ExpertSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_EXPERT_ID)
+                ->hideOnForm();
+        }
+
 
         return $tabAttributs;
     }

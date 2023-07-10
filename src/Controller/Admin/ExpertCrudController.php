@@ -113,33 +113,7 @@ class ExpertCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-user-graduate') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("L'expert est une personne morale ou physique qui a pour rôle d'aider l'assureur à mieux évaluer l'ampleur du dégât (évaluation chiffrée) afin de déterminer le montant réel de la compensation."),
-            
-            //Ligne 01
-            TextField::new('nom', "Nom complet de l'expert")->setColumns(6),
-            TextField::new('adresse', "Adresse")->setColumns(6)->hideOnIndex(),
-
-            //Ligne 02
-            EmailField::new('email', "Email")->setColumns(6),
-            UrlField::new('siteweb', "Site Web")->setColumns(6)->hideOnIndex(),
-
-            //Ligne 03
-            TelephoneField::new('telephone', "Téléphone")->setColumns(6),
-            TextField::new('description', "Description")->setColumns(6),
-
-            //Ligne 04
-            ArrayField::new('sinistres', "Sinistres")->setColumns(6)->hideOnForm(),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new Expert());
     }
 
     public function configureActions(Actions $actions): Actions

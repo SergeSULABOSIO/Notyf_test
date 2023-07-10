@@ -1459,21 +1459,23 @@ class ServicePreferences
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
                 ->hideOnForm();
         }
-
-
-
-
-
-
-        /*   
-         AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-         //Ligne 02
-         DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-         DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-         //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
-
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_ETAPE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_ETAPE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_ETAPE_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE)
+                ->hideOnForm();
+        }
 
         return $tabAttributs;
     }

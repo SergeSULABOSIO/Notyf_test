@@ -838,15 +838,15 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //SINISTRE - SINISTRE
     public const PREF_SIN_SINISTRE_ID                   = "Id";
-    public const PREF_SIN_SINISTRE_REFERENCE            = "Numéro";
+    public const PREF_SIN_SINISTRE_REFERENCE            = "Numéro Sinistre";
     public const PREF_SIN_SINISTRE_ITITRE               = "Titre";
-    public const PREF_SIN_SINISTRE_DATE_OCCURENCE       = "Date";
+    public const PREF_SIN_SINISTRE_DATE_OCCURENCE       = "Date de l'incident";
     public const PREF_SIN_SINISTRE_DESCRIPTION          = "Description";
     public const PREF_SIN_SINISTRE_VICTIMES             = "Victimes";
-    public const PREF_SIN_SINISTRE_EXPERT               = "Expert";
+    public const PREF_SIN_SINISTRE_EXPERT               = "Expert(s)";
     public const PREF_SIN_SINISTRE_POLICE               = "Police";
     public const PREF_SIN_SINISTRE_COUT                 = "Coût de réparation";
-    public const PREF_SIN_SINISTRE_MONTANT_PAYE         = "Indemnisation";
+    public const PREF_SIN_SINISTRE_MONTANT_PAYE         = "Compensation";
     public const PREF_SIN_SINISTRE_MONNAIE              = "Monnaie";
     public const PREF_SIN_SINISTRE_DATE_PAIEMENT        = "Date de paiement";
     public const PREF_SIN_SINISTRE_ETAPE                = "Etape actuelle";

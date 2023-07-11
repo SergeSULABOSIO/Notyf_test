@@ -64,6 +64,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 
 class ServicePreferences
 {
@@ -444,6 +447,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_ExpertSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Sinistre) {
+            $tabAttributs = [
+                FormField::addTab(' Informations générales')
+                    ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index_Details($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Victime) {
         }
@@ -1206,6 +1216,99 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_SinistreSinistres_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('cout', PreferenceCrudController::PREF_SIN_SINISTRE_COUT)
+            ->setCurrency("USD")
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
+            ->setCurrency("USD")
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_SIN_SINISTRE_MONNAIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        $tabAttributs[] = AssociationField::new('victime', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('commentaire', PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1563,6 +1666,119 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE)
                 ->hideOnForm();
         }
+
+        return $tabAttributs;
+    }
+
+
+    public function setCRM_Fields_SinistreSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_SINISTRE_ID)
+                ->hideOnForm();
+        }
+
+        $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(4)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('cout', PreferenceCrudController::PREF_SIN_SINISTRE_COUT)
+            ->setCurrency("USD")
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
+            ->setCurrency("USD")
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_SIN_SINISTRE_MONNAIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        $tabAttributs[] = AssociationField::new('victime', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('commentaire', PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        /* 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+            DateTimeField::new('createdAt', "Date création")->hideOnIndex()->hideOnForm()->setColumns(6),
+            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
+            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6),
+
+            //LES CHAMPS CALCULABLES
+
+             */
+
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }

@@ -1203,18 +1203,6 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms();
 
-
-        /* 
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-            //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6) 
-            
-        */
-
-
         return $tabAttributs;
     }
 
@@ -1552,6 +1540,9 @@ class ServicePreferences
 
 
         /* 
+
+        AssociationField::new('sinistres', "Sinistres")->setColumns(6)->hideOnForm()
+
         AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
 

@@ -1518,42 +1518,51 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_EXPERT_ID)
                 ->hideOnForm();
         }
-
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_EXPERT_NOM)
-            ->setColumns(12)
-            ->onlyOnForms();
-        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE)
-            ->setColumns(4)
-            ->onlyOnForms();
-        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
-            ->setColumns(4)
-            ->onlyOnForms();
-        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
-
-
-        /* 
-
-        AssociationField::new('sinistres', "Sinistres")->setColumns(6)->hideOnForm()
-
-        AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-        DateTimeField::new('createdAt', "Created At")->hideOnIndex()->hideOnForm(),
-        DateTimeField::new('updatedAt', "Dernière modification")->hideOnForm(),
-        //AssociationField::new('entreprise', "Entreprise")->hideOnIndex()->setColumns(6) 
-        
-    */
-
-
-
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_EXPERT_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE])) {
+            $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_EMAIL])) {
+            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET])) {
+            $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE])) {
+            $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION])) {
+            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES])) {
+            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_EXPERT_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_EXPERT_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_EXPERT_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE)
+                ->hideOnForm();
+        }
 
         return $tabAttributs;
     }

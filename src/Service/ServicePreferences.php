@@ -467,6 +467,13 @@ class ServicePreferences
         }
         //GROUPE BIBLIOTHEQUE
         if ($objetInstance instanceof DocCategorie) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fas fa-tags') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Tout simplement un ensemble des documents qui partagent un certain nombre des critères communs."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_Index_Details($preference->getBibCategories(), PreferenceCrudController::TAB_BIB_CATEGORIES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_form($tabAttributs);
         }
         if ($objetInstance instanceof DocClasseur) {
         }
@@ -1338,6 +1345,15 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_BibliothequeCategories_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CATEGORIE_NOM)
+            ->setColumns(6)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1834,6 +1850,37 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+
+    public function setCRM_Fields_BibliothequeCategories_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CATEGORIE_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CATEGORIE_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CATEGORIE_ENTREPRISE)
+                ->hideOnForm();
+        }
+
+        return $tabAttributs;
+    }
 
 
     public function setCRM_Fields_Partenaires_form($tabAttributs)

@@ -112,22 +112,7 @@ class DocCategorieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-tags') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Tout simplement un ensemble des documents qui partagent un certain nombre des critères communs."),
-
-            //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
-            
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            //Ligne 02
-            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new DocCategorie());
     }
 
     public function configureActions(Actions $actions): Actions

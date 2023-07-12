@@ -117,31 +117,7 @@ class VictimeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-person-falling-burst') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Personne (morale ou physique) laisée ou ayant subi les dommages au cours du sinistre."),
-
-            //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
-            TextField::new('adresse', "Adresse")->setColumns(6),
-
-            //Ligne 02
-            EmailField::new('email', "Email")->setColumns(6),
-            TelephoneField::new('telephone', "Téléphone")->setColumns(6),
-
-            //Ligne 03
-            CollectionField::new('sinistres', "Sinistre")->setColumns(6)->onlyOnIndex(),
-            ArrayField::new('sinistres', "Sinistres")->setColumns(6)->onlyOnDetail(),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-            //Ligne 04
-            DateTimeField::new('createdAt', 'Date creation')->hideOnIndex()->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new Victime());
     }
 
     public function configureActions(Actions $actions): Actions

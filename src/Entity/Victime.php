@@ -181,7 +181,7 @@ class Victime
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->nom . " / Tél. : " . $this->telephone;
     }
 
     public function getUtilisateur(): ?Utilisateur

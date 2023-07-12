@@ -912,7 +912,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_SIN_VICTIME_ADRESSE               = "Adresse";
     public const PREF_SIN_VICTIME_TELEPHONE             = "Téléphone";
     public const PREF_SIN_VICTIME_EMAIL                 = "Email";
-    public const PREF_SIN_VICTIME_SINISTRE              = "Sinistre";
+    public const PREF_SIN_VICTIME_SINISTRE              = "Sinistres";
     public const PREF_SIN_VICTIME_UTILISATEUR           = "Utilisateur";
     public const PREF_SIN_VICTIME_ENTREPRISE            = "Entreprise";
     public const PREF_SIN_VICTIME_DATE_DE_CREATION      = "Date de création";

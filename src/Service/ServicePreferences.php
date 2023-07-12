@@ -1430,34 +1430,6 @@ class ServicePreferences
             ->setColumns(6)
             ->onlyOnForms();
 
-        /* 
-            
-            //Ligne 03
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            TextField::new('fichierA', 'Fichier A')->setColumns(6)->hideOnForm(),
-
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            TextField::new('fichierB', 'Fichier B')->setColumns(6)->hideOnForm(),
-
-            //Ligne 04
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            TextField::new('fichierC', 'Fichier C')->setColumns(6)->hideOnForm(),
-
-            
-            TextField::new('fichierD', 'Fichier D')->setColumns(6)->hideOnForm(),
-
-            //Ligne 05 
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
-
         return $tabAttributs;
     }
 
@@ -2050,6 +2022,85 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
                 ->hideOnForm();
         }
+
+
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierA', 'Fichier A')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierB', 'Fichier B')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierC', 'Fichier C')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierD', 'Fichier D')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+
+        /* 
+            
+            //Ligne 03
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierA', 'Fichier A')->setColumns(6)->hideOnForm(),
+
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierB', 'Fichier B')->setColumns(6)->hideOnForm(),
+
+            //Ligne 04
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierC', 'Fichier C')->setColumns(6)->hideOnForm(),
+
+            
+            TextField::new('fichierD', 'Fichier D')->setColumns(6)->hideOnForm(),
+
+            //Ligne 05 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
+            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
+
 
         return $tabAttributs;
     }

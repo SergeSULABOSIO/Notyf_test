@@ -112,23 +112,7 @@ class DocClasseurCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel('Informations générales')
-            ->setIcon('fas fa-folder-open') //<i class="fa-sharp fa-solid fa-address-book"></i>
-            ->setHelp("Un classeur représente un dossier (virtuel) dans lequel peuvent se ranger un ou plusieurs documents."),
-
-            //Ligne 01
-            TextField::new('nom', "Nom")->setColumns(6),
-            //AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm(),
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            //Ligne 02
-            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6)
-        ];
+        return $this->servicePreferences->getChamps(new DocClasseur());
     }
 
     public function configureActions(Actions $actions): Actions

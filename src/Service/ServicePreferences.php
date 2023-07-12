@@ -45,7 +45,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\EtapeSinistreCrudController;
+use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -53,21 +53,23 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use App\Controller\Admin\EtapeSinistreCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class ServicePreferences
 {
@@ -485,6 +487,13 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_form($tabAttributs);
         }
         if ($objetInstance instanceof DocPiece) {
+            $tabAttributs = [
+                FormField::addTab('Informations générales')
+                    ->setIcon('fas fa-file-word') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Une pièce est un document de quel que format que ce soit."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_BibliothequePieces_Index_Details($preference->getBibPieces(), PreferenceCrudController::TAB_BIB_DOCUMENTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequePieces_form($tabAttributs);
         }
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
@@ -1370,6 +1379,88 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_BibliothequePieces_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierA', 'Fichier A')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierB', 'Fichier B')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierC', 'Fichier C')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichierD', 'Fichier D')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+
+        /* 
+            
+            //Ligne 03
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierA', 'Fichier A')->setColumns(6)->hideOnForm(),
+
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierB', 'Fichier B')->setColumns(6)->hideOnForm(),
+
+            //Ligne 04
+            
+                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
+            TextField::new('fichierC', 'Fichier C')->setColumns(6)->hideOnForm(),
+
+            
+            TextField::new('fichierD', 'Fichier D')->setColumns(6)->hideOnForm(),
+
+            //Ligne 05 
+            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
+
+
+            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
+            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
+            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -1908,6 +1999,40 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CLASSEUR_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
+                ->hideOnForm();
+        }
+
+        return $tabAttributs;
+    }
+
+
+    public function setCRM_Fields_BibliothequePieces_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CLASSEUR_ID)
+                ->hideOnForm();
+        }
+
+
+
+
+
+
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])

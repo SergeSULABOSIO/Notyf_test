@@ -982,7 +982,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PARAMETRES - UTILISATEUR
     public const PREF_PAR_UTILISATEUR_ID                    = "Id";
-    public const PREF_PAR_UTILISATEUR_NOM                   = "Nom";
+    public const PREF_PAR_UTILISATEUR_NOM                   = "Nom complet";
     public const PREF_PAR_UTILISATEUR_PSEUDO                = "Speudo";
     public const PREF_PAR_UTILISATEUR_EMAIL                 = "Email";
     public const PREF_PAR_UTILISATEUR_ROLES                 = "Rôles";

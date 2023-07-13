@@ -88,7 +88,7 @@ class UtilisateurCrudController extends AbstractCrudController
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Utilisateur")
             ->setEntityLabelInPlural("Utilisateurs")
-            ->setPageTitle("index", "Liste d'utilisateurs")
+            ->setPageTitle("index", "Utilisateurs")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES])
             // ...
@@ -154,37 +154,7 @@ class UtilisateurCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addPanel(' Profil')
-                ->setIcon('fas fa-user') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                ->setHelp("L'utilisateur ayant un certain droit d'accès aux données et pouvant utiliser le système."),
-
-            //Ligne 01
-            TextField::new('nom', 'Nom Complet')->setColumns(4),
-            TextField::new('pseudo', 'Pseudo')->setColumns(2),
-            TextField::new('email', 'Adresse mail')->setColumns(3),
-            TextField::new('plainPassword', 'Nouveau mot de passe')->onlyOnForms()->setColumns(3)
-                ->setEmptyData(''),
-
-            //Ligne 02
-            ChoiceField::new('roles', "Roles")->setColumns(6)
-                ->setChoices(self::TAB_ROLES)
-                ->allowMultipleChoices()
-                ->renderExpanded()
-                ->renderAsBadges([
-                    // $value => $badgeStyleName
-                    self::TAB_ROLES[self::VISION_GLOBALE] => 'success', //info
-                    self::TAB_ROLES[self::ACTION_EDITION] => 'danger',
-                ]),
-
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            //Ligne 03
-            DateTimeField::new('updatedAt', 'Dernière modification')->setColumns(6)->hideOnform(),
-            DateTimeField::new('createdAt', "Date création")->setColumns(6)->hideOnForm()
-        ];
+        return $this->servicePreferences->getChamps(new Utilisateur());
     }
 
     public function configureActions(Actions $actions): Actions

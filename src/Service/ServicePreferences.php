@@ -497,6 +497,13 @@ class ServicePreferences
         }
         //GROUPE PARAMETRES
         if ($objetInstance instanceof Utilisateur) {
+            $tabAttributs = [
+                FormField::addPanel(' Profil')
+                    ->setIcon('fas fa-user') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("L'utilisateur ayant un certain droit d'accès aux données et pouvant utiliser le système."),
+            ];
+            $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_Index_Details($preference->getParUtilisateurs(), PreferenceCrudController::TAB_PAR_UTILISATEURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_form($tabAttributs);
         }
         return $tabAttributs;
     }
@@ -1433,6 +1440,36 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_ParUtilisateurs_form($tabAttributs)
+    {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('pseudo', PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('email', PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('plainPassword', 'Nouveau mot de passe')
+            ->setEmptyData('')
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('roles', "Roles")
+            ->setChoices(UtilisateurCrudController::TAB_ROLES)
+            ->allowMultipleChoices()
+            ->renderExpanded()
+            ->renderAsBadges([
+                // $value => $badgeStyleName
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE] => 'success', //info
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION] => 'danger',
+            ])
+            ->setColumns(3)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
 
     public function setCRM_Fields_Monnaies_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -2039,39 +2076,60 @@ class ServicePreferences
                 ->hideOnForm();
         }
 
-
-        /* 
-            
-            //Ligne 03
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            ->setColumns(6)->hideOnForm(),
-
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            TextField::new('fichierB', 'Fichier B')->setColumns(6)->hideOnForm(),
-
-            //Ligne 04
-            
-                ->hideOnIndex()->setColumns(6)->onlyOnForms(),
-            TextField::new('fichierC', 'Fichier C')->setColumns(6)->hideOnForm(),
-
-            
-            TextField::new('fichierD', 'Fichier D')->setColumns(6)->hideOnForm(),
-
-            //Ligne 05 
-            AssociationField::new('utilisateur', "Utilisateur")->setColumns(6)->hideOnForm()
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]),
-
-
-            DateTimeField::new('createdAt', 'Date création')->hideOnForm(),
-            DateTimeField::new('updatedAt', 'Dernière modification')->hideOnForm(),
-            //AssociationField::new('entreprise', 'Entreprise')->hideOnIndex()->setColumns(6) */
-
-
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_ParUtilisateurs_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PAR_UTILISATEUR_ID)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO])) {
+            $tabAttributs[] = TextField::new('pseudo', PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL])) {
+            $tabAttributs[] = TextField::new('email', PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ROLES])) {
+            $tabAttributs[] = $tabAttributs[] = ChoiceField::new('roles', PreferenceCrudController::PREF_PAR_UTILISATEUR_ROLES)
+                ->setChoices(UtilisateurCrudController::TAB_ROLES)
+                ->allowMultipleChoices()
+                ->renderExpanded()
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE] => 'success', //info
+                    UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION] => 'danger',
+                ])
+                ->setColumns(3)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PAR_UTILISATEUR_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DATE_DE_CREATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION)
+                ->hideOnForm();
+        }
+
+        return $tabAttributs;
+    }
 
     public function setCRM_Fields_Partenaires_form($tabAttributs)
     {

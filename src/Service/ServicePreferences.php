@@ -3305,12 +3305,9 @@ class ServicePreferences
         return $this->definirAttributsPages($objetInstance, $preference);
     }
 
-    public function creerPreference($utilisateur, $entreprise)
+    public function setDefaultData(Preference $preference)
     {
-        $preference = new Preference();
         $preference->setApparence(0);
-        $preference->setUtilisateur($utilisateur);
-        $preference->setEntreprise($entreprise);
         $preference->setCreatedAt(new DateTimeImmutable());
         $preference->setUpdatedAt(new DateTimeImmutable());
         //CRM
@@ -3352,8 +3349,31 @@ class ServicePreferences
         $preference->setParTaille(100);
         $preference->setParUtilisateurs([1,2,3,4,8]);
 
+        return $preference;
+    }
+
+    public function getDefaultPreferences($utilisateur, $entreprise)
+    {
+        $preference = new Preference();
+        $preference->setUtilisateur($utilisateur);
+        $preference->setEntreprise($entreprise);
+        $preference = $this->setDefaultData($preference);
+        return $preference;
+    }
+
+    public function creerPreference($utilisateur, $entreprise)
+    {
         //persistance
-        $this->entityManager->persist($preference);
+        $this->entityManager->persist($this->getDefaultPreferences($utilisateur, $entreprise));
+        $this->entityManager->flush();
+    }
+
+    public function resetPreferences(Utilisateur $utilisateur, Entreprise $entreprise)
+    {
+        $preferences = $this->chargerPreference($utilisateur, $entreprise);
+        $preferences = $this->setDefaultData($preferences);
+        //dd($preferences);
+        $this->entityManager->persist($preferences);
         $this->entityManager->flush();
     }
 }

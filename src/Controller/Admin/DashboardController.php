@@ -53,6 +53,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_DESTROY_ENTREPRISE = "Détruire l'entreprie";
     public const ACTION_LISTE = "Revenir sur la liste";
     public const ACTION_DUPLICATE = "Dupliquer";
+    public const ACTION_RESET = "Réinitialiser";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";
     public const ACTION_ENREGISTRER = "Enregistrer et Retourner";

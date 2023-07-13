@@ -3328,14 +3328,14 @@ class ServicePreferences
         $preference->setProClients([1,2,3,4,10,14]);
         $preference->setProPartenaires([1,2,3,4,5,12]);
         $preference->setProPolices([1,2,3,4,5,14,22,23,27,40,41,47,51]);
-        $preference->setProProduits([1,]);
+        $preference->setProProduits([1,2,3,4,5,6,11,14,18,24]);
         //FIN
         $preference->setFinTaille(100);
-        $preference->setFinTaxes([0, 1]);
-        $preference->setFinMonnaies([0, 1]);
-        $preference->setFinCommissionsPayees([0, 1]);
-        $preference->setFinRetrocommissionsPayees([0, 1]);
-        $preference->setFinTaxesPayees([0, 1]);
+        $preference->setFinTaxes([1,2,3,4,5,6,10]);
+        $preference->setFinMonnaies([1,2,3,4,8]);
+        $preference->setFinCommissionsPayees([1,2,4,5,6,11]);
+        $preference->setFinRetrocommissionsPayees([1,2,4,5,6,11]);
+        $preference->setFinTaxesPayees([1,2,3,5,6,7,12]);
         //SIN
         $preference->setSinTaille(100);
         $preference->setSinCommentaires([0, 1]);

@@ -3322,11 +3322,11 @@ class ServicePreferences
         $preference->setCrmPistes([1,2,3,4,5,6,12]);
         //PRO
         $preference->setProTaille(100);
-        $preference->setProAssureurs([0, 1]);
-        $preference->setProAutomobiles([0, 1]);
-        $preference->setProContacts([0, 1]);
-        $preference->setProClients([0, 1]);
-        $preference->setProPartenaires([0, 1]);
+        $preference->setProAssureurs([1,2,3,4,5,10,14]);
+        $preference->setProAutomobiles([2,3,4,5,6,10,12,16]);
+        $preference->setProContacts([1,2,3,4,5,9]);
+        $preference->setProClients([1,2,3,4,10,14]);
+        $preference->setProPartenaires([1,2,3,4,5,12]);
         $preference->setProPolices([0, 1]);
         $preference->setProProduits([0, 1]);
         //FIN

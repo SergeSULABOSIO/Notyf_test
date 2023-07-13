@@ -342,7 +342,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_CLIENT_DATE_DE_CREATION           = "Date de création";
     public const PREF_PRO_CLIENT_DATE_DE_MODIFICATION       = "Dernière modification";
     public const TAB_PRO_CLIENTS = [
-        self::PREF_PRO_CLIENT_ID                        => 0,
+        self::PREF_PRO_CLIENT_ID                                => 0,
         self::PREF_PRO_CLIENT_NOM                               => 1,
         self::PREF_PRO_CLIENT_PERSONNE_MORALE                   => 2,
         self::PREF_PRO_CLIENT_ADRESSE                           => 3,

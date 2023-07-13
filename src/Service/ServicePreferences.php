@@ -3315,8 +3315,8 @@ class ServicePreferences
         $preference->setUpdatedAt(new DateTimeImmutable());
         //CRM
         $preference->setCrmTaille(100);
-        $preference->setCrmMissions([0, 1]);
-        $preference->setCrmFeedbacks([0, 1]);
+        $preference->setCrmMissions([1,2,3,4,5,6,7,10]);
+        $preference->setCrmFeedbacks([1,2,3,4,8]);
         $preference->setCrmCotations([0, 1]);
         $preference->setCrmEtapes([1, 2, 4, 5]); //ok
         $preference->setCrmPistes([0, 1]);

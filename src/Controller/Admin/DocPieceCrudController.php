@@ -70,7 +70,7 @@ class DocPieceCrudController extends AbstractCrudController
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Pièce")
             ->setEntityLabelInPlural("Pièces")
-            ->setPageTitle("index", "Liste des pièces")
+            ->setPageTitle("index", "Documents / Pièces")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE])
             // ...

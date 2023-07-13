@@ -961,7 +961,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //BIBLIOTHEQUE - DOCUMENT
     public const PREF_BIB_DOCUMENT_ID                   = "Id";
-    public const PREF_BIB_DOCUMENT_NOM                  = "Nom";
+    public const PREF_BIB_DOCUMENT_NOM                  = "Intitulé du document";
     public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
     public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";

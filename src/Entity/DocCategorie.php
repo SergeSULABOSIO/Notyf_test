@@ -97,6 +97,6 @@ class DocCategorie
 
     public function __toString()
     {
-        return "Doc / Catégorie / " . $this->nom;
+        return $this->nom;
     }
 }

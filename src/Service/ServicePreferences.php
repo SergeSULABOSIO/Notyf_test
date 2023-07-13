@@ -3317,8 +3317,8 @@ class ServicePreferences
         $preference->setCrmTaille(100);
         $preference->setCrmMissions([1,2,3,4,5,6,7,10]);
         $preference->setCrmFeedbacks([1,2,3,4,8]);
-        $preference->setCrmCotations([0, 1]);
-        $preference->setCrmEtapes([1, 2, 4, 5]); //ok
+        $preference->setCrmCotations([1,2,3,4,5,6,11]);
+        $preference->setCrmEtapes([0, 1, 5]); //ok
         $preference->setCrmPistes([0, 1]);
         //PRO
         $preference->setProTaille(100);

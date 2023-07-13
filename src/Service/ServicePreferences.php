@@ -3338,18 +3338,19 @@ class ServicePreferences
         $preference->setFinTaxesPayees([1,2,3,5,6,7,12]);
         //SIN
         $preference->setSinTaille(100);
-        $preference->setSinCommentaires([0, 1]);
-        $preference->setSinEtapes([0, 1]);
-        $preference->setSinSinistres([0, 1]);
-        $preference->setSinVictimes([0, 1]);
+        $preference->setSinCommentaires([1,2,3,7]);
+        $preference->setSinEtapes([1,2,3,4,7]);
+        $preference->setSinExperts([1,2,3,4,5,6,7,11]);
+        $preference->setSinSinistres([1,2,3,4,5,6,7,8,9,11,12,18]);
+        $preference->setSinVictimes([1,2,3,4,5,10]);
         //BIB
         $preference->setBibTaille(100);
-        $preference->setBibCategories([0, 1]);
-        $preference->setBibClasseurs([0, 1]);
-        $preference->setBibPieces([0, 1]);
+        $preference->setBibCategories([1,5]);
+        $preference->setBibClasseurs([1,5]);
+        $preference->setBibPieces([1,2,3,4,8]);
         //PAR
         $preference->setParTaille(100);
-        $preference->setParUtilisateurs([0, 1]);
+        $preference->setParUtilisateurs([1,2,3,4,8]);
 
         //persistance
         $this->entityManager->persist($preference);

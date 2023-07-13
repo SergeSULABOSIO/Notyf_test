@@ -3319,7 +3319,7 @@ class ServicePreferences
         $preference->setCrmFeedbacks([1,2,3,4,8]);
         $preference->setCrmCotations([1,2,3,4,5,6,11]);
         $preference->setCrmEtapes([0, 1, 5]); //ok
-        $preference->setCrmPistes([0, 1]);
+        $preference->setCrmPistes([1,2,3,4,5,6,12]);
         //PRO
         $preference->setProTaille(100);
         $preference->setProAssureurs([0, 1]);

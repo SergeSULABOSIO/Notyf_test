@@ -3327,8 +3327,8 @@ class ServicePreferences
         $preference->setProContacts([1,2,3,4,5,9]);
         $preference->setProClients([1,2,3,4,10,14]);
         $preference->setProPartenaires([1,2,3,4,5,12]);
-        $preference->setProPolices([0, 1]);
-        $preference->setProProduits([0, 1]);
+        $preference->setProPolices([1,2,3,4,5,14,22,23,27,40,41,47,51]);
+        $preference->setProProduits([1,]);
         //FIN
         $preference->setFinTaille(100);
         $preference->setFinTaxes([0, 1]);

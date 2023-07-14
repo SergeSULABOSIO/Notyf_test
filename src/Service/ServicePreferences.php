@@ -1007,15 +1007,11 @@ class ServicePreferences
 
     public function setCRM_Fields_Produits_form($tabAttributs)
     {
-
-        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
-            ->setColumns(6)
-            ->onlyOnForms();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
-            ->setColumns(6)
+        ->setColumns(6)
+        ->onlyOnForms();
+        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
+            ->setColumns(1)
             ->onlyOnForms();
         $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
             ->setColumns(2)
@@ -1029,8 +1025,11 @@ class ServicePreferences
             ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
-            ->setColumns(2)
+            ->setColumns(1)
             ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+            ->setColumns(12)
             ->onlyOnForms();
 
         return $tabAttributs;

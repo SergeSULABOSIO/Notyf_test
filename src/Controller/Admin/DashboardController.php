@@ -56,7 +56,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_RESET = "Réinitialiser";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";
-    public const ACTION_ENREGISTRER = "Enregistrer et Retourner";
+    public const ACTION_ENREGISTRER = "Enregistrer";
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
 
@@ -191,7 +191,7 @@ class DashboardController extends AbstractDashboardController
                 ->setAction(Action::DETAIL)
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
             MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Preference::class)
-                ->setAction(Action::DETAIL)
+                ->setAction(Action::EDIT)
                 ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()) //<i class="fa-solid fa-solar-panel"></i>
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);

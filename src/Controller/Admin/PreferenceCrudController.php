@@ -1285,7 +1285,7 @@ class PreferenceCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
             })
             //Updates Sur la page Edit
-            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
             ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
@@ -1295,7 +1295,7 @@ class PreferenceCrudController extends AbstractCrudController
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_DETAIL, Action::DELETE)
             ->remove(Crud::PAGE_DETAIL, Action::INDEX)
-            ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE);
+            ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN);
     }
 
     public function resetEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -1311,7 +1311,7 @@ class PreferenceCrudController extends AbstractCrudController
 
         $url = $adminUrlGenerator
             ->setController(self::class)
-            ->setAction(Action::DETAIL)
+            ->setAction(Action::EDIT)
             ->setEntityId($entite->getId())
             ->generateUrl();
         

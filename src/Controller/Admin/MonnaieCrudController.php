@@ -44,10 +44,12 @@ class MonnaieCrudController extends AbstractCrudController
     public const TAB_MONNAIES = [
         "XUA - ADB Unit of Account" => "XUA",
         "AFN - Afghan afghani" => "AFN",
+        "ALL - Albanian lek" => "ALL",
+        "DZD - Algerian dinar" => "DZD",
+        "AOA - Angolan kwanza" => "AOA",
         /* 
-ALL	Albanian lek
-DZD	Algerian dinar
-AOA	Angolan kwanza
+
+	
 ARS	Argentine peso
 AMD	Armenian dram
 AWG	Aruban florin

@@ -16,15 +16,14 @@ class Monnaie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message:"Le code ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $code = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message:"Le taux ne peut pas être vide.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $tauxusd = null;
 

@@ -1247,7 +1247,7 @@ class ServicePreferences
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
 

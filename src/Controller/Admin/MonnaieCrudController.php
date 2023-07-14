@@ -41,6 +41,18 @@ class MonnaieCrudController extends AbstractCrudController
         'Oui' => 1
     ];
 
+    public const FONCTION_SAISIE_ET_AFFICHAGE = "Saisie et Affichage";
+    public const FONCTION_SAISIE_UNIQUEMENT = "Saisie Uniquement";
+    public const FONCTION_AFFICHAGE_UNIQUEMENT = "Affichage Uniquement";
+    public const FONCTION_AUCUNE = "Aucune";
+
+    public const TAB_MONNAIE_FONCTIONS = [
+        self::FONCTION_AUCUNE => -1,
+        self::FONCTION_SAISIE_ET_AFFICHAGE => 0,
+        self::FONCTION_SAISIE_UNIQUEMENT => 1,
+        self::FONCTION_AFFICHAGE_UNIQUEMENT => 2,
+    ];
+
     public const TAB_MONNAIES = [
         "XUA - ADB Unit of Account" => "XUA",
         "AFN - Afghan afghani" => "AFN",

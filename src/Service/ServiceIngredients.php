@@ -34,6 +34,7 @@ class ServiceIngredients
             [
                 "setCode" => "USD",
                 "setNom" => "USD - United States dollar",
+                "setFonction" => 0,
                 "setTauxusd" => 1,
                 "setIslocale" => true
             ]
@@ -144,6 +145,7 @@ class ServiceIngredients
             $monnaie = new Monnaie();
             $monnaie->setCode($O_monnaie['setCode']);
             $monnaie->setNom($O_monnaie['setNom']);
+            $monnaie->setFonction($O_monnaie['setFonction']);
             $monnaie->setTauxusd($O_monnaie['setTauxusd']);
             $monnaie->setIslocale($O_monnaie['setIslocale']);
 

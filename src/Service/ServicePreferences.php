@@ -1061,8 +1061,12 @@ class ServicePreferences
     public function setCRM_Fields_Monnaies_form($tabAttributs)
     {
         $tabAttributs[] = ChoiceField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
-            ->setColumns(8)
+            ->setColumns(6)
             ->setChoices(MonnaieCrudController::TAB_MONNAIES)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
             ->onlyOnForms();
         $tabAttributs[] = NumberField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
             ->setColumns(2)
@@ -1481,6 +1485,11 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_CODE])) {
             $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION])) {
+            $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
+                ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD])) {
@@ -3328,7 +3337,7 @@ class ServicePreferences
         //FIN
         $preference->setFinTaille(100);
         $preference->setFinTaxes([1, 2, 3, 4, 5, 6, 10]);
-        $preference->setFinMonnaies([1, 2, 3, 4, 8]);
+        $preference->setFinMonnaies([1, 2, 3, 4, 5, 9]);
         $preference->setFinCommissionsPayees([1, 2, 4, 5, 6, 11]);
         $preference->setFinRetrocommissionsPayees([1, 2, 4, 5, 6, 11]);
         $preference->setFinTaxesPayees([1, 2, 3, 5, 6, 7, 12]);

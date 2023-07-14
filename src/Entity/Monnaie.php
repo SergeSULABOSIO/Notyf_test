@@ -43,6 +43,9 @@ class Monnaie
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\Column]
+    private ?int $fonction = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -145,6 +148,18 @@ class Monnaie
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getFonction(): ?int
+    {
+        return $this->fonction;
+    }
+
+    public function setFonction(int $fonction): self
+    {
+        $this->fonction = $fonction;
 
         return $this;
     }

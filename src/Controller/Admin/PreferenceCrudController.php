@@ -1305,18 +1305,18 @@ class PreferenceCrudController extends AbstractCrudController
 
         //On reinitialise les préférences de cet utilisateur
         $this->servicePreferences->resetPreferences(
-                $this->serviceEntreprise->getUtilisateur(),
-                $this->serviceEntreprise->getEntreprise()
-            );
+            $this->serviceEntreprise->getUtilisateur(),
+            $this->serviceEntreprise->getEntreprise()
+        );
 
         $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::EDIT)
             ->setEntityId($entite->getId())
             ->generateUrl();
-        
-            $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur() . ", La reinitialisation de vos paramètres d'affichage est effectuée avec succès.");
-            
+
+        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur() . ", La reinitialisation de vos paramètres d'affichage est effectuée avec succès.");
+
         return $this->redirect($url);
     }
 }

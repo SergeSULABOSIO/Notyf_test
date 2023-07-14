@@ -33,15 +33,9 @@ class ServiceIngredients
         $taMonnaies = [
             [
                 "setCode" => "USD",
-                "setNom" => "Dollar Américain",
+                "setNom" => "USD - United States dollar",
                 "setTauxusd" => 1,
                 "setIslocale" => true
-            ],
-            [
-                "setCode" => "EUR",
-                "setNom" => "Euro",
-                "setTauxusd" => 1.09,
-                "setIslocale" => false
             ]
         ]; //array("USD", "CDF");
 

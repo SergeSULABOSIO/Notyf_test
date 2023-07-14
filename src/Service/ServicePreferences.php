@@ -2975,10 +2975,10 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_form($tabAttributs)
     {
-        $tabAttributs[] = TextField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
             ->onlyOnForms()
             ->setColumns(6);
-        $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
+        $tabAttributs[] = TextEditorField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
             ->onlyOnForms()
             ->setColumns(6);
         $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
@@ -3066,7 +3066,7 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
             ->onlyOnForms()
             ->setColumns(12);
-        $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);
         $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
@@ -3245,34 +3245,19 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = TextField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = AssociationField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+            ->setColumns(4);
         $tabAttributs[] = AssociationField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(4)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+            ->onlyOnForms()
+            ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -3281,7 +3266,19 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(3)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
+            ->onlyOnForms()
+            ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -3290,7 +3287,11 @@ class ServicePreferences
             });
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(3);
+        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            ->onlyOnForms()
+            ->setColumns(12);
+
 
         //dd($tabAttributs);
 
@@ -3312,42 +3313,42 @@ class ServicePreferences
         $preference->setUpdatedAt(new DateTimeImmutable());
         //CRM
         $preference->setCrmTaille(100);
-        $preference->setCrmMissions([1,2,3,4,5,6,7,10]);
-        $preference->setCrmFeedbacks([1,2,3,4,8]);
-        $preference->setCrmCotations([1,2,3,4,5,6,11]);
+        $preference->setCrmMissions([1, 2, 3, 4, 5, 6, 7, 10]);
+        $preference->setCrmFeedbacks([1, 2, 3, 4, 8]);
+        $preference->setCrmCotations([1, 2, 3, 4, 5, 6, 11]);
         $preference->setCrmEtapes([0, 1, 5]); //ok
-        $preference->setCrmPistes([1,2,3,4,5,6,12]);
+        $preference->setCrmPistes([1, 2, 3, 4, 5, 6, 12]);
         //PRO
         $preference->setProTaille(100);
-        $preference->setProAssureurs([1,2,3,4,5,10,14]);
-        $preference->setProAutomobiles([2,3,4,5,6,10,12,16]);
-        $preference->setProContacts([1,2,3,4,5,9]);
-        $preference->setProClients([1,2,3,4,10,14]);
-        $preference->setProPartenaires([1,2,3,4,5,12]);
-        $preference->setProPolices([1,2,3,4,5,14,22,23,27,40,41,47,51]);
-        $preference->setProProduits([1,2,3,4,5,6,11,14,18,24]);
+        $preference->setProAssureurs([1, 2, 3, 4, 5, 10, 14]);
+        $preference->setProAutomobiles([2, 3, 4, 5, 6, 10, 12, 16]);
+        $preference->setProContacts([1, 2, 3, 4, 5, 9]);
+        $preference->setProClients([1, 2, 3, 4, 10, 14]);
+        $preference->setProPartenaires([1, 2, 3, 4, 5, 12]);
+        $preference->setProPolices([1, 2, 3, 4, 5, 14, 22, 23, 27, 40, 41, 47, 51]);
+        $preference->setProProduits([1, 2, 3, 4, 5, 6, 11, 14, 18, 24]);
         //FIN
         $preference->setFinTaille(100);
-        $preference->setFinTaxes([1,2,3,4,5,6,10]);
-        $preference->setFinMonnaies([1,2,3,4,8]);
-        $preference->setFinCommissionsPayees([1,2,4,5,6,11]);
-        $preference->setFinRetrocommissionsPayees([1,2,4,5,6,11]);
-        $preference->setFinTaxesPayees([1,2,3,5,6,7,12]);
+        $preference->setFinTaxes([1, 2, 3, 4, 5, 6, 10]);
+        $preference->setFinMonnaies([1, 2, 3, 4, 8]);
+        $preference->setFinCommissionsPayees([1, 2, 4, 5, 6, 11]);
+        $preference->setFinRetrocommissionsPayees([1, 2, 4, 5, 6, 11]);
+        $preference->setFinTaxesPayees([1, 2, 3, 5, 6, 7, 12]);
         //SIN
         $preference->setSinTaille(100);
-        $preference->setSinCommentaires([1,2,3,7]);
-        $preference->setSinEtapes([1,2,3,4,7]);
-        $preference->setSinExperts([1,2,3,4,5,6,7,11]);
-        $preference->setSinSinistres([1,2,3,4,5,6,7,8,9,11,12,18]);
-        $preference->setSinVictimes([1,2,3,4,5,10]);
+        $preference->setSinCommentaires([1, 2, 3, 7]);
+        $preference->setSinEtapes([1, 2, 3, 4, 7]);
+        $preference->setSinExperts([1, 2, 3, 4, 5, 6, 7, 11]);
+        $preference->setSinSinistres([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 18]);
+        $preference->setSinVictimes([1, 2, 3, 4, 5, 10]);
         //BIB
         $preference->setBibTaille(100);
-        $preference->setBibCategories([1,5]);
-        $preference->setBibClasseurs([1,5]);
-        $preference->setBibPieces([1,2,3,4,8]);
+        $preference->setBibCategories([1, 5]);
+        $preference->setBibClasseurs([1, 5]);
+        $preference->setBibPieces([1, 2, 3, 4, 8]);
         //PAR
         $preference->setParTaille(100);
-        $preference->setParUtilisateurs([1,2,3,4,8]);
+        $preference->setParUtilisateurs([1, 2, 3, 4, 8]);
 
         return $preference;
     }

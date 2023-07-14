@@ -139,6 +139,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie');
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('COMMERCIAL / CRM', 'fas fa-bullseye')->setSubItems([ //<i class="fa-solid fa-bullseye"></i>
+            MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class), //<i class="fa-sharp fa-solid fa-address-book"></i>
             MenuItem::linkToCrud('Missions', 'fas fa-paper-plane', ActionCRM::class), //<i class="fa-solid fa-paper-plane"></i>
             MenuItem::linkToCrud('Feedbacks', 'fas fa-comments', FeedbackCRM::class),
             MenuItem::linkToCrud('Cotations', 'fas fa-cash-register', Cotation::class), //<i class="fa-solid fa-cash-register"></i>
@@ -150,7 +151,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('PRODUCTION', 'fas fa-bag-shopping')->setSubItems([ //<i class="fa-solid fa-bag-shopping"></i>
             MenuItem::linkToCrud('Assureurs', 'fas fa-umbrella', Assureur::class),
             MenuItem::linkToCrud('Engins', 'fas fa-car', Automobile::class),
-            MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class), //<i class="fa-sharp fa-solid fa-address-book"></i>
             MenuItem::linkToCrud('Clients', 'fas fa-person-shelter', Client::class), //<i class="fa-solid fa-person-shelter"></i>
             MenuItem::linkToCrud('Partenaires', 'fas fa-handshake', Partenaire::class),
             MenuItem::linkToCrud('Polices', 'fas fa-file-shield', Police::class),

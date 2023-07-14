@@ -1202,12 +1202,13 @@ class ServicePreferences
 
     public function setCRM_Fields_CommentaireSinistres_form($tabAttributs)
     {
-        $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
-            ->setColumns(6)
+        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
+            ->setColumns(12)
             ->onlyOnForms();
+        
 
         return $tabAttributs;
     }
@@ -1216,13 +1217,13 @@ class ServicePreferences
     public function setCRM_Fields_EtapeSinistres_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
-            ->setColumns(4)
+            ->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('indice', PreferenceCrudController::PREF_SIN_ETAPE_INDICE)
             ->setColumns(2)
             ->setChoices(EtapeSinistreCrudController::TAB_ETAPE_INDICE)
             ->onlyOnForms();
-        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
 

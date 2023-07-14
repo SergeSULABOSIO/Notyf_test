@@ -2,11 +2,13 @@
 
 namespace App\EventSubscriber;
 
+use App\Controller\Admin\MonnaieCrudController;
 use App\Entity\Piste;
 use App\Entity\Cotation;
 use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\FeedbackCRM;
+use App\Entity\Monnaie;
 use App\Entity\Police;
 use App\Entity\Preference;
 use App\Entity\Utilisateur;
@@ -27,12 +29,11 @@ class AdminSubscriber implements EventSubscriberInterface
 {
 
     public function __construct(
-        private UserPasswordHasherInterface $hasher, 
-        private ServiceEntreprise $serviceEntreprise, 
+        private UserPasswordHasherInterface $hasher,
+        private ServiceEntreprise $serviceEntreprise,
         private ServiceCalculateur $serviceCalculateur,
         private ServicePreferences $servicePreferences
-        )
-    {
+    ) {
     }
 
     public static function getSubscribedEvents()
@@ -58,6 +59,11 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         //dd($event);
         $entityInstance = $event->getEntityInstance();
+
+        if ($entityInstance instanceof Monnaie) {
+            $entityInstance = $this->updateNomMonnaie($entityInstance);
+        }
+
         if ($entityInstance instanceof Utilisateur) {
             $newpassword = $entityInstance->getPlainPassword();
             if ($newpassword !== "") {
@@ -78,10 +84,26 @@ class AdminSubscriber implements EventSubscriberInterface
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
     }
 
+    public function updateNomMonnaie(Monnaie $entityInstance): Monnaie
+    {
+        foreach (MonnaieCrudController::TAB_MONNAIES as $key => $value) {
+            if ($value == $entityInstance->getCode()) {
+                $entityInstance->setNom($key);
+            }
+        }
+        //dd($entityInstance);
+        return $entityInstance;
+    }
+
     public function setUpdatedAt(BeforeEntityUpdatedEvent $event)
     {
         //dd($event);
         $entityInstance = $event->getEntityInstance();
+
+        if ($entityInstance instanceof Monnaie) {
+            $entityInstance = $this->updateNomMonnaie($entityInstance);
+        }
+
         if ($entityInstance instanceof Utilisateur) {
             $newpassword = $entityInstance->getPlainPassword();
             //Si le mot de passe n'est pas vide = C'est que l'on désire le modifier
@@ -95,10 +117,6 @@ class AdminSubscriber implements EventSubscriberInterface
             /* if($this->serviceEntreprise->getUtilisateur() == $entityInstance){
                 $response = $this->security->logout(false);
             } */
-        }
-
-        if($entityInstance instanceof Preference){
-            //dd($entityInstance);
         }
 
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());

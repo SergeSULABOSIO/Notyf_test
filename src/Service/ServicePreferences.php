@@ -1008,8 +1008,8 @@ class ServicePreferences
     public function setCRM_Fields_Produits_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
-        ->setColumns(6)
-        ->onlyOnForms();
+            ->setColumns(6)
+            ->onlyOnForms();
         $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
             ->setColumns(1)
             ->onlyOnForms();
@@ -1060,14 +1060,12 @@ class ServicePreferences
 
     public function setCRM_Fields_Monnaies_form($tabAttributs)
     {
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
-            ->setColumns(3)
-            ->onlyOnForms();
-        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
-            ->setColumns(1)
+        $tabAttributs[] = ChoiceField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+            ->setColumns(8)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIES)
             ->onlyOnForms();
         $tabAttributs[] = NumberField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
-            ->setColumns(1)
+            ->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
             ->setColumns(2)
@@ -1208,7 +1206,7 @@ class ServicePreferences
         $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
             ->setColumns(12)
             ->onlyOnForms();
-        
+
 
         return $tabAttributs;
     }

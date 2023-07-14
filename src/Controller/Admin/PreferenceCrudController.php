@@ -1314,7 +1314,9 @@ class PreferenceCrudController extends AbstractCrudController
             ->setAction(Action::DETAIL)
             ->setEntityId($entite->getId())
             ->generateUrl();
-
+        
+            $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur() . ", La reinitialisation de vos paramètres d'affichage est effectuée avec succès.");
+            
         return $this->redirect($url);
     }
 }

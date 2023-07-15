@@ -80,7 +80,8 @@ class ServicePreferences
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServiceMonnaie $serviceMonnaie
     ) {
     }
 
@@ -815,6 +816,8 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_form($tabAttributs)
     {
+        //On récupère la monnaie de saisie venant du serviceMonnaie
+        $codeMonnaie = $this->serviceMonnaie->getMonnaie_Saisie()->getCode();
 
         $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
             ->setColumns(2)
@@ -894,16 +897,8 @@ class ServicePreferences
             ->setIcon('fas fa-bag-shopping')
             ->setHelp("Le contrat d'assurance en place.")
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_POLICE_MONNAIE)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = NumberField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+        $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
@@ -911,27 +906,34 @@ class ServicePreferences
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
         $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnForms();
-        $tabAttributs[] = NumberField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+        $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
-        $tabAttributs[] = NumberField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            ->setColumns(2);
+        $tabAttributs[] = MoneyField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
-            ->setColumns(1);
+            ->setColumns(2);
         $tabAttributs[] = FormField::addTab(' Structure des revenus')
             ->setIcon('fas fa-sack-dollar')
             ->onlyOnForms();
@@ -951,7 +953,8 @@ class ServicePreferences
             ->setHelp("Précisez le taux exceptionnel si, pour ce compte spécifique, le taux est différent du standard.");
         $tabAttributs[] = FormField::addPanel('Commission de réassurance')
             ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('ricom', "Montant ht")
+        $tabAttributs[] = MoneyField::new('ricom', "Montant ht")
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
@@ -963,7 +966,8 @@ class ServicePreferences
             ->setColumns(3)
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
         $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnForms();
-        $tabAttributs[] = NumberField::new('localcom', "Montant ht")
+        $tabAttributs[] = MoneyField::new('localcom', "Montant ht")
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
@@ -976,7 +980,8 @@ class ServicePreferences
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
         $tabAttributs[] = FormField::addPanel("Commission sur Fronting")
             ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('frontingcom', "Montant ht")
+        $tabAttributs[] = MoneyField::new('frontingcom', "Montant ht")
+            ->setCurrency($codeMonnaie)
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
@@ -987,7 +992,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(3)
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
+        $tabAttributs[] = TextEditorField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
             ->onlyOnForms()
             ->setColumns(12);
 

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Admin\MonnaieCrudController;
 use App\Entity\Entreprise;
 use App\Entity\Monnaie;
 use App\Entity\Utilisateur;
@@ -31,11 +32,40 @@ class ServiceMonnaie
         $this->chargerMonnaies();
     }
 
-    public function chargerMonnaies()
+    private function chargerMonnaies()
     {
         $this->monnaies = $this->entityManager->getRepository(Monnaie::class)->findBy(
             ['entreprise' => $this->entreprise]
         );
+    }
+
+    private function getMonnaie($fonction)
+    {
+        foreach ($this->monnaies as $monnaie) {
+            //dd($fonction);
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
+    }
+
+    public function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    public function getMonnaie_Saisie()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_UNIQUEMENT]);
+        }
+        return $monnaie;
     }
 
 }

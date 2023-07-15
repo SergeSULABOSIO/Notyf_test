@@ -326,9 +326,7 @@ class PoliceCrudController extends AbstractCrudController
             $user = $entityManager->find($className, $id);
             $user->approve();
         }
-
         $entityManager->flush();
-
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 }

@@ -112,7 +112,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_ID                   = "Id";
     public const PREF_CRM_COTATION_NOM                  = "Nom";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
-    public const PREF_CRM_COTATION_MONNAIE              = "Monnaie";
+    //public const PREF_CRM_COTATION_MONNAIE              = "Monnaie";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_RISQUE               = "Risque";
     public const PREF_CRM_COTATION_PISTE                = "Piste";
@@ -125,7 +125,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_ID                                              => 0,
         self::PREF_CRM_COTATION_NOM                                             => 1,
         self::PREF_CRM_COTATION_ASSUREUR                                        => 2,
-        self::PREF_CRM_COTATION_MONNAIE                                         => 3,
+        //self::PREF_CRM_COTATION_MONNAIE                                         => 3,
         self::PREF_CRM_COTATION_PRIME_TOTALE                                    => 4,
         self::PREF_CRM_COTATION_RISQUE                                          => 5,
         self::PREF_CRM_COTATION_PISTE                                           => 6,
@@ -274,7 +274,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_ENGIN_MARQUE                      = "Marque";
     public const PREF_PRO_ENGIN_ANNEE                       = "Année";
     public const PREF_PRO_ENGIN_PUISSANCE                   = "Puissance";
-    public const PREF_PRO_ENGIN_MONNAIE                     = "Monnaie";
+    //public const PREF_PRO_ENGIN_MONNAIE                     = "Monnaie";
     public const PREF_PRO_ENGIN_VALEUR                      = "Valeur";
     public const PREF_PRO_ENGIN_NB_SIEGES                   = "Nb. Sièges";
     public const PREF_PRO_ENGIN_USAGE                       = "Usage";
@@ -292,7 +292,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_ENGIN_MARQUE                 => 2,
         self::PREF_PRO_ENGIN_ANNEE                  => 3,
         self::PREF_PRO_ENGIN_PUISSANCE              => 4,
-        self::PREF_PRO_ENGIN_MONNAIE                => 5,
+        //self::PREF_PRO_ENGIN_MONNAIE                => 5,
         self::PREF_PRO_ENGIN_VALEUR                 => 6,
         self::PREF_PRO_ENGIN_NB_SIEGES              => 7,
         self::PREF_PRO_ENGIN_USAGE                  => 8,
@@ -468,7 +468,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_LOCAL_COM                                  = "Com. locale";
     public const PREF_PRO_POLICE_FRONTIN_COM                                = "Com. sur Fronting";
     public const PREF_PRO_POLICE_REMARQUE                                   = "Remarques";
-    public const PREF_PRO_POLICE_MONNAIE                                    = "Monnaie";
+    //public const PREF_PRO_POLICE_MONNAIE                                    = "Monnaie";
     public const PREF_PRO_POLICE_CLIENT                                     = "Client";
     public const PREF_PRO_POLICE_PRODUIT                                    = "Produit";
     public const PREF_PRO_POLICE_PARTENAIRE                                 = "Partenaire";
@@ -511,7 +511,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_POLICE_LOCAL_COM                         => 18,
         self::PREF_PRO_POLICE_FRONTIN_COM                       => 19,
         self::PREF_PRO_POLICE_REMARQUE                          => 20,
-        self::PREF_PRO_POLICE_MONNAIE                           => 21,
+        //self::PREF_PRO_POLICE_MONNAIE                           => 21,
         self::PREF_PRO_POLICE_CLIENT                            => 22,
         self::PREF_PRO_POLICE_PRODUIT                           => 23,
         self::PREF_PRO_POLICE_PARTENAIRE                        => 24,
@@ -695,7 +695,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_ID                      = "Id";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                    = "Date";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                  = "Police";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                 = "Monnaie";
+    //public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                 = "Montant";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Note de débit";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION             = "Description";
@@ -708,7 +708,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_ID                         => 0,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                       => 1,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                     => 2,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                    => 3,
+        //self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                    => 3,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                    => 4,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE                => 5,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION                => 6,
@@ -722,7 +722,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                      = "Id";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                    = "Date";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                  = "Police";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                 = "Monnaie";
+    //public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                 = "Montant";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Note de débit";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE              = "Partenaire";
@@ -736,7 +736,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                         => 0,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                       => 1,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                     => 2,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                    => 3,
+        //self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                    => 3,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                    => 4,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE                => 5,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE                 => 6,
@@ -751,7 +751,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_TAXE_DATE                   = "Date";
     public const PREF_FIN_PAIEMENTS_TAXE_TAXE                   = "Taxe";
     public const PREF_FIN_PAIEMENTS_TAXE_POLICE                 = "Police d'assurance";
-    public const PREF_FIN_PAIEMENTS_TAXE_MONNAIE                = "Monnaie";
+    //public const PREF_FIN_PAIEMENTS_TAXE_MONNAIE                = "Monnaie";
     public const PREF_FIN_PAIEMENTS_TAXE_MONTANT                = "Montant";
     public const PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT          = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_TAXE_EXERCICE               = "Exercice comptable";
@@ -765,7 +765,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_TAXE_DATE                  => 1,
         self::PREF_FIN_PAIEMENTS_TAXE_TAXE                  => 2,
         self::PREF_FIN_PAIEMENTS_TAXE_POLICE                => 3,
-        self::PREF_FIN_PAIEMENTS_TAXE_MONNAIE               => 4,
+        //self::PREF_FIN_PAIEMENTS_TAXE_MONNAIE               => 4,
         self::PREF_FIN_PAIEMENTS_TAXE_MONTANT               => 5,
         self::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT         => 6,
         self::PREF_FIN_PAIEMENTS_TAXE_EXERCICE              => 7,
@@ -852,7 +852,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_SIN_SINISTRE_POLICE               = "Police";
     public const PREF_SIN_SINISTRE_COUT                 = "Coût de réparation";
     public const PREF_SIN_SINISTRE_MONTANT_PAYE         = "Compensation";
-    public const PREF_SIN_SINISTRE_MONNAIE              = "Monnaie";
+    //public const PREF_SIN_SINISTRE_MONNAIE              = "Monnaie";
     public const PREF_SIN_SINISTRE_DATE_PAIEMENT        = "Date de paiement";
     public const PREF_SIN_SINISTRE_ETAPE                = "Etape actuelle";
     public const PREF_SIN_SINISTRE_DOCUMENTS            = "Documents";
@@ -872,7 +872,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_SINISTRE_POLICE                          => 7,
         self::PREF_SIN_SINISTRE_COUT                            => 8,
         self::PREF_SIN_SINISTRE_MONTANT_PAYE                    => 9,
-        self::PREF_SIN_SINISTRE_MONNAIE                         => 10,
+        //self::PREF_SIN_SINISTRE_MONNAIE                         => 10,
         self::PREF_SIN_SINISTRE_DATE_PAIEMENT                   => 11,
         self::PREF_SIN_SINISTRE_ETAPE                           => 12,
         self::PREF_SIN_SINISTRE_DOCUMENTS                       => 13,

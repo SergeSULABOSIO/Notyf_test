@@ -2347,38 +2347,37 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('plaque', PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(4);
         $tabAttributs[] = TextField::new('chassis', PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(4);
         $tabAttributs[] = TextField::new('model', PreferenceCrudController::PREF_PRO_ENGIN_MODEL)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(4);
         $tabAttributs[] = TextField::new('marque', PreferenceCrudController::PREF_PRO_ENGIN_MARQUE)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(4);
         $tabAttributs[] = TextField::new('annee', PreferenceCrudController::PREF_PRO_ENGIN_ANNEE)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(4);
         $tabAttributs[] = TextField::new('puissance', PreferenceCrudController::PREF_PRO_ENGIN_PUISSANCE)
             ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = NumberField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+            ->setColumns(4);
+        $tabAttributs[] = MoneyField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
             ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE)
-            ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(2);
         $tabAttributs[] = NumberField::new('nbsieges', PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('utilite', PreferenceCrudController::PREF_PRO_ENGIN_USAGE)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(4)
             ->setChoices(AutomobileCrudController::TAB_AUTO_UTILITE);
         $tabAttributs[] = ChoiceField::new('nature', PreferenceCrudController::PREF_PRO_ENGIN_NATURE)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(4)
             ->setChoices(AutomobileCrudController::TAB_AUTO_NATURE);
 
         return $tabAttributs;
@@ -2482,12 +2481,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('puissance', PreferenceCrudController::PREF_PRO_ENGIN_PUISSANCE)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE])) {
-            $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_PRO_ENGIN_MONNAIE)
-                ->hideOnForm();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_VALEUR])) {
-            $tabAttributs[] = NumberField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+            $tabAttributs[] = MoneyField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES])) {

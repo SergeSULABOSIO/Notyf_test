@@ -2132,28 +2132,28 @@ class ServicePreferences
     public function setCRM_Fields_Partenaires_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM)
-            ->setColumns(6)
+            ->setColumns(10)
             ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
-            ->setColumns(6)
+        $tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
+            ->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -2829,7 +2829,7 @@ class ServicePreferences
 
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -2838,19 +2838,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
             ->onlyOnForms()
-            ->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
-        $tabAttributs[] = NumberField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-            ->onlyOnForms()
-            ->setColumns(6);
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_CRM_COTATION_MONNAIE)
-            ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -2859,7 +2847,7 @@ class ServicePreferences
             });
 
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
-            ->setColumns(6)
+            ->setColumns(4)
             ->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -2867,6 +2855,11 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
+        $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->onlyOnForms()
+            ->setColumns(2);
         return $tabAttributs;
     }
 

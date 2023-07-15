@@ -1108,39 +1108,25 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
             ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE)
-            ->setColumns(2)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->onlyOnForms();
-        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
-            ->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
             ->setColumns(2)
             ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+
 
         return $tabAttributs;
     }
 
     public function setCRM_Fields_PaiementPartenaires_form($tabAttributs)
     {
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
-            ->setColumns(12)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->onlyOnForms();
+
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
             ->setColumns(12)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -1153,11 +1139,13 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE)
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT)
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('monnaie', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE)
-            ->setColumns(2)
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
+            ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')

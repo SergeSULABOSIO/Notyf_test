@@ -816,9 +816,6 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_form($tabAttributs)
     {
-        //On récupère la monnaie de saisie venant du serviceMonnaie
-        $codeMonnaie = $this->serviceMonnaie->getMonnaie_Saisie()->getCode();
-
         $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
             ->setColumns(2)
             ->onlyOnForms();
@@ -898,7 +895,7 @@ class ServicePreferences
             ->setHelp("Le contrat d'assurance en place.")
             ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
@@ -907,31 +904,31 @@ class ServicePreferences
             ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
         $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnForms();
         $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = MoneyField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = FormField::addTab(' Structure des revenus')
@@ -954,7 +951,7 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel('Commission de réassurance')
             ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('ricom', "Montant ht")
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
@@ -967,7 +964,7 @@ class ServicePreferences
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
         $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnForms();
         $tabAttributs[] = MoneyField::new('localcom', "Montant ht")
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
@@ -981,7 +978,7 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel("Commission sur Fronting")
             ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('frontingcom', "Montant ht")
-            ->setCurrency($codeMonnaie)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)

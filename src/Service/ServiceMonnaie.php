@@ -68,4 +68,14 @@ class ServiceMonnaie
         return $monnaie;
     }
 
+    public function getCodeSaisie()
+    {
+        return $this->getMonnaie_Saisie()->getCode();
+    }
+
+    public function getCodeAffichage()
+    {
+        return $this->getMonnaie_Affichage()->getCode();
+    }
+
 }

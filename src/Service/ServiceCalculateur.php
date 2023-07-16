@@ -71,7 +71,7 @@ class ServiceCalculateur
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
                 );
                 foreach ($liste as $pol) {
-                    dd($this->serviceMonnaie->mustConvertCurrency());
+                    dd($this->serviceMonnaie->getEquivalentInUSD(10)); //$pol->getPrimetotale()
                     //C'est ici qu'il faudra convertir en autre monnaie si la monnaie d'affichage est différente de la monnaie de saisie
                     $this->updatePoliceCalculableFileds($pol);
                 }

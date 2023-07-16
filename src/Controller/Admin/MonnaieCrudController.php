@@ -147,95 +147,92 @@ class MonnaieCrudController extends AbstractCrudController
         "MYR - Malaysian ringgit" => "MYR",
         "MVR - Maldivian rufiyaa" => "MVR",
         "MRU - Mauritanian ouguiya" => "MRU",
-        /* 	
-MUR	Mauritian rupee
-MXN	Mexican peso
-MXV	Mexican Unidad de Inversion (UDI) (funds code)
-MDL	Moldovan leu
-MNT	Mongolian tögrög
-MAD	Moroccan dirham
-MZN	Mozambican metical
-MMK	Myanmar kyat
-NAD	Namibian dollar
-NPR	Nepalese rupee
-ANG	Netherlands Antillean guilder
-TWD	New Taiwan dollar
-NZD	New Zealand dollar
-NIO	Nicaraguan córdoba
-NGN	Nigerian naira
-XXX	No currency
-KPW	North Korean won
-NOK	Norwegian krone
-OMR	Omani rial
-PKR	Pakistani rupee
-XPD	Palladium (one troy ounce)
-PAB	Panamanian balboa
-PGK	Papua New Guinean kina
-PYG	Paraguayan guaraní
-PEN	Peruvian sol
-PHP	Philippine peso[10]
-XPT	Platinum (one troy ounce)
-PLN	Polish złoty
-GBP	Pound sterling
-QAR	Qatari riyal
-CNY	Renminbi[11]
-RON	Romanian leu
-RUB	Russian ruble
-RWF	Rwandan franc
-SHP	Saint Helena pound
-SVC	Salvadoran colón
-WST	Samoan tala
-STN	São Tomé and Príncipe dobra
-SAR	Saudi riyal
-RSD	Serbian dinar
-SCR	Seychelles rupee
-SLE	Sierra Leonean leone (new leone)[12][13][14]
-SLL	Sierra Leonean leone (old leone)[12][13][14][15]
-XAG	Silver (one troy ounce)
-SGD	Singapore dollar
-SBD	Solomon Islands dollar
-SOS	Somali shilling
-ZAR	South African rand
-KRW	South Korean won
-SSP	South Sudanese pound
-XDR	Special drawing rights
-LKR	Sri Lankan rupee
-XSU	SUCRE
-SDG	Sudanese pound
-SRD	Surinamese dollar
-SZL	Swazi lilangeni
-SEK	Swedish krona (plural: kronor)
-CHF	Swiss franc
-SYP	Syrian pound
-TJS	Tajikistani somoni
-TZS	Tanzanian shilling
-THB	Thai baht
-TOP	Tongan paʻanga
-TTD	Trinidad and Tobago dollar
-TND	Tunisian dinar
-TRY	Turkish lira
-TMT	Turkmenistan manat
-UGX	Ugandan shilling
-UAH	Ukrainian hryvnia
-CLF	Unidad de Fomento (funds code)
-COU	Unidad de Valor Real (UVR) (funds code)[6]
-UYW	Unidad previsional[17]
-AED	United Arab Emirates dirham
-USD	United States dollar
-USN	United States dollar (next day) (funds code)
-UYI	Uruguay Peso en Unidades Indexadas (URUIURUI) (funds code)
-UYU	Uruguayan peso
-UZS	Uzbekistan sum
-VUV	Vanuatu vatu
-VED	Venezuelan digital bolívar[18]
-VES	Venezuelan sovereign bolívar[10]
-VND	Vietnamese đồng
-CHE	WIR euro (complementary currency)
-CHW	WIR franc (complementary currency)
-YER	Yemeni rial
-ZMW	Zambian kwacha
-ZWL	Zimbabwean dollar (fifth)[e]
- */
+        "MUR - Mauritian rupee" => "MUR",
+        "MXN - Mexican peso" => "MXN",
+        "MXV - Mexican Unidad de Inversion (UDI) (funds code)" => "MXV",
+        "MDL - Moldovan leu" => "MDL",
+        "MNT - Mongolian tögrög" => "MNT",
+        "MAD - Moroccan dirham" => "MAD",
+        "MZN - Mozambican metical" => "MZN",
+        "MMK - Myanmar kyat" => "MMK",
+        "NAD - Namibian dollar" => "NAD",
+        "NPR - Nepalese rupee" => "NPR",
+        "ANG - Netherlands Antillean guilder" => "ANG",
+        "TWD - New Taiwan dollar" => "TWD",
+        "NZD - New Zealand dollar" => "NZD",
+        "NIO - Nicaraguan córdoba" => "NIO",
+        "NGN - Nigerian naira" => "NGN",
+        "XXX - No currency" => "XXX",
+        "KPW - North Korean won" => "KPW",
+        "NOK - Norwegian krone" => "NOK",
+        "OMR - Omani rial" => "OMR",
+        "PKR - Pakistani rupee" => "PKR",
+        "XPD - Palladium (one troy ounce)" => "XPD",
+        "PAB - Panamanian balboa" => "PAB",
+        "PGK - Papua New Guinean kina" => "PGK",
+        "PYG - Paraguayan guaraní" => "PYG",
+        "PEN - Peruvian sol" => "PEN",
+        "PHP - Philippine peso[10]" => "PHP",
+        "XPT - Platinum (one troy ounce)" => "XPT",
+        "PLN - Polish złoty" => "PLN",
+        "GBP - Pound sterling" => "GBP",
+        "QAR - Qatari riyal" => "QAR",
+        "CNY - Renminbi[11]" => "CNY",
+        "RON - Romanian leu" => "RON",
+        "RUB - Russian ruble" => "RUB",
+        "RWF - Rwandan franc" => "RWF",
+        "SHP - Saint Helena pound" => "SHP",
+        "SVC - Salvadoran colón" => "SVC",
+        "WST - Samoan tala" => "WST",
+        "SAR - Saudi riyal" => "SAR",
+        "RSD - Serbian dinar" => "RSD",
+        "SCR - Seychelles rupee" => "SCR",
+        "SLE - Sierra Leonean leone (new leone)[12][13][14]" => "SLE",
+        "SLL - Sierra Leonean leone (old leone)[12][13][14][15]" => "SLL",
+        "XAG - Silver (one troy ounce)" => "XAG",
+        "SGD - Singapore dollar" => "SGD",
+        "SBD - Solomon Islands dollar" => "SBD",
+        "SOS - Somali shilling" => "SOS",
+        "ZAR - South African rand" => "ZAR",
+        "KRW - South Korean won" => "KRW",
+        "SSP - South Sudanese pound" => "SSP",
+        "XDR - Special drawing rights" => "XDR",
+        "LKR - Sri Lankan rupee" => "LKR",
+        "XSU - SUCRE" => "XSU",
+        "SDG - Sudanese pound" => "SDG",
+        "SRD - Surinamese dollar" => "SRD",
+        "SZL - Swazi lilangeni" => "SZL",
+        "SEK - Swedish krona (plural: kronor)" => "SEK",
+        "CHF - Swiss franc" => "CHF",
+        "SYP - Syrian pound" => "SYP",
+        "TJS - Tajikistani somoni" => "TJS",
+        "TZS - Tanzanian shilling" => "TZS",
+        "THB - Thai baht" => "THB",
+        "TOP - Tongan paʻanga" => "TOP",
+        "TTD - Trinidad and Tobago dollar" => "TTD",
+        "TND - Tunisian dinar" => "TND",
+        "TRY - Turkish lira" => "TRY",
+        "TMT - Turkmenistan manat" => "TMT",
+        "UGX - Ugandan shilling" => "UGX",
+        "UAH - Ukrainian hryvnia" => "UAH",
+        "CLF - Unidad de Fomento (funds code)" => "CLF",
+        "COU - Unidad de Valor Real (UVR) (funds code)[6]" => "COU",
+        "UYW - Unidad previsional[17]" => "UYW",
+        "AED - United Arab Emirates dirham" => "AED",
+        "USD - United States dollar" => "USD",
+        "USN - United States dollar (next day) (funds code)" => "USN",
+        "UYI - Uruguay Peso en Unidades Indexadas (URUIURUI) (funds code)" => "UYI",
+        "UYU - Uruguayan peso" => "UYU",
+        "UZS - Uzbekistan sum" => "UZS",
+        "VUV - Vanuatu vatu" => "VUV",
+        "VED - Venezuelan digital bolívar[18]" => "VED",
+        "VES - Venezuelan sovereign bolívar[10]" => "VES",
+        "VND - Vietnamese đồng" => "VND",
+        "CHE - WIR euro (complementary currency)" => "CHE",
+        "CHW - WIR franc (complementary currency)" => "CHW",
+        "YER - Yemeni rial" => "YER",
+        "ZMW - Zambian kwacha" => "ZMW",
+        "ZWL - Zimbabwean dollar (fifth)[e]" => "ZWL"
     ];
 
     public function __construct(

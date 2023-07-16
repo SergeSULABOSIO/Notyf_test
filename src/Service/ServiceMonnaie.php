@@ -87,4 +87,24 @@ class ServiceMonnaie
         }
     }
 
+    public function getEquivalentInUSD($montant)
+    {
+        //Monnaie de saisie
+        $monnaieSaisie = $this->getMonnaie_Saisie();
+        $tauxUSDSaisie = $monnaieSaisie->getTauxusd() / 100;
+
+        //Montant saisie en USD
+        $mntInput = $montant * $tauxUSDSaisie;
+
+        //Monnaie d'affichage
+        $monnaieAffichage = $this->getMonnaie_Affichage();
+        $tauxUSDAffichage = $monnaieAffichage->getTauxusd() / 100;
+
+        //Montant saisie en Monnaie d'affichage
+        $mntOutput = $mntInput / $tauxUSDAffichage;
+
+        dd("Input: " . $mntInput . " USD. Output: " . $mntOutput . " " . $monnaieAffichage->getCode());
+        return $montant;
+    }
+
 }

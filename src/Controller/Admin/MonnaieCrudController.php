@@ -124,39 +124,32 @@ class MonnaieCrudController extends AbstractCrudController
         "HUF - Hungarian forint" => "HUF",
         "ISK - Icelandic króna (plural: krónur)" => "ISK",
         "INR - Indian rupee" => "INR",
+        "IDR - Indonesian rupiah" => "IDR",
+        "IRR - Iranian rial" => "IRR",
+        "IQD - Iraqi dinar" => "IQD",
+        "ILS - Israeli new shekel" => "ILS",
+        "JMD - Jamaican dollar" => "JMD",
+        "JPY - Japanese yen" => "JPY",
+        "JOD - Jordanian dinar" => "JOD",
+        "KZT - Kazakhstani tenge" => "KZT",
+        "KES - Kenyan shilling" => "KES",
+        "KWD - Kuwaiti dinar" => "KWD",
+        "KGS - Kyrgyzstani som" => "KGS",
+        "LAK - Lao kip" => "LAK",
+        "LBP - Lebanese pound" => "LBP",
+        "LSL - Lesotho loti" => "LSL",
+        "LRD - Liberian dollar" => "LRD",
+        "LYD - Libyan dinar" => "LYD",
+        "MOP - Macanese pataca" => "MOP",
+        "MKD - Macedonian denar" => "MKD",
+        "MGA - Malagasy ariary" => "MGA",
+        "MWK - Malawian kwacha" => "MWK",
+        "MYR - Malaysian ringgit" => "MYR",
+        "MVR - Maldivian rufiyaa" => "MVR",
+        "MRU - Mauritanian ouguiya" => "MRU",
         /* 	
 
 	
-	
-	
-	
-	
-	
-	
-	
-IDR	Indonesian rupiah
-IRR	Iranian rial
-IQD	Iraqi dinar
-ILS	Israeli new shekel
-JMD	Jamaican dollar
-JPY	Japanese yen
-JOD	Jordanian dinar
-KZT	Kazakhstani tenge
-KES	Kenyan shilling
-KWD	Kuwaiti dinar
-KGS	Kyrgyzstani som
-LAK	Lao kip
-LBP	Lebanese pound
-LSL	Lesotho loti
-LRD	Liberian dollar
-LYD	Libyan dinar
-MOP	Macanese pataca
-MKD	Macedonian denar
-MGA	Malagasy ariary
-MWK	Malawian kwacha
-MYR	Malaysian ringgit
-MVR	Maldivian rufiyaa
-MRU	Mauritanian ouguiya
 MUR	Mauritian rupee
 MXN	Mexican peso
 MXV	Mexican Unidad de Inversion (UDI) (funds code)

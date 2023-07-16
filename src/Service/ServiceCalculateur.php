@@ -42,7 +42,11 @@ class ServiceCalculateur
     public const RUBRIQUE_SINISTRE = 7;
 
 
-    public function __construct(private EntityManagerInterface $entityManager, private ServiceEntreprise $serviceEntreprise)
+    public function __construct(
+        private EntityManagerInterface $entityManager, 
+        private ServiceEntreprise $serviceEntreprise,
+        private ServiceMonnaie $serviceMonnaie
+        )
     {
         $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
@@ -67,6 +71,8 @@ class ServiceCalculateur
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
                 );
                 foreach ($liste as $pol) {
+                    dd($this->serviceMonnaie->mustConvertCurrency());
+                    //C'est ici qu'il faudra convertir en autre monnaie si la monnaie d'affichage est différente de la monnaie de saisie
                     $this->updatePoliceCalculableFileds($pol);
                 }
                 break;

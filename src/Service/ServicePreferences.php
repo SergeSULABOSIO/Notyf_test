@@ -1103,6 +1103,7 @@ class ServicePreferences
         $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
             ->setCurrency("USD")
             ->setStoredAsCents()
+            ->setNumDecimals(4)
             ->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
@@ -1506,6 +1507,7 @@ class ServicePreferences
             $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
                 ->setCurrency("USD")
                 ->setStoredAsCents()
+                ->setNumDecimals(4)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE])) {

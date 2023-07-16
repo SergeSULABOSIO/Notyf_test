@@ -59,74 +59,81 @@ class MonnaieCrudController extends AbstractCrudController
         "ALL - Albanian lek" => "ALL",
         "DZD - Algerian dinar" => "DZD",
         "AOA - Angolan kwanza" => "AOA",
-        /* 
+        "ARS - Argentine peso" => "ARS",
+        "AMD - Armenian dram" => "AMD",
+        "AWG - Aruban florin" => "AWG",
+        "AUD - Australian dollar" => "AUD",
+        "AZN - Azerbaijani manat" => "AZN",
+        "BSD - Bahamian dollar" => "BSD",
+        "BHD - Bahraini dinar" => "BHD",
+        "BDT - Bangladeshi taka" => "BDT",
+        "BBD - Barbados dollar" => "BBD",
+        "BYN - Belarusian ruble" => "BYN",
+        "BZD - Belize dollar" => "BZD",
+        "BMD - Bermudian dollar" => "BMD",
+        "BTN - Bhutanese ngultrum" => "BTN",
+        "BOV - Bolivian Mvdol (funds code)" => "BOV",
+        "BOB - Boliviano" => "BOB",
+        "BAM - Bosnia and Herzegovina convertible mark" => "BAM",
+        "BWP - Botswana pula" => "BWP",
+        "BRL - Brazilian real" => "BRL",
+        "BND - Brunei dollar" => "BND",
+        "BGN - Bulgarian lev" => "BGN",
+        "BIF - Burundian franc" => "BIF",
+        "KHR - Cambodian riel" => "KHR",
+        "CAD - Canadian dollar" => "CAD",
+        "CVE - Cape Verdean escudo" => "CVE",
+        "KYD - Cayman Islands dollar" => "KYD",
+        "XOF - CFA franc BCEAO" => "XOF",
+        "XAF - CFA franc BEAC" => "XAF",
+        "XPF - CFP franc (franc Pacifique)" => "XPF",
+        "CLP - Chilean peso" => "CLP",
+        "XTS - Code reserved for testing" => "XTS",
+        "COP - Colombian peso" => "COP",
+        "KMF - Comoro franc" => "KMF",
+        "CDF - Congolese franc" => "CDF",
+        "CRC - Costa Rican colon" => "CRC",
+        "CUC - Cuban convertible peso" => "CUC",
+        "CUP - Cuban peso" => "CUP",
+        "CZK - Czech koruna" => "CZK",
+        "DKK - Danish krone" => "DKK",
+        "DJF - Djiboutian franc" => "DJF",
+        "DOP - Dominican peso" => "DOP",
+        "XCD - East Caribbean dollar" => "XCD",
+        "EGP - Egyptian pound" => "EGP",
+        "ERN - Eritrean nakfa" => "ERN",
+        "ETB - Ethiopian birr" => "ETB",
+        "EUR - Euro" => "EUR",
+        "XBA - European Composite Unit (EURCO) (bond market unit)" => "XBA",
+        "XBB - European Monetary Unit (E.M.U.-6) (bond market unit)" => "XBB",
+        "XBD - European Unit of Account 17 (E.U.A.-17) (bond market unit)" => "XBD",
+        "XBC - European Unit of Account 9 (E.U.A.-9) (bond market unit)" => "XBC",
+        "FKP - Falkland Islands pound" => "FKP",
+        "FJD - Fiji dollar" => "FJD",
+        "GMD - Gambian dalasi" => "GMD",
+        "GEL - Georgian lari" => "GEL",
+        "GHS - Ghanaian cedi" => "GHS",
+        "GIP - Gibraltar pound" => "GIP",
+        "XAU - Gold (one troy ounce)" => "XAU",
+        "GTQ - Guatemalan quetzal" => "GTQ",
+        "GNF - Guinean franc" => "GNF",
+        "GYD - Guyanese dollar" => "GYD",
+        "HTG - Haitian gourde" => "HTG",
+        "HNL - Honduran lempira" => "HNL",
+        "HKD - Hong Kong dollar" => "HKD",
+        "HUF - Hungarian forint" => "HUF",
+        "ISK - Icelandic króna (plural: krónur)" => "ISK",
+        "INR - Indian rupee" => "INR",
+        /* 	
 
 	
-ARS	Argentine peso
-AMD	Armenian dram
-AWG	Aruban florin
-AUD	Australian dollar
-AZN	Azerbaijani manat
-BSD	Bahamian dollar
-BHD	Bahraini dinar
-BDT	Bangladeshi taka
-BBD	Barbados dollar
-BYN	Belarusian ruble
-BZD	Belize dollar
-BMD	Bermudian dollar
-BTN	Bhutanese ngultrum
-BOV	Bolivian Mvdol (funds code)
-BOB	Boliviano
-BAM	Bosnia and Herzegovina convertible mark
-BWP	Botswana pula
-BRL	Brazilian real
-BND	Brunei dollar
-BGN	Bulgarian lev
-BIF	Burundian franc
-KHR	Cambodian riel
-CAD	Canadian dollar
-CVE	Cape Verdean escudo
-KYD	Cayman Islands dollar
-XOF	CFA franc BCEAO
-XAF	CFA franc BEAC
-XPF	CFP franc (franc Pacifique)
-CLP	Chilean peso
-XTS	Code reserved for testing
-COP	Colombian peso
-KMF	Comoro franc
-CDF	Congolese franc
-CRC	Costa Rican colon
-CUC	Cuban convertible peso
-CUP	Cuban peso
-CZK	Czech koruna
-DKK	Danish krone
-DJF	Djiboutian franc
-DOP	Dominican peso
-XCD	East Caribbean dollar
-EGP	Egyptian pound
-ERN	Eritrean nakfa
-ETB	Ethiopian birr
-EUR	Euro
-XBA	European Composite Unit (EURCO) (bond market unit)
-XBB	European Monetary Unit (E.M.U.-6) (bond market unit)
-XBD	European Unit of Account 17 (E.U.A.-17) (bond market unit)
-XBC	European Unit of Account 9 (E.U.A.-9) (bond market unit)
-FKP	Falkland Islands pound
-FJD	Fiji dollar
-GMD	Gambian dalasi
-GEL	Georgian lari
-GHS	Ghanaian cedi
-GIP	Gibraltar pound
-XAU	Gold (one troy ounce)
-GTQ	Guatemalan quetzal
-GNF	Guinean franc
-GYD	Guyanese dollar
-HTG	Haitian gourde
-HNL	Honduran lempira
-HKD	Hong Kong dollar
-HUF	Hungarian forint
-ISK	Icelandic króna (plural: krónur)
-INR	Indian rupee
+	
+	
+	
+	
+	
+	
+	
 IDR	Indonesian rupiah
 IRR	Iranian rial
 IQD	Iraqi dinar

@@ -78,4 +78,13 @@ class ServiceMonnaie
         return $this->getMonnaie_Affichage()->getCode();
     }
 
+    public function mustConvertCurrency(): bool
+    {
+        if($this->getMonnaie_Affichage() == $this->getMonnaie_Saisie()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }

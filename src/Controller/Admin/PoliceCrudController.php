@@ -141,7 +141,6 @@ class PoliceCrudController extends AbstractCrudController
             ->add('assureur')
             ->add('partenaire')
             ->add('idavenant')
-            ->add('monnaie')
             ->add('capital')
             ->add('primenette')
             ->add('fronting')

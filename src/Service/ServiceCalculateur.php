@@ -291,7 +291,7 @@ class ServiceCalculateur
             foreach ($this->paiements_com as $paiement_com) {
                 if ($paiement_com->getPolice() == $police) {
                     $obj->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-                    $obj->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMonnaie()->getCode() . " " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
+                    $obj->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
                 }
             }
             $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
@@ -332,7 +332,7 @@ class ServiceCalculateur
                 //dd($paiement_retrocom->getPolice());
                 if ($police == $paiement_retrocom->getPolice()) {
                     $obj->calc_retrocom_payees += $paiement_retrocom->getMontant();
-                    $obj->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMonnaie()->getCode() . " " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
+                    $obj->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
                 }
             }
             $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
@@ -384,7 +384,7 @@ class ServiceCalculateur
         foreach ($this->paiements_taxes as $paiement_taxe) {
             if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                 $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
-                $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+                $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
             }
         }
         $calculableEntity->calc_taxes_courtier_solde += ($calculableEntity->calc_taxes_courtier - $calculableEntity->calc_taxes_courtier_payees);

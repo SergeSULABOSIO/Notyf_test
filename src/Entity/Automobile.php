@@ -61,10 +61,6 @@ class Automobile
     #[ORM\Column(length: 255)]
     private ?string $chassis = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
     #[ORM\ManyToMany(targetEntity: Police::class)]
     private Collection $polices;
 
@@ -222,18 +218,6 @@ class Automobile
     public function __toString()
     {
         return $this->marque . " - " . $this->plaque;
-    }
-
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
-
-        return $this;
     }
 
     /**

@@ -37,10 +37,6 @@ class PaiementTaxe
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Taxe $taxe = null;
 
     #[ORM\ManyToOne]
@@ -131,19 +127,7 @@ class PaiementTaxe
 
     public function __toString()
     {
-        return $this->montant . " " . $this->monnaie->getCode() . " / Facture: " . $this->refnotededebit;
-    }
-
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
-
-        return $this;
+        return $this->montant . " / Facture: " . $this->refnotededebit;
     }
 
     public function getTaxe(): ?Taxe

@@ -81,7 +81,6 @@ class PaiementTaxeCrudController extends AbstractCrudController
         }
         return $filters
             ->add('montant')
-            ->add('monnaie')
             ->add('taxe')
             ->add('police')
             ->add('pieces')

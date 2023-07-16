@@ -71,10 +71,6 @@ class Sinistre extends CalculableEntity
     #[ORM\ManyToMany(targetEntity: DocPiece::class)]
     private Collection $pieces;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numero = null;
 
@@ -372,18 +368,6 @@ class Sinistre extends CalculableEntity
     public function removePiece(DocPiece $piece): self
     {
         $this->pieces->removeElement($piece);
-
-        return $this;
-    }
-
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
 
         return $this;
     }

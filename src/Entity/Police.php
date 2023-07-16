@@ -96,10 +96,6 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
     #[ORM\ManyToOne]
@@ -420,18 +416,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
-
-        return $this;
-    }
-
     public function getClient(): ?Client
     {
         return $this->client;
@@ -470,7 +454,7 @@ class Police extends CalculableEntity
 
     public function __toString()
     {
-        return $this->getAssureur() . " / " . $this->getProduit() . " / Réf. Police: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale() . " " . $this->monnaie->getCode(). " / Client: " . $this->client->getNom();
+        return $this->getAssureur() . " / " . $this->getProduit() . " / Réf. Police: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale() . " / Client: " . $this->client->getNom();
     }
 
     public function getReassureurs(): ?string

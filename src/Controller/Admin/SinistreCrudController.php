@@ -86,7 +86,6 @@ class SinistreCrudController extends AbstractCrudController
             ->add('commentaire')
             ->add('cout')
             ->add('montantPaye')
-            ->add('monnaie')
             ->add('paidAt')
             ->add('police');
     }

@@ -34,11 +34,6 @@ class PaiementPartenaire
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Partenaire $partenaire = null;
 
     #[ORM\ManyToOne]
@@ -117,21 +112,8 @@ class PaiementPartenaire
 
     public function __toString()
     {
-        return $this->montant . " " . $this->monnaie->getCode() . " / Facture: " . $this->refnotededebit;
+        return ($this->montant/100) . " / Facture: " . $this->refnotededebit;
     }
-
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
-
-        return $this;
-    }
-
 
     public function getPartenaire(): ?Partenaire
     {

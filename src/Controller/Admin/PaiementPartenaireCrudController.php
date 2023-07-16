@@ -96,7 +96,6 @@ class PaiementPartenaireCrudController extends AbstractCrudController
         }
         return $filters
             ->add('montant')
-            ->add('monnaie')
             ->add('partenaire')
             ->add('police')
             ->add('pieces')

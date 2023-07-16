@@ -397,7 +397,7 @@ class ServiceCalculateur
         foreach ($this->paiements_taxes as $paiement_taxe) {
             if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
                 $calculableEntity->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
-                $calculableEntity->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMonnaie()->getCode() . " " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
+                $calculableEntity->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
             }
         }
         $calculableEntity->calc_taxes_assureurs_solde += ($calculableEntity->calc_taxes_assureurs - $calculableEntity->calc_taxes_assureurs_payees);

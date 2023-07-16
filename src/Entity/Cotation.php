@@ -48,10 +48,6 @@ class Cotation
     #[ORM\ManyToMany(targetEntity: DocPiece::class)]
     private Collection $pieces;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Monnaie $monnaie = null;
-
     public function __construct()
     {
         $this->assureur = new ArrayCollection();
@@ -207,20 +203,8 @@ class Cotation
         return $this;
     }
 
-    public function getMonnaie(): ?Monnaie
-    {
-        return $this->monnaie;
-    }
-
-    public function setMonnaie(?Monnaie $monnaie): self
-    {
-        $this->monnaie = $monnaie;
-
-        return $this;
-    }
-
     public function __toString()
     {
-        return $this->nom . ", Prime: " . $this->monnaie->getCode() ." " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
+        return $this->nom . ", Prime: " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 }

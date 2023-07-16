@@ -148,8 +148,6 @@ class MonnaieCrudController extends AbstractCrudController
         "MVR - Maldivian rufiyaa" => "MVR",
         "MRU - Mauritanian ouguiya" => "MRU",
         /* 	
-
-	
 MUR	Mauritian rupee
 MXN	Mexican peso
 MXV	Mexican Unidad de Inversion (UDI) (funds code)

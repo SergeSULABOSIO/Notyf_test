@@ -277,6 +277,8 @@ class ServiceCalculateur
     {
         foreach ($this->polices as $police) {
             //Meta - police
+            $obj->calc_polices_accessoire += $police->getFraisAdmin();
+            $obj->calc_polices_tva += $police->getTva();
             $obj->calc_polices_tab[] = $police;
             $obj->calc_polices_primes_nette += $police->getPrimenette();
             $obj->calc_polices_primes_totale += $police->getPrimetotale();

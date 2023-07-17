@@ -2729,18 +2729,27 @@ class ServicePreferences
             }
             if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_accessoire])) {
                 $tabAttributs[] = MoneyField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
+                    ->formatValue(function ($value, CalculableEntity $entity) {
+                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_accessoire);
+                    })
                     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                     ->setStoredAsCents()
                     ->hideOnForm();
             }
             if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tva])) {
                 $tabAttributs[] = MoneyField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
+                    ->formatValue(function ($value, CalculableEntity $entity) {
+                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_tva);
+                    })
                     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                     ->setStoredAsCents()
                     ->hideOnForm();
             }
             if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_totale])) {
                 $tabAttributs[] = MoneyField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
+                    ->formatValue(function ($value, CalculableEntity $entity) {
+                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_totale);
+                    })
                     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                     ->setStoredAsCents()
                     ->hideOnForm();
@@ -2752,30 +2761,45 @@ class ServicePreferences
             ->hideOnForm();
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_reserve])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_reserve);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_partageable])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_partageable);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ht])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ht);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_encaisse);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2786,6 +2810,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_solde_restant_du);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2795,12 +2822,18 @@ class ServicePreferences
             ->hideOnForm();
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom])) {
             $tabAttributs[] = MoneyField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_payees])) {
             $tabAttributs[] = MoneyField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_payees);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2811,6 +2844,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_solde])) {
             $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_solde);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2824,12 +2860,18 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_payees);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2840,6 +2882,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_solde);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2854,12 +2899,18 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_payees);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2870,6 +2921,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_solde);
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -2995,6 +3049,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
             $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
+                ->formatValue(function ($value, Cotation $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();

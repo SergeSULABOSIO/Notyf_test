@@ -88,7 +88,7 @@ class ServiceMonnaie
         }
     }
 
-    public function getMonantEnMonnaieAffichage($montant)
+    public function getMonantEnMonnaieAffichage($montant):string
     {
         //Monnaie de saisie
         $monnaieSaisie = $this->getMonnaie_Saisie();

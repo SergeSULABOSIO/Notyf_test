@@ -631,6 +631,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ARCA])) {
             $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
+                ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getArca());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();

@@ -598,6 +598,9 @@ class ServicePreferences
             ->hideOnForm();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CAPITAL])) {
             $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+                ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
@@ -610,12 +613,18 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel('Facture client')->hideOnForm();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE])) {
             $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+                ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimenette());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTING])) {
             $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+                ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();

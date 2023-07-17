@@ -9,6 +9,7 @@ use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use NumberFormatter;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -87,24 +88,21 @@ class ServiceMonnaie
         }
     }
 
-    public function getEquivalentInUSD($montant)
+    public function getMonantEnMonnaieAffichage($montant)
     {
         //Monnaie de saisie
         $monnaieSaisie = $this->getMonnaie_Saisie();
         $tauxUSDSaisie = $monnaieSaisie->getTauxusd() / 100;
-
         //Montant saisie en USD
-        $mntInput = $montant * $tauxUSDSaisie;
-
+        $mntInputInUSD = $montant * $tauxUSDSaisie;
         //Monnaie d'affichage
         $monnaieAffichage = $this->getMonnaie_Affichage();
         $tauxUSDAffichage = $monnaieAffichage->getTauxusd() / 100;
-
         //Montant saisie en Monnaie d'affichage
-        $mntOutput = $mntInput / $tauxUSDAffichage;
-
-        dd("Input: " . $mntInput . " USD. Output: " . $mntOutput . " " . $monnaieAffichage->getCode());
-        return $montant;
+        $mntOutput = $mntInputInUSD / $tauxUSDAffichage;
+        //Application du format monnétaire en anglais
+        $fmt = numfmt_create('en_US', NumberFormatter::CURRENCY);
+        return numfmt_format_currency($fmt, $mntOutput, $monnaieAffichage->getCode());
     }
 
 }

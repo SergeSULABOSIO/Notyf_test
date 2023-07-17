@@ -70,6 +70,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use PHPUnit\Framework\MockObject\ReturnValueNotConfiguredException;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class ServicePreferences
@@ -2485,8 +2486,12 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_VALEUR])) {
             $tabAttributs[] = MoneyField::new('valeur', PreferenceCrudController::PREF_PRO_ENGIN_VALEUR)
+                ->formatValue(function ($value, Automobile $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getValeur());
+                })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
+
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_NB_SIEGES])) {

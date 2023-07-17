@@ -99,7 +99,7 @@ class ServiceMonnaie
         $monnaieAffichage = $this->getMonnaie_Affichage();
         $tauxUSDAffichage = $monnaieAffichage->getTauxusd() / 100;
         //Montant saisie en Monnaie d'affichage
-        $mntOutput = $mntInputInUSD / $tauxUSDAffichage;
+        $mntOutput = ($mntInputInUSD / $tauxUSDAffichage) / 100;
         //Application du format monnétaire en anglais
         $fmt = numfmt_create('en_US', NumberFormatter::CURRENCY);
         return numfmt_format_currency($fmt, $mntOutput, $monnaieAffichage->getCode());

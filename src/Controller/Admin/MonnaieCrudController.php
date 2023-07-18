@@ -303,6 +303,9 @@ class MonnaieCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Monnaie();
+        $objet->setFonction(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        $objet->setTauxusd(100);
+        $objet->setIslocale(0);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

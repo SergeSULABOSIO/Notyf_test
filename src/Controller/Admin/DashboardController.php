@@ -59,6 +59,10 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_ENREGISTRER = "Enregistrer";
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
+    public const ACTION_FONCTION_AFFICHAGE_ET_SAISIE = "Pour affichage et saisie";
+    public const ACTION_FONCTION_AFFICHAGE_UNIQUEMENT = "Pour affichage uniquement";
+    public const ACTION_FONCTION_SAISIE_UNIQUEMENT = "Pour saisie uniquement";
+
     
 
     public function __construct(

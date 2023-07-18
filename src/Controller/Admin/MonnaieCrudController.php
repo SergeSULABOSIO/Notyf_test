@@ -317,29 +317,31 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $definirCommeMonnaieAffichageEtSaisie = Action::new("Pour affichage et saisie")
+        $definirCommeMonnaieAffichageEtSaisie = Action::new(DashboardController::ACTION_FONCTION_AFFICHAGE_ET_SAISIE)
             ->linkToCrudAction('definirCommeMonnaieAffichageEtSaisie')
-            ->setIcon('fa-solid fa-cash-register')//<i class="fa-solid fa-cash-register"></i>
+            ->setIcon('fa-solid fa-cash-register') //<i class="fa-solid fa-cash-register"></i>
             ->displayIf(static function (Monnaie $entity) {
                 return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE];
             });
-        $definirCommeMonnaieAffichageUniquement = Action::new("Pour affichage uniquement")
+        $definirCommeMonnaieAffichageUniquement = Action::new(DashboardController::ACTION_FONCTION_AFFICHAGE_UNIQUEMENT)
             ->linkToCrudAction('definirCommeMonnaieAffichageUniquement')
-            ->setIcon('fa-solid fa-desktop')//<i class="fa-solid fa-desktop"></i>
+            ->setIcon('fa-solid fa-desktop') //<i class="fa-solid fa-desktop"></i>
             ->displayIf(static function (Monnaie $entity) {
                 return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT];
             });
-        $definirCommeMonnaieSaisieUniquement = Action::new("Pour saisie uniquement")
+        $definirCommeMonnaieSaisieUniquement = Action::new(DashboardController::ACTION_FONCTION_SAISIE_UNIQUEMENT)
             ->linkToCrudAction('definirCommeMonnaieSaisieUniquement')
-            ->setIcon('fa-regular fa-keyboard')//<i class="fa-regular fa-keyboard"></i>
+            ->setIcon('fa-regular fa-keyboard') //<i class="fa-regular fa-keyboard"></i>
             ->displayIf(static function (Monnaie $entity) {
                 return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_UNIQUEMENT];
             });
 
-        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
+        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
+            ->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
-            ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
+            ->setIcon('fa-solid fa-eye')
+            ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')

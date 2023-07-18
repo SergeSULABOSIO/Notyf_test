@@ -2497,6 +2497,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(6);
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
+            ->setRequired(false)
             ->onlyOnForms()
             ->setColumns(6);
 

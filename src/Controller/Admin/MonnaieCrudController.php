@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -33,6 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\MoneyConfigurator;
 
 class MonnaieCrudController extends AbstractCrudController
 {
@@ -315,6 +317,25 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        $definirCommeMonnaieAffichageEtSaisie = Action::new("Pour affichage et saisie")
+            ->linkToCrudAction('definirCommeMonnaieAffichageEtSaisie')
+            ->setIcon('fa-solid fa-restroom')//<i class="fa-solid fa-restroom"></i>
+            ->displayIf(static function (Monnaie $entity) {
+                return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE];
+            });
+        $definirCommeMonnaieAffichageUniquement = Action::new("Pour affichage uniquement")
+            ->linkToCrudAction('definirCommeMonnaieAffichageUniquement')
+            ->setIcon('fa-solid fa-desktop')//<i class="fa-solid fa-desktop"></i>
+            ->displayIf(static function (Monnaie $entity) {
+                return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT];
+            });
+        $definirCommeMonnaieSaisieUniquement = Action::new("Pour saisie uniquement")
+            ->linkToCrudAction('definirCommeMonnaieSaisieUniquement')
+            ->setIcon('fa-regular fa-keyboard')//<i class="fa-regular fa-keyboard"></i>
+            ->displayIf(static function (Monnaie $entity) {
+                return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_UNIQUEMENT];
+            });
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -365,6 +386,7 @@ class MonnaieCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
+
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
@@ -372,6 +394,20 @@ class MonnaieCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
+
+            //FONCTIONS DE LA MONNAIE
+            ->add(Crud::PAGE_INDEX, $definirCommeMonnaieAffichageEtSaisie)
+            ->add(Crud::PAGE_DETAIL, $definirCommeMonnaieAffichageEtSaisie)
+            ->add(Crud::PAGE_EDIT, $definirCommeMonnaieAffichageEtSaisie)
+
+            ->add(Crud::PAGE_INDEX, $definirCommeMonnaieAffichageUniquement)
+            ->add(Crud::PAGE_DETAIL, $definirCommeMonnaieAffichageUniquement)
+            ->add(Crud::PAGE_EDIT, $definirCommeMonnaieAffichageUniquement)
+
+            ->add(Crud::PAGE_INDEX, $definirCommeMonnaieSaisieUniquement)
+            ->add(Crud::PAGE_DETAIL, $definirCommeMonnaieSaisieUniquement)
+            ->add(Crud::PAGE_EDIT, $definirCommeMonnaieSaisieUniquement)
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -388,6 +424,39 @@ class MonnaieCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
+    }
+
+    public function definirCommeMonnaieAffichageUniquement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $entite->setFonction(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        return $this->updateFonctionMonaie($entite, $adminUrlGenerator, $em);
+    }
+
+    public function definirCommeMonnaieSaisieUniquement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $entite->setFonction(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_UNIQUEMENT]);
+        return $this->updateFonctionMonaie($entite, $adminUrlGenerator, $em);
+    }
+
+    public function definirCommeMonnaieAffichageEtSaisie(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $entite->setFonction(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        return $this->updateFonctionMonaie($entite, $adminUrlGenerator, $em);
+    }
+
+    private function updateFonctionMonaie(Monnaie $entite, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite->setUpdatedAt(new \DateTimeImmutable());
+        parent::persistEntity($em, $entite);
+        $url = $adminUrlGenerator
+            ->setController(self::class)
+            ->setAction(Action::INDEX)
+            //->setEntityId($entite->getId())
+            ->generateUrl();
+        return $this->redirect($url);
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

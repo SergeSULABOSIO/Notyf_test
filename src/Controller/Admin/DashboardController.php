@@ -59,6 +59,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_ENREGISTRER = "Enregistrer";
     public const ACTION_ENREGISTRER_ET_CONTINUER = "Enregistrer et Continuer";
     public const ACTION_EXPORTER_EXCELS = "Exporter via MS Excels";
+    
 
     public function __construct(
         private ServicePreferences $servicePreferences,

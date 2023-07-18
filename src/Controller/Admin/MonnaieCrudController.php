@@ -319,7 +319,7 @@ class MonnaieCrudController extends AbstractCrudController
     {
         $definirCommeMonnaieAffichageEtSaisie = Action::new("Pour affichage et saisie")
             ->linkToCrudAction('definirCommeMonnaieAffichageEtSaisie')
-            ->setIcon('fa-solid fa-restroom')//<i class="fa-solid fa-restroom"></i>
+            ->setIcon('fa-solid fa-cash-register')//<i class="fa-solid fa-cash-register"></i>
             ->displayIf(static function (Monnaie $entity) {
                 return $entity->getFonction() != MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE];
             });

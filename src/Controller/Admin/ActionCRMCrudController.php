@@ -263,13 +263,12 @@ class ActionCRMCrudController extends AbstractCrudController
     public function cross_canal_listerFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         $entite = $context->getEntity()->getInstance();
-        dd($entite);
+        //dd($entite->getId());
         //parent::persistEntity($em, $entite);
         $url = $adminUrlGenerator
             ->setController(FeedbackCRMCrudController::class)
             ->setAction(Action::INDEX)
-            //->set('action', $entite->getId())
-            ->set('filters[action][value]', $entite->getMission())
+            ->set('filters[action][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[action][comparison]', '=')
             //->setEntityId(null)
             ->generateUrl();

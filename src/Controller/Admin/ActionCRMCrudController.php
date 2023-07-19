@@ -40,7 +40,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
-    public const ACTION_AJOUTER_UN_FEEDBACK = "Ajouter un feedback";
+    public const ACTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
+    public const ACTION_FEEDBACK_LISTER = "Voire les feedbacks";
     public const STATUS_MISSION = [
         'Mission achevée avec succès' => 1,
         'Mission en cours...' => 0
@@ -131,9 +132,12 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     { //<i class="fa-regular fa-circle-check"></i>
-        $feedback = Action::new(self::ACTION_AJOUTER_UN_FEEDBACK)
+        $feedback_ajouter = Action::new(self::ACTION_FEEDBACK_AJOUTER)
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterFeedback');
+        $feedback_lister = Action::new(self::ACTION_FEEDBACK_LISTER)
+            ->setIcon('fas fa-comments')
+            ->linkToCrudAction('cross_canal_listerFeedback');
         $terminer = Action::new(self::ACTION_ACHEVER_MISSION)
             ->setIcon('fas fa-regular fa-circle-check')
             ->linkToCrudAction('terminerAction');
@@ -200,9 +204,11 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $terminer)
             ->add(Crud::PAGE_INDEX, $terminer)
             //Action terminer
-            ->add(Crud::PAGE_DETAIL, $feedback)
-            ->add(Crud::PAGE_EDIT, $feedback)
-            ->add(Crud::PAGE_INDEX, $feedback)
+            ->add(Crud::PAGE_DETAIL, $feedback_ajouter)
+            ->add(Crud::PAGE_INDEX, $feedback_ajouter)
+
+            ->add(Crud::PAGE_DETAIL, $feedback_lister)
+            ->add(Crud::PAGE_INDEX, $feedback_lister)
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -218,7 +224,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
+            ->setPermission(self::ACTION_FEEDBACK_AJOUTER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
 
@@ -250,7 +256,24 @@ class ActionCRMCrudController extends AbstractCrudController
             ->set('action', $entite->getId())
             //->setEntityId(null)
             ->generateUrl();
-            
+
+        return $this->redirect($url);
+    }
+
+    public function cross_canal_listerFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $entite = $context->getEntity()->getInstance();
+        dd($entite);
+        //parent::persistEntity($em, $entite);
+        $url = $adminUrlGenerator
+            ->setController(FeedbackCRMCrudController::class)
+            ->setAction(Action::INDEX)
+            //->set('action', $entite->getId())
+            ->set('filters[action][value]', $entite->getMission())
+            ->set('filters[action][comparison]', '=')
+            //->setEntityId(null)
+            ->generateUrl();
+
         return $this->redirect($url);
     }
 

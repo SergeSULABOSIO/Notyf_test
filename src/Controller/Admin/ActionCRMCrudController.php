@@ -133,7 +133,7 @@ class ActionCRMCrudController extends AbstractCrudController
     { //<i class="fa-regular fa-circle-check"></i>
         $feedback = Action::new(self::ACTION_AJOUTER_UN_FEEDBACK)
             ->setIcon('fas fa-comments')
-            ->linkToCrudAction('ajouterFeedback');
+            ->linkToCrudAction('cross_canal_ajouterFeedback');
         $terminer = Action::new(self::ACTION_ACHEVER_MISSION)
             ->setIcon('fas fa-regular fa-circle-check')
             ->linkToCrudAction('terminerAction');
@@ -240,7 +240,7 @@ class ActionCRMCrudController extends AbstractCrudController
     }
 
 
-    public function ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function cross_canal_ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         $entite = $context->getEntity()->getInstance();
         //parent::persistEntity($em, $entite);

@@ -107,17 +107,15 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
-
-        //dd("ID ACTION: " . $this->adminUrlGenerator->get("action"));
-
-        //dd($actionCRM);
-
+        $actionCRM = null;
+        $paramIDAction = $this->adminUrlGenerator->get("action");
+        if($paramIDAction != null){
+            $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($paramIDAction);
+        }
+        
         $objet = new FeedbackCRM();
         $objet->setStartedAt(new DateTimeImmutable("now"));
-        if ($this->adminUrlGenerator->get("action") == true) {
-            $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($this->adminUrlGenerator->get("action"));
-            $objet->setAction($actionCRM);
-        }
+        $objet->setAction($actionCRM);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -183,7 +181,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
             })
             //Enlever le bouton "Ajouter"
             ->remove(Crud::PAGE_INDEX, Action::NEW)
-            
+
             //ur la page détail
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)

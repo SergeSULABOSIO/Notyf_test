@@ -253,6 +253,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $url = $adminUrlGenerator
             ->setController(FeedbackCRMCrudController::class)
             ->setAction(Action::NEW)
+            ->set("titre", "NOUVEAU FEEDBACK - [" . $entite->getMission() . "]")
             ->set('action', $entite->getId())
             //->setEntityId(null)
             ->generateUrl();
@@ -268,6 +269,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $url = $adminUrlGenerator
             ->setController(FeedbackCRMCrudController::class)
             ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES FEEDBACKS - [" . $entite->getMission() . "]")
             ->set('filters[action][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[action][comparison]', '=')
             //->setEntityId(null)

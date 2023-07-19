@@ -41,6 +41,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class FeedbackCRMCrudController extends AbstractCrudController
 {
 
+    private Crud $crud;
+
     public function __construct(
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceSuppression $serviceSuppression,
@@ -84,7 +86,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new FeedbackCRM(), $crud);
-        return $crud
+        $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -96,6 +98,8 @@ class FeedbackCRMCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL])
             // ...
         ;
+        $this->crud = $crud;
+        return $crud;
     }
 
 
@@ -112,7 +116,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
         if($paramIDAction != null){
             $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($paramIDAction);
         }
-        
+
         $objet = new FeedbackCRM();
         $objet->setStartedAt(new DateTimeImmutable("now"));
         $objet->setAction($actionCRM);
@@ -124,6 +128,11 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre"));
+        $this->crud->setPageTitle(Crud::PAGE_DETAIL, $this->adminUrlGenerator->get("titre"));
+        $this->crud->setPageTitle(Crud::PAGE_NEW, $this->adminUrlGenerator->get("titre"));
+        
+        //dd($this->adminUrlGenerator->get("titre"));
         return $this->servicePreferences->getChamps(new FeedbackCRM());
     }
 

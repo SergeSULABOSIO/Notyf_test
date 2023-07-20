@@ -138,6 +138,7 @@ class PreferenceCrudController extends AbstractCrudController
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";
     public const PREF_CRM_ETAPES_NOM                = "Nom";
+    public const PREF_CRM_ETAPES_PISTES             = "Pistes";
     public const PREF_CRM_ETAPES_UTILISATEUR        = "Utilisateur";
     public const PREF_CRM_ETAPES_ENTREPRISE         = "Entreprise";
     public const PREF_CRM_ETAPES_DATE_CREATION      = "Date de création";
@@ -148,7 +149,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_ETAPES_UTILISATEUR           => 2,
         self::PREF_CRM_ETAPES_ENTREPRISE            => 3,
         self::PREF_CRM_ETAPES_DATE_CREATION         => 4,
-        self::PREF_CRM_ETAPES_DATE_MODIFICATION     => 5
+        self::PREF_CRM_ETAPES_DATE_MODIFICATION     => 5,
+        self::PREF_CRM_ETAPES_PISTES                => 6
     ];
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID                          = "Id";

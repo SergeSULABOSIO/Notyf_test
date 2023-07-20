@@ -44,15 +44,14 @@ class Piste extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $expiredAt = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?EtapeCrm $etape = null;
-
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
     #[ORM\ManyToMany(targetEntity: ActionCRM::class)]
     private Collection $actions;
+
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?EtapeCRM $etape = null;
 
 
     public function __construct()
@@ -187,18 +186,6 @@ class Piste extends CalculableEntity
         return $this;
     }
 
-    public function getEtape(): ?EtapeCrm
-    {
-        return $this->etape;
-    }
-
-    public function setEtape(?EtapeCrm $etape): self
-    {
-        $this->etape = $etape;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Cotation>
      */
@@ -254,6 +241,18 @@ class Piste extends CalculableEntity
     public function removeAction(ActionCRM $action): self
     {
         $this->actions->removeElement($action);
+
+        return $this;
+    }
+
+    public function getEtape(): ?EtapeCRM
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(?EtapeCRM $etape): self
+    {
+        $this->etape = $etape;
 
         return $this;
     }

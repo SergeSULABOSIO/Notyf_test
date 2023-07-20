@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\EtapeCrm;
 use App\Entity\FeedbackCRM;
+use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -40,7 +41,8 @@ class EtapeCrmCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal
     ) {
     }
 
@@ -116,6 +118,15 @@ class EtapeCrmCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //cross canal
+        $piste_ajouter = Action::new(ServiceCrossCanal::COTATION_PISTE_AJOUTER)
+            ->setIcon('fas fa-location-crosshairs')
+            ->linkToCrudAction('cross_canal_ajouterPiste');
+        $piste_lister = Action::new(ServiceCrossCanal::COTATION_PISTE_LISTER)
+            ->setIcon('fa-solid fa-rectangle-list')
+            ->linkToCrudAction('cross_canal_listerPiste');
+
+        
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -175,6 +186,14 @@ class EtapeCrmCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
+
+            //cross canal
+            ->add(Crud::PAGE_DETAIL, $piste_ajouter)
+            ->add(Crud::PAGE_INDEX, $piste_ajouter)
+
+            ->add(Crud::PAGE_DETAIL, $piste_lister)
+            ->add(Crud::PAGE_INDEX, $piste_lister)
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -191,6 +210,16 @@ class EtapeCrmCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
 
         ;
+    }
+
+    public function cross_canal_ajouterPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_EtapeCRM_ajouterPiste($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_EtapeCRM_listerPiste($context, $adminUrlGenerator));
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

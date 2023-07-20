@@ -125,7 +125,7 @@ class DocPieceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_Action_setTitrePage($this->crud, $this->adminUrlGenerator);
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new DocPiece());
     }
 
@@ -180,6 +180,8 @@ class DocPieceCrudController extends AbstractCrudController
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
+
 
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)

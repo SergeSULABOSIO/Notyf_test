@@ -48,7 +48,8 @@ class FeedbackCRMCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal
     ) {
     }
 
@@ -111,15 +112,9 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
-        $actionCRM = null;
-        $paramIDAction = $this->adminUrlGenerator->get("action");
-        if($paramIDAction != null){
-            $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($paramIDAction);
-        }
-
         $objet = new FeedbackCRM();
         $objet->setStartedAt(new DateTimeImmutable("now"));
-        $objet->setAction($actionCRM);
+        $objet = $this->serviceCrossCanal->crossCanal_Action_setAction($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -128,11 +123,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre"));
-        $this->crud->setPageTitle(Crud::PAGE_DETAIL, $this->adminUrlGenerator->get("titre"));
-        $this->crud->setPageTitle(Crud::PAGE_NEW, $this->adminUrlGenerator->get("titre"));
-        
-        //dd($this->adminUrlGenerator->get("titre"));
+        $this->crud = $this->serviceCrossCanal->crossCanal_Action_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new FeedbackCRM());
     }
 

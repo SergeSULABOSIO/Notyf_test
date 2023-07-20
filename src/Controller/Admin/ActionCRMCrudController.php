@@ -40,8 +40,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
-    public const ACTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
-    public const ACTION_FEEDBACK_LISTER = "Voire les feedbacks";
     public const STATUS_MISSION = [
         'Mission achevée avec succès' => 1,
         'Mission en cours...' => 0
@@ -52,7 +50,8 @@ class ActionCRMCrudController extends AbstractCrudController
         private EntityManagerInterface $entityManager,
         private Security $security,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal
     ) {
     }
 
@@ -132,11 +131,11 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     { //<i class="fa-regular fa-circle-check"></i>
-        $feedback_ajouter = Action::new(self::ACTION_FEEDBACK_AJOUTER)
+        $feedback_ajouter = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_AJOUTER)
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterFeedback');
-        $feedback_lister = Action::new(self::ACTION_FEEDBACK_LISTER)
-            ->setIcon('fas fa-comments')
+        $feedback_lister = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_LISTER)
+            ->setIcon('fa-solid fa-rectangle-list')//<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerFeedback');
         $terminer = Action::new(self::ACTION_ACHEVER_MISSION)
             ->setIcon('fas fa-regular fa-circle-check')
@@ -224,7 +223,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(self::ACTION_FEEDBACK_AJOUTER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
+            ->setPermission(ServiceCrossCanal::ACTION_FEEDBACK_AJOUTER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
 
@@ -248,34 +247,12 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function cross_canal_ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $entite = $context->getEntity()->getInstance();
-        //parent::persistEntity($em, $entite);
-        $url = $adminUrlGenerator
-            ->setController(FeedbackCRMCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVEAU FEEDBACK - [" . $entite->getMission() . "]")
-            ->set('action', $entite->getId())
-            //->setEntityId(null)
-            ->generateUrl();
-
-        return $this->redirect($url);
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Action_ajouterFeedback($context, $adminUrlGenerator));
     }
 
     public function cross_canal_listerFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $entite = $context->getEntity()->getInstance();
-        //dd($entite->getId());
-        //parent::persistEntity($em, $entite);
-        $url = $adminUrlGenerator
-            ->setController(FeedbackCRMCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES FEEDBACKS - [" . $entite->getMission() . "]")
-            ->set('filters[action][value]', $entite->getId()) //il faut juste passer son ID
-            ->set('filters[action][comparison]', '=')
-            //->setEntityId(null)
-            ->generateUrl();
-
-        return $this->redirect($url);
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Action_listerFeedback($context, $adminUrlGenerator));
     }
 
     public function terminerAction(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

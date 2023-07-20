@@ -1439,6 +1439,26 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
             ->setColumns(12)
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
@@ -2113,6 +2133,14 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
             $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
+            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
                 ->hideOnForm();
         }
         //Les fichiers
@@ -3062,7 +3090,7 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
-            $tabAttributs[] = ArrayField::new('pieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR])) {

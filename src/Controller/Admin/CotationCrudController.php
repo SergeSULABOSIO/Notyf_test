@@ -75,7 +75,7 @@ class CotationCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('pieces')
+            ->add('docPieces')
             ->add('piste')
             ->add('risque')
             ->add('assureur')

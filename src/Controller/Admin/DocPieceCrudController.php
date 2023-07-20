@@ -102,7 +102,8 @@ class DocPieceCrudController extends AbstractCrudController
         return $filters
             ->add('categorie')
             ->add('classeur')
-            //->add('utilisateur')
+            ->add('cotation')
+            ->add('police')
         ;
     }
 

@@ -45,13 +45,13 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Piste $piste = null;
 
-    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
-    private Collection $pieces;
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
 
     public function __construct()
     {
         $this->assureur = new ArrayCollection();
-        $this->pieces = new ArrayCollection();
+        $this->docPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,32 +179,38 @@ class Cotation
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->nom . ", Prime: " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
+    }
+
     /**
      * @return Collection<int, DocPiece>
      */
-    public function getPieces(): Collection
+    public function getDocPieces(): Collection
     {
-        return $this->pieces;
+        return $this->docPieces;
     }
 
-    public function addPiece(DocPiece $piece): self
+    public function addDocPiece(DocPiece $docPiece): self
     {
-        if (!$this->pieces->contains($piece)) {
-            $this->pieces->add($piece);
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setCotation($this);
         }
 
         return $this;
     }
 
-    public function removePiece(DocPiece $piece): self
+    public function removeDocPiece(DocPiece $docPiece): self
     {
-        $this->pieces->removeElement($piece);
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getCotation() === $this) {
+                $docPiece->setCotation(null);
+            }
+        }
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->nom . ", Prime: " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 }

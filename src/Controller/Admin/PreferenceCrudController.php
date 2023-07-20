@@ -970,6 +970,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
     public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
+    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation";
+    public const PREF_BIB_DOCUMENT_POLICE               = "Police";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";
@@ -983,7 +985,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_DOCUMENT_UTILISATEUR             => 5,
         self::PREF_BIB_DOCUMENT_ENTREPRISE              => 6,
         self::PREF_BIB_DOCUMENT_DATE_DE_CREATION        => 7,
-        self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8
+        self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8,
+        self::PREF_BIB_DOCUMENT_COTATION                => 9,
+        self::PREF_BIB_DOCUMENT_POLICE                  => 10
     ];
     //PARAMETRES - UTILISATEUR
     public const PREF_PAR_UTILISATEUR_ID                    = "Id";

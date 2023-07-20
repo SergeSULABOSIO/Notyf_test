@@ -42,11 +42,11 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations')]
-    private ?Piste $piste = null;
-
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
     private Collection $docPieces;
+
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Piste $piste = null;
 
     public function __construct()
     {

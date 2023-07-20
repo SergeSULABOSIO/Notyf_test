@@ -80,12 +80,13 @@ class PisteCrudController extends AbstractCrudController
         }
 
         return $filters
-            ->add('contact')
+            //->add('contacts')
             //->add('utilisateur')
             ->add('expiredAt')
             ->add('etape')
-            ->add('cotations')
-            ->add('actions');
+            //->add('cotations')
+            //->add('actionCRMs')
+            ;
     }
 
     public function configureCrud(Crud $crud): Crud

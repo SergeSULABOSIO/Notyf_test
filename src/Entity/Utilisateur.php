@@ -60,21 +60,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: FeedbackCRM::class)]
-    private Collection $feedbackCRMs;
-
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $utilisateur = null;
-
-    #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
-    private Collection $actionCRMs;
 
     #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
     private ?Entreprise $entreprise = null;
 
+    #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
+
+
     public function __construct()
     {
-        $this->feedbackCRMs = new ArrayCollection();
         $this->actionCRMs = new ArrayCollection();
     }
 
@@ -213,36 +210,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, FeedbackCRM>
-     */
-    public function getFeedbackCRMs(): Collection
-    {
-        return $this->feedbackCRMs;
-    }
-
-    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
-            $this->feedbackCRMs->add($feedbackCRM);
-            $feedbackCRM->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($feedbackCRM->getUtilisateur() === $this) {
-                $feedbackCRM->setUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUtilisateur(): ?self
     {
         return $this->utilisateur;
@@ -251,6 +218,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUtilisateur(?self $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }
@@ -281,18 +260,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $actionCRM->setAttributedTo(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getEntreprise(): ?Entreprise
-    {
-        return $this->entreprise;
-    }
-
-    public function setEntreprise(?Entreprise $entreprise): self
-    {
-        $this->entreprise = $entreprise;
 
         return $this;
     }

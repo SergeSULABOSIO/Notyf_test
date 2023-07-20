@@ -126,8 +126,8 @@ class ServiceCrossCanal
             ->setController(PisteCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PISTES - [Etape: " . $entite . "]")
-            ->set('filters[etape][value]', $entite->getId()) //il faut juste passer son ID
-            ->set('filters[etape][comparison]', '=')
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_CRM . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_CRM . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
         //dd($entite);

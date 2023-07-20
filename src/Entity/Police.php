@@ -137,12 +137,8 @@ class Police extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
-
-    #[ORM\ManyToOne]
-    private ?Piste $piste = null;
 
     #[ORM\ManyToOne]
     private ?Utilisateur $gestionnaire = null;
@@ -586,18 +582,6 @@ class Police extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
-    public function getPiste(): ?Piste
-    {
-        return $this->piste;
-    }
-
-    public function setPiste(?Piste $piste): self
-    {
-        $this->piste = $piste;
 
         return $this;
     }

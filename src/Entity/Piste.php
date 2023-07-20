@@ -18,9 +18,6 @@ class Piste extends CalculableEntity
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Contact::class)]
-    private Collection $contact;
-
     #[ORM\Column(length: 255)]
     private ?string $objectif = null;
 
@@ -44,21 +41,24 @@ class Piste extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $expiredAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?EtapeCrm $etape = null;
+
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class)]
+    private Collection $contacts;
+
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
-    #[ORM\ManyToMany(targetEntity: ActionCRM::class)]
-    private Collection $actions;
-
-    #[ORM\ManyToOne(inversedBy: 'pistes')]
-    private ?EtapeCrm $etape = null;
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
 
 
     public function __construct()
     {
-        $this->contact = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
         $this->cotations = new ArrayCollection();
-        $this->actions = new ArrayCollection();
+        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,30 +74,6 @@ class Piste extends CalculableEntity
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Contact>
-     */
-    public function getContact(): Collection
-    {
-        return $this->contact;
-    }
-
-    public function addContact(Contact $contact): self
-    {
-        if (!$this->contact->contains($contact)) {
-            $this->contact->add($contact);
-        }
-
-        return $this;
-    }
-
-    public function removeContact(Contact $contact): self
-    {
-        $this->contact->removeElement($contact);
 
         return $this;
     }
@@ -186,6 +162,53 @@ class Piste extends CalculableEntity
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->nom . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
+    }
+
+    public function getEtape(): ?EtapeCRM
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(?EtapeCRM $etape): self
+    {
+        $this->etape = $etape;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contact $contact): self
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): self
+    {
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getPiste() === $this) {
+                $contact->setPiste(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Cotation>
      */
@@ -216,43 +239,32 @@ class Piste extends CalculableEntity
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->nom . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
-    }
-
     /**
      * @return Collection<int, ActionCRM>
      */
-    public function getActions(): Collection
+    public function getActionCRMs(): Collection
     {
-        return $this->actions;
+        return $this->actionCRMs;
     }
 
-    public function addAction(ActionCRM $action): self
+    public function addActionCRM(ActionCRM $actionCRM): self
     {
-        if (!$this->actions->contains($action)) {
-            $this->actions->add($action);
+        if (!$this->actionCRMs->contains($actionCRM)) {
+            $this->actionCRMs->add($actionCRM);
+            $actionCRM->setPiste($this);
         }
 
         return $this;
     }
 
-    public function removeAction(ActionCRM $action): self
+    public function removeActionCRM(ActionCRM $actionCRM): self
     {
-        $this->actions->removeElement($action);
-
-        return $this;
-    }
-
-    public function getEtape(): ?EtapeCRM
-    {
-        return $this->etape;
-    }
-
-    public function setEtape(?EtapeCRM $etape): self
-    {
-        $this->etape = $etape;
+        if ($this->actionCRMs->removeElement($actionCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionCRM->getPiste() === $this) {
+                $actionCRM->setPiste(null);
+            }
+        }
 
         return $this;
     }

@@ -42,28 +42,20 @@ class ActionCRM
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actions')]
-    private ?Piste $piste = null;
-
-    #[ORM\ManyToOne(inversedBy: 'action')]
-    private ?FeedbackCRM $feedback = null;
-
-    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class, orphanRemoval: true)]
-    private Collection $feedbacks;
-
     #[ORM\Column]
     private ?bool $clos = null;
 
-    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class, orphanRemoval: true)]
-    private Collection $feedbackCRMs;
+    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Piste $piste = null;
 
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
 
+    //private ?Utilisateur $attributedTo = null;
+
     public function __construct()
     {
-        $this->feedbacks = new ArrayCollection();
-        $this->feedbackCRMs = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -168,60 +160,6 @@ class ActionCRM
         return $this;
     }
 
-    public function getPiste(): ?Piste
-    {
-        return $this->piste;
-    }
-
-    public function setPiste(?Piste $piste): self
-    {
-        $this->piste = $piste;
-
-        return $this;
-    }
-
-    public function getFeedback(): ?FeedbackCRM
-    {
-        return $this->feedback;
-    }
-
-    public function setFeedback(?FeedbackCRM $feedback): self
-    {
-        $this->feedback = $feedback;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, FeedbackCRM>
-     */
-    public function getFeedbacks(): Collection
-    {
-        return $this->feedbacks;
-    }
-
-    public function addFeedback(FeedbackCRM $feedback): self
-    {
-        if (!$this->feedbacks->contains($feedback)) {
-            $this->feedbacks->add($feedback);
-            $feedback->setAction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFeedback(FeedbackCRM $feedback): self
-    {
-        if ($this->feedbacks->removeElement($feedback)) {
-            // set the owning side to null (unless already changed)
-            if ($feedback->getAction() === $this) {
-                $feedback->setAction(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isClos(): ?bool
     {
         return $this->clos;
@@ -239,32 +177,14 @@ class ActionCRM
         return $this->mission;
     }
 
-    /**
-     * @return Collection<int, FeedbackCRM>
-     */
-    public function getFeedbackCRMs(): Collection
+    public function getPiste(): ?Piste
     {
-        return $this->feedbackCRMs;
+        return $this->piste;
     }
 
-    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    public function setPiste(?Piste $piste): self
     {
-        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
-            $this->feedbackCRMs->add($feedbackCRM);
-            $feedbackCRM->setAction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($feedbackCRM->getAction() === $this) {
-                $feedbackCRM->setAction(null);
-            }
-        }
+        $this->piste = $piste;
 
         return $this;
     }
@@ -280,5 +200,4 @@ class ActionCRM
 
         return $this;
     }
-
 }

@@ -33,9 +33,6 @@ class Contact
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne]
-    private ?Client $client = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -44,6 +41,9 @@ class Contact
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contacts')]
+    private ?Piste $piste = null;
 
     public function getId(): ?int
     {
@@ -115,18 +115,6 @@ class Contact
         return $this->nom . ", Tél.: " . $this->telephone. ", Email: " . $this->email;
     }
 
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): self
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -159,6 +147,18 @@ class Contact
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
 
         return $this;
     }

@@ -51,7 +51,7 @@ class Piste extends CalculableEntity
     private Collection $actions;
 
     #[ORM\ManyToOne(inversedBy: 'pistes')]
-    private ?EtapeCRM $etape = null;
+    private ?EtapeCrm $etape = null;
 
 
     public function __construct()

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Controller\Admin\DocPieceCrudController;
+use App\Controller\Admin\EtapeCrmCrudController;
 use NumberFormatter;
 use App\Entity\Monnaie;
 use App\Entity\ActionCRM;
@@ -19,10 +20,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\PoliceCrudController;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
 use App\Entity\Piste;
+use App\Entity\Police;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -53,7 +56,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU FEEDBACK - [Mission: " . $entite->getMission() . "]")
             ->set(self::CROSSED_ENTITY_ACTION, $entite->getId())
-            //->setEntityId(null)
+            ->setEntityId(null)
             ->generateUrl();
         return $url;
     }
@@ -66,7 +69,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Cotation: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
-            //->setEntityId(null)
+            ->setEntityId(null)
             ->generateUrl();
         return $url;
     }
@@ -80,7 +83,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PISTE - [Etape: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_ETAPE_CRM, $entite->getId())
-            //->setEntityId(null)
+            ->setEntityId(null)
             ->generateUrl();
         //dd($url);
         return $url;
@@ -95,6 +98,7 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES FEEDBACKS - [Mission: " . $entite->getMission() . "]")
             ->set('filters[' . self::CROSSED_ENTITY_ACTION . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_ACTION . '][comparison]', '=')
+            ->setEntityId(null)
             ->generateUrl();
 
         return $url;
@@ -109,6 +113,7 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES PICES - [Cotation: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][comparison]', '=')
+            ->setEntityId(null)
             ->generateUrl();
 
         return $url;
@@ -117,15 +122,15 @@ class ServiceCrossCanal
     public function crossCanal_EtapeCRM_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
-        //dd($entite);
         $url = $adminUrlGenerator
             ->setController(PisteCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PISTES - [Etape: " . $entite . "]")
             ->set('filters[etape][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[etape][comparison]', '=')
+            ->setEntityId(null)
             ->generateUrl();
-        //dd($url);
+        //dd($entite);
         return $url;
     }
 

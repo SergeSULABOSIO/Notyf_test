@@ -126,7 +126,7 @@ class EtapeCrmCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiste');
 
-        
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)

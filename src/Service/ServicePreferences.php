@@ -1449,7 +1449,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')

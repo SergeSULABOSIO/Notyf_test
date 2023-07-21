@@ -48,9 +48,9 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Piste $piste = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
-
+ */
     //private ?Utilisateur $attributedTo = null;
 
     public function __construct()
@@ -185,18 +185,6 @@ class ActionCRM
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
-
-        return $this;
-    }
-
-    public function getAttributedTo(): ?Utilisateur
-    {
-        return $this->attributedTo;
-    }
-
-    public function setAttributedTo(?Utilisateur $attributedTo): self
-    {
-        $this->attributedTo = $attributedTo;
 
         return $this;
     }

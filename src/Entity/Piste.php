@@ -44,10 +44,13 @@ class Piste extends CalculableEntity
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?EtapeCrm $etape = null;
 
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
+
 
     public function __construct()
     {
-        
+        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +167,36 @@ class Piste extends CalculableEntity
     public function setEtape(?EtapeCrm $etape): self
     {
         $this->etape = $etape;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionCRM>
+     */
+    public function getActionCRMs(): Collection
+    {
+        return $this->actionCRMs;
+    }
+
+    public function addActionCRM(ActionCRM $actionCRM): self
+    {
+        if (!$this->actionCRMs->contains($actionCRM)) {
+            $this->actionCRMs->add($actionCRM);
+            $actionCRM->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionCRM(ActionCRM $actionCRM): self
+    {
+        if ($this->actionCRMs->removeElement($actionCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionCRM->getPiste() === $this) {
+                $actionCRM->setPiste(null);
+            }
+        }
 
         return $this;
     }

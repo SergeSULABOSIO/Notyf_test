@@ -3224,10 +3224,10 @@ class ServicePreferences
             $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
             $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
                 ->hideOnForm();
-        }
+        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE)
                 ->hideOnForm();
@@ -3276,7 +3276,7 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
             ->onlyOnForms()
             ->setColumns(6);
-        $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
+        /* $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
             ->onlyOnForms()
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3284,7 +3284,7 @@ class ServicePreferences
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+            }); */
         return $tabAttributs;
     }
 
@@ -3352,10 +3352,10 @@ class ServicePreferences
             $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
                 ->hideOnForm();
         } */
-        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
-            $tabAttributs[] = CollectionField::new('actions', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
+            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
                 ->hideOnForm();
-        } */
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
                 ->hideOnForm();

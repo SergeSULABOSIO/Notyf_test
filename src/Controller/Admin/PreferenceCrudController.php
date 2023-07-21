@@ -160,7 +160,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_MONTANT                     = "Montant";
     public const PREF_CRM_PISTE_ETAPE                       = "Etape actuelle";
     public const PREF_CRM_PISTE_DATE_EXPIRATION             = "Echéance";
-    public const PREF_CRM_PISTE_ACTIONS                     = "Actions";
+    public const PREF_CRM_PISTE_ACTIONS                     = "Missions";
     public const PREF_CRM_PISTE_COTATION                    = "Cotation";
     public const PREF_CRM_PISTE_UTILISATEUR                 = "Utilisateur";
     public const PREF_CRM_PISTE_ENTREPRISE                  = "Entreprise";

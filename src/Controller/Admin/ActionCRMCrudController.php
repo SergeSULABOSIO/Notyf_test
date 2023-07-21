@@ -87,7 +87,8 @@ class ActionCRMCrudController extends AbstractCrudController
         return $filters
             ->add('startedAt')
             ->add('endedAt')
-            ->add('attributedTo');
+            //->add('attributedTo')
+            ;
     }
 
     public function configureCrud(Crud $crud): Crud

@@ -163,7 +163,7 @@ class ServiceCrossCanal
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(EtapeCrm::class)->find($paramID);
         }
-        $piste->setEtape($objet);
+        //$piste->setEtape($objet);
         return $piste;
     }
 

@@ -145,14 +145,11 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $partExceptionnellePartenaire = null;
-
-    #[ORM\OneToMany(mappedBy: 'police', targetEntity: DocPiece::class)]
-    private Collection $docPieces;
-
+    
     
     public function __construct()
     {
-        $this->docPieces = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -606,36 +603,6 @@ class Police extends CalculableEntity
     public function setPartExceptionnellePartenaire(?float $partExceptionnellePartenaire): self
     {
         $this->partExceptionnellePartenaire = $partExceptionnellePartenaire;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getDocPieces(): Collection
-    {
-        return $this->docPieces;
-    }
-
-    public function addDocPiece(DocPiece $docPiece): self
-    {
-        if (!$this->docPieces->contains($docPiece)) {
-            $this->docPieces->add($docPiece);
-            $docPiece->setPolice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocPiece(DocPiece $docPiece): self
-    {
-        if ($this->docPieces->removeElement($docPiece)) {
-            // set the owning side to null (unless already changed)
-            if ($docPiece->getPolice() === $this) {
-                $docPiece->setPolice(null);
-            }
-        }
 
         return $this;
     }

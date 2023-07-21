@@ -208,12 +208,14 @@ class ServiceCalculateur
 
     public function updatePisteCalculableFileds(?CalculableEntity $obj)
     {
+        
         $this->calculerPolices(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'piste' => $obj
+                //'piste' => $obj
             ]
         );
+        //dd($obj);
         $this->calculer($obj);
     }
 
@@ -253,7 +255,9 @@ class ServiceCalculateur
 
     private function calculerPolices($criteres)
     {
+        
         $this->polices = $this->entityManager->getRepository(Police::class)->findBy($criteres);
+        //  dd("SERGE");
     }
 
     public function calculerRevenusReserve(?CalculableEntity $obj)

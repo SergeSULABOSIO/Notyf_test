@@ -83,7 +83,7 @@ class PisteCrudController extends AbstractCrudController
             //->add('contacts')
             //->add('utilisateur')
             ->add('expiredAt')
-            ->add('etape')
+            //->add('etape')
             //->add('cotations')
             //->add('actionCRMs')
             ;
@@ -130,9 +130,14 @@ class PisteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        //dd("SERGE");
+        
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PISTE);
+        //dd("SERGE");
+        
         return $this->servicePreferences->getChamps(new Piste());
     }
 

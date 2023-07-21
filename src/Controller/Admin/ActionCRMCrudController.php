@@ -126,6 +126,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet->setStartedAt(new DateTimeImmutable("+1 day"));
         $objet->setEndedAt(new DateTimeImmutable("+7 day"));
         $objet->setClos(0);
+        $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
         return $objet;
     }
 

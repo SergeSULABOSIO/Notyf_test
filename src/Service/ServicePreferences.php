@@ -3341,8 +3341,21 @@ class ServicePreferences
                 ->hideOnForm(); //->setColumns(6);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
-            $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
-                ->hideOnForm(); //->setColumns(6);
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+                ->formatValue(function ($value, Piste $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->hideOnForm();
+
+            /* MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+                ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->hideOnForm(); */
         }
         /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
             $tabAttributs[] = CollectionField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
@@ -3464,7 +3477,9 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        $tabAttributs[] = NumberField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
             ->onlyOnForms()
             ->setColumns(2);
         /* $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)

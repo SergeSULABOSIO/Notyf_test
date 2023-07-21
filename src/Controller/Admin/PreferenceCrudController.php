@@ -154,10 +154,10 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID                          = "Id";
-    public const PREF_CRM_PISTE_NOM                         = "Nom";
+    public const PREF_CRM_PISTE_NOM                         = "Intitulé de la piste";
     public const PREF_CRM_PISTE_CONTACT                     = "Contact";
-    public const PREF_CRM_PISTE_OBJECTIF                    = "Objectif";
-    public const PREF_CRM_PISTE_MONTANT                     = "Montant";
+    public const PREF_CRM_PISTE_OBJECTIF                    = "Objectif à atteindre";
+    public const PREF_CRM_PISTE_MONTANT                     = "CAFF potentiels";
     public const PREF_CRM_PISTE_ETAPE                       = "Etape actuelle";
     public const PREF_CRM_PISTE_DATE_EXPIRATION             = "Echéance";
     public const PREF_CRM_PISTE_ACTIONS                     = "Missions";

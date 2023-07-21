@@ -201,6 +201,17 @@ class ServiceCrossCanal
         return $piste;
     }
 
+    public function crossCanal_Mission_setPiste(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
+        }
+        $actionCRM->setPiste($objet);
+        return $actionCRM;
+    }
+
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator): Crud
     {
         $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));

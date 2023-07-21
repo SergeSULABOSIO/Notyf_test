@@ -2206,6 +2206,12 @@ class ServicePreferences
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS])) {
+            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE)
                 ->hideOnForm();
@@ -3241,10 +3247,10 @@ class ServicePreferences
             $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
                 ->hideOnForm();
         }
-        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A])) {
             $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
                 ->hideOnForm();
-        } */
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_MISSION_ENTREPRISE)
                 ->hideOnForm();
@@ -3269,7 +3275,16 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
             ->onlyOnForms()
-            ->setColumns(12);
+            ->setColumns(8);
+        $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
+            ->onlyOnForms()
+            ->setColumns(4)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);
@@ -3293,15 +3308,6 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
             ->onlyOnForms()
             ->setColumns(6);
-        /* $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            }); */
         return $tabAttributs;
     }
 
@@ -3567,7 +3573,7 @@ class ServicePreferences
         $preference->setBibPieces([1, 2, 3, 4, 8]);
         //PAR
         $preference->setParTaille(100);
-        $preference->setParUtilisateurs([1, 2, 3, 4, 8]);
+        $preference->setParUtilisateurs([1, 2, 3, 4, 8, 9]);
 
         return $preference;
     }

@@ -69,10 +69,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
+/* 
+    #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
 
+ */
     public function __construct()
     {
-        $this->actionCRMs = new ArrayCollection();
+        //$this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int

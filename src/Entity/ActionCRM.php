@@ -51,6 +51,9 @@ class ActionCRM
     #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
     private Collection $feedbackCRMs;
 
+    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Utilisateur $attributedTo = null;
+
     /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
  */
@@ -177,7 +180,7 @@ class ActionCRM
 
     public function __toString()
     {
-        return $this->mission;
+        return $this->mission . " / Piste: " . $this->piste;
     }
 
     public function getPiste(): ?Piste
@@ -218,6 +221,18 @@ class ActionCRM
                 $feedbackCRM->setAction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAttributedTo(): ?Utilisateur
+    {
+        return $this->attributedTo;
+    }
+
+    public function setAttributedTo(?Utilisateur $attributedTo): self
+    {
+        $this->attributedTo = $attributedTo;
 
         return $this;
     }

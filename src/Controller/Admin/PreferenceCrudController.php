@@ -1000,6 +1000,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PAR_UTILISATEUR_EMAIL                 = "Email";
     public const PREF_PAR_UTILISATEUR_ROLES                 = "Rôles";
     public const PREF_PAR_UTILISATEUR_UTILISATEUR           = "Utilisateur";
+    public const PREF_PAR_UTILISATEUR_MISSIONS              = "Missions";
     public const PREF_PAR_UTILISATEUR_ENTREPRISE            = "Entreprise";
     public const PREF_PAR_UTILISATEUR_DATE_DE_CREATION      = "Date de création";
     public const PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION  = "Dernière modification";
@@ -1013,6 +1014,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PAR_UTILISATEUR_ENTREPRISE           => 6,
         self::PREF_PAR_UTILISATEUR_DATE_DE_CREATION     => 7,
         self::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION => 8,
+        self::PREF_PAR_UTILISATEUR_MISSIONS             => 9,
     ];
 
 

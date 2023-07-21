@@ -32,9 +32,12 @@ class EtapeCrm
     #[ORM\JoinColumn(nullable: false)]
     public ?Entreprise $entreprise = null;
 
+    #[ORM\OneToMany(mappedBy: 'etape', targetEntity: Piste::class)]
+    private Collection $pistes;
+
     public function __construct()
     {
-
+        $this->pistes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,5 +108,35 @@ class EtapeCrm
     public function __toString()
     {
         return $this->nom . "";
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setEtape($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getEtape() === $this) {
+                $piste->setEtape(null);
+            }
+        }
+
+        return $this;
     }
 }

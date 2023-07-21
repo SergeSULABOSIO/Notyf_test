@@ -41,6 +41,9 @@ class Piste extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $expiredAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?EtapeCrm $etape = null;
+
 
     public function __construct()
     {
@@ -151,5 +154,17 @@ class Piste extends CalculableEntity
     public function __toString()
     {
         return $this->nom . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
+    }
+
+    public function getEtape(): ?EtapeCrm
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(?EtapeCrm $etape): self
+    {
+        $this->etape = $etape;
+
+        return $this;
     }
 }

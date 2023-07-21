@@ -94,7 +94,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_FEEDBACK_MESAGE               = "Message";
     public const PREF_CRM_FEEDBACK_PROCHAINE_ETAPE      = "Etape suivante";
     public const PREF_CRM_FEEDBACK_DATE_EFFET           = "Date d'effet";
-    public const PREF_CRM_FEEDBACK_ACTION               = "Action";
+    public const PREF_CRM_FEEDBACK_ACTION               = "Mission concernée";
     public const PREF_CRM_FEEDBACK_DATE_CREATION        = "Date de création";
     public const PREF_CRM_FEEDBACK_DATE_MODIFICATION    = "Dernière modification";
     public const PREF_CRM_FEEDBACK_UTILISATEUR          = "Utilisateur";

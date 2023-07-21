@@ -209,8 +209,8 @@ class ServiceCrossCanal
         $paramIDAction = $adminUrlGenerator->get(self::CROSSED_ENTITY_ACTION);
         if ($paramIDAction != null) {
             $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($paramIDAction);
+            $feedbackCRM->setAction($actionCRM);
         }
-        $feedbackCRM->setAction($actionCRM);
         return $feedbackCRM;
     }
 
@@ -220,8 +220,8 @@ class ServiceCrossCanal
         $paramIDAction = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
         if ($paramIDAction != null) {
             $objet = $this->entityManager->getRepository(Cotation::class)->find($paramIDAction);
+            $docPiece->setCotation($objet);
         }
-        $docPiece->setCotation($objet);
         return $docPiece;
     }
 
@@ -231,8 +231,8 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_ETAPE_CRM);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(EtapeCrm::class)->find($paramID);
+            $piste->setEtape($objet);
         }
-        $piste->setEtape($objet);
         return $piste;
     }
 
@@ -242,8 +242,8 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
+            $contact->addPiste($objet);
         }
-        $contact->addPiste($objet);
         return $contact;
     }
 
@@ -253,8 +253,8 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
+            $actionCRM->setPiste($objet);
         }
-        $actionCRM->setPiste($objet);
         return $actionCRM;
     }
 

@@ -2487,7 +2487,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_PISTE])) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
-                ->hideOnForm();
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR)
@@ -2524,6 +2526,15 @@ class ServicePreferences
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
             ->onlyOnForms()
             ->setColumns(6);
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         /* $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
             ->setRequired(false)
             ->onlyOnForms()
@@ -3350,16 +3361,21 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
+            $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+                ->onlyOnDetail();
             $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
+
         /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
             $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
                 ->hideOnForm();
         } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
             $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
-                ->hideOnForm();
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)

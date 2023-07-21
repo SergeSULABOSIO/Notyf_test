@@ -3337,7 +3337,7 @@ class ServicePreferences
                 ->hideOnForm(); //->setColumns(6);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
-            $tabAttributs[] = TextField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
                 ->hideOnForm(); //->setColumns(6);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
@@ -3482,10 +3482,7 @@ class ServicePreferences
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);
-
-
         //dd($tabAttributs);
-
         return $tabAttributs;
     }
 

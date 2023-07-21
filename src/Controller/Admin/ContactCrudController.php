@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Contact;
+use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -36,11 +37,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ContactCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public function __construct(
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
         private ServiceSuppression $serviceSuppression,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
         )
     {
         
@@ -74,7 +79,8 @@ class ContactCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('client')
+            //->add('client')
+            ->add('piste')
         ;
     }
 
@@ -82,7 +88,7 @@ class ContactCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Contact(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -94,6 +100,7 @@ class ContactCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -105,6 +112,7 @@ class ContactCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Contact();
+        $objet = $this->serviceCrossCanal->crossCanal_Piste_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -113,6 +121,7 @@ class ContactCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new Contact());
     }
 

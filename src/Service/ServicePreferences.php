@@ -2485,8 +2485,8 @@ class ServicePreferences
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_CLIENT])) {
-            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_PISTE])) {
+            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR])) {
@@ -2524,10 +2524,10 @@ class ServicePreferences
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
             ->onlyOnForms()
             ->setColumns(6);
-        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
+        /* $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_CONTACT_CLIENT)
             ->setRequired(false)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(6); */
 
         return $tabAttributs;
     }
@@ -3348,19 +3348,11 @@ class ServicePreferences
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
-
-            /* MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->hideOnForm(); */
         }
-        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
-            $tabAttributs[] = CollectionField::new('contact', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
+            $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
                 ->hideOnForm();
-        } */
+        }
         /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
             $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
                 ->hideOnForm();
@@ -3459,15 +3451,6 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             }); */
-        /* $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
-            ->onlyOnForms()
-            ->setColumns(4)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            }); */
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
             ->setColumns(3)
@@ -3494,6 +3477,15 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
             ->onlyOnForms()
             ->setColumns(3);
+        $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);

@@ -85,7 +85,7 @@ class PisteCrudController extends AbstractCrudController
             ->add('etape')
             //->add('cotations')
             //->add('actionCRMs')
-            ;
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -143,8 +143,15 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterMission');
         $mission_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_MISSION)
-            ->setIcon('fa-solid fa-rectangle-list')//<i class="fa-solid fa-rectangle-list"></i>
+            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerMission');
+
+        $contact_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_CONTACT)
+            ->setIcon('fas fa-address-book')
+            ->linkToCrudAction('cross_canal_ajouterContact');
+        $contact_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_CONTACT)
+            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
+            ->linkToCrudAction('cross_canal_listerContact');
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -212,8 +219,14 @@ class PisteCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $mission_ajouter)
             ->add(Crud::PAGE_INDEX, $mission_ajouter)
 
+            ->add(Crud::PAGE_DETAIL, $contact_ajouter)
+            ->add(Crud::PAGE_INDEX, $contact_ajouter)
+
             ->add(Crud::PAGE_DETAIL, $mission_lister)
             ->add(Crud::PAGE_INDEX, $mission_lister)
+
+            ->add(Crud::PAGE_DETAIL, $contact_lister)
+            ->add(Crud::PAGE_INDEX, $contact_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -241,6 +254,16 @@ class PisteCrudController extends AbstractCrudController
     public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_listerMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_ajouterContact($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_listerContact($context, $adminUrlGenerator));
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

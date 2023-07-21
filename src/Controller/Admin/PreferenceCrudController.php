@@ -155,7 +155,7 @@ class PreferenceCrudController extends AbstractCrudController
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID                          = "Id";
     public const PREF_CRM_PISTE_NOM                         = "Intitulé de la piste";
-    public const PREF_CRM_PISTE_CONTACT                     = "Contact";
+    public const PREF_CRM_PISTE_CONTACT                     = "Contacts";
     public const PREF_CRM_PISTE_OBJECTIF                    = "Objectif à atteindre";
     public const PREF_CRM_PISTE_MONTANT                     = "CAFF potentiels";
     public const PREF_CRM_PISTE_ETAPE                       = "Etape actuelle";
@@ -313,7 +313,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_CONTACT_POSTE                     = "Poste";
     public const PREF_PRO_CONTACT_TELEPHONE                 = "Téléphone";
     public const PREF_PRO_CONTACT_EMAIL                     = "Email";
-    public const PREF_PRO_CONTACT_CLIENT                    = "Client";
+    public const PREF_PRO_CONTACT_PISTE                     = "Piste";
     public const PREF_PRO_CONTACT_UTILISATEUR               = "Utilisateur";
     public const PREF_PRO_CONTACT_ENTREPRISE                = "Entreprise";
     public const PREF_PRO_CONTACT_DATE_DE_CREATION          = "Date de création";
@@ -324,7 +324,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_CONTACT_POSTE                    => 2,
         self::PREF_PRO_CONTACT_TELEPHONE                => 3,
         self::PREF_PRO_CONTACT_EMAIL                    => 4,
-        self::PREF_PRO_CONTACT_CLIENT                   => 5,
+        self::PREF_PRO_CONTACT_PISTE                    => 5,
         self::PREF_PRO_CONTACT_UTILISATEUR              => 6,
         self::PREF_PRO_CONTACT_ENTREPRISE               => 7,
         self::PREF_PRO_CONTACT_DATE_DE_CREATION         => 8,

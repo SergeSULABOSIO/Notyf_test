@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\EtapeCrmCrudController;
 use NumberFormatter;
@@ -38,10 +39,13 @@ class ServiceCrossCanal
     public const COTATION_PIECE_LISTER = "Voire les pièces";
     public const COTATION_PISTE_AJOUTER = "Ajouter une piste";
     public const COTATION_PISTE_LISTER = "Voire les pistes";
+    public const PISTE_AJOUTER_MISSION = "Ajouter une mission";
+    public const PISTE_LISTER_MISSION = "Voire les missions";
 
     public const CROSSED_ENTITY_ACTION = "action";
     public const CROSSED_ENTITY_COTATION = "cotation";
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
+    public const CROSSED_ENTITY_PISTE = "piste";
 
     public function __construct(
         private EntityManagerInterface $entityManager
@@ -89,6 +93,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Piste_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        //dd($entite);
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE MISSION - [Piste: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        //dd($url);
+        return $url;
+    }
+
     public function crossCanal_Action_listerFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -98,6 +117,21 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES FEEDBACKS - [Mission: " . $entite->getMission() . "]")
             ->set('filters[' . self::CROSSED_ENTITY_ACTION . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_ACTION . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Piste_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES MISSIONS - [Piste: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

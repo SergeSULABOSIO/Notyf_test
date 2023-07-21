@@ -87,6 +87,7 @@ class ActionCRMCrudController extends AbstractCrudController
         return $filters
             ->add('startedAt')
             ->add('endedAt')
+            ->add('piste')
             //->add('attributedTo')
             ;
     }
@@ -131,13 +132,16 @@ class ActionCRMCrudController extends AbstractCrudController
 
 
     public function configureActions(Actions $actions): Actions
-    { //<i class="fa-regular fa-circle-check"></i>
+    {
+        //Cross Canal
         $feedback_ajouter = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_AJOUTER)
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterFeedback');
         $feedback_lister = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_LISTER)
             ->setIcon('fa-solid fa-rectangle-list')//<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerFeedback');
+
+
         $terminer = Action::new(self::ACTION_ACHEVER_MISSION)
             ->setIcon('fas fa-regular fa-circle-check')
             ->linkToCrudAction('terminerAction');

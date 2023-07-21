@@ -42,8 +42,6 @@ class Contact
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'contacts')]
-    private ?Piste $piste = null;
 
     public function getId(): ?int
     {
@@ -147,18 +145,6 @@ class Contact
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
-    public function getPiste(): ?Piste
-    {
-        return $this->piste;
-    }
-
-    public function setPiste(?Piste $piste): self
-    {
-        $this->piste = $piste;
 
         return $this;
     }

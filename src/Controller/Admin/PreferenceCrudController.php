@@ -65,6 +65,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_OBJECTIF          = "Objectif à atteindre";
     public const PREF_CRM_MISSION_STATUS            = "Status actuel";
     public const PREF_CRM_MISSION_PISTE             = "Piste à suivre";
+    public const PREF_CRM_MISSION_FEEDBACKS         = "Feedbacks";
     public const PREF_CRM_MISSION_STARTED_AT        = "Date d'effet";
     public const PREF_CRM_MISSION_ENDED_AT          = "Echéance";
     public const PREF_CRM_MISSION_ATTRIBUE_A        = "Mission attribuée à";
@@ -84,7 +85,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_MISSION_UTILISATEUR  => 8,
         self::PREF_CRM_MISSION_ENTREPRISE   => 9,
         self::PREF_CRM_MISSION_CREATED_AT   => 10,
-        self::PREF_CRM_MISSION_UPDATED_AT   => 11
+        self::PREF_CRM_MISSION_UPDATED_AT   => 11,
+        self::PREF_CRM_MISSION_FEEDBACKS    => 12
     ];
 
     //CRM - FEEDBACK

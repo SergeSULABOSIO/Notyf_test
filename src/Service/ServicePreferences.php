@@ -3227,6 +3227,12 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_PISTE])) {
+            $tabAttributs[] = AssociationField::new('feedbackCRMs', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('feedbackCRMs', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT])) {
             $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
                 ->hideOnForm();
@@ -3526,7 +3532,7 @@ class ServicePreferences
         $preference->setUpdatedAt(new DateTimeImmutable());
         //CRM
         $preference->setCrmTaille(100);
-        $preference->setCrmMissions([1, 2, 3, 4, 5, 6, 7, 10]);
+        $preference->setCrmMissions([1, 2, 3, 4, 5, 6, 7, 10, 12]);
         $preference->setCrmFeedbacks([1, 2, 3, 4, 8]);
         $preference->setCrmCotations([1, 2, 3, 4, 5, 6, 11]);
         $preference->setCrmEtapes([0, 1, 5, 6]); //ok

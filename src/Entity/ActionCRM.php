@@ -48,6 +48,9 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Piste $piste = null;
 
+    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
+    private Collection $feedbackCRMs;
+
     /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
  */
@@ -55,7 +58,7 @@ class ActionCRM
 
     public function __construct()
     {
-
+        $this->feedbackCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -185,6 +188,36 @@ class ActionCRM
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbackCRMs(): Collection
+    {
+        return $this->feedbackCRMs;
+    }
+
+    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
+            $this->feedbackCRMs->add($feedbackCRM);
+            $feedbackCRM->setAction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    {
+        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackCRM->getAction() === $this) {
+                $feedbackCRM->setAction(null);
+            }
+        }
 
         return $this;
     }

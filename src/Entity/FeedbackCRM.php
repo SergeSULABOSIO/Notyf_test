@@ -22,9 +22,9 @@ class FeedbackCRM
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
+    /* #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?ActionCRM $action = null;
+    private ?ActionCRM $action = null; */
 
     #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,6 +40,11 @@ class FeedbackCRM
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
+    private ?ActionCRM $action = null;
+
+
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -81,20 +86,9 @@ class FeedbackCRM
         return $this;
     }
 
-    public function setAction(?ActionCRM $action): self
-    {
-        $this->action = $action;
-        return $this;
-    }
-
     public function __toString():string
     {
         return "(" . $this->message . ") par ". $this->utilisateur->getNom() . " le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
-    }
-
-    public function getAction(): ?ActionCRM
-    {
-        return $this->action;
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -141,6 +135,18 @@ class FeedbackCRM
     public function setStartedAt(?\DateTimeImmutable $startedAt): self
     {
         $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
+    public function getAction(): ?ActionCRM
+    {
+        return $this->action;
+    }
+
+    public function setAction(?ActionCRM $action): self
+    {
+        $this->action = $action;
 
         return $this;
     }

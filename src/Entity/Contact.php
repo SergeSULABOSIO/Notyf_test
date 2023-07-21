@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,6 +43,14 @@ class Contact
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToMany(targetEntity: Piste::class, inversedBy: 'contacts')]
+    private Collection $piste;
+
+    public function __construct()
+    {
+        $this->piste = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -145,6 +155,30 @@ class Contact
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPiste(): Collection
+    {
+        return $this->piste;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->piste->contains($piste)) {
+            $this->piste->add($piste);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        $this->piste->removeElement($piste);
 
         return $this;
     }

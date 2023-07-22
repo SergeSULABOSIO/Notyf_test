@@ -112,7 +112,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //CRM - COTATION
     public const PREF_CRM_COTATION_ID                   = "Id";
-    public const PREF_CRM_COTATION_NOM                  = "Nom";
+    public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     //public const PREF_CRM_COTATION_MONNAIE              = "Monnaie";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";

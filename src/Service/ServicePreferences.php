@@ -3103,7 +3103,7 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR])) {
-            $tabAttributs[] = ArrayField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
+            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->hideOnForm();
         }
         /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {

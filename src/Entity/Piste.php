@@ -50,11 +50,15 @@ class Piste extends CalculableEntity
     #[ORM\ManyToMany(targetEntity: Contact::class, mappedBy: 'piste')]
     private Collection $contacts;
 
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
+    private Collection $cotations;
+
 
     public function __construct()
     {
         $this->actionCRMs = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->cotations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +231,36 @@ class Piste extends CalculableEntity
     {
         if ($this->contacts->removeElement($contact)) {
             $contact->removePiste($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cotation>
+     */
+    public function getCotations(): Collection
+    {
+        return $this->cotations;
+    }
+
+    public function addCotation(Cotation $cotation): self
+    {
+        if (!$this->cotations->contains($cotation)) {
+            $this->cotations->add($cotation);
+            $cotation->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCotation(Cotation $cotation): self
+    {
+        if ($this->cotations->removeElement($cotation)) {
+            // set the owning side to null (unless already changed)
+            if ($cotation->getPiste() === $this) {
+                $cotation->setPiste(null);
+            }
         }
 
         return $this;

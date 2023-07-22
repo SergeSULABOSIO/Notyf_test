@@ -42,16 +42,12 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
-    private Collection $docPieces;
-
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Piste $piste = null;
 
     public function __construct()
     {
         $this->assureur = new ArrayCollection();
-        $this->docPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,6 +163,11 @@ class Cotation
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->nom . ", Prime: " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
+    }
+
     public function getPiste(): ?Piste
     {
         return $this->piste;
@@ -175,41 +176,6 @@ class Cotation
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->nom . ", Prime: " . $this->primeTotale .  ", le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
-    }
-
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getDocPieces(): Collection
-    {
-        return $this->docPieces;
-    }
-
-    public function addDocPiece(DocPiece $docPiece): self
-    {
-        if (!$this->docPieces->contains($docPiece)) {
-            $this->docPieces->add($docPiece);
-            $docPiece->setCotation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocPiece(DocPiece $docPiece): self
-    {
-        if ($this->docPieces->removeElement($docPiece)) {
-            // set the owning side to null (unless already changed)
-            if ($docPiece->getCotation() === $this) {
-                $docPiece->setCotation(null);
-            }
-        }
 
         return $this;
     }

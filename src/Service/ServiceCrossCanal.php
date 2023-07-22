@@ -27,6 +27,7 @@ use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\EtapeCrmCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\CotationCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
@@ -113,6 +114,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        //dd($entite);
+        $url = $adminUrlGenerator
+            ->setController(CotationCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE COTATION - [Piste: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        //dd($url);
+        return $url;
+    }
+
     public function crossCanal_Piste_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -165,6 +181,21 @@ class ServiceCrossCanal
             ->setController(ContactCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES CONTACTS - [Piste: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$entite->getId()]) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', ComparisonType::EQ) //'='
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Piste_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(CotationCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES COTATIONS - [Piste: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$entite->getId()]) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', ComparisonType::EQ) //'='
             ->setEntityId(null)

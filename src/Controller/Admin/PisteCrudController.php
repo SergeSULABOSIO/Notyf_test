@@ -153,6 +153,13 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerContact');
 
+        $cotation_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_CONTACT)
+            ->setIcon('fas fa-cash-register')
+            ->linkToCrudAction('cross_canal_ajouterCotation');
+        $cotation_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_CONTACT)
+            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
+            ->linkToCrudAction('cross_canal_listerCotation');
+
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -222,11 +229,17 @@ class PisteCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $contact_ajouter)
             ->add(Crud::PAGE_INDEX, $contact_ajouter)
 
+            ->add(Crud::PAGE_DETAIL, $cotation_ajouter)
+            ->add(Crud::PAGE_INDEX, $cotation_ajouter)
+
             ->add(Crud::PAGE_DETAIL, $mission_lister)
             ->add(Crud::PAGE_INDEX, $mission_lister)
 
             ->add(Crud::PAGE_DETAIL, $contact_lister)
             ->add(Crud::PAGE_INDEX, $contact_lister)
+
+            ->add(Crud::PAGE_DETAIL, $cotation_lister)
+            ->add(Crud::PAGE_INDEX, $cotation_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -264,6 +277,16 @@ class PisteCrudController extends AbstractCrudController
     public function cross_canal_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_listerContact($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_ajouterCotation($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_listerCotation($context, $adminUrlGenerator));
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

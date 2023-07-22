@@ -3041,14 +3041,14 @@ class ServicePreferences
 
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
             ->onlyOnForms()
-            ->setColumns(4)
+            ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
+        /* $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
             ->onlyOnForms()
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3056,7 +3056,7 @@ class ServicePreferences
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+            }); */
 
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
             ->setColumns(4)
@@ -3089,10 +3089,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_RISQUE])) {
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_RISQUE])) {
             $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
                 ->hideOnForm();
-        }
+        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
             $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
                 ->formatValue(function ($value, Cotation $entity) {
@@ -3106,10 +3106,10 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
                 ->hideOnForm();
-        }
+        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
                 ->hideOnForm()

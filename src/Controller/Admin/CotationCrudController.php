@@ -38,11 +38,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class CotationCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
-        private ServiceCrossCanal $serviceCrossCanal
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
     }
 
@@ -73,9 +76,9 @@ class CotationCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('docPieces')
+            //->add('docPieces')
             ->add('piste')
-            ->add('risque')
+            //->add('risque')
             ->add('assureur');
     }
 
@@ -83,7 +86,7 @@ class CotationCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Cotation(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -95,6 +98,7 @@ class CotationCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL])
             // ...
         ;
+        return $crud;
     }
 
 
@@ -108,6 +112,7 @@ class CotationCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Cotation();
+        $objet = $this->serviceCrossCanal->crossCanal_Cotation_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -116,6 +121,7 @@ class CotationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new Cotation());
     }
 
@@ -195,6 +201,11 @@ class CotationCrudController extends AbstractCrudController
 
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
+
+
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
+
+
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\AssureurRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -60,6 +62,14 @@ class Assureur extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Cotation::class)]
+    private Collection $cotations;
+
+    public function __construct()
+    {
+        $this->cotations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -235,6 +245,36 @@ class Assureur extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cotation>
+     */
+    public function getCotations(): Collection
+    {
+        return $this->cotations;
+    }
+
+    public function addCotation(Cotation $cotation): self
+    {
+        if (!$this->cotations->contains($cotation)) {
+            $this->cotations->add($cotation);
+            $cotation->setAssureur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCotation(Cotation $cotation): self
+    {
+        if ($this->cotations->removeElement($cotation)) {
+            // set the owning side to null (unless already changed)
+            if ($cotation->getAssureur() === $this) {
+                $cotation->setAssureur(null);
+            }
+        }
 
         return $this;
     }

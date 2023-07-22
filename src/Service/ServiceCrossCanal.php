@@ -198,7 +198,7 @@ class ServiceCrossCanal
             ->setController(CotationCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES COTATIONS - [Piste: " . $entite . "]")
-            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$entite->getId()]) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', ComparisonType::EQ) //'='
             ->setEntityId(null)
             ->generateUrl();
@@ -276,6 +276,17 @@ class ServiceCrossCanal
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
             $contact->addPiste($objet);
+        }
+        return $contact;
+    }
+
+    public function crossCanal_Cotation_setPiste(Cotation $contact, AdminUrlGenerator $adminUrlGenerator): Cotation
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
+            $contact->setPiste($objet);
         }
         return $contact;
     }

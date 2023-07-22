@@ -153,10 +153,10 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerContact');
 
-        $cotation_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_CONTACT)
+        $cotation_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_COTATION)
             ->setIcon('fas fa-cash-register')
             ->linkToCrudAction('cross_canal_ajouterCotation');
-        $cotation_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_CONTACT)
+        $cotation_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_COTATION)
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerCotation');
 

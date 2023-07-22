@@ -45,8 +45,10 @@ class ServiceCrossCanal
     public const COTATION_PISTE_LISTER = "Voire les pistes";
     public const PISTE_AJOUTER_MISSION = "Ajouter une mission";
     public const PISTE_AJOUTER_CONTACT = "Ajouter un contact";
+    public const PISTE_AJOUTER_COTATION = "Ajouter une cotation";
     public const PISTE_LISTER_MISSION = "Voire les missions";
     public const PISTE_LISTER_CONTACT = "Voire les contacts";
+    public const PISTE_LISTER_COTATION = "Voire les cotations";
 
     public const CROSSED_ENTITY_ACTION = "action";
     public const CROSSED_ENTITY_COTATION = "cotation";

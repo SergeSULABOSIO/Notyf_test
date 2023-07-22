@@ -41,8 +41,12 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Assureur $assureur = null;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
+
     public function __construct()
     {
+        $this->docPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,6 +151,36 @@ class Cotation
     public function setAssureur(?Assureur $assureur): self
     {
         $this->assureur = $assureur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocPieces(): Collection
+    {
+        return $this->docPieces;
+    }
+
+    public function addDocPiece(DocPiece $docPiece): self
+    {
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocPiece(DocPiece $docPiece): self
+    {
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getCotation() === $this) {
+                $docPiece->setCotation(null);
+            }
+        }
 
         return $this;
     }

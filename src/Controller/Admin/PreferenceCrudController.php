@@ -117,7 +117,7 @@ class PreferenceCrudController extends AbstractCrudController
     //public const PREF_CRM_COTATION_MONNAIE              = "Monnaie";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_RISQUE               = "Risque";
-    public const PREF_CRM_COTATION_PISTE                = "Piste";
+    public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
     public const PREF_CRM_COTATION_PIECES               = "Pièces";
     public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
     public const PREF_CRM_COTATION_DATE_MODIFICATION    = "Dernière modification";
@@ -974,7 +974,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
     public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
-    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation";
+    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation concernée";
     public const PREF_BIB_DOCUMENT_POLICE               = "Police";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";

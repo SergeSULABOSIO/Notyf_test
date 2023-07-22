@@ -55,10 +55,10 @@ class DocPiece
     private ?\DateTimeImmutable $updatedAt = null;
     
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?Cotation $cotation = null;
+    private ?Police $police = null;
 
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?Police $police = null;
+    private ?Cotation $cotation = null;
 
 
     public function __construct()
@@ -245,18 +245,6 @@ class DocPiece
         return $this->nom;
     }
 
-    public function getCotation(): ?Cotation
-    {
-        return $this->cotation;
-    }
-
-    public function setCotation(?Cotation $cotation): self
-    {
-        $this->cotation = $cotation;
-
-        return $this;
-    }
-
     public function getPolice(): ?Police
     {
         return $this->police;
@@ -265,6 +253,18 @@ class DocPiece
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
 
         return $this;
     }

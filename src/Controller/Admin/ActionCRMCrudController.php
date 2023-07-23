@@ -91,7 +91,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('startedAt')
             ->add('endedAt')
             ->add('piste')
-            //->add('attributedTo')
+            ->add('attributedTo')
             ;
     }
 

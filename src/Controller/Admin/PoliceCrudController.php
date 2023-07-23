@@ -3,10 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Police;
-use App\Service\ServiceCalculateur;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,6 +27,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PoliceCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public const TAB_POLICE_REPONSES_OUI_NON = [
         'Non' => 0,
         'Oui' => 1
@@ -60,7 +63,9 @@ class PoliceCrudController extends AbstractCrudController
         private ServiceCalculateur $serviceCalculateur, 
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
         )
     {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
@@ -90,7 +95,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -102,6 +107,7 @@ class PoliceCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
         ;
+        return $crud;
     }
 
 
@@ -115,10 +121,11 @@ class PoliceCrudController extends AbstractCrudController
             //->add('gestionnaire')
             ->add('dateeffet')
             ->add('dateexpiration')
-            //->add('client')
-            //->add('produit')
-            //->add('assureur')
-            //->add('partenaire')
+            ->add('client')
+            ->add('produit')
+            ->add('assureur')
+            ->add('partenaire')
+            ->add('docPieces')
             ->add('idavenant')
             ->add('capital')
             ->add('primenette')
@@ -185,6 +192,15 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //cross canal
+        $piece_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_PIECE)
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_ajouterPiece');
+        $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
+            ->setIcon('fa-solid fa-rectangle-list')
+            ->linkToCrudAction('cross_canal_listerPiece');
+
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -244,6 +260,14 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
+
+            //cross canal
+            ->add(Crud::PAGE_DETAIL, $piece_ajouter)
+            ->add(Crud::PAGE_INDEX, $piece_ajouter)
+
+            ->add(Crud::PAGE_DETAIL, $piece_lister)
+            ->add(Crud::PAGE_INDEX, $piece_lister)
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -306,5 +330,15 @@ class PoliceCrudController extends AbstractCrudController
         }
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPiece($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPiece($context, $adminUrlGenerator));
     }
 }

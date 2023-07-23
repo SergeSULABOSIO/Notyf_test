@@ -46,14 +46,17 @@ class ServiceCrossCanal
     public const PISTE_AJOUTER_MISSION = "Ajouter une mission";
     public const PISTE_AJOUTER_CONTACT = "Ajouter un contact";
     public const PISTE_AJOUTER_COTATION = "Ajouter une cotation";
+    public const POLICE_AJOUTER_PIECE = "Ajouter une pièce";
     public const PISTE_LISTER_MISSION = "Voire les missions";
     public const PISTE_LISTER_CONTACT = "Voire les contacts";
     public const PISTE_LISTER_COTATION = "Voire les cotations";
+    public const POLICE_LISTER_PIECE = "Voire les pièces";
 
     public const CROSSED_ENTITY_ACTION = "action";
     public const CROSSED_ENTITY_COTATION = "cotation";
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
     public const CROSSED_ENTITY_PISTE = "piste";
+    public const CROSSED_ENTITY_POLICE = "police";
 
     public function __construct(
         private EntityManagerInterface $entityManager
@@ -81,6 +84,19 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Cotation: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PIECE - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -221,6 +237,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PICES - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_EtapeCRM_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -247,13 +278,24 @@ class ServiceCrossCanal
         return $feedbackCRM;
     }
 
-    public function crossCanal_Cotation_setCotation(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
+    public function crossCanal_Piece_setCotation(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
     {
         $objet = null;
         $paramIDAction = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
         if ($paramIDAction != null) {
             $objet = $this->entityManager->getRepository(Cotation::class)->find($paramIDAction);
             $docPiece->setCotation($objet);
+        }
+        return $docPiece;
+    }
+
+    public function crossCanal_Piece_setPolice(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
+    {
+        $objet = null;
+        $paramIDAction = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramIDAction != null) {
+            $objet = $this->entityManager->getRepository(Police::class)->find($paramIDAction);
+            $docPiece->setPolice($objet);
         }
         return $docPiece;
     }

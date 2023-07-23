@@ -543,6 +543,15 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
+                ->onlyOnDetail();
+        }
+
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
             $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
                 ->hideOnForm();
@@ -744,13 +753,6 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY])) {
             $tabAttributs[] = ChoiceField::new('frontingcompayableby', PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
                 ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-                ->hideOnForm();
-        }
-
-        //Onglet Documents
-        $tabAttributs[] = FormField::addTab(' Documents')->setIcon('fas fa-book')->hideOnForm();
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
-            $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->hideOnForm();
         }
 

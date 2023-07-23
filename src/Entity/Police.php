@@ -96,10 +96,6 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Client $client = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Produit $produit = null;
 
     #[ORM\ManyToOne]
@@ -145,11 +141,17 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $partExceptionnellePartenaire = null;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
+
+    #[ORM\ManyToOne(inversedBy: 'police')]
+    private ?Client $client = null;
     
     
     public function __construct()
     {
-        
+        $this->docPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -409,18 +411,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): self
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     public function getProduit(): ?Produit
     {
         return $this->produit;
@@ -447,7 +437,7 @@ class Police extends CalculableEntity
 
     public function __toString()
     {
-        return $this->getAssureur() . " / " . $this->getProduit() . " / Réf. Police: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale() . " / Client: " . $this->client->getNom();
+        return $this->getAssureur() . " / " . $this->getProduit() . " / Réf. Police: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale() . " / Client: " . $this->client;
     }
 
     public function getReassureurs(): ?string
@@ -603,6 +593,48 @@ class Police extends CalculableEntity
     public function setPartExceptionnellePartenaire(?float $partExceptionnellePartenaire): self
     {
         $this->partExceptionnellePartenaire = $partExceptionnellePartenaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocPieces(): Collection
+    {
+        return $this->docPieces;
+    }
+
+    public function addDocPiece(DocPiece $docPiece): self
+    {
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocPiece(DocPiece $docPiece): self
+    {
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getPolice() === $this) {
+                $docPiece->setPolice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
 
         return $this;
     }

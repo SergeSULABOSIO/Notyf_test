@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,6 +60,14 @@ class Client extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Police::class)]
+    private Collection $police;
+
+    public function __construct()
+    {
+        $this->police = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -233,6 +243,36 @@ class Client extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolice(): Collection
+    {
+        return $this->police;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->police->contains($police)) {
+            $this->police->add($police);
+            $police->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->police->removeElement($police)) {
+            // set the owning side to null (unless already changed)
+            if ($police->getClient() === $this) {
+                $police->setClient(null);
+            }
+        }
 
         return $this;
     }

@@ -116,7 +116,8 @@ class DocPieceCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new DocPiece();
-        $objet = $this->serviceCrossCanal->crossCanal_Cotation_setCotation($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piece_setCotation($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piece_setPolice($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

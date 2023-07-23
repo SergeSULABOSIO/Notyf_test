@@ -474,7 +474,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_REMARQUE                                   = "Remarques";
     //public const PREF_PRO_POLICE_MONNAIE                                    = "Monnaie";
     public const PREF_PRO_POLICE_CLIENT                                     = "Client";
-    public const PREF_PRO_POLICE_PRODUIT                                    = "Produit";
+    public const PREF_PRO_POLICE_PRODUIT                                    = "Couverture d'assurance";
     public const PREF_PRO_POLICE_PARTENAIRE                                 = "Partenaire";
     public const PREF_PRO_POLICE_PART_EXCEPTIONNELLE                        = "Part except.";
     public const PREF_PRO_POLICE_REASSUREURS                                = "Réassureurs";
@@ -487,7 +487,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_RI_COM_PAYABLE_BY                          = "Com. de réass. dûe par";
     public const PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY                    = "Com. sur Front. dûe par";
     public const PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY                       = "Com. locale dûe par";
-    public const PREF_PRO_POLICE_PIECES                                     = "Documents";
+    public const PREF_PRO_POLICE_PIECES                                     = "Pièces";
     public const PREF_PRO_POLICE_UTILISATEUR                                = "Utilisateur";
     public const PREF_PRO_POLICE_ENTREPRISE                                 = "Entreprise";
     public const PREF_PRO_POLICE_DATE_DE_CREATION                           = "Date de création";
@@ -975,7 +975,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
     public const PREF_BIB_DOCUMENT_COTATION             = "Cotation concernée";
-    public const PREF_BIB_DOCUMENT_POLICE               = "Police";
+    public const PREF_BIB_DOCUMENT_POLICE               = "Police concernée";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";

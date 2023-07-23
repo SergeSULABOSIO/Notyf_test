@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
@@ -52,6 +54,14 @@ class Produit extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Cotation::class)]
+    private Collection $cotations;
+
+    public function __construct()
+    {
+        $this->cotations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -191,6 +201,36 @@ class Produit extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cotation>
+     */
+    public function getCotations(): Collection
+    {
+        return $this->cotations;
+    }
+
+    public function addCotation(Cotation $cotation): self
+    {
+        if (!$this->cotations->contains($cotation)) {
+            $this->cotations->add($cotation);
+            $cotation->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCotation(Cotation $cotation): self
+    {
+        if ($this->cotations->removeElement($cotation)) {
+            // set the owning side to null (unless already changed)
+            if ($cotation->getProduit() === $this) {
+                $cotation->setProduit(null);
+            }
+        }
 
         return $this;
     }

@@ -147,6 +147,9 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne(inversedBy: 'police')]
     private ?Client $client = null;
+
+    #[ORM\OneToOne(inversedBy: 'police', cascade: ['persist', 'remove'])]
+    private ?Cotation $cotation = null;
     
     
     public function __construct()
@@ -635,6 +638,18 @@ class Police extends CalculableEntity
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
 
         return $this;
     }

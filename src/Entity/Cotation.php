@@ -44,6 +44,12 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
     private Collection $docPieces;
 
+    #[ORM\OneToOne(mappedBy: 'cotation', cascade: ['persist', 'remove'])]
+    private ?Police $police = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Produit $produit = null;
+
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();
@@ -181,6 +187,40 @@ class Cotation
                 $docPiece->setCotation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($police === null && $this->police !== null) {
+            $this->police->setCotation(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($police !== null && $police->getCotation() !== $this) {
+            $police->setCotation($this);
+        }
+
+        $this->police = $police;
+
+        return $this;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): self
+    {
+        $this->produit = $produit;
 
         return $this;
     }

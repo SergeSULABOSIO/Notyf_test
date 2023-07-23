@@ -176,6 +176,8 @@ class PoliceCrudController extends AbstractCrudController
 
         $objet->setPartenaire(null);
         $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
+        $objet = $this->serviceCrossCanal->crossCanal_Police_setCotationEtProduit($objet, $this->adminUrlGenerator);
+        
 
         return $objet;
     }
@@ -183,9 +185,9 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
-
         return $this->servicePreferences->getChamps(new Police());
     }
 

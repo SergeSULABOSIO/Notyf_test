@@ -43,6 +43,8 @@ class ServiceCrossCanal
     public const COTATION_PIECE_LISTER = "Voire les pièces";
     public const COTATION_PISTE_AJOUTER = "Ajouter une piste";
     public const COTATION_PISTE_LISTER = "Voire les pistes";
+    public const COTATION_POLICE_OUVRIR = "Voire la police";
+    public const COTATION_POLICE_CREER = "Créer la police";
     public const PISTE_AJOUTER_MISSION = "Ajouter une mission";
     public const PISTE_AJOUTER_CONTACT = "Ajouter un contact";
     public const PISTE_AJOUTER_COTATION = "Ajouter une cotation";
@@ -83,6 +85,19 @@ class ServiceCrossCanal
             ->setController(DocPieceCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Cotation: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Cotation_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE POLICE - [Cotation: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -237,6 +252,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Cotation_ouvrirPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->set("titre", $entite->getPolice())
+            //->set('filters[' . self::CROSSED_ENTITY_COTATION . '][value]', $entite->getId()) //il faut juste passer son ID
+            //->set('filters[' . self::CROSSED_ENTITY_COTATION . '][comparison]', '=')
+            ->setEntityId($entite->getPolice()->getId())
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -329,6 +359,19 @@ class ServiceCrossCanal
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
             $contact->setPiste($objet);
+        }
+        return $contact;
+    }
+
+    public function crossCanal_Police_setCotationEtProduit(Police $contact, AdminUrlGenerator $adminUrlGenerator): Police
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Cotation::class)->find($paramID);
+            $contact->setCotation($objet);
+            $contact->setProduit($objet->getProduit());
+            $contact->setAssureur($objet->getAssureur());
         }
         return $contact;
     }

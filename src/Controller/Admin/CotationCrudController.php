@@ -76,9 +76,10 @@ class CotationCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            //->add('docPieces')
+            ->add('docPieces')
             ->add('piste')
-            //->add('risque')
+            ->add('police')
+            ->add('produit')
             ->add('assureur');
     }
 
@@ -135,6 +136,20 @@ class CotationCrudController extends AbstractCrudController
         $piece_lister = Action::new(ServiceCrossCanal::COTATION_PIECE_LISTER)
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiece');
+
+        //cross canal
+        $police_creer = Action::new(ServiceCrossCanal::COTATION_POLICE_CREER)
+            ->displayIf(static function (?Cotation $entity) {
+                return $entity->getPolice() == null;
+            })
+            ->setIcon('fas fa-file-shield')
+            ->linkToCrudAction('cross_canal_creerPolice');
+        $police_ouvrir = Action::new(ServiceCrossCanal::COTATION_POLICE_OUVRIR)
+            ->displayIf(static function (?Cotation $entity) {
+                return $entity->getPolice() != null;
+            })
+            ->setIcon('fas fa-file-shield')
+            ->linkToCrudAction('cross_canal_ouvrirPolice');
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -202,6 +217,12 @@ class CotationCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
 
+            ->add(Crud::PAGE_DETAIL, $police_creer)
+            ->add(Crud::PAGE_INDEX, $police_creer)
+
+            ->add(Crud::PAGE_DETAIL, $police_ouvrir)
+            ->add(Crud::PAGE_INDEX, $police_ouvrir)
+
 
             ->remove(Crud::PAGE_INDEX, Action::NEW)
 
@@ -233,6 +254,16 @@ class CotationCrudController extends AbstractCrudController
     public function cross_canal_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_listerPiece($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_creerPolice($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ouvrirPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_ouvrirPolice($context, $adminUrlGenerator));
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

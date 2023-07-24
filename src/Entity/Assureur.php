@@ -66,9 +66,13 @@ class Assureur extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Cotation::class)]
     private Collection $cotations;
 
+    #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Police::class)]
+    private Collection $police;
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
+        $this->police = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -273,6 +277,36 @@ class Assureur extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($cotation->getAssureur() === $this) {
                 $cotation->setAssureur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolice(): Collection
+    {
+        return $this->police;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->police->contains($police)) {
+            $this->police->add($police);
+            $police->setAssureur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->police->removeElement($police)) {
+            // set the owning side to null (unless already changed)
+            if ($police->getAssureur() === $this) {
+                $police->setAssureur(null);
             }
         }
 

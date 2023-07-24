@@ -115,10 +115,6 @@ class Police extends CalculableEntity
     #[ORM\Column(length: 255)]
     private ?string $frontingcompayableby = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Assureur $assureur = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -148,6 +144,9 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne(inversedBy: 'police')]
     private ?Partenaire $partenaire = null;
+
+    #[ORM\ManyToOne(inversedBy: 'police')]
+    private ?Assureur $assureur = null;
     
     
     public function __construct()
@@ -501,18 +500,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getAssureur(): ?Assureur
-    {
-        return $this->assureur;
-    }
-
-    public function setAssureur(?Assureur $assureur): self
-    {
-        $this->assureur = $assureur;
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -648,6 +635,18 @@ class Police extends CalculableEntity
     public function setPartenaire(?Partenaire $partenaire): self
     {
         $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getAssureur(): ?Assureur
+    {
+        return $this->assureur;
+    }
+
+    public function setAssureur(?Assureur $assureur): self
+    {
+        $this->assureur = $assureur;
 
         return $this;
     }

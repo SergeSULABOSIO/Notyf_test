@@ -50,6 +50,9 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Produit $produit = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Client $client = null;
+
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();
@@ -221,6 +224,18 @@ class Cotation
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
 
         return $this;
     }

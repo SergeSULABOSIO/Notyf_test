@@ -138,6 +138,13 @@ class AssureurCrudController extends AbstractCrudController
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
 
+        $cotations_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_COTATION)
+            ->displayIf(static function (?Assureur $entity) {
+                return count($entity->getCotations()) != 0;
+            })
+            ->setIcon('fas fa-cash-register')
+            ->linkToCrudAction('cross_canal_listerCotation');
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -199,6 +206,9 @@ class AssureurCrudController extends AbstractCrudController
             //cross canal
             ->add(Crud::PAGE_DETAIL, $polices_lister)
             ->add(Crud::PAGE_INDEX, $polices_lister)
+
+            ->add(Crud::PAGE_DETAIL, $cotations_lister)
+            ->add(Crud::PAGE_INDEX, $cotations_lister)
 
 
             //Reorganisation des boutons
@@ -269,5 +279,10 @@ class AssureurCrudController extends AbstractCrudController
     public function cross_canal_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Assureur_listerPolice($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Assureur_listerCotation($context, $adminUrlGenerator));
     }
 }

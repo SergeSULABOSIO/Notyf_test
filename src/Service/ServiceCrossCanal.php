@@ -335,6 +335,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Assureur_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(CotationCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES COTATIONS - [Assureur: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_ASSUREUR . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_ASSUREUR . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Client_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();

@@ -2730,6 +2730,12 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS])) {
+            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES)
                 ->onlyOnIndex();

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PartenaireRepository;
 use Doctrine\DBAL\Types\Types;
@@ -55,6 +57,14 @@ class Partenaire extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: Police::class)]
+    private Collection $police;
+
+    public function __construct()
+    {
+        $this->police = new ArrayCollection();
+    }
 
 
 
@@ -208,6 +218,36 @@ class Partenaire extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolice(): Collection
+    {
+        return $this->police;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->police->contains($police)) {
+            $this->police->add($police);
+            $police->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->police->removeElement($police)) {
+            // set the owning side to null (unless already changed)
+            if ($police->getPartenaire() === $this) {
+                $police->setPartenaire(null);
+            }
+        }
 
         return $this;
     }

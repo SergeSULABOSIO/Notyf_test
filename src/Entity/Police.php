@@ -93,14 +93,6 @@ class Police extends CalculableEntity
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-/* 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Produit $produit = null; */
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Partenaire $partenaire = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reassureurs = null;
@@ -153,6 +145,9 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne(inversedBy: 'police')]
     private ?Produit $produit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'police')]
+    private ?Partenaire $partenaire = null;
     
     
     public function __construct()
@@ -417,18 +412,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getPartenaire(): ?Partenaire
-    {
-        return $this->partenaire;
-    }
-
-    public function setPartenaire(?Partenaire $partenaire): self
-    {
-        $this->partenaire = $partenaire;
-
-        return $this;
-    }
-
     public function __toString()
     {
         return $this->getAssureur() . " / " . $this->getProduit() . " / Réf. Police: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale() . " / Client: " . $this->client;
@@ -653,6 +636,18 @@ class Police extends CalculableEntity
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
 
         return $this;
     }

@@ -908,6 +908,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->onlyOnForms()
+            ->setRequired(false)
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -917,6 +918,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
             ->onlyOnForms()
+            ->setRequired(false)
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -931,6 +933,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->onlyOnForms()
             ->setColumns(6)
+            ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -941,6 +944,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
             ->onlyOnForms()
             ->setColumns(6)
+            ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -2288,6 +2292,12 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_PART])) {
             $tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
                 ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)

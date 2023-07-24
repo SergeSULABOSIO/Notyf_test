@@ -531,6 +531,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CLIENT])) {
             $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
                 ->hideOnForm();

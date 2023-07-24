@@ -68,6 +68,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_POLICE = "police";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
+    public const CROSSED_ENTITY_ASSUREUR = "assureur";
 
     public function __construct(
         private EntityManagerInterface $entityManager
@@ -313,6 +314,21 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES POLICES - [Partenaire: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_PARTENAIRE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_PARTENAIRE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Assureur_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES POLICES - [Assureur: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_ASSUREUR . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_ASSUREUR . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

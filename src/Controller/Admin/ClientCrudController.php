@@ -160,13 +160,20 @@ class ClientCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //cross canal
         $police_lister = Action::new(ServiceCrossCanal::CLIENT_LISTER_POLICES)
             ->displayIf(static function (?Client $entity) {
-                on doit vérifier les polices de ce client avant affichage de cette option
-                return $entity->getPolice() == null;
+                return count($entity->getPolice()) != 0;
             })
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
+
+        $cotation_lister = Action::new(ServiceCrossCanal::CLIENT_LISTER_COTATIONS)
+            ->displayIf(static function (?Client $entity) {
+                return count($entity->getCotations()) != 0;
+            })
+            ->setIcon('fas fa-cash-register')
+            ->linkToCrudAction('cross_canal_listerCotation');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -225,6 +232,13 @@ class ClientCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
+
+            ->add(Crud::PAGE_DETAIL, $police_lister)
+            ->add(Crud::PAGE_INDEX, $police_lister)
+
+            ->add(Crud::PAGE_DETAIL, $cotation_lister)
+            ->add(Crud::PAGE_INDEX, $cotation_lister)
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -289,5 +303,15 @@ class ClientCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Client_listerPolice($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Client_listerCotation($context, $adminUrlGenerator));
     }
 }

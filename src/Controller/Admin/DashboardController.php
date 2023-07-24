@@ -63,15 +63,14 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_FONCTION_AFFICHAGE_UNIQUEMENT = "Pour affichage uniquement";
     public const ACTION_FONCTION_SAISIE_UNIQUEMENT = "Pour saisie uniquement";
 
-    
+
 
     public function __construct(
         private ServicePreferences $servicePreferences,
         private EntityManagerInterface $entityManager,
-        private AdminUrlGenerator $adminUrlGenerator, 
+        private AdminUrlGenerator $adminUrlGenerator,
         private ServiceEntreprise $serviceEntreprise
-        )
-    {
+    ) {
     }
 
     #[Route('/admin', name: 'admin')]
@@ -124,11 +123,11 @@ class DashboardController extends AbstractDashboardController
         $dashboard = Dashboard::new();
         $nomEntreprise = "TBA";
         //Application de la préférence sur l'apparence
-        if($this->serviceEntreprise->getEntreprise() != null){
+        if ($this->serviceEntreprise->getEntreprise() != null) {
             $this->servicePreferences->appliquerPreferenceApparence($dashboard, $this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
             $nomEntreprise = $this->serviceEntreprise->getEntreprise();
         }
-        
+
         return $dashboard
             ->setLocales(['fr'])    //Ne fonctionne pas - je ne sais pourquoi
             ->setTitle($nomEntreprise) //$this->serviceEntreprise->getEntreprise()

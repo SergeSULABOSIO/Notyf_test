@@ -147,11 +147,15 @@ class Police extends CalculableEntity
 
     #[ORM\ManyToOne(inversedBy: 'police')]
     private ?Assureur $assureur = null;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: PaiementCommission::class)]
+    private Collection $paiementCommissions;
     
     
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();
+        $this->paiementCommissions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -647,6 +651,36 @@ class Police extends CalculableEntity
     public function setAssureur(?Assureur $assureur): self
     {
         $this->assureur = $assureur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaiementCommission>
+     */
+    public function getPaiementCommissions(): Collection
+    {
+        return $this->paiementCommissions;
+    }
+
+    public function addPaiementCommission(PaiementCommission $paiementCommission): self
+    {
+        if (!$this->paiementCommissions->contains($paiementCommission)) {
+            $this->paiementCommissions->add($paiementCommission);
+            $paiementCommission->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiementCommission(PaiementCommission $paiementCommission): self
+    {
+        if ($this->paiementCommissions->removeElement($paiementCommission)) {
+            // set the owning side to null (unless already changed)
+            if ($paiementCommission->getPolice() === $this) {
+                $paiementCommission->setPolice(null);
+            }
+        }
 
         return $this;
     }

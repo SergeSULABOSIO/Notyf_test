@@ -31,7 +31,9 @@ use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\CotationCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
+use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Entity\Client;
+use App\Entity\PaiementCommission;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -57,6 +59,8 @@ class ServiceCrossCanal
     public const PISTE_LISTER_CONTACT = "Voire les contacts";
     public const PISTE_LISTER_COTATION = "Voire les cotations";
     public const POLICE_LISTER_PIECE = "Voire les pièces";
+    public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp/Comm";
+    public const POLICE_AJOUTER_POP_COMMISSIONS = "Ajouter une Pdp/Comm";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -66,12 +70,14 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
+    public const CROSSED_ENTITY_POP_COMMISSIONS = "police";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
 
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private ServiceCalculateur $serviceCalculateur
     ) {
     }
 
@@ -134,6 +140,19 @@ class ServiceCrossCanal
             ->setController(DocPieceCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementCommissionCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PDP COMMISSION - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -421,6 +440,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementCommissionCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP COMMISSIONS - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_EtapeCRM_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -515,6 +549,20 @@ class ServiceCrossCanal
             $police->setClient($objet->getClient());
         }
         return $police;
+    }
+
+    public function crossCanal_POPComm_setPolice(PaiementCommission $paiementCommission, AdminUrlGenerator $adminUrlGenerator): PaiementCommission
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
+            //dd($objet);
+            $paiementCommission->setPolice($objet);
+            $paiementCommission->setMontant($objet->calc_revenu_ttc);
+        }
+        return $paiementCommission;
     }
 
     public function crossCanal_Mission_setPiste(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM

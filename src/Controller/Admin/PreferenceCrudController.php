@@ -500,6 +500,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY                    = "Com. sur Front. dûe par";
     public const PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY                       = "Com. locale dûe par";
     public const PREF_PRO_POLICE_PIECES                                     = "Pièces";
+    public const PREF_PRO_POLICE_POP_COMMISSIONS                            = "PDP/Commissions";
     public const PREF_PRO_POLICE_UTILISATEUR                                = "Utilisateur";
     public const PREF_PRO_POLICE_ENTREPRISE                                 = "Entreprise";
     public const PREF_PRO_POLICE_DATE_DE_CREATION                           = "Date de création";
@@ -527,7 +528,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_POLICE_LOCAL_COM                         => 18,
         self::PREF_PRO_POLICE_FRONTIN_COM                       => 19,
         self::PREF_PRO_POLICE_REMARQUE                          => 20,
-        //self::PREF_PRO_POLICE_MONNAIE                           => 21,
+        self::PREF_PRO_POLICE_POP_COMMISSIONS                   => 21,
         self::PREF_PRO_POLICE_CLIENT                            => 22,
         self::PREF_PRO_POLICE_PRODUIT                           => 23,
         self::PREF_PRO_POLICE_PARTENAIRE                        => 24,

@@ -5,10 +5,11 @@ namespace App\Controller\Admin;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\PaiementCommission;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -39,12 +40,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PaiementCommissionCrudController extends AbstractCrudController
 {
+    private ?Crud $crud = null;
+
     public function __construct
     (
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
         )
     {
         
@@ -88,7 +93,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new PaiementCommission(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -99,6 +104,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -111,6 +117,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
     {
         $objet = new PaiementCommission();
         $objet->setDate(new DateTimeImmutable("now"));
+        $objet = $this->serviceCrossCanal->crossCanal_POPComm_setPolice($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -119,6 +126,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new PaiementCommission());
     }
 
@@ -184,6 +192,8 @@ class PaiementCommissionCrudController extends AbstractCrudController
         //Reorganisation des boutons
         ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
         ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+
+        ->remove(Crud::PAGE_INDEX, Action::NEW)
         
         //Application des roles
         ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])

@@ -557,8 +557,11 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->onlyOnDetail();
         }
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS])) {
+            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
             $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
@@ -1624,13 +1627,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->hideOnForm();
+                ->onlyOnIndex();
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE])) {
             $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)

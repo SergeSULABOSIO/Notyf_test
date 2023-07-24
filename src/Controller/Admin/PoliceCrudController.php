@@ -60,14 +60,13 @@ class PoliceCrudController extends AbstractCrudController
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur, 
-        private EntityManagerInterface $entityManager, 
+        private ServiceCalculateur $serviceCalculateur,
+        private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
-        )
-    {
+    ) {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
 
@@ -177,7 +176,7 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setPartenaire(null);
         $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-        
+
 
         return $objet;
     }
@@ -201,6 +200,13 @@ class PoliceCrudController extends AbstractCrudController
         $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiece');
+
+        $paiementCommission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_POP_COMMISSIONS)
+            ->setIcon('fas fa-person-arrow-down-to-line')
+            ->linkToCrudAction('cross_canal_ajouterPOPComm');
+        $paiementCommission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_COMMISSIONS)
+            ->setIcon('fas fa-person-arrow-down-to-line')
+            ->linkToCrudAction('cross_canal_listerPOPComm');
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -269,6 +275,12 @@ class PoliceCrudController extends AbstractCrudController
 
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
+
+            ->add(Crud::PAGE_DETAIL, $paiementCommission_ajouter)
+            ->add(Crud::PAGE_INDEX, $paiementCommission_ajouter)
+
+            ->add(Crud::PAGE_DETAIL, $paiementCommission_lister)
+            ->add(Crud::PAGE_INDEX, $paiementCommission_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -342,5 +354,15 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPiece($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPComm($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPComm($context, $adminUrlGenerator));
     }
 }

@@ -66,6 +66,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
+    public const CROSSED_ENTITY_PRODUIT = "produit";
 
     public function __construct(
         private EntityManagerInterface $entityManager
@@ -287,6 +288,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Produit_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES POLICES - [Produit: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PRODUIT . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PRODUIT . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Client_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -296,6 +312,21 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES COTATIONS - [Cient: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Produit_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(CotationCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES COTATIONS - [Produit: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PRODUIT . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PRODUIT . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

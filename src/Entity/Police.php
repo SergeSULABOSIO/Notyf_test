@@ -93,10 +93,10 @@ class Police extends CalculableEntity
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-
+/* 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Produit $produit = null;
+    private ?Produit $produit = null; */
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
@@ -150,6 +150,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToOne(inversedBy: 'police', cascade: ['persist', 'remove'])]
     private ?Cotation $cotation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'police')]
+    private ?Produit $produit = null;
     
     
     public function __construct()
@@ -414,18 +417,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getProduit(): ?Produit
-    {
-        return $this->produit;
-    }
-
-    public function setProduit(?Produit $produit): self
-    {
-        $this->produit = $produit;
-
-        return $this;
-    }
-
     public function getPartenaire(): ?Partenaire
     {
         return $this->partenaire;
@@ -650,6 +641,18 @@ class Police extends CalculableEntity
     public function setCotation(?Cotation $cotation): self
     {
         $this->cotation = $cotation;
+
+        return $this;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): self
+    {
+        $this->produit = $produit;
 
         return $this;
     }

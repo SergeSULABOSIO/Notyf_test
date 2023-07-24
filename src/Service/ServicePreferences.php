@@ -806,6 +806,12 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
                 ->onlyOnDetail();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_POLICES])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])

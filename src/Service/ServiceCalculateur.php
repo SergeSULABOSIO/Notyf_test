@@ -299,7 +299,7 @@ class ServiceCalculateur
     {
         foreach ($this->polices as $police) {
             foreach ($this->paiements_com as $paiement_com) {
-                if ($paiement_com->getPolice() == $police) {
+                if ($paiement_com->getPolice() === $police) {
                     $obj->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
                     $obj->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
                 }

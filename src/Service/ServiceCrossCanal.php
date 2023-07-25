@@ -32,8 +32,10 @@ use App\Controller\Admin\CotationCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PaiementCommissionCrudController;
+use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Entity\Client;
 use App\Entity\PaiementCommission;
+use App\Entity\PaiementPartenaire;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -59,8 +61,10 @@ class ServiceCrossCanal
     public const PISTE_LISTER_CONTACT = "Voire les contacts";
     public const PISTE_LISTER_COTATION = "Voire les cotations";
     public const POLICE_LISTER_PIECE = "Voire les pièces";
-    public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp/Comm";
-    public const POLICE_AJOUTER_POP_COMMISSIONS = "Ajouter une Pdp/Comm";
+    public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp Comm";
+    public const POLICE_LISTER_POP_PARTENAIRES = "Voir les Pdp Partenaire";
+    public const POLICE_AJOUTER_POP_COMMISSIONS = "Encaisser la Comm";
+    public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -153,6 +157,19 @@ class ServiceCrossCanal
             ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP COMMISSION - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementPartenaireCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PDP PARTENAIRE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -285,7 +302,7 @@ class ServiceCrossCanal
         $url = $adminUrlGenerator
             ->setController(DocPieceCrudController::class)
             ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES PICES - [Cotation: " . $entite . "]")
+            ->set("titre", "LISTE DES PIECES - [Cotation: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][comparison]', '=')
             ->setEntityId(null)
@@ -431,7 +448,7 @@ class ServiceCrossCanal
         $url = $adminUrlGenerator
             ->setController(DocPieceCrudController::class)
             ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES PICES - [Police: " . $entite . "]")
+            ->set("titre", "LISTE DES PIECES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
             ->setEntityId(null)
@@ -447,6 +464,21 @@ class ServiceCrossCanal
             ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP COMMISSIONS - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Police_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementPartenaireCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP PARTENAIRES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
             ->setEntityId(null)
@@ -560,9 +592,24 @@ class ServiceCrossCanal
             //On calcule d'abord les champs calculables
             $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
             $paiementCommission->setPolice($objet);
-            $paiementCommission->setMontant($objet->calc_revenu_ttc);
+            $paiementCommission->setMontant($objet->calc_revenu_ttc_solde_restant_du);//calc_revenu_ttc_solde_restant_du
         }
         return $paiementCommission;
+    }
+
+    public function crossCanal_POPRetroComm_setPolice(PaiementPartenaire $paiementPartenaire, AdminUrlGenerator $adminUrlGenerator): PaiementPartenaire
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+            //On calcule d'abord les champs calculables
+            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
+            $paiementPartenaire->setPolice($objet);
+            $paiementPartenaire->setPartenaire($objet->getPartenaire());
+            $paiementPartenaire->setMontant($objet->calc_retrocom_solde);
+        }
+        return $paiementPartenaire;
     }
 
     public function crossCanal_Mission_setPiste(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM

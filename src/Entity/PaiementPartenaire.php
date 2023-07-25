@@ -31,15 +31,11 @@ class PaiementPartenaire
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Partenaire $partenaire = null;
-
+/* 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Police $police = null;
-
+ */
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -51,6 +47,12 @@ class PaiementPartenaire
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'paiementPartenaires')]
+    private ?Partenaire $partenaire = null;
+
+    #[ORM\ManyToOne(inversedBy: 'paiementPartenaires')]
+    private ?Police $police = null;
 
     public function __construct()
     {
@@ -115,30 +117,6 @@ class PaiementPartenaire
         return ($this->montant/100) . " / Facture: " . $this->refnotededebit;
     }
 
-    public function getPartenaire(): ?Partenaire
-    {
-        return $this->partenaire;
-    }
-
-    public function setPartenaire(?Partenaire $partenaire): self
-    {
-        $this->partenaire = $partenaire;
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -195,6 +173,30 @@ class PaiementPartenaire
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\TaxeRepository;
 use Doctrine\DBAL\Types\Types;
@@ -47,6 +49,14 @@ class Taxe extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'taxe', targetEntity: PaiementTaxe::class)]
+    private Collection $paiementTaxes;
+
+    public function __construct()
+    {
+        $this->paiementTaxes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -162,6 +172,36 @@ class Taxe extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaiementTaxe>
+     */
+    public function getPaiementTaxes(): Collection
+    {
+        return $this->paiementTaxes;
+    }
+
+    public function addPaiementTax(PaiementTaxe $paiementTax): self
+    {
+        if (!$this->paiementTaxes->contains($paiementTax)) {
+            $this->paiementTaxes->add($paiementTax);
+            $paiementTax->setTaxe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiementTax(PaiementTaxe $paiementTax): self
+    {
+        if ($this->paiementTaxes->removeElement($paiementTax)) {
+            // set the owning side to null (unless already changed)
+            if ($paiementTax->getTaxe() === $this) {
+                $paiementTax->setTaxe(null);
+            }
+        }
 
         return $this;
     }

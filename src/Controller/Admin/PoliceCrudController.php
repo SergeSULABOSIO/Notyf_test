@@ -10,6 +10,7 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -66,7 +67,8 @@ class PoliceCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
-        private AdminUrlGenerator $adminUrlGenerator
+        private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceTaxes $serviceTaxes
     ) {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
@@ -229,6 +231,20 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_listerPOPRetroComm');
 
+        
+        $paiementTaxeCourtier_ajouter = Action::new("Payer " . $this->serviceTaxes->getNomTaxeCourtier())
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_courtier_solde != 0 || $entity->calc_taxes_assureurs_solde != 0) && $entity->calc_revenu_ttc_encaisse != 0;
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_ajouterPOPTaxe');
+        $paiementTaxeCourtier_lister = Action::new("Voir les Pdp des " . $this->serviceTaxes->getNomTaxeCourtier())
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_courtier_payees != 0 || $entity->calc_taxes_assureurs_payees != 0);
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_listerPOPTaxe');
+
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -297,11 +313,15 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $paiementCommission_ajouter)
             ->add(Crud::PAGE_DETAIL, $paiementPartenaire_ajouter)
             ->add(Crud::PAGE_INDEX, $paiementPartenaire_ajouter)
+            ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_ajouter)
+            ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_ajouter)
 
             ->add(Crud::PAGE_DETAIL, $paiementCommission_lister)
             ->add(Crud::PAGE_INDEX, $paiementCommission_lister)
             ->add(Crud::PAGE_DETAIL, $paiementPartenaire_lister)
             ->add(Crud::PAGE_INDEX, $paiementPartenaire_lister)
+            ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
+            ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister)
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
 
@@ -397,5 +417,15 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPRetroComm($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator));
     }
 }

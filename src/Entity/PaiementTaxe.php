@@ -34,15 +34,7 @@ class PaiementTaxe
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Taxe $taxe = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Police $police = null;
-
+    
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -54,6 +46,12 @@ class PaiementTaxe
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
+    private ?Taxe $taxe = null;
+
+    #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
+    private ?Police $police = null;
 
     public function __construct()
     {
@@ -130,30 +128,6 @@ class PaiementTaxe
         return $this->montant . " / Facture: " . $this->refnotededebit;
     }
 
-    public function getTaxe(): ?Taxe
-    {
-        return $this->taxe;
-    }
-
-    public function setTaxe(?Taxe $taxe): self
-    {
-        $this->taxe = $taxe;
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -210,6 +184,30 @@ class PaiementTaxe
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getTaxe(): ?Taxe
+    {
+        return $this->taxe;
+    }
+
+    public function setTaxe(?Taxe $taxe): self
+    {
+        $this->taxe = $taxe;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

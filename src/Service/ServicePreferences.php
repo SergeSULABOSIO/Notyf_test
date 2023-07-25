@@ -569,6 +569,12 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES)
                 ->onlyOnDetail();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES])) {
+            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
             $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
                 ->hideOnForm();
@@ -2916,7 +2922,7 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures])) {
             $tabAttributs[] = ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures)
-                ->hideOnForm();
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
@@ -2950,7 +2956,7 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures])) {
             $tabAttributs[] = ArrayField::new('calc_retrocom_payees_tab_factures', PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures)
-                ->hideOnForm();
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_solde])) {
             $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)

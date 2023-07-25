@@ -33,9 +33,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
+use App\Controller\Admin\PaiementTaxeCrudController;
 use App\Entity\Client;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
+use App\Entity\PaiementTaxe;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -63,8 +65,10 @@ class ServiceCrossCanal
     public const POLICE_LISTER_PIECE = "Voire les pièces";
     public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp Comm";
     public const POLICE_LISTER_POP_PARTENAIRES = "Voir les Pdp Partenaire";
+    public const POLICE_LISTER_POP_TAXES = "Voir les Pdp Taxe";
     public const POLICE_AJOUTER_POP_COMMISSIONS = "Encaisser la Comm";
     public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
+    public const POLICE_AJOUTER_POP_TAXES = "Payer Taxe";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -170,6 +174,19 @@ class ServiceCrossCanal
             ->setController(PaiementPartenaireCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP PARTENAIRE - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementTaxeCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PDP TAXE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -487,6 +504,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementTaxeCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP TAXE - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -610,6 +642,20 @@ class ServiceCrossCanal
             $paiementCommission->setMontant($objet->calc_revenu_ttc_solde_restant_du);//calc_revenu_ttc_solde_restant_du
         }
         return $paiementCommission;
+    }
+
+    public function crossCanal_POPTaxe_setPolice(PaiementTaxe $paiementTaxe, AdminUrlGenerator $adminUrlGenerator): PaiementTaxe
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramID != null) {
+            $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+            //On calcule d'abord les champs calculables
+            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
+            $paiementTaxe->setPolice($objet);
+            $paiementTaxe->setMontant(0);//calc_revenu_ttc_solde_restant_du
+        }
+        return $paiementTaxe;
     }
 
     public function crossCanal_POPRetroComm_setPolice(PaiementPartenaire $paiementPartenaire, AdminUrlGenerator $adminUrlGenerator): PaiementPartenaire

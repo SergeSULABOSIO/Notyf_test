@@ -153,6 +153,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: PaiementPartenaire::class)]
     private Collection $paiementPartenaires;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: PaiementTaxe::class)]
+    private Collection $paiementTaxes;
     
     
     public function __construct()
@@ -160,6 +163,7 @@ class Police extends CalculableEntity
         $this->docPieces = new ArrayCollection();
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
+        $this->paiementTaxes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -713,6 +717,36 @@ class Police extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($paiementPartenaire->getPolice() === $this) {
                 $paiementPartenaire->setPolice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaiementTaxe>
+     */
+    public function getPaiementTaxes(): Collection
+    {
+        return $this->paiementTaxes;
+    }
+
+    public function addPaiementTax(PaiementTaxe $paiementTax): self
+    {
+        if (!$this->paiementTaxes->contains($paiementTax)) {
+            $this->paiementTaxes->add($paiementTax);
+            $paiementTax->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiementTax(PaiementTaxe $paiementTax): self
+    {
+        if ($this->paiementTaxes->removeElement($paiementTax)) {
+            // set the owning side to null (unless already changed)
+            if ($paiementTax->getPolice() === $this) {
+                $paiementTax->setPolice(null);
             }
         }
 

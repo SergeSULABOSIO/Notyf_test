@@ -5,10 +5,11 @@ namespace App\Controller\Admin;
 use DateTimeImmutable;
 use App\Entity\PaiementTaxe;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -40,12 +41,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class PaiementTaxeCrudController extends AbstractCrudController
 {
 
+    private ?Crud $crud = null;
+
     public function __construct
     (
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
         private ServiceSuppression $serviceSuppression,
-        private ServicePreferences $servicePreferences        
+        private ServicePreferences $servicePreferences ,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator       
     )
     {
         
@@ -60,7 +65,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new PaiementTaxe(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -72,6 +77,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
+        return $crud;
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -114,6 +120,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
     {
         $objet = new PaiementTaxe();
         $objet->setDate(new DateTimeImmutable("now"));
+        $objet = $this->serviceCrossCanal->crossCanal_POPTaxe_setPolice($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -122,6 +129,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new PaiementTaxe());
     }
 

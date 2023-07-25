@@ -118,7 +118,6 @@ class PartenaireCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PARTENAIRE);
-
         return $this->servicePreferences->getChamps(new Partenaire());
     }
 
@@ -131,6 +130,13 @@ class PartenaireCrudController extends AbstractCrudController
             })
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
+
+        $paiementPartenaire_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_PARTENAIRES)
+            ->displayIf(static function (?Partenaire $entity) {
+                return count($entity->getPaiementPartenaires()) != 0;
+            })
+            ->setIcon('fas fa-person-arrow-up-from-line')
+            ->linkToCrudAction('cross_canal_listerPOPRetrocom');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -193,8 +199,10 @@ class PartenaireCrudController extends AbstractCrudController
             //cross canal
             ->add(Crud::PAGE_DETAIL, $polices_lister)
             ->add(Crud::PAGE_INDEX, $polices_lister)
+            ->add(Crud::PAGE_DETAIL, $paiementPartenaire_lister)
+            ->add(Crud::PAGE_INDEX, $paiementPartenaire_lister)
 
-            
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -263,5 +271,10 @@ class PartenaireCrudController extends AbstractCrudController
     public function cross_canal_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Partenaire_listerPolice($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPOPRetrocom(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Partenaire_listerPOPRetroComm($context, $adminUrlGenerator));
     }
 }

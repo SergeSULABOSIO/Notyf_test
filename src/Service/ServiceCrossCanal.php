@@ -487,6 +487,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementPartenaireCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP PARTENAIRES - [Partenaire: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PARTENAIRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PARTENAIRE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_EtapeCRM_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();

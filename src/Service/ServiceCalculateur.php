@@ -151,7 +151,7 @@ class ServiceCalculateur
         }
     }
 
-    public function updatePoliceCalculableFileds(?CalculableEntity $obj)
+    public function updatePoliceCalculableFileds(?Police $obj)
     {
         $this->calculerPolices(
             [
@@ -229,7 +229,7 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
-    public function updateSinistreCalculableFileds(?CalculableEntity $obj)
+    public function updateSinistreCalculableFileds(?Sinistre $obj)
     {
         $this->calculerPolices(
             [

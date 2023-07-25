@@ -340,7 +340,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PRODUCTION - CLIENT
     public const PREF_PRO_CLIENT_ID                         = "Id";
-    public const PREF_PRO_CLIENT_NOM                        = "Nom";
+    public const PREF_PRO_CLIENT_NOM                        = "Nom / Raison sociale";
     public const PREF_PRO_CLIENT_PERSONNE_MORALE            = "Société";
     public const PREF_PRO_CLIENT_ADRESSE                    = "Adresse";
     public const PREF_PRO_CLIENT_COTATIONS                  = "Cotations";

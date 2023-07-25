@@ -2359,6 +2359,18 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CLIENT_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS])) {
+            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
+                ->onlyOnDetail();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE)
                 ->hideOnForm();
@@ -2396,18 +2408,6 @@ class ServicePreferences
             $tabAttributs[] = ChoiceField::new('secteur', PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR)
                 ->hideOnForm()
                 ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS])) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CLIENT_UTILISATEUR)

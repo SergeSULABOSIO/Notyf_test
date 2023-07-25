@@ -557,8 +557,8 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+            //On calcule d'abord les champs calculables
             $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
-            //dd($objet);
             $paiementCommission->setPolice($objet);
             $paiementCommission->setMontant($objet->calc_revenu_ttc);
         }

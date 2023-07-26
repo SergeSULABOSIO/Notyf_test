@@ -39,10 +39,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class TaxeCrudController extends AbstractCrudController
 {
+    public const TAXE_COURTIER = 1;
+    public const TAXE_ASSUREUR = 0;
+
     public const TAB_TAXE_PAYABLE_PAR_COURTIER = [
         'Non' => 0,
         'Oui' => 1
     ];
+    
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,

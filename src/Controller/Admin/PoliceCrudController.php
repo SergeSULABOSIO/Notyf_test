@@ -231,20 +231,32 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_listerPOPRetroComm');
 
-        
-        $paiementTaxeCourtier_ajouter = Action::new("Payer " . $this->serviceTaxes->getNomTaxeCourtier())
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_courtier_solde != 0 || $entity->calc_taxes_assureurs_solde != 0) && $entity->calc_revenu_ttc_encaisse != 0;
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_ajouterPOPTaxe');
-        $paiementTaxeCourtier_lister = Action::new("Voir les Pdp des " . $this->serviceTaxes->getNomTaxeCourtier())
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_courtier_payees != 0 || $entity->calc_taxes_assureurs_payees != 0);
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_listerPOPTaxe');
 
+
+        $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
+
+        $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_courtier_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_ajouterPOPTaxeCourtier');
+
+        $paiementTaxeCourtier_lister = Action::new("Voir les Pdp " . $txtTaxeCourtier)
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_courtier_payees != 0);
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_listerPOPTaxeCourtier');
+
+        if ($this->serviceTaxes->getTaxe(true) != null) {
+            $actions
+                ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_ajouter)
+                ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_ajouter)
+
+                ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
+                ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister);
+        }
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -257,7 +269,7 @@ class PoliceCrudController extends AbstractCrudController
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
 
-        return $actions
+        $actions
             //Sur la page Index - Selection
             ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
@@ -313,15 +325,10 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $paiementCommission_ajouter)
             ->add(Crud::PAGE_DETAIL, $paiementPartenaire_ajouter)
             ->add(Crud::PAGE_INDEX, $paiementPartenaire_ajouter)
-            ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_ajouter)
-            ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_ajouter)
-
             ->add(Crud::PAGE_DETAIL, $paiementCommission_lister)
             ->add(Crud::PAGE_INDEX, $paiementCommission_lister)
             ->add(Crud::PAGE_DETAIL, $paiementPartenaire_lister)
             ->add(Crud::PAGE_INDEX, $paiementPartenaire_lister)
-            ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
-            ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister)
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
 
@@ -341,6 +348,10 @@ class PoliceCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
+
+
+
+        return $actions;
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -419,13 +430,13 @@ class PoliceCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPRetroComm($context, $adminUrlGenerator));
     }
 
-    public function cross_canal_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function cross_canal_ajouterPOPTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(true)));
     }
 
-    public function cross_canal_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function cross_canal_listerPOPTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(true)));
     }
 }

@@ -17,7 +17,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class ServiceTaxes
 {
-    private ?Utilisateur $utilisateur = null;
+    public const TAXE_COURTIER = 0;
+    public const TAXE_ASSUREUR = 1;
+
     private ?Entreprise $entreprise = null;
     private $taxes = [];
 
@@ -27,48 +29,38 @@ class ServiceTaxes
         private Security $security
     ) {
         //Chargement de l'utilisateur et de l'entreprise
-        $this->utilisateur = $this->serviceEntreprise->getUtilisateur();
         $this->entreprise = $this->serviceEntreprise->getEntreprise();
 
-        //Chargement des monnaies
-        $this->chargerTaxes();
-    }
-
-    private function chargerTaxes()
-    {
+        //Chargement des taxes
         $this->taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
             ['entreprise' => $this->entreprise]
         );
     }
 
-    private function getTaxe(bool $payableParCourtier): Taxe
+
+    public function getTaxe(bool $payableParCourtier)
     {
         foreach ($this->taxes as $taxe) {
             //dd($fonction);
-            if($taxe->isPayableparcourtier() == $payableParCourtier){
+            if ($taxe->isPayableparcourtier() == $payableParCourtier) {
                 return $taxe;
             }
         }
         return null;
     }
 
-    public function getTaxe_Courtier()
-    {
-        return $this->getTaxe(true);
-    }
-
-    public function getTaxe_Assureur()
-    {
-        return $this->getTaxe(false);
-    }
-
     public function getNomTaxeCourtier()
     {
-        return $this->getTaxe_Courtier()->getNom();
+        $taxe = $this->getTaxe(true);
+        $txt = $taxe != null ? strtolower($taxe->getNom()) . " (" . ($taxe->getTaux()*100) . "%)" : "Txt Courtier";
+        return $txt;
     }
 
     public function getNomTaxeAssureur()
     {
-        return $this->getTaxe_Assureur()->getNom();
+        /** @var Taxe */
+        $taxe = $this->getTaxe(false);
+        $txt = $taxe != null ? strtolower($taxe->getNom()) . " (" . ($taxe->getTaux()*100) . "%)" : "Txt Assureur";
+        return $txt;
     }
 }

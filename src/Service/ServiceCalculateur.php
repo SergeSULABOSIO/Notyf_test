@@ -392,7 +392,7 @@ class ServiceCalculateur
         $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
         $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
         foreach ($this->paiements_taxes as $paiement_taxe) {
-            if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() == $police) {
+            if ($paiement_taxe->getTaxe() === $taxe && $paiement_taxe->getPolice() === $police) {
                 $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
                 $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
             }

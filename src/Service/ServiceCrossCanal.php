@@ -38,10 +38,12 @@ use App\Entity\Client;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
+use App\Entity\Taxe;
+use DateTimeImmutable;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-
+use Symfony\Component\Validator\Constraints\Date;
 
 class ServiceCrossCanal
 {
@@ -82,6 +84,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
+    public const CROSSED_ENTITY_TAXE = "taxe";
 
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -180,7 +183,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Police_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Police_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, Taxe $taxe)
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
@@ -188,6 +191,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP TAXE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -504,15 +508,17 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Police_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Police_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, Taxe $taxe)
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PaiementTaxeCrudController::class)
             ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES PDP TAXE - [Police: " . $entite . "]")
+            ->set("titre", "LISTE DES PDP TAXE - [Police: " . $entite . "] & [Taxe: " . $taxe . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][value]', $taxe->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 
@@ -646,14 +652,20 @@ class ServiceCrossCanal
 
     public function crossCanal_POPTaxe_setPolice(PaiementTaxe $paiementTaxe, AdminUrlGenerator $adminUrlGenerator): PaiementTaxe
     {
-        $objet = null;
-        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
-        if ($paramID != null) {
-            $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+        $police = null;
+        $paramPoliceID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        $paramTaxeID = $adminUrlGenerator->get(self::CROSSED_ENTITY_TAXE);
+        if ($paramPoliceID != null && $paramTaxeID != null) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($paramPoliceID);
+            /** @var Taxe */
+            $taxe = $this->entityManager->getRepository(Taxe::class)->find($paramTaxeID);
             //On calcule d'abord les champs calculables
-            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
-            $paiementTaxe->setPolice($objet);
-            $paiementTaxe->setMontant(0);//calc_revenu_ttc_solde_restant_du
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            $paiementTaxe->setPolice($police);
+            $paiementTaxe->setTaxe($taxe);
+            $paiementTaxe->setExercice(Date("Y"));
+            $paiementTaxe->setMontant($police->calc_taxes_courtier_solde);//calc_revenu_ttc_solde_restant_du
         }
         return $paiementTaxe;
     }

@@ -826,8 +826,9 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //SINISTRE - ETAPE
     public const PREF_SIN_ETAPE_ID                      = "Id";
-    public const PREF_SIN_ETAPE_NOM                     = "Nom";
+    public const PREF_SIN_ETAPE_NOM                     = "Intitulé de l'étape";
     public const PREF_SIN_ETAPE_DESCRIPTION             = "Description";
+    public const PREF_SIN_ETAPE_SINISTRES               = "Sinistres";
     public const PREF_SIN_ETAPE_INDICE                  = "Indice";
     public const PREF_SIN_ETAPE_UTILISATEUR             = "Utilisateur";
     public const PREF_SIN_ETAPE_ENTREPRISE              = "Entreprise";
@@ -837,11 +838,12 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_ETAPE_ID                     => 0,
         self::PREF_SIN_ETAPE_NOM                    => 1,
         self::PREF_SIN_ETAPE_DESCRIPTION            => 2,
-        self::PREF_SIN_ETAPE_INDICE                 => 3,
-        self::PREF_SIN_ETAPE_UTILISATEUR            => 4,
-        self::PREF_SIN_ETAPE_ENTREPRISE             => 5,
-        self::PREF_SIN_ETAPE_DATE_DE_CREATION       => 6,
-        self::PREF_SIN_ETAPE_DERNIRE_MODIFICATION   => 7
+        self::PREF_SIN_ETAPE_SINISTRES              => 3,
+        self::PREF_SIN_ETAPE_INDICE                 => 4,
+        self::PREF_SIN_ETAPE_UTILISATEUR            => 5,
+        self::PREF_SIN_ETAPE_ENTREPRISE             => 6,
+        self::PREF_SIN_ETAPE_DATE_DE_CREATION       => 7,
+        self::PREF_SIN_ETAPE_DERNIRE_MODIFICATION   => 8
     ];
     //SINISTRE - EXPERT
     public const PREF_SIN_EXPERT_ID                     = "Id";

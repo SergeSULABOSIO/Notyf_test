@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EtapeSinistreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,14 @@ class EtapeSinistre
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'etape', targetEntity: Sinistre::class)]
+    private Collection $sinistres;
+
+    public function __construct()
+    {
+        $this->sinistres = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -126,6 +136,36 @@ class EtapeSinistre
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sinistre>
+     */
+    public function getSinistres(): Collection
+    {
+        return $this->sinistres;
+    }
+
+    public function addSinistre(Sinistre $sinistre): self
+    {
+        if (!$this->sinistres->contains($sinistre)) {
+            $this->sinistres->add($sinistre);
+            $sinistre->setEtape($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSinistre(Sinistre $sinistre): self
+    {
+        if ($this->sinistres->removeElement($sinistre)) {
+            // set the owning side to null (unless already changed)
+            if ($sinistre->getEtape() === $this) {
+                $sinistre->setEtape(null);
+            }
+        }
 
         return $this;
     }

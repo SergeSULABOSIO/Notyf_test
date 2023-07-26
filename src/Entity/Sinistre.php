@@ -48,10 +48,6 @@ class Sinistre extends CalculableEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?EtapeSinistre $etape = null;
-
     #[ORM\Column]
     private ?float $montantPaye = null;
 
@@ -72,6 +68,9 @@ class Sinistre extends CalculableEntity
 
     #[ORM\ManyToOne(inversedBy: 'sinistres')]
     private ?Police $police = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sinistres')]
+    private ?EtapeSinistre $etape = null;
 
     public function __construct()
     {
@@ -233,18 +232,6 @@ class Sinistre extends CalculableEntity
         return $this;
     }
 
-    public function getEtape(): ?EtapeSinistre
-    {
-        return $this->etape;
-    }
-
-    public function setEtape(?EtapeSinistre $etape): self
-    {
-        $this->etape = $etape;
-
-        return $this;
-    }
-
     public function getMontantPaye(): ?float
     {
         return $this->montantPaye;
@@ -360,6 +347,18 @@ class Sinistre extends CalculableEntity
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    public function getEtape(): ?EtapeSinistre
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(?EtapeSinistre $etape): self
+    {
+        $this->etape = $etape;
 
         return $this;
     }

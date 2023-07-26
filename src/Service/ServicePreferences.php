@@ -1859,6 +1859,12 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES])) {
+            $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION])) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
                 ->hideOnForm();

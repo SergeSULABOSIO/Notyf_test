@@ -234,6 +234,7 @@ class PoliceCrudController extends AbstractCrudController
 
 
         $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
+        $txtTaxeAssureur = $this->serviceTaxes->getTaxe(false) != null ? $this->serviceTaxes->getNomTaxeAssureur() : "";
 
         $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
             ->displayIf(static function (?Police $entity) {
@@ -242,12 +243,26 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-person-chalkboard')
             ->linkToCrudAction('cross_canal_ajouterPOPTaxeCourtier');
 
+        $paiementTaxeAssureur_ajouter = Action::new("Payer " . $txtTaxeAssureur)
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_assureurs_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_ajouterPOPTaxeAssureur');
+
         $paiementTaxeCourtier_lister = Action::new("Voir les Pdp " . $txtTaxeCourtier)
             ->displayIf(static function (?Police $entity) {
                 return ($entity->calc_taxes_courtier_payees != 0);
             })
             ->setIcon('fas fa-person-chalkboard')
             ->linkToCrudAction('cross_canal_listerPOPTaxeCourtier');
+
+        $paiementTaxeAssureur_lister = Action::new("Voir les Pdp " . $txtTaxeAssureur)
+            ->displayIf(static function (?Police $entity) {
+                return ($entity->calc_taxes_assureurs_payees != 0);
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_listerPOPTaxeAssureur');
 
         if ($this->serviceTaxes->getTaxe(true) != null) {
             $actions
@@ -256,6 +271,15 @@ class PoliceCrudController extends AbstractCrudController
 
                 ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
                 ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister);
+        }
+
+        if ($this->serviceTaxes->getTaxe(false) != null) {
+            $actions
+                ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_ajouter)
+                ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_ajouter)
+
+                ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_lister)
+                ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_lister);
         }
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -438,5 +462,15 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerPOPTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(true)));
+    }
+
+    public function cross_canal_ajouterPOPTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(false)));
+    }
+
+    public function cross_canal_listerPOPTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(false)));
     }
 }

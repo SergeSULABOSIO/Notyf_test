@@ -665,7 +665,11 @@ class ServiceCrossCanal
             $paiementTaxe->setPolice($police);
             $paiementTaxe->setTaxe($taxe);
             $paiementTaxe->setExercice(Date("Y"));
-            $paiementTaxe->setMontant($police->calc_taxes_courtier_solde);//calc_revenu_ttc_solde_restant_du
+            if($taxe->isPayableparcourtier() == true){
+                $paiementTaxe->setMontant($police->calc_taxes_courtier_solde);
+            }else{
+                $paiementTaxe->setMontant($police->calc_taxes_assureurs_solde);
+            }
         }
         return $paiementTaxe;
     }

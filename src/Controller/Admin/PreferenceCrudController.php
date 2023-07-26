@@ -776,7 +776,7 @@ class PreferenceCrudController extends AbstractCrudController
     //FINANCE - PAIEMENTS TAXES
     public const PREF_FIN_PAIEMENTS_TAXE_ID                     = "Id";
     public const PREF_FIN_PAIEMENTS_TAXE_DATE                   = "Date";
-    public const PREF_FIN_PAIEMENTS_TAXE_TAXE                   = "Taxe";
+    public const PREF_FIN_PAIEMENTS_TAXE_TAXE                   = "Taxe concernée";
     public const PREF_FIN_PAIEMENTS_TAXE_POLICE                 = "Police d'assurance";
     //public const PREF_FIN_PAIEMENTS_TAXE_MONNAIE                = "Monnaie";
     public const PREF_FIN_PAIEMENTS_TAXE_MONTANT                = "Montant";

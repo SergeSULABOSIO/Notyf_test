@@ -231,11 +231,8 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_listerPOPRetroComm');
 
-
-
         $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
         $txtTaxeAssureur = $this->serviceTaxes->getTaxe(false) != null ? $this->serviceTaxes->getNomTaxeAssureur() : "";
-
         $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
             ->displayIf(static function (?Police $entity) {
                 return ($entity->calc_taxes_courtier_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
@@ -281,6 +278,26 @@ class PoliceCrudController extends AbstractCrudController
                 ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_lister)
                 ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_lister);
         }
+
+        //Sinistres
+        $sinistre_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_SINISTRE)
+            ->setIcon('fas fa-bell')
+            ->linkToCrudAction('cross_canal_ajouterSinistre');
+
+        $sinistre_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_SINISTRES)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getSinistres()) != 0;
+            })
+            ->setIcon('fas fa-bell')
+            ->linkToCrudAction('cross_canal_listerSinistre');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $sinistre_lister)
+            ->add(Crud::PAGE_INDEX, $sinistre_lister)
+
+            ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
+            ->add(Crud::PAGE_INDEX, $sinistre_ajouter);
+
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -472,5 +489,15 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerPOPTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(false)));
+    }
+
+    public function cross_canal_ajouterSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterSinistre($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerSinistre($context, $adminUrlGenerator));
     }
 }

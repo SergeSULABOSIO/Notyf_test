@@ -41,10 +41,6 @@ class Sinistre extends CalculableEntity
     #[ORM\ManyToMany(targetEntity: Expert::class, inversedBy: 'sinistres')]
     private Collection $experts;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Police $police = null;
-
     #[ORM\Column]
     private ?float $cout = null;
 
@@ -73,6 +69,9 @@ class Sinistre extends CalculableEntity
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numero = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sinistres')]
+    private ?Police $police = null;
 
     public function __construct()
     {
@@ -210,18 +209,6 @@ class Sinistre extends CalculableEntity
         return $this;
     }
 
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
-    }
-
     public function getCout(): ?float
     {
         return $this->cout;
@@ -246,18 +233,6 @@ class Sinistre extends CalculableEntity
         return $this;
     }
 
-    public function getDateIncident(): ?\DateTimeInterface
-    {
-        return $this->dateIncident;
-    }
-
-    public function setDateIncident(\DateTimeInterface $dateIncident): self
-    {
-        $this->dateIncident = $dateIncident;
-
-        return $this;
-    }
-
     public function getEtape(): ?EtapeSinistre
     {
         return $this->etape;
@@ -278,18 +253,6 @@ class Sinistre extends CalculableEntity
     public function setMontantPaye(float $montantPaye): self
     {
         $this->montantPaye = $montantPaye;
-
-        return $this;
-    }
-
-    public function getDatePayement(): ?\DateTimeInterface
-    {
-        return $this->datePayement;
-    }
-
-    public function setDatePayement(?\DateTimeInterface $datePayement): self
-    {
-        $this->datePayement = $datePayement;
 
         return $this;
     }
@@ -385,6 +348,18 @@ class Sinistre extends CalculableEntity
     public function setNumero(?string $numero): self
     {
         $this->numero = $numero;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

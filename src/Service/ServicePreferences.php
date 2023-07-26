@@ -551,6 +551,12 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_SINISTRES])) {
+            $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->onlyOnIndex();
@@ -1364,7 +1370,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->setColumns(4)
-            ->onlyOnForms();
+            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1389,10 +1395,10 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->setColumns(2)
-            ->onlyOnForms();
+            ->onlyWhenUpdating();
         $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
             ->setColumns(2)
-            ->onlyOnForms();
+            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1411,7 +1417,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->setColumns(12)
-            ->onlyOnForms();
+            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1420,7 +1426,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->setColumns(12)
-            ->onlyOnForms();
+            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('commentaire', PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1429,8 +1435,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->setColumns(12)
-            ->onlyOnForms();
-
+            ->onlyWhenUpdating();
         return $tabAttributs;
     }
 
@@ -2995,8 +3000,6 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures])) {
-            $tabAttributs[] = AssociationField::new('calc_taxes_courtier_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "PdP", PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures))
-                ->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "PdP", PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures))
                 ->onlyOnDetail();
         }
@@ -3038,8 +3041,6 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures])) {
-            $tabAttributs[] = AssociationField::new('calc_taxes_assureurs_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "PdP", PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures))
-                ->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "PdP", PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures))
                 ->onlyOnDetail();
         }

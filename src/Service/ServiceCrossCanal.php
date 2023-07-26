@@ -2,48 +2,50 @@
 
 namespace App\Service;
 
+use App\Entity\Taxe;
 use NumberFormatter;
 use App\Entity\Piste;
+use App\Entity\Client;
 use App\Entity\Police;
+use DateTimeImmutable;
 use App\Entity\Contact;
 use App\Entity\Monnaie;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
+use App\Entity\Sinistre;
 use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
+use App\Entity\PaiementTaxe;
 use Doctrine\ORM\QueryBuilder;
+use App\Entity\PaiementCommission;
+use App\Entity\PaiementPartenaire;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\ContactCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\EtapeCrmCrudController;
+use App\Controller\Admin\SinistreCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
-use App\Controller\Admin\ClientCrudController;
-use App\Controller\Admin\CotationCrudController;
+use Symfony\Component\Validator\Constraints\Date;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
+use App\Controller\Admin\PaiementTaxeCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
-use App\Controller\Admin\PaiementTaxeCrudController;
-use App\Entity\Client;
-use App\Entity\PaiementCommission;
-use App\Entity\PaiementPartenaire;
-use App\Entity\PaiementTaxe;
-use App\Entity\Taxe;
-use DateTimeImmutable;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\Validator\Constraints\Date;
 
 class ServiceCrossCanal
 {
@@ -68,9 +70,11 @@ class ServiceCrossCanal
     public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp Comm";
     public const POLICE_LISTER_POP_PARTENAIRES = "Voir les Pdp Partenaire";
     public const POLICE_LISTER_POP_TAXES = "Voir les Pdp Taxe";
+    public const POLICE_LISTER_SINISTRES = "Voir les sinistres";
     public const POLICE_AJOUTER_POP_COMMISSIONS = "Encaisser la Comm";
     public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
     public const POLICE_AJOUTER_POP_TAXES = "Payer Taxe";
+    public const POLICE_AJOUTER_SINISTRE = "Ajouter un sinistre";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -192,6 +196,20 @@ class ServiceCrossCanal
             ->set("titre", "NOUVELLE PDP TAXE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVEAU SINISTRE - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -508,6 +526,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES SINISTRES - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, Taxe $taxe)
     {
         $entite = $context->getEntity()->getInstance();
@@ -673,6 +706,27 @@ class ServiceCrossCanal
         }
         return $paiementTaxe;
     }
+
+    public function crossCanal_Sinistre_setPolice(Sinistre $sinistre, AdminUrlGenerator $adminUrlGenerator): Sinistre
+    {
+        $police = null;
+        $paramPoliceID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        //$paramTaxeID = $adminUrlGenerator->get(self::CROSSED_ENTITY_TAXE);
+        if ($paramPoliceID != null) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($paramPoliceID);
+            //On calcule d'abord les champs calculables
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            $sinistre->setPolice($police);
+            $sinistre->setOccuredAt(new \DateTimeImmutable("now"));
+            $sinistre->setCout(0);
+            $sinistre->setMontantPaye(0);
+            $sinistre->setTitre("SIN" . Date("dmYHis") . " / " . $police);
+            $sinistre->setNumero("TMPSIN" . Date("dmYHis"));
+        }
+        return $sinistre;
+    }
+
 
     public function crossCanal_POPRetroComm_setPolice(PaiementPartenaire $paiementPartenaire, AdminUrlGenerator $adminUrlGenerator): PaiementPartenaire
     {

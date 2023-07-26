@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use DateTimeImmutable;
 use App\Entity\Sinistre;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
@@ -37,19 +38,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SinistreCrudController extends AbstractCrudController
 {
+    private ?Crud $crud = null;
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur, 
-        private EntityManagerInterface $entityManager, 
+        private ServiceCalculateur $serviceCalculateur,
+        private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences        
-        )
-    {
-        
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {
     }
 
     public static function getEntityFqcn(): string
@@ -64,19 +67,17 @@ class SinistreCrudController extends AbstractCrudController
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
-            ->Where('entity.utilisateur = :user')
-            ->setParameter('user', $this->getUser())
-            ;
+                ->Where('entity.utilisateur = :user')
+                ->setParameter('user', $this->getUser());
         }
         return $defaultQueryBuilder
             ->andWhere('entity.entreprise = :ese')
-            ->setParameter('ese', $connected_entreprise)
-        ;
+            ->setParameter('ese', $connected_entreprise);
     }
 
     public function configureFilters(Filters $filters): Filters
     {
-        if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
+        if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {
             $filters->add('utilisateur');
         }
         return $filters
@@ -95,7 +96,7 @@ class SinistreCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Sinistre(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -107,6 +108,7 @@ class SinistreCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES])
             // ...
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -118,9 +120,9 @@ class SinistreCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Sinistre();
-        $objet->setOccuredAt(new DateTimeImmutable("now"));
-        $objet->setDatePayement(null);
-        $objet->setCout(0);
+        $objet = $this->serviceCrossCanal->crossCanal_Sinistre_setPolice($objet, $this->adminUrlGenerator);
+        //$objet->setOccuredAt(new DateTimeImmutable("now"));
+        //$objet->setCout(0);
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
         return $objet;
@@ -128,6 +130,7 @@ class SinistreCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_SINISTRE);
         return $this->servicePreferences->getChamps(new Sinistre());
@@ -256,5 +259,18 @@ class SinistreCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        /** @var Sinistre */
+        $sinistre = $context->getEntity()->getInstance();
+        $url = $this->adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($sinistre->getId())
+            ->generateUrl();
+        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". Le sinistre " . $sinistre->getNumero() .  " vient d'être enregistré avec succès. Vous pouvez maintenant y ajouter d'autres informations telles que les Experts, les Victimes, les Pièces justificatives, etc.");
+        return $this->redirect($url);
     }
 }

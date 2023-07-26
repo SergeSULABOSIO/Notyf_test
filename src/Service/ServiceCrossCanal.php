@@ -44,6 +44,7 @@ use App\Controller\Admin\PaiementTaxeCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
+use App\Entity\EtapeSinistre;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -82,6 +83,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_COTATION = "cotation";
     public const CROSSED_ENTITY_CLIENT = "client";
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
+    public const CROSSED_ENTITY_ETAPE_SINISTRE = "etape";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
     public const CROSSED_ENTITY_POP_COMMISSIONS = "police";
@@ -535,6 +537,22 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES SINISTRES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_EtapeSinistre_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var EtapeSinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES SINISTRES - [Etape: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

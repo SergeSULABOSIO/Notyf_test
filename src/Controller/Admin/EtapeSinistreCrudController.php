@@ -41,11 +41,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class EtapeSinistreCrudController extends AbstractCrudController
 {
 
+    public ?Crud $crud = null;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator,
     ) {
     }
 
@@ -65,18 +69,19 @@ class EtapeSinistreCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new EtapeSinistre(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Etape")
             ->setEntityLabelInPlural("Etapes")
-            ->setPageTitle("index", "Liste d'étapes")
+            ->setPageTitle("index", "Liste d'étapes pour sinistre")
             ->setDefaultSort(['indice' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES])
             // ...
         ;
+        return $crud;
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -122,6 +127,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new EtapeSinistre());
     }
 
@@ -263,7 +269,6 @@ class EtapeSinistreCrudController extends AbstractCrudController
 
     public function cross_canal_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        ici
         return $this->redirect($this->serviceCrossCanal->crossCanal_EtapeSinistre_listerSinistre($context, $adminUrlGenerator));
     }
 }

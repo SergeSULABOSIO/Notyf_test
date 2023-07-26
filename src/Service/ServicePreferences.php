@@ -1380,25 +1380,14 @@ class ServicePreferences
             })
             ->setColumns(3)
             ->onlyOnForms();
-        $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('cout', PreferenceCrudController::PREF_SIN_SINISTRE_COUT)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
+        $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
             ->setColumns(2)
-            ->onlyWhenUpdating();
-        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
-            ->setColumns(2)
-            ->onlyWhenUpdating();
+            ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1408,6 +1397,19 @@ class ServicePreferences
             })
             ->setColumns(12)
             ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setColumns(2)
+            ->onlyWhenUpdating();
+        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
+            ->setColumns(2)
+            ->onlyWhenUpdating();
+
 
         $tabAttributs[] = AssociationField::new('victime', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {

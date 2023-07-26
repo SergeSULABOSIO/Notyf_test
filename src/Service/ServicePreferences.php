@@ -1962,8 +1962,10 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT])) {
+            $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
+                ->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
-                ->hideOnForm();
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)

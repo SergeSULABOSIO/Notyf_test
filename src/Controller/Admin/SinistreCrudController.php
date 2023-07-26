@@ -138,6 +138,25 @@ class SinistreCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //Cross Canal
+        $expert_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_EXPERT)
+            ->setIcon('fas fa-user-graduate')
+            ->linkToCrudAction('cross_canal_ajouterExpert');
+
+        $expert_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_EXPERT)
+            ->displayIf(static function (?Sinistre $entity) {
+                return count($entity->getExperts()) != 0;
+            })
+            ->setIcon('fas fa-user-graduate')
+            ->linkToCrudAction('cross_canal_listerExpert');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $expert_lister)
+            ->add(Crud::PAGE_INDEX, $expert_lister)
+
+            ->add(Crud::PAGE_DETAIL, $expert_ajouter)
+            ->add(Crud::PAGE_INDEX, $expert_ajouter);
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -272,5 +291,15 @@ class SinistreCrudController extends AbstractCrudController
             ->generateUrl();
         $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". Le sinistre " . $sinistre->getNumero() .  " vient d'être enregistré avec succès. Vous pouvez maintenant y ajouter d'autres informations telles que les Experts, les Victimes, les Pièces justificatives, etc.");
         return $this->redirect($url);
+    }
+
+    public function cross_canal_ajouterExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_ajouterExpert($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerExpert($context, $adminUrlGenerator));
     }
 }

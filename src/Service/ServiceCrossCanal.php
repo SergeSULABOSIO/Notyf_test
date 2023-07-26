@@ -37,6 +37,7 @@ use App\Controller\Admin\EtapeCrmCrudController;
 use App\Controller\Admin\SinistreCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\ExpertCrudController;
 use Symfony\Component\Validator\Constraints\Date;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
@@ -76,6 +77,8 @@ class ServiceCrossCanal
     public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
     public const POLICE_AJOUTER_POP_TAXES = "Payer Taxe";
     public const POLICE_AJOUTER_SINISTRE = "Ajouter un sinistre";
+    public const SINISTRE_AJOUTER_EXPERT = "Ajouter un expert";
+    public const SINISTRE_LISTER_EXPERT = "Lister les expert";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -84,6 +87,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_CLIENT = "client";
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
     public const CROSSED_ENTITY_ETAPE_SINISTRE = "etape";
+    public const CROSSED_ENTITY_EXPERT = "expert";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
     public const CROSSED_ENTITY_POP_COMMISSIONS = "police";
@@ -91,6 +95,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
     public const CROSSED_ENTITY_TAXE = "taxe";
+    public const CROSSED_ENTITY_SINISTRE = "sinistre";
 
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -211,6 +216,21 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU SINISTRE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Sinistre_ajouterExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ExpertCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVEL EXPERT - [Sinistre: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_SINISTRE, $entite->getId())
             //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -537,6 +557,22 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES SINISTRES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Sinistre_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ExpertCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE D'EXPERTS - [Sinistre: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

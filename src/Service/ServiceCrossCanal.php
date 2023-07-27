@@ -99,7 +99,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_EXPERT = "expert";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
-    public const CROSSED_ENTITY_POP_COMMISSIONS = "police";
+    public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommission";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
@@ -172,6 +172,20 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_POPCom_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var PaiementCommission */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PIECE (Pdp) - [Commissions encaissées: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POP_COMMISSIONS, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -557,6 +571,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_POPCom_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var PaiementCommission */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PIECES - [Commissions encaissées: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POP_COMMISSIONS . '][value]', [$entite->getId()]) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POP_COMMISSIONS . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_listerPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -776,6 +806,21 @@ class ServiceCrossCanal
         }
         return $docPiece;
     }
+
+    public function crossCanal_Piece_setPOPCom(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
+    {
+        /** @var PaiementCommission */
+        $paiementCommission = null;
+        $paramIDPOPCom = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_COMMISSIONS);
+        if ($paramIDPOPCom != null) {
+            $paiementCommission = $this->entityManager->getRepository(PaiementCommission::class)->find($paramIDPOPCom);
+            $docPiece->setPolice($paiementCommission->getPolice());
+            $docPiece->setCotation($paiementCommission->getPolice()->getCotation());
+            $docPiece->addPaiementCommission($paiementCommission);
+        }
+        return $docPiece;
+    }
+
 
     public function crossCanal_Etape_setEtape(Piste $piste, AdminUrlGenerator $adminUrlGenerator): Piste
     {

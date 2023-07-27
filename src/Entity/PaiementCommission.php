@@ -122,7 +122,7 @@ class PaiementCommission
 
     public function __toString()
     {
-        return ($this->montant/100) . " - Facture: " . $this->refnotededebit;
+        return ($this->montant/100) . " - Facture: " . $this->refnotededebit . $this->police;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

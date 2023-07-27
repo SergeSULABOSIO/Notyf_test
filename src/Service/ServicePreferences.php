@@ -1206,6 +1206,15 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
+            ->setColumns(12)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->onlyOnForms();
         $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
             ->setColumns(2)
             ->onlyOnForms();
@@ -1516,6 +1525,17 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+        //
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
@@ -2202,7 +2222,15 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
             $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->hideOnForm();
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+                ->onlyOnDetail();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS])) {
+            $tabAttributs[] = AssociationField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+                ->onlyOnDetail();
         }
         //Les fichiers
         $tabAttributs[] = TextField::new('fichierA', 'Fichier A')->onlyOnDetail();

@@ -95,11 +95,6 @@ class Expert
         return $this;
     }
 
-    public function getTélephone(): ?string
-    {
-        return $this->télephone;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;

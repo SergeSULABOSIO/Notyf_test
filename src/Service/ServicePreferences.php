@@ -1365,15 +1365,6 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
             ->setColumns(3)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->setColumns(4)
-            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1391,6 +1382,24 @@ class ServicePreferences
         $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
             ->setColumns(2)
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyWhenUpdating();
+        $tabAttributs[] = AssociationField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(12)
+            ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1411,17 +1420,6 @@ class ServicePreferences
             ->onlyWhenUpdating();
         $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
             ->setColumns(2)
-            ->onlyWhenUpdating();
-
-
-        $tabAttributs[] = AssociationField::new('victime', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->setColumns(12)
             ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -1458,7 +1456,7 @@ class ServicePreferences
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE)
             ->setColumns(3)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
             ->setColumns(12)
             ->onlyOnForms();
 
@@ -1966,6 +1964,12 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES])) {
+            $tabAttributs[] = AssociationField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT])) {
             $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
                 ->onlyOnIndex();
@@ -2010,10 +2014,6 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES])) {
-            $tabAttributs[] = ArrayField::new('victime', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
-                ->hideOnForm();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS])) {
             $tabAttributs[] = ArrayField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
                 ->hideOnForm();
@@ -2056,6 +2056,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_VICTIME_ADRESSE)
                 ->hideOnForm();
@@ -2066,10 +2070,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE])) {
             $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE])) {
-            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_UTILISATEUR])) {

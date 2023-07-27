@@ -81,7 +81,7 @@ class SinistreCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('victime')
+            ->add('victimes')
             ->add('experts')
             ->add('etape')
             ->add('commentaire')
@@ -139,6 +139,25 @@ class SinistreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
+        $victime_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_VICTIME)
+            ->setIcon('fas fa-person-falling-burst')
+            ->linkToCrudAction('cross_canal_ajouterVictime');
+
+        $victime_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_VICTIME)
+            ->displayIf(static function (?Sinistre $entity) {
+                return count($entity->getVictimes()) != 0;
+            })
+            ->setIcon('fas fa-person-falling-burst')
+            ->linkToCrudAction('cross_canal_listerVictime');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $victime_lister)
+            ->add(Crud::PAGE_INDEX, $victime_lister)
+
+            ->add(Crud::PAGE_DETAIL, $victime_ajouter)
+            ->add(Crud::PAGE_INDEX, $victime_ajouter);
+
+
         $expert_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_EXPERT)
             ->setIcon('fas fa-user-graduate')
             ->linkToCrudAction('cross_canal_ajouterExpert');
@@ -301,5 +320,15 @@ class SinistreCrudController extends AbstractCrudController
     public function cross_canal_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerExpert($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterVictime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_ajouterVictime($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerVictime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerVictime($context, $adminUrlGenerator));
     }
 }

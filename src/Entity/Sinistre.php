@@ -28,12 +28,6 @@ class Sinistre extends CalculableEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'sinistres', targetEntity: Victime::class)]
-    private Collection $victimes;
-
-    #[ORM\ManyToMany(targetEntity: Victime::class, inversedBy: 'sinistres')]
-    private Collection $victime;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
@@ -72,13 +66,15 @@ class Sinistre extends CalculableEntity
     #[ORM\ManyToOne(inversedBy: 'sinistres')]
     private ?EtapeSinistre $etape = null;
 
+    #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: Victime::class)]
+    private Collection $victimes;
+
     public function __construct()
     {
-        $this->victimes = new ArrayCollection();
-        $this->victime = new ArrayCollection();
         $this->experts = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
         $this->pieces = new ArrayCollection();
+        $this->victimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,44 +128,6 @@ class Sinistre extends CalculableEntity
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, Victime>
-     */
-    public function getVictimes(): Collection
-    {
-        return $this->victimes;
-    }
-
-    public function addVictime(Victime $victime): self
-    {
-        if (!$this->victimes->contains($victime)) {
-            $this->victimes->add($victime);
-            $victime->setSinistre($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVictime(Victime $victime): self
-    {
-        if ($this->victimes->removeElement($victime)) {
-            // set the owning side to null (unless already changed)
-            if ($victime->getSinistre() === $this) {
-                $victime->setSinistre(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Victime>
-     */
-    public function getVictime(): Collection
-    {
-        return $this->victime;
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -359,6 +317,36 @@ class Sinistre extends CalculableEntity
     public function setEtape(?EtapeSinistre $etape): self
     {
         $this->etape = $etape;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Victime>
+     */
+    public function getVictimes(): Collection
+    {
+        return $this->victimes;
+    }
+
+    public function addVictime(Victime $victime): self
+    {
+        if (!$this->victimes->contains($victime)) {
+            $this->victimes->add($victime);
+            $victime->setSinistre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVictime(Victime $victime): self
+    {
+        if ($this->victimes->removeElement($victime)) {
+            // set the owning side to null (unless already changed)
+            if ($victime->getSinistre() === $this) {
+                $victime->setSinistre(null);
+            }
+        }
 
         return $this;
     }

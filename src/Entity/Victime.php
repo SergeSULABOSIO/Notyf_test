@@ -37,18 +37,15 @@ class Victime
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'victimes')]
-    private ?Sinistre $sinistre = null;
-
-    #[ORM\ManyToMany(targetEntity: Sinistre::class, mappedBy: 'victime')]
-    private Collection $sinistres;
-
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\ManyToOne(inversedBy: 'victimes')]
+    private ?Sinistre $sinistre = null;
+
     public function __construct()
     {
-        $this->sinistres = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -140,45 +137,6 @@ class Victime
         return $this;
     }
 
-    public function getSinistre(): ?Sinistre
-    {
-        return $this->sinistre;
-    }
-
-    public function setSinistre(?Sinistre $sinistre): self
-    {
-        $this->sinistre = $sinistre;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Sinistre>
-     */
-    public function getSinistres(): Collection
-    {
-        return $this->sinistres;
-    }
-
-    public function addSinistre(Sinistre $sinistre): self
-    {
-        if (!$this->sinistres->contains($sinistre)) {
-            $this->sinistres->add($sinistre);
-            $sinistre->addVictime($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSinistre(Sinistre $sinistre): self
-    {
-        if ($this->sinistres->removeElement($sinistre)) {
-            $sinistre->removeVictime($this);
-        }
-
-        return $this;
-    }
-
     public function __toString()
     {
         return $this->nom . " / Tél. : " . $this->telephone;
@@ -192,6 +150,18 @@ class Victime
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getSinistre(): ?Sinistre
+    {
+        return $this->sinistre;
+    }
+
+    public function setSinistre(?Sinistre $sinistre): self
+    {
+        $this->sinistre = $sinistre;
 
         return $this;
     }

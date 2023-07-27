@@ -54,9 +54,6 @@ class Sinistre extends CalculableEntity
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $paidAt = null;
 
-    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
-    private Collection $pieces;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numero = null;
 
@@ -69,12 +66,15 @@ class Sinistre extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: Victime::class)]
     private Collection $victimes;
 
+    #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
+
     public function __construct()
     {
         $this->experts = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
-        $this->pieces = new ArrayCollection();
         $this->victimes = new ArrayCollection();
+        $this->docPieces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,30 +256,6 @@ class Sinistre extends CalculableEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getPieces(): Collection
-    {
-        return $this->pieces;
-    }
-
-    public function addPiece(DocPiece $piece): self
-    {
-        if (!$this->pieces->contains($piece)) {
-            $this->pieces->add($piece);
-        }
-
-        return $this;
-    }
-
-    public function removePiece(DocPiece $piece): self
-    {
-        $this->pieces->removeElement($piece);
-
-        return $this;
-    }
-
     public function __toString()
     {
         return $this->numero . " / " . $this->titre;
@@ -345,6 +321,36 @@ class Sinistre extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($victime->getSinistre() === $this) {
                 $victime->setSinistre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocPieces(): Collection
+    {
+        return $this->docPieces;
+    }
+
+    public function addDocPiece(DocPiece $docPiece): self
+    {
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setSinistre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocPiece(DocPiece $docPiece): self
+    {
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getSinistre() === $this) {
+                $docPiece->setSinistre(null);
             }
         }
 

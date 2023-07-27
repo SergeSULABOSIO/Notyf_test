@@ -104,7 +104,8 @@ class DocPieceCrudController extends AbstractCrudController
             ->add('categorie')
             ->add('classeur')
             ->add('cotation')
-            ->add('police');
+            ->add('police')//sinistre
+            ->add('sinistre');//
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -118,6 +119,7 @@ class DocPieceCrudController extends AbstractCrudController
         $objet = new DocPiece();
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setCotation($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setPolice($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piece_setSinistre($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

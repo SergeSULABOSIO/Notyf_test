@@ -139,6 +139,24 @@ class SinistreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
+        $document_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_DOCUMENT)
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_ajouterDocument');
+
+        $document_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_DOCUMENT)
+            ->displayIf(static function (?Sinistre $entity) {
+                return count($entity->getDocPieces()) != 0;
+            })
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_listerDocument');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $document_lister)
+            ->add(Crud::PAGE_INDEX, $document_lister)
+
+            ->add(Crud::PAGE_DETAIL, $document_ajouter)
+            ->add(Crud::PAGE_INDEX, $document_ajouter);
+
         $victime_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_VICTIME)
             ->setIcon('fas fa-person-falling-burst')
             ->linkToCrudAction('cross_canal_ajouterVictime');
@@ -330,5 +348,15 @@ class SinistreCrudController extends AbstractCrudController
     public function cross_canal_listerVictime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerVictime($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterDocument(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_ajouterDocument($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerDocument(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerDocument($context, $adminUrlGenerator));
     }
 }

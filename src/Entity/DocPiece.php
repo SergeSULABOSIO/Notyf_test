@@ -60,6 +60,9 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?Police $police = null;
 
+    #[ORM\ManyToOne(inversedBy: 'docPieces')]
+    private ?Sinistre $sinistre = null;
+
 
     public function __construct()
     {
@@ -265,6 +268,18 @@ class DocPiece
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    public function getSinistre(): ?Sinistre
+    {
+        return $this->sinistre;
+    }
+
+    public function setSinistre(?Sinistre $sinistre): self
+    {
+        $this->sinistre = $sinistre;
 
         return $this;
     }

@@ -1421,7 +1421,7 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
             ->setColumns(2)
             ->onlyWhenUpdating();
-        $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+        $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1497,6 +1497,16 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1976,6 +1986,12 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
                 ->onlyOnDetail();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS])) {
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
                 ->hideOnForm();
@@ -2012,10 +2028,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS])) {
-            $tabAttributs[] = ArrayField::new('pieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE])) {
@@ -2184,6 +2196,10 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
                 ->hideOnForm();
         }
         //Les fichiers

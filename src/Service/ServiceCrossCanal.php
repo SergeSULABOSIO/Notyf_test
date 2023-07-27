@@ -84,8 +84,10 @@ class ServiceCrossCanal
     public const POLICE_AJOUTER_SINISTRE = "Ajouter un sinistre";
     public const SINISTRE_AJOUTER_EXPERT = "Ajouter un expert";
     public const SINISTRE_AJOUTER_VICTIME = "Ajouter une victime";
+    public const SINISTRE_AJOUTER_DOCUMENT = "Ajouter un document";
     public const SINISTRE_LISTER_EXPERT = "Lister les experts";
     public const SINISTRE_LISTER_VICTIME = "Lister les victimes";
+    public const SINISTRE_LISTER_DOCUMENT = "Lister les documents";
     public const CLIENT_LISTER_POLICES = "Voire les polices";
     public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
 
@@ -252,6 +254,21 @@ class ServiceCrossCanal
             ->setController(VictimeCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE VICTIME - [Sinistre: " . $sinistre . "]")
+            ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Sinistre_ajouterDocument(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $sinistre = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVEAU DOCUMENT - [Sinistre: " . $sinistre . "]")
             ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
             //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
@@ -617,6 +634,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Sinistre_listerDocument(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES DOCUMENTS - [Sinistre: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Expert_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Expert */
@@ -726,6 +759,20 @@ class ServiceCrossCanal
             $objet = $this->entityManager->getRepository(Police::class)->find($paramIDAction);
             $docPiece->setPolice($objet);
             $docPiece->setCotation($objet->getCotation());
+        }
+        return $docPiece;
+    }
+
+    public function crossCanal_Piece_setSinistre(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
+    {
+        /** @var Sinistre */
+        $sinistre = null;
+        $paramIDSinistre = $adminUrlGenerator->get(self::CROSSED_ENTITY_SINISTRE);
+        if ($paramIDSinistre != null) {
+            $sinistre = $this->entityManager->getRepository(Sinistre::class)->find($paramIDSinistre);
+            $docPiece->setSinistre($sinistre);
+            $docPiece->setPolice($sinistre->getPolice());
+            $docPiece->setCotation($sinistre->getPolice()->getCotation());
         }
         return $docPiece;
     }

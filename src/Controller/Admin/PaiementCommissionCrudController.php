@@ -85,7 +85,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
         return $filters
             ->add('montant')
             ->add('police')
-            ->add('pieces')
+            ->add('docPieces')
         ;
     }
 

@@ -63,11 +63,15 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?Sinistre $sinistre = null;
 
+    #[ORM\ManyToMany(targetEntity: PaiementCommission::class, inversedBy: 'docPieces')]
+    private Collection $paiementCommission;
+
 
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
         $this->classeur = new ArrayCollection();
+        $this->paiementCommission = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -280,6 +284,30 @@ class DocPiece
     public function setSinistre(?Sinistre $sinistre): self
     {
         $this->sinistre = $sinistre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaiementCommission>
+     */
+    public function getPaiementCommission(): Collection
+    {
+        return $this->paiementCommission;
+    }
+
+    public function addPaiementCommission(PaiementCommission $paiementCommission): self
+    {
+        if (!$this->paiementCommission->contains($paiementCommission)) {
+            $this->paiementCommission->add($paiementCommission);
+        }
+
+        return $this;
+    }
+
+    public function removePaiementCommission(PaiementCommission $paiementCommission): self
+    {
+        $this->paiementCommission->removeElement($paiementCommission);
 
         return $this;
     }

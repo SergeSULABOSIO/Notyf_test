@@ -86,7 +86,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
             ->add('montant')
             ->add('taxe')
             ->add('police')
-            ->add('pieces');
+            ->add('piece');
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -129,6 +129,18 @@ class PaiementTaxeCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //cross canal
+        $piece_attacher = Action::new(ServiceCrossCanal::POPPARTENAIRE_ATTACHER_PIECE)
+            ->displayIf(static function (?PaiementTaxe $entity) {
+                return $entity->getPiece() == null;
+            })
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_attacherPiece');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $piece_attacher)
+            ->add(Crud::PAGE_INDEX, $piece_attacher);
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -250,5 +262,10 @@ class PaiementTaxeCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_POPTaxe_attacherPiece($context, $adminUrlGenerator));
     }
 }

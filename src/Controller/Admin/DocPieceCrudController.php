@@ -123,6 +123,7 @@ class DocPieceCrudController extends AbstractCrudController
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setSinistre($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setPOPCom($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setPOPPartenaire($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piece_setPOPTaxe($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -140,23 +141,32 @@ class DocPieceCrudController extends AbstractCrudController
         //Cross Canal
         $paiementCommissions_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_COMMISSIONS)
             ->displayIf(static function (?DocPiece $entity) {
-                return $entity->getPaiementCommissions() != null;
+                return count($entity->getPaiementCommissions()) != 0;
             })
             ->setIcon('fas fa-person-arrow-down-to-line')
             ->linkToCrudAction('cross_canal_listerPaiementCommission');
 
         $paiementPartenaires_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_PARTENAIRES)
             ->displayIf(static function (?DocPiece $entity) {
-                return $entity->getPaiementPartenaires() != null;
+                return count($entity->getPaiementPartenaires()) != 0;
             })
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_listerPaiementPartenaire');
+
+        $paiementTaxe_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_TAXES)
+            ->displayIf(static function (?DocPiece $entity) {
+                return count($entity->getPaiementTaxes()) != 0;
+            })
+            ->setIcon('fas fa-person-chalkboard')
+            ->linkToCrudAction('cross_canal_listerPaiementTaxe');
 
         $actions
             ->add(Crud::PAGE_DETAIL, $paiementCommissions_lister)
             ->add(Crud::PAGE_INDEX, $paiementCommissions_lister)
             ->add(Crud::PAGE_DETAIL, $paiementPartenaires_lister)
-            ->add(Crud::PAGE_INDEX, $paiementPartenaires_lister);
+            ->add(Crud::PAGE_INDEX, $paiementPartenaires_lister)
+            ->add(Crud::PAGE_DETAIL, $paiementTaxe_lister)
+            ->add(Crud::PAGE_INDEX, $paiementTaxe_lister);
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -291,5 +301,10 @@ class DocPieceCrudController extends AbstractCrudController
     public function cross_canal_listerPaiementPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPPartenaire($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPaiementTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPTaxe($context, $adminUrlGenerator));
     }
 }

@@ -784,7 +784,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_TAXE_MONTANT                = "Montant";
     public const PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT          = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_TAXE_EXERCICE               = "Exercice comptable";
-    public const PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS              = "Documents";
+    public const PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS              = "Pièce Justificative";
     public const PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR            = "Utilisateur";
     public const PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE             = "Entreprise";
     public const PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION       = "Date de création";

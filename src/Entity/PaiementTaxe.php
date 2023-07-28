@@ -41,8 +41,6 @@ class PaiementTaxe
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: DocPiece::class)]
-    private Collection $pieces;
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
@@ -53,9 +51,12 @@ class PaiementTaxe
     #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
     private ?Police $police = null;
 
+    #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
+    private ?DocPiece $piece = null;
+
     public function __construct()
     {
-        $this->pieces = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -125,7 +126,7 @@ class PaiementTaxe
 
     public function __toString()
     {
-        return $this->montant . " / Facture: " . $this->refnotededebit;
+        return $this->montant . " / Facture: " . $this->refnotededebit . " / " . $this->police;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -148,30 +149,6 @@ class PaiementTaxe
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getPieces(): Collection
-    {
-        return $this->pieces;
-    }
-
-    public function addPiece(DocPiece $piece): self
-    {
-        if (!$this->pieces->contains($piece)) {
-            $this->pieces->add($piece);
-        }
-
-        return $this;
-    }
-
-    public function removePiece(DocPiece $piece): self
-    {
-        $this->pieces->removeElement($piece);
 
         return $this;
     }
@@ -208,6 +185,18 @@ class PaiementTaxe
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    public function getPiece(): ?DocPiece
+    {
+        return $this->piece;
+    }
+
+    public function setPiece(?DocPiece $piece): self
+    {
+        $this->piece = $piece;
 
         return $this;
     }

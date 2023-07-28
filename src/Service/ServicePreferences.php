@@ -1292,6 +1292,7 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
+            ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
@@ -1313,7 +1314,18 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
+            ->setRequired(false)
             ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(6)
             ->onlyOnForms();
         $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
             ->setColumns(2)
@@ -1549,6 +1561,16 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1839,6 +1861,10 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE])) {
             $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS])) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR])) {
@@ -2257,6 +2283,12 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
                 ->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+                ->onlyOnDetail();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES])) {
+            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
                 ->onlyOnDetail();
         }
         //Les fichiers

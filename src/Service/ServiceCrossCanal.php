@@ -104,6 +104,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_DOC_PIECE = "piece";
     public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommissions";
     public const CROSSED_ENTITY_POP_PARTENAIRE = "paiementPartenaires";
+    public const CROSSED_ENTITY_POP_TAXE = "paiementTaxes";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
@@ -204,6 +205,20 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE (Pdp) - [Retrocommission payée: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POP_PARTENAIRE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_POPTaxe_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var PaiementTaxe */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PIECE (Pdp) - [Taxe payée: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POP_TAXE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -665,6 +680,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Piece_listerPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocPiece */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementTaxeCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP TAXES - [Pièce justificative: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -894,6 +925,20 @@ class ServiceCrossCanal
             $docPiece->setPolice($paiementPartenaire->getPolice());
             $docPiece->setCotation($paiementPartenaire->getPolice()->getCotation());
             $docPiece->addPaiementPartenaire($paiementPartenaire);
+        }
+        return $docPiece;
+    }
+
+    public function crossCanal_Piece_setPOPTaxe(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
+    {
+        /** @var PaiementTaxe */
+        $paiementTaxe = null;
+        $paramIDPOPTaxe = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_TAXE);
+        if ($paramIDPOPTaxe != null) {
+            $paiementTaxe = $this->entityManager->getRepository(PaiementTaxe::class)->find($paramIDPOPTaxe);
+            $docPiece->setPolice($paiementTaxe->getPolice());
+            $docPiece->setCotation($paiementTaxe->getPolice()->getCotation());
+            $docPiece->addPaiementTax($paiementTaxe);
         }
         return $docPiece;
     }

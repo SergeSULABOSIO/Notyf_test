@@ -649,6 +649,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Piece_listerPOPPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocPiece */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementPartenaireCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP RETO-COMMISSIONS - [Pièce justificative: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();

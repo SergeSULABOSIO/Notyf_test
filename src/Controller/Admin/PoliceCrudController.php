@@ -4,13 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\Police;
 use DateTimeImmutable;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use App\Service\ServiceTaxes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -18,14 +18,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 
 class PoliceCrudController extends AbstractCrudController
 {
@@ -102,9 +103,9 @@ class PoliceCrudController extends AbstractCrudController
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Police")
-            ->setEntityLabelInPlural("Polices")
-            ->setPageTitle("index", "Liste des polices")
+            ->setEntityLabelInSingular("POLICE")
+            ->setEntityLabelInPlural("Police d'assurance")
+            ->setPageTitle("index", "POLICES")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
@@ -201,9 +202,12 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterPiece');
         $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getDocPieces()) != 0;
+            })
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiece');
-            
+
         $actions
             ->add(Crud::PAGE_DETAIL, $piece_ajouter)
             ->add(Crud::PAGE_INDEX, $piece_ajouter)
@@ -503,5 +507,18 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerSinistre($context, $adminUrlGenerator));
+    }
+
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $this->adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($police->getId())
+            ->generateUrl();
+        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La police " . $police .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
+        return $this->redirect($url);
     }
 }

@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -341,6 +342,19 @@ class CotationCrudController extends AbstractCrudController
             ->setEntityId($entite->getId())
             ->generateUrl();
 
+        return $this->redirect($url);
+    }
+
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        /** @var Cotation */
+        $cotation = $context->getEntity()->getInstance();
+        $url = $this->adminUrlGenerator
+            ->setController(CotationCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($cotation->getId())
+            ->generateUrl();
+        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La cotation " . $cotation->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
         return $this->redirect($url);
     }
 }

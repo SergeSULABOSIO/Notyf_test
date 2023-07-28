@@ -340,7 +340,7 @@ class ServiceCalculateur
 
             foreach ($this->paiements_retrocom as $paiement_retrocom) {
                 //dd($paiement_retrocom->getPolice());
-                if ($police == $paiement_retrocom->getPolice()) {
+                if ($police === $paiement_retrocom->getPolice()) {
                     $obj->calc_retrocom_payees += $paiement_retrocom->getMontant();
                     $obj->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
                 }

@@ -5,10 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\Piste;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
-use App\Service\ServiceCrossCanal;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +25,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -143,6 +144,9 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterMission');
         $mission_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_MISSION)
+            ->displayIf(static function (?Piste $entity) {
+                return count($entity->getActionCRMs()) != 0;
+            })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerMission');
 
@@ -150,6 +154,9 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fas fa-address-book')
             ->linkToCrudAction('cross_canal_ajouterContact');
         $contact_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_CONTACT)
+            ->displayIf(static function (?Piste $entity) {
+                return count($entity->getContacts()) != 0;
+            })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerContact');
 
@@ -157,6 +164,9 @@ class PisteCrudController extends AbstractCrudController
             ->setIcon('fas fa-cash-register')
             ->linkToCrudAction('cross_canal_ajouterCotation');
         $cotation_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_COTATION)
+            ->displayIf(static function (?Piste $entity) {
+                return count($entity->getCotations()) != 0;
+            })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerCotation');
 
@@ -334,5 +344,18 @@ class PisteCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        /** @var Piste */
+        $piste = $context->getEntity()->getInstance();
+        $url = $this->adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($piste->getId())
+            ->generateUrl();
+        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La piste " . $piste->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
+        return $this->redirect($url);
     }
 }

@@ -80,7 +80,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
         return $filters
             ->add('montant')
             ->add('police')
-            ->add('docPieces');
+            ->add('piece');
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -130,18 +130,10 @@ class PaiementCommissionCrudController extends AbstractCrudController
         $piece_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_PIECE)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterPiece');
-        $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
-            ->displayIf(static function (?PaiementCommission $entity) {
-                return count($entity->getDocPieces()) != 0;
-            })
-            ->setIcon('fa-solid fa-rectangle-list')
-            ->linkToCrudAction('cross_canal_listerPiece');
 
         $actions
             ->add(Crud::PAGE_DETAIL, $piece_ajouter)
-            ->add(Crud::PAGE_INDEX, $piece_ajouter)
-            ->add(Crud::PAGE_DETAIL, $piece_lister)
-            ->add(Crud::PAGE_INDEX, $piece_lister);
+            ->add(Crud::PAGE_INDEX, $piece_ajouter);
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -271,10 +263,5 @@ class PaiementCommissionCrudController extends AbstractCrudController
     public function cross_canal_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_POPCom_ajouterPiece($context, $adminUrlGenerator));
-    }
-
-    public function cross_canal_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_POPCom_listerPiece($context, $adminUrlGenerator));
     }
 }

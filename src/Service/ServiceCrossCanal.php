@@ -99,7 +99,8 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_EXPERT = "expert";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
-    public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommission";
+    public const CROSSED_ENTITY_DOC_PIECE = "piece";
+    public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommissions";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
@@ -192,6 +193,19 @@ class ServiceCrossCanal
     }
 
     public function crossCanal_Police_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementCommissionCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PDP COMMISSION - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Piece_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
@@ -596,6 +610,22 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES PDP COMMISSIONS - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Piece_listerPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocPiece */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PaiementCommissionCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PDP COMMISSIONS - [Pièce justificative: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

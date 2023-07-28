@@ -1206,8 +1206,9 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             })
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-            ->setColumns(12)
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
+            ->setColumns(6)
+            ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1525,7 +1526,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+        $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1702,10 +1703,8 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS])) {
-            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-                ->onlyOnDetail();
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
+                ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR)
@@ -2227,9 +2226,9 @@ class ServicePreferences
                 ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS])) {
-            $tabAttributs[] = AssociationField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('paiementCommission', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
                 ->onlyOnDetail();
         }
         //Les fichiers

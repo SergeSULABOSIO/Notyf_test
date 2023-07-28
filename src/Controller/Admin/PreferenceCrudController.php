@@ -726,9 +726,9 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                  = "Police";
     //public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                 = "Montant";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Note de débit";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION             = "Description";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS               = "Documents";
+    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS               = "Pièce justificative";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR             = "Utilisateur";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE              = "Entreprise";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION        = "Date de création";

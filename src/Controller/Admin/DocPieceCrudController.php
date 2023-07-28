@@ -106,7 +106,7 @@ class DocPieceCrudController extends AbstractCrudController
             ->add('cotation')
             ->add('police')
             ->add('sinistre')
-            ->add('paiementCommission');
+            ->add('paiementCommissions');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -136,6 +136,16 @@ class DocPieceCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //Cross Canal
+        $paiementCommissions_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_COMMISSIONS)
+            ->setIcon('fas fa-person-arrow-down-to-line')
+            ->linkToCrudAction('cross_canal_listerPaiementCommission');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $paiementCommissions_lister)
+            ->add(Crud::PAGE_INDEX, $paiementCommissions_lister);
+
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -258,5 +268,10 @@ class DocPieceCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_listerPaiementCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPComm($context, $adminUrlGenerator));
     }
 }

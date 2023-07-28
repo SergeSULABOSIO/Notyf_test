@@ -47,12 +47,13 @@ class PaiementCommission
     #[ORM\ManyToOne(inversedBy: 'paiementCommissions')]
     private ?Police $police = null;
 
-    #[ORM\ManyToMany(targetEntity: DocPiece::class, mappedBy: 'paiementCommission')]
-    private Collection $docPieces;
+    #[ORM\ManyToOne(inversedBy: 'paiementCommissions')]
+    private ?DocPiece $piece = null;
+
 
     public function __construct()
     {
-        $this->docPieces = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -122,7 +123,7 @@ class PaiementCommission
 
     public function __toString()
     {
-        return ($this->montant/100) . " - Facture: " . $this->refnotededebit . $this->police;
+        return "Montant: " . ($this->montant/100) . " | Réf. ND: " . $this->refnotededebit . " | Description: " . $this->police;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -173,29 +174,14 @@ class PaiementCommission
         return $this;
     }
 
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getDocPieces(): Collection
+    public function getPiece(): ?DocPiece
     {
-        return $this->docPieces;
+        return $this->piece;
     }
 
-    public function addDocPiece(DocPiece $docPiece): self
+    public function setPiece(?DocPiece $piece): self
     {
-        if (!$this->docPieces->contains($docPiece)) {
-            $this->docPieces->add($docPiece);
-            $docPiece->addPaiementCommission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocPiece(DocPiece $docPiece): self
-    {
-        if ($this->docPieces->removeElement($docPiece)) {
-            $docPiece->removePaiementCommission($this);
-        }
+        $this->piece = $piece;
 
         return $this;
     }

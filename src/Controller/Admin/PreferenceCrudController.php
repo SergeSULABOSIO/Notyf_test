@@ -753,9 +753,9 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                  = "Police";
     //public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                 = "Montant";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Note de débit";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE              = "Partenaire";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS               = "Documents";
+    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS               = "Pièce Justificative";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR             = "Utilisateur";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE              = "Entreprise";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION        = "Date de création";
@@ -1005,6 +1005,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_DOCUMENT_POLICE               = "Police concernée";
     public const PREF_BIB_DOCUMENT_SINISTRE             = "Sinistre concernée";
     public const PREF_BIB_DOCUMENT_POP_COMMISSIONS      = "Pdp Commissions";
+    public const PREF_BIB_DOCUMENT_POP_PARTENAIRES      = "Pdp Partenaires";
+    public const PREF_BIB_DOCUMENT_POP_TAXES            = "Pdp Taxes";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";
@@ -1022,7 +1024,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_DOCUMENT_COTATION                => 9,
         self::PREF_BIB_DOCUMENT_POLICE                  => 10,
         self::PREF_BIB_DOCUMENT_SINISTRE                => 11,
-        self::PREF_BIB_DOCUMENT_POP_COMMISSIONS         => 12
+        self::PREF_BIB_DOCUMENT_POP_COMMISSIONS         => 12,
+        self::PREF_BIB_DOCUMENT_POP_PARTENAIRES         => 13,
+        self::PREF_BIB_DOCUMENT_POP_TAXES               => 14
     ];
     //PARAMETRES - UTILISATEUR
     public const PREF_PAR_UTILISATEUR_ID                    = "Id";

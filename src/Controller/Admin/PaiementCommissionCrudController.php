@@ -126,14 +126,16 @@ class PaiementCommissionCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        //cross canal
-        $piece_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_PIECE)
+        $piece_attacher = Action::new(ServiceCrossCanal::POPCOMMISSION_ATTACHER_PIECE)
+            ->displayIf(static function (?PaiementCommission $entity) {
+                return $entity->getPiece() == null;
+            })
             ->setIcon('fas fa-file-word')
-            ->linkToCrudAction('cross_canal_ajouterPiece');
+            ->linkToCrudAction('cross_canal_attacherPiece');
 
         $actions
-            ->add(Crud::PAGE_DETAIL, $piece_ajouter)
-            ->add(Crud::PAGE_INDEX, $piece_ajouter);
+            ->add(Crud::PAGE_DETAIL, $piece_attacher)
+            ->add(Crud::PAGE_INDEX, $piece_attacher);
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -260,8 +262,8 @@ class PaiementCommissionCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    public function cross_canal_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function cross_canal_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_POPCom_ajouterPiece($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_POPCom_attacherPiece($context, $adminUrlGenerator));
     }
 }

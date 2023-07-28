@@ -66,12 +66,16 @@ class DocPiece
     #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementCommission::class)]
     private Collection $paiementCommissions;
 
+    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementPartenaire::class)]
+    private Collection $paiementPartenaires;
+
 
     public function __construct()
     {
         $this->categorie = new ArrayCollection();
         $this->classeur = new ArrayCollection();
         $this->paiementCommissions = new ArrayCollection();
+        $this->paiementPartenaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -312,6 +316,36 @@ class DocPiece
             // set the owning side to null (unless already changed)
             if ($paiementCommission->getPiece() === $this) {
                 $paiementCommission->setPiece(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaiementPartenaire>
+     */
+    public function getPaiementPartenaires(): Collection
+    {
+        return $this->paiementPartenaires;
+    }
+
+    public function addPaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
+    {
+        if (!$this->paiementPartenaires->contains($paiementPartenaire)) {
+            $this->paiementPartenaires->add($paiementPartenaire);
+            $paiementPartenaire->setPiece($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
+    {
+        if ($this->paiementPartenaires->removeElement($paiementPartenaire)) {
+            // set the owning side to null (unless already changed)
+            if ($paiementPartenaire->getPiece() === $this) {
+                $paiementPartenaire->setPiece(null);
             }
         }
 

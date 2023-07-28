@@ -100,7 +100,7 @@ class PaiementPartenaireCrudController extends AbstractCrudController
             ->add('montant')
             ->add('partenaire')
             ->add('police')
-            ->add('pieces');
+            ->add('piece');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -128,6 +128,18 @@ class PaiementPartenaireCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //cross canal
+        $piece_attacher = Action::new(ServiceCrossCanal::POPPARTENAIRE_ATTACHER_PIECE)
+            ->displayIf(static function (?PaiementPartenaire $entity) {
+                return $entity->getPiece() == null;
+            })
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_attacherPiece');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $piece_attacher)
+            ->add(Crud::PAGE_INDEX, $piece_attacher);
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -250,5 +262,10 @@ class PaiementPartenaireCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_POPPartenaire_attacherPiece($context, $adminUrlGenerator));
     }
 }

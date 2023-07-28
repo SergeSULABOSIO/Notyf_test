@@ -1239,6 +1239,7 @@ class ServicePreferences
     {
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
             ->setColumns(12)
+            ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1255,6 +1256,17 @@ class ServicePreferences
             ->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
+            ->setColumns(4)
+            ->setRequired(false)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
+            ->setRequired(false)
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1536,6 +1548,16 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
         //
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->setColumns(12)
@@ -1760,7 +1782,7 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS])) {
-            $tabAttributs[] = AssociationField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR])) {
@@ -2229,6 +2251,12 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
                 ->onlyOnIndex();
             $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+                ->onlyOnDetail();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES])) {
+            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
                 ->onlyOnDetail();
         }
         //Les fichiers

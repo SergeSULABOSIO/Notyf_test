@@ -122,6 +122,7 @@ class DocPieceCrudController extends AbstractCrudController
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setPolice($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setSinistre($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piece_setPOPCom($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piece_setPOPPartenaire($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

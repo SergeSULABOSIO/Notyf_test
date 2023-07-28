@@ -18,27 +18,9 @@ class DocPiece
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-    
-    #[ORM\ManyToMany(targetEntity: DocCategorie::class)]
-    private Collection $categorie;
-
-    #[ORM\ManyToMany(targetEntity: DocClasseur::class)]
-    private Collection $classeur;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichierA = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichierB = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichierC = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichierD = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -72,11 +54,17 @@ class DocPiece
     #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementTaxe::class)]
     private Collection $paiementTaxes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fichier = null;
+
+    #[ORM\ManyToOne(inversedBy: 'docPieces')]
+    private ?DocCategorie $categorie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'docPieces')]
+    private ?DocClasseur $classeur = null;
 
     public function __construct()
     {
-        $this->categorie = new ArrayCollection();
-        $this->classeur = new ArrayCollection();
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
         $this->paiementTaxes = new ArrayCollection();
@@ -107,54 +95,6 @@ class DocPiece
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getFichierA(): ?string
-    {
-        return $this->fichierA;
-    }
-
-    public function setFichierA(string $fichierA): self
-    {
-        $this->fichierA = $fichierA;
-
-        return $this;
-    }
-
-    public function getFichierB(): ?string
-    {
-        return $this->fichierB;
-    }
-
-    public function setFichierB(?string $fichierB): self
-    {
-        $this->fichierB = $fichierB;
-
-        return $this;
-    }
-
-    public function getFichierC(): ?string
-    {
-        return $this->fichierC;
-    }
-
-    public function setFichierC(?string $fichierC): self
-    {
-        $this->fichierC = $fichierC;
-
-        return $this;
-    }
-
-    public function getFichierD(): ?string
-    {
-        return $this->fichierD;
-    }
-
-    public function setFichierD(?string $fichierD): self
-    {
-        $this->fichierD = $fichierD;
 
         return $this;
     }
@@ -203,54 +143,6 @@ class DocPiece
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DocCategorie>
-     */
-    public function getCategorie(): Collection
-    {
-        return $this->categorie;
-    }
-
-    public function addCategorie(DocCategorie $categorie): self
-    {
-        if (!$this->categorie->contains($categorie)) {
-            $this->categorie->add($categorie);
-        }
-
-        return $this;
-    }
-
-    public function removeCategorie(DocCategorie $categorie): self
-    {
-        $this->categorie->removeElement($categorie);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DocClasseur>
-     */
-    public function getClasseur(): Collection
-    {
-        return $this->classeur;
-    }
-
-    public function addClasseur(DocClasseur $classeur): self
-    {
-        if (!$this->classeur->contains($classeur)) {
-            $this->classeur->add($classeur);
-        }
-
-        return $this;
-    }
-
-    public function removeClasseur(DocClasseur $classeur): self
-    {
-        $this->classeur->removeElement($classeur);
 
         return $this;
     }
@@ -382,6 +274,42 @@ class DocPiece
                 $paiementTax->setPiece(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFichier(): ?string
+    {
+        return $this->fichier;
+    }
+
+    public function setFichier(?string $fichier): self
+    {
+        $this->fichier = $fichier;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?DocCategorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?DocCategorie $categorie): self
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getClasseur(): ?DocClasseur
+    {
+        return $this->classeur;
+    }
+
+    public function setClasseur(?DocClasseur $classeur): self
+    {
+        $this->classeur = $classeur;
 
         return $this;
     }

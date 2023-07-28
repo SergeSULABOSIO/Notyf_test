@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DocCategorieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DocCategorieRepository::class)]
@@ -29,6 +31,14 @@ class DocCategorie
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
+
+    public function __construct()
+    {
+        $this->docPieces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -98,5 +108,35 @@ class DocCategorie
     public function __toString()
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocPieces(): Collection
+    {
+        return $this->docPieces;
+    }
+
+    public function addDocPiece(DocPiece $docPiece): self
+    {
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocPiece(DocPiece $docPiece): self
+    {
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getCategorie() === $this) {
+                $docPiece->setCategorie(null);
+            }
+        }
+
+        return $this;
     }
 }

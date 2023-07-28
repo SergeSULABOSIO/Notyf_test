@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DocClasseurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DocClasseurRepository::class)]
@@ -29,6 +31,15 @@ class DocClasseur
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
+
+    #[ORM\OneToMany(mappedBy: 'classeur', targetEntity: DocPiece::class)]
+    private Collection $docPieces;
+
+
+    public function __construct()
+    {
+        $this->docPieces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -98,5 +109,35 @@ class DocClasseur
     public function __toString()
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocPieces(): Collection
+    {
+        return $this->docPieces;
+    }
+
+    public function addDocPiece(DocPiece $docPiece): self
+    {
+        if (!$this->docPieces->contains($docPiece)) {
+            $this->docPieces->add($docPiece);
+            $docPiece->setClasseur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocPiece(DocPiece $docPiece): self
+    {
+        if ($this->docPieces->removeElement($docPiece)) {
+            // set the owning side to null (unless already changed)
+            if ($docPiece->getClasseur() === $this) {
+                $docPiece->setClasseur(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -117,6 +117,9 @@ class DocCategorieCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //Cross Canal
+        Je suis ici
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)

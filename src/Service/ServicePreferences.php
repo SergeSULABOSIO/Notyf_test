@@ -1518,6 +1518,35 @@ class ServicePreferences
     public function setCRM_Fields_BibliothequePieces_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->setRequired(false)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            })
+            ->setColumns(3)
+            ->setRequired(false)
+            ->onlyOnForms();
+        $tabAttributs[] = ImageField::new('fichier', 'Fichier')
+            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
+            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
+            ->setSortable(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
@@ -1550,6 +1579,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
+
         $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1579,52 +1609,6 @@ class ServicePreferences
             })
             ->setRequired(false)
             ->setColumns(12)
-            ->onlyOnForms();
-        //
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = ImageField::new('fichierA', 'Fichier A')
-            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
-            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
-            ->setSortable(false)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = ImageField::new('fichierB', 'Fichier B')
-            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
-            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
-            ->setSortable(false)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = ImageField::new('fichierC', 'Fichier C')
-            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
-            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
-            ->setSortable(false)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = ImageField::new('fichierD', 'Fichier D')
-            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
-            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
-            ->setSortable(false)
-            ->setColumns(6)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -2184,6 +2168,12 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CATEGORIE_NOM)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES])) {
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
@@ -2214,6 +2204,12 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CLASSEUR_NOM)
                 ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES])) {
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES)
+                ->onlyOnIndex();
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)

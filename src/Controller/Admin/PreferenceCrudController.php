@@ -969,6 +969,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_CATEGORIE_ID                      = "Id";
     public const PREF_BIB_CATEGORIE_NOM                     = "Nom";
     public const PREF_BIB_CATEGORIE_UTILISATEUR             = "Utilisateur";
+    public const PREF_BIB_CATEGORIE_PIECES                  = "Pièces";
     public const PREF_BIB_CATEGORIE_ENTREPRISE              = "Entreprise";
     public const PREF_BIB_CATEGORIE_DATE_DE_CREATION        = "Date de création";
     public const PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION    = "Dernière modification";
@@ -976,14 +977,16 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_CATEGORIE_ID                     => 0,
         self::PREF_BIB_CATEGORIE_NOM                    => 1,
         self::PREF_BIB_CATEGORIE_UTILISATEUR            => 2,
-        self::PREF_BIB_CATEGORIE_ENTREPRISE             => 3,
-        self::PREF_BIB_CATEGORIE_DATE_DE_CREATION       => 4,
-        self::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION   => 5
+        self::PREF_BIB_CATEGORIE_PIECES                 => 3,
+        self::PREF_BIB_CATEGORIE_ENTREPRISE             => 4,
+        self::PREF_BIB_CATEGORIE_DATE_DE_CREATION       => 5,
+        self::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION   => 6
     ];
     //BIBLIOTHEQUE - CLASSEUR
     public const PREF_BIB_CLASSEUR_ID                   = "Id";
     public const PREF_BIB_CLASSEUR_NOM                  = "Nom";
     public const PREF_BIB_CLASSEUR_UTILISATEUR          = "Utilisateur";
+    public const PREF_BIB_CLASSEUR_PIECES               = "Pièces";
     public const PREF_BIB_CLASSEUR_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_CLASSEUR_DATE_DE_CREATION     = "Date de création";
     public const PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION = "Dernière modification";
@@ -991,9 +994,10 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_CLASSEUR_ID                      => 0,
         self::PREF_BIB_CLASSEUR_NOM                     => 1,
         self::PREF_BIB_CLASSEUR_UTILISATEUR             => 2,
-        self::PREF_BIB_CLASSEUR_ENTREPRISE              => 3,
-        self::PREF_BIB_CLASSEUR_DATE_DE_CREATION        => 4,
-        self::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION    => 5
+        self::PREF_BIB_CLASSEUR_PIECES                  => 3,
+        self::PREF_BIB_CLASSEUR_ENTREPRISE              => 4,
+        self::PREF_BIB_CLASSEUR_DATE_DE_CREATION        => 5,
+        self::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION    => 6
     ];
     //BIBLIOTHEQUE - DOCUMENT
     public const PREF_BIB_DOCUMENT_ID                   = "Id";

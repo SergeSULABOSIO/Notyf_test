@@ -47,6 +47,7 @@ use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Controller\Admin\VictimeCrudController;
 use App\Entity\DocCategorie;
+use App\Entity\DocClasseur;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
 use App\Entity\Victime;
@@ -103,7 +104,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
     public const CROSSED_ENTITY_CATEGORIE = "categorie";
-    public const CROSSED_ENTITY_CLASSE = "classeur";
+    public const CROSSED_ENTITY_CLASSEUR = "classeur";
     public const CROSSED_ENTITY_DOC_PIECE = "piece";
     public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommissions";
     public const CROSSED_ENTITY_POP_PARTENAIRE = "paiementPartenaires";
@@ -636,6 +637,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Classeur_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocClasseur */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PIECES - [Classeur: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_CLASSEUR . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_CLASSEUR . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_POPCom_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var PaiementCommission */
@@ -1017,7 +1033,7 @@ class ServiceCrossCanal
         $paramIDSinistre = $adminUrlGenerator->get(self::CROSSED_ENTITY_SINISTRE);
         if ($paramIDSinistre != null) {
             $sinistre = $this->entityManager->getRepository(Sinistre::class)->find($paramIDSinistre);
-            if($expert->getSinistres()->contains($sinistre) == false){
+            if ($expert->getSinistres()->contains($sinistre) == false) {
                 $expert->addSinistre($sinistre);
             }
         }
@@ -1045,7 +1061,7 @@ class ServiceCrossCanal
             //On calcule d'abord les champs calculables
             $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
             $paiementCommission->setPolice($objet);
-            $paiementCommission->setMontant($objet->calc_revenu_ttc_solde_restant_du);//calc_revenu_ttc_solde_restant_du
+            $paiementCommission->setMontant($objet->calc_revenu_ttc_solde_restant_du); //calc_revenu_ttc_solde_restant_du
         }
         return $paiementCommission;
     }
@@ -1065,9 +1081,9 @@ class ServiceCrossCanal
             $paiementTaxe->setPolice($police);
             $paiementTaxe->setTaxe($taxe);
             $paiementTaxe->setExercice(Date("Y"));
-            if($taxe->isPayableparcourtier() == true){
+            if ($taxe->isPayableparcourtier() == true) {
                 $paiementTaxe->setMontant($police->calc_taxes_courtier_solde);
-            }else{
+            } else {
                 $paiementTaxe->setMontant($police->calc_taxes_assureurs_solde);
             }
         }

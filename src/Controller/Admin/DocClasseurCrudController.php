@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\DocClasseur;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
@@ -39,7 +40,9 @@ class DocClasseurCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression, 
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
         )
     {
         
@@ -117,6 +120,18 @@ class DocClasseurCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //Cross Canal
+        $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
+            ->displayIf(static function (?DocClasseur $entity) {
+                return count($entity->getDocPieces()) != 0;
+            })
+            ->setIcon('fas fa-file-word')
+            ->linkToCrudAction('cross_canal_listerPiece');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $piece_lister)
+            ->add(Crud::PAGE_INDEX, $piece_lister);
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite');//<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -237,5 +252,10 @@ class DocClasseurCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function cross_canal_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Classeur_listerPiece($context, $adminUrlGenerator));
     }
 }

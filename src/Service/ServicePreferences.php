@@ -803,7 +803,7 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION])) {
-            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION])) {

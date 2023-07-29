@@ -181,7 +181,6 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
 
-
         return $objet;
     }
 

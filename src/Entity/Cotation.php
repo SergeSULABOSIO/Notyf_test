@@ -53,9 +53,13 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Client $client = null;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
+
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();
+        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,6 +240,36 @@ class Cotation
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionCRM>
+     */
+    public function getActionCRMs(): Collection
+    {
+        return $this->actionCRMs;
+    }
+
+    public function addActionCRM(ActionCRM $actionCRM): self
+    {
+        if (!$this->actionCRMs->contains($actionCRM)) {
+            $this->actionCRMs->add($actionCRM);
+            $actionCRM->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionCRM(ActionCRM $actionCRM): self
+    {
+        if ($this->actionCRMs->removeElement($actionCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionCRM->getCotation() === $this) {
+                $actionCRM->setCotation(null);
+            }
+        }
 
         return $this;
     }

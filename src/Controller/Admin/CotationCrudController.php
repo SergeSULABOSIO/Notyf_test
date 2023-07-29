@@ -132,6 +132,22 @@ class CotationCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
+        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_ajouterMission');
+        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+            ->displayIf(static function (?Cotation $entity) {
+                return count($entity->getActionCRMs()) != 0;
+            })
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_listerMission');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $mission_ajouter)
+            ->add(Crud::PAGE_INDEX, $mission_ajouter)
+            ->add(Crud::PAGE_DETAIL, $mission_lister)
+            ->add(Crud::PAGE_INDEX, $mission_lister);
+
         $piece_ajouter = Action::new(ServiceCrossCanal::COTATION_PIECE_AJOUTER)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterPiece');
@@ -356,5 +372,15 @@ class CotationCrudController extends AbstractCrudController
             ->generateUrl();
         $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La cotation " . $cotation->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
         return $this->redirect($url);
+    }
+
+    public function cross_canal_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_ajouterMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_listerMission($context, $adminUrlGenerator));
     }
 }

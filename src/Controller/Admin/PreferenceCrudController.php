@@ -66,6 +66,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_STATUS            = "Status actuel";
     public const PREF_CRM_MISSION_PISTE             = "Piste à suivre";
     public const PREF_CRM_MISSION_POLICE            = "Police";
+    public const PREF_CRM_MISSION_COTATION          = "Cotation";
     public const PREF_CRM_MISSION_FEEDBACKS         = "Feedbacks";
     public const PREF_CRM_MISSION_STARTED_AT        = "Date d'effet";
     public const PREF_CRM_MISSION_ENDED_AT          = "Echéance";
@@ -81,14 +82,15 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_MISSION_STATUS       => 3,
         self::PREF_CRM_MISSION_PISTE        => 4,
         self::PREF_CRM_MISSION_POLICE       => 5,
-        self::PREF_CRM_MISSION_STARTED_AT   => 6,
-        self::PREF_CRM_MISSION_ENDED_AT     => 7,
-        self::PREF_CRM_MISSION_ATTRIBUE_A   => 8,
-        self::PREF_CRM_MISSION_UTILISATEUR  => 9,
-        self::PREF_CRM_MISSION_ENTREPRISE   => 10,
-        self::PREF_CRM_MISSION_CREATED_AT   => 11,
-        self::PREF_CRM_MISSION_UPDATED_AT   => 12,
-        self::PREF_CRM_MISSION_FEEDBACKS    => 13
+        self::PREF_CRM_MISSION_COTATION     => 6,
+        self::PREF_CRM_MISSION_STARTED_AT   => 7,
+        self::PREF_CRM_MISSION_ENDED_AT     => 8,
+        self::PREF_CRM_MISSION_ATTRIBUE_A   => 9,
+        self::PREF_CRM_MISSION_UTILISATEUR  => 10,
+        self::PREF_CRM_MISSION_ENTREPRISE   => 11,
+        self::PREF_CRM_MISSION_CREATED_AT   => 12,
+        self::PREF_CRM_MISSION_UPDATED_AT   => 13,
+        self::PREF_CRM_MISSION_FEEDBACKS    => 14
     ];
 
     //CRM - FEEDBACK
@@ -120,6 +122,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_CLIENT               = "Assuré(e)";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_POLICE               = "Police en place";
+    public const PREF_CRM_COTATION_MISSIONS             = "Missions";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
     public const PREF_CRM_COTATION_PIECES               = "Pièces";
     public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
@@ -133,13 +136,14 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_PRODUIT                                         => 3,
         self::PREF_CRM_COTATION_PRIME_TOTALE                                    => 4,
         self::PREF_CRM_COTATION_POLICE                                          => 5,
-        self::PREF_CRM_COTATION_PISTE                                           => 6,
-        self::PREF_CRM_COTATION_PIECES                                          => 7,
-        self::PREF_CRM_COTATION_UTILISATEUR                                     => 8,
-        self::PREF_CRM_COTATION_ENTREPRISE                                      => 9,
-        self::PREF_CRM_COTATION_DATE_CREATION                                   => 10,
-        self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 11,
-        self::PREF_CRM_COTATION_CLIENT                                          => 12
+        self::PREF_CRM_COTATION_MISSIONS                                        => 6,
+        self::PREF_CRM_COTATION_PISTE                                           => 7,
+        self::PREF_CRM_COTATION_PIECES                                          => 8,
+        self::PREF_CRM_COTATION_UTILISATEUR                                     => 9,
+        self::PREF_CRM_COTATION_ENTREPRISE                                      => 10,
+        self::PREF_CRM_COTATION_DATE_CREATION                                   => 11,
+        self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 12,
+        self::PREF_CRM_COTATION_CLIENT                                          => 13
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";

@@ -312,6 +312,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Cotation_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Cotation */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE MISSION - [Cotation: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Sinistre_ajouterExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Sinistre */
@@ -794,6 +809,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Cotation_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Cotation */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES MISSIONS - [Cotation: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_COTATION . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Sinistre_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Sinistre */
@@ -1178,6 +1209,26 @@ class ServiceCrossCanal
             /** @var Police */
             $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
             $actionCRM->setPolice($objet);
+            if ($objet->getCotation() != null) {
+                $actionCRM->setCotation($objet->getCotation());
+                if ($objet->getCotation()->getPiste() != null) {
+                    $actionCRM->setPiste($objet->getCotation()->getPiste());
+                }
+            }
+        }
+        return $actionCRM;
+    }
+
+    public function crossCanal_Mission_setCotation(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM
+    {
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
+        if ($paramID != null) {
+            /** @var Cotation */
+            $objet = $this->entityManager->getRepository(Cotation::class)->find($paramID);
+            $actionCRM->setCotation($objet);
+            if ($objet->getPiste() != null) {
+                $actionCRM->setPiste($objet->getPiste());
+            }
         }
         return $actionCRM;
     }

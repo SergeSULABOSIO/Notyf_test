@@ -92,6 +92,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('endedAt')
             ->add('piste')
             ->add('police')
+            ->add('cotation')
             ->add('attributedTo')
             ;
     }
@@ -129,6 +130,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet->setClos(0);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Mission_setCotation($objet, $this->adminUrlGenerator);
         return $objet;
     }
 

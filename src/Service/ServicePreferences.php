@@ -3229,6 +3229,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(6);
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
+            ->setRequired(false)
             ->setColumns(6)
             ->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3248,6 +3249,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)
+            ->setRequired(false)
             ->setColumns(4)
             ->onlyOnForms()
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3262,6 +3264,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(2);
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
+            ->setRequired(false)
             ->onlyOnForms()
             ->setColumns(6)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3271,6 +3274,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_COTATION_POLICE)
+            ->setRequired(false)
             ->onlyOnForms()
             ->setColumns(12)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -3279,15 +3283,16 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        /* $tabAttributs[] = AssociationField::new('risque', PreferenceCrudController::PREF_CRM_COTATION_RISQUE)
+        $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+            ->setRequired(false)
             ->onlyOnForms()
-            ->setColumns(4)
+            ->setColumns(12)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            }); */
+            });
 
         return $tabAttributs;
     }
@@ -3330,6 +3335,12 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR])) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_MISSIONS])) {
+            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)
@@ -3460,6 +3471,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_COTATION])) {
+            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_PISTE])) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->hideOnForm();
@@ -3518,6 +3533,16 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms()

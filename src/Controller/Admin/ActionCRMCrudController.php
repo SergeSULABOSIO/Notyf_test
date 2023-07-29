@@ -91,6 +91,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('startedAt')
             ->add('endedAt')
             ->add('piste')
+            ->add('police')
             ->add('attributedTo')
             ;
     }
@@ -127,6 +128,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet->setEndedAt(new DateTimeImmutable("+7 day"));
         $objet->setClos(0);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
         return $objet;
     }
 

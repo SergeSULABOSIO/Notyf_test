@@ -82,10 +82,12 @@ class ServiceCrossCanal
     public const POLICE_LISTER_POP_PARTENAIRES = "Voir les Pdp Partenaire";
     public const POLICE_LISTER_POP_TAXES = "Voir les Pdp Taxe";
     public const POLICE_LISTER_SINISTRES = "Voir les sinistres";
+    public const POLICE_LISTER_MISSIONS = "Voir les missions";
     public const POLICE_AJOUTER_POP_COMMISSIONS = "Encaisser la Comm";
     public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
     public const POLICE_AJOUTER_POP_TAXES = "Payer Taxe";
     public const POLICE_AJOUTER_SINISTRE = "Ajouter un sinistre";
+    public const POLICE_AJOUTER_MISSIONS = "Ajouter une mission";
     public const SINISTRE_AJOUTER_EXPERT = "Ajouter un expert";
     public const SINISTRE_AJOUTER_VICTIME = "Ajouter une victime";
     public const SINISTRE_AJOUTER_DOCUMENT = "Ajouter un document";
@@ -288,6 +290,21 @@ class ServiceCrossCanal
             ->setController(SinistreCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU SINISTRE - [Police: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE MISSION - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
@@ -761,6 +778,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES MISSIONS - [Police: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Sinistre_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Sinistre */
@@ -1133,6 +1166,18 @@ class ServiceCrossCanal
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
             $actionCRM->setPiste($objet);
+        }
+        return $actionCRM;
+    }
+
+    public function crossCanal_Mission_setPolice(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM
+    {
+        $objet = null;
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramID != null) {
+            /** @var Police */
+            $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
+            $actionCRM->setPolice($objet);
         }
         return $actionCRM;
     }

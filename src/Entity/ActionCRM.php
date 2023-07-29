@@ -54,11 +54,10 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
 
-    /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
-    private ?Utilisateur $attributedTo = null;
- */
-    //private ?Utilisateur $attributedTo = null;
+    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Police $police = null;
 
+    
     public function __construct()
     {
         $this->feedbackCRMs = new ArrayCollection();
@@ -233,6 +232,18 @@ class ActionCRM
     public function setAttributedTo(?Utilisateur $attributedTo): self
     {
         $this->attributedTo = $attributedTo;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

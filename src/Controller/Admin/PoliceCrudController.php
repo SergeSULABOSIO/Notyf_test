@@ -304,9 +304,26 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $sinistre_lister)
             ->add(Crud::PAGE_INDEX, $sinistre_lister)
-
             ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
             ->add(Crud::PAGE_INDEX, $sinistre_ajouter);
+
+        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_ajouterMission');
+
+        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getActionCRMs()) != 0;
+            })
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_listerMission');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $mission_lister)
+            ->add(Crud::PAGE_INDEX, $mission_lister)
+            ->add(Crud::PAGE_DETAIL, $mission_ajouter)
+            ->add(Crud::PAGE_INDEX, $mission_ajouter);
+
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -507,6 +524,16 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerSinistre($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerMission($context, $adminUrlGenerator));
     }
 
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse

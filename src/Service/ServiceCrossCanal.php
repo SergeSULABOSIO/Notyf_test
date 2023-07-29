@@ -46,6 +46,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Controller\Admin\VictimeCrudController;
+use App\Entity\DocCategorie;
 use App\Entity\EtapeSinistre;
 use App\Entity\Expert;
 use App\Entity\Victime;
@@ -101,6 +102,8 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_EXPERT = "expert";
     public const CROSSED_ENTITY_PISTE = "piste";
     public const CROSSED_ENTITY_POLICE = "police";
+    public const CROSSED_ENTITY_CATEGORIE = "categorie";
+    public const CROSSED_ENTITY_CLASSE = "classeur";
     public const CROSSED_ENTITY_DOC_PIECE = "piece";
     public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommissions";
     public const CROSSED_ENTITY_POP_PARTENAIRE = "paiementPartenaires";
@@ -611,6 +614,22 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES PIECES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Categorie_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocCategorie */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(DocPieceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PIECES - [Catégorie: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_CATEGORIE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_CATEGORIE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

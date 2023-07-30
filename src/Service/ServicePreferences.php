@@ -3473,7 +3473,6 @@ class ServicePreferences
                 ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
                 ->setChoices(ActionCRMCrudController::STATUS_MISSION)
                 ->renderAsBadges([
-                    // $value => $badgeStyleName
                     ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ACHEVEE] => 'success', //info
                     ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS] => 'warning',
                 ]);

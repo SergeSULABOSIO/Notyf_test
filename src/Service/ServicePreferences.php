@@ -2022,6 +2022,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
+            $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES])) {
             $tabAttributs[] = AssociationField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
                 ->onlyOnIndex();
@@ -2040,9 +2044,11 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
                 ->onlyOnDetail();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
-            $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
-                ->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS])) {
+            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS)
+                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE])) {
             $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
@@ -3479,6 +3485,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_PISTE])) {
             $tabAttributs[] = AssociationField::new('feedbackCRMs', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)
                 ->onlyOnIndex();
@@ -3543,6 +3553,16 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms()
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms()

@@ -69,12 +69,16 @@ class Sinistre extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: DocPiece::class)]
     private Collection $docPieces;
 
+    #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: ActionCRM::class)]
+    private Collection $actionCRMs;
+
     public function __construct()
     {
         $this->experts = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
         $this->victimes = new ArrayCollection();
         $this->docPieces = new ArrayCollection();
+        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -351,6 +355,36 @@ class Sinistre extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($docPiece->getSinistre() === $this) {
                 $docPiece->setSinistre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionCRM>
+     */
+    public function getActionCRMs(): Collection
+    {
+        return $this->actionCRMs;
+    }
+
+    public function addActionCRM(ActionCRM $actionCRM): self
+    {
+        if (!$this->actionCRMs->contains($actionCRM)) {
+            $this->actionCRMs->add($actionCRM);
+            $actionCRM->setSinistre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionCRM(ActionCRM $actionCRM): self
+    {
+        if ($this->actionCRMs->removeElement($actionCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionCRM->getSinistre() === $this) {
+                $actionCRM->setSinistre(null);
             }
         }
 

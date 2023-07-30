@@ -60,6 +60,9 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Cotation $cotation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Sinistre $sinistre = null;
+
     
     public function __construct()
     {
@@ -259,6 +262,18 @@ class ActionCRM
     public function setCotation(?Cotation $cotation): self
     {
         $this->cotation = $cotation;
+
+        return $this;
+    }
+
+    public function getSinistre(): ?Sinistre
+    {
+        return $this->sinistre;
+    }
+
+    public function setSinistre(?Sinistre $sinistre): self
+    {
+        $this->sinistre = $sinistre;
 
         return $this;
     }

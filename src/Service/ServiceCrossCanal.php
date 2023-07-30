@@ -327,6 +327,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Sinistre_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE MISSION - [Sinistre: " . $entite . "]")
+            ->set(self::CROSSED_ENTITY_SINISTRE, $entite->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Sinistre_ajouterExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Sinistre */
@@ -825,6 +840,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Sinistre_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Sinistre */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(ActionCRMCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES MISSIONS - [Sinistre: " . $entite . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Sinistre_listerExpert(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Sinistre */
@@ -1228,6 +1259,29 @@ class ServiceCrossCanal
             $actionCRM->setCotation($objet);
             if ($objet->getPiste() != null) {
                 $actionCRM->setPiste($objet->getPiste());
+            }
+        }
+        return $actionCRM;
+    }
+
+    public function crossCanal_Mission_setSinistre(ActionCRM $actionCRM, AdminUrlGenerator $adminUrlGenerator): ActionCRM
+    {
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_SINISTRE);
+        if ($paramID != null) {
+            /** @var Sinistre */
+            $objet = $this->entityManager->getRepository(Sinistre::class)->find($paramID);
+            $actionCRM->setSinistre($objet);
+            //Définition de la police
+            if ($objet->getPolice() != null) {
+                $actionCRM->setPolice($objet->getPolice());
+                //Définition de la cotation
+                if($objet->getPolice()->getCotation() != null){
+                    $actionCRM->setCotation($objet->getPolice()->getCotation());
+                    //Définition de la piste
+                    if($objet->getPolice()->getCotation()->getPiste() != null){
+                        $actionCRM->setPiste($objet->getPolice()->getCotation()->getPiste());
+                    }
+                }
             }
         }
         return $actionCRM;

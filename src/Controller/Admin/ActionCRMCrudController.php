@@ -40,9 +40,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class ActionCRMCrudController extends AbstractCrudController
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
+    public const MISSION_ACHEVEE = "Achevée";
+    public const MISSION_ENCOURS = "Encours";
     public const STATUS_MISSION = [
-        'Mission achevée avec succès' => 1,
-        'Mission en cours...' => 0
+        self::MISSION_ACHEVEE => 1,
+        self::MISSION_ENCOURS => 0
     ];
 
     public ?Crud $crud = null;
@@ -93,6 +95,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('piste')
             ->add('police')
             ->add('cotation')
+            ->add('sinistre')
             ->add('attributedTo')
             ;
     }
@@ -131,6 +134,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setCotation($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Mission_setSinistre($objet, $this->adminUrlGenerator);
         return $objet;
     }
 

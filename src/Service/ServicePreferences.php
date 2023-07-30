@@ -3464,14 +3464,19 @@ class ServicePreferences
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF])) {
-            $tabAttributs[] = TextField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+            $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_STATUS])) {
             $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
                 ->hideOnForm()
                 ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
-                ->setChoices(ActionCRMCrudController::STATUS_MISSION);
+                ->setChoices(ActionCRMCrudController::STATUS_MISSION)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ACHEVEE] => 'success', //info
+                    ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS] => 'warning',
+                ]);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_MISSION_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)

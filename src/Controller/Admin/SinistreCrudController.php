@@ -139,6 +139,22 @@ class SinistreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
+        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_ajouterMission');
+        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+            ->displayIf(static function (?Sinistre $entity) {
+                return count($entity->getActionCRMs()) != 0;
+            })
+            ->setIcon('fas fa-paper-plane')
+            ->linkToCrudAction('cross_canal_listerMission');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $mission_ajouter)
+            ->add(Crud::PAGE_INDEX, $mission_ajouter)
+            ->add(Crud::PAGE_DETAIL, $mission_lister)
+            ->add(Crud::PAGE_INDEX, $mission_lister);
+
         $document_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_DOCUMENT)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterDocument');
@@ -358,5 +374,15 @@ class SinistreCrudController extends AbstractCrudController
     public function cross_canal_listerDocument(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerDocument($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_ajouterMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Sinistre_listerMission($context, $adminUrlGenerator));
     }
 }

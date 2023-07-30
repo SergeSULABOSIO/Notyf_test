@@ -152,7 +152,10 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
     #[Route('/inscription_entreprise', name: 'security.register.entreprise', methods: ['GET', 'POST'])]
     public function registration_admin(Security $security, ServiceMails $serviceMails, Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $hasher): Response
     {
+        /** @var Entreprise */
         $entreprise = new Entreprise();
+
+        /** @var Utilisateur */
         $utilisateur = new Utilisateur();
         $utilisateur = $security->getUser();
 
@@ -171,9 +174,9 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
             //on persiste l'entreprise
             $manager->persist($entreprise);
 
-            //On modifie et persiste aussi l'objet Utilisateur
             $utilisateur->setEntreprise($entreprise);
             $utilisateur->setUtilisateur($utilisateur);
+            
             $manager->persist($utilisateur);
 
             $manager->flush();

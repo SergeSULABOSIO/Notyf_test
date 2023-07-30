@@ -45,9 +45,6 @@ class Sinistre extends CalculableEntity
     #[ORM\Column]
     private ?float $montantPaye = null;
 
-    #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: CommentaireSinistre::class)]
-    private Collection $commentaire;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $occuredAt = null;
 
@@ -75,7 +72,6 @@ class Sinistre extends CalculableEntity
     public function __construct()
     {
         $this->experts = new ArrayCollection();
-        $this->commentaire = new ArrayCollection();
         $this->victimes = new ArrayCollection();
         $this->docPieces = new ArrayCollection();
         $this->actionCRMs = new ArrayCollection();
@@ -202,36 +198,6 @@ class Sinistre extends CalculableEntity
     public function setMontantPaye(float $montantPaye): self
     {
         $this->montantPaye = $montantPaye;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CommentaireSinistre>
-     */
-    public function getCommentaire(): Collection
-    {
-        return $this->commentaire;
-    }
-
-    public function addCommentaire(CommentaireSinistre $commentaire): self
-    {
-        if (!$this->commentaire->contains($commentaire)) {
-            $this->commentaire->add($commentaire);
-            $commentaire->setSinistre($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommentaire(CommentaireSinistre $commentaire): self
-    {
-        if ($this->commentaire->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getSinistre() === $this) {
-                $commentaire->setSinistre(null);
-            }
-        }
 
         return $this;
     }

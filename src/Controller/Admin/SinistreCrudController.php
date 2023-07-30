@@ -84,7 +84,6 @@ class SinistreCrudController extends AbstractCrudController
             ->add('victimes')
             ->add('experts')
             ->add('etape')
-            ->add('commentaire')
             ->add('cout')
             ->add('montantPaye')
             ->add('paidAt')

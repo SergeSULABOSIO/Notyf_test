@@ -172,7 +172,6 @@ class DashboardController extends AbstractDashboardController
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES]);
 
         yield MenuItem::subMenu('SINISTRE', 'fas fa-fire')->setSubItems([ //<i class="fa-solid fa-fire"></i>
-            MenuItem::linkToCrud('Commentaires', 'fas fa-comments', CommentaireSinistre::class), //<i class="fa-solid fa-comments"></i>
             MenuItem::linkToCrud('Etapes', 'fas fa-arrow-down-short-wide', EtapeSinistre::class), //<i class="fa-solid fa-arrow-down-short-wide"></i>
             MenuItem::linkToCrud('Expert', 'fas fa-user-graduate', Expert::class), //<i class="fa-solid fa-user-graduate"></i>
             MenuItem::linkToCrud('Sinistre', 'fas fa-bell', Sinistre::class), //<i class="fa-regular fa-bell"></i>

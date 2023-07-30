@@ -32,7 +32,6 @@ use App\Entity\CalculableEntity;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use Doctrine\ORM\EntityRepository;
-use App\Entity\CommentaireSinistre;
 use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use function PHPUnit\Framework\returnSelf;
@@ -173,9 +172,6 @@ class ServicePreferences
             $this->setTailleFIN($preference, $crud);
         }
         //GROUPE SINISTRE
-        if ($instance instanceof CommentaireSinistre) {
-            $this->setTailleSIN($preference, $crud);
-        }
         if ($instance instanceof EtapeSinistre) {
             $this->setTailleSIN($preference, $crud);
         }
@@ -427,15 +423,6 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_PaiementTaxes_form($tabAttributs);
         }
         //GROUPE SINISTRE
-        if ($objetInstance instanceof CommentaireSinistre) {
-            $tabAttributs = [
-                FormField::addPanel('Informations générales')
-                    ->setIcon('fas fa-comments') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Commentaires.")
-            ];
-            $tabAttributs = $this->setCRM_Fields_CommentaireSinistres_Index_Details($preference->getSinCommentaires(), PreferenceCrudController::TAB_SIN_COMMENTAIRES, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_CommentaireSinistres_form($tabAttributs);
-        }
         if ($objetInstance instanceof EtapeSinistre) {
             $tabAttributs = [
                 FormField::addPanel('Informations générales')
@@ -1336,19 +1323,6 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_CommentaireSinistres_form($tabAttributs)
-    {
-        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
-            ->setColumns(12)
-            ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
-            ->setColumns(12)
-            ->onlyOnForms();
-
-
-        return $tabAttributs;
-    }
-
 
     public function setCRM_Fields_EtapeSinistres_form($tabAttributs)
     {
@@ -1458,15 +1432,6 @@ class ServicePreferences
             ->setColumns(2)
             ->onlyWhenUpdating();
         $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->setColumns(12)
-            ->onlyWhenUpdating();
-        $tabAttributs[] = AssociationField::new('commentaire', PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -1874,41 +1839,6 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_CommentaireSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
-    {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_COMMENTAIRE_ID)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE])) {
-            $tabAttributs[] = TextareaField::new('message', PreferenceCrudController::PREF_SIN_COMMENTAIRE_MESSAGE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE])) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_COMMENTAIRE_SINISTRE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_COMMENTAIRE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_COMMENTAIRE_DATE_DE_CREATION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_COMMENTAIRE_DERNIRE_MODIFICATION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_COMMENTAIRE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_COMMENTAIRE_ENTREPRISE)
-                ->hideOnForm();
-        }
-
-        return $tabAttributs;
-    }
-
 
     public function setCRM_Fields_EtapeSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
@@ -2089,10 +2019,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE])) {
-            $tabAttributs[] = ArrayField::new('commentaire', PreferenceCrudController::PREF_SIN_SINISTRE_COMMENTAIRE)
                 ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_UTILISATEUR])) {
@@ -3872,7 +3798,6 @@ class ServicePreferences
         $preference->setFinTaxesPayees([1, 2, 3, 5, 6, 7, 12]);
         //SIN
         $preference->setSinTaille(100);
-        $preference->setSinCommentaires([1, 2, 3, 7]);
         $preference->setSinEtapes([1, 2, 3, 4, 7]);
         $preference->setSinExperts([1, 2, 3, 4, 5, 6, 7, 11]);
         $preference->setSinSinistres([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 18]);

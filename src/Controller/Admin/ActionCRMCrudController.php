@@ -96,6 +96,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('police')
             ->add('cotation')
             ->add('sinistre')
+            ->add('clos')
             ->add('attributedTo')
             ;
     }

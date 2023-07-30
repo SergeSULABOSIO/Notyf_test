@@ -564,6 +564,12 @@ class ServicePreferences
             $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)
                 ->onlyOnDetail();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES])) {
+            $tabAttributs[] = AssociationField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)
+                ->onlyOnIndex();
+            $tabAttributs[] = ArrayField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)
+                ->onlyOnDetail();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
                 ->onlyOnIndex();
@@ -2610,6 +2616,16 @@ class ServicePreferences
 
     public function setCRM_Fields_Engins_form($tabAttributs)
     {
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_ENGIN_POLICE)
+            ->setRequired(false)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         $tabAttributs[] = TextField::new('plaque', PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE)
             ->onlyOnForms()
             ->setColumns(4);
@@ -2738,6 +2754,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('plaque', PreferenceCrudController::PREF_PRO_ENGIN_N°_PLAQUE)
                 ->hideOnForm();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_ENGIN_POLICE)
+                ->hideOnForm();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS])) {
             $tabAttributs[] = TextField::new('chassis', PreferenceCrudController::PREF_PRO_ENGIN_N°_CHASSIS)
                 ->hideOnForm();
@@ -2781,10 +2801,6 @@ class ServicePreferences
             $tabAttributs[] = ChoiceField::new('nature', PreferenceCrudController::PREF_PRO_ENGIN_NATURE)
                 ->hideOnForm()
                 ->setChoices(AutomobileCrudController::TAB_AUTO_NATURE);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_POLICE])) {
-            $tabAttributs[] = ArrayField::new('polices', PreferenceCrudController::PREF_PRO_ENGIN_POLICE)
-                ->hideOnForm();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ENGIN_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_ENGIN_UTILISATEUR)

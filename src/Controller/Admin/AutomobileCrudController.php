@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Automobile;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
+use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\FilterCollection;
@@ -16,7 +18,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Service\ServicePreferences;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -71,11 +72,15 @@ class AutomobileCrudController extends AbstractCrudController
         'Autres' => 19
     ];
 
+    public ?Crud $crud = null;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager, 
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator
         )
     {
         
@@ -109,7 +114,7 @@ class AutomobileCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('polices')
+            ->add('police')
             ->add(ChoiceFilter::new('utilite', 'Usage')->setChoices(self::TAB_AUTO_UTILITE))
             ->add(ChoiceFilter::new('nature', 'Nature')->setChoices(self::TAB_AUTO_NATURE))
         ;
@@ -119,7 +124,7 @@ class AutomobileCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Automobile(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -131,6 +136,7 @@ class AutomobileCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -142,6 +148,7 @@ class AutomobileCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Automobile();
+        $objet = $this->serviceCrossCanal->crossCanal_Automobile_setPolice($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -150,6 +157,7 @@ class AutomobileCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new Automobile());
     }
 

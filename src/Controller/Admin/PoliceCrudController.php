@@ -197,6 +197,23 @@ class PoliceCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
+        $automobile_ajouter = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_AJOUTER)
+            ->setIcon('fas fa-car')
+            ->linkToCrudAction('cross_canal_ajouterAutomobile');
+        $automobile_lister = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_LISTER)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getAutomobiles()) != 0;
+            })
+            ->setIcon('fas fa-car')
+            ->linkToCrudAction('cross_canal_listerAutomobile');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $automobile_ajouter)
+            ->add(Crud::PAGE_INDEX, $automobile_ajouter)
+            ->add(Crud::PAGE_DETAIL, $automobile_lister)
+            ->add(Crud::PAGE_INDEX, $automobile_lister);
+
+
         $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
             ->setIcon('fas fa-address-book')
             ->linkToCrudAction('cross_canal_ajouterContact');
@@ -234,7 +251,8 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_ajouter)
             ->add(Crud::PAGE_INDEX, $piece_ajouter)
             ->add(Crud::PAGE_DETAIL, $piece_lister)
-            ->add(Crud::PAGE_INDEX, $piece_lister);
+            ->add(Crud::PAGE_INDEX, $piece_lister)
+            ;
 
         $paiementCommission_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_AJOUTER)
             ->displayIf(static function (?Police $entity) {
@@ -566,6 +584,16 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerContact($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterAutomobile($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerAutomobile($context, $adminUrlGenerator));
     }
 
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse

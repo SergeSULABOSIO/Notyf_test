@@ -61,9 +61,6 @@ class Automobile
     #[ORM\Column(length: 255)]
     private ?string $chassis = null;
 
-    #[ORM\ManyToMany(targetEntity: Police::class)]
-    private Collection $polices;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -73,9 +70,12 @@ class Automobile
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\ManyToOne(inversedBy: 'automobiles')]
+    private ?Police $police = null;
+
     public function __construct()
     {
-        $this->polices = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -217,31 +217,7 @@ class Automobile
 
     public function __toString()
     {
-        return $this->marque . " - " . $this->plaque;
-    }
-
-    /**
-     * @return Collection<int, Police>
-     */
-    public function getPolices(): Collection
-    {
-        return $this->polices;
-    }
-
-    public function addPolice(Police $police): self
-    {
-        if (!$this->polices->contains($police)) {
-            $this->polices->add($police);
-        }
-
-        return $this;
-    }
-
-    public function removePolice(Police $police): self
-    {
-        $this->polices->removeElement($police);
-
-        return $this;
+        return "Marque: " . $this->marque . " / Plaque: " . $this->plaque . " / Chassis: " . $this->chassis . " / Année: " . $this->annee;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -276,6 +252,18 @@ class Automobile
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

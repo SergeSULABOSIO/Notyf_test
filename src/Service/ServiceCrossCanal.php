@@ -37,6 +37,7 @@ use App\Controller\Admin\EtapeCrmCrudController;
 use App\Controller\Admin\SinistreCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\AutomobileCrudController;
 use App\Controller\Admin\ExpertCrudController;
 use Symfony\Component\Validator\Constraints\Date;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -46,6 +47,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Controller\Admin\VictimeCrudController;
+use App\Entity\Automobile;
 use App\Entity\DocCategorie;
 use App\Entity\DocClasseur;
 use App\Entity\EtapeSinistre;
@@ -65,6 +67,9 @@ class ServiceCrossCanal
     public const OPTION_PIECE_AJOUTER = "Ajouter une pièce";
     public const OPTION_PIECE_LISTER = "Voire les pièces";
     public const OPTION_PIECE_ATTACHER = "Attacher une pièce";
+    //Automobile
+    public const OPTION_AUTOMOBILE_AJOUTER = "Ajouter un engin";
+    public const OPTION_AUTOMOBILE_LISTER = "Voire les engins";
     //Piste
     public const OPTION_PISTE_AJOUTER = "Ajouter une piste";
     public const OPTION_PISTE_LISTER = "Voire les pistes";
@@ -868,6 +873,21 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_ajouterAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+
+        $url = $adminUrlGenerator
+            ->setController(AutomobileCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVEL ENGIN AUTOMOTEUR - [Police: " . $police . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Police_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
@@ -887,6 +907,23 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES CONTACT - [Police: " . $police . "]")
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$piste->getId()]) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Police_listerAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+
+        $url = $adminUrlGenerator
+            ->setController(AutomobileCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE D'ENGINS AUTOMOTEURS - [Police: " . $police . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $police->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 
@@ -1188,6 +1225,17 @@ class ServiceCrossCanal
             $police->setClient($objet->getClient());
         }
         return $police;
+    }
+
+    public function crossCanal_Automobile_setPolice(Automobile $automobile, AdminUrlGenerator $adminUrlGenerator): Automobile
+    {
+        $paramIdPolice = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramIdPolice != null) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($paramIdPolice);
+            $automobile->setPolice($police);
+        }
+        return $automobile;
     }
 
     public function crossCanal_Expert_setSinistre(Expert $expert, AdminUrlGenerator $adminUrlGenerator): Expert

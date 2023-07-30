@@ -162,6 +162,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: Automobile::class)]
+    private Collection $automobiles;
     
     
     public function __construct()
@@ -172,6 +175,7 @@ class Police extends CalculableEntity
         $this->paiementTaxes = new ArrayCollection();
         $this->sinistres = new ArrayCollection();
         $this->actionCRMs = new ArrayCollection();
+        $this->automobiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -815,6 +819,36 @@ class Police extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($actionCRM->getPolice() === $this) {
                 $actionCRM->setPolice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Automobile>
+     */
+    public function getAutomobiles(): Collection
+    {
+        return $this->automobiles;
+    }
+
+    public function addAutomobile(Automobile $automobile): self
+    {
+        if (!$this->automobiles->contains($automobile)) {
+            $this->automobiles->add($automobile);
+            $automobile->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAutomobile(Automobile $automobile): self
+    {
+        if ($this->automobiles->removeElement($automobile)) {
+            // set the owning side to null (unless already changed)
+            if ($automobile->getPolice() === $this) {
+                $automobile->setPolice(null);
             }
         }
 

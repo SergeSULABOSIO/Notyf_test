@@ -126,7 +126,7 @@ class PaiementCommissionCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $piece_attacher = Action::new(ServiceCrossCanal::POPCOMMISSION_ATTACHER_PIECE)
+        $piece_attacher = Action::new(ServiceCrossCanal::OPTION_PIECE_ATTACHER)
             ->displayIf(static function (?PaiementCommission $entity) {
                 return $entity->getPiece() == null;
             })

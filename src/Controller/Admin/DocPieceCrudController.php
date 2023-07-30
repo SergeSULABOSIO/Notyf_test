@@ -139,21 +139,21 @@ class DocPieceCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $paiementCommissions_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_COMMISSIONS)
+        $paiementCommissions_lister = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_LISTER)
             ->displayIf(static function (?DocPiece $entity) {
                 return count($entity->getPaiementCommissions()) != 0;
             })
             ->setIcon('fas fa-person-arrow-down-to-line')
             ->linkToCrudAction('cross_canal_listerPaiementCommission');
 
-        $paiementPartenaires_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_PARTENAIRES)
+        $paiementPartenaires_lister = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_LISTER)
             ->displayIf(static function (?DocPiece $entity) {
                 return count($entity->getPaiementPartenaires()) != 0;
             })
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_listerPaiementPartenaire');
 
-        $paiementTaxe_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_TAXES)
+        $paiementTaxe_lister = Action::new(ServiceCrossCanal::OPTION_POP_TAXE_LISTER)
             ->displayIf(static function (?DocPiece $entity) {
                 return count($entity->getPaiementTaxes()) != 0;
             })

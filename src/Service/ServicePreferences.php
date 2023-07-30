@@ -28,6 +28,7 @@ use App\Entity\Utilisateur;
 use App\Entity\DocCategorie;
 use App\Entity\PaiementTaxe;
 use App\Entity\EtapeSinistre;
+use App\Entity\CalculableEntity;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use Doctrine\ORM\EntityRepository;
@@ -39,13 +40,14 @@ use phpDocumentor\Reflection\Types\Boolean;
 use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PoliceCrudController;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ProduitCrudController;
+use App\Controller\Admin\DocPieceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -54,7 +56,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
-use App\Entity\CalculableEntity;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -68,11 +69,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use PHPUnit\Framework\MockObject\ReturnValueNotConfiguredException;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 class ServicePreferences
 {
@@ -3577,6 +3578,7 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+            //->setFormType(CKEditorType::class)
             ->onlyOnForms()
             ->setColumns(12);
         $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)

@@ -122,7 +122,7 @@ class ExpertCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $sinistre_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_SINISTRES)
+        $sinistre_lister = Action::new(ServiceCrossCanal::OPTION_SINISTRE_LISTER)
             ->displayIf(static function (?Expert $entity) {
                 return count($entity->getSinistres()) != 0;
             })

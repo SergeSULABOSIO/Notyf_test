@@ -149,10 +149,10 @@ class ActionCRMCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $feedback_ajouter = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_AJOUTER)
+        $feedback_ajouter = Action::new(ServiceCrossCanal::OPTION_FEEDBACK_AJOUTER)
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterFeedback');
-        $feedback_lister = Action::new(ServiceCrossCanal::ACTION_FEEDBACK_LISTER)
+        $feedback_lister = Action::new(ServiceCrossCanal::OPTION_FEEDBACK_LISTER)
             ->setIcon('fa-solid fa-rectangle-list')//<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerFeedback');
 
@@ -244,7 +244,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(ServiceCrossCanal::ACTION_FEEDBACK_AJOUTER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
+            ->setPermission(ServiceCrossCanal::OPTION_FEEDBACK_AJOUTER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
 

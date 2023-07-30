@@ -121,7 +121,7 @@ class DocClasseurCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
+        $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->displayIf(static function (?DocClasseur $entity) {
                 return count($entity->getDocPieces()) != 0;
             })

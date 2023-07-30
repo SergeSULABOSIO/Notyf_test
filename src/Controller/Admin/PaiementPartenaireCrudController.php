@@ -129,7 +129,7 @@ class PaiementPartenaireCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $piece_attacher = Action::new(ServiceCrossCanal::POPPARTENAIRE_ATTACHER_PIECE)
+        $piece_attacher = Action::new(ServiceCrossCanal::OPTION_PIECE_ATTACHER)
             ->displayIf(static function (?PaiementPartenaire $entity) {
                 return $entity->getPiece() == null;
             })

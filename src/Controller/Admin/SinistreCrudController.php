@@ -139,10 +139,10 @@ class SinistreCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
             ->setIcon('fas fa-paper-plane')
             ->linkToCrudAction('cross_canal_ajouterMission');
-        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Sinistre $entity) {
                 return count($entity->getActionCRMs()) != 0;
             })
@@ -155,11 +155,11 @@ class SinistreCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $mission_lister)
             ->add(Crud::PAGE_INDEX, $mission_lister);
 
-        $document_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_DOCUMENT)
+        $document_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterDocument');
 
-        $document_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_DOCUMENT)
+        $document_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->displayIf(static function (?Sinistre $entity) {
                 return count($entity->getDocPieces()) != 0;
             })
@@ -173,11 +173,11 @@ class SinistreCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $document_ajouter)
             ->add(Crud::PAGE_INDEX, $document_ajouter);
 
-        $victime_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_VICTIME)
+        $victime_ajouter = Action::new(ServiceCrossCanal::OPTION_VICTIME_AJOUTER)
             ->setIcon('fas fa-person-falling-burst')
             ->linkToCrudAction('cross_canal_ajouterVictime');
 
-        $victime_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_VICTIME)
+        $victime_lister = Action::new(ServiceCrossCanal::OPTION_VICTIME_LISTER)
             ->displayIf(static function (?Sinistre $entity) {
                 return count($entity->getVictimes()) != 0;
             })
@@ -192,11 +192,11 @@ class SinistreCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $victime_ajouter);
 
 
-        $expert_ajouter = Action::new(ServiceCrossCanal::SINISTRE_AJOUTER_EXPERT)
+        $expert_ajouter = Action::new(ServiceCrossCanal::OPTION_EXPERT_AJOUTER)
             ->setIcon('fas fa-user-graduate')
             ->linkToCrudAction('cross_canal_ajouterExpert');
 
-        $expert_lister = Action::new(ServiceCrossCanal::SINISTRE_LISTER_EXPERT)
+        $expert_lister = Action::new(ServiceCrossCanal::OPTION_EXPERT_LISTER)
             ->displayIf(static function (?Sinistre $entity) {
                 return count($entity->getExperts()) != 0;
             })

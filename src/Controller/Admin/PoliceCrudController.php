@@ -197,10 +197,33 @@ class PoliceCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $piece_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_PIECE)
+        $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
+            ->setIcon('fas fa-address-book')
+            ->linkToCrudAction('cross_canal_ajouterContact');
+        $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
+            ->displayIf(static function (?Police $entity) {
+                $isEmpty = false;
+                if ($entity->getCotation() != null) {
+                    if ($entity->getCotation()->getPiste() != null) {
+                        $isEmpty = count($entity->getCotation()->getPiste()->getContacts()) != 0;
+                    }
+                }
+                return $isEmpty;
+            })
+            ->setIcon('fas fa-address-book')
+            ->linkToCrudAction('cross_canal_listerContact');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $contact_ajouter)
+            ->add(Crud::PAGE_INDEX, $contact_ajouter)
+            ->add(Crud::PAGE_DETAIL, $contact_lister)
+            ->add(Crud::PAGE_INDEX, $contact_lister);
+
+
+        $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterPiece');
-        $piece_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_PIECE)
+        $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return count($entity->getDocPieces()) != 0;
             })
@@ -213,27 +236,27 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister);
 
-        $paiementCommission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_POP_COMMISSIONS)
+        $paiementCommission_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_AJOUTER)
             ->displayIf(static function (?Police $entity) {
                 return ($entity->calc_revenu_ttc_solde_restant_du != 0);
             })
             ->setIcon('fas fa-person-arrow-down-to-line')
             ->linkToCrudAction('cross_canal_ajouterPOPComm');
-        $paiementCommission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_COMMISSIONS)
+        $paiementCommission_lister = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return ($entity->calc_revenu_ttc_encaisse != 0);
             })
             ->setIcon('fas fa-person-arrow-down-to-line')
             ->linkToCrudAction('cross_canal_listerPOPComm');
 
-        $paiementPartenaire_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_POP_PARTENAIRES)
+        $paiementPartenaire_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_AJOUTER)
             ->displayIf(static function (?Police $entity) {
                 //Attention on ne paie pas le partenaire tant que la comm n a pas ete encaissée
                 return ($entity->getPartenaire() != null) && ($entity->calc_retrocom_solde != 0) && $entity->calc_revenu_ttc_encaisse != 0;
             })
             ->setIcon('fas fa-person-arrow-up-from-line')
             ->linkToCrudAction('cross_canal_ajouterPOPRetroComm');
-        $paiementPartenaire_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_POP_PARTENAIRES)
+        $paiementPartenaire_lister = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return ($entity->calc_retrocom_payees != 0);
             })
@@ -289,11 +312,11 @@ class PoliceCrudController extends AbstractCrudController
         }
 
         //Sinistres
-        $sinistre_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_SINISTRE)
+        $sinistre_ajouter = Action::new(ServiceCrossCanal::OPTION_SINISTRE_AJOUTER)
             ->setIcon('fas fa-bell')
             ->linkToCrudAction('cross_canal_ajouterSinistre');
 
-        $sinistre_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_SINISTRES)
+        $sinistre_lister = Action::new(ServiceCrossCanal::OPTION_SINISTRE_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return count($entity->getSinistres()) != 0;
             })
@@ -306,11 +329,11 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
             ->add(Crud::PAGE_INDEX, $sinistre_ajouter);
 
-        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
             ->setIcon('fas fa-paper-plane')
             ->linkToCrudAction('cross_canal_ajouterMission');
 
-        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return count($entity->getActionCRMs()) != 0;
             })
@@ -533,6 +556,16 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterContact($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerContact($context, $adminUrlGenerator));
     }
 
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse

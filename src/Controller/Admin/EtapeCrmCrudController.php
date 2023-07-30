@@ -119,10 +119,10 @@ class EtapeCrmCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $piste_ajouter = Action::new(ServiceCrossCanal::COTATION_PISTE_AJOUTER)
+        $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
             ->setIcon('fas fa-location-crosshairs')
             ->linkToCrudAction('cross_canal_ajouterPiste');
-        $piste_lister = Action::new(ServiceCrossCanal::COTATION_PISTE_LISTER)
+        $piste_lister = Action::new(ServiceCrossCanal::OPTION_PISTE_LISTER)
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiste');
 

@@ -58,44 +58,51 @@ use function PHPUnit\Framework\containsEqual;
 
 class ServiceCrossCanal
 {
-    public const ACTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
-    public const ACTION_FEEDBACK_LISTER = "Voire les feedbacks";
-    public const COTATION_PIECE_AJOUTER = "Ajouter une pièce";
-    public const COTATION_PIECE_LISTER = "Voire les pièces";
-    public const COTATION_PISTE_AJOUTER = "Ajouter une piste";
-    public const COTATION_PISTE_LISTER = "Voire les pistes";
-    public const COTATION_POLICE_OUVRIR = "Voire la police";
-    public const COTATION_CLIENT_OUVRIR = "Voire le client";
-    public const COTATION_POLICE_CREER = "Créer la police";
-    public const COTATION_CLIENT_CREER = "Créer le client";
-    public const PISTE_AJOUTER_MISSION = "Ajouter une mission";
-    public const PISTE_AJOUTER_CONTACT = "Ajouter un contact";
-    public const PISTE_AJOUTER_COTATION = "Ajouter une cotation";
-    public const POLICE_AJOUTER_PIECE = "Ajouter une pièce";
-    public const POPCOMMISSION_ATTACHER_PIECE = "Attacher une pièce";
-    public const POPPARTENAIRE_ATTACHER_PIECE = "Attacher une pièce";
-    public const PISTE_LISTER_MISSION = "Voire les missions";
-    public const PISTE_LISTER_CONTACT = "Voire les contacts";
-    public const PISTE_LISTER_COTATION = "Voire les cotations";
-    public const POLICE_LISTER_PIECE = "Voire les pièces";
-    public const POLICE_LISTER_POP_COMMISSIONS = "Voire les Pdp Comm";
-    public const POLICE_LISTER_POP_PARTENAIRES = "Voir les Pdp Partenaire";
-    public const POLICE_LISTER_POP_TAXES = "Voir les Pdp Taxe";
-    public const POLICE_LISTER_SINISTRES = "Voir les sinistres";
-    public const POLICE_LISTER_MISSIONS = "Voir les missions";
-    public const POLICE_AJOUTER_POP_COMMISSIONS = "Encaisser la Comm";
-    public const POLICE_AJOUTER_POP_PARTENAIRES = "Payer Partenaire";
-    public const POLICE_AJOUTER_POP_TAXES = "Payer Taxe";
-    public const POLICE_AJOUTER_SINISTRE = "Ajouter un sinistre";
-    public const POLICE_AJOUTER_MISSIONS = "Ajouter une mission";
-    public const SINISTRE_AJOUTER_EXPERT = "Ajouter un expert";
-    public const SINISTRE_AJOUTER_VICTIME = "Ajouter une victime";
-    public const SINISTRE_AJOUTER_DOCUMENT = "Ajouter un document";
-    public const SINISTRE_LISTER_EXPERT = "Lister les experts";
-    public const SINISTRE_LISTER_VICTIME = "Lister les victimes";
-    public const SINISTRE_LISTER_DOCUMENT = "Lister les documents";
-    public const CLIENT_LISTER_POLICES = "Voire les polices";
-    public const CLIENT_LISTER_COTATIONS = "Voire les cotations";
+    //Feedback
+    public const OPTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
+    public const OPTION_FEEDBACK_LISTER = "Voire les feedbacks";
+    //Piece
+    public const OPTION_PIECE_AJOUTER = "Ajouter une pièce";
+    public const OPTION_PIECE_LISTER = "Voire les pièces";
+    public const OPTION_PIECE_ATTACHER = "Attacher une pièce";
+    //Piste
+    public const OPTION_PISTE_AJOUTER = "Ajouter une piste";
+    public const OPTION_PISTE_LISTER = "Voire les pistes";
+    //Police
+    public const OPTION_POLICE_LISTER = "Voire les polices";
+    public const OPTION_POLICE_OUVRIR = "Voire la police";
+    public const OPTION_POLICE_CREER = "Créer la police";
+    //Client
+    public const OPTION_CLIENT_OUVRIR = "Voire le client";
+    public const OPTION_CLIENT_CREER = "Créer le client";
+    //Mission
+    public const OPTION_MISSION_AJOUTER = "Ajouter une mission";
+    public const OPTION_MISSION_LISTER = "Voire les missions";
+    //Contact
+    public const OPTION_CONTACT_AJOUTER = "Ajouter un contact";
+    public const OPTION_CONTACT_LISTER = "Voire les contacts";
+    //Cotation
+    public const OPTION_COTATION_AJOUTER = "Ajouter une cotation";
+    public const OPTION_COTATION_LISTER = "Voire les cotations";
+    //POP Commissions
+    public const OPTION_POP_COMMISSION_LISTER = "Voire les Pdp Comm";
+    public const OPTION_POP_COMMISSION_AJOUTER = "Encaisser la Comm";
+    //POP Partenaire
+    public const OPTION_POP_PARTENAIRE_LISTER = "Voir les Pdp Partenaire";
+    public const OPTION_POP_PARTENAIRE_AJOUTER = "Payer Partenaire";
+    //POP Taxe
+    public const OPTION_POP_TAXE_LISTER = "Voir les Pdp Taxe";
+    public const OPTION_POP_TAXE_AJOUTER = "Payer Taxe";
+    //Sinistre
+    public const OPTION_SINISTRE_LISTER = "Voir les sinistres";
+    public const OPTION_SINISTRE_AJOUTER = "Ajouter un sinistre";
+    //Expert Sinistre
+    public const OPTION_EXPERT_AJOUTER = "Ajouter un expert";
+    public const OPTION_EXPERT_LISTER = "Lister les experts";
+    //Victime Sinistre
+    public const OPTION_VICTIME_AJOUTER = "Ajouter une victime";
+    public const OPTION_VICTIME_LISTER = "Lister les victimes";
+
 
     public const CROSSED_ENTITY_ACTION = "action";
     public const CROSSED_ENTITY_COTATION = "cotation";
@@ -125,6 +132,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Action_ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var ActionCRM */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(FeedbackCRMCrudController::class)
@@ -138,6 +146,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Cotation_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Cotation */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(DocPieceCrudController::class)
@@ -151,6 +160,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Cotation_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Cotation */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
@@ -164,6 +174,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Cotation_creerClient(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Cotation */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(ClientCrudController::class)
@@ -177,6 +188,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Police_ajouterPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(DocPieceCrudController::class)
@@ -232,6 +244,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Police_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PaiementCommissionCrudController::class)
@@ -245,6 +258,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Piece_ajouterPOPComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PaiementCommissionCrudController::class)
@@ -258,6 +272,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Police_ajouterPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PaiementPartenaireCrudController::class)
@@ -271,6 +286,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Police_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, Taxe $taxe)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PaiementTaxeCrudController::class)
@@ -285,6 +301,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Police_ajouterSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(SinistreCrudController::class)
@@ -389,8 +406,8 @@ class ServiceCrossCanal
 
     public function crossCanal_EtapeCRM_ajouterPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var EtapeCrm */
         $entite = $context->getEntity()->getInstance();
-        //dd($entite);
         $url = $adminUrlGenerator
             ->setController(PisteCrudController::class)
             ->setAction(Action::NEW)
@@ -404,8 +421,8 @@ class ServiceCrossCanal
 
     public function crossCanal_Piste_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
-        //dd($entite);
         $url = $adminUrlGenerator
             ->setController(ActionCRMCrudController::class)
             ->setAction(Action::NEW)
@@ -413,14 +430,13 @@ class ServiceCrossCanal
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
-        //dd($url);
         return $url;
     }
 
     public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
-        //dd($entite);
         $url = $adminUrlGenerator
             ->setController(CotationCrudController::class)
             ->setAction(Action::NEW)
@@ -434,8 +450,8 @@ class ServiceCrossCanal
 
     public function crossCanal_Piste_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
-        //dd($entite);
         $url = $adminUrlGenerator
             ->setController(ContactCrudController::class)
             ->setAction(Action::NEW)
@@ -443,12 +459,12 @@ class ServiceCrossCanal
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
-        //dd($url);
         return $url;
     }
 
     public function crossCanal_Action_listerFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var ActionCRM */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(FeedbackCRMCrudController::class)
@@ -458,12 +474,12 @@ class ServiceCrossCanal
             ->set('filters[' . self::CROSSED_ENTITY_ACTION . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
-
         return $url;
     }
 
     public function crossCanal_Piste_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(ActionCRMCrudController::class)
@@ -479,6 +495,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Piste_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(ContactCrudController::class)
@@ -494,6 +511,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Piste_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Piste */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(CotationCrudController::class)
@@ -509,6 +527,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Cotation_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Cotation */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(DocPieceCrudController::class)
@@ -524,6 +543,7 @@ class ServiceCrossCanal
 
     public function crossCanal_Client_listerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
+        /** @var Client */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
@@ -818,6 +838,55 @@ class ServiceCrossCanal
             ->set("titre", "LISTE DES MISSIONS - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_Police_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+
+        /** @var Piste */
+        $piste = null;
+        if ($police->getCotation() != null) {
+            if ($police->getCotation()->getPiste() != null) {
+                $piste = $police->getCotation()->getPiste();
+            }
+        }
+
+        $url = $adminUrlGenerator
+            ->setController(ContactCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVEAU CONTACT - [Police: " . $police . "]")
+            ->set(self::CROSSED_ENTITY_PISTE, $piste->getId())
+            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Police_listerContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+
+        /** @var Piste */
+        $piste = null;
+        if ($police->getCotation() != null) {
+            if ($police->getCotation()->getPiste() != null) {
+                $piste = $police->getCotation()->getPiste();
+            }
+        }
+
+        $url = $adminUrlGenerator
+            ->setController(ContactCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES CONTACT - [Police: " . $police . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$piste->getId()]) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 
@@ -1275,10 +1344,10 @@ class ServiceCrossCanal
             if ($objet->getPolice() != null) {
                 $actionCRM->setPolice($objet->getPolice());
                 //Définition de la cotation
-                if($objet->getPolice()->getCotation() != null){
+                if ($objet->getPolice()->getCotation() != null) {
                     $actionCRM->setCotation($objet->getPolice()->getCotation());
                     //Définition de la piste
-                    if($objet->getPolice()->getCotation()->getPiste() != null){
+                    if ($objet->getPolice()->getCotation()->getPiste() != null) {
                         $actionCRM->setPiste($objet->getPolice()->getCotation()->getPiste());
                     }
                 }

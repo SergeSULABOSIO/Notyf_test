@@ -132,10 +132,10 @@ class CotationCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $mission_ajouter = Action::new(ServiceCrossCanal::POLICE_AJOUTER_MISSIONS)
+        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
             ->setIcon('fas fa-paper-plane')
             ->linkToCrudAction('cross_canal_ajouterMission');
-        $mission_lister = Action::new(ServiceCrossCanal::POLICE_LISTER_MISSIONS)
+        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Cotation $entity) {
                 return count($entity->getActionCRMs()) != 0;
             })
@@ -148,21 +148,21 @@ class CotationCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $mission_lister)
             ->add(Crud::PAGE_INDEX, $mission_lister);
 
-        $piece_ajouter = Action::new(ServiceCrossCanal::COTATION_PIECE_AJOUTER)
+        $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
             ->setIcon('fas fa-file-word')
             ->linkToCrudAction('cross_canal_ajouterPiece');
-        $piece_lister = Action::new(ServiceCrossCanal::COTATION_PIECE_LISTER)
+        $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->setIcon('fa-solid fa-rectangle-list')
             ->linkToCrudAction('cross_canal_listerPiece');
 
         //cross canal
-        $police_creer = Action::new(ServiceCrossCanal::COTATION_POLICE_CREER)
+        $police_creer = Action::new(ServiceCrossCanal::OPTION_POLICE_CREER)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getPolice() == null;
             })
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_creerPolice');
-        $police_ouvrir = Action::new(ServiceCrossCanal::COTATION_POLICE_OUVRIR)
+        $police_ouvrir = Action::new(ServiceCrossCanal::OPTION_POLICE_OUVRIR)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getPolice() != null;
             })
@@ -170,13 +170,13 @@ class CotationCrudController extends AbstractCrudController
             ->linkToCrudAction('cross_canal_ouvrirPolice');
 
         //cross canal
-        $client_creer = Action::new(ServiceCrossCanal::COTATION_CLIENT_CREER)
+        $client_creer = Action::new(ServiceCrossCanal::OPTION_CLIENT_CREER)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getClient() == null;
             })
             ->setIcon('fas fa-person-shelter')
             ->linkToCrudAction('cross_canal_creerClient');
-        $client_ouvrir = Action::new(ServiceCrossCanal::COTATION_CLIENT_OUVRIR)
+        $client_ouvrir = Action::new(ServiceCrossCanal::OPTION_CLIENT_OUVRIR)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getClient() != null;
             })

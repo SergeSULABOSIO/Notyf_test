@@ -161,14 +161,14 @@ class ClientCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $police_lister = Action::new(ServiceCrossCanal::CLIENT_LISTER_POLICES)
+        $police_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
             ->displayIf(static function (?Client $entity) {
                 return count($entity->getPolice()) != 0;
             })
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
 
-        $cotation_lister = Action::new(ServiceCrossCanal::CLIENT_LISTER_COTATIONS)
+        $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
             ->displayIf(static function (?Client $entity) {
                 return count($entity->getCotations()) != 0;
             })

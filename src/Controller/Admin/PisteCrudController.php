@@ -140,30 +140,30 @@ class PisteCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $mission_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_MISSION)
+        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterMission');
-        $mission_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_MISSION)
+        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Piste $entity) {
                 return count($entity->getActionCRMs()) != 0;
             })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerMission');
 
-        $contact_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_CONTACT)
+        $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
             ->setIcon('fas fa-address-book')
             ->linkToCrudAction('cross_canal_ajouterContact');
-        $contact_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_CONTACT)
+        $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
             ->displayIf(static function (?Piste $entity) {
                 return count($entity->getContacts()) != 0;
             })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerContact');
 
-        $cotation_ajouter = Action::new(ServiceCrossCanal::PISTE_AJOUTER_COTATION)
+        $cotation_ajouter = Action::new(ServiceCrossCanal::OPTION_COTATION_AJOUTER)
             ->setIcon('fas fa-cash-register')
             ->linkToCrudAction('cross_canal_ajouterCotation');
-        $cotation_lister = Action::new(ServiceCrossCanal::PISTE_LISTER_COTATION)
+        $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
             ->displayIf(static function (?Piste $entity) {
                 return count($entity->getCotations()) != 0;
             })

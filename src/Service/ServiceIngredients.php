@@ -142,7 +142,8 @@ class ServiceIngredients
             "LETTRE DE PRESENTATION",
             "PV DE LA POLICE",
             "FORMULAIRE DE DECLARATION DE SINISTRE",
-            "DECHARGE"
+            "DECHARGE",
+            "AUTRES"
         ];
 
         $tabBiblioClasseur = [

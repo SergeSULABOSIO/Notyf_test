@@ -3785,11 +3785,11 @@ class ServicePreferences
         //BIB
         $preference->setBibTaille(100);
         $preference->setBibCategories([1, 2, 3, 4, 5, 6]);
-        $preference->setBibClasseurs([1, 5]); ici
-        $preference->setBibPieces([1, 2, 3, 4, 8]);
+        $preference->setBibClasseurs([1, 2, 3, 4, 5, 6]);
+        $preference->setBibPieces([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
         //PAR
         $preference->setParTaille(100);
-        $preference->setParUtilisateurs([1, 2, 3, 4, 8, 9]);
+        $preference->setParUtilisateurs([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
         return $preference;
     }

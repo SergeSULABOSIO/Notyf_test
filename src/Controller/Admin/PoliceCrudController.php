@@ -37,6 +37,11 @@ class PoliceCrudController extends AbstractCrudController
         'Oui' => 1
     ];
 
+    public const TAB_POLICE_OUTSTANDING_RESPONSE = [
+        'Non' => 0,
+        'Oui' => 1
+    ];
+
     public const TAB_POLICE_DEBITEUR = [
         "L'assureur" => 0,
         "Le client" => 1,
@@ -122,6 +127,7 @@ class PoliceCrudController extends AbstractCrudController
         }
         return $filters
             ->add('gestionnaire')
+            ->add('isCommissionUnpaid')
             ->add('dateeffet')
             ->add('dateexpiration')
             ->add('client')

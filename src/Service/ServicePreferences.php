@@ -626,6 +626,12 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
                 ->hideOnForm();
         }
+        //STATUS SUR LES OUTSTANDING
+        $tabAttributs[] = ChoiceField::new('isCommissionUnpaid', "Commissions dûes?")
+            ->hideOnForm()
+            ->setChoices(PoliceCrudController::TAB_POLICE_OUTSTANDING_RESPONSE);
+
+
         //Onglet Prime & Capitaux
         $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
             ->setIcon('fas fa-bag-shopping')

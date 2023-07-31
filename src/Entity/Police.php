@@ -165,6 +165,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Automobile::class)]
     private Collection $automobiles;
+
+    #[ORM\Column]
+    private ?bool $isCommissionUnpaid = null;
     
     
     public function __construct()
@@ -851,6 +854,18 @@ class Police extends CalculableEntity
                 $automobile->setPolice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsCommissionUnpaid(): ?bool
+    {
+        return $this->isCommissionUnpaid;
+    }
+
+    public function setIsCommissionUnpaid(bool $isCommissionUnpaid): self
+    {
+        $this->isCommissionUnpaid = $isCommissionUnpaid;
 
         return $this;
     }

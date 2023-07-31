@@ -59,8 +59,9 @@ class ServiceIngredients
 
         $tabEtapesCRM = [
             "PROSPECTION",
-            "PRODUCTION DE COTATION",
-            "EMISSION DE LA POLICE",
+            "PRODUCTION DES OFFRES",
+            "PLACEMENT DE LA POLICE",
+            "SUIVI SINISTRE",
             "RENOUVELLEMENT"
         ];
 
@@ -127,13 +128,25 @@ class ServiceIngredients
         ];
 
         $tabBiblioCategorie = [
-            "POLICES D'ASSURANCE",
+            "BORDEREAU DE PRODUCTION",
+            "BORDEREAU DE CESSION",
+            "FACTURES / NOTES DE DEBIT",
             "FORMULAIRES DE PROPOSITION",
+            "COTATION / PROPOSITION",
+            "CERTIFICAT D'ASSURANCE",
+            "ORDRE DE VIREMENT",
+            "PREUVE DE PAIEMENTS (POP)",
+            "ATTESTATION DE REASSURANCE",
+            "POLICE D'ASSURANCE",
             "MANDATS DE COURTAGE",
-            "FACTURES"
+            "LETTRE DE PRESENTATION",
+            "PV DE LA POLICE",
+            "FORMULAIRE DE DECLARATION DE SINISTRE",
+            "DECHARGE"
         ];
 
         $tabBiblioClasseur = [
+            "COMMERCIAL",
             "PRODUCTION",
             "SINISTRES",
             "FINANCES"

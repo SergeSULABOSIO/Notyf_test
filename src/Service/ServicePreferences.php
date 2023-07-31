@@ -3755,37 +3755,37 @@ class ServicePreferences
         $preference->setUpdatedAt(new DateTimeImmutable());
         //CRM
         $preference->setCrmTaille(100);
-        $preference->setCrmMissions([1, 2, 3, 4, 5, 6, 7, 10, 12]);
-        $preference->setCrmFeedbacks([1, 2, 3, 4, 8]);
-        $preference->setCrmCotations([1, 2, 3, 4, 5, 6, 11]);
-        $preference->setCrmEtapes([0, 1, 5, 6]); //ok
-        $preference->setCrmPistes([1, 2, 3, 4, 5, 6, 12]);
+        $preference->setCrmMissions([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        $preference->setCrmFeedbacks([1, 2, 3, 4, 5, 6, 7, 8]);
+        $preference->setCrmCotations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+        $preference->setCrmEtapes([1, 2, 3, 4, 5, 6]);
+        $preference->setCrmPistes([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
         //PRO
         $preference->setProTaille(100);
-        $preference->setProAssureurs([1, 2, 3, 4, 5, 10, 14]);
-        $preference->setProAutomobiles([2, 3, 4, 5, 6, 10, 12, 16]);
-        $preference->setProContacts([1, 2, 3, 4, 5, 9]);
-        $preference->setProClients([1, 2, 3, 4, 10, 14]);
-        $preference->setProPartenaires([1, 2, 3, 4, 5, 12]);
-        $preference->setProPolices([1, 2, 3, 4, 5, 14, 22, 23, 27, 40, 41, 47, 51]);
-        $preference->setProProduits([1, 2, 3, 4, 5, 6, 11, 14, 18, 24]);
+        $preference->setProAssureurs([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]);
+        $preference->setProAutomobiles([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+        $preference->setProContacts([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $preference->setProClients([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]);
+        $preference->setProPartenaires([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]);
+        $preference->setProPolices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]);
+        $preference->setProProduits([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]);
         //FIN
         $preference->setFinTaille(100);
-        $preference->setFinTaxes([1, 2, 3, 4, 5, 6, 10]);
-        $preference->setFinMonnaies([1, 2, 3, 4, 5, 9]);
-        $preference->setFinCommissionsPayees([1, 2, 4, 5, 6, 11]);
-        $preference->setFinRetrocommissionsPayees([1, 2, 4, 5, 6, 11]);
-        $preference->setFinTaxesPayees([1, 2, 3, 5, 6, 7, 12]);
+        $preference->setFinTaxes([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+        $preference->setFinMonnaies([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $preference->setFinCommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        $preference->setFinRetrocommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        $preference->setFinTaxesPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
         //SIN
         $preference->setSinTaille(100);
-        $preference->setSinEtapes([1, 2, 3, 4, 7]);
-        $preference->setSinExperts([1, 2, 3, 4, 5, 6, 7, 11]);
-        $preference->setSinSinistres([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 18]);
-        $preference->setSinVictimes([1, 2, 3, 4, 5, 10]);
+        $preference->setSinEtapes([1, 2, 3, 4, 5, 6, 7, 8]);
+        $preference->setSinExperts([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        $preference->setSinSinistres([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]);
+        $preference->setSinVictimes([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         //BIB
         $preference->setBibTaille(100);
-        $preference->setBibCategories([1, 5]);
-        $preference->setBibClasseurs([1, 5]);
+        $preference->setBibCategories([1, 2, 3, 4, 5, 6]);
+        $preference->setBibClasseurs([1, 5]); ici
         $preference->setBibPieces([1, 2, 3, 4, 8]);
         //PAR
         $preference->setParTaille(100);

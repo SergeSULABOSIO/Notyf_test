@@ -937,7 +937,7 @@ class PreferenceCrudController extends AbstractCrudController
 
     //SINISTRE - VICTIME
     public const PREF_SIN_VICTIME_ID                    = "Id";
-    public const PREF_SIN_VICTIME_NOM                   = "Nom comptet / Raison sociale";
+    public const PREF_SIN_VICTIME_NOM                   = "Nom comptet";
     public const PREF_SIN_VICTIME_ADRESSE               = "Adresse";
     public const PREF_SIN_VICTIME_TELEPHONE             = "Téléphone";
     public const PREF_SIN_VICTIME_EMAIL                 = "Email";

@@ -238,13 +238,13 @@ class PoliceCrudController extends AbstractCrudController
 
 
         $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
-            ->setIcon('fas fa-file-word')
+            ->setIcon('fa-solid fa-paperclip')
             ->linkToCrudAction('cross_canal_ajouterPiece');
         $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->displayIf(static function (?Police $entity) {
                 return count($entity->getDocPieces()) != 0;
             })
-            ->setIcon('fa-solid fa-rectangle-list')
+            ->setIcon('fa-solid fa-paperclip')
             ->linkToCrudAction('cross_canal_listerPiece');
 
         $actions

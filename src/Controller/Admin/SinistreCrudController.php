@@ -155,14 +155,14 @@ class SinistreCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $mission_lister);
 
         $document_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
-            ->setIcon('fas fa-file-word')
+            ->setIcon('fa-solid fa-paperclip')
             ->linkToCrudAction('cross_canal_ajouterDocument');
 
         $document_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
             ->displayIf(static function (?Sinistre $entity) {
                 return count($entity->getDocPieces()) != 0;
             })
-            ->setIcon('fas fa-file-word')
+            ->setIcon('fa-solid fa-paperclip')
             ->linkToCrudAction('cross_canal_listerDocument');
 
         $actions

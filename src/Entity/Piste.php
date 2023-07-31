@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
-class Piste extends CalculableEntity
+class Piste
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

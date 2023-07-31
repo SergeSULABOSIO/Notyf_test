@@ -3641,10 +3641,6 @@ class ServicePreferences
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)
                 ->onlyOnIndex();
         }
-
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
-
         return $tabAttributs;
     }
 

@@ -2884,10 +2884,6 @@ class ServicePreferences
         if ($isPolice == false) {
             $tabAttributs[] = FormField::addPanel('Primes')->setIcon('fa-solid fa-toggle-off')
                 ->hideOnForm();
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tab])) {
-                $tabAttributs[] = ArrayField::new('calc_polices_tab', PreferenceCrudController::PREF_calc_polices_tab)
-                    ->onlyOnDetail();
-            }
             if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_nette])) {
                 $tabAttributs[] = MoneyField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
                     ->formatValue(function ($value, CalculableEntity $entity) {
@@ -2933,6 +2929,32 @@ class ServicePreferences
                     ->setStoredAsCents()
                     ->hideOnForm();
             }
+        }
+
+        //SINISTRE
+        $tabAttributs[] = FormField::addPanel('Sinistre')->setIcon('fa-solid fa-toggle-off')
+            ->hideOnForm();
+        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_dommage_total])) {
+            $tabAttributs[] = MoneyField::new('calc_sinistre_dommage_total', PreferenceCrudController::PREF_calc_sinistre_dommage_total)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_dommage_total);
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indemnisation_total])) {
+            $tabAttributs[] = MoneyField::new('calc_sinistre_indemnisation_total', PreferenceCrudController::PREF_calc_sinistre_indemnisation_total)
+                ->formatValue(function ($value, CalculableEntity $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_indemnisation_total);
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->hideOnForm();
+        }
+        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indice_SP])) {
+            $tabAttributs[] = PercentField::new('calc_sinistre_indice_SP', PreferenceCrudController::PREF_calc_sinistre_indice_SP)
+                ->hideOnForm();
         }
 
         //SECTION REVENU
@@ -2983,10 +3005,6 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_revenu_ttc_encaisse_tab_ref_factures', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse_tab_ref_factures)
-                ->onlyOnDetail();
-        }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])) {
             $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
                 ->formatValue(function ($value, CalculableEntity $entity) {
@@ -3016,10 +3034,6 @@ class ServicePreferences
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_retrocom_payees_tab_factures', PreferenceCrudController::PREF_calc_retrocom_payees_tab_factures)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_solde])) {
             $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
@@ -3054,10 +3068,6 @@ class ServicePreferences
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "PdP", PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures))
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
@@ -3094,10 +3104,6 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "PdP", PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures))
-                ->onlyOnDetail();
-        }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
             $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
                 ->formatValue(function ($value, CalculableEntity $entity) {
@@ -3131,10 +3137,6 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "PdP", PreferenceCrudController::PREF_calc_taxes_courtier_payees_tab_ref_factures))
-                ->onlyOnDetail();
-        }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
             $tabAttributs[] = NumberField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
                 ->hideOnForm();
@@ -3154,10 +3156,6 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
             $tabAttributs[] = NumberField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
                 ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_payees_tab_ref_factures', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "PdP", PreferenceCrudController::PREF_calc_taxes_assureurs_payees_tab_ref_factures))
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
             $tabAttributs[] = NumberField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))

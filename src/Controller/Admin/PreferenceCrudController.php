@@ -30,32 +30,35 @@ class PreferenceCrudController extends AbstractCrudController
 {
 
     //CHAMPS CALCULABLES AUTOMATIQUEMENT
-    public const PREF_calc_polices_tab                                  = 'Ac/Polices/Réf.';
     public const PREF_calc_polices_primes_nette                         = 'Ac/Prime/Mnt ht';
     public const PREF_calc_polices_primes_totale                        = 'Ac/Prime/Mnt Total';
     public const PREF_calc_polices_fronting                             = 'Ac/Prime/Fronting';
     public const PREF_calc_polices_accessoire                           = 'Ac/Prime/Accessoires';
     public const PREF_calc_polices_tva                                  = 'Ac/Prime/Taxes';
+
+    public const PREF_calc_sinistre_dommage_total                       = 'Ac/Sinistre/Dommage';
+    public const PREF_calc_sinistre_indemnisation_total                 = 'Ac/Sinistre/Indemn';
+    public const PREF_calc_sinistre_indice_SP                           = 'Ac/Sinistre/Indice S/P';
+
     public const PREF_calc_revenu_reserve                               = 'Ac/Comm./Réserve';
     public const PREF_calc_revenu_partageable                           = 'Ac/Comm./A partager';
     public const PREF_calc_revenu_ht                                    = 'Ac/Comm./Mnt ht';
     public const PREF_calc_revenu_ttc                                   = 'Ac/Comm./Mnt dû';
     public const PREF_calc_revenu_ttc_encaisse                          = 'Ac/Comm./Pymnt';
-    public const PREF_calc_revenu_ttc_encaisse_tab_ref_factures         = 'Ac/Comm./PdP';
     public const PREF_calc_revenu_ttc_solde_restant_du                  = 'Ac/Comm./Solde dû';
+
     public const PREF_calc_retrocom                                     = 'Ac/Retrocom./Mnt dû';
     public const PREF_calc_retrocom_payees                              = 'Ac/Retrocom./Pymnt';
-    public const PREF_calc_retrocom_payees_tab_factures                 = 'Ac/Retrocom./PdP';
     public const PREF_calc_retrocom_solde                               = 'Ac/Retrocom./Solde';
+
     public const PREF_calc_taxes_courtier_tab                           = 'Ac/Taxes/Court./Réf.';
     public const PREF_calc_taxes_courtier                               = 'Ac/Taxes/Court./Mnt dû';
     public const PREF_calc_taxes_courtier_payees                        = 'Ac/Taxes/Court./Pymnt';
-    public const PREF_calc_taxes_courtier_payees_tab_ref_factures       = 'Ac/Taxes/Court./PdP';
     public const PREF_calc_taxes_courtier_solde                         = 'Ac/Taxes/Court./Solde';
+
     public const PREF_calc_taxes_assureurs_tab                          = 'Ac/Taxes/Assur./Réf.';
     public const PREF_calc_taxes_assureurs                              = 'Ac/Taxes/Assur./Mnt dû';
     public const PREF_calc_taxes_assureurs_payees                       = 'Ac/Taxes/Assur./Pymnt';
-    public const PREF_calc_taxes_assureurs_payees_tab_ref_factures      = 'Ac/Taxes/Assur./PdP';
     public const PREF_calc_taxes_assureurs_solde                        = 'Ac/Taxes/Assur./Solde';
 
 
@@ -191,35 +194,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_PISTE_UTILISATEUR                        => 9,
         self::PREF_CRM_PISTE_ENTREPRISE                         => 10,
         self::PREF_CRM_PISTE_DATE_DE_CREATION                   => 11,
-        self::PREF_CRM_PISTE_DATE_DE_MODIFICATION               => 12,
-        //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 13,
-        self::PREF_calc_polices_primes_nette                    => 14,
-        self::PREF_calc_polices_primes_totale                   => 15,
-        self::PREF_calc_polices_fronting                        => 16,
-        self::PREF_calc_polices_accessoire                      => 17,
-        self::PREF_calc_polices_tva                             => 18,
-        self::PREF_calc_revenu_reserve                          => 19,
-        self::PREF_calc_revenu_partageable                      => 20,
-        self::PREF_calc_revenu_ht                               => 21,
-        self::PREF_calc_revenu_ttc                              => 22,
-        self::PREF_calc_revenu_ttc_encaisse                     => 23,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 24,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 25,
-        self::PREF_calc_retrocom                                => 26,
-        self::PREF_calc_retrocom_payees                         => 27,
-        self::PREF_calc_retrocom_payees_tab_factures            => 28,
-        self::PREF_calc_retrocom_solde                          => 29,
-        self::PREF_calc_taxes_courtier_tab                      => 30,
-        self::PREF_calc_taxes_courtier                          => 31,
-        self::PREF_calc_taxes_courtier_payees                   => 32,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 33,
-        self::PREF_calc_taxes_courtier_solde                    => 34,
-        self::PREF_calc_taxes_assureurs_tab                     => 35,
-        self::PREF_calc_taxes_assureurs                         => 36,
-        self::PREF_calc_taxes_assureurs_payees                  => 37,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 38,
-        self::PREF_calc_taxes_assureurs_solde                   => 39
+        self::PREF_CRM_PISTE_DATE_DE_MODIFICATION               => 12
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";
@@ -258,33 +233,31 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_ASSUREUR_DATE_DE_CREATION                => 15,
         self::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION            => 16,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 17,
-        self::PREF_calc_polices_primes_nette                    => 18,
-        self::PREF_calc_polices_primes_totale                   => 19,
-        self::PREF_calc_polices_fronting                        => 20,
-        self::PREF_calc_polices_accessoire                      => 21,
-        self::PREF_calc_polices_tva                             => 22,
-        self::PREF_calc_revenu_reserve                          => 23,
-        self::PREF_calc_revenu_partageable                      => 24,
-        self::PREF_calc_revenu_ht                               => 25,
-        self::PREF_calc_revenu_ttc                              => 26,
-        self::PREF_calc_revenu_ttc_encaisse                     => 27,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 28,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 29,
-        self::PREF_calc_retrocom                                => 30,
-        self::PREF_calc_retrocom_payees                         => 31,
-        self::PREF_calc_retrocom_payees_tab_factures            => 32,
-        self::PREF_calc_retrocom_solde                          => 33,
-        self::PREF_calc_taxes_courtier_tab                      => 34,
-        self::PREF_calc_taxes_courtier                          => 35,
-        self::PREF_calc_taxes_courtier_payees                   => 36,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 37,
-        self::PREF_calc_taxes_courtier_solde                    => 38,
-        self::PREF_calc_taxes_assureurs_tab                     => 39,
-        self::PREF_calc_taxes_assureurs                         => 40,
-        self::PREF_calc_taxes_assureurs_payees                  => 41,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 42,
-        self::PREF_calc_taxes_assureurs_solde                   => 43
+        self::PREF_calc_polices_primes_nette                    => 17,
+        self::PREF_calc_polices_primes_totale                   => 18,
+        self::PREF_calc_polices_fronting                        => 19,
+        self::PREF_calc_polices_accessoire                      => 20,
+        self::PREF_calc_polices_tva                             => 21,
+        self::PREF_calc_revenu_reserve                          => 22,
+        self::PREF_calc_revenu_partageable                      => 23,
+        self::PREF_calc_revenu_ht                               => 24,
+        self::PREF_calc_revenu_ttc                              => 25,
+        self::PREF_calc_revenu_ttc_encaisse                     => 26,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 27,
+        self::PREF_calc_retrocom                                => 28,
+        self::PREF_calc_retrocom_payees                         => 29,
+        self::PREF_calc_retrocom_solde                          => 30,
+        self::PREF_calc_taxes_courtier_tab                      => 31,
+        self::PREF_calc_taxes_courtier                          => 32,
+        self::PREF_calc_taxes_courtier_payees                   => 33,
+        self::PREF_calc_taxes_courtier_solde                    => 34,
+        self::PREF_calc_taxes_assureurs_tab                     => 35,
+        self::PREF_calc_taxes_assureurs                         => 36,
+        self::PREF_calc_taxes_assureurs_payees                  => 37,
+        self::PREF_calc_taxes_assureurs_solde                   => 38,
+        self::PREF_calc_sinistre_dommage_total                  => 39,
+        self::PREF_calc_sinistre_indemnisation_total            => 40,
+        self::PREF_calc_sinistre_indice_SP                      => 41
     ];
     //PRODUCTION - ENGIN
     public const PREF_PRO_ENGIN_ID                          = "Id";
@@ -292,7 +265,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_ENGIN_MARQUE                      = "Marque";
     public const PREF_PRO_ENGIN_ANNEE                       = "Année";
     public const PREF_PRO_ENGIN_PUISSANCE                   = "Puissance";
-    //public const PREF_PRO_ENGIN_MONNAIE                     = "Monnaie";
     public const PREF_PRO_ENGIN_VALEUR                      = "Valeur";
     public const PREF_PRO_ENGIN_NB_SIEGES                   = "Nb. Sièges";
     public const PREF_PRO_ENGIN_USAGE                       = "Usage";
@@ -310,18 +282,17 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_ENGIN_MARQUE                 => 2,
         self::PREF_PRO_ENGIN_ANNEE                  => 3,
         self::PREF_PRO_ENGIN_PUISSANCE              => 4,
-        //self::PREF_PRO_ENGIN_MONNAIE                => 5,
-        self::PREF_PRO_ENGIN_VALEUR                 => 6,
-        self::PREF_PRO_ENGIN_NB_SIEGES              => 7,
-        self::PREF_PRO_ENGIN_USAGE                  => 8,
-        self::PREF_PRO_ENGIN_NATURE                 => 9,
-        self::PREF_PRO_ENGIN_N°_PLAQUE              => 10,
-        self::PREF_PRO_ENGIN_N°_CHASSIS             => 11,
-        self::PREF_PRO_ENGIN_POLICE                 => 12,
-        self::PREF_PRO_ENGIN_UTILISATEUR            => 13,
-        self::PREF_PRO_ENGIN_ENTREPRISE             => 14,
-        self::PREF_PRO_ENGIN_DATE_DE_CREATION       => 15,
-        self::PREF_PRO_ENGIN_DATE_DE_MODIFICATION   => 16
+        self::PREF_PRO_ENGIN_VALEUR                 => 5,
+        self::PREF_PRO_ENGIN_NB_SIEGES              => 6,
+        self::PREF_PRO_ENGIN_USAGE                  => 7,
+        self::PREF_PRO_ENGIN_NATURE                 => 8,
+        self::PREF_PRO_ENGIN_N°_PLAQUE              => 9,
+        self::PREF_PRO_ENGIN_N°_CHASSIS             => 10,
+        self::PREF_PRO_ENGIN_POLICE                 => 11,
+        self::PREF_PRO_ENGIN_UTILISATEUR            => 12,
+        self::PREF_PRO_ENGIN_ENTREPRISE             => 13,
+        self::PREF_PRO_ENGIN_DATE_DE_CREATION       => 14,
+        self::PREF_PRO_ENGIN_DATE_DE_MODIFICATION   => 15
     ];
     //PRODUCTION - CONTACT
     public const PREF_PRO_CONTACT_ID                        = "Id";
@@ -348,8 +319,8 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PRODUCTION - CLIENT
     public const PREF_PRO_CLIENT_ID                         = "Id";
-    public const PREF_PRO_CLIENT_NOM                        = "Nom / Raison sociale";
-    public const PREF_PRO_CLIENT_PERSONNE_MORALE            = "Société";
+    public const PREF_PRO_CLIENT_NOM                        = "Raison sociale";
+    public const PREF_PRO_CLIENT_PERSONNE_MORALE            = "Forme Jurique";
     public const PREF_PRO_CLIENT_ADRESSE                    = "Adresse";
     public const PREF_PRO_CLIENT_COTATIONS                  = "Cotations";
     public const PREF_PRO_CLIENT_POLICES                    = "Polices";
@@ -383,33 +354,31 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_CLIENT_DATE_DE_MODIFICATION              => 15,
         self::PREF_PRO_CLIENT_POLICES                           => 16,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 17,
-        self::PREF_calc_polices_primes_nette                    => 18,
-        self::PREF_calc_polices_primes_totale                   => 19,
-        self::PREF_calc_polices_fronting                        => 20,
-        self::PREF_calc_polices_accessoire                      => 21,
-        self::PREF_calc_polices_tva                             => 22,
-        self::PREF_calc_revenu_reserve                          => 23,
-        self::PREF_calc_revenu_partageable                      => 24,
-        self::PREF_calc_revenu_ht                               => 25,
-        self::PREF_calc_revenu_ttc                              => 26,
-        self::PREF_calc_revenu_ttc_encaisse                     => 27,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 28,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 29,
-        self::PREF_calc_retrocom                                => 30,
-        self::PREF_calc_retrocom_payees                         => 31,
-        self::PREF_calc_retrocom_payees_tab_factures            => 32,
-        self::PREF_calc_retrocom_solde                          => 33,
-        self::PREF_calc_taxes_courtier_tab                      => 34,
-        self::PREF_calc_taxes_courtier                          => 35,
-        self::PREF_calc_taxes_courtier_payees                   => 36,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 37,
-        self::PREF_calc_taxes_courtier_solde                    => 38,
-        self::PREF_calc_taxes_assureurs_tab                     => 39,
-        self::PREF_calc_taxes_assureurs                         => 40,
-        self::PREF_calc_taxes_assureurs_payees                  => 41,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 42,
-        self::PREF_calc_taxes_assureurs_solde                   => 43
+        self::PREF_calc_polices_primes_nette                    => 17,
+        self::PREF_calc_polices_primes_totale                   => 18,
+        self::PREF_calc_polices_fronting                        => 19,
+        self::PREF_calc_polices_accessoire                      => 20,
+        self::PREF_calc_polices_tva                             => 21,
+        self::PREF_calc_revenu_reserve                          => 22,
+        self::PREF_calc_revenu_partageable                      => 23,
+        self::PREF_calc_revenu_ht                               => 24,
+        self::PREF_calc_revenu_ttc                              => 25,
+        self::PREF_calc_revenu_ttc_encaisse                     => 26,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 27,
+        self::PREF_calc_retrocom                                => 28,
+        self::PREF_calc_retrocom_payees                         => 29,
+        self::PREF_calc_retrocom_solde                          => 30,
+        self::PREF_calc_taxes_courtier_tab                      => 31,
+        self::PREF_calc_taxes_courtier                          => 32,
+        self::PREF_calc_taxes_courtier_payees                   => 33,
+        self::PREF_calc_taxes_courtier_solde                    => 34,
+        self::PREF_calc_taxes_assureurs_tab                     => 35,
+        self::PREF_calc_taxes_assureurs                         => 36,
+        self::PREF_calc_taxes_assureurs_payees                  => 37,
+        self::PREF_calc_taxes_assureurs_solde                   => 38,
+        self::PREF_calc_sinistre_dommage_total                  => 39,
+        self::PREF_calc_sinistre_indemnisation_total            => 40,
+        self::PREF_calc_sinistre_indice_SP                      => 41
     ];
     //PRODUCTION - PARTENAIRE
     public const PREF_PRO_PARTENAIRE_ID                         = "Id";
@@ -444,33 +413,31 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_PARTENAIRE_DATE_DE_CREATION              => 13,
         self::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION          => 14,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 15,
-        self::PREF_calc_polices_primes_nette                    => 16,
-        self::PREF_calc_polices_primes_totale                   => 17,
-        self::PREF_calc_polices_fronting                        => 18,
-        self::PREF_calc_polices_accessoire                      => 19,
-        self::PREF_calc_polices_tva                             => 20,
-        self::PREF_calc_revenu_reserve                          => 21,
-        self::PREF_calc_revenu_partageable                      => 22,
-        self::PREF_calc_revenu_ht                               => 23,
-        self::PREF_calc_revenu_ttc                              => 24,
-        self::PREF_calc_revenu_ttc_encaisse                     => 25,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 26,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 27,
-        self::PREF_calc_retrocom                                => 28,
-        self::PREF_calc_retrocom_payees                         => 29,
-        self::PREF_calc_retrocom_payees_tab_factures            => 30,
-        self::PREF_calc_retrocom_solde                          => 31,
-        self::PREF_calc_taxes_courtier_tab                      => 32,
-        self::PREF_calc_taxes_courtier                          => 33,
-        self::PREF_calc_taxes_courtier_payees                   => 34,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 35,
-        self::PREF_calc_taxes_courtier_solde                    => 36,
-        self::PREF_calc_taxes_assureurs_tab                     => 37,
-        self::PREF_calc_taxes_assureurs                         => 38,
-        self::PREF_calc_taxes_assureurs_payees                  => 39,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 40,
-        self::PREF_calc_taxes_assureurs_solde                   => 41
+        self::PREF_calc_polices_primes_nette                    => 15,
+        self::PREF_calc_polices_primes_totale                   => 16,
+        self::PREF_calc_polices_fronting                        => 17,
+        self::PREF_calc_polices_accessoire                      => 18,
+        self::PREF_calc_polices_tva                             => 19,
+        self::PREF_calc_revenu_reserve                          => 20,
+        self::PREF_calc_revenu_partageable                      => 21,
+        self::PREF_calc_revenu_ht                               => 22,
+        self::PREF_calc_revenu_ttc                              => 23,
+        self::PREF_calc_revenu_ttc_encaisse                     => 24,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 25,
+        self::PREF_calc_retrocom                                => 26,
+        self::PREF_calc_retrocom_payees                         => 27,
+        self::PREF_calc_retrocom_solde                          => 28,
+        self::PREF_calc_taxes_courtier_tab                      => 29,
+        self::PREF_calc_taxes_courtier                          => 30,
+        self::PREF_calc_taxes_courtier_payees                   => 31,
+        self::PREF_calc_taxes_courtier_solde                    => 32,
+        self::PREF_calc_taxes_assureurs_tab                     => 33,
+        self::PREF_calc_taxes_assureurs                         => 34,
+        self::PREF_calc_taxes_assureurs_payees                  => 35,
+        self::PREF_calc_taxes_assureurs_solde                   => 36,
+        self::PREF_calc_sinistre_dommage_total                  => 37,
+        self::PREF_calc_sinistre_indemnisation_total            => 38,
+        self::PREF_calc_sinistre_indice_SP                      => 39
     ];
     //PRODUCTION - POLICE
     public const PREF_PRO_POLICE_ID                                         = "id";
@@ -494,7 +461,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_LOCAL_COM                                  = "Com. locale";
     public const PREF_PRO_POLICE_FRONTIN_COM                                = "Com. sur Fronting";
     public const PREF_PRO_POLICE_REMARQUE                                   = "Remarques";
-    //public const PREF_PRO_POLICE_MONNAIE                                    = "Monnaie";
     public const PREF_PRO_POLICE_CLIENT                                     = "Client / Assuré";
     public const PREF_PRO_POLICE_PRODUIT                                    = "Couverture d'assurance";
     public const PREF_PRO_POLICE_PARTENAIRE                                 = "Partenaire";
@@ -580,22 +546,21 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_revenu_ht                               => 48,
         self::PREF_calc_revenu_ttc                              => 49,
         self::PREF_calc_revenu_ttc_encaisse                     => 50,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 51,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 52,
-        self::PREF_calc_retrocom                                => 53,
-        self::PREF_calc_retrocom_payees                         => 54,
-        self::PREF_calc_retrocom_payees_tab_factures            => 55,
-        self::PREF_calc_retrocom_solde                          => 56,
-        self::PREF_calc_taxes_courtier_tab                      => 57,
-        self::PREF_calc_taxes_courtier                          => 58,
-        self::PREF_calc_taxes_courtier_payees                   => 59,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 60,
-        self::PREF_calc_taxes_courtier_solde                    => 61,
-        self::PREF_calc_taxes_assureurs_tab                     => 62,
-        self::PREF_calc_taxes_assureurs                         => 63,
-        self::PREF_calc_taxes_assureurs_payees                  => 64,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 65,
-        self::PREF_calc_taxes_assureurs_solde                   => 66
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 51,
+        self::PREF_calc_retrocom                                => 52,
+        self::PREF_calc_retrocom_payees                         => 53,
+        self::PREF_calc_retrocom_solde                          => 54,
+        self::PREF_calc_taxes_courtier_tab                      => 55,
+        self::PREF_calc_taxes_courtier                          => 56,
+        self::PREF_calc_taxes_courtier_payees                   => 57,
+        self::PREF_calc_taxes_courtier_solde                    => 58,
+        self::PREF_calc_taxes_assureurs_tab                     => 59,
+        self::PREF_calc_taxes_assureurs                         => 60,
+        self::PREF_calc_taxes_assureurs_payees                  => 61,
+        self::PREF_calc_taxes_assureurs_solde                   => 62,
+        self::PREF_calc_sinistre_dommage_total                  => 63,
+        self::PREF_calc_sinistre_indemnisation_total            => 64,
+        self::PREF_calc_sinistre_indice_SP                      => 65
     ];
     //PRODUCTION - PRODUIT
     public const PREF_PRO_PRODUIT_ID                        = "Id";
@@ -628,33 +593,31 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_PRODUIT_COTATIONS                        => 12,
         self::PREF_PRO_PRODUIT_POLICES                          => 13,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 14,
-        self::PREF_calc_polices_primes_nette                    => 15,
-        self::PREF_calc_polices_primes_totale                   => 16,
-        self::PREF_calc_polices_fronting                        => 17,
-        self::PREF_calc_polices_accessoire                      => 18,
-        self::PREF_calc_polices_tva                             => 19,
-        self::PREF_calc_revenu_reserve                          => 20,
-        self::PREF_calc_revenu_partageable                      => 21,
-        self::PREF_calc_revenu_ht                               => 22,
-        self::PREF_calc_revenu_ttc                              => 23,
-        self::PREF_calc_revenu_ttc_encaisse                     => 24,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 25,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 26,
-        self::PREF_calc_retrocom                                => 27,
-        self::PREF_calc_retrocom_payees                         => 28,
-        self::PREF_calc_retrocom_payees_tab_factures            => 29,
-        self::PREF_calc_retrocom_solde                          => 30,
-        self::PREF_calc_taxes_courtier_tab                      => 31,
-        self::PREF_calc_taxes_courtier                          => 32,
-        self::PREF_calc_taxes_courtier_payees                   => 33,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 34,
-        self::PREF_calc_taxes_courtier_solde                    => 35,
-        self::PREF_calc_taxes_assureurs_tab                     => 36,
-        self::PREF_calc_taxes_assureurs                         => 37,
-        self::PREF_calc_taxes_assureurs_payees                  => 38,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 39,
-        self::PREF_calc_taxes_assureurs_solde                   => 40
+        self::PREF_calc_polices_primes_nette                    => 14,
+        self::PREF_calc_polices_primes_totale                   => 15,
+        self::PREF_calc_polices_fronting                        => 16,
+        self::PREF_calc_polices_accessoire                      => 17,
+        self::PREF_calc_polices_tva                             => 18,
+        self::PREF_calc_revenu_reserve                          => 19,
+        self::PREF_calc_revenu_partageable                      => 20,
+        self::PREF_calc_revenu_ht                               => 21,
+        self::PREF_calc_revenu_ttc                              => 22,
+        self::PREF_calc_revenu_ttc_encaisse                     => 23,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 24,
+        self::PREF_calc_retrocom                                => 25,
+        self::PREF_calc_retrocom_payees                         => 26,
+        self::PREF_calc_retrocom_solde                          => 27,
+        self::PREF_calc_taxes_courtier_tab                      => 28,
+        self::PREF_calc_taxes_courtier                          => 29,
+        self::PREF_calc_taxes_courtier_payees                   => 30,
+        self::PREF_calc_taxes_courtier_solde                    => 31,
+        self::PREF_calc_taxes_assureurs_tab                     => 32,
+        self::PREF_calc_taxes_assureurs                         => 33,
+        self::PREF_calc_taxes_assureurs_payees                  => 34,
+        self::PREF_calc_taxes_assureurs_solde                   => 35,
+        self::PREF_calc_sinistre_dommage_total                  => 36,
+        self::PREF_calc_sinistre_indemnisation_total            => 37,
+        self::PREF_calc_sinistre_indice_SP                      => 38
     ];
 
     //FINANCE - TAXES
@@ -673,12 +636,12 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_TAXE_NOM                                 => 1,
         self::PREF_FIN_TAXE_DESCRIPTION                         => 2,
         self::PREF_FIN_TAXE_TAUX                                => 3,
-        self::PREF_FIN_TAXE_ORGANISATION                        => 5,
-        self::PREF_FIN_TAXE_PAR_COURTIER                        => 6,
-        self::PREF_FIN_TAXE_UTILISATEUR                         => 7,
-        self::PREF_FIN_TAXE_ENTREPRISE                          => 8,
-        self::PREF_FIN_TAXE_DATE_DE_CREATION                    => 9,
-        self::PREF_FIN_TAXE_DERNIERE_MODIFICATION               => 10,
+        self::PREF_FIN_TAXE_ORGANISATION                        => 4,
+        self::PREF_FIN_TAXE_PAR_COURTIER                        => 5,
+        self::PREF_FIN_TAXE_UTILISATEUR                         => 6,
+        self::PREF_FIN_TAXE_ENTREPRISE                          => 7,
+        self::PREF_FIN_TAXE_DATE_DE_CREATION                    => 8,
+        self::PREF_FIN_TAXE_DERNIERE_MODIFICATION               => 9,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
         //self::PREF_calc_polices_tab                             => 11,
         //self::PREF_calc_polices_primes_nette                    => 12,
@@ -697,16 +660,15 @@ class PreferenceCrudController extends AbstractCrudController
         //self::PREF_calc_retrocom_payees                         => 25,
         //self::PREF_calc_retrocom_payees_tab_factures            => 26,
         //self::PREF_calc_retrocom_solde                          => 27,
-        self::PREF_calc_taxes_courtier_tab                      => 11,
-        self::PREF_calc_taxes_courtier                          => 12,
-        self::PREF_calc_taxes_courtier_payees                   => 13,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 14,
-        self::PREF_calc_taxes_courtier_solde                    => 15,
-        self::PREF_calc_taxes_assureurs_tab                     => 16,
-        self::PREF_calc_taxes_assureurs                         => 17,
-        self::PREF_calc_taxes_assureurs_payees                  => 18,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 19,
-        self::PREF_calc_taxes_assureurs_solde                   => 20
+        self::PREF_calc_taxes_courtier_tab                      => 10,
+        self::PREF_calc_taxes_courtier                          => 11,
+        self::PREF_calc_taxes_courtier_payees                   => 12,
+        self::PREF_calc_taxes_courtier_solde                    => 13,
+        self::PREF_calc_taxes_assureurs_tab                     => 14,
+        self::PREF_calc_taxes_assureurs                         => 15,
+        self::PREF_calc_taxes_assureurs_payees                  => 16,
+        self::PREF_calc_taxes_assureurs_solde                   => 17,
+        
     ];
 
     //FINANCE - MONNAIE
@@ -736,7 +698,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_ID                      = "Id";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                    = "Date";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                  = "Police";
-    //public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                 = "Montant";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION             = "Description";
@@ -749,21 +710,19 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_ID                         => 0,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                       => 1,
         self::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                     => 2,
-        //self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONNAIE                    => 3,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                    => 4,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE                => 5,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION                => 6,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS                  => 7,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR                => 8,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE                 => 9,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION           => 10,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION       => 11
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                    => 3,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE                => 4,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION                => 5,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS                  => 6,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR                => 7,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE                 => 8,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION           => 9,
+        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION       => 10
     ];
     //FINANCE - PAIEMENTS RETROCOMMISSIONS
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                      = "Id";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                    = "Date";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                  = "Police";
-    //public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                 = "Monnaie";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                 = "Montant";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE              = "Partenaire";
@@ -772,27 +731,24 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE              = "Entreprise";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION        = "Date de création";
     public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION    = "Dernière modification";
-
     public const TAB_FIN_PAIEMENTS_RETROCOMMISSIONS = [
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                         => 0,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                       => 1,
         self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                     => 2,
-        //self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONNAIE                    => 3,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                    => 4,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE                => 5,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE                 => 6,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS                  => 7,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR                => 8,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE                 => 9,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION           => 10,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION       => 11
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                    => 3,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE                => 4,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE                 => 5,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS                  => 6,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR                => 7,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE                 => 8,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION           => 9,
+        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION       => 10
     ];
     //FINANCE - PAIEMENTS TAXES
     public const PREF_FIN_PAIEMENTS_TAXE_ID                     = "Id";
     public const PREF_FIN_PAIEMENTS_TAXE_DATE                   = "Date";
     public const PREF_FIN_PAIEMENTS_TAXE_TAXE                   = "Taxe concernée";
     public const PREF_FIN_PAIEMENTS_TAXE_POLICE                 = "Police d'assurance";
-    //public const PREF_FIN_PAIEMENTS_TAXE_MONNAIE                = "Monnaie";
     public const PREF_FIN_PAIEMENTS_TAXE_MONTANT                = "Montant";
     public const PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT          = "Réf. Note de débit";
     public const PREF_FIN_PAIEMENTS_TAXE_EXERCICE               = "Exercice comptable";
@@ -806,15 +762,14 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENTS_TAXE_DATE                  => 1,
         self::PREF_FIN_PAIEMENTS_TAXE_TAXE                  => 2,
         self::PREF_FIN_PAIEMENTS_TAXE_POLICE                => 3,
-        //self::PREF_FIN_PAIEMENTS_TAXE_MONNAIE               => 4,
-        self::PREF_FIN_PAIEMENTS_TAXE_MONTANT               => 5,
-        self::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT         => 6,
-        self::PREF_FIN_PAIEMENTS_TAXE_EXERCICE              => 7,
-        self::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS             => 8,
-        self::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR           => 9,
-        self::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE            => 10,
-        self::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION      => 11,
-        self::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION  => 12
+        self::PREF_FIN_PAIEMENTS_TAXE_MONTANT               => 4,
+        self::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT         => 5,
+        self::PREF_FIN_PAIEMENTS_TAXE_EXERCICE              => 6,
+        self::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS             => 7,
+        self::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR           => 8,
+        self::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE            => 9,
+        self::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION      => 10,
+        self::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION  => 11
     ];
 
     //SINISTRE - ETAPE
@@ -877,7 +832,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_SIN_SINISTRE_POLICE               = "Police";
     public const PREF_SIN_SINISTRE_COUT                 = "Coût de réparation";
     public const PREF_SIN_SINISTRE_MONTANT_PAYE         = "Compensation";
-    //public const PREF_SIN_SINISTRE_MONNAIE              = "Monnaie";
     public const PREF_SIN_SINISTRE_DATE_PAIEMENT        = "Date de paiement";
     public const PREF_SIN_SINISTRE_ETAPE                = "Etape actuelle";
     public const PREF_SIN_SINISTRE_DOCUMENTS            = "Documents";
@@ -897,42 +851,39 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_SINISTRE_POLICE                          => 8,
         self::PREF_SIN_SINISTRE_COUT                            => 9,
         self::PREF_SIN_SINISTRE_MONTANT_PAYE                    => 10,
-        //self::PREF_SIN_SINISTRE_MONNAIE                         => 10,
-        self::PREF_SIN_SINISTRE_DATE_PAIEMENT                   => 12,
-        self::PREF_SIN_SINISTRE_ETAPE                           => 13,
-        self::PREF_SIN_SINISTRE_DOCUMENTS                       => 14,
-        self::PREF_SIN_SINISTRE_UTILISATEUR                     => 15,
-        self::PREF_SIN_SINISTRE_ENTREPRISE                      => 16,
-        self::PREF_SIN_SINISTRE_DATE_DE_CREATION                => 17,
-        self::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION            => 18,
+        self::PREF_SIN_SINISTRE_DATE_PAIEMENT                   => 11,
+        self::PREF_SIN_SINISTRE_ETAPE                           => 12,
+        self::PREF_SIN_SINISTRE_DOCUMENTS                       => 13,
+        self::PREF_SIN_SINISTRE_UTILISATEUR                     => 14,
+        self::PREF_SIN_SINISTRE_ENTREPRISE                      => 15,
+        self::PREF_SIN_SINISTRE_DATE_DE_CREATION                => 16,
+        self::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION            => 17,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_polices_tab                             => 19,
-        self::PREF_calc_polices_primes_nette                    => 20,
-        self::PREF_calc_polices_primes_totale                   => 21,
-        self::PREF_calc_polices_fronting                        => 22,
-        self::PREF_calc_polices_accessoire                      => 23,
-        self::PREF_calc_polices_tva                             => 24,
-        self::PREF_calc_revenu_reserve                          => 25,
-        self::PREF_calc_revenu_partageable                      => 26,
-        self::PREF_calc_revenu_ht                               => 27,
-        self::PREF_calc_revenu_ttc                              => 28,
-        self::PREF_calc_revenu_ttc_encaisse                     => 29,
-        self::PREF_calc_revenu_ttc_encaisse_tab_ref_factures    => 30,
-        self::PREF_calc_revenu_ttc_solde_restant_du             => 31,
-        self::PREF_calc_retrocom                                => 32,
-        self::PREF_calc_retrocom_payees                         => 33,
-        self::PREF_calc_retrocom_payees_tab_factures            => 34,
-        self::PREF_calc_retrocom_solde                          => 35,
-        self::PREF_calc_taxes_courtier_tab                      => 36,
-        self::PREF_calc_taxes_courtier                          => 37,
-        self::PREF_calc_taxes_courtier_payees                   => 38,
-        self::PREF_calc_taxes_courtier_payees_tab_ref_factures  => 39,
-        self::PREF_calc_taxes_courtier_solde                    => 40,
-        self::PREF_calc_taxes_assureurs_tab                     => 41,
-        self::PREF_calc_taxes_assureurs                         => 42,
-        self::PREF_calc_taxes_assureurs_payees                  => 43,
-        self::PREF_calc_taxes_assureurs_payees_tab_ref_factures => 44,
-        self::PREF_calc_taxes_assureurs_solde                   => 45
+        self::PREF_calc_polices_primes_nette                    => 18,
+        self::PREF_calc_polices_primes_totale                   => 19,
+        self::PREF_calc_polices_fronting                        => 20,
+        self::PREF_calc_polices_accessoire                      => 21,
+        self::PREF_calc_polices_tva                             => 22,
+        self::PREF_calc_revenu_reserve                          => 23,
+        self::PREF_calc_revenu_partageable                      => 24,
+        self::PREF_calc_revenu_ht                               => 25,
+        self::PREF_calc_revenu_ttc                              => 26,
+        self::PREF_calc_revenu_ttc_encaisse                     => 27,
+        self::PREF_calc_revenu_ttc_solde_restant_du             => 28,
+        self::PREF_calc_retrocom                                => 29,
+        self::PREF_calc_retrocom_payees                         => 30,
+        self::PREF_calc_retrocom_solde                          => 31,
+        self::PREF_calc_taxes_courtier_tab                      => 32,
+        self::PREF_calc_taxes_courtier                          => 33,
+        self::PREF_calc_taxes_courtier_payees                   => 34,
+        self::PREF_calc_taxes_courtier_solde                    => 35,
+        self::PREF_calc_taxes_assureurs_tab                     => 36,
+        self::PREF_calc_taxes_assureurs                         => 37,
+        self::PREF_calc_taxes_assureurs_payees                  => 38,
+        self::PREF_calc_taxes_assureurs_solde                   => 39,
+        self::PREF_calc_sinistre_dommage_total                  => 40,
+        self::PREF_calc_sinistre_indemnisation_total            => 41,
+        self::PREF_calc_sinistre_indice_SP                      => 42
     ];
 
     //SINISTRE - VICTIME
@@ -956,7 +907,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_SIN_VICTIME_UTILISATEUR          => 6,
         self::PREF_SIN_VICTIME_ENTREPRISE           => 7,
         self::PREF_SIN_VICTIME_DATE_DE_CREATION     => 8,
-        self::PREF_SIN_VICTIME_DERNIRE_MODIFICATION => 10
+        self::PREF_SIN_VICTIME_DERNIRE_MODIFICATION => 9
     ];
     //BIBLIOTHEQUE - CATEGORIE
     public const PREF_BIB_CATEGORIE_ID                      = "Id";
@@ -1046,7 +997,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PAR_UTILISATEUR_ENTREPRISE           => 6,
         self::PREF_PAR_UTILISATEUR_DATE_DE_CREATION     => 7,
         self::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION => 8,
-        self::PREF_PAR_UTILISATEUR_MISSIONS             => 9,
+        self::PREF_PAR_UTILISATEUR_MISSIONS             => 9
     ];
 
 

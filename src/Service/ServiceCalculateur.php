@@ -26,11 +26,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class ServiceCalculateur
 {
-    private $paiements_com = null;
     private $taxes = null;
     private $paiements_taxes = null;
     private $paiements_retrocom = null;
+    private $paiements_com = null;
     private $polices = null;
+    private $sinistres = null;
 
     public const RUBRIQUE_POLICE = 0;
     public const RUBRIQUE_PARTENAIRE = 1;
@@ -43,11 +44,10 @@ class ServiceCalculateur
 
 
     public function __construct(
-        private EntityManagerInterface $entityManager, 
+        private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceMonnaie $serviceMonnaie
-        )
-    {
+    ) {
         $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
@@ -65,6 +65,16 @@ class ServiceCalculateur
     public function calculate($container, $rubrique)
     {
         switch ($rubrique) {
+            case self::RUBRIQUE_CLIENT:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Client::class);
+                $listeClients = $entityManager->getRepository(Client::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($listeClients as $client) {
+                    $this->updateClientCalculableFileds($client);
+                }
+                break;
+
             case self::RUBRIQUE_POLICE:
                 $entityManager = $container->get('doctrine')->getManagerForClass(Police::class);
                 $liste = $entityManager->getRepository(Police::class)->findBy(
@@ -95,16 +105,6 @@ class ServiceCalculateur
                 }
                 break;
 
-            case self::RUBRIQUE_CLIENT:
-                $entityManager = $container->get('doctrine')->getManagerForClass(Client::class);
-                $liste = $entityManager->getRepository(Client::class)->findBy(
-                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                );
-                foreach ($liste as $pol) {
-                    $this->updateClientCalculableFileds($pol);
-                }
-                break;
-
             case self::RUBRIQUE_ASSUREUR:
                 $entityManager = $container->get('doctrine')->getManagerForClass(Assureur::class);
                 $liste = $entityManager->getRepository(Assureur::class)->findBy(
@@ -112,16 +112,6 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updateAssureurCalculableFileds($pol);
-                }
-                break;
-
-            case self::RUBRIQUE_PISTE:
-                $entityManager = $container->get('doctrine')->getManagerForClass(Piste::class);
-                $liste = $entityManager->getRepository(Piste::class)->findBy(
-                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-                );
-                foreach ($liste as $pol) {
-                    $this->updatePisteCalculableFileds($pol);
                 }
                 break;
 
@@ -208,7 +198,7 @@ class ServiceCalculateur
 
     public function updatePisteCalculableFileds(?CalculableEntity $obj)
     {
-        
+
         $this->calculerPolices(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
@@ -250,12 +240,13 @@ class ServiceCalculateur
         $this->calculerRevenusPartageables($obj);
         $this->calculerRetrocommissions($obj);
         $this->calculerRevenusReserve($obj);
+        $this->calculerSinistre($obj);
     }
 
 
     private function calculerPolices($criteres)
     {
-        
+
         $this->polices = $this->entityManager->getRepository(Police::class)->findBy($criteres);
         //  dd("SERGE");
     }
@@ -263,6 +254,28 @@ class ServiceCalculateur
     public function calculerRevenusReserve(?CalculableEntity $obj)
     {
         $obj->calc_revenu_reserve = $obj->calc_revenu_partageable - $obj->calc_retrocom;
+    }
+
+    public function calculerSinistre(?CalculableEntity $obj)
+    {
+        //dd($this->polices);
+        foreach ($this->polices as $police) {
+            /** @var Police */
+            $pol = $police;
+            if (count($pol->getSinistres()) != 0) {
+                foreach ($pol->getSinistres() as $sinistre) {
+                    /** @var Sinistre */
+                    $sin = $sinistre;
+                    $obj->calc_sinistre_dommage_total += $sin->getCout();
+                    $obj->calc_sinistre_indemnisation_total += $sin->getMontantPaye();
+                }
+            }
+        }
+        //dd("Prime totale: " . $obj->calc_polices_primes_totale);
+        if ($obj->calc_polices_primes_totale != 0) {
+            $obj->calc_sinistre_indice_SP = round($obj->calc_sinistre_indemnisation_total / $obj->calc_polices_primes_totale, 3);
+        }
+        //dd("Sinistre payé: " . $obj->calc_sinistre_indice_SP*100 . "%");
     }
 
     public function calculerRevenusPartageables(?CalculableEntity $obj)
@@ -283,7 +296,6 @@ class ServiceCalculateur
             //Meta - police
             $obj->calc_polices_accessoire += $police->getFraisAdmin();
             $obj->calc_polices_tva += $police->getTva();
-            $obj->calc_polices_tab[] = $police;
             $obj->calc_polices_primes_nette += $police->getPrimenette();
             $obj->calc_polices_primes_totale += $police->getPrimetotale();
             $obj->calc_polices_fronting += $police->getFronting();
@@ -301,7 +313,6 @@ class ServiceCalculateur
             foreach ($this->paiements_com as $paiement_com) {
                 if ($paiement_com->getPolice() === $police) {
                     $obj->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
-                    $obj->calc_revenu_ttc_encaisse_tab_ref_factures[] = "Réf.:" . $paiement_com->getRefnotededebit() . ", " . $paiement_com->getMontant() . ", reçus de " . $paiement_com->getPolice()->getAssureur()->getNom() . " le " . $paiement_com->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_com->getUtilisateur()->getNom();
                 }
             }
             $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
@@ -334,18 +345,18 @@ class ServiceCalculateur
                 if ($police->isCansharefrontingcom() == true) {
                     $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part) / 100;
                 }
-                $obj->calc_retrocom = $retrocom_ri + $retrocom_local + $retrocom_fronting;
+                $obj->calc_retrocom += $retrocom_ri + $retrocom_local + $retrocom_fronting;
             }
-            //dd($police->calc_retrocom . " ** " . $police->getLocalcom());
+            //dd($obj->calc_retrocom);
 
             foreach ($this->paiements_retrocom as $paiement_retrocom) {
                 //dd($paiement_retrocom->getPolice());
                 if ($police === $paiement_retrocom->getPolice()) {
                     $obj->calc_retrocom_payees += $paiement_retrocom->getMontant();
-                    $obj->calc_retrocom_payees_tab_factures[] = "Réf.:" . $paiement_retrocom->getRefnotededebit() . ", " . $paiement_retrocom->getMontant() . ", reversé à " . $paiement_retrocom->getPartenaire()->getNom() . " le " . $paiement_retrocom->getDate()->format('d/m/Y') . ", enregistré par " . $paiement_retrocom->getUtilisateur()->getNom();
                 }
             }
             $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
+            //dd($obj->calc_retrocom_solde);
         }
     }
 
@@ -394,7 +405,6 @@ class ServiceCalculateur
         foreach ($this->paiements_taxes as $paiement_taxe) {
             if ($paiement_taxe->getTaxe() === $taxe && $paiement_taxe->getPolice() === $police) {
                 $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
-                $calculableEntity->calc_taxes_courtier_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
             }
         }
         $calculableEntity->calc_taxes_courtier_solde += ($calculableEntity->calc_taxes_courtier - $calculableEntity->calc_taxes_courtier_payees);
@@ -407,7 +417,6 @@ class ServiceCalculateur
         foreach ($this->paiements_taxes as $paiement_taxe) {
             if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() === $police) {
                 $calculableEntity->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
-                $calculableEntity->calc_taxes_assureurs_payees_tab_ref_factures[] = "Réf.:" . $paiement_taxe->getRefnotededebit() . ", " . $paiement_taxe->getMontant() . ", le " . $paiement_taxe->getDate()->format('d/m/Y') . ", par " . $paiement_taxe->getUtilisateur()->getNom(); //$paiement_taxe->getRefnotededebit();
             }
         }
         $calculableEntity->calc_taxes_assureurs_solde += ($calculableEntity->calc_taxes_assureurs - $calculableEntity->calc_taxes_assureurs_payees);

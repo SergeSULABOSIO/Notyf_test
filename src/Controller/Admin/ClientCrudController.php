@@ -142,10 +142,6 @@ class ClientCrudController extends AbstractCrudController
     {
         $objet = new Client();
         $objet = $this->serviceCrossCanal->crossCanal_Client_setCotation($objet, $this->adminUrlGenerator);
-
-        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
-        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        //$objet->setClos(0);
         return $objet;
     }
 

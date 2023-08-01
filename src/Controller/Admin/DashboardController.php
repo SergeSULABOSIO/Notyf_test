@@ -32,6 +32,7 @@ use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
 use App\Entity\Preference;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityManagerInterface;
@@ -69,7 +70,8 @@ class DashboardController extends AbstractDashboardController
         private ServicePreferences $servicePreferences,
         private EntityManagerInterface $entityManager,
         private AdminUrlGenerator $adminUrlGenerator,
-        private ServiceEntreprise $serviceEntreprise
+        private ServiceEntreprise $serviceEntreprise,
+        private ServiceCrossCanal $serviceCrossCanal
     ) {
     }
 
@@ -188,7 +190,19 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section("REPORTING")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        $url = $this->adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES POLICES - [Cient: XXXX ]")
+            //->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][value]', $entite->getId()) //il faut juste passer son ID
+            //->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
         yield MenuItem::subMenu('COMMISSIONS IMPAYEES', 'fa-regular fa-newspaper')
+            ->setSubItems([
+                MenuItem::linkToUrl('TOUS', 'fas fa-shop', $this->serviceCrossCanal->reporting_outstanding_commission_tous($this->adminUrlGenerator)),
+            ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
 

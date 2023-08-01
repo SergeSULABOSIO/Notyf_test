@@ -1202,15 +1202,15 @@ class ServiceCrossCanal
         return $contact;
     }
 
-    public function crossCanal_Cotation_setPiste(Cotation $contact, AdminUrlGenerator $adminUrlGenerator): Cotation
+    public function crossCanal_Cotation_setPiste(Cotation $cotation, AdminUrlGenerator $adminUrlGenerator): Cotation
     {
-        $objet = null;
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
         if ($paramID != null) {
+            /** @var Piste */
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
-            $contact->setPiste($objet);
+            $cotation->setPiste($objet);
         }
-        return $contact;
+        return $cotation;
     }
 
     public function crossCanal_Police_setCotation(Police $police, AdminUrlGenerator $adminUrlGenerator): Police
@@ -1421,5 +1421,19 @@ class ServiceCrossCanal
         $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
         $crud->setPageTitle(Crud::PAGE_NEW, $adminUrlGenerator->get("titre"));
         return $crud;
+    }
+
+    public function reporting_outstanding_commission_tous(AdminUrlGenerator $adminUrlGenerator)
+    {
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: USD XXXXXX")
+            ->set('filters[isCommissionUnpaid][value]', true) //il faut juste passer son ID
+            ->set('filters[isCommissionUnpaid][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
     }
 }

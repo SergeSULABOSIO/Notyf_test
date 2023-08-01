@@ -143,7 +143,6 @@ class ServiceCalculateur
 
     public function updatePoliceCalculableFileds(?Police $police)
     {
-        $soldeComAvant = $police->calc_revenu_ttc_solde_restant_du;
         $this->calculerPolices(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
@@ -151,16 +150,10 @@ class ServiceCalculateur
             ]
         );
         $this->calculer($police);
-        $soldeComApres = $police->calc_revenu_ttc_solde_restant_du;
-
         //On met à jour le status des outstanding
-        if ($soldeComAvant != $soldeComApres) {
-            //dd("Avant (" . $soldecomAvant . ") | Après (" . $soldecomApres . "). On actualise la BD.");
-            $police->setIsCommissionUnpaid(($police->calc_revenu_ttc_solde_restant_du == 0) ? false : true);
-            //persistance
-            $this->entityManager->persist($police);
-            $this->entityManager->flush();
-        }
+        $police->setIsCommissionUnpaid(($police->calc_revenu_ttc_solde_restant_du == 0) ? false : true);
+        $this->entityManager->persist($police);
+        $this->entityManager->flush();
     }
 
     public function updatePartenaireCalculableFileds(?CalculableEntity $obj)

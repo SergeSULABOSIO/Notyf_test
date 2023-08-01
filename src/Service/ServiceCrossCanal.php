@@ -1429,8 +1429,8 @@ class ServiceCrossCanal
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: USD XXXXXX")
-            ->set('filters[isCommissionUnpaid][value]', true) //il faut juste passer son ID
-            ->set('filters[isCommissionUnpaid][comparison]', '=')
+            ->set('filters[isCommissionUnpaid][value]', true)
+            //->set('filters[isCommissionUnpaid][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

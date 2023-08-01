@@ -152,6 +152,7 @@ class ServiceCalculateur
         $this->calculer($police);
         //On met à jour le status des outstanding
         $police->setIsCommissionUnpaid(($police->calc_revenu_ttc_solde_restant_du == 0) ? false : true);
+        //dd($police->isIsCommissionUnpaid());
         $this->entityManager->persist($police);
         $this->entityManager->flush();
     }

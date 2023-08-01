@@ -186,17 +186,24 @@ class DashboardController extends AbstractDashboardController
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE]);
 
+        yield MenuItem::section("REPORTING")
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        yield MenuItem::subMenu('COMMISSIONS IMPAYEES', 'fa-regular fa-newspaper')
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
+
         yield MenuItem::section("CONFIGURATIONS")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
-        yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')->setSubItems([ //<i class="fa-solid fa-gears"></i>
-            MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
-            MenuItem::linkToCrud('Entreprise', 'fas fa-shop', Entreprise::class)
-                ->setAction(Action::DETAIL)
-                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
-            MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Preference::class)
-                ->setAction(Action::EDIT)
-                ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()) //<i class="fa-solid fa-solar-panel"></i>
-        ])
+        yield MenuItem::subMenu('PARAMETRES', 'fas fa-gears')
+            ->setSubItems([ //<i class="fa-solid fa-gears"></i>
+                MenuItem::linkToCrud('Utilisateur', 'fas fa-user', Utilisateur::class),
+                MenuItem::linkToCrud('Entreprise', 'fas fa-shop', Entreprise::class)
+                    ->setAction(Action::DETAIL)
+                    ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()),
+                MenuItem::linkToCrud('Affichage', 'fa-solid fa-solar-panel', Preference::class)
+                    ->setAction(Action::EDIT)
+                    ->setEntityId($this->serviceEntreprise->getEntreprise()->getId()) //<i class="fa-solid fa-solar-panel"></i>
+            ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);
 
         yield MenuItem::linkToCrud("MON PROFIL", "fa-solid fa-user", Utilisateur::class) //<i class="fa-solid fa-user"></i>

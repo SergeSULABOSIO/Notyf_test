@@ -198,7 +198,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";
-    public const PREF_PRO_ASSUREUR_NOM                      = "Nom";
+    public const PREF_PRO_ASSUREUR_NOM                      = "Nom de l'assureur";
     public const PREF_PRO_ASSUREUR_POLICES                  = "Polices";
     public const PREF_PRO_ASSUREUR_COTATIONS                = "Cotations";
     public const PREF_PRO_ASSUREUR_ADRESSE                  = "Adresse";

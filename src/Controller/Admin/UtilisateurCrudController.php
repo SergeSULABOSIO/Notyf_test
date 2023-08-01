@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\SecurityController;
 use DateTime;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
@@ -23,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
@@ -44,6 +46,7 @@ class UtilisateurCrudController extends AbstractCrudController
     public const ACCES_SINISTRES = 'ACCES : SINISTRES';
     public const ACCES_BIBLIOTHE = 'ACCES : BIBLIOTHE';
     public const ACCES_PARAMETRES = 'ACCES : PARAMETRES';
+    public const ACCES_REPORTING = 'ACCES : REPORTING';
     //public const ACTION_LECTURE = 'ACTION : LECTURE';
     public const ACTION_EDITION = 'ACTION : EDITION';
     public const VISION_GLOBALE = 'VISION : GLOBALE';
@@ -57,6 +60,7 @@ class UtilisateurCrudController extends AbstractCrudController
         self::ACCES_SINISTRES => 'ROLE_ACCES_SINISTRE',
         self::ACCES_BIBLIOTHE => 'ROLE_ACCES_BIBLIOTHEQUE',
         self::ACCES_PARAMETRES => 'ROLE_ACCES_PARAMETRES',
+        self::ACCES_REPORTING => 'ROLE_ACCES_REPORTING',
         //Les pouvoir d'action sur les données
         self::ACTION_EDITION => 'ROLE_ACTION_EDITION',
         //Visibilité
@@ -68,7 +72,8 @@ class UtilisateurCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private AdminUrlGenerator $adminUrlGenerator,
     ) {
     }
 
@@ -281,5 +286,19 @@ class UtilisateurCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    
+    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    {
+        /** @var Utilisateur */
+        $utilisateur = $context->getEntity()->getInstance();
+        //dd($utilisateur);
+        $url = $this->adminUrlGenerator
+            ->setController(SecurityController::class)
+            ->setAction("index")
+            ->setEntityId(null)
+            ->generateUrl();
+        return $this->redirect($url);
     }
 }

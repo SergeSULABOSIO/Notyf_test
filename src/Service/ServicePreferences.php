@@ -97,6 +97,7 @@ class ServicePreferences
 
     public function chargerPreference(Utilisateur $utilisateur, Entreprise $entreprise): Preference
     {
+        //dd($utilisateur);
         $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
             [
                 'entreprise' => $entreprise,
@@ -116,6 +117,7 @@ class ServicePreferences
 
     public function appliquerPreferenceTaille($instance, Crud $crud)
     {
+        //dd($this->serviceEntreprise);
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //GROUPE CRM
         if ($instance instanceof Action) {

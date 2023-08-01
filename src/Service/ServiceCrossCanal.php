@@ -1446,7 +1446,6 @@ class ServiceCrossCanal
             ->setAction(Action::INDEX)
             ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total))
             ->set('filters[isCommissionUnpaid][value]', true)
-            //->set('filters[isCommissionUnpaid][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

@@ -74,6 +74,10 @@ class AdminSubscriber implements EventSubscriberInterface
                 $entityInstance->setPassword($hashedPassword);
             }
             //On ajoute par la même occasion les préférences par défaut de cet User
+            $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
+            $entityInstance->setCreatedAt(new \DateTimeImmutable());
+            $entityInstance->setUpdatedAt(new \DateTimeImmutable());
             $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
         }
 

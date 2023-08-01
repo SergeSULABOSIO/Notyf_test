@@ -140,6 +140,7 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         $objet = new Utilisateur();
         $objet->setPlainPassword("abc");
+        $objet->setUpdatedAt(new \DateTimeImmutable("now"));
         $objet->setRoles([
             //Accès aux fonctionnalités
             UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL],
@@ -238,7 +239,7 @@ class UtilisateurCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
 
-        
+
         return $actions;
     }
 
@@ -288,17 +289,25 @@ class UtilisateurCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    
+
     protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
     {
         /** @var Utilisateur */
         $utilisateur = $context->getEntity()->getInstance();
-        //dd($utilisateur);
-        $url = $this->adminUrlGenerator
-            ->setController(SecurityController::class)
-            ->setAction("index")
-            ->setEntityId(null)
-            ->generateUrl();
-        return $this->redirect($url);
+        if ($this->serviceEntreprise->getUtilisateur() != $utilisateur) {
+            $url = $this->adminUrlGenerator
+                ->setController(UtilisateurCrudController::class)
+                ->setAction(Action::INDEX)
+                ->setEntityId(null)
+                ->generateUrl();
+            return $this->redirect($url);
+        } else {
+            $url = $this->adminUrlGenerator
+                ->setController(SecurityController::class)
+                ->setAction("index")
+                ->setEntityId(null)
+                ->generateUrl();
+            return $this->redirect($url);
+        }
     }
 }

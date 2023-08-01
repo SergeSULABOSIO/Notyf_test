@@ -131,7 +131,9 @@ class ServiceCrossCanal
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ServiceCalculateur $serviceCalculateur
+        private ServiceCalculateur $serviceCalculateur,
+        private ServiceEntreprise $serviceEntreprise,
+        private ServiceMonnaie $serviceMonnaie
     ) {
     }
 
@@ -1425,10 +1427,24 @@ class ServiceCrossCanal
 
     public function reporting_outstanding_commission_tous(AdminUrlGenerator $adminUrlGenerator)
     {
+        $polices = $this->entityManager->getRepository(Police::class)->findBy(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'isCommissionUnpaid' => true,
+            ]
+        );
+        $total = 0;
+        foreach ($polices as $police) {
+            /** @var Police  */
+            $pol = $police;
+            $total += $pol->calc_revenu_ttc_solde_restant_du;
+        }
+        //dd($polices);
+
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
-            ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: USD XXXXXX")
+            ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total))
             ->set('filters[isCommissionUnpaid][value]', true)
             //->set('filters[isCommissionUnpaid][comparison]', '=')
             ->setEntityId(null)

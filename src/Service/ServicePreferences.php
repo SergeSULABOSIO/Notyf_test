@@ -72,6 +72,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use PHPUnit\Framework\MockObject\ReturnValueNotConfiguredException;
 
 class ServicePreferences
@@ -80,6 +81,20 @@ class ServicePreferences
     private $taxes = [];
     public const INDICE_TAXE_COURTIER = 0;
     public const INDICE_TAXE_ASSUREUR = 1;
+
+    public ?Crud $crud = null;
+    public ?AdminUrlGenerator $adminUrlGenerator = null;
+
+    public $total_unpaidcommission = 0;
+    public $total_unpaidretrocommission = 0;
+    public $total_unpaidtaxecourtier = 0;
+    public $total_unpaidtaxeassureur = 0;
+
+    public $total_paidcommission = 0;
+    public $total_paidretrocommission = 0;
+    public $total_paidtaxecourtier = 0;
+    public $total_paidtaxeassureur = 0;
+
 
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -266,7 +281,7 @@ class ServicePreferences
         return false;
     }
 
-    public function definirAttributsPages($objetInstance, Preference $preference)
+    public function definirAttributsPages($objetInstance, Preference $preference, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
         //GROUPE CRM
         if ($objetInstance instanceof ActionCRM) {
@@ -366,8 +381,8 @@ class ServicePreferences
                     ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le contrat d'assurance en place.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Polices_Index_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Polices_Index_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs, $crud, $adminUrlGenerator);
+            $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs, $crud, $adminUrlGenerator);
         }
         if ($objetInstance instanceof Produit) {
             $tabAttributs = [
@@ -502,8 +517,11 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Polices_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_Polices_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        $this->crud = $crud;
+        $this->adminUrlGenerator = $adminUrlGenerator;
+
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)
                 ->hideOnForm();
@@ -791,6 +809,16 @@ class ServicePreferences
 
         //LES CHAMPS CALCULABLES
         $tabAttributs = $this->setAttributs_Calculables(true, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+
+        //TRAVAUX SUR LE REPORTING
+        $tabAttributs[] = MoneyField::new('unpaidcommission')
+            ->formatValue(function ($value, Police $police) {
+                $this->setTitreReporting($police);
+                return $value;
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
 
         return $tabAttributs;
     }
@@ -3748,12 +3776,11 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function getChamps($objetInstance)
+    public function getChamps($objetInstance, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
-        $taxes = $this->chargerTaxes();
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //définition des attributs des pages
-        return $this->definirAttributsPages($objetInstance, $preference);
+        return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
     }
 
     public function setDefaultData(Preference $preference)
@@ -3825,5 +3852,16 @@ class ServicePreferences
         //dd($preferences);
         $this->entityManager->persist($preferences);
         $this->entityManager->flush();
+    }
+
+    public function setTitreReporting(Police $police){
+        if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
+            $this->total_unpaidcommission += $police->getUnpaidcommission();
+            $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
+        }
+        if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
+            $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
+            $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
+        }
     }
 }

@@ -133,7 +133,7 @@ class DocPieceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
-        return $this->servicePreferences->getChamps(new DocPiece());
+        return $this->servicePreferences->getChamps(new DocPiece(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

@@ -39,6 +39,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class AssureurCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
@@ -91,7 +93,7 @@ class AssureurCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Assureur(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -103,6 +105,7 @@ class AssureurCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -125,7 +128,7 @@ class AssureurCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_ASSUREUR);
-        return $this->servicePreferences->getChamps(new Assureur());
+        return $this->servicePreferences->getChamps(new Assureur(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

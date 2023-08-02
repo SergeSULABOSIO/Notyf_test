@@ -36,6 +36,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class DocCategorieCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression, 
         private EntityManagerInterface $entityManager, 
@@ -57,7 +59,7 @@ class DocCategorieCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new DocCategorie(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat ('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -69,6 +71,7 @@ class DocCategorieCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE])
             // ...
         ;
+        return $crud;
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -115,7 +118,7 @@ class DocCategorieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return $this->servicePreferences->getChamps(new DocCategorie());
+        return $this->servicePreferences->getChamps(new DocCategorie(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

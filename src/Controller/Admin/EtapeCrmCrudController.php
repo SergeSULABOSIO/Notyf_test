@@ -37,12 +37,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class EtapeCrmCrudController extends AbstractCrudController
 {
+    public ?Crud $crud = null;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
-        private ServiceCrossCanal $serviceCrossCanal
+        private ServiceCrossCanal $serviceCrossCanal,
+        private AdminUrlGenerator $adminUrlGenerator,
     ) {
     }
 
@@ -81,7 +84,7 @@ class EtapeCrmCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new EtapeCrm(), $crud);
 
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -93,6 +96,7 @@ class EtapeCrmCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL])
             // ...
         ;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -112,7 +116,7 @@ class EtapeCrmCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return $this->servicePreferences->getChamps(new EtapeCrm());
+        return $this->servicePreferences->getChamps(new EtapeCrm(), $this->crud, $this->adminUrlGenerator);
     }
 
 

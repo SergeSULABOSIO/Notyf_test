@@ -151,7 +151,7 @@ class ClientCrudController extends AbstractCrudController
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_CLIENT);
-        return $this->servicePreferences->getChamps(new Client());
+        return $this->servicePreferences->getChamps(new Client(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

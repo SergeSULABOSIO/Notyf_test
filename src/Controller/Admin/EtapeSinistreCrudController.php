@@ -128,7 +128,7 @@ class EtapeSinistreCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
-        return $this->servicePreferences->getChamps(new EtapeSinistre());
+        return $this->servicePreferences->getChamps(new EtapeSinistre(), $this->crud, $this->adminUrlGenerator);
     }
 
 

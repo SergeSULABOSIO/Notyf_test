@@ -60,6 +60,17 @@ use function PHPUnit\Framework\containsEqual;
 
 class ServiceCrossCanal
 {
+    //code reporting
+    public const REPORTING_CODE_UNPAID_COM = 0;
+    public const REPORTING_CODE_UNPAID_RETROCOM = 1;
+    public const REPORTING_CODE_UNPAID_TAXE_COURTIER = 2;
+    public const REPORTING_CODE_UNPAID_TAXE_ASSUREUR = 3;
+    public const REPORTING_CODE_PAID_COM = 100;
+    public const REPORTING_CODE_PAID_RETROCOM = 101;
+    public const REPORTING_CODE_PAID_TAXE_COURTIER = 102;
+    public const REPORTING_CODE_PAID_TAXE_ASSUREUR = 103;
+
+
     //Feedback
     public const OPTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
     public const OPTION_FEEDBACK_LISTER = "Voire les feedbacks";
@@ -1446,24 +1457,12 @@ class ServiceCrossCanal
 
     private function reporting_commission_paid(AdminUrlGenerator $adminUrlGenerator):string
     {
-        //$polices = $this->entityManager->getRepository(Police::class)->findBy(
-        //    [
-        //        'entreprise' => $this->serviceEntreprise->getEntreprise()
-        //    ]
-        //);
-        //$totalPaid = 0;
-        //foreach ($polices as $police) {
-        //    /** @var Police  */
-        //    $pol = $police;
-        //    $totalPaid += $pol->calc_revenu_ttc_encaisse;
-        //}
-        //dd($polices);
-       
-        $titre = "TOUTES COMMISSIONS ENCAISSEES - TOTAL $00000";
+        $titre = "TOUTES COMMISSIONS ENCAISSEES";
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
             ->set('filters[unpaidcommission][comparison]', '>=')
             ->setEntityId(null)
@@ -1474,25 +1473,12 @@ class ServiceCrossCanal
 
     private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator):string
     {
-        //$polices = $this->entityManager->getRepository(Police::class)->findBy(
-        //    [
-        //        'entreprise' => $this->serviceEntreprise->getEntreprise(),
-        //        'isCommissionUnpaid' => true,
-        //    ]
-        //);
-        //$totalDue = 0;
-        //foreach ($polices as $police) {
-        //    /** @var Police  */
-        //    $pol = $police;
-        //    $totalDue += $pol->calc_revenu_ttc_solde_restant_du;
-        //}
-        //dd($polices);
-        //$titre = "TOUTES LES COMMISSIONS IMPAYEES - TOTAL: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($totalDue);
-        $titre = "TOUTES COMMISSIONS IMPAYEES - TOTAL $00000";
+        $titre = "TOUTES COMMISSIONS IMPAYEES";
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
             ->set('filters[unpaidcommission][comparison]', '!=')
             ->setEntityId(null)

@@ -166,9 +166,6 @@ class Police extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Automobile::class)]
     private Collection $automobiles;
 
-    #[ORM\Column]
-    private ?bool $isCommissionUnpaid = null;
-
     #[ORM\Column(nullable: true)]
     private ?float $unpaidcommission = null;
 
@@ -180,6 +177,18 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $unpaidtaxeassureur = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $paidcommission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $paidretrocommission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $paidtaxecourtier = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $paidtaxeassureur = null;
     
     
     public function __construct()
@@ -870,18 +879,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function isIsCommissionUnpaid(): ?bool
-    {
-        return $this->isCommissionUnpaid;
-    }
-
-    public function setIsCommissionUnpaid(bool $isCommissionUnpaid): self
-    {
-        $this->isCommissionUnpaid = $isCommissionUnpaid;
-
-        return $this;
-    }
-
     public function getUnpaidcommission(): ?float
     {
         return $this->unpaidcommission;
@@ -926,6 +923,54 @@ class Police extends CalculableEntity
     public function setUnpaidtaxeassureur(?float $unpaidtaxeassureur): self
     {
         $this->unpaidtaxeassureur = $unpaidtaxeassureur;
+
+        return $this;
+    }
+
+    public function getPaidcommission(): ?float
+    {
+        return $this->paidcommission;
+    }
+
+    public function setPaidcommission(?float $paidcommission): self
+    {
+        $this->paidcommission = $paidcommission;
+
+        return $this;
+    }
+
+    public function getPaidretrocommission(): ?float
+    {
+        return $this->paidretrocommission;
+    }
+
+    public function setPaidretrocommission(?float $paidretrocommission): self
+    {
+        $this->paidretrocommission = $paidretrocommission;
+
+        return $this;
+    }
+
+    public function getPaidtaxecourtier(): ?float
+    {
+        return $this->paidtaxecourtier;
+    }
+
+    public function setPaidtaxecourtier(?float $paidtaxecourtier): self
+    {
+        $this->paidtaxecourtier = $paidtaxecourtier;
+
+        return $this;
+    }
+
+    public function getPaidtaxeassureur(): ?float
+    {
+        return $this->paidtaxeassureur;
+    }
+
+    public function setPaidtaxeassureur(?float $paidtaxeassureur): self
+    {
+        $this->paidtaxeassureur = $paidtaxeassureur;
 
         return $this;
     }

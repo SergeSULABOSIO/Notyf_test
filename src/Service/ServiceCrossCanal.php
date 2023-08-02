@@ -1463,8 +1463,8 @@ class ServiceCrossCanal
             ->setAction(Action::INDEX)
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_COM)
-            ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '>=')
+            ->set('filters[paidcommission][value]', 0)
+            ->set('filters[paidcommission][comparison]', '>')
             ->setEntityId(null)
             ->generateUrl();
 

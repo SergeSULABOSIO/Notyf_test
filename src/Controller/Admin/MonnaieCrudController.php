@@ -237,7 +237,10 @@ class MonnaieCrudController extends AbstractCrudController
         "ZWL - Zimbabwean dollar (fifth)[e]" => "ZWL"
     ];
 
+    private ?Crud $crud;
+
     public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
@@ -291,6 +294,8 @@ class MonnaieCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
+        $this->crud = $crud;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -314,7 +319,7 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return $this->servicePreferences->getChamps(new Monnaie());
+        return $this->servicePreferences->getChamps(new Monnaie(), $this->crud, $this->adminUrlGenerator);
     }
 
 

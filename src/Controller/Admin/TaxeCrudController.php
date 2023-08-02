@@ -47,13 +47,15 @@ class TaxeCrudController extends AbstractCrudController
         'Oui' => 1
     ];
     
+    private ?Crud $crud = null;
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
     }
 
@@ -103,6 +105,8 @@ class TaxeCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
+        $this->crud = $crud;
+        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -127,7 +131,7 @@ class TaxeCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_TAXE);
-        return $this->servicePreferences->getChamps(new Taxe());
+        return $this->servicePreferences->getChamps(new Taxe(), $this->crud, $this->adminUrlGenerator);
     }
 
 

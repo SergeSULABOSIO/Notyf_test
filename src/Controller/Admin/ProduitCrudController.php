@@ -144,7 +144,7 @@ class ProduitCrudController extends AbstractCrudController
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PRODUIT);
 
-        return $this->servicePreferences->getChamps(new Produit());
+        return $this->servicePreferences->getChamps(new Produit(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

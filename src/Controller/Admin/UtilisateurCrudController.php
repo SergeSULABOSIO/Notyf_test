@@ -67,7 +67,8 @@ class UtilisateurCrudController extends AbstractCrudController
         self::VISION_GLOBALE => 'ROLE_VISION_GLOBALE'
     ];
 
-
+    private ?Crud $crud = null;
+    
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -98,6 +99,8 @@ class UtilisateurCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES])
             // ...
         ;
+        $this->crud = $crud;
+        return $crud;
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -160,7 +163,7 @@ class UtilisateurCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return $this->servicePreferences->getChamps(new Utilisateur());
+        return $this->servicePreferences->getChamps(new Utilisateur(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

@@ -124,7 +124,7 @@ class PaiementTaxeCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
-        return $this->servicePreferences->getChamps(new PaiementTaxe());
+        return $this->servicePreferences->getChamps(new PaiementTaxe(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

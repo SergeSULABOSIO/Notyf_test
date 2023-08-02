@@ -132,7 +132,7 @@ class PisteCrudController extends AbstractCrudController
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Piste());
+        return $this->servicePreferences->getChamps(new Piste(), $this->crud, $this->adminUrlGenerator);
     }
 
 

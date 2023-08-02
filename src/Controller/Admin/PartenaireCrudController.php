@@ -118,7 +118,7 @@ class PartenaireCrudController extends AbstractCrudController
     {
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_PARTENAIRE);
-        return $this->servicePreferences->getChamps(new Partenaire());
+        return $this->servicePreferences->getChamps(new Partenaire(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

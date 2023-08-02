@@ -646,11 +646,6 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
                 ->hideOnForm();
         }
-        //STATUS SUR LES OUTSTANDING
-        $tabAttributs[] = ChoiceField::new('isCommissionUnpaid', "Commissions dûes?")
-            ->hideOnForm()
-            ->setChoices(PoliceCrudController::TAB_POLICE_OUTSTANDING_RESPONSE);
-
 
         //Onglet Prime & Capitaux
         $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
@@ -3854,14 +3849,18 @@ class ServicePreferences
         $this->entityManager->flush();
     }
 
-    public function setTitreReporting(Police $police){
-        if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
-            $this->total_unpaidcommission += $police->getUnpaidcommission();
-            $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
-        }
-        if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
-            $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
-            $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
+    public function setTitreReporting(Police $police)
+    {
+        //dd($this->adminUrlGenerator->get("codeReporting"));
+        if ($this->adminUrlGenerator->get("codeReporting") != null) {
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
+                $this->total_unpaidcommission += $police->getUnpaidcommission();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
+                $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
+            }
         }
     }
 }

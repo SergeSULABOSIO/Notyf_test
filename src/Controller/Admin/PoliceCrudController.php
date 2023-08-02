@@ -127,11 +127,7 @@ class PoliceCrudController extends AbstractCrudController
         }
         return $filters
             ->add('gestionnaire')
-            ->add('isCommissionUnpaid')
-            ->add('unpaidcommission')
-            ->add('unpaidretrocommission')
-            ->add('unpaidtaxecourtier')
-            ->add('unpaidtaxeassureur')
+            //->add('isCommissionUnpaid')
             ->add('dateeffet')
             ->add('dateexpiration')
             ->add('client')
@@ -146,7 +142,15 @@ class PoliceCrudController extends AbstractCrudController
             ->add('primetotale')
             ->add(ChoiceFilter::new('cansharericom', 'Com. de réa. partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
             ->add(ChoiceFilter::new('cansharelocalcom', 'Com. locale partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
-            ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON));
+            ->add(ChoiceFilter::new('cansharefrontingcom', 'Com. fronting partageable?')->setChoices(self::TAB_POLICE_REPONSES_OUI_NON))
+            ->add('paidcommission')
+            ->add('paidretrocommission')
+            ->add('paidtaxecourtier')
+            ->add('paidtaxeassureur')
+            ->add('unpaidcommission')
+            ->add('unpaidretrocommission')
+            ->add('unpaidtaxecourtier')
+            ->add('unpaidtaxeassureur');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -195,6 +199,10 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setUnpaidtaxeassureur(0);
         $objet->setUnpaidtaxecourtier(0);
 
+        $objet->setPaidcommission(0);
+        $objet->setPaidretrocommission(0);
+        $objet->setPaidtaxeassureur(0);
+        $objet->setPaidtaxecourtier(0);
 
         return $objet;
     }

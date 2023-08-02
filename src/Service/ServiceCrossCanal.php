@@ -1458,6 +1458,7 @@ class ServiceCrossCanal
     private function reporting_commission_paid(AdminUrlGenerator $adminUrlGenerator):string
     {
         $titre = "TOUTES COMMISSIONS ENCAISSEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
@@ -1474,6 +1475,7 @@ class ServiceCrossCanal
     private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator):string
     {
         $titre = "TOUTES COMMISSIONS IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
@@ -1484,5 +1486,14 @@ class ServiceCrossCanal
             ->setEntityId(null)
             ->generateUrl();
         return $url;
+    }
+
+    private function resetFilters(AdminUrlGenerator $adminUrlGenerator):AdminUrlGenerator
+    {
+        return $adminUrlGenerator
+        ->unset("titre")
+        ->unset("filters")
+        ->unset("codeReporting")
+        ;
     }
 }

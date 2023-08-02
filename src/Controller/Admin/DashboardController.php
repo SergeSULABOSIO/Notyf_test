@@ -190,18 +190,15 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section("REPORTING")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
-        $url = $this->adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES POLICES - [Cient: XXXX ]")
-            //->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][value]', $entite->getId()) //il faut juste passer son ID
-            //->set('filters[' . self::CROSSED_ENTITY_CLIENT . '][comparison]', '=')
-            ->setEntityId(null)
-            ->generateUrl();
 
-        yield MenuItem::subMenu('COMMISSIONS IMPAYEES', 'fa-regular fa-newspaper')
+        yield MenuItem::subMenu('COMMISSIONS DUES', 'fa-regular fa-newspaper')
             ->setSubItems([
-                MenuItem::linkToUrl('TOUS', 'fas fa-shop', $this->serviceCrossCanal->reporting_outstanding_commission_tous($this->adminUrlGenerator)),
+                MenuItem::linkToUrl('TOUS', 'fas fa-file-shield', $this->serviceCrossCanal->reporting_commission_tous($this->adminUrlGenerator, true)),
+            ])
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        yield MenuItem::subMenu('COMMISSIONS PAYEES', 'fa-regular fa-newspaper')
+            ->setSubItems([
+                MenuItem::linkToUrl('TOUS', 'fas fa-file-shield', $this->serviceCrossCanal->reporting_commission_tous($this->adminUrlGenerator, false)),
             ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 

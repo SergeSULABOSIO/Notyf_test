@@ -128,6 +128,10 @@ class PoliceCrudController extends AbstractCrudController
         return $filters
             ->add('gestionnaire')
             ->add('isCommissionUnpaid')
+            ->add('unpaidcommission')
+            ->add('unpaidretrocommission')
+            ->add('unpaidtaxecourtier')
+            ->add('unpaidtaxeassureur')
             ->add('dateeffet')
             ->add('dateexpiration')
             ->add('client')
@@ -182,10 +186,15 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setLocalcom(0);
         $objet->setCansharelocalcom(false);
         $objet->setLocalcompayableby(0);
-        $objet->setIsCommissionUnpaid(true);
         $objet->setPartenaire(null);
         $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+
+        $objet->setUnpaidcommission(0);
+        $objet->setUnpaidretrocommission(0);
+        $objet->setUnpaidtaxeassureur(0);
+        $objet->setUnpaidtaxecourtier(0);
+
 
         return $objet;
     }

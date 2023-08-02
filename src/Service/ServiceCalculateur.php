@@ -151,7 +151,12 @@ class ServiceCalculateur
         );
         $this->calculer($police);
         //On met à jour le status des outstanding
-        $police->setIsCommissionUnpaid(($police->calc_revenu_ttc_solde_restant_du == 0) ? false : true);
+        //$police->setIsCommissionUnpaid(($police->calc_revenu_ttc_solde_restant_du == 0) ? false : true);
+        $police->setUnpaidcommission($police->calc_revenu_ttc_solde_restant_du);
+        $police->setUnpaidretrocommission($police->calc_retrocom_solde);
+        $police->setUnpaidtaxecourtier($police->calc_taxes_courtier_solde);
+        $police->setUnpaidtaxeassureur($police->calc_taxes_assureurs_solde);
+
         //dd($police->isIsCommissionUnpaid());
         $this->entityManager->persist($police);
         $this->entityManager->flush();

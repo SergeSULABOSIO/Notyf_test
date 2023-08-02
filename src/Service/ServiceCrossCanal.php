@@ -1425,30 +1425,78 @@ class ServiceCrossCanal
         return $crud;
     }
 
-    public function reporting_outstanding_commission_tous(AdminUrlGenerator $adminUrlGenerator)
+    public function reporting_commission_tous(AdminUrlGenerator $adminUrlGenerator, bool $outstanding)
     {
-        $polices = $this->entityManager->getRepository(Police::class)->findBy(
-            [
-                'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'isCommissionUnpaid' => true,
-            ]
-        );
-        $total = 0;
-        foreach ($polices as $police) {
-            /** @var Police  */
-            $pol = $police;
-            $total += $pol->calc_revenu_ttc_solde_restant_du;
+        $url = "";
+        if($outstanding == true){
+            $url = $this->reporting_commission_unpaid($adminUrlGenerator);
+        }else{
+            $url = $this->reporting_commission_paid($adminUrlGenerator);
         }
-        //dd($polices);
+        /* $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set('filters[isCommissionUnpaid][value]', $outstanding)
+            ->setEntityId(null)
+            ->generateUrl(); */
 
+        return $url;
+    }
+
+    private function reporting_commission_paid(AdminUrlGenerator $adminUrlGenerator):string
+    {
+        //$polices = $this->entityManager->getRepository(Police::class)->findBy(
+        //    [
+        //        'entreprise' => $this->serviceEntreprise->getEntreprise()
+        //    ]
+        //);
+        //$totalPaid = 0;
+        //foreach ($polices as $police) {
+        //    /** @var Police  */
+        //    $pol = $police;
+        //    $totalPaid += $pol->calc_revenu_ttc_encaisse;
+        //}
+        //dd($polices);
+       
+        $titre = "TOUTES COMMISSIONS ENCAISSEES - TOTAL $00000";
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::INDEX)
-            ->set("titre", "COMMISSIONS IMPAYEES  - [TOUS] - TOTAL: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total))
-            ->set('filters[isCommissionUnpaid][value]', true)
+            ->set("titre", $titre)
+            ->set('filters[unpaidcommission][value]', 0)
+            ->set('filters[unpaidcommission][comparison]', '>=')
             ->setEntityId(null)
             ->generateUrl();
 
+        return $url;
+    }
+
+    private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator):string
+    {
+        //$polices = $this->entityManager->getRepository(Police::class)->findBy(
+        //    [
+        //        'entreprise' => $this->serviceEntreprise->getEntreprise(),
+        //        'isCommissionUnpaid' => true,
+        //    ]
+        //);
+        //$totalDue = 0;
+        //foreach ($polices as $police) {
+        //    /** @var Police  */
+        //    $pol = $police;
+        //    $totalDue += $pol->calc_revenu_ttc_solde_restant_du;
+        //}
+        //dd($polices);
+        //$titre = "TOUTES LES COMMISSIONS IMPAYEES - TOTAL: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($totalDue);
+        $titre = "TOUTES COMMISSIONS IMPAYEES - TOTAL $00000";
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set('filters[unpaidcommission][value]', 0)
+            ->set('filters[unpaidcommission][comparison]', '!=')
+            ->setEntityId(null)
+            ->generateUrl();
         return $url;
     }
 }

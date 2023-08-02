@@ -168,6 +168,18 @@ class Police extends CalculableEntity
 
     #[ORM\Column]
     private ?bool $isCommissionUnpaid = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $unpaidcommission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $unpaidretrocommission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $unpaidtaxecourtier = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $unpaidtaxeassureur = null;
     
     
     public function __construct()
@@ -866,6 +878,54 @@ class Police extends CalculableEntity
     public function setIsCommissionUnpaid(bool $isCommissionUnpaid): self
     {
         $this->isCommissionUnpaid = $isCommissionUnpaid;
+
+        return $this;
+    }
+
+    public function getUnpaidcommission(): ?float
+    {
+        return $this->unpaidcommission;
+    }
+
+    public function setUnpaidcommission(?float $unpaidcommission): self
+    {
+        $this->unpaidcommission = $unpaidcommission;
+
+        return $this;
+    }
+
+    public function getUnpaidretrocommission(): ?float
+    {
+        return $this->unpaidretrocommission;
+    }
+
+    public function setUnpaidretrocommission(?float $unpaidretrocommission): self
+    {
+        $this->unpaidretrocommission = $unpaidretrocommission;
+
+        return $this;
+    }
+
+    public function getUnpaidtaxecourtier(): ?float
+    {
+        return $this->unpaidtaxecourtier;
+    }
+
+    public function setUnpaidtaxecourtier(?float $unpaidtaxecourtier): self
+    {
+        $this->unpaidtaxecourtier = $unpaidtaxecourtier;
+
+        return $this;
+    }
+
+    public function getUnpaidtaxeassureur(): ?float
+    {
+        return $this->unpaidtaxeassureur;
+    }
+
+    public function setUnpaidtaxeassureur(?float $unpaidtaxeassureur): self
+    {
+        $this->unpaidtaxeassureur = $unpaidtaxeassureur;
 
         return $this;
     }

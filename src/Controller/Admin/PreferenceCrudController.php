@@ -441,7 +441,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PRODUCTION - POLICE
     public const PREF_PRO_POLICE_ID                                         = "id";
-    public const PREF_PRO_POLICE_REFERENCE                                  = "Référence";
+    public const PREF_PRO_POLICE_REFERENCE                                  = "Référence de la police";
     public const PREF_PRO_POLICE_DATE_OPERATION                             = "Date d'opération";
     public const PREF_PRO_POLICE_DATE_EMISSION                              = "Date d'émission";
     public const PREF_PRO_POLICE_DATE_EFFET                                 = "Date d'effet";

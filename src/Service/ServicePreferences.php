@@ -3861,6 +3861,14 @@ class ServicePreferences
                 $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
             }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM) {
+                $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
+                $this->total_paidretrocommission += $police->calc_retrocom_payees;
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
+            }
         }
     }
 }

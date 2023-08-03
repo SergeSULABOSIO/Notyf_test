@@ -56,7 +56,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
-
+use App\Entity\Partenaire;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -1450,6 +1450,17 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function reporting_retrocommission_tous(AdminUrlGenerator $adminUrlGenerator, bool $outstanding)
+    {
+        $url = "";
+        if ($outstanding == true) {
+            $url = $this->reporting_retrocommission_unpaid($adminUrlGenerator);
+        } else {
+            $url = $this->reporting_retrocommission_paid($adminUrlGenerator);
+        }
+        return $url;
+    }
+
     public function reporting_commission_assureur(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Assureur $assureur)
     {
         $url = "";
@@ -1457,6 +1468,17 @@ class ServiceCrossCanal
             $url = $this->reporting_commission_unpaid_assureur($adminUrlGenerator, $assureur);
         } else {
             $url = $this->reporting_commission_paid_assureur($adminUrlGenerator, $assureur);
+        }
+        return $url;
+    }
+
+    public function reporting_retrocommission_unpaid_parteniare(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Partenaire $partenaire)
+    {
+        $url = "";
+        if ($outstanding == true) {
+            $url = $this->reporting_retrocommission_unpaid_partenaire($adminUrlGenerator, $partenaire);
+        } else {
+            $url = $this->reporting_retrocommission_paid_partenaire($adminUrlGenerator, $partenaire);
         }
         return $url;
     }
@@ -1472,6 +1494,23 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_COM)
             ->set('filters[paidcommission][value]', 0)
             ->set('filters[paidcommission][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    private function reporting_retrocommission_paid(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES RETRO-COMMISSIONS PAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM)
+            ->set('filters[paidretrocommission][value]', 0)
+            ->set('filters[paidretrocommission][comparison]', '>')
             ->setEntityId(null)
             ->generateUrl();
 
@@ -1497,6 +1536,25 @@ class ServiceCrossCanal
         return $url;
     }
 
+    private function reporting_retrocommission_paid_partenaire(AdminUrlGenerator $adminUrlGenerator, Partenaire $partenaire): string
+    {
+        $titre = "TOUTES RETRO-COMMISSIONS PAYEE A " . strtoupper($partenaire->getNom());
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM)
+            ->set('filters[paidretrocommission][value]', 0)
+            ->set('filters[paidretrocommission][comparison]', '>')
+            ->set('filters[partenaire][value]', $partenaire->getId())
+            ->set('filters[partenaire][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator): string
     {
         $titre = "TOUTES COMMISSIONS IMPAYEES";
@@ -1508,6 +1566,22 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
             ->set('filters[unpaidcommission][comparison]', '!=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_retrocommission_unpaid(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES RETRO-COMMISSIONS IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM)
+            ->set('filters[unpaidretrocommission][value]', 0)
+            ->set('filters[unpaidretrocommission][comparison]', '!=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1526,6 +1600,24 @@ class ServiceCrossCanal
             ->set('filters[unpaidcommission][comparison]', '!=')
             ->set('filters[assureur][value]', $assureur->getId())
             ->set('filters[assureur][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_retrocommission_unpaid_partenaire(AdminUrlGenerator $adminUrlGenerator, Partenaire $partenaire): string
+    {
+        $titre = "TOUTES RETRO-COMMISSIONS DUES A " . strtoupper($partenaire->getNom());
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM)
+            ->set('filters[unpaidretrocommission][value]', 0)
+            ->set('filters[unpaidretrocommission][comparison]', '!=')
+            ->set('filters[partenaire][value]', $partenaire->getId())
+            ->set('filters[partenaire][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1551,5 +1643,19 @@ class ServiceCrossCanal
             $subItemsComm[] = MenuItem::linkToUrl('PAR ' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
         }
         return $subItemsComm;
+    }
+
+    public function reporting_commission_partenaire_generer_liens(bool $unpaid)
+    {
+        $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        $subItemsRetroComm = [];
+        $subItemsRetroComm[] = MenuItem::linkToUrl('A TOUS', 'fas fa-handshake', $this->reporting_retrocommission_tous($this->adminUrlGenerator, $unpaid));
+        //dd($subItemsCommPayee);
+        foreach ($partenaires as $partenaire) {
+            $subItemsRetroComm[] = MenuItem::linkToUrl('A ' . strtoupper($partenaire->getNom()), 'fas fa-handshake', $this->reporting_retrocommission_unpaid_parteniare($this->adminUrlGenerator, $unpaid, $partenaire));
+        }
+        return $subItemsRetroComm;
     }
 }

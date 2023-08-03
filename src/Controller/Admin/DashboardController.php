@@ -199,6 +199,14 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_commission_assureur_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
+        yield MenuItem::subMenu('RETRO-COMM. DUES', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_commission_partenaire_generer_liens(true))
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        
+        yield MenuItem::subMenu('RETRO-COMM. PAYEES', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_commission_partenaire_generer_liens(false))
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
 
         yield MenuItem::section("CONFIGURATIONS")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);

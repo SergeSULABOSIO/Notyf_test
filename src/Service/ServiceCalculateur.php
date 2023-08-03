@@ -156,11 +156,13 @@ class ServiceCalculateur
         $police->setUnpaidretrocommission($police->calc_retrocom_solde);
         $police->setUnpaidtaxecourtier($police->calc_taxes_courtier_solde);
         $police->setUnpaidtaxeassureur($police->calc_taxes_assureurs_solde);
+        $police->setUnpaidtaxe($police->calc_taxes_assureurs_solde + $police->calc_taxes_courtier_solde);
 
         $police->setPaidcommission($police->calc_revenu_ttc_encaisse);
         $police->setPaidretrocommission($police->calc_retrocom_payees);
         $police->setPaidtaxecourtier($police->calc_taxes_courtier_payees);
         $police->setPaidtaxeassureur($police->calc_taxes_assureurs_payees);
+        $police->setPaidtaxe($police->calc_taxes_assureurs_payees + $police->calc_taxes_courtier_payees);
 
         //dd($police->isIsCommissionUnpaid());
         $this->entityManager->persist($police);

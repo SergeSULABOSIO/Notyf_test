@@ -150,7 +150,9 @@ class PoliceCrudController extends AbstractCrudController
             ->add('unpaidcommission')
             ->add('unpaidretrocommission')
             ->add('unpaidtaxecourtier')
-            ->add('unpaidtaxeassureur');
+            ->add('unpaidtaxeassureur')
+            ->add('paidtaxe')
+            ->add('unpaidtaxe');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -198,11 +200,13 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setUnpaidretrocommission(0);
         $objet->setUnpaidtaxeassureur(0);
         $objet->setUnpaidtaxecourtier(0);
+        $objet->setUnpaidtaxe(0);
 
         $objet->setPaidcommission(0);
         $objet->setPaidretrocommission(0);
         $objet->setPaidtaxeassureur(0);
         $objet->setPaidtaxecourtier(0);
+        $objet->setPaidtaxe(0);
 
         return $objet;
     }

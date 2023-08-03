@@ -89,11 +89,13 @@ class ServicePreferences
     public $total_unpaidretrocommission = 0;
     public $total_unpaidtaxecourtier = 0;
     public $total_unpaidtaxeassureur = 0;
+    public $total_unpaidtaxe = 0;
 
     public $total_paidcommission = 0;
     public $total_paidretrocommission = 0;
     public $total_paidtaxecourtier = 0;
     public $total_paidtaxeassureur = 0;
+    public $total_paidtaxe = 0;
 
 
     public function __construct(
@@ -3868,6 +3870,14 @@ class ServicePreferences
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
                 $this->total_paidretrocommission += $police->calc_retrocom_payees;
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE) {
+                $this->total_unpaidtaxe += $police->getUnpaidtaxe();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxe) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
+                $this->total_paidtaxe += $police->getPaidtaxe();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxe) . "]");
             }
         }
     }

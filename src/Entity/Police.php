@@ -189,6 +189,12 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $paidtaxeassureur = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $unpaidtaxe = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $paidtaxe = null;
     
     
     public function __construct()
@@ -971,6 +977,30 @@ class Police extends CalculableEntity
     public function setPaidtaxeassureur(?float $paidtaxeassureur): self
     {
         $this->paidtaxeassureur = $paidtaxeassureur;
+
+        return $this;
+    }
+
+    public function getUnpaidtaxe(): ?float
+    {
+        return $this->unpaidtaxe;
+    }
+
+    public function setUnpaidtaxe(?float $unpaidtaxe): self
+    {
+        $this->unpaidtaxe = $unpaidtaxe;
+
+        return $this;
+    }
+
+    public function getPaidtaxe(): ?float
+    {
+        return $this->paidtaxe;
+    }
+
+    public function setPaidtaxe(?float $paidtaxe): self
+    {
+        $this->paidtaxe = $paidtaxe;
 
         return $this;
     }

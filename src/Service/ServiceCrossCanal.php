@@ -67,10 +67,12 @@ class ServiceCrossCanal
     public const REPORTING_CODE_UNPAID_RETROCOM = 1;
     public const REPORTING_CODE_UNPAID_TAXE_COURTIER = 2;
     public const REPORTING_CODE_UNPAID_TAXE_ASSUREUR = 3;
+    public const REPORTING_CODE_UNPAID_TAXE = 4;
     public const REPORTING_CODE_PAID_COM = 100;
     public const REPORTING_CODE_PAID_RETROCOM = 101;
     public const REPORTING_CODE_PAID_TAXE_COURTIER = 102;
     public const REPORTING_CODE_PAID_TAXE_ASSUREUR = 103;
+    public const REPORTING_CODE_PAID_TAXE = 104;
 
 
     //Feedback
@@ -1461,6 +1463,17 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function reporting_taxe_tous(AdminUrlGenerator $adminUrlGenerator, bool $outstanding)
+    {
+        $url = "";
+        if ($outstanding == true) {
+            $url = $this->reporting_taxe_unpaid($adminUrlGenerator);
+        } else {
+            $url = $this->reporting_taxe_paid($adminUrlGenerator);
+        }
+        return $url;
+    }
+
     public function reporting_commission_assureur(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Assureur $assureur)
     {
         $url = "";
@@ -1479,6 +1492,18 @@ class ServiceCrossCanal
             $url = $this->reporting_retrocommission_unpaid_partenaire($adminUrlGenerator, $partenaire);
         } else {
             $url = $this->reporting_retrocommission_paid_partenaire($adminUrlGenerator, $partenaire);
+        }
+        return $url;
+    }
+
+
+    public function reporting_taxe_unpaid_taxe(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Taxe $taxe)
+    {
+        $url = "";
+        if ($outstanding == true) {
+            $url = $this->reporting_taxe_unpaid_all($adminUrlGenerator, $taxe);
+        } else {
+            $url = $this->reporting_taxe_paid_all($adminUrlGenerator, $taxe);
         }
         return $url;
     }
@@ -1511,6 +1536,23 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM)
             ->set('filters[paidretrocommission][value]', 0)
             ->set('filters[paidretrocommission][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    private function reporting_taxe_paid(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES TAXE PAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_TAXE)
+            ->set('filters[paidtaxe][value]', 0)
+            ->set('filters[paidtaxe][comparison]', '>')
             ->setEntityId(null)
             ->generateUrl();
 
@@ -1581,7 +1623,23 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM)
             ->set('filters[unpaidretrocommission][value]', 0)
-            ->set('filters[unpaidretrocommission][comparison]', '!=')
+            ->set('filters[unpaidretrocommission][comparison]', '>') //!=
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_taxe_unpaid(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES TAXES IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE)
+            ->set('filters[unpaidtaxe][value]', 0)
+            ->set('filters[unpaidtaxe][comparison]', '!=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1657,5 +1715,27 @@ class ServiceCrossCanal
             $subItemsRetroComm[] = MenuItem::linkToUrl('A ' . strtoupper($partenaire->getNom()), 'fas fa-handshake', $this->reporting_retrocommission_unpaid_parteniare($this->adminUrlGenerator, $unpaid, $partenaire));
         }
         return $subItemsRetroComm;
+    }
+
+    public function reporting_taxe_generer_liens(bool $unpaid)
+    {
+        $taxes = $this->entityManager->getRepository(Taxe::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        $subItemsTaxes = [];
+        $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_tous($this->adminUrlGenerator, $unpaid));
+        //dd($subItemsCommPayee);
+        //Courtier
+        foreach ($taxes as $taxe) {
+            if ($taxe->isPayableparcourtier() == true) {
+                $subItemsTaxes[] = MenuItem::linkToUrl("PAR COURTIER", 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator, $unpaid, $taxe->isPayableparcourtier()));
+            }
+        }
+        foreach ($taxes as $taxe) {
+            if ($taxe->isPayableparcourtier() == false) {
+                $subItemsTaxes[] = MenuItem::linkToUrl("PAR ASSUREURS", 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator, $unpaid, $taxe->isPayableparcourtier()));
+            }
+        }
+        return $subItemsTaxes;
     }
 }

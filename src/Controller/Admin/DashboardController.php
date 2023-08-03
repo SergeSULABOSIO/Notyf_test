@@ -190,7 +190,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section("REPORTING")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
-
+        //COMMISSIONS
         yield MenuItem::subMenu('COMMISSIONS DUES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_commission_assureur_generer_liens(true))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
@@ -198,7 +198,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('COMMISSIONS PAYEES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_commission_assureur_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
-
+        //RETROCOMMISSION
         yield MenuItem::subMenu('RETRO-COMM. DUES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_commission_partenaire_generer_liens(true))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
@@ -206,7 +206,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('RETRO-COMM. PAYEES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_commission_partenaire_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
-
+        //TAXES
+        yield MenuItem::subMenu('TAXES DUES', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_taxe_generer_liens(true)) ici
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
         yield MenuItem::section("CONFIGURATIONS")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);

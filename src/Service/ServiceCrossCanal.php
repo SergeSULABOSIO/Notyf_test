@@ -1576,7 +1576,7 @@ class ServiceCrossCanal
 
     private function reporting_retrocommission_paid_partenaire(AdminUrlGenerator $adminUrlGenerator, Partenaire $partenaire): string
     {
-        $titre = "TOUTES RETRO-COMMISSIONS PAYEE A " . strtoupper($partenaire->getNom());
+        $titre = "TOUTES RETRO-COMMISSIONS PAYEES A " . strtoupper($partenaire->getNom());
         $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)

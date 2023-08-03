@@ -352,14 +352,14 @@ class ServiceCalculateur
                 }
 
                 if ($police->isCansharericom() == true) {
-                    $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part) / 100;
+                    $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part);
                 }
                 if ($police->isCansharelocalcom() == true) {
                     //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
-                    $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part) / 100;
+                    $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part);
                 }
                 if ($police->isCansharefrontingcom() == true) {
-                    $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part) / 100;
+                    $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part);
                 }
                 $obj->calc_retrocom += $retrocom_ri + $retrocom_local + $retrocom_fronting;
             }

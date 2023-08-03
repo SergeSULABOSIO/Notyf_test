@@ -6,19 +6,26 @@ use App\Entity\Taxe;
 use NumberFormatter;
 use App\Entity\Piste;
 use App\Entity\Client;
+use App\Entity\Expert;
 use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Contact;
 use App\Entity\Monnaie;
+use App\Entity\Victime;
+use App\Entity\Assureur;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
 use App\Entity\Sinistre;
 use App\Entity\ActionCRM;
+use App\Entity\Automobile;
 use App\Entity\Entreprise;
+use App\Entity\DocClasseur;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
+use App\Entity\DocCategorie;
 use App\Entity\PaiementTaxe;
+use App\Entity\EtapeSinistre;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
@@ -27,36 +34,31 @@ use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PisteCrudController;
+use function PHPUnit\Framework\containsEqual;
 use App\Controller\Admin\ClientCrudController;
+use App\Controller\Admin\ExpertCrudController;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\ContactCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\VictimeCrudController;
 use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\EtapeCrmCrudController;
 use App\Controller\Admin\SinistreCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
-use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\ExpertCrudController;
 use Symfony\Component\Validator\Constraints\Date;
+use App\Controller\Admin\AutomobileCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PaiementTaxeCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
-use App\Controller\Admin\VictimeCrudController;
-use App\Entity\Automobile;
-use App\Entity\DocCategorie;
-use App\Entity\DocClasseur;
-use App\Entity\EtapeSinistre;
-use App\Entity\Expert;
-use App\Entity\Victime;
+
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-
-use function PHPUnit\Framework\containsEqual;
 
 class ServiceCrossCanal
 {
@@ -144,6 +146,7 @@ class ServiceCrossCanal
         private EntityManagerInterface $entityManager,
         private ServiceCalculateur $serviceCalculateur,
         private ServiceEntreprise $serviceEntreprise,
+        private AdminUrlGenerator $adminUrlGenerator,
         private ServiceMonnaie $serviceMonnaie
     ) {
     }
@@ -1439,23 +1442,26 @@ class ServiceCrossCanal
     public function reporting_commission_tous(AdminUrlGenerator $adminUrlGenerator, bool $outstanding)
     {
         $url = "";
-        if($outstanding == true){
+        if ($outstanding == true) {
             $url = $this->reporting_commission_unpaid($adminUrlGenerator);
-        }else{
+        } else {
             $url = $this->reporting_commission_paid($adminUrlGenerator);
         }
-        /* $url = $adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", $titre)
-            ->set('filters[isCommissionUnpaid][value]', $outstanding)
-            ->setEntityId(null)
-            ->generateUrl(); */
-
         return $url;
     }
 
-    private function reporting_commission_paid(AdminUrlGenerator $adminUrlGenerator):string
+    public function reporting_commission_assureur(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Assureur $assureur)
+    {
+        $url = "";
+        if ($outstanding == true) {
+            $url = $this->reporting_commission_unpaid_assureur($adminUrlGenerator, $assureur);
+        } else {
+            $url = $this->reporting_commission_paid_assureur($adminUrlGenerator, $assureur);
+        }
+        return $url;
+    }
+
+    private function reporting_commission_paid(AdminUrlGenerator $adminUrlGenerator): string
     {
         $titre = "TOUTES COMMISSIONS ENCAISSEES";
         $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
@@ -1472,7 +1478,26 @@ class ServiceCrossCanal
         return $url;
     }
 
-    private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator):string
+    private function reporting_commission_paid_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
+    {
+        $titre = "TOUTES COMMISSIONS ENCAISSEES VIA " . strtoupper($assureur->getNom());
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_COM)
+            ->set('filters[paidcommission][value]', 0)
+            ->set('filters[paidcommission][comparison]', '>')
+            ->set('filters[assureur][value]', $assureur->getId())
+            ->set('filters[assureur][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    private function reporting_commission_unpaid(AdminUrlGenerator $adminUrlGenerator): string
     {
         $titre = "TOUTES COMMISSIONS IMPAYEES";
         $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
@@ -1488,12 +1513,43 @@ class ServiceCrossCanal
         return $url;
     }
 
-    private function resetFilters(AdminUrlGenerator $adminUrlGenerator):AdminUrlGenerator
+    private function reporting_commission_unpaid_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
+    {
+        $titre = "TOUTES COMMISSIONS IMPAYEES PAR " . strtoupper($assureur->getNom());
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
+            ->set('filters[unpaidcommission][value]', 0)
+            ->set('filters[unpaidcommission][comparison]', '!=')
+            ->set('filters[assureur][value]', $assureur->getId())
+            ->set('filters[assureur][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function resetFilters(AdminUrlGenerator $adminUrlGenerator): AdminUrlGenerator
     {
         return $adminUrlGenerator
-        ->unset("titre")
-        ->unset("filters")
-        ->unset("codeReporting")
-        ;
+            ->unset("titre")
+            ->unset("filters")
+            ->unset("codeReporting");
+    }
+
+    public function reporting_commission_assureur_generer_liens(bool $unpaid)
+    {
+        $assureurs = $this->entityManager->getRepository(Assureur::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        $subItemsComm = [];
+        $subItemsComm[] = MenuItem::linkToUrl('PAR TOUS', 'fas fa-umbrella', $this->reporting_commission_tous($this->adminUrlGenerator, $unpaid));
+        //dd($subItemsCommPayee);
+        foreach ($assureurs as $assureur) {
+            $subItemsComm[] = MenuItem::linkToUrl('PAR ' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
+        }
+        return $subItemsComm;
     }
 }

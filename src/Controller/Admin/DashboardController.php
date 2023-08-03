@@ -192,14 +192,11 @@ class DashboardController extends AbstractDashboardController
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
         yield MenuItem::subMenu('COMMISSIONS DUES', 'fa-regular fa-newspaper')
-            ->setSubItems([
-                MenuItem::linkToUrl('TOUS', 'fas fa-file-shield', $this->serviceCrossCanal->reporting_commission_tous($this->adminUrlGenerator, true)),
-            ])
+            ->setSubItems($this->serviceCrossCanal->reporting_commission_assureur_generer_liens(true))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        
         yield MenuItem::subMenu('COMMISSIONS PAYEES', 'fa-regular fa-newspaper')
-            ->setSubItems([
-                MenuItem::linkToUrl('TOUS', 'fas fa-file-shield', $this->serviceCrossCanal->reporting_commission_tous($this->adminUrlGenerator, false)),
-            ])
+            ->setSubItems($this->serviceCrossCanal->reporting_commission_assureur_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
 

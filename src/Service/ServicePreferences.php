@@ -3855,6 +3855,7 @@ class ServicePreferences
     {
         //dd($this->adminUrlGenerator->get("codeReporting"));
         if ($this->adminUrlGenerator->get("codeReporting") != null) {
+            //COMMISSION
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
                 $this->total_unpaidcommission += $police->getUnpaidcommission();
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
@@ -3863,6 +3864,7 @@ class ServicePreferences
                 $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
             }
+            //RETRO-COMMISSION
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM) {
                 $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
@@ -3871,13 +3873,32 @@ class ServicePreferences
                 $this->total_paidretrocommission += $police->calc_retrocom_payees;
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
             }
+            //TAXES
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE) {
                 $this->total_unpaidtaxe += $police->getUnpaidtaxe();
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxe) . "]");
             }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE) {
                 $this->total_paidtaxe += $police->getPaidtaxe();
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxe) . "]");
+            }
+            //TAXES COURTIERS
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_COURTIER) {
+                $this->total_unpaidtaxecourtier += $police->getUnpaidtaxecourtier();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxecourtier) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_COURTIER) {
+                $this->total_paidtaxecourtier += $police->getPaidtaxecourtier();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxecourtier) . "]");
+            }
+            //TAXES ASSUREUR
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_ASSUREUR) {
+                $this->total_unpaidtaxeassureur += $police->getUnpaidtaxeassureur();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxeassureur) . "]");
+            }
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR) {
+                $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxeassureur) . "]");
             }
         }
     }

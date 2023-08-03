@@ -149,6 +149,7 @@ class ServiceCrossCanal
         private ServiceCalculateur $serviceCalculateur,
         private ServiceEntreprise $serviceEntreprise,
         private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie
     ) {
     }
@@ -1463,17 +1464,6 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function reporting_taxe_tous(AdminUrlGenerator $adminUrlGenerator, bool $outstanding)
-    {
-        $url = "";
-        if ($outstanding == true) {
-            $url = $this->reporting_taxe_unpaid($adminUrlGenerator);
-        } else {
-            $url = $this->reporting_taxe_paid($adminUrlGenerator);
-        }
-        return $url;
-    }
-
     public function reporting_commission_assureur(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Assureur $assureur)
     {
         $url = "";
@@ -1492,18 +1482,6 @@ class ServiceCrossCanal
             $url = $this->reporting_retrocommission_unpaid_partenaire($adminUrlGenerator, $partenaire);
         } else {
             $url = $this->reporting_retrocommission_paid_partenaire($adminUrlGenerator, $partenaire);
-        }
-        return $url;
-    }
-
-
-    public function reporting_taxe_unpaid_taxe(AdminUrlGenerator $adminUrlGenerator, bool $outstanding, Taxe $taxe)
-    {
-        $url = "";
-        if ($outstanding == true) {
-            $url = $this->reporting_taxe_unpaid_all($adminUrlGenerator, $taxe);
-        } else {
-            $url = $this->reporting_taxe_paid_all($adminUrlGenerator, $taxe);
         }
         return $url;
     }
@@ -1559,6 +1537,24 @@ class ServiceCrossCanal
         return $url;
     }
 
+    private function reporting_taxe_unpaid(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES TAXES IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE)
+            ->set('filters[unpaidtaxe][value]', 0)
+            ->set('filters[unpaidtaxe][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+
     private function reporting_commission_paid_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
     {
         $titre = "TOUTES COMMISSIONS ENCAISSEES VIA " . strtoupper($assureur->getNom());
@@ -1607,7 +1603,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '!=')
+            ->set('filters[unpaidcommission][comparison]', '>')
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1629,22 +1625,6 @@ class ServiceCrossCanal
         return $url;
     }
 
-    private function reporting_taxe_unpaid(AdminUrlGenerator $adminUrlGenerator): string
-    {
-        $titre = "TOUTES TAXES IMPAYEES";
-        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
-        $url = $adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", $titre)
-            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE)
-            ->set('filters[unpaidtaxe][value]', 0)
-            ->set('filters[unpaidtaxe][comparison]', '!=')
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
     private function reporting_commission_unpaid_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
     {
         $titre = "TOUTES COMMISSIONS IMPAYEES PAR " . strtoupper($assureur->getNom());
@@ -1655,7 +1635,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '!=')
+            ->set('filters[unpaidcommission][comparison]', '>')
             ->set('filters[assureur][value]', $assureur->getId())
             ->set('filters[assureur][comparison]', '=')
             ->setEntityId(null)
@@ -1673,7 +1653,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM)
             ->set('filters[unpaidretrocommission][value]', 0)
-            ->set('filters[unpaidretrocommission][comparison]', '!=')
+            ->set('filters[unpaidretrocommission][comparison]', '>')
             ->set('filters[partenaire][value]', $partenaire->getId())
             ->set('filters[partenaire][comparison]', '=')
             ->setEntityId(null)
@@ -1723,19 +1703,97 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         $subItemsTaxes = [];
-        $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_tous($this->adminUrlGenerator, $unpaid));
+        if ($unpaid == true) {
+            $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator));
+        } else {
+            $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_paid($this->adminUrlGenerator));
+        }
         //dd($subItemsCommPayee);
         //Courtier
         foreach ($taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == true) {
-                $subItemsTaxes[] = MenuItem::linkToUrl("PAR COURTIER", 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator, $unpaid, $taxe->isPayableparcourtier()));
+                $nomTaxe = "" . $this->serviceTaxes->getNomTaxeCourtier();
+                if ($unpaid == true) {
+                    $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($nomTaxe), 'fas fa-landmark-dome', $this->reporting_taxe_unpaid_courtier($this->adminUrlGenerator));
+                } else {
+                    $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($nomTaxe), 'fas fa-landmark-dome', $this->reporting_taxe_paid_courtier($this->adminUrlGenerator));
+                }
             }
         }
         foreach ($taxes as $taxe) {
             if ($taxe->isPayableparcourtier() == false) {
-                $subItemsTaxes[] = MenuItem::linkToUrl("PAR ASSUREURS", 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator, $unpaid, $taxe->isPayableparcourtier()));
+                $nomTaxe = "" . $this->serviceTaxes->getNomTaxeAssureur();
+                if ($unpaid == true) {
+                    $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($nomTaxe), 'fas fa-landmark-dome', $this->reporting_taxe_unpaid_assureur($this->adminUrlGenerator));
+                } else {
+                    $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($nomTaxe), 'fas fa-landmark-dome', $this->reporting_taxe_paid_assureur($this->adminUrlGenerator));
+                }
             }
         }
         return $subItemsTaxes;
+    }
+
+    private function reporting_taxe_unpaid_courtier(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES LES TAXES " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . " IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_COURTIER)
+            ->set('filters[unpaidtaxecourtier][value]', 0)
+            ->set('filters[unpaidtaxecourtier][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_taxe_paid_courtier(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES LES TAXES " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . " PAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_COURTIER)
+            ->set('filters[paidtaxecourtier][value]', 0)
+            ->set('filters[paidtaxecourtier][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_taxe_unpaid_assureur(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES LES TAXES " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . " IMPAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_ASSUREUR)
+            ->set('filters[unpaidtaxeassureur][value]', 0)
+            ->set('filters[unpaidtaxeassureur][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_taxe_paid_assureur(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "TOUTES LES TAXES " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . " PAYEES";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR)
+            ->set('filters[paidtaxeassureur][value]', 0)
+            ->set('filters[paidtaxeassureur][comparison]', '>')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
     }
 }

@@ -257,10 +257,10 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_piste_etape_generer_liens())
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
-            //PISTE PAR UTILISATEUR
+        //PISTE PAR UTILISATEUR
         yield MenuItem::subMenu('PISTES GROUPES PAR UTILISATEUR', 'fa-regular fa-newspaper')
-        ->setSubItems($this->serviceCrossCanal->reporting_piste_utilisateur_generer_liens())
-        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+            ->setSubItems($this->serviceCrossCanal->reporting_piste_utilisateur_generer_liens())
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
 
         yield MenuItem::section("CONFIGURATIONS")

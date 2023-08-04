@@ -114,7 +114,8 @@ class ServicePreferences
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceTaxes $serviceTaxes,
-        private ServiceMonnaie $serviceMonnaie
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceCalculateur $serviceCalculateur
     ) {
     }
 
@@ -3961,9 +3962,27 @@ class ServicePreferences
             //SINISTRE
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PISTE_TOUS) {
                 $this->total_piste_caff_esperes += $piste->getMontant();
+                $com_ttc = 0;
+                $prime_ttc = 0;
+                foreach ($piste->getCotations() as $cotation) {
+                    /** @var Cotation */
+                    $cota = $cotation;
+                    if ($cota->getPolice() != null) {
+                        /** @var Police */
+                        $pol = $cota->getPolice();
+                        //On force le calcul des champs calculables
+                        $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
+                        $prime_ttc += $pol->getPrimetotale();
+                        $com_ttc += $pol->calc_revenu_ttc;
+                        //dd($pol);
+                    }
+                }
+
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
                 [
-                    Revenu potentiel: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_piste_caff_esperes) . ",
+                    Revenus potentiels: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_piste_caff_esperes) . ",
+                    Revenus générés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($com_ttc) . ",
+                    Primes générées: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($prime_ttc) . "
                 ]");
             }
         }

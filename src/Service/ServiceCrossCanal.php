@@ -57,6 +57,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Entity\Partenaire;
+use App\Entity\Produit;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -73,6 +74,10 @@ class ServiceCrossCanal
     public const REPORTING_CODE_PAID_TAXE_COURTIER = 102;
     public const REPORTING_CODE_PAID_TAXE_ASSUREUR = 103;
     public const REPORTING_CODE_PAID_TAXE = 104;
+    public const REPORTING_CODE_PRODUCTION_TOUS = 200;
+    public const REPORTING_CODE_PRODUCTION_ASSUREUR = 210;
+    public const REPORTING_CODE_PRODUCTION_PRODUIT = 220;
+    public const REPORTING_CODE_PRODUCTION_PARTENAIRE = 230;
 
 
     //Feedback
@@ -1675,10 +1680,10 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         $subItemsComm = [];
-        $subItemsComm[] = MenuItem::linkToUrl('PAR TOUS', 'fas fa-umbrella', $this->reporting_commission_tous($this->adminUrlGenerator, $unpaid));
+        $subItemsComm[] = MenuItem::linkToUrl('VIA TOUS', 'fas fa-umbrella', $this->reporting_commission_tous($this->adminUrlGenerator, $unpaid));
         //dd($subItemsCommPayee);
         foreach ($assureurs as $assureur) {
-            $subItemsComm[] = MenuItem::linkToUrl('PAR ' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
+            $subItemsComm[] = MenuItem::linkToUrl('VIA ' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
         }
         return $subItemsComm;
     }
@@ -1731,6 +1736,109 @@ class ServiceCrossCanal
             }
         }
         return $subItemsTaxes;
+    }
+
+    public function reporting_production_assureur_generer_liens()
+    {
+        $subItemsTaxes = [];
+        $assureurs = $this->entityManager->getRepository(Assureur::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //TOUS
+        $subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fas fa-umbrella', $this->reporting_production_assureur_tous($this->adminUrlGenerator));
+        //PART ASSUREURS
+        foreach ($assureurs as $assureur) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($assureur), 'fas fa-umbrella', $this->reporting_production_assureur($this->adminUrlGenerator, $assureur));
+        }
+        return $subItemsTaxes;
+    }
+
+    public function reporting_production_partenaire_generer_liens()
+    {
+        $subItemsTaxes = [];
+        $partenaires = $this->entityManager->getRepository(Partenaire::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //PART ASSUREURS
+        foreach ($partenaires as $partenaire) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($partenaire), 'fas fa-handshake', $this->reporting_production_partenaire($this->adminUrlGenerator, $partenaire));
+        }
+        return $subItemsTaxes;
+    }
+
+    public function reporting_production_produit_generer_liens()
+    {
+        $subItemsTaxes = [];
+        $produits = $this->entityManager->getRepository(Produit::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //PRODUITS
+        foreach ($produits as $produit) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($produit), 'fas fa-gifts', $this->reporting_production_produit($this->adminUrlGenerator, $produit));
+        }
+        return $subItemsTaxes;
+    }
+
+    private function reporting_production_assureur_tous(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "PRODUCTION GLOBALE";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_production_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
+    {
+        $titre = "PRODUCTION AVEC " . strtoupper($assureur);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->set('filters[assureur][value]', $assureur->getId())
+            ->set('filters[assureur][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_production_partenaire(AdminUrlGenerator $adminUrlGenerator, Partenaire $partenaire): string
+    {
+        $titre = "PRODUCTION AVEC " . strtoupper($partenaire);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->set('filters[partenaire][value]', $partenaire->getId())
+            ->set('filters[partenaire][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_production_produit(AdminUrlGenerator $adminUrlGenerator, Produit $produit): string
+    {
+        $titre = "PRODUCTION EN " . strtoupper($produit);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->set('filters[produit][value]', $produit->getId())
+            ->set('filters[produit][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
     }
 
     private function reporting_taxe_unpaid_courtier(AdminUrlGenerator $adminUrlGenerator): string

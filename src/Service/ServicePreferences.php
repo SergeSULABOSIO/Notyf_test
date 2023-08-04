@@ -97,10 +97,19 @@ class ServicePreferences
     public $total_paidtaxeassureur = 0;
     public $total_paidtaxe = 0;
 
+    //Production
+    public $total_prime_nette = 0;
+    public $total_prime_fronting = 0;
+    public $total_prime_accessoire = 0;
+    public $total_prime_tva = 0;
+    public $total_prime_arca = 0;
+    public $total_prime_ttc = 0;
+
 
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
+        private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie
     ) {
     }
@@ -3899,6 +3908,24 @@ class ServicePreferences
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR) {
                 $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
                 $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxeassureur) . "]");
+            }
+            //PRODUCTION GLOBALE
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS) {
+                $this->total_prime_nette += $police->getPrimenette();
+                $this->total_prime_fronting += $police->getFronting();
+                $this->total_prime_accessoire += $police->getFraisadmin();
+                $this->total_prime_arca += $police->getArca();
+                $this->total_prime_tva += $police->getTva();
+                $this->total_prime_ttc += $police->getPrimetotale();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
+                [
+                    Prime totale: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_ttc) . ", 
+                    Prime nette: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_nette) . ",
+                    Fronting: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_fronting) . ",
+                    " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_tva) . ",
+                    " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_arca) . ",
+                    Accessoires: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_accessoire) . ",
+                ]");
             }
         }
     }

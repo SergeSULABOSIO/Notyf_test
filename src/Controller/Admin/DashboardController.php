@@ -142,7 +142,7 @@ class DashboardController extends AbstractDashboardController
         //Seules les admin ont le droit de voir le menu
         //if ($this->isGranted('ROLE_ADMIN')) {
         yield MenuItem::section("ACCEUIL");
-        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-chart-pie');
+        yield MenuItem::linkToDashboard('TABLEAU DE BORD', 'fa fa-chart-pie');
         yield MenuItem::section("DEPARTEMENTS");
         yield MenuItem::subMenu('COMMERCIAL / CRM', 'fas fa-bullseye')->setSubItems([ //<i class="fa-solid fa-bullseye"></i>
             MenuItem::linkToCrud('Contact', 'fas fa-address-book', Contact::class), //<i class="fa-sharp fa-solid fa-address-book"></i>

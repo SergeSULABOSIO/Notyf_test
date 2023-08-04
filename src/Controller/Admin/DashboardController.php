@@ -232,6 +232,11 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_production_produit_generer_liens())
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
+        //SINISTRE
+        yield MenuItem::subMenu('SINISTRES GROUPES PAR ETAPES', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_sinistre_etape_generer_liens())
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
 
         yield MenuItem::section("CONFIGURATIONS")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PARAMETRES]);

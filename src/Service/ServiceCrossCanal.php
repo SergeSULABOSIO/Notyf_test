@@ -78,7 +78,8 @@ class ServiceCrossCanal
     public const REPORTING_CODE_PRODUCTION_ASSUREUR = 210;
     public const REPORTING_CODE_PRODUCTION_PRODUIT = 220;
     public const REPORTING_CODE_PRODUCTION_PARTENAIRE = 230;
-
+    public const REPORTING_CODE_SINISTRE_TOUS = 300;
+        
 
     //Feedback
     public const OPTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
@@ -1779,6 +1780,22 @@ class ServiceCrossCanal
         return $subItemsTaxes;
     }
 
+    public function reporting_sinistre_etape_generer_liens()
+    {
+        $subItemsTaxes = [];
+        $etapes = $this->entityManager->getRepository(EtapeSinistre::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //TOUS
+        $subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fas fa-bell', $this->reporting_sinistre_tous($this->adminUrlGenerator));
+        
+        //ETAPES
+        foreach ($etapes as $etape) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($etape), 'fas fa-bell', $this->reporting_sinistre_etape($this->adminUrlGenerator, $etape));
+        }
+        return $subItemsTaxes;
+    }
+
     private function reporting_production_assureur_tous(AdminUrlGenerator $adminUrlGenerator): string
     {
         $titre = "PRODUCTION GLOBALE";
@@ -1788,6 +1805,20 @@ class ServiceCrossCanal
             ->setAction(Action::INDEX)
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_sinistre_tous(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "ETAT GLOBALE SINISTRE";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_SINISTRE_TOUS)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1836,6 +1867,22 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
             ->set('filters[produit][value]', $produit->getId())
             ->set('filters[produit][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_sinistre_etape(AdminUrlGenerator $adminUrlGenerator, EtapeSinistre $etape): string
+    {
+        $titre = "SINISTRE - ETAPE ACTUELLE: " . strtoupper($etape);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(SinistreCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_SINISTRE_TOUS)
+            ->set('filters[etape][value]', $etape->getId())
+            ->set('filters[etape][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;

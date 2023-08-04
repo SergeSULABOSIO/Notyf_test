@@ -104,6 +104,9 @@ class ServicePreferences
     public $total_prime_tva = 0;
     public $total_prime_arca = 0;
     public $total_prime_ttc = 0;
+    //SINISTRE
+    public $total_sinistre_cout = 0;
+    public $total_sinistre_indemnisation = 0;
 
 
     public function __construct(
@@ -475,7 +478,7 @@ class ServicePreferences
                     ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
             ];
-            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index_Details($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index_Details($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs, $crud, $adminUrlGenerator);
             $tabAttributs = $this->setCRM_Fields_SinistreSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Victime) {
@@ -1987,8 +1990,11 @@ class ServicePreferences
     }
 
 
-    public function setCRM_Fields_SinistreSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_SinistreSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        $this->crud = $crud;
+        $this->adminUrlGenerator = $adminUrlGenerator;
+
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_SINISTRE_ID)
                 ->hideOnForm();
@@ -1997,10 +2003,17 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
                 ->hideOnForm();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE])) {
-            $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
-                ->hideOnForm();
-        }
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE])) {
+            
+        } */
+        //On doit afficher la référence sans aucune restriction / condition
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
+            ->formatValue(function ($value, Sinistre $sinistre) {
+                $this->setTitreReportingSinistre($sinistre);
+                return $value;
+            })
+            ->hideOnForm();
+
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
                 ->hideOnForm();
@@ -3925,6 +3938,23 @@ class ServicePreferences
                     " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_tva) . ",
                     " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_arca) . ",
                     Accessoires: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_accessoire) . ",
+                ]");
+            }
+        }
+    }
+
+    public function setTitreReportingSinistre(Sinistre $sinistre)
+    {
+        //dd($this->adminUrlGenerator->get("codeReporting"));
+        if ($this->adminUrlGenerator->get("codeReporting") != null) {
+            //SINISTRE
+            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_SINISTRE_TOUS) {
+                $this->total_sinistre_cout += $sinistre->getCout();
+                $this->total_sinistre_indemnisation += $sinistre->getMontantPaye();
+                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
+                [
+                    Dégâts estimés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_cout) . ", 
+                    Compensation versée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_indemnisation) . "
                 ]");
             }
         }

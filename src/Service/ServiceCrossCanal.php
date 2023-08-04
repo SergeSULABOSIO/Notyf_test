@@ -79,6 +79,7 @@ class ServiceCrossCanal
     public const REPORTING_CODE_PRODUCTION_PRODUIT = 220;
     public const REPORTING_CODE_PRODUCTION_PARTENAIRE = 230;
     public const REPORTING_CODE_SINISTRE_TOUS = 300;
+    public const REPORTING_CODE_PISTE_TOUS = 400;
         
 
     //Feedback
@@ -1754,6 +1755,21 @@ class ServiceCrossCanal
         return $subItemsTaxes;
     }
 
+    public function reporting_production_gestionnaire_generer_liens()
+    {
+        $subItemsTaxes = [];
+        $gestionnaires = $this->entityManager->getRepository(Utilisateur::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //TOUS
+        //$subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fa-solid fa-user', $this->reporting_production_assureur_tous($this->adminUrlGenerator));
+        //PART ASSUREURS
+        foreach ($gestionnaires as $gestionnaire) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($gestionnaire), 'fa-solid fa-user', $this->reporting_production_gestionnaire($this->adminUrlGenerator, $gestionnaire));
+        }
+        return $subItemsTaxes;
+    }
+
     public function reporting_production_partenaire_generer_liens()
     {
         $subItemsTaxes = [];
@@ -1776,6 +1792,35 @@ class ServiceCrossCanal
         //PRODUITS
         foreach ($produits as $produit) {
             $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($produit), 'fas fa-gifts', $this->reporting_production_produit($this->adminUrlGenerator, $produit));
+        }
+        return $subItemsTaxes;
+    }
+
+    public function reporting_piste_etape_generer_liens()//fas fa-location-crosshairs
+    {
+        $subItemsTaxes = [];
+        $etapes = $this->entityManager->getRepository(EtapeCrm::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //TOUS
+        $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-location-crosshairs', $this->reporting_piste_tous($this->adminUrlGenerator));
+        
+        //ETAPES
+        foreach ($etapes as $etape) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($etape), 'fas fa-location-crosshairs', $this->reporting_piste_etape($this->adminUrlGenerator, $etape));
+        }
+        return $subItemsTaxes;
+    }
+
+    public function reporting_piste_utilisateur_generer_liens()//fas fa-location-crosshairs
+    {
+        $subItemsTaxes = [];
+        $utilisateurs = $this->entityManager->getRepository(Utilisateur::class)->findBy([
+            'entreprise' => $this->serviceEntreprise->getEntreprise()
+        ]);
+        //USERS
+        foreach ($utilisateurs as $user) {
+            $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($user), 'fas fa-user', $this->reporting_piste_utilisateur($this->adminUrlGenerator, $user));
         }
         return $subItemsTaxes;
     }
@@ -1824,6 +1869,20 @@ class ServiceCrossCanal
         return $url;
     }
 
+    private function reporting_piste_tous(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        $titre = "ETAT GLOBALE DES PISTES DU CRM";
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PISTE_TOUS)
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     private function reporting_production_assureur(AdminUrlGenerator $adminUrlGenerator, Assureur $assureur): string
     {
         $titre = "PRODUCTION AVEC " . strtoupper($assureur);
@@ -1835,6 +1894,22 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
             ->set('filters[assureur][value]', $assureur->getId())
             ->set('filters[assureur][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_production_gestionnaire(AdminUrlGenerator $adminUrlGenerator, Utilisateur $gestionnaire): string
+    {
+        $titre = "PRODUCTION DE " . strtoupper($gestionnaire);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS)
+            ->set('filters[gestionnaire][value]', $gestionnaire->getId())
+            ->set('filters[gestionnaire][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1883,6 +1958,38 @@ class ServiceCrossCanal
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_SINISTRE_TOUS)
             ->set('filters[etape][value]', $etape->getId())
             ->set('filters[etape][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_piste_etape(AdminUrlGenerator $adminUrlGenerator, EtapeCrm $etape): string
+    {
+        $titre = "PISTE - ETAPE ACTUELLE: " . strtoupper($etape);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PISTE_TOUS)
+            ->set('filters[etape][value]', $etape->getId())
+            ->set('filters[etape][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    private function reporting_piste_utilisateur(AdminUrlGenerator $adminUrlGenerator, Utilisateur $user): string
+    {
+        $titre = "PISTES DE " . strtoupper($user);
+        $adminUrlGenerator = $this->resetFilters($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", $titre)
+            ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_PISTE_TOUS)
+            ->set('filters[utilisateur][value]', $user->getId())
+            ->set('filters[utilisateur][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
         return $url;

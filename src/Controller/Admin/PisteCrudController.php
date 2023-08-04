@@ -84,7 +84,7 @@ class PisteCrudController extends AbstractCrudController
             //->add('contacts')
             ->add('expiredAt')
             ->add('etape')
-            //->add('cotations')
+            //->add('utilisateur')
             //->add('actionCRMs')
         ;
     }

@@ -221,6 +221,13 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section("REPORTING - Production")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
+        //PRODUCTION GESTIONNAIRE DE COMPTE
+        yield MenuItem::subMenu('PRODUCTION GROUPEE PAR GESTIONNAIRE', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_production_gestionnaire_generer_liens())
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
+
         //PRODUCTION ASSUREUR
         yield MenuItem::subMenu('PRODUCTION GROUPEE PAR ASSUREUR', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_production_assureur_generer_liens())
@@ -242,6 +249,18 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('SINISTRES GROUPES PAR ETAPES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_sinistre_etape_generer_liens())
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
+        yield MenuItem::section("REPORTING - PISTE (CRM)")
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+        //PISTE PAR ETAPE
+        yield MenuItem::subMenu('PISTES GROUPES PAR ETAPES', 'fa-regular fa-newspaper')
+            ->setSubItems($this->serviceCrossCanal->reporting_piste_etape_generer_liens())
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
+
+            //PISTE PAR UTILISATEUR
+        yield MenuItem::subMenu('PISTES GROUPES PAR UTILISATEUR', 'fa-regular fa-newspaper')
+        ->setSubItems($this->serviceCrossCanal->reporting_piste_utilisateur_generer_liens())
+        ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
 
         yield MenuItem::section("CONFIGURATIONS")

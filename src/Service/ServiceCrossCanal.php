@@ -1008,12 +1008,13 @@ class ServiceCrossCanal
     {
         /** @var Sinistre */
         $entite = $context->getEntity()->getInstance();
+        $url = $this->resetFilters($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(VictimeCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES VICTIMES - [Sinistre: " . $entite . "]")
-            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
-            ->set('filters[' . self::CROSSED_ENTITY_ETAPE_SINISTRE . '][comparison]', '=')
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][value]', $entite->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_SINISTRE . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
 

@@ -188,7 +188,7 @@ class DashboardController extends AbstractDashboardController
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE]);
 
-        yield MenuItem::section("REPORTING")
+        yield MenuItem::section("REPORTING - Commissions")
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
         //COMMISSIONS
         yield MenuItem::subMenu('COMMISSIONS DUES PAR ASSUREUR', 'fa-regular fa-newspaper')
@@ -207,6 +207,8 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_commission_partenaire_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
+        yield MenuItem::section("REPORTING - Taxes")
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
         //TAXES DUES
         yield MenuItem::subMenu("TAXES DUES L'AUTORITE", 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_taxe_generer_liens(true))
@@ -217,6 +219,8 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_taxe_generer_liens(false))
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
+        yield MenuItem::section("REPORTING - Production")
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
         //PRODUCTION ASSUREUR
         yield MenuItem::subMenu('PRODUCTION GROUPEE PAR ASSUREUR', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_production_assureur_generer_liens())
@@ -232,6 +236,8 @@ class DashboardController extends AbstractDashboardController
             ->setSubItems($this->serviceCrossCanal->reporting_production_produit_generer_liens())
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
 
+        yield MenuItem::section("REPORTING - Sinistre")
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_REPORTING]);
         //SINISTRE
         yield MenuItem::subMenu('SINISTRES GROUPES PAR ETAPES', 'fa-regular fa-newspaper')
             ->setSubItems($this->serviceCrossCanal->reporting_sinistre_etape_generer_liens())

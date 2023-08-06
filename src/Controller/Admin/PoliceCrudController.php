@@ -105,6 +105,7 @@ class PoliceCrudController extends AbstractCrudController
         $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
         $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            //->setDateTimeFormat('dd/MM/yyyy')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()

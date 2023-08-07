@@ -361,7 +361,9 @@ class ServicePreferences
                     ->setIcon('fas fa-umbrella') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le preneur des risques en contre partie du versement d'une prime d'assurance et selon les condtions bien spécifiées dans la police.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Assureur_Index_Details($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_Assureur_Index_Details($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Assureur_Index($preference->getProAssureurs(), PreferenceCrudController::TAB_PRO_ASSUREURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Assureur_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Assureur_form($tabAttributs);
         }
         if ($objetInstance instanceof Automobile) {
@@ -3318,43 +3320,32 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Assureur_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_Assureur_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)
-                ->hideOnForm();
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)
-                ->hideOnForm();
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS])) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
-                ->onlyOnDetail();
+            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES)
-                ->onlyOnDetail();
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE])) {
-            $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)
-                ->hideOnForm();
+            $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE])) {
-            $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)
-                ->hideOnForm();
+            $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL])) {
-            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
-                ->hideOnForm();
+            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR])) {
             $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
-                ->hideOnForm()
+                ->onlyOnIndex()
                 ->setChoices([
                     'Réassureur' => 1,
                     'Assureur' => 0
@@ -3362,44 +3353,76 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB])) {
             $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM])) {
             $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE])) {
             $tabAttributs[] = TextField::new('licence', PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT])) {
             $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT])) {
             $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR)
-                ->hideOnForm()
+                ->onlyOnIndex()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION)
-                ->hideOnform();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION)
-                ->hideOnform();
+                ->onlyOnIndex();
         }
 
         //LES CHAMPS CALCULABLES
         $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Assureur_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_ASSUREUR_POLICES)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)->onlyOnDetail();
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)->onlyOnDetail();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
+            ->onlyOnDetail()
+            ->setChoices([
+                'Réassureur' => 1,
+                'Assureur' => 0
+            ]);
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_ASSUREUR_RCCM)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('licence', PreferenceCrudController::PREF_PRO_ASSUREUR_LICENCE)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_ASSUREUR_IDNAT)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_ASSUREUR_NUM_IMPOT)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_ASSUREUR_UTILISATEUR)
+            ->onlyOnDetail()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_ASSUREUR_ENTREPRISE)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION)->onlyOnDetail();
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
 
         return $tabAttributs;
     }
@@ -3629,7 +3652,7 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setAttributs_Calculables_details($isPolice, array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
+    public function setAttributs_Calculables_details($isPolice, array $tabAttributs)
     {
         //LES CHAMPS CALCULABLES
         $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail();

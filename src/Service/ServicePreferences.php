@@ -327,7 +327,9 @@ class ServicePreferences
                     ->setIcon('fas fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une cotation est tout simplement un dévis/une offre financière relative à un risque précis. Ce n'est pas une police d'assurance.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Cotation_Index_Details($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_Cotation_Index_Details($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Cotation_Index($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Cotation_Details($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Cotation_form($tabAttributs);
         }
         if ($objetInstance instanceof EtapeCrm) {

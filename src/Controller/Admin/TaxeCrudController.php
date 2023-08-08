@@ -93,7 +93,7 @@ class TaxeCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Taxe(), $crud);
-        return $crud
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -105,7 +105,6 @@ class TaxeCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
-        $this->crud = $crud;
         return $crud;
     }
 

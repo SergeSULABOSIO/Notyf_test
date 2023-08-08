@@ -439,7 +439,9 @@ class ServicePreferences
                     ->setIcon('fas fa-landmark-dome') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Taxes ou Impôts dûes aux autorités étatiques.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Taxes_Index_Details($preference->getFinTaxes(), PreferenceCrudController::TAB_FIN_TAXES, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_Taxes_Index_Details($preference->getFinTaxes(), PreferenceCrudController::TAB_FIN_TAXES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Taxes_Index($preference->getFinTaxes(), PreferenceCrudController::TAB_FIN_TAXES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Taxes_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Taxes_form($tabAttributs);
         }
         if ($objetInstance instanceof Monnaie) {
@@ -1407,49 +1409,76 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Taxes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_Taxes_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_TAXE_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
+            ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
+            ->onlyOnDetail();
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_CalculablesTaxes_Details($tabAttributs);
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Taxes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_TAXE_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX])) {
             $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION])) {
             $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION])) {
             $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER])) {
             $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
                 ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_CalculablesTaxes($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_CalculablesTaxes_Index($tabAttributs, $tabPreferences, $tabDefaultAttributs);
         return $tabAttributs;
     }
 
@@ -3979,43 +4008,61 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setAttributs_CalculablesTaxes(array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
+    public function setAttributs_CalculablesTaxes_Index(array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
     {
         //LES CHAMPS CALCULABLES
-        $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')
-            ->hideOnForm();
-
         //SECTION - TAXES - COURTIER
-        $tabAttributs[] = FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')
-            ->hideOnForm();
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier])) {
             $tabAttributs[] = NumberField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees])) {
             $tabAttributs[] = NumberField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
             $tabAttributs[] = NumberField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         //SECTION - TAXES ASSUREURS
-        $tabAttributs[] = FormField::addPanel()
-            ->hideOnForm();
-
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs])) {
             $tabAttributs[] = NumberField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
             $tabAttributs[] = NumberField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
             $tabAttributs[] = NumberField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
+        return $tabAttributs;
+    }
+
+    public function setAttributs_CalculablesTaxes_Details(array $tabAttributs)
+    {
+        //LES CHAMPS CALCULABLES
+        $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')
+            ->onlyOnDetail();
+        //SECTION - TAXES - COURTIER
+        $tabAttributs[] = FormField::addPanel('Impôts et Taxes')->setIcon('fa-solid fa-toggle-off')
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
+            ->onlyOnDetail();
+        //SECTION - TAXES ASSUREURS
+        $tabAttributs[] = FormField::addPanel()
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
+            ->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
+            ->onlyOnDetail();
         return $tabAttributs;
     }
 

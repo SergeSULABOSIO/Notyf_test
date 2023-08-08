@@ -394,7 +394,9 @@ class ServicePreferences
                     ->setIcon('fas fa-person-shelter') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le client c'est l'assuré ou le bénéficiaire de la couverture d'assurance.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Clients_Index_Details($preference->getProClients(), PreferenceCrudController::TAB_PRO_CLIENTS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_Clients_Index_Details($preference->getProClients(), PreferenceCrudController::TAB_PRO_CLIENTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Clients_Index($preference->getProClients(), PreferenceCrudController::TAB_PRO_CLIENTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Clients_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Clients_form($tabAttributs);
         }
         if ($objetInstance instanceof Partenaire) {
@@ -2927,82 +2929,109 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Clients_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_Clients_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_CLIENT_ID)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CLIENT_NOM)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE)->onlyOnDetail();
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CLIENT_TELEPHONE)->onlyOnDetail();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CLIENT_EMAIL)->onlyOnDetail();
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_CLIENT_SITEWEB)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('ispersonnemorale', PreferenceCrudController::PREF_PRO_CLIENT_PERSONNE_MORALE)
+            ->onlyOnDetail()
+            ->setChoices(ClientCrudController::TAB_CLIENT_IS_PERSONNE_MORALE);
+        $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_CLIENT_RCCM)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_CLIENT_IDNAT)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('numipot', PreferenceCrudController::PREF_PRO_CLIENT_NUM_IMPOT)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('secteur', PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR)
+            ->onlyOnDetail()
+            ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CLIENT_UTILISATEUR)
+            ->onlyOnDetail()
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CLIENT_ENTREPRISE)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION)->onlyOnDetail();
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Clients_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_CLIENT_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CLIENT_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS])) {
             $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_TELEPHONE])) {
             $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CLIENT_TELEPHONE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_EMAIL])) {
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CLIENT_EMAIL)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_SITEWEB])) {
             $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_CLIENT_SITEWEB)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_PERSONNE_MORALE])) {
             $tabAttributs[] = ChoiceField::new('ispersonnemorale', PreferenceCrudController::PREF_PRO_CLIENT_PERSONNE_MORALE)
-                ->hideOnForm()
+                ->onlyOnIndex()
                 ->setChoices(ClientCrudController::TAB_CLIENT_IS_PERSONNE_MORALE);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_RCCM])) {
             $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_CLIENT_RCCM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_IDNAT])) {
             $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_CLIENT_IDNAT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_NUM_IMPOT])) {
             $tabAttributs[] = TextField::new('numipot', PreferenceCrudController::PREF_PRO_CLIENT_NUM_IMPOT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR])) {
             $tabAttributs[] = ChoiceField::new('secteur', PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR)
-                ->hideOnForm()
+                ->onlyOnIndex()
                 ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CLIENT_UTILISATEUR)
-                ->hideOnForm()
+                ->onlyOnIndex()
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CLIENT_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         //LES CHAMPS CALCULABLES
         $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);

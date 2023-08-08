@@ -427,7 +427,9 @@ class ServicePreferences
                     ->setIcon('fas fa-gifts') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une couverture d'assurance.")
             ];
-            $tabAttributs = $this->setCRM_Fields_Produits_Index_Details($preference->getProProduits(), PreferenceCrudController::TAB_PRO_PRODUITS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_Produits_Index_Details($preference->getProProduits(), PreferenceCrudController::TAB_PRO_PRODUITS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Produits_Index($preference->getProProduits(), PreferenceCrudController::TAB_PRO_PRODUITS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Produits_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Produits_form($tabAttributs);
         }
         //GROUPE FINANCES
@@ -1295,72 +1297,108 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_Produits_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_PRODUIT_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
+            ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
+            ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_PRODUIT_ENTREPRISE)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
+            ->onlyOnDetail();
 
-    public function setCRM_Fields_Produits_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_Produits_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_PRODUIT_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_CODE])) {
             $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION])) {
             $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION])) {
             $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE])) {
             $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
                 ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
             $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
                 ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
             $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
                 ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS])) {
             $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_POLICES])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_PRODUIT_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         //LES CHAMPS CALCULABLES

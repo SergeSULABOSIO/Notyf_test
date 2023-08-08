@@ -418,8 +418,8 @@ class ServicePreferences
             ];
             //$tabAttributs = $this->setCRM_Fields_Polices_Index_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs, $crud, $adminUrlGenerator);
             $tabAttributs = $this->setCRM_Fields_Polices_Index($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs, $crud, $adminUrlGenerator);
-            $tabAttributs = $this->setCRM_Fields_Polices_Details($preference->getProPolices(), PreferenceCrudController::TAB_PRO_POLICES, $tabAttributs, $crud, $adminUrlGenerator);
-            $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs, $crud, $adminUrlGenerator);
+            $tabAttributs = $this->setCRM_Fields_Polices_Details($tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_Polices_form($tabAttributs);
         }
         if ($objetInstance instanceof Produit) {
             $tabAttributs = [
@@ -554,11 +554,8 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_Polices_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
+    public function setCRM_Fields_Polices_Details($tabAttributs)
     {
-        $this->crud = $crud;
-        $this->adminUrlGenerator = $adminUrlGenerator;
-
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)->onlyOnDetail();
@@ -705,7 +702,7 @@ class ServicePreferences
             ->onlyOnDetail();
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_details(true, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs = $this->setAttributs_Calculables_details(true, $tabAttributs);
 
         //TRAVAUX SUR LE REPORTING
         $tabAttributs[] = MoneyField::new('unpaidcommission')

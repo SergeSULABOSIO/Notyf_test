@@ -477,6 +477,7 @@ class ServiceCrossCanal
             //Champs de saisie à cacher obligatoirement car inutiles
             ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_COTATION_POLICE)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_COTATION_PISTE)
 
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)

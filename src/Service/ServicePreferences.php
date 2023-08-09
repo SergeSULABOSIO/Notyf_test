@@ -528,7 +528,9 @@ class ServicePreferences
                     ->setIcon('fas fa-person-falling-burst') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Personne (morale ou physique) laisée ou ayant subi les dommages au cours du sinistre."),
             ];
-            $tabAttributs = $this->setCRM_Fields_SinistreVictimes_Index_Details($preference->getSinVictimes(), PreferenceCrudController::TAB_SIN_VICTIMES, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_SinistreVictimes_Index_Details($preference->getSinVictimes(), PreferenceCrudController::TAB_SIN_VICTIMES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_SinistreVictimes_Index($preference->getSinVictimes(), PreferenceCrudController::TAB_SIN_VICTIMES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_SinistreVictimes_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_SinistreVictimes_form($tabAttributs);
         }
         //GROUPE BIBLIOTHEQUE
@@ -2876,48 +2878,74 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_SinistreVictimes_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_SinistreVictimes_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_VICTIME_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_VICTIME_ADRESSE)
+            ->onlyOnDetail();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_VICTIME_EMAIL)
+            ->onlyOnDetail();
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE)
+            ->onlyOnDetail();
+        $tabAttributs[] =  AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_VICTIME_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] =  DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_VICTIME_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] =  DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_VICTIME_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] =  AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_VICTIME_ENTREPRISE)
+            ->onlyOnDetail();
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_SinistreVictimes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_VICTIME_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE])) {
             $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_VICTIME_ADRESSE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_EMAIL])) {
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_VICTIME_EMAIL)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE])) {
             $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_UTILISATEUR])) {
             $tabAttributs[] =  AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_VICTIME_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_DATE_DE_CREATION])) {
             $tabAttributs[] =  DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_VICTIME_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_DERNIRE_MODIFICATION])) {
             $tabAttributs[] =  DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_VICTIME_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_ENTREPRISE])) {
             $tabAttributs[] =  AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_VICTIME_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         return $tabAttributs;
     }

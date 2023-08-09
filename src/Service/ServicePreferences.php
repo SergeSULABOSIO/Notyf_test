@@ -540,7 +540,9 @@ class ServicePreferences
                     ->setIcon('fas fa-tags') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Tout simplement un ensemble des documents qui partagent un certain nombre des critères communs."),
             ];
-            $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_Index_Details($preference->getBibCategories(), PreferenceCrudController::TAB_BIB_CATEGORIES, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_BibliothequeCategories_Index_Details($preference->getBibCategories(), PreferenceCrudController::TAB_BIB_CATEGORIES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_Index($preference->getBibCategories(), PreferenceCrudController::TAB_BIB_CATEGORIES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_BibliothequeCategories_form($tabAttributs);
         }
         if ($objetInstance instanceof DocClasseur) {
@@ -549,7 +551,9 @@ class ServicePreferences
                     ->setIcon('fas fa-folder-open') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Un classeur représente un dossier (virtuel) dans lequel peuvent se ranger un ou plusieurs documents."),
             ];
-            $tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_Index_Details($preference->getBibClasseurs(), PreferenceCrudController::TAB_BIB_CLASSEURS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_Index_Details($preference->getBibClasseurs(), PreferenceCrudController::TAB_BIB_CLASSEURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_Index($preference->getBibClasseurs(), PreferenceCrudController::TAB_BIB_CLASSEURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_BibliothequeClasseurs_form($tabAttributs);
         }
         if ($objetInstance instanceof DocPiece) {
@@ -558,7 +562,9 @@ class ServicePreferences
                     ->setIcon('fas fa-file-word') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une pièce est un document de quel que format que ce soit."),
             ];
-            $tabAttributs = $this->setCRM_Fields_BibliothequePieces_Index_Details($preference->getBibPieces(), PreferenceCrudController::TAB_BIB_DOCUMENTS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_BibliothequePieces_Index_Details($preference->getBibPieces(), PreferenceCrudController::TAB_BIB_DOCUMENTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequePieces_Index($preference->getBibPieces(), PreferenceCrudController::TAB_BIB_DOCUMENTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_BibliothequePieces_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_BibliothequePieces_form($tabAttributs);
         }
         //GROUPE PARAMETRES
@@ -568,7 +574,9 @@ class ServicePreferences
                     ->setIcon('fas fa-user') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("L'utilisateur ayant un certain droit d'accès aux données et pouvant utiliser le système."),
             ];
-            $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_Index_Details($preference->getParUtilisateurs(), PreferenceCrudController::TAB_PAR_UTILISATEURS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_ParUtilisateurs_Index_Details($preference->getParUtilisateurs(), PreferenceCrudController::TAB_PAR_UTILISATEURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_Index($preference->getParUtilisateurs(), PreferenceCrudController::TAB_PAR_UTILISATEURS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_ParUtilisateurs_form($tabAttributs);
         }
         return $tabAttributs;
@@ -2951,179 +2959,278 @@ class ServicePreferences
     }
 
 
-    public function setCRM_Fields_BibliothequeCategories_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_BibliothequeCategories_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CATEGORIE_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CATEGORIE_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CATEGORIE_ENTREPRISE)
+            ->onlyOnDetail();
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_BibliothequeCategories_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CATEGORIE_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CATEGORIE_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_BIB_CATEGORIE_PIECES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CATEGORIE_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CATEGORIE_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CATEGORIE_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CATEGORIE_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_BibliothequeClasseurs_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_BibliothequeClasseurs_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CLASSEUR_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CLASSEUR_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
+            ->onlyOnDetail();
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_BibliothequeClasseurs_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_CLASSEUR_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CLASSEUR_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES)
                 ->onlyOnIndex();
-            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_BIB_CLASSEUR_PIECES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;
     }
 
-
-    public function setCRM_Fields_BibliothequePieces_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_BibliothequePieces_Details($tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION])) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE])) {
-            $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
-            $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS])) {
-            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES])) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES])) {
-            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-                ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-                ->onlyOnDetail();
-        }
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
+            ->onlyOnDetail();
         //Les fichiers
         $tabAttributs[] = TextField::new('fichierA', 'Fichier A')->onlyOnDetail();
         $tabAttributs[] = TextField::new('fichierB', 'Fichier B')->onlyOnDetail();
         $tabAttributs[] = TextField::new('fichierC', 'Fichier C')->onlyOnDetail();
         $tabAttributs[] = TextField::new('fichierD', 'Fichier D')->onlyOnDetail();
         //Fin  - les fichiers
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
+            ->onlyOnDetail();
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_BibliothequePieces_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION])) {
+            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE])) {
+            $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
+            $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
+            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
+            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS])) {
+            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES])) {
+            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES])) {
+            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_ParUtilisateurs_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    public function setCRM_Fields_ParUtilisateurs_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PAR_UTILISATEUR_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('pseudo', PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('email', PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL)
+            ->onlyOnDetail();
+        $tabAttributs[] = $tabAttributs[] = ChoiceField::new('roles', PreferenceCrudController::PREF_PAR_UTILISATEUR_ROLES)
+            ->setChoices(UtilisateurCrudController::TAB_ROLES)
+            ->renderAsBadges([
+                // $value => $badgeStyleName
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE] => 'success', //info
+                UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION] => 'danger',
+            ])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PAR_UTILISATEUR_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_ParUtilisateurs_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PAR_UTILISATEUR_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PAR_UTILISATEUR_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO])) {
             $tabAttributs[] = TextField::new('pseudo', PreferenceCrudController::PREF_PAR_UTILISATEUR_PSEUDO)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL])) {
             $tabAttributs[] = TextField::new('email', PreferenceCrudController::PREF_PAR_UTILISATEUR_EMAIL)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ROLES])) {
             $tabAttributs[] = $tabAttributs[] = ChoiceField::new('roles', PreferenceCrudController::PREF_PAR_UTILISATEUR_ROLES)
@@ -3136,30 +3243,28 @@ class ServicePreferences
                     UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION] => 'danger',
                 ])
                 ->setColumns(3)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PAR_UTILISATEUR_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS])) {
             $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_PAR_UTILISATEUR_MISSIONS)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PAR_UTILISATEUR_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PAR_UTILISATEUR_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;

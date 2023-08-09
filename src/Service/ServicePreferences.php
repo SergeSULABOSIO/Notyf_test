@@ -495,7 +495,9 @@ class ServicePreferences
                     ->setIcon('fas fa-arrow-down-short-wide') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le traitement d'un sinistre passe par une ou plusieurs étapes. De la déclaration à l'indemnisation.")
             ];
-            $tabAttributs = $this->setCRM_Fields_EtapeSinistres_Index_Details($preference->getSinEtapes(), PreferenceCrudController::TAB_SIN_ETAPES, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_EtapeSinistres_Index_Details($preference->getSinEtapes(), PreferenceCrudController::TAB_SIN_ETAPES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_EtapeSinistres_Index($preference->getSinEtapes(), PreferenceCrudController::TAB_SIN_ETAPES, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_EtapeSinistres_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_EtapeSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Expert) {
@@ -2554,48 +2556,71 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_EtapeSinistres_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_ETAPE_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('indice', PreferenceCrudController::PREF_SIN_ETAPE_INDICE)
+            ->setChoices(EtapeSinistreCrudController::TAB_ETAPE_INDICE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_ETAPE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_ETAPE_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_ETAPE_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE)
+            ->onlyOnDetail();
 
-    public function setCRM_Fields_EtapeSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_EtapeSinistres_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_ETAPE_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_NOM])) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_INDICE])) {
             $tabAttributs[] = ChoiceField::new('indice', PreferenceCrudController::PREF_SIN_ETAPE_INDICE)
                 ->setChoices(EtapeSinistreCrudController::TAB_ETAPE_INDICE)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES])) {
             $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_ETAPE_SINISTRES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION])) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_ETAPE_DESCRIPTION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_ETAPE_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_ETAPE_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_ETAPE_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;

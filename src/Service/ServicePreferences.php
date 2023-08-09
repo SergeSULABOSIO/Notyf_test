@@ -517,7 +517,9 @@ class ServicePreferences
                     ->setIcon('fas fa-bell') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Evènement(s) malheureux pouvant déclancher le processus d'indemnisation selon les termes de la police."),
             ];
-            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index_Details($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs, $crud, $adminUrlGenerator);
+            //$tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index_Details($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs, $crud, $adminUrlGenerator);
+            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Index($preference->getSinSinistres(), PreferenceCrudController::TAB_SIN_SINISTRES, $tabAttributs, $crud, $adminUrlGenerator);
+            $tabAttributs = $this->setCRM_Fields_SinistreSinistres_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_SinistreSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Victime) {
@@ -2714,66 +2716,115 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-
-    public function setCRM_Fields_SinistreSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
+    public function setCRM_Fields_SinistreSinistres_Details($tabAttributs)
     {
-        $this->crud = $crud;
-        $this->adminUrlGenerator = $adminUrlGenerator;
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_SINISTRE_ID)
-                ->hideOnForm();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE])) {
-            $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
-                ->hideOnForm();
-        }
-        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE])) {
-            
-        } */
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_SINISTRE_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
+            ->onlyOnDetail();
         //On doit afficher la référence sans aucune restriction / condition
         $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
             ->formatValue(function ($value, Sinistre $sinistre) {
                 $this->setTitreReportingSinistre($sinistre);
                 return $value;
             })
-            ->hideOnForm();
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('cout', PreferenceCrudController::PREF_SIN_SINISTRE_COUT)
+            ->formatValue(function ($value, Sinistre $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCout());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
+            ->formatValue(function ($value, Sinistre $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontantPaye());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_SINISTRE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_SINISTRE_ENTREPRISE)
+            ->onlyOnDetail();
+
+        //LES CHAMPS CALCULABLES
+        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
+
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_SinistreSinistres_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $this->crud = $crud;
+        $this->adminUrlGenerator = $adminUrlGenerator;
+
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_SINISTRE_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE])) {
+            $tabAttributs[] = TextField::new('titre', PreferenceCrudController::PREF_SIN_SINISTRE_ITITRE)
+                ->onlyOnIndex();
+        }
+        //On doit afficher la référence sans aucune restriction / condition
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_SIN_SINISTRE_REFERENCE)
+            ->formatValue(function ($value, Sinistre $sinistre) {
+                $this->setTitreReportingSinistre($sinistre);
+                return $value;
+            })
+            ->onlyOnIndex();
 
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE])) {
             $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES])) {
             $tabAttributs[] = AssociationField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT])) {
             $tabAttributs[] = AssociationField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS])) {
             $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_SIN_SINISTRE_ACTIONS)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE])) {
             $tabAttributs[] = DateField::new('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION])) {
             $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_SIN_SINISTRE_DESCRIPTION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_COUT])) {
             $tabAttributs[] = MoneyField::new('cout', PreferenceCrudController::PREF_SIN_SINISTRE_COUT)
@@ -2782,7 +2833,7 @@ class ServicePreferences
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE])) {
             $tabAttributs[] = MoneyField::new('montantPaye', PreferenceCrudController::PREF_SIN_SINISTRE_MONTANT_PAYE)
@@ -2791,32 +2842,32 @@ class ServicePreferences
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT])) {
             $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_PAIEMENT)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_SINISTRE_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_SINISTRE_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_SINISTRE_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_SINISTRE_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         //LES CHAMPS CALCULABLES

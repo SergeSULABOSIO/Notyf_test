@@ -506,7 +506,9 @@ class ServicePreferences
                     ->setIcon('fas fa-user-graduate') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("L'expert est une personne morale ou physique qui a pour rôle d'aider l'assureur à mieux évaluer l'ampleur du dégât (évaluation chiffrée) afin de déterminer le montant réel de la compensation."),
             ];
-            $tabAttributs = $this->setCRM_Fields_ExpertSinistres_Index_Details($preference->getSinExperts(), PreferenceCrudController::TAB_SIN_EXPERTS, $tabAttributs);
+            //$tabAttributs = $this->setCRM_Fields_ExpertSinistres_Index_Details($preference->getSinExperts(), PreferenceCrudController::TAB_SIN_EXPERTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ExpertSinistres_Index($preference->getSinExperts(), PreferenceCrudController::TAB_SIN_EXPERTS, $tabAttributs);
+            $tabAttributs = $this->setCRM_Fields_ExpertSinistres_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_ExpertSinistres_form($tabAttributs);
         }
         if ($objetInstance instanceof Sinistre) {
@@ -2626,59 +2628,87 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setCRM_Fields_ExpertSinistres_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_EXPERT_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_EXPERT_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE)
+            ->onlyOnDetail();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
+            ->onlyOnDetail();
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
+            ->onlyOnDetail();
+        $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_EXPERT_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_EXPERT_DATE_DE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_EXPERT_DERNIRE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE)
+            ->onlyOnDetail();
 
-    public function setCRM_Fields_ExpertSinistres_Index_Details(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+        return $tabAttributs;
+    }
+
+    public function setCRM_Fields_ExpertSinistres_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_EXPERT_ID)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_EXPERT_NOM)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES])) {
             $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
                 ->onlyOnIndex();
-            $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
-                ->onlyOnDetail();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_SIN_EXPERT_ADRESSE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_EMAIL])) {
             $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET])) {
             $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE])) {
             $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION])) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_SIN_EXPERT_DESCRIPTION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_EXPERT_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DATE_DE_CREATION])) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_SIN_EXPERT_DATE_DE_CREATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_DERNIRE_MODIFICATION])) {
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_SIN_EXPERT_DERNIRE_MODIFICATION)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_EXPERT_ENTREPRISE)
-                ->hideOnForm();
+                ->onlyOnIndex();
         }
 
         return $tabAttributs;

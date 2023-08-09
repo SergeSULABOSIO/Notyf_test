@@ -1681,6 +1681,7 @@ class ServiceCrossCanal
         return $adminUrlGenerator
             ->unset("titre")
             ->unset("filters")
+            ->unset("champsACacher")
             ->unset("codeReporting");
     }
 

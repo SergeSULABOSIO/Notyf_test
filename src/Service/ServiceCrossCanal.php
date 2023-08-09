@@ -11,6 +11,7 @@ use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Contact;
 use App\Entity\Monnaie;
+use App\Entity\Produit;
 use App\Entity\Victime;
 use App\Entity\Assureur;
 use App\Entity\Cotation;
@@ -20,6 +21,7 @@ use App\Entity\Sinistre;
 use App\Entity\ActionCRM;
 use App\Entity\Automobile;
 use App\Entity\Entreprise;
+use App\Entity\Partenaire;
 use App\Entity\DocClasseur;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
@@ -45,10 +47,12 @@ use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\EtapeCrmCrudController;
 use App\Controller\Admin\SinistreCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use Symfony\Component\Validator\Constraints\Date;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PaiementTaxeCrudController;
@@ -56,8 +60,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
-use App\Entity\Partenaire;
-use App\Entity\Produit;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -465,13 +467,17 @@ class ServiceCrossCanal
     }
 
     public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
+    {        
         /** @var Piste */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(CotationCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE COTATION - [Piste: " . $entite . "]")
+            //Champs de saisie à cacher obligatoirement car inutiles
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_COTATION_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();

@@ -8,6 +8,8 @@ use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;

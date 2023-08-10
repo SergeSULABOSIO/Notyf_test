@@ -5141,6 +5141,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(3);
         $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+        ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
             ->onlyOnForms()
             ->setColumns(12)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {

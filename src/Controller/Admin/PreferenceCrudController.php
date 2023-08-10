@@ -124,7 +124,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
-    public const PREF_CRM_COTATION_CLIENT               = "Assuré(e)";
+    public const PREF_CRM_COTATION_CLIENT               = "Prospect / Client";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_POLICE               = "Police en place";
     public const PREF_CRM_COTATION_MISSIONS             = "Missions";

@@ -1857,7 +1857,8 @@ class ServicePreferences
             })
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
-            ->setRequired(false)
+        ->setHelp("Si la pièce justificative ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette preuve de paiement.")    
+        ->setRequired(false)
             ->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -1909,7 +1910,8 @@ class ServicePreferences
             ->setColumns(3)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+        ->setHelp("Si votre pièce justificative ne figure pas sur cette liste, ne vous inquiètez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette preueve de paiement.")    
+        ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')

@@ -934,7 +934,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU CONTACT - [Police: " . $police . "]")
             ->set(self::CROSSED_ENTITY_PISTE, $piste->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -950,6 +950,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEL ENGIN AUTOMOTEUR - [Police: " . $police . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_ENGIN_POLICE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

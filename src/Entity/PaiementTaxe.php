@@ -126,7 +126,7 @@ class PaiementTaxe
 
     public function __toString()
     {
-        return $this->montant . " / Facture: " . $this->refnotededebit . " / " . $this->police;
+        return $this->montant/100 . " / Facture: " . $this->refnotededebit . " / " . $this->police;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

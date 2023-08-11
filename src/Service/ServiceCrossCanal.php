@@ -340,6 +340,8 @@ class ServiceCrossCanal
             ->set("titre", "NOUVELLE PDP TAXE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
             ->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -369,7 +371,10 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE MISSION - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_MISSION_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_CRM_MISSION_PISTE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

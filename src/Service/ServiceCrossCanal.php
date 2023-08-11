@@ -382,6 +382,10 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE MISSION - [Cotation: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_MISSION_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_CRM_MISSION_PISTE)
             //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
             ->setEntityId(null)
             ->generateUrl();

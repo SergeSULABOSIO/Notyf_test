@@ -3128,9 +3128,9 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
             ->onlyOnDetail();

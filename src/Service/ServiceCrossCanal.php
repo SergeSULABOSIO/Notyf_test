@@ -324,6 +324,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP PARTENAIRE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

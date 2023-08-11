@@ -260,6 +260,12 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE (Pdp) - [Commissions encaissées: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POP_COMMISSIONS, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

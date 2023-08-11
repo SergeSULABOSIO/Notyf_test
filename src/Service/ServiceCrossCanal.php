@@ -461,6 +461,10 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE MISSION - [Piste: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_MISSION_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_MISSION_PISTE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -494,6 +498,8 @@ class ServiceCrossCanal
             ->setController(ContactCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVAU CONTACT - [Piste: " . $entite . "]")
+            //Champs de saisie à cacher obligatoirement car inutiles
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();

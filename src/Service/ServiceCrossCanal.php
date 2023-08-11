@@ -356,7 +356,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU SINISTRE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_SIN_SINISTRE_POLICE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

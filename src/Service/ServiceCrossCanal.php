@@ -172,6 +172,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU FEEDBACK - [Mission: " . $entite->getMission() . "]")
             ->set(self::CROSSED_ENTITY_ACTION, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
             ->setEntityId(null)
             ->generateUrl();
         return $url;

@@ -199,6 +199,10 @@ class ServiceCrossCanal
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE POLICE - [Cotation: " . $entite . "]")
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();

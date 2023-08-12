@@ -3136,7 +3136,7 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
             ->onlyOnDetail();

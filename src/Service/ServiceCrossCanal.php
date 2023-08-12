@@ -153,6 +153,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_TAXE = "taxe";
     public const CROSSED_ENTITY_SINISTRE = "sinistre";
 
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceCalculateur $serviceCalculateur,
@@ -208,9 +209,31 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE POLICE - [Cotation: " . $entite . "]")
             ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION)
+            ->set("avenant[id]", 0)
+            ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Avanant_Annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Cotation */
+        $entite = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "ANNULATION - [Police: " . $entite . "]")
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_ANNULATION)
+            ->set("avenant[id]", 0)
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -1744,7 +1767,8 @@ class ServiceCrossCanal
             ->unset("titre")
             ->unset("filters")
             ->unset("champsACacher")
-            ->unset("codeReporting");
+            ->unset("codeReporting")
+            ->unset("avenant");
     }
 
     public function reporting_commission_assureur_generer_liens(bool $unpaid)

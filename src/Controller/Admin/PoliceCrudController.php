@@ -56,14 +56,25 @@ class PoliceCrudController extends AbstractCrudController
         'Paiements Mensuels' => 3
     ];
 
+    
+    public const AVENANT_TYPE_SOUSCRIPTION = "Souscription";
+    public const AVENANT_TYPE_RISTOURNE = "Ristourne";
+    public const AVENANT_TYPE_RESILIATION = "Résiliation";
+    public const AVENANT_TYPE_RENOUVELLEMENT = "Renouvellement";
+    public const AVENANT_TYPE_PROROGATION = "Prorogation";
+    public const AVENANT_TYPE_INCORPORATION = "Incorporation";
+    public const AVENANT_TYPE_ANNULATION = "Annulation";
+    public const AVENANT_TYPE_AUTRE_MODIFICATION = "Autre modification";
+
     public const TAB_POLICE_TYPE_AVENANT = [
-        'Souscription' => 0,
-        'Ristourne' => 1,
-        'Résiliation' => 2,
-        'Renouvellement' => 3,
-        'Prorogation' => 4,
-        'Incorporation' => 5,
-        'Annulation' => 6
+        self::AVENANT_TYPE_SOUSCRIPTION => 0,
+        self::AVENANT_TYPE_RISTOURNE => 1,
+        self::AVENANT_TYPE_RESILIATION => 2,
+        self::AVENANT_TYPE_RENOUVELLEMENT => 3,
+        self::AVENANT_TYPE_PROROGATION => 4,
+        self::AVENANT_TYPE_INCORPORATION => 5,
+        self::AVENANT_TYPE_ANNULATION => 6,
+        self::AVENANT_TYPE_AUTRE_MODIFICATION => 7
     ];
 
     public function __construct(
@@ -169,8 +180,9 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setDateeffet(new DateTimeImmutable("now"));
         $objet->setDateexpiration(new DateTimeImmutable("+365 day"));
         $objet->setPartExceptionnellePartenaire(0);
-        $objet->setIdavenant(0);
-        $objet->setTypeavenant(0);
+        $this->setAvenant($objet);
+        //$objet->setIdavenant(0);
+        //$objet->setTypeavenant(0);
         $objet->setReassureurs("Voir le traité de réassurance en place.");
         $objet->setCapital(1000000.00);
         $objet->setPrimenette(0);
@@ -210,6 +222,19 @@ class PoliceCrudController extends AbstractCrudController
         $objet->setPaidtaxe(0);
 
         return $objet;
+    }
+
+    public function setAvenant(Police $police)
+    {
+        if($this->adminUrlGenerator){
+            if($this->adminUrlGenerator->get("avenant[type]")){
+                $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$this->adminUrlGenerator->get("avenant[type]")]);
+            }
+            if($this->adminUrlGenerator->get("avenant[id]")){
+                $police->setIdavenant($this->adminUrlGenerator->get("avenant[id]"));
+            }
+        }
+        dd($police);
     }
 
 
@@ -279,8 +304,7 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_ajouter)
             ->add(Crud::PAGE_INDEX, $piece_ajouter)
             ->add(Crud::PAGE_DETAIL, $piece_lister)
-            ->add(Crud::PAGE_INDEX, $piece_lister)
-            ;
+            ->add(Crud::PAGE_INDEX, $piece_lister);
 
         $paiementCommission_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_AJOUTER)
             ->displayIf(static function (?Police $entity) {
@@ -483,6 +507,71 @@ class PoliceCrudController extends AbstractCrudController
             //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
 
+
+        //Opérations ARCA
+        $operation_annulation = Action::new("Opération - Annulation")
+            ->setIcon('fa-regular fa-trash-can') //<i class="fa-regular fa-trash-can"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_annulation');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_annulation)
+            //->add(Crud::PAGE_INDEX, $operation_annulation)
+            ;
+
+        $operation_renouvellement = Action::new("Opération - Renouvellement")
+            ->setIcon('fa-solid fa-champagne-glasses') //<i class="fa-solid fa-champagne-glasses"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_renouvellement');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_renouvellement)
+            //->add(Crud::PAGE_INDEX, $operation_renouvellement)
+            ;
+
+        $operation_prorogation = Action::new("Opération - Prorogation")
+            ->setIcon('fa-solid fa-bridge') //<i class="fa-solid fa-bridge"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_prorogation');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_prorogation)
+            //->add(Crud::PAGE_INDEX, $operation_prorogation)
+            ;
+
+        $operation_incorporation = Action::new("Opération - Incorporation")
+            ->setIcon('fa-solid fa-plus') //<i class="fa-solid fa-plus"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_incorporation');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_incorporation)
+            //->add(Crud::PAGE_INDEX, $operation_incorporation)
+            ;
+
+        $operation_ristourne = Action::new("Opération - Ristourne")
+            ->setIcon('fa-solid fa-person-walking-arrow-loop-left') //<i class="fa-solid fa-person-walking-arrow-loop-left"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_ristourne');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_ristourne)
+            //->add(Crud::PAGE_INDEX, $operation_ristourne)
+            ;
+
+        $operation_resiliation = Action::new("Opération - Résiliation")
+            ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_resiliation');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_resiliation)
+            //->add(Crud::PAGE_INDEX, $operation_resiliation)
+            ;
+
+        $operation_autre_modifications = Action::new("Opération - Autre modifications")
+            ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
+            ->addCssClass("btn btn-primary")
+            ->linkToCrudAction('operation_autre_modification');
+        $actions
+            ->add(Crud::PAGE_DETAIL, $operation_autre_modifications)
+            //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
+            ;
+        //Ajout des opérations arca
 
 
         return $actions;

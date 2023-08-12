@@ -50,7 +50,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 class DashboardController extends AbstractDashboardController
 {
     public const ACTION_AJOUTER = "Ajouter";
-    public const ACTION_OPEN = "Ouvrir";
+    public const ACTION_OPEN = "Voire les détails";
     public const ACTION_DESTROY_ENTREPRISE = "Détruire l'entreprie";
     public const ACTION_LISTE = "Revenir sur la liste";
     public const ACTION_DUPLICATE = "Dupliquer";

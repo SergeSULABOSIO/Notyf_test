@@ -447,7 +447,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEL EXPERT - [Sinistre: " . $sinistre . "]")
             ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -462,7 +462,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE VICTIME - [Sinistre: " . $sinistre . "]")
             ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -477,7 +477,12 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU DOCUMENT - [Sinistre: " . $sinistre . "]")
             ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
-            //->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -492,6 +497,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PISTE - [Etape: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_ETAPE_CRM, $entite->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->setEntityId(null)
             ->generateUrl();
         //dd($url);

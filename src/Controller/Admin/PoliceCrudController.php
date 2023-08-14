@@ -175,123 +175,125 @@ class PoliceCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Police();
-        $objet->setDateemission(new DateTimeImmutable("now"));
-        $objet->setDateoperation(new DateTimeImmutable("now"));
-        $objet->setDateeffet(new DateTimeImmutable("now"));
-        $objet->setDateexpiration(new DateTimeImmutable("+365 day"));
-        $objet->setPartExceptionnellePartenaire(0);
         $this->setAvenant($objet);
+        //$objet->setDateemission(new DateTimeImmutable("now"));
+        //$objet->setDateoperation(new DateTimeImmutable("now"));
+        //$objet->setDateeffet(new DateTimeImmutable("now"));
+        //$objet->setDateexpiration(new DateTimeImmutable("+365 day"));
+        //$objet->setPartExceptionnellePartenaire(0);
+
         //$objet->setIdavenant(0);
         //$objet->setTypeavenant(0);
-        $objet->setReassureurs("Voir le traité de réassurance en place.");
-        $objet->setCapital(1000000.00);
-        $objet->setPrimenette(0);
-        $objet->setFronting(0);
-        $objet->setArca(0);
-        $objet->setTva(0);
-        $objet->setFraisadmin(0);
-        $objet->setPrimetotale(0);
-        $objet->setModepaiement(0);
-        $objet->setDiscount(0);
+        //$objet->setReassureurs("Voir le traité de réassurance en place.");
+        //$objet->setCapital(1000000.00);
+        //$objet->setPrimenette(0);
+        //$objet->setFronting(0);
+        //$objet->setArca(0);
+        //$objet->setTva(0);
+        //$objet->setFraisadmin(0);
+        //$objet->setPrimetotale(0);
+        //$objet->setModepaiement(0);
+        //$objet->setDiscount(0);
 
-        $objet->setRicom(0);
-        $objet->setCansharericom(false);
-        $objet->setRicompayableby(0);
+        //$objet->setRicom(0);
+        //$objet->setCansharericom(false);
+        //$objet->setRicompayableby(0);
 
-        $objet->setFrontingcom(0);
-        $objet->setCansharefrontingcom(false);
-        $objet->setFrontingcompayableby(0);
+        //$objet->setFrontingcom(0);
+        //$objet->setCansharefrontingcom(false);
+        //$objet->setFrontingcompayableby(0);
 
-        $objet->setLocalcom(0);
-        $objet->setCansharelocalcom(false);
-        $objet->setLocalcompayableby(0);
-        $objet->setPartenaire(null);
+        //$objet->setLocalcom(0);
+        //$objet->setCansharelocalcom(false);
+        //$objet->setLocalcompayableby(0);
+        //$objet->setPartenaire(null);
         $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
 
-        $objet->setUnpaidcommission(0);
-        $objet->setUnpaidretrocommission(0);
-        $objet->setUnpaidtaxeassureur(0);
-        $objet->setUnpaidtaxecourtier(0);
-        $objet->setUnpaidtaxe(0);
+        //$objet->setUnpaidcommission(0);
+        //$objet->setUnpaidretrocommission(0);
+        //$objet->setUnpaidtaxeassureur(0);
+        //$objet->setUnpaidtaxecourtier(0);
+        //$objet->setUnpaidtaxe(0);
 
-        $objet->setPaidcommission(0);
-        $objet->setPaidretrocommission(0);
-        $objet->setPaidtaxeassureur(0);
-        $objet->setPaidtaxecourtier(0);
-        $objet->setPaidtaxe(0);
+        //$objet->setPaidcommission(0);
+        //$objet->setPaidretrocommission(0);
+        //$objet->setPaidtaxeassureur(0);
+        //$objet->setPaidtaxecourtier(0);
+        //$objet->setPaidtaxe(0);
 
         return $objet;
     }
 
     public function setAvenant(Police $police)
     {
-        $avenant_data = $this->adminUrlGenerator->get("avenant");
-        /** @var Police */
-        $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
-        $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
-            [
-                'reference' => $avenant_data['reference'],
-                'entreprise' => $this->serviceEntreprise->getEntreprise()
-            ]
-        );
-        //dd($policesConcernees);
-        if ($this->adminUrlGenerator) {
-            if ($this->adminUrlGenerator->get("avenant")) {
-                $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
-                $police->setIdavenant(count($policesConcernees));
-                $police->setReference($policeDeBase->getReference());
-                //On effectue les traitements selon le type d'avenant
-                switch ($avenant_data['type']) {
-                    case PoliceCrudController::AVENANT_TYPE_ANNULATION:
-                        dd("On effectue ici les traitements relatives à une ANNULATION...");
-                        $police->setDateoperation(new \DateTimeImmutable("now"));
-                        $police->setDateemission(new \DateTimeImmutable("now"));
-                        $police->setDateeffet($policeDeBase->getDateeffet());
-                        $police->setDateexpiration($policeDeBase->getDateeffet());
-                        $police->setModepaiement($policeDeBase->getModepaiement());
-                        $police->setRemarques("Cette police est annulée.");
-                        $police->setReassureurs($policeDeBase->getReassureurs());
-                        $police->setCansharericom($policeDeBase->isCansharericom());
-                        $police->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
-                        $police->setCansharelocalcom($policeDeBase->isCansharelocalcom());
-                        $police->setRicompayableby($policeDeBase->getRicompayableby());
-                        $police->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
-                        $police->setLocalcompayableby($policeDeBase->getLocalcompayableby());
-                        $police->setUpdatedAt(new \DateTimeImmutable("now"));
-                        $police->setCreatedAt(new \DateTimeImmutable("now"));
-                        $police->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                        $police->setGestionnaire($policeDeBase->getGestionnaire());
-                        $police->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
-                        foreach ($policeDeBase->getDocPieces() as $piece) {
-                            $police->addDocPiece($piece);
-                        }
-                        $police->setClient($policeDeBase->getClient());
+        if ($this->adminUrlGenerator->get("avenant")) {
+            $avenant_data = $this->adminUrlGenerator->get("avenant");
+            /** @var Police */
+            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+                [
+                    'reference' => $avenant_data['reference'],
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            );
+            //dd($policesConcernees);
+            if ($this->adminUrlGenerator) {
+                if ($this->adminUrlGenerator->get("avenant")) {
+                    $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+                    $police->setIdavenant(count($policesConcernees));
+                    $police->setReference($policeDeBase->getReference());
+                    //On effectue les traitements selon le type d'avenant
+                    switch ($avenant_data['type']) {
+                        case PoliceCrudController::AVENANT_TYPE_ANNULATION:
+                            //dd("On effectue ici les traitements relatives à une ANNULATION...");
+                            $police->setDateoperation(new \DateTimeImmutable("now"));
+                            $police->setDateemission(new \DateTimeImmutable("now"));
+                            $police->setDateeffet($policeDeBase->getDateeffet());
+                            $police->setDateexpiration($policeDeBase->getDateeffet());
+                            $police->setModepaiement($policeDeBase->getModepaiement());
+                            $police->setRemarques("Cette police est annulée.");
+                            $police->setReassureurs($policeDeBase->getReassureurs());
+                            $police->setCansharericom($policeDeBase->isCansharericom());
+                            $police->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+                            $police->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+                            $police->setRicompayableby($policeDeBase->getRicompayableby());
+                            $police->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+                            $police->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+                            $police->setUpdatedAt(new \DateTimeImmutable("now"));
+                            $police->setCreatedAt(new \DateTimeImmutable("now"));
+                            $police->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                            $police->setGestionnaire($policeDeBase->getGestionnaire());
+                            $police->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+                            $police->setClient($policeDeBase->getClient());
+                            $police->setAssureur($policeDeBase->getAssureur());
+                            $police->setProduit($policeDeBase->getProduit());
+                            $police->setCotation($policeDeBase->getCotation());
 
-                        $tot_capital = 0;
-                        $tot_prime_nette = 0;
-                        $tot_fronting = 0;
-                        $tot_arca = 0;
-                        $tot_tva = 0;
-                        $tot_frais_admin = 0;
-                        $tot_prime_totale = 0;
-                        $tot_discount = 0;
-                        $tot_ricom = 0;
-                        $tot_localcom = 0;
-                        $tot_frontingcom = 0;
-
-                        $police->setDateexpiration($policeDeBase->getDateeffet());
+                            $tot_capital = 0;
+                            $tot_prime_nette = 0;
+                            $tot_fronting = 0;
+                            $tot_arca = 0;
+                            $tot_tva = 0;
+                            $tot_frais_admin = 0;
+                            $tot_prime_totale = 0;
+                            $tot_discount = 0;
+                            $tot_ricom = 0;
+                            $tot_localcom = 0;
+                            $tot_frontingcom = 0;
 
 
-                        break;
+                            break;
 
-                    default:
-                        dd("Avenant non supporté!!!!");
-                        break;
+                        default:
+                            dd("Avenant non supporté!!!!");
+                            break;
+                    }
                 }
             }
+            //dd($police);
+
         }
-        //dd($police);
     }
 
 

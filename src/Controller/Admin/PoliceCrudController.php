@@ -56,7 +56,7 @@ class PoliceCrudController extends AbstractCrudController
         'Paiements Mensuels' => 3
     ];
 
-    
+
     public const AVENANT_TYPE_SOUSCRIPTION = "Souscription";
     public const AVENANT_TYPE_RISTOURNE = "Ristourne";
     public const AVENANT_TYPE_RESILIATION = "Résiliation";
@@ -226,15 +226,60 @@ class PoliceCrudController extends AbstractCrudController
 
     public function setAvenant(Police $police)
     {
-        if($this->adminUrlGenerator){
-            if($this->adminUrlGenerator->get("avenant[type]")){
-                $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$this->adminUrlGenerator->get("avenant[type]")]);
-            }
-            if($this->adminUrlGenerator->get("avenant[id]")){
-                $police->setIdavenant($this->adminUrlGenerator->get("avenant[id]"));
+        $avenant_data = $this->adminUrlGenerator->get("avenant");
+        /** @var Police */
+        $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+        $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+            [
+                'reference' => $avenant_data['reference'],
+                'entreprise' => $this->serviceEntreprise->getEntreprise()
+            ]
+        );
+        //dd($policesConcernees);
+        if ($this->adminUrlGenerator) {
+            if ($this->adminUrlGenerator->get("avenant")) {
+                $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+                $police->setIdavenant(count($policesConcernees));
+                $police->setReference($policeDeBase->getReference());
+                //On effectue les traitements selon le type d'avenant
+                switch ($avenant_data['type']) {
+                    case PoliceCrudController::AVENANT_TYPE_ANNULATION:
+                        dd("On effectue ici les traitements relatives à une ANNULATION...");
+                        $police->setDateoperation(new \DateTimeImmutable("now"));
+                        $police->setDateemission(new \DateTimeImmutable("now"));
+                        $police->setDateeffet($policeDeBase->getDateeffet());
+                        $police->setDateexpiration($policeDeBase->getDateeffet());
+                        $police->setModepaiement($policeDeBase->getModepaiement());
+                        $police->setRemarques("Cette police est annulée.");
+                        $police->setReassureurs($policeDeBase->getReassureurs());
+                        $police->setCansharericom($policeDeBase->isCansharericom());
+                        $police->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+                        $police->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+                        
+                        $tot_capital = 0;
+                        $tot_prime_nette = 0;
+                        $tot_fronting = 0;
+                        $tot_arca = 0;
+                        $tot_tva = 0;
+                        $tot_frais_admin = 0;
+                        $tot_prime_totale = 0;
+                        $tot_discount = 0;
+                        $tot_ricom = 0;
+                        $tot_localcom = 0;
+                        $tot_frontingcom = 0;
+
+                        $police->setDateexpiration($policeDeBase->getDateeffet());
+
+
+                        break;
+
+                    default:
+                        dd("Avenant non supporté!!!!");
+                        break;
+                }
             }
         }
-        dd($police);
+        //dd($police);
     }
 
 
@@ -509,14 +554,14 @@ class PoliceCrudController extends AbstractCrudController
 
 
         //Opérations ARCA
-        $avenant_annulation = Action::new("Avenant d'Annulation")
+        $avenant_annulation = Action::new("Avenant d'annulation")
             ->setIcon('fa-regular fa-trash-can') //<i class="fa-regular fa-trash-can"></i>
             ->addCssClass("btn btn-primary")
             ->linkToCrudAction('avenant_annulation');
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_annulation)
             //->add(Crud::PAGE_INDEX, $operation_annulation)
-            ;
+        ;
 
         $avenant_renouvellement = Action::new("Avenant de renouvellement")
             ->setIcon('fa-solid fa-champagne-glasses') //<i class="fa-solid fa-champagne-glasses"></i>
@@ -525,7 +570,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_renouvellement)
             //->add(Crud::PAGE_INDEX, $operation_renouvellement)
-            ;
+        ;
 
         $avenant_prorogation = Action::new("Avenant de prorogation")
             ->setIcon('fa-solid fa-bridge') //<i class="fa-solid fa-bridge"></i>
@@ -534,7 +579,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_prorogation)
             //->add(Crud::PAGE_INDEX, $operation_prorogation)
-            ;
+        ;
 
         $avenant_incorporation = Action::new("Avenant d'incorporation")
             ->setIcon('fa-solid fa-plus') //<i class="fa-solid fa-plus"></i>
@@ -543,7 +588,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_incorporation)
             //->add(Crud::PAGE_INDEX, $operation_incorporation)
-            ;
+        ;
 
         $avenant_ristourne = Action::new("Avenant de ristourne")
             ->setIcon('fa-solid fa-person-walking-arrow-loop-left') //<i class="fa-solid fa-person-walking-arrow-loop-left"></i>
@@ -552,7 +597,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_ristourne)
             //->add(Crud::PAGE_INDEX, $operation_ristourne)
-            ;
+        ;
 
         $avenant_resiliation = Action::new("Avenant de résiliation")
             ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
@@ -561,7 +606,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
             //->add(Crud::PAGE_INDEX, $operation_resiliation)
-            ;
+        ;
 
         $avenant_autre_modifications = Action::new("Avenant pour autres modifications")
             ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
@@ -570,7 +615,7 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
-            ;
+        ;
         //Ajout des opérations arca
 
 
@@ -707,6 +752,13 @@ class PoliceCrudController extends AbstractCrudController
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterAutomobile($context, $adminUrlGenerator));
     }
+
+
+    public function avenant_annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Annulation($context, $adminUrlGenerator));
+    }
+
 
     public function cross_canal_listerAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {

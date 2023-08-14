@@ -509,66 +509,66 @@ class PoliceCrudController extends AbstractCrudController
 
 
         //Opérations ARCA
-        $operation_annulation = Action::new("Opération - Annulation")
+        $avenant_annulation = Action::new("Avenant d'Annulation")
             ->setIcon('fa-regular fa-trash-can') //<i class="fa-regular fa-trash-can"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_annulation');
+            ->linkToCrudAction('avenant_annulation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_annulation)
+            ->add(Crud::PAGE_DETAIL, $avenant_annulation)
             //->add(Crud::PAGE_INDEX, $operation_annulation)
             ;
 
-        $operation_renouvellement = Action::new("Opération - Renouvellement")
+        $avenant_renouvellement = Action::new("Avenant de renouvellement")
             ->setIcon('fa-solid fa-champagne-glasses') //<i class="fa-solid fa-champagne-glasses"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_renouvellement');
+            ->linkToCrudAction('avenant_renouvellement');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_renouvellement)
+            ->add(Crud::PAGE_DETAIL, $avenant_renouvellement)
             //->add(Crud::PAGE_INDEX, $operation_renouvellement)
             ;
 
-        $operation_prorogation = Action::new("Opération - Prorogation")
+        $avenant_prorogation = Action::new("Avenant de prorogation")
             ->setIcon('fa-solid fa-bridge') //<i class="fa-solid fa-bridge"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_prorogation');
+            ->linkToCrudAction('avenant_prorogation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_prorogation)
+            ->add(Crud::PAGE_DETAIL, $avenant_prorogation)
             //->add(Crud::PAGE_INDEX, $operation_prorogation)
             ;
 
-        $operation_incorporation = Action::new("Opération - Incorporation")
+        $avenant_incorporation = Action::new("Avenant d'incorporation")
             ->setIcon('fa-solid fa-plus') //<i class="fa-solid fa-plus"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_incorporation');
+            ->linkToCrudAction('avenant_incorporation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_incorporation)
+            ->add(Crud::PAGE_DETAIL, $avenant_incorporation)
             //->add(Crud::PAGE_INDEX, $operation_incorporation)
             ;
 
-        $operation_ristourne = Action::new("Opération - Ristourne")
+        $avenant_ristourne = Action::new("Avenant de ristourne")
             ->setIcon('fa-solid fa-person-walking-arrow-loop-left') //<i class="fa-solid fa-person-walking-arrow-loop-left"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_ristourne');
+            ->linkToCrudAction('avenant_ristourne');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_ristourne)
+            ->add(Crud::PAGE_DETAIL, $avenant_ristourne)
             //->add(Crud::PAGE_INDEX, $operation_ristourne)
             ;
 
-        $operation_resiliation = Action::new("Opération - Résiliation")
+        $avenant_resiliation = Action::new("Avenant de résiliation")
             ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_resiliation');
+            ->linkToCrudAction('avenant_resiliation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_resiliation)
+            ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
             //->add(Crud::PAGE_INDEX, $operation_resiliation)
             ;
 
-        $operation_autre_modifications = Action::new("Opération - Autre modifications")
+        $avenant_autre_modifications = Action::new("Avenant pour autres modifications")
             ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('operation_autre_modification');
+            ->linkToCrudAction('avenant_autre_modification');
         $actions
-            ->add(Crud::PAGE_DETAIL, $operation_autre_modifications)
+            ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
             ;
         //Ajout des opérations arca

@@ -222,19 +222,19 @@ class ServiceCrossCanal
 
     public function crossCanal_Avanant_Annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
-        /** @var Cotation */
-        $entite = $context->getEntity()->getInstance();
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", "ANNULATION - [Police: " . $entite . "]")
+            ->set("titre", "Annulation de la police " . $police . "")
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_ANNULATION)
             ->set("avenant[id]", 0)
-            ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->set(self::CROSSED_ENTITY_POLICE, $police->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;

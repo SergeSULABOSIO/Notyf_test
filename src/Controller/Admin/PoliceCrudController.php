@@ -255,7 +255,19 @@ class PoliceCrudController extends AbstractCrudController
                         $police->setCansharericom($policeDeBase->isCansharericom());
                         $police->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
                         $police->setCansharelocalcom($policeDeBase->isCansharelocalcom());
-                        
+                        $police->setRicompayableby($policeDeBase->getRicompayableby());
+                        $police->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+                        $police->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+                        $police->setUpdatedAt(new \DateTimeImmutable("now"));
+                        $police->setCreatedAt(new \DateTimeImmutable("now"));
+                        $police->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                        $police->setGestionnaire($policeDeBase->getGestionnaire());
+                        $police->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+                        foreach ($policeDeBase->getDocPieces() as $piece) {
+                            $police->addDocPiece($piece);
+                        }
+                        $police->setClient($policeDeBase->getClient());
+
                         $tot_capital = 0;
                         $tot_prime_nette = 0;
                         $tot_fronting = 0;

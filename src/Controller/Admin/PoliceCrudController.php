@@ -171,7 +171,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_POLICE);
     }
-    
+
     public function createEntity(string $entityFqcn)
     {
         $objet = new Police();
@@ -229,29 +229,25 @@ class PoliceCrudController extends AbstractCrudController
 
     public function setAvenant(Police $police): Police
     {
-        if ($this->adminUrlGenerator->get("avenant")) {
-            $avenant_data = $this->adminUrlGenerator->get("avenant");
-            /** @var Police */
-            $policeDB = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
-            $policeDeBase = clone $policeDB;
-            //dd($policeDB);
-            //dd($policeDeBase);
-            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
-                [
-                    'reference' => $avenant_data['reference'],
-                    'entreprise' => $this->serviceEntreprise->getEntreprise()
-                ]
-            );
-            //dd($policesConcernees);
-            if ($this->adminUrlGenerator) {
-                if ($this->adminUrlGenerator->get("avenant")) {
-                    $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
-                    $police->setIdavenant(count($policesConcernees));
-                    $police->setReference($policeDeBase->getReference());
-                    //On effectue les traitements selon le type d'avenant
-                    switch ($avenant_data['type']) {
-                        case PoliceCrudController::AVENANT_TYPE_ANNULATION:
+        if ($this->adminUrlGenerator) {
+            if ($this->adminUrlGenerator->get("avenant")) {
+                $avenant_data = $this->adminUrlGenerator->get("avenant");
+                //On effectue les traitements selon le type d'avenant
+                switch ($avenant_data['type']) {
+                    case PoliceCrudController::AVENANT_TYPE_ANNULATION:
+                        if ($avenant_data['police']) {
                             //dd("On effectue ici les traitements relatives à une ANNULATION...");
+                            /** @var Police */
+                            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+                            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+                                [
+                                    'reference' => $avenant_data['reference'],
+                                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                                ]
+                            );
+                            $police->setIdavenant(count($policesConcernees));
+                            $police->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+                            $police->setReference($policeDeBase->getReference());
                             $police->setDateoperation(new \DateTimeImmutable("now"));
                             $police->setDateemission(new \DateTimeImmutable("now"));
                             $police->setDateeffet($policeDeBase->getDateeffet());
@@ -271,8 +267,9 @@ class PoliceCrudController extends AbstractCrudController
                             $police->setGestionnaire($policeDeBase->getGestionnaire());
                             $police->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
                             $police->setClient($policeDeBase->getClient());
-                            $police->setAssureur($policeDeBase->getAssureur());
                             $police->setProduit($policeDeBase->getProduit());
+                            $police->setPartenaire($policeDeBase->getPartenaire());
+                            $police->setAssureur($policeDeBase->getAssureur());
                             //$police->setCotation($policeDeBase->getCotation());
 
                             //Initialisation des variables à cumuler
@@ -314,19 +311,17 @@ class PoliceCrudController extends AbstractCrudController
                             $police->setRicom($tot_ricom * -1);
                             $police->setLocalcom($tot_localcom * -1);
                             $police->setFrontingcom($tot_frontingcom * -1);
+                        }
+                        break;
 
-                            break;
-
-                        default:
-                            dd("Avenant non supporté!!!!");
-                            break;
-                    }
+                    default:
+                        dd("Avenant non supporté!!!!");
+                        break;
                 }
+                //dd($police);
+
             }
-            //dd($police);
-
         }
-
         return $police;
     }
 

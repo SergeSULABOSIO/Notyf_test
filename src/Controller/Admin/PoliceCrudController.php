@@ -171,11 +171,12 @@ class PoliceCrudController extends AbstractCrudController
     {
         $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_POLICE);
     }
-
+    
     public function createEntity(string $entityFqcn)
     {
         $objet = new Police();
-        $this->setAvenant($objet);
+        $objet = $this->setAvenant($objet);
+        $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
         //$objet->setDateemission(new DateTimeImmutable("now"));
         //$objet->setDateoperation(new DateTimeImmutable("now"));
         //$objet->setDateeffet(new DateTimeImmutable("now"));
@@ -207,8 +208,7 @@ class PoliceCrudController extends AbstractCrudController
         //$objet->setCansharelocalcom(false);
         //$objet->setLocalcompayableby(0);
         //$objet->setPartenaire(null);
-        $objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
-        $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+        //$objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
 
         //$objet->setUnpaidcommission(0);
         //$objet->setUnpaidretrocommission(0);
@@ -222,15 +222,20 @@ class PoliceCrudController extends AbstractCrudController
         //$objet->setPaidtaxecourtier(0);
         //$objet->setPaidtaxe(0);
 
+        //dd($objet);
+
         return $objet;
     }
 
-    public function setAvenant(Police $police)
+    public function setAvenant(Police $police): Police
     {
         if ($this->adminUrlGenerator->get("avenant")) {
             $avenant_data = $this->adminUrlGenerator->get("avenant");
             /** @var Police */
-            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policeDB = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policeDeBase = clone $policeDB;
+            //dd($policeDB);
+            //dd($policeDeBase);
             $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
                 [
                     'reference' => $avenant_data['reference'],
@@ -268,8 +273,9 @@ class PoliceCrudController extends AbstractCrudController
                             $police->setClient($policeDeBase->getClient());
                             $police->setAssureur($policeDeBase->getAssureur());
                             $police->setProduit($policeDeBase->getProduit());
-                            $police->setCotation($policeDeBase->getCotation());
+                            //$police->setCotation($policeDeBase->getCotation());
 
+                            //Initialisation des variables à cumuler
                             $tot_capital = 0;
                             $tot_prime_nette = 0;
                             $tot_fronting = 0;
@@ -281,7 +287,33 @@ class PoliceCrudController extends AbstractCrudController
                             $tot_ricom = 0;
                             $tot_localcom = 0;
                             $tot_frontingcom = 0;
-
+                            foreach ($policesConcernees as $polcon) {
+                                /** @var Police  */
+                                $polco = $polcon;
+                                //On cumule les valeurs numériques ensuite on les mutiliplie par -1 pour les annuler en un coup;
+                                $tot_capital += $polco->getCapital();
+                                $tot_prime_nette += $polco->getPrimenette();
+                                $tot_fronting += $polco->getFronting();
+                                $tot_arca += $polco->getArca();
+                                $tot_tva += $polco->getTva();
+                                $tot_frais_admin += $polco->getFraisadmin();
+                                $tot_prime_totale += $polco->getPrimetotale();
+                                $tot_discount += $polco->getDiscount();
+                                $tot_ricom += $polco->getRicom();
+                                $tot_localcom += $polco->getLocalcom();
+                                $tot_frontingcom += $polco->getFrontingcom();
+                            }
+                            $police->setCapital($tot_capital * -1);
+                            $police->setPrimenette($tot_prime_nette * -1);
+                            $police->setFronting($tot_fronting * -1);
+                            $police->setArca($tot_arca * -1);
+                            $police->setTva($tot_tva * -1);
+                            $police->setFraisadmin($tot_frais_admin * -1);
+                            $police->setPrimetotale($tot_prime_totale * -1);
+                            $police->setDiscount($tot_discount * -1);
+                            $police->setRicom($tot_ricom * -1);
+                            $police->setLocalcom($tot_localcom * -1);
+                            $police->setFrontingcom($tot_frontingcom * -1);
 
                             break;
 
@@ -294,6 +326,8 @@ class PoliceCrudController extends AbstractCrudController
             //dd($police);
 
         }
+
+        return $police;
     }
 
 

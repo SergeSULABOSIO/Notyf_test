@@ -789,7 +789,18 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT])) {
             $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
                 ->onlyOnIndex()
-                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
+                ]);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)

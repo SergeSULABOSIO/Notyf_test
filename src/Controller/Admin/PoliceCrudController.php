@@ -270,8 +270,6 @@ class PoliceCrudController extends AbstractCrudController
                             $police->setProduit($policeDeBase->getProduit());
                             $police->setPartenaire($policeDeBase->getPartenaire());
                             $police->setAssureur($policeDeBase->getAssureur());
-                            //$police->setCotation($policeDeBase->getCotation());
-
                             //Initialisation des variables à cumuler
                             $tot_capital = 0;
                             $tot_prime_nette = 0;
@@ -284,9 +282,9 @@ class PoliceCrudController extends AbstractCrudController
                             $tot_ricom = 0;
                             $tot_localcom = 0;
                             $tot_frontingcom = 0;
-                            foreach ($policesConcernees as $polcon) {
+                            foreach ($policesConcernees as $p) {
                                 /** @var Police  */
-                                $polco = $polcon;
+                                $polco = $p;
                                 //On cumule les valeurs numériques ensuite on les mutiliplie par -1 pour les annuler en un coup;
                                 $tot_capital += $polco->getCapital();
                                 $tot_prime_nette += $polco->getPrimenette();

@@ -1704,7 +1704,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '>')
+            ->set('filters[unpaidcommission][comparison]', '!=')//
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1736,7 +1736,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '>')
+            ->set('filters[unpaidcommission][comparison]', '!=')//>
             ->set('filters[assureur][value]', $assureur->getId())
             ->set('filters[assureur][comparison]', '=')
             ->setEntityId(null)

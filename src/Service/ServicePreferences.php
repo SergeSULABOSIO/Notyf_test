@@ -794,7 +794,7 @@ class ServicePreferences
                     // $value => $badgeStyleName
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success', //info
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning', //info
@@ -4525,6 +4525,15 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(6);
         }
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM)) {
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)
+                ->onlyOnForms()
+                ->setColumns(6);
+        }
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
+            ->setColumns(6)
+            ->onlyOnForms()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->setRequired(false)
@@ -4615,6 +4624,22 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT])) {
+            $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
+                ->onlyOnIndex()
+                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
+                ]);
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnIndex();
         }
@@ -4671,6 +4696,9 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
+            ->onlyOnDetail()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_COTATION_CLIENT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
@@ -5029,6 +5057,26 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT])) {
+            $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
+                ->onlyOnIndex()
+                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
+                ]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+                ->onlyOnIndex();
+        }
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->formatValue(function ($value, Piste $piste) {
                 $this->setTitreReportingCRM($piste);
@@ -5094,6 +5142,10 @@ class ServicePreferences
                 return $value;
             })
             ->onlyOnDetail(); //->setColumns(6);
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
+            ->onlyOnDetail()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)->onlyOnDetail();
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->formatValue(function ($value, Piste $entity) {
@@ -5168,7 +5220,21 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->onlyOnForms()
-            ->setColumns(4);
+            ->setColumns(8);
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
+            ->setColumns(4)
+            ->onlyOnForms()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setRequired(false)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
         /* $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
             ->onlyOnForms()
             ->setColumns(4)

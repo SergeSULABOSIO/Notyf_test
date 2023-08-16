@@ -53,6 +53,12 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $typeavenant = null;
+
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Police $police = null;
+
 
     public function __construct()
     {
@@ -262,6 +268,30 @@ class Piste
                 $cotation->setPiste(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTypeavenant(): ?string
+    {
+        return $this->typeavenant;
+    }
+
+    public function setTypeavenant(?string $typeavenant): self
+    {
+        $this->typeavenant = $typeavenant;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

@@ -124,6 +124,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
+    public const PREF_CRM_COTATION_TYPE_AVENANT         = "Avenant";
     public const PREF_CRM_COTATION_CLIENT               = "Prospect / Client";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_POLICE               = "Police en place";
@@ -148,7 +149,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_ENTREPRISE                                      => 10,
         self::PREF_CRM_COTATION_DATE_CREATION                                   => 11,
         self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 12,
-        self::PREF_CRM_COTATION_CLIENT                                          => 13
+        self::PREF_CRM_COTATION_CLIENT                                          => 13,
+        self::PREF_CRM_COTATION_TYPE_AVENANT                                    => 14
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";
@@ -181,6 +183,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_ENTREPRISE                  = "Entreprise";
     public const PREF_CRM_PISTE_DATE_DE_CREATION            = "Date de création";
     public const PREF_CRM_PISTE_DATE_DE_MODIFICATION        = "Dernière modification";
+    public const PREF_CRM_PISTE_TYPE_AVENANT                = "Avenant";
+    public const PREF_CRM_PISTE_POLICE                      = "Police de base";
     public const TAB_CRM_PISTE = [
         self::PREF_CRM_PISTE_ID                                 => 0,
         self::PREF_CRM_PISTE_NOM                                => 1,
@@ -194,7 +198,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_PISTE_UTILISATEUR                        => 9,
         self::PREF_CRM_PISTE_ENTREPRISE                         => 10,
         self::PREF_CRM_PISTE_DATE_DE_CREATION                   => 11,
-        self::PREF_CRM_PISTE_DATE_DE_MODIFICATION               => 12
+        self::PREF_CRM_PISTE_DATE_DE_MODIFICATION               => 12,
+        self::PREF_CRM_PISTE_TYPE_AVENANT                       => 13,
+        self::PREF_CRM_PISTE_POLICE                             => 14
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";

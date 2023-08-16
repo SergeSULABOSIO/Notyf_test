@@ -56,6 +56,9 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $typeavenant = null;
+
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();
@@ -270,6 +273,18 @@ class Cotation
                 $actionCRM->setCotation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTypeavenant(): ?string
+    {
+        return $this->typeavenant;
+    }
+
+    public function setTypeavenant(?string $typeavenant): self
+    {
+        $this->typeavenant = $typeavenant;
 
         return $this;
     }

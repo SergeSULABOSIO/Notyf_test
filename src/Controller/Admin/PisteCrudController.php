@@ -119,6 +119,7 @@ class PisteCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Piste();
+        $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
 

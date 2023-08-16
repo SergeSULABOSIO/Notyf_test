@@ -195,6 +195,9 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $paidtaxe = null;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: Piste::class)]
+    private Collection $pistes;
     
     
     public function __construct()
@@ -206,6 +209,7 @@ class Police extends CalculableEntity
         $this->sinistres = new ArrayCollection();
         $this->actionCRMs = new ArrayCollection();
         $this->automobiles = new ArrayCollection();
+        $this->pistes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1001,6 +1005,36 @@ class Police extends CalculableEntity
     public function setPaidtaxe(?float $paidtaxe): self
     {
         $this->paidtaxe = $paidtaxe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getPolice() === $this) {
+                $piste->setPolice(null);
+            }
+        }
 
         return $this;
     }

@@ -2221,6 +2221,7 @@ class ServiceCrossCanal
             $entite->setRemarques("Souscription.");
             $entite->setReassureurs("Voir le traité de réassurance en place.");
             //Champs des valeurs numériques
+            $entite->setPartExceptionnellePartenaire(0);
             $entite->setCapital(1000000.00);
             $entite->setPrimenette(0);
             $entite->setFronting(0);

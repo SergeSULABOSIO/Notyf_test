@@ -82,7 +82,7 @@ class ServiceCrossCanal
     public const REPORTING_CODE_PRODUCTION_PARTENAIRE = 230;
     public const REPORTING_CODE_SINISTRE_TOUS = 300;
     public const REPORTING_CODE_PISTE_TOUS = 400;
-        
+
 
     //Feedback
     public const OPTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
@@ -204,16 +204,33 @@ class ServiceCrossCanal
     {
         /** @var Cotation */
         $entite = $context->getEntity()->getInstance();
+        $nomAvenant = $this->getNomAvenant($entite->getTypeavenant());
+        $reference = "";
+        $idPolice = -1;
+        $titre = "";
+        switch ($nomAvenant) {
+            case PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION:
+                $titre = $nomAvenant . " - Mise en place de la police " . $entite->getPolice() . " - || Cotation: " . $entite . ".";
+                break;
+
+            default:
+                $titre = $nomAvenant . " || Police: " . $entite->getPolice() . " - || Cotation: " . $entite . ".";
+                $reference = $entite->getPolice()->getReference();
+                $idPolice = $entite->getPolice()->getId();
+                break;
+        }
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE POLICE - [Cotation: " . $entite . "]")
+            ->set("titre", $titre)
             ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION)
-            ->set("avenant[id]", 0)
+            ->set("avenant[type]", $nomAvenant)
+            ->set("avenant[reference]", $reference)
+            ->set("avenant[police]", $idPolice)
+            //->set("avenant[id]", 0)
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -549,19 +566,32 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function getNomAvenant($codeAvenant)
+    {
+        $nomAvenant = "";
+        foreach (PoliceCrudController::TAB_POLICE_TYPE_AVENANT as $key => $value) {
+            if ($value == $codeAvenant) {
+                $nomAvenant = $key;
+            }
+        }
+        return $nomAvenant;
+    }
+
     public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {        
+    {
         /** @var Piste */
         $entite = $context->getEntity()->getInstance();
+        $nomAvenant = $this->getNomavenant($entite->getTypeavenant());
+        //dd($entite->getTypeavenant());
         $url = $adminUrlGenerator
             ->setController(CotationCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE COTATION - [Piste: " . $entite . "]")
+            ->set("titre", $nomAvenant . " - Nouvelle Cotation - [Piste: " . $entite . "]")
             //Champs de saisie à cacher obligatoirement car inutiles
             ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_COTATION_POLICE)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_COTATION_PISTE)
-
+            ->set("avenant[type]", $nomAvenant)
             ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
             ->setEntityId(null)
             ->generateUrl();
@@ -1704,7 +1734,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '!=')//
+            ->set('filters[unpaidcommission][comparison]', '!=') //
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1736,7 +1766,7 @@ class ServiceCrossCanal
             ->set("titre", $titre)
             ->set("codeReporting", ServiceCrossCanal::REPORTING_CODE_UNPAID_COM)
             ->set('filters[unpaidcommission][value]', 0)
-            ->set('filters[unpaidcommission][comparison]', '!=')//>
+            ->set('filters[unpaidcommission][comparison]', '!=') //>
             ->set('filters[assureur][value]', $assureur->getId())
             ->set('filters[assureur][comparison]', '=')
             ->setEntityId(null)
@@ -1892,7 +1922,7 @@ class ServiceCrossCanal
         return $subItemsTaxes;
     }
 
-    public function reporting_piste_etape_generer_liens()//fas fa-location-crosshairs
+    public function reporting_piste_etape_generer_liens() //fas fa-location-crosshairs
     {
         $subItemsTaxes = [];
         $etapes = $this->entityManager->getRepository(EtapeCrm::class)->findBy([
@@ -1900,7 +1930,7 @@ class ServiceCrossCanal
         ]);
         //TOUS
         $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-location-crosshairs', $this->reporting_piste_tous($this->adminUrlGenerator));
-        
+
         //ETAPES
         foreach ($etapes as $etape) {
             $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($etape), 'fas fa-location-crosshairs', $this->reporting_piste_etape($this->adminUrlGenerator, $etape));
@@ -1908,7 +1938,7 @@ class ServiceCrossCanal
         return $subItemsTaxes;
     }
 
-    public function reporting_piste_utilisateur_generer_liens()//fas fa-location-crosshairs
+    public function reporting_piste_utilisateur_generer_liens() //fas fa-location-crosshairs
     {
         $subItemsTaxes = [];
         $utilisateurs = $this->entityManager->getRepository(Utilisateur::class)->findBy([
@@ -1929,7 +1959,7 @@ class ServiceCrossCanal
         ]);
         //TOUS
         $subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fas fa-bell', $this->reporting_sinistre_tous($this->adminUrlGenerator));
-        
+
         //ETAPES
         foreach ($etapes as $etape) {
             $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($etape), 'fas fa-bell', $this->reporting_sinistre_etape($this->adminUrlGenerator, $etape));
@@ -2153,5 +2183,144 @@ class ServiceCrossCanal
             ->setEntityId(null)
             ->generateUrl();
         return $url;
+    }
+
+    public function setAvenant($entite, AdminUrlGenerator $adminUrlGenerator)
+    {
+        if ($adminUrlGenerator) {
+            if ($adminUrlGenerator->get("avenant")) {
+                $avenant_data = $adminUrlGenerator->get("avenant");
+                //On effectue les traitements selon le type d'avenant
+                switch ($avenant_data['type']) {
+                    case PoliceCrudController::AVENANT_TYPE_ANNULATION:
+                        if ($avenant_data['police']) {
+                            $entite = $this->setAnnulation($entite, $avenant_data);
+                        }
+                        break;
+                    case PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION:
+                        $entite = $this->setSouscription($entite, $avenant_data);
+                        break;
+
+                    default:
+                        dd("Avenant non supporté!!!! (" . $avenant_data['type'] . ")");
+                        break;
+                }
+                //dd($police);
+
+            }
+        }
+        return $entite;
+    }
+
+    public function setSouscription($entite, array $avenant_data)
+    {
+        $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+        if ($entite instanceof Police) {
+            $entite->setIdavenant(0);
+            $entite->setReassureurs("Traité en place.");
+
+            $entite->setDateoperation(new \DateTimeImmutable("now"));
+            $entite->setDateemission(new \DateTimeImmutable("now"));
+            $entite->setDateeffet(new \DateTimeImmutable("now"));
+            $entite->setDateexpiration(new DateTimeImmutable("+365 day"));
+            $entite->setModepaiement($policeDeBase->getModepaiement());
+            $entite->setRemarques("Cette police est annulée.");
+            $entite->setReassureurs($policeDeBase->getReassureurs());
+            $entite->setCansharericom($policeDeBase->isCansharericom());
+            $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+            $entite->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+            $entite->setRicompayableby($policeDeBase->getRicompayableby());
+            $entite->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+            $entite->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+            $entite->setUpdatedAt(new \DateTimeImmutable("now"));
+            $entite->setCreatedAt(new \DateTimeImmutable("now"));
+            $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entite->setGestionnaire($policeDeBase->getGestionnaire());
+            $entite->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+            $entite->setClient($policeDeBase->getClient());
+            $entite->setProduit($policeDeBase->getProduit());
+            $entite->setPartenaire($policeDeBase->getPartenaire());
+            $entite->setAssureur($policeDeBase->getAssureur());
+        }
+        return $entite;
+    }
+
+    public function setAnnulation(Police $entite, array $avenant_data): Police
+    {
+        /** @var Police */
+        $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+        $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+            [
+                'reference' => $avenant_data['reference'],
+                'entreprise' => $this->serviceEntreprise->getEntreprise()
+            ]
+        );
+        if ($entite instanceof Police) {
+            $entite->setIdavenant(count($policesConcernees));
+            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            $entite->setReference($policeDeBase->getReference());
+            $entite->setDateoperation(new \DateTimeImmutable("now"));
+            $entite->setDateemission(new \DateTimeImmutable("now"));
+            $entite->setDateeffet($policeDeBase->getDateeffet());
+            $entite->setDateexpiration($policeDeBase->getDateeffet());
+            $entite->setModepaiement($policeDeBase->getModepaiement());
+            $entite->setRemarques("Cette police est annulée.");
+            $entite->setReassureurs($policeDeBase->getReassureurs());
+            $entite->setCansharericom($policeDeBase->isCansharericom());
+            $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+            $entite->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+            $entite->setRicompayableby($policeDeBase->getRicompayableby());
+            $entite->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+            $entite->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+            $entite->setUpdatedAt(new \DateTimeImmutable("now"));
+            $entite->setCreatedAt(new \DateTimeImmutable("now"));
+            $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entite->setGestionnaire($policeDeBase->getGestionnaire());
+            $entite->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+            $entite->setClient($policeDeBase->getClient());
+            $entite->setProduit($policeDeBase->getProduit());
+            $entite->setPartenaire($policeDeBase->getPartenaire());
+            $entite->setAssureur($policeDeBase->getAssureur());
+            //Initialisation des variables à cumuler
+            $tot_capital = 0;
+            $tot_prime_nette = 0;
+            $tot_fronting = 0;
+            $tot_arca = 0;
+            $tot_tva = 0;
+            $tot_frais_admin = 0;
+            $tot_prime_totale = 0;
+            $tot_discount = 0;
+            $tot_ricom = 0;
+            $tot_localcom = 0;
+            $tot_frontingcom = 0;
+            foreach ($policesConcernees as $p) {
+                /** @var Police  */
+                $polco = $p;
+                //On cumule les valeurs numériques ensuite on les mutiliplie par -1 pour les annuler en un coup;
+                $tot_capital += $polco->getCapital();
+                $tot_prime_nette += $polco->getPrimenette();
+                $tot_fronting += $polco->getFronting();
+                $tot_arca += $polco->getArca();
+                $tot_tva += $polco->getTva();
+                $tot_frais_admin += $polco->getFraisadmin();
+                $tot_prime_totale += $polco->getPrimetotale();
+                $tot_discount += $polco->getDiscount();
+                $tot_ricom += $polco->getRicom();
+                $tot_localcom += $polco->getLocalcom();
+                $tot_frontingcom += $polco->getFrontingcom();
+            }
+            $entite->setCapital($tot_capital * -1);
+            $entite->setPrimenette($tot_prime_nette * -1);
+            $entite->setFronting($tot_fronting * -1);
+            $entite->setArca($tot_arca * -1);
+            $entite->setTva($tot_tva * -1);
+            $entite->setFraisadmin($tot_frais_admin * -1);
+            $entite->setPrimetotale($tot_prime_totale * -1);
+            $entite->setDiscount($tot_discount * -1);
+            $entite->setRicom($tot_ricom * -1);
+            $entite->setLocalcom($tot_localcom * -1);
+            $entite->setFrontingcom($tot_frontingcom * -1);
+        }
+        return $entite;
     }
 }

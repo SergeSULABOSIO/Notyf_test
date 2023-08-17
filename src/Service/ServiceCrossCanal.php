@@ -2217,30 +2217,55 @@ class ServiceCrossCanal
         $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
         if ($entite instanceof Police) {
             $entite->setIdavenant(0);
-            $entite->setReassureurs("Traité en place.");
-
+            $entite->setModepaiement(0);
+            $entite->setRemarques("Souscription.");
+            $entite->setReassureurs("Voir le traité de réassurance en place.");
+            //Champs des valeurs numériques
+            $entite->setCapital(1000000.00);
+            $entite->setPrimenette(0);
+            $entite->setFronting(0);
+            $entite->setArca(0);
+            $entite->setTva(0);
+            $entite->setFraisadmin(0);
+            $entite->setPrimetotale(0);
+            $entite->setDiscount(0);
+            $entite->setRicom(0);
+            $entite->setFrontingcom(0);
+            $entite->setLocalcom(0);
+            //Mode de Partage
+            $entite->setCansharericom(false);
+            $entite->setCansharefrontingcom(false);
+            $entite->setCansharelocalcom(false);
+            //Le redevable
+            $entite->setRicompayableby(0);
+            $entite->setFrontingcompayableby(0);
+            $entite->setLocalcompayableby(0);
+            //Les Dates
             $entite->setDateoperation(new \DateTimeImmutable("now"));
             $entite->setDateemission(new \DateTimeImmutable("now"));
             $entite->setDateeffet(new \DateTimeImmutable("now"));
             $entite->setDateexpiration(new DateTimeImmutable("+365 day"));
-            $entite->setModepaiement($policeDeBase->getModepaiement());
-            $entite->setRemarques("Cette police est annulée.");
-            $entite->setReassureurs($policeDeBase->getReassureurs());
-            $entite->setCansharericom($policeDeBase->isCansharericom());
-            $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
-            $entite->setCansharelocalcom($policeDeBase->isCansharelocalcom());
-            $entite->setRicompayableby($policeDeBase->getRicompayableby());
-            $entite->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
-            $entite->setLocalcompayableby($policeDeBase->getLocalcompayableby());
             $entite->setUpdatedAt(new \DateTimeImmutable("now"));
             $entite->setCreatedAt(new \DateTimeImmutable("now"));
+            //les associations ou clés étrangères
             $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-            $entite->setGestionnaire($policeDeBase->getGestionnaire());
-            $entite->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
-            $entite->setClient($policeDeBase->getClient());
-            $entite->setProduit($policeDeBase->getProduit());
-            $entite->setPartenaire($policeDeBase->getPartenaire());
-            $entite->setAssureur($policeDeBase->getAssureur());
+            $entite->setGestionnaire($this->serviceEntreprise->getUtilisateur());
+            $entite->setClient($entite->getClient());
+            $entite->setProduit($entite->getProduit());
+            $entite->setPartenaire(null);
+            $entite->setAssureur($entite->getAssureur());
+            //Les soldes calculables
+            $entite->setUnpaidcommission(0);
+            $entite->setUnpaidretrocommission(0);
+            $entite->setUnpaidtaxeassureur(0);
+            $entite->setUnpaidtaxecourtier(0);
+            $entite->setUnpaidtaxe(0);
+            //Autres soldes calculables
+            $entite->setPaidcommission(0);
+            $entite->setPaidretrocommission(0);
+            $entite->setPaidtaxeassureur(0);
+            $entite->setPaidtaxecourtier(0);
+            $entite->setPaidtaxe(0);
         }
         return $entite;
     }

@@ -5216,24 +5216,24 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->onlyOnForms()
-            ->setColumns(8);
+            ->setColumns(5);
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->setColumns(4)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
-            ->setColumns(12)
-            ->setRequired(false)
+            ->setColumns(3)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
-            ->setColumns(3)
+            ->setColumns(12)
+            ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')

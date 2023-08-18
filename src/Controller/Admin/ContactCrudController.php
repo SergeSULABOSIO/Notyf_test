@@ -80,7 +80,7 @@ class ContactCrudController extends AbstractCrudController
         }
         return $filters
             //->add('client')
-            ->add('piste')
+            ->add('pistes')
         ;
     }
 

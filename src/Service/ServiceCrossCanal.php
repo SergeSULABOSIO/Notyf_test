@@ -2257,9 +2257,9 @@ class ServiceCrossCanal
             $entite->setDateoperation(new \DateTimeImmutable("now"));
             $entite->setDateemission(new \DateTimeImmutable("now"));
             $entite->setDateeffet(new \DateTimeImmutable("now"));
-            $entite->setDateexpiration($policeDeBase->getDateexpiration()); ici
+            $entite->setDateexpiration($policeDeBase->getDateexpiration());
             $entite->setModepaiement($policeDeBase->getModepaiement());
-            $entite->setRemarques("Cette police est annulée.");
+            $entite->setRemarques("Ceci est une incorporation effectuée à la police " . $policeDeBase);
             $entite->setReassureurs($policeDeBase->getReassureurs());
             $entite->setCansharericom($policeDeBase->isCansharericom());
             $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
@@ -2277,17 +2277,17 @@ class ServiceCrossCanal
             $entite->setPartenaire($policeDeBase->getPartenaire());
             $entite->setAssureur($policeDeBase->getAssureur());
             //Initialisation des variables numériques
-            $entite->setCapital($tot_capital * -1);
-            $entite->setPrimenette($tot_prime_nette * -1);
-            $entite->setFronting($tot_fronting * -1);
-            $entite->setArca($tot_arca * -1);
-            $entite->setTva($tot_tva * -1);
-            $entite->setFraisadmin($tot_frais_admin * -1);
-            $entite->setPrimetotale($tot_prime_totale * -1);
-            $entite->setDiscount($tot_discount * -1);
-            $entite->setRicom($tot_ricom * -1);
-            $entite->setLocalcom($tot_localcom * -1);
-            $entite->setFrontingcom($tot_frontingcom * -1);
+            $entite->setCapital(0);
+            $entite->setPrimenette(0);
+            $entite->setFronting(0);
+            $entite->setArca(0);
+            $entite->setTva(0);
+            $entite->setFraisadmin(0);
+            $entite->setPrimetotale(0);
+            $entite->setDiscount(0);
+            $entite->setRicom(0);
+            $entite->setLocalcom(0);
+            $entite->setFrontingcom(0);
         }
         return $entite;
     }

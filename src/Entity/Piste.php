@@ -47,9 +47,6 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
-    #[ORM\ManyToMany(targetEntity: Contact::class, mappedBy: 'piste')]
-    private Collection $contacts;
-
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
 
@@ -59,12 +56,14 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Police $police = null;
 
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'pistes')]
+    private Collection $contacts;
 
     public function __construct()
     {
         $this->actionCRMs = new ArrayCollection();
-        $this->contacts = new ArrayCollection();
         $this->cotations = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,32 +214,6 @@ class Piste
         return $this;
     }
 
-    /**
-     * @return Collection<int, Contact>
-     */
-    public function getContacts(): Collection
-    {
-        return $this->contacts;
-    }
-
-    public function addContact(Contact $contact): self
-    {
-        if (!$this->contacts->contains($contact)) {
-            $this->contacts->add($contact);
-            $contact->addPiste($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContact(Contact $contact): self
-    {
-        if ($this->contacts->removeElement($contact)) {
-            $contact->removePiste($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Cotation>
@@ -292,6 +265,30 @@ class Piste
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contact $contact): self
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): self
+    {
+        $this->contacts->removeElement($contact);
 
         return $this;
     }

@@ -3688,7 +3688,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_PISTE])) {
-            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
+            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR])) {
@@ -3719,7 +3719,7 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('poste', PreferenceCrudController::PREF_PRO_CONTACT_POSTE)->onlyOnDetail();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE)->onlyOnDetail();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR)
             ->onlyOnDetail()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
@@ -3745,7 +3745,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(6);
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_CONTACT_PISTE)) {
-            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
+            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
                 ->onlyOnForms()
                 ->setColumns(12)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -5135,6 +5135,7 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->formatValue(function ($value, Piste $piste) {
                 $this->setTitreReportingCRM($piste);
+                //dd($piste);
                 return $value;
             })
             ->onlyOnDetail(); //->setColumns(6);

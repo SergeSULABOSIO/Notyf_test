@@ -711,6 +711,11 @@ class PoliceCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Incorporation($context, $adminUrlGenerator));
     }
 
+    public function avenant_renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Renouvellement($context, $adminUrlGenerator));
+    }
+
 
     public function cross_canal_listerAutomobile(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {

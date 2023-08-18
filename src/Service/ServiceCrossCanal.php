@@ -2256,8 +2256,8 @@ class ServiceCrossCanal
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation(new \DateTimeImmutable("now"));
             $entite->setDateemission(new \DateTimeImmutable("now"));
-            $entite->setDateeffet($policeDeBase->getDateeffet());
-            $entite->setDateexpiration($policeDeBase->getDateeffet());
+            $entite->setDateeffet(new \DateTimeImmutable("now"));
+            $entite->setDateexpiration($policeDeBase->getDateexpiration()); ici
             $entite->setModepaiement($policeDeBase->getModepaiement());
             $entite->setRemarques("Cette police est annulée.");
             $entite->setReassureurs($policeDeBase->getReassureurs());

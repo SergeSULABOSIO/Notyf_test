@@ -213,6 +213,14 @@ class ServiceCrossCanal
                 $titre = $nomAvenant . " - Mise en place de la police " . $entite->getPolice() . " - || Cotation: " . $entite . ".";
                 break;
 
+            case PoliceCrudController::AVENANT_TYPE_INCORPORATION:
+                /** @var Police */
+                $police = $entite->getPiste()->getPolice();
+                $reference = $police->getReference();
+                $idPolice = $police->getId();
+                $titre = $nomAvenant . " - Mise à jour de la police " . $police . " - || Cotation: " . $entite . ".";
+                break;
+
             default:
                 $titre = $nomAvenant . " || Police: " . $entite->getPolice() . " - || Cotation: " . $entite . ".";
                 $reference = $entite->getPolice()->getReference();
@@ -2232,6 +2240,54 @@ class ServiceCrossCanal
             $entite->setPiste($piste);
             $entite->setCreatedAt(new \DateTimeImmutable("now"));
             $entite->setUpdatedAt(new \DateTimeImmutable("now"));
+        }
+        if ($entite instanceof Police) {
+            /** @var Police */
+            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+                [
+                    'reference' => $avenant_data['reference'],
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            );
+
+            $entite->setIdavenant(count($policesConcernees));
+            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            $entite->setReference($policeDeBase->getReference());
+            $entite->setDateoperation(new \DateTimeImmutable("now"));
+            $entite->setDateemission(new \DateTimeImmutable("now"));
+            $entite->setDateeffet($policeDeBase->getDateeffet());
+            $entite->setDateexpiration($policeDeBase->getDateeffet());
+            $entite->setModepaiement($policeDeBase->getModepaiement());
+            $entite->setRemarques("Cette police est annulée.");
+            $entite->setReassureurs($policeDeBase->getReassureurs());
+            $entite->setCansharericom($policeDeBase->isCansharericom());
+            $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+            $entite->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+            $entite->setRicompayableby($policeDeBase->getRicompayableby());
+            $entite->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+            $entite->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+            $entite->setUpdatedAt(new \DateTimeImmutable("now"));
+            $entite->setCreatedAt(new \DateTimeImmutable("now"));
+            $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entite->setGestionnaire($policeDeBase->getGestionnaire());
+            $entite->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+            $entite->setClient($policeDeBase->getClient());
+            $entite->setProduit($policeDeBase->getProduit());
+            $entite->setPartenaire($policeDeBase->getPartenaire());
+            $entite->setAssureur($policeDeBase->getAssureur());
+            //Initialisation des variables numériques
+            $entite->setCapital($tot_capital * -1);
+            $entite->setPrimenette($tot_prime_nette * -1);
+            $entite->setFronting($tot_fronting * -1);
+            $entite->setArca($tot_arca * -1);
+            $entite->setTva($tot_tva * -1);
+            $entite->setFraisadmin($tot_frais_admin * -1);
+            $entite->setPrimetotale($tot_prime_totale * -1);
+            $entite->setDiscount($tot_discount * -1);
+            $entite->setRicom($tot_ricom * -1);
+            $entite->setLocalcom($tot_localcom * -1);
+            $entite->setFrontingcom($tot_frontingcom * -1);
         }
         return $entite;
     }

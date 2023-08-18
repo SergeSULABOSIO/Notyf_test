@@ -8,6 +8,7 @@ use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
+use App\Service\ServiceSuppression;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,6 +45,7 @@ class CotationCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
@@ -111,6 +113,7 @@ class CotationCrudController extends AbstractCrudController
     {
         //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
         //dd($entityInstance);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_COTATION);
     }
 
 

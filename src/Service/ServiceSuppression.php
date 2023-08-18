@@ -167,6 +167,10 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::CRM_COTATION:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
             case self::BIBLIOTHEQUE_PIECE:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;

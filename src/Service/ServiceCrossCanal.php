@@ -60,6 +60,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
+use DateInterval;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -155,6 +156,7 @@ class ServiceCrossCanal
 
 
     public function __construct(
+        private ServiceDates $serviceDates,
         private EntityManagerInterface $entityManager,
         private ServiceCalculateur $serviceCalculateur,
         private ServiceEntreprise $serviceEntreprise,
@@ -287,7 +289,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Avanant_Renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Avenant_Renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
@@ -1403,23 +1405,25 @@ class ServiceCrossCanal
         return $contact;
     }
 
-    public function crossCanal_Cotation_setPiste(Cotation $cotation, AdminUrlGenerator $adminUrlGenerator): Cotation
+    public function crossCanal_Cotation_setPiste($cotation, AdminUrlGenerator $adminUrlGenerator): Cotation
     {
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
         if ($paramID != null) {
             /** @var Piste */
             $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
+            /** @var Cotation */
             $cotation->setPiste($objet);
         }
         return $cotation;
     }
 
-    public function crossCanal_Police_setCotation(Police $police, AdminUrlGenerator $adminUrlGenerator): Police
+    public function crossCanal_Police_setCotation($police, AdminUrlGenerator $adminUrlGenerator): Police
     {
         $objet = null;
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Cotation::class)->find($paramID);
+            /** @var Police */
             $police->setCotation($objet);
             $police->setProduit($objet->getProduit());
             $police->setAssureur($objet->getAssureur());
@@ -2236,6 +2240,14 @@ class ServiceCrossCanal
         return $url;
     }
 
+    /**
+     * Cette fonction permet de définir le type d'avenant à un objet.
+     * Elle permet de définnir les attributs par défaut de l'objet initialisé en fonction du type d'avénant choisi.
+     *
+     * @param [type] $entite
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @return void
+     */
     public function setAvenant($entite, AdminUrlGenerator $adminUrlGenerator)
     {
         if ($adminUrlGenerator) {
@@ -2252,6 +2264,9 @@ class ServiceCrossCanal
                     case PoliceCrudController::AVENANT_TYPE_INCORPORATION:
                         $entite = $this->setIncorporation($entite, $avenant_data, $adminUrlGenerator);
                         break;
+                    case PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT:
+                        $entite = $this->setRenouvellement($entite, $avenant_data, $adminUrlGenerator);
+                        break;
 
                     default:
                         dd("Avenant non supporté!!!! (" . $avenant_data['type'] . ")");
@@ -2264,6 +2279,114 @@ class ServiceCrossCanal
         return $entite;
     }
 
+    /**
+     * Elle reçoit un tableau d'avenant d'une police ensuite, elle identifie l'avenant de souscription. S'il existe plusieurs avenants de souscription, seul le premier du groupe sera retourner.
+     *
+     * @param [Police] $policesConcernees
+     * @return Police
+     */
+    public function getPoliceSouscription($policesConcernees):Police{
+        foreach ($policesConcernees as $police) {
+            /** @var Police */
+            $pol = $police;
+            if($pol->getTypeavenant() == PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]){
+                return $pol;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cette fonction permet d'initialiser un Renouvellement
+     *
+     * @param [type] $entite
+     * @param array $avenant_data
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @return void
+     */
+    public function setRenouvellement($entite, array $avenant_data, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+        if ($entite instanceof Cotation) {
+            /** @var Piste */
+            $piste = $this->entityManager->getRepository(Piste::class)->find($adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_PISTE));
+
+            /** @var Cotation */
+            $entite
+                ->setNom($avenant_data['type'] . " - " . Date("dmYHis") . " - " . $piste->getPolice())
+                ->setUtilisateur($this->serviceEntreprise->getUtilisateur())
+                ->setEntreprise($this->serviceEntreprise->getEntreprise())
+                ->setAssureur($piste->getPolice()->getAssureur())
+                ->setClient($piste->getPolice()->getClient())
+                ->setProduit($piste->getPolice()->getProduit())
+                ->setPiste($piste)
+                ->setCreatedAt($this->serviceDates->aujourdhui())
+                ->setUpdatedAt($this->serviceDates->aujourdhui());
+        }
+        if ($entite instanceof Police) {
+            /** @var Police */
+            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+                [
+                    'reference' => $avenant_data['reference'],
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            );
+            //On tente de récupérer l'avenant de souscription
+            $policeDeBase = $this->getPoliceSouscription($policesConcernees);
+
+            $entite
+                ->setIdavenant(count($policesConcernees))
+                ->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']])
+                ->setReference($policeDeBase->getReference())
+                ->setDateoperation($this->serviceDates->aujourdhui())
+                ->setDateemission($this->serviceDates->aujourdhui())
+                ->setDateeffet($this->serviceDates->ajouterJours($policeDeBase->getDateexpiration(), 1))
+                ->setDateexpiration($this->serviceDates->ajouterJours($policeDeBase->getDateexpiration(), 365))
+                ->setModepaiement($policeDeBase->getModepaiement())
+                ->setRemarques("Renouvellement de la police " . $policeDeBase)
+                ->setReassureurs($policeDeBase->getReassureurs())
+                ->setCansharericom($policeDeBase->isCansharericom())
+                ->setCansharefrontingcom($policeDeBase->isCansharefrontingcom())
+                ->setCansharelocalcom($policeDeBase->isCansharelocalcom())
+                ->setRicompayableby($policeDeBase->getRicompayableby())
+                ->setFrontingcompayableby($policeDeBase->getFrontingcompayableby())
+                ->setLocalcompayableby($policeDeBase->getLocalcompayableby())
+                ->setUpdatedAt($this->serviceDates->aujourdhui())
+                ->setCreatedAt($this->serviceDates->aujourdhui())
+                ->setUtilisateur($this->serviceEntreprise->getUtilisateur())
+                ->setGestionnaire($policeDeBase->getGestionnaire())
+                ->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire())
+                ->setClient($policeDeBase->getClient())
+                ->setProduit($policeDeBase->getProduit())
+                ->setPartenaire($policeDeBase->getPartenaire())
+                ->setAssureur($policeDeBase->getAssureur())
+                //Initialisation des variables numériques
+                ->setCapital($policeDeBase->getCapital())
+                ->setPrimenette($policeDeBase->getPrimenette())
+                ->setFronting($policeDeBase->getFronting())
+                ->setArca($policeDeBase->getArca())
+                ->setTva($policeDeBase->getTva())
+                ->setFraisadmin($policeDeBase->getFraisadmin())
+                ->setPrimetotale($policeDeBase->getPrimetotale())
+                ->setDiscount($policeDeBase->getDiscount())
+                ->setRicom($policeDeBase->getRicom())
+                ->setLocalcom($policeDeBase->getLocalcom())
+                ->setFrontingcom($policeDeBase->getFrontingcom());
+        }
+        return $entite;
+    }
+
+
+
+    /**
+     * Cette fonction permet d'initialiser une Incorporation
+     *
+     * @param [type] $entite
+     * @param array $avenant_data
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @return void
+     */
     public function setIncorporation($entite, array $avenant_data, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
@@ -2292,6 +2415,8 @@ class ServiceCrossCanal
                     'entreprise' => $this->serviceEntreprise->getEntreprise()
                 ]
             );
+            //On tente de récupérer l'avenant de souscription
+            $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant(count($policesConcernees));
             $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
@@ -2299,7 +2424,7 @@ class ServiceCrossCanal
             $entite->setDateoperation(new \DateTimeImmutable("now"));
             $entite->setDateemission(new \DateTimeImmutable("now"));
             $entite->setDateeffet(new \DateTimeImmutable("now"));
-            $entite->setDateexpiration($policeDeBase->getDateexpiration());
+            $entite->setDateexpiration($policeDeBase->getDateexpiration());// + new \DateTimeImmutable("+365 days")
             $entite->setModepaiement($policeDeBase->getModepaiement());
             $entite->setRemarques("Ceci est une incorporation effectuée à la police " . $policeDeBase);
             $entite->setReassureurs($policeDeBase->getReassureurs());

@@ -52,6 +52,7 @@ class CotationCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        
     }
 
 

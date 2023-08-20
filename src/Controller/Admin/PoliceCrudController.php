@@ -505,7 +505,7 @@ class PoliceCrudController extends AbstractCrudController
         $avenant_resiliation = Action::new("Avenant de résiliation")
             ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_resiliation');
+            ->linkToCrudAction('avenant_resiliation');ici
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
             //->add(Crud::PAGE_INDEX, $operation_resiliation)

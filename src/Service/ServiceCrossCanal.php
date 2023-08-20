@@ -239,43 +239,16 @@ class ServiceCrossCanal
             ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_ANNULATION)
             ->set("avenant[police]", $police->getId())
             ->set("avenant[reference]", $police->getReference())
-            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
-            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
-            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
-            ->set("champsADesactiver[3]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            ->set("champsADesactiver[4]", PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
-            ->set("champsADesactiver[5]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-            ->set("champsADesactiver[6]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
-            ->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            ->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-            ->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            ->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            ->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
-            ->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
-            ->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            ->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            ->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            ->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-            ->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
-            ->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
-            ->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-            ->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-            ->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
-            ->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
-            ->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
-            ->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
-            ->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
-            ->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
-            ->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
             ->setEntityId(null)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
             ->generateUrl();
+        $this->desactiverChampsAnnulation($adminUrlGenerator);
         return $url;
     }
+
 
     public function crossCanal_Avenant_Incorporation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
@@ -289,12 +262,37 @@ class ServiceCrossCanal
             ->set("avenant[police]", $police->getId())
             ->set("avenant[reference]", $police->getReference())
             ->setEntityId(null)
+
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
             ->generateUrl();
+        $this->desactiverChampsIncorporation($adminUrlGenerator);
+        return $url;
+    }
+
+    public function crossCanal_Avenant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Ristourne sur la police " . $police . "")
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RISTOURNE)
+            ->set("avenant[police]", $police->getId())
+            ->set("avenant[reference]", $police->getReference())
+            ->setEntityId(null)
+
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->generateUrl();
+            $this->desactiverChampsRistourne($adminUrlGenerator);
         return $url;
     }
 
@@ -310,6 +308,90 @@ class ServiceCrossCanal
             ->set("avenant[police]", $police->getId())
             ->set("avenant[reference]", $police->getReference())
             ->setEntityId(null)
+
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->generateUrl();
+        $this->desactiverChampsProrogation($adminUrlGenerator);
+        return $url;
+    }
+
+    private function desactiverChampsRistourne(AdminUrlGenerator $adminUrlGenerator)
+    {
+        $adminUrlGenerator
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+            ->set("champsADesactiver[3]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("champsADesactiver[4]", PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->set("champsADesactiver[5]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            ->set("champsADesactiver[6]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+            //->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            //->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+            //->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            //->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            //->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+            //->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
+            //->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            //->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            //->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            //->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+            //->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+            //->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
+            //->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+            //->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+            //->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
+            //->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
+            //->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
+            //->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
+            //->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
+            //->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
+            //->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
+        ;
+    }
+
+    private function desactiverChampsIncorporation(AdminUrlGenerator $adminUrlGenerator)
+    {
+        $adminUrlGenerator
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+            ->set("champsADesactiver[3]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("champsADesactiver[4]", PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->set("champsADesactiver[5]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            ->set("champsADesactiver[6]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+            //->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            //->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+            //->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            //->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            //->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+            //->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
+            //->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            //->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            //->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            //->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+            //->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+            //->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
+            //->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+            //->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+            //->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
+            //->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
+            //->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
+            //->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
+            //->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
+            //->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
+            //->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
+        ;
+    }
+
+    private function desactiverChampsProrogation(AdminUrlGenerator $adminUrlGenerator)
+    {
+        $adminUrlGenerator
             ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
             ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
             ->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
@@ -339,49 +421,46 @@ class ServiceCrossCanal
             //->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
             //->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
             //->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
-
-            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
-            ->generateUrl();
-        return $url;
+        ;
     }
 
-    public function crossCanal_Avenant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    private function desactiverChampsAnnulation(AdminUrlGenerator $adminUrlGenerator)
     {
-        /** @var Police */
-        $police = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "Ristourne sur la police " . $police . "")
-            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RISTOURNE)
-            ->set("avenant[police]", $police->getId())
-            ->set("avenant[reference]", $police->getReference())
-            ->setEntityId(null)
-            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
-            ->generateUrl();
-        return $url;
+        $adminUrlGenerator
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+            ->set("champsADesactiver[3]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("champsADesactiver[4]", PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->set("champsADesactiver[5]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            ->set("champsADesactiver[6]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+            ->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            ->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+            ->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            ->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+            ->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+            ->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
+            ->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+            ->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+            ->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+            ->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+            ->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+            ->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
+            ->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+            ->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+            ->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
+            ->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
+            ->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
+            ->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
+            ->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
+            ->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
+            ->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE);
     }
 
-    public function crossCanal_Avenant_Renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    private function desctiverChampsRenouvellement(AdminUrlGenerator $adminUrlGenerator)
     {
-        /** @var Police */
-        $police = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "Renouvellement de la police " . $police . "")
-            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT)
-            ->set("avenant[police]", $police->getId())
-            ->set("avenant[reference]", $police->getReference())
-            ->setEntityId(null)
+        $adminUrlGenerator
             ->set("champsADesactiver[0]", PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
             ->set("champsADesactiver[1]", PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
             //->set("champsADesactiver[2]", PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
@@ -411,13 +490,28 @@ class ServiceCrossCanal
             //->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
             //->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
             //->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
-            
+        ;
+    }
+
+    public function crossCanal_Avenant_Renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Renouvellement de la police " . $police . "")
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT)
+            ->set("avenant[police]", $police->getId())
+            ->set("avenant[reference]", $police->getReference())
+            ->setEntityId(null)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
             ->generateUrl();
+        $this->desctiverChampsRenouvellement($adminUrlGenerator);
         return $url;
     }
 
@@ -729,7 +823,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    
+
 
     public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {

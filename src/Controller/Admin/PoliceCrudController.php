@@ -656,25 +656,24 @@ class PoliceCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterAutomobile($context, $adminUrlGenerator));
     }
 
-
     public function avenant_annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Annulation($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Annulation($context, $adminUrlGenerator));
     }
 
     public function avenant_incorporation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Incorporation($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Incorporation($context, $adminUrlGenerator));
     }
 
     public function avenant_prorogation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Prorogation($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Prorogation($context, $adminUrlGenerator));
     }
 
     public function avenant_ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Avanant_Ristourne($context, $adminUrlGenerator));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Ristourne($context, $adminUrlGenerator));
     }
 
     public function avenant_renouvellement(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

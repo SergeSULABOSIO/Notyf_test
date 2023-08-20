@@ -275,7 +275,6 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", $titre)
             ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             ->set("avenant[type]", $nomAvenant)
@@ -288,7 +287,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Avanant_Annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Avenant_Annulation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
@@ -301,7 +300,6 @@ class ServiceCrossCanal
             ->set("avenant[reference]", $police->getReference())
             ->setEntityId(null)
             //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
             //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
@@ -309,7 +307,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Avanant_Incorporation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Avenant_Incorporation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
@@ -330,7 +328,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Avanant_Prorogation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Avenant_Prorogation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
@@ -351,7 +349,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Avanant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function crossCanal_Avenant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();

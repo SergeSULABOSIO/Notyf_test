@@ -232,6 +232,38 @@ class ServiceCrossCanal
                 $titre = $nomAvenant . " - Renouvellement de la police " . $police . " - || Cotation: " . $entite . ".";
                 break;
 
+            case PoliceCrudController::AVENANT_TYPE_PROROGATION:
+                /** @var Police */
+                $police = $entite->getPiste()->getPolice();
+                $reference = $police->getReference();
+                $idPolice = $police->getId();
+                $titre = $nomAvenant . " - Prorogation de la police " . $police . " - || Cotation: " . $entite . ".";
+                break;
+
+            case PoliceCrudController::AVENANT_TYPE_RISTOURNE:
+                /** @var Police */
+                $police = $entite->getPiste()->getPolice();
+                $reference = $police->getReference();
+                $idPolice = $police->getId();
+                $titre = $nomAvenant . " - Ristourne sur la police " . $police . " - || Cotation: " . $entite . ".";
+                break;
+
+            case PoliceCrudController::AVENANT_TYPE_RESILIATION:
+                /** @var Police */
+                $police = $entite->getPiste()->getPolice();
+                $reference = $police->getReference();
+                $idPolice = $police->getId();
+                $titre = $nomAvenant . " - Résiliation de la police " . $police . " - || Cotation: " . $entite . ".";
+                break;
+
+            case PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION:
+                /** @var Police */
+                $police = $entite->getPiste()->getPolice();
+                $reference = $police->getReference();
+                $idPolice = $police->getId();
+                $titre = $nomAvenant . " - Autres modifications sur la police " . $police . " - || Cotation: " . $entite . ".";
+                break;
+
             default:
                 $titre = $nomAvenant . " || Police: " . $entite->getPolice() . " - || Cotation: " . $entite . ".";
                 $reference = $entite->getPolice()->getReference();
@@ -307,6 +339,27 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "Prorogation de la police " . $police . "")
             ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_PROROGATION)
+            ->set("avenant[police]", $police->getId())
+            ->set("avenant[reference]", $police->getReference())
+            ->setEntityId(null)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Avanant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Ristourne sur la police " . $police . "")
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RISTOURNE)
             ->set("avenant[police]", $police->getId())
             ->set("avenant[reference]", $police->getReference())
             ->setEntityId(null)

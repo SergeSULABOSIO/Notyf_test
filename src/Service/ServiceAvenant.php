@@ -293,6 +293,87 @@ class ServiceAvenant
     }
 
 
+    /**
+     * Cette fonction permet d'initialiser une Ristourne pour le bénéfice du client. Une Ristourne est toute opération consistant à ajuster la prime à la baisse suite à un trop perçu ou aux éléments qui y donnent lieu
+     *
+     * @param [type] $entite
+     * @param array $avenant_data
+     * @param AdminUrlGenerator $adminUrlGenerator
+     * @return void
+     */
+    public function setRistourne($entite, array $avenant_data, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+        if ($entite instanceof Cotation) {
+            /** @var Piste */
+            $piste = $this->entityManager->getRepository(Piste::class)->find($adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_PISTE));
+            //dd($piste->getPolice());
+
+            /** @var Cotation */
+            $entite->setNom($avenant_data['type'] . " - " . Date("dmYHis") . " - " . $piste->getPolice());
+            $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entite->setEntreprise($this->serviceEntreprise->getEntreprise());
+            $entite->setAssureur($piste->getPolice()->getAssureur());
+            $entite->setClient($piste->getPolice()->getClient());
+            $entite->setProduit($piste->getPolice()->getProduit());
+            $entite->setPiste($piste);
+            $entite->setCreatedAt($this->serviceDates->aujourdhui());
+            $entite->setUpdatedAt($this->serviceDates->aujourdhui());
+        }
+        if ($entite instanceof Police) {
+            /** @var Police */
+            $policeDeBase = $this->entityManager->getRepository(Police::class)->find($avenant_data['police']);
+            $policesConcernees = $this->entityManager->getRepository(Police::class)->findBy(
+                [
+                    'reference' => $avenant_data['reference'],
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            );
+            //On tente de récupérer l'avenant de souscription
+            $policeDeBase = $this->getPoliceSouscription($policesConcernees);
+
+            $entite->setIdavenant(count($policesConcernees));
+            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            $entite->setReference($policeDeBase->getReference());
+            $entite->setDateoperation($this->serviceDates->aujourdhui());
+            $entite->setDateemission($this->serviceDates->aujourdhui());
+            $entite->setDateeffet($this->serviceDates->aujourdhui());
+            $entite->setDateexpiration($this->serviceDates->aujourdhui());
+            $entite->setModepaiement($policeDeBase->getModepaiement());
+            $entite->setRemarques("Ristourne sur la police " . $policeDeBase);
+            $entite->setReassureurs($policeDeBase->getReassureurs());
+            $entite->setCansharericom($policeDeBase->isCansharericom());
+            $entite->setCansharefrontingcom($policeDeBase->isCansharefrontingcom());
+            $entite->setCansharelocalcom($policeDeBase->isCansharelocalcom());
+            $entite->setRicompayableby($policeDeBase->getRicompayableby());
+            $entite->setFrontingcompayableby($policeDeBase->getFrontingcompayableby());
+            $entite->setLocalcompayableby($policeDeBase->getLocalcompayableby());
+            $entite->setUpdatedAt($this->serviceDates->aujourdhui());
+            $entite->setCreatedAt($this->serviceDates->aujourdhui());
+            $entite->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $entite->setGestionnaire($policeDeBase->getGestionnaire());
+            $entite->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire());
+            $entite->setClient($policeDeBase->getClient());
+            $entite->setProduit($policeDeBase->getProduit());
+            $entite->setPartenaire($policeDeBase->getPartenaire());
+            $entite->setAssureur($policeDeBase->getAssureur());
+            //Initialisation des variables numériques
+            $entite->setCapital(0);
+            $entite->setPrimenette(0);
+            $entite->setFronting(0);
+            $entite->setArca(0);
+            $entite->setTva(0);
+            $entite->setFraisadmin(0);
+            $entite->setPrimetotale(0);
+            $entite->setDiscount(0);
+            $entite->setRicom(0);
+            $entite->setLocalcom(0);
+            $entite->setFrontingcom(0);
+        }
+        return $entite;
+    }
+
+
 
 
     /**
@@ -492,6 +573,9 @@ class ServiceAvenant
                         break;
                     case PoliceCrudController::AVENANT_TYPE_PROROGATION:
                         $entite = $this->setProrogation($entite, $avenant_data, $adminUrlGenerator);
+                        break;
+                    case PoliceCrudController::AVENANT_TYPE_RISTOURNE:
+                        $entite = $this->setRistourne($entite, $avenant_data, $adminUrlGenerator);
                         break;
 
                     default:

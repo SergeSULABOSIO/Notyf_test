@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Police;
+use App\Service\ServiceAvenant;
 use DateTimeImmutable;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -79,6 +80,7 @@ class PoliceCrudController extends AbstractCrudController
     ];
 
     public function __construct(
+        private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
@@ -176,55 +178,9 @@ class PoliceCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Police();
-        $objet = $this->serviceCrossCanal->setAvenant($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-        //$objet->setDateemission(new DateTimeImmutable("now"));
-        //$objet->setDateoperation(new DateTimeImmutable("now"));
-        //$objet->setDateeffet(new DateTimeImmutable("now"));
-        //$objet->setDateexpiration(new DateTimeImmutable("+365 day"));
-        //$objet->setPartExceptionnellePartenaire(0);
-
-        //$objet->setIdavenant(0);
-        //$objet->setTypeavenant(0);
-        //$objet->setReassureurs("Voir le traité de réassurance en place.");
-        //$objet->setCapital(1000000.00);
-        //$objet->setPrimenette(0);
-        //$objet->setFronting(0);
-        //$objet->setArca(0);
-        //$objet->setTva(0);
-        //$objet->setFraisadmin(0);
-        //$objet->setPrimetotale(0);
-        //$objet->setModepaiement(0);
-        //$objet->setDiscount(0);
-
-        //$objet->setRicom(0);
-        //$objet->setCansharericom(false);
-        //$objet->setRicompayableby(0);
-
-        //$objet->setFrontingcom(0);
-        //$objet->setCansharefrontingcom(false);
-        //$objet->setFrontingcompayableby(0);
-
-        //$objet->setLocalcom(0);
-        //$objet->setCansharelocalcom(false);
-        //$objet->setLocalcompayableby(0);
-        //$objet->setPartenaire(null);
-        //$objet->setGestionnaire($this->serviceEntreprise->getUtilisateur());
-
-        //$objet->setUnpaidcommission(0);
-        //$objet->setUnpaidretrocommission(0);
-        //$objet->setUnpaidtaxeassureur(0);
-        //$objet->setUnpaidtaxecourtier(0);
-        //$objet->setUnpaidtaxe(0);
-
-        //$objet->setPaidcommission(0);
-        //$objet->setPaidretrocommission(0);
-        //$objet->setPaidtaxeassureur(0);
-        //$objet->setPaidtaxecourtier(0);
-        //$objet->setPaidtaxe(0);
-
-        //dd($objet);
-
+    
         return $objet;
     }
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Cotation;
+use App\Service\ServiceAvenant;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
@@ -45,6 +46,7 @@ class CotationCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
@@ -121,7 +123,7 @@ class CotationCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Cotation();
-        $objet = $this->serviceCrossCanal->setAvenant($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Cotation_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));

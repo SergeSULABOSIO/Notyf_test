@@ -88,6 +88,12 @@ class ServiceMonnaie
         }
     }
 
+    /**
+     * Cette fonction retourne le montant passé en paramètre en monnaie d'affichage défini dans cette application.
+     *
+     * @param [type] $montant
+     * @return string
+     */
     public function getMonantEnMonnaieAffichage($montant):string
     {
         //Monnaie de saisie

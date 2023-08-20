@@ -5,6 +5,7 @@ namespace App\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PoliceRepository;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceMonnaie;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

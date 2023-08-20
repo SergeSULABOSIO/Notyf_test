@@ -1679,9 +1679,9 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(3)
             ->setHelp("Précisez le taux exceptionnel si, pour ce compte spécifique, le taux est différent du standard.");
-        $tabAttributs[] = FormField::addPanel('Commission de réassurance')
+        $tabAttributs[] = FormField::addPanel('Commission de réassurance hors taxe')
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('ricom', "Montant ht")
+        $tabAttributs[] = MoneyField::new('ricom', PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()
@@ -1694,8 +1694,8 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(3)
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('localcom', "Montant ht")
+        $tabAttributs[] = FormField::addPanel("Commission locale hors taxe")->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('localcom', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()
@@ -1708,9 +1708,9 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(3)
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = FormField::addPanel("Commission sur Fronting")
+        $tabAttributs[] = FormField::addPanel("Commission hors taxe sur Fronting")
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('frontingcom', "Montant ht")
+        $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)//"Montant ht"
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()
@@ -1727,7 +1727,17 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(12);
 
+        //On désactive les champs non éditables
+        $this->appliquerCanDesable($tabAttributs);
+
         return $tabAttributs;
+    }
+
+    public function appliquerCanDesable($tabAttributs)
+    {
+        foreach ($tabAttributs as $champ) {
+            $champ->setDisabled($this->canDesable($this->adminUrlGenerator, $champ->getAsDto()->getLabel()));
+        }
     }
 
     public function setCRM_Fields_Produits_form($tabAttributs)
@@ -4514,6 +4524,19 @@ class ServicePreferences
         }
         //dd($champsACacher);
         $reponse = !$champsACacher->contains($nomChamp);
+        //dd($champsACacher . ": " . $reponse);
+        return $reponse;
+    }
+
+    public function canDesable($adminUrlGenerator, $nomChamp): Bool
+    {
+        $reponse = false;
+        $champsADesactiver = new ArrayCollection([]);
+        if ($adminUrlGenerator->get("champsADesactiver")) {
+            $champsADesactiver = new ArrayCollection($adminUrlGenerator->get("champsADesactiver"));
+        }
+        //dd($champsACacher);
+        $reponse = $champsADesactiver->contains($nomChamp);
         //dd($champsACacher . ": " . $reponse);
         return $reponse;
     }

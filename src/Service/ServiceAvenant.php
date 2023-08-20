@@ -588,4 +588,75 @@ class ServiceAvenant
         }
         return $entite;
     }
+
+    public function getNomAvenant($codeAvenant)
+    {
+        $nomAvenant = "";
+        foreach (PoliceCrudController::TAB_POLICE_TYPE_AVENANT as $key => $value) {
+            if ($value == $codeAvenant) {
+                $nomAvenant = $key;
+            }
+        }
+        return $nomAvenant;
+    }
+
+
+    /**
+     * Elle retourne un tableau contenant la référence, l'id de la police ainsi que le titre de l'avenant.
+     *
+     * @param Cotation|null $cotation
+     * @return void
+     */
+    public function getAvenantPRT(?Cotation $cotation)
+    {
+        $tabData = [
+            "titre" => "",
+            "reference" => "",
+            "idPolice" => "",
+            "nomAvenant" => ""
+        ];
+        if ($cotation->getPiste()) {
+            $nomAvenant = $this->getNomAvenant($cotation->getTypeavenant());
+            $tabData['nomAvenant'] = $nomAvenant;
+            if ($nomAvenant == PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION) {
+                $tabData['titre'] = $nomAvenant . " - Mise en place de la police " . $cotation->getPolice() . " - || Cotation: " . $cotation . ".";
+            } else if ($cotation->getPiste()->getPolice()) {
+                /** @var Police */
+                $police = $cotation->getPiste()->getPolice();
+                $tabData['reference'] = $police->getReference();
+                $tabData['idPolice'] = $police->getId();
+                switch ($nomAvenant) {
+                    case PoliceCrudController::AVENANT_TYPE_INCORPORATION:
+                        $tabData['titre'] = $nomAvenant . " - Mise à jour de la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    case PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT:
+                        $tabData['titre'] = $nomAvenant . " - Renouvellement de la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    case PoliceCrudController::AVENANT_TYPE_PROROGATION:
+                        $tabData['titre'] = $nomAvenant . " - Prorogation de la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    case PoliceCrudController::AVENANT_TYPE_RISTOURNE:
+                        $tabData['titre'] = $nomAvenant . " - Ristourne sur la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    case PoliceCrudController::AVENANT_TYPE_RESILIATION:
+                        $tabData['titre'] = $nomAvenant . " - Résiliation de la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    case PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION:
+                        $tabData['titre'] = $nomAvenant . " - Autres modifications sur la police " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+
+                    default:
+                        $tabData['titre'] = $nomAvenant . " || Police: " . $police . " - || Cotation: " . $cotation . ".";
+                        break;
+                }
+            }
+        }
+        //dd($tabData);
+        return $tabData;
+    }
 }

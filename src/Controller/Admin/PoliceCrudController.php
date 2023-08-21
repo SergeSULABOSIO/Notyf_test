@@ -505,7 +505,7 @@ class PoliceCrudController extends AbstractCrudController
         $avenant_resiliation = Action::new("Avenant de résiliation")
             ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_resiliation');ici
+            ->linkToCrudAction('avenant_resiliation');
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
             //->add(Crud::PAGE_INDEX, $operation_resiliation)
@@ -514,7 +514,7 @@ class PoliceCrudController extends AbstractCrudController
         $avenant_autre_modifications = Action::new("Avenant pour autres modifications")
             ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
             ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_autre_modification');
+            ->linkToCrudAction('avenant_autres_modifications');
         $actions
             ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
@@ -664,6 +664,16 @@ class PoliceCrudController extends AbstractCrudController
     public function avenant_incorporation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Incorporation($context, $adminUrlGenerator));
+    }
+
+    public function avenant_resiliation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Resiliation($context, $adminUrlGenerator));
+    }
+
+    public function avenant_autres_modifications(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Avenant_Autres_Modifications($context, $adminUrlGenerator));
     }
 
     public function avenant_prorogation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

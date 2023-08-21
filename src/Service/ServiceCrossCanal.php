@@ -206,10 +206,10 @@ class ServiceCrossCanal
     public function crossCanal_Cotation_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Cotation */
-        $entite = $context->getEntity()->getInstance();
-        $tabData = $this->serviceAvenant->getAvenantPRT($entite);
-        //dd($tabData);
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($entite->getTypeavenant()), $adminUrlGenerator);
+        $cotation = $context->getEntity()->getInstance();
+        $tabData = $this->serviceAvenant->getAvenantPRT($cotation);
+        //dd($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()));
+        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()), $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
@@ -220,7 +220,7 @@ class ServiceCrossCanal
             ->set("avenant[type]", $tabData['nomAvenant'])
             ->set("avenant[reference]", $tabData['reference'])
             ->set("avenant[police]", $tabData['idPolice'])
-            ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
+            ->set(self::CROSSED_ENTITY_COTATION, $cotation->getId())
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -228,6 +228,7 @@ class ServiceCrossCanal
 
     private function appliquerDesactivations($typeAvenant, AdminUrlGenerator $adminUrlGenerator)
     {
+        //dd($typeAvenant);
         switch ($typeAvenant) {
             case PoliceCrudController::AVENANT_TYPE_ANNULATION:
                 $this->desactiverChampsAnnulation($adminUrlGenerator);
@@ -264,7 +265,7 @@ class ServiceCrossCanal
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_ANNULATION, $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
@@ -286,7 +287,8 @@ class ServiceCrossCanal
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_INCORPORATION, $adminUrlGenerator);
+        //$this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
@@ -305,11 +307,58 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Avenant_Autres_Modifications(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION, $adminUrlGenerator);
+        //dd("ici");
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Autres modifications à la police " . $police . "")
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION)
+            ->set("avenant[police]", $police->getId())
+            ->set("avenant[reference]", $police->getReference())
+            ->setEntityId(null)
+
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->generateUrl();
+        return $url;
+    }
+
+    public function crossCanal_Avenant_Resiliation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_RESILIATION, $adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PoliceCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Résiliation de la police " . $police . "")
+            ->set("avenant[type]", PoliceCrudController::AVENANT_TYPE_RESILIATION)
+            ->set("avenant[police]", $police->getId())
+            ->set("avenant[reference]", $police->getReference())
+            ->setEntityId(null)
+
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            //->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+            //->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            //->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Avenant_Ristourne(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_RISTOURNE, $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
@@ -332,7 +381,7 @@ class ServiceCrossCanal
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_PROROGATION, $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)
@@ -593,6 +642,7 @@ class ServiceCrossCanal
             //->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
             //->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
         ;
+        //dd($adminUrlGenerator);
     }
 
     private function desactiverChampsResiliation(AdminUrlGenerator $adminUrlGenerator)
@@ -634,7 +684,7 @@ class ServiceCrossCanal
     {
         /** @var Police */
         $police = $context->getEntity()->getInstance();
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($police->getTypeavenant()), $adminUrlGenerator);
+        $this->appliquerDesactivations(PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT, $adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PoliceCrudController::class)
             ->setAction(Action::NEW)

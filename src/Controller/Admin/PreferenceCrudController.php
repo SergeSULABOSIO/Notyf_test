@@ -485,6 +485,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_SINISTRES                                  = "Sinistres";
     public const PREF_PRO_POLICE_AUTOMOBILES                                = "Automobiles";
     public const PREF_PRO_POLICE_ACTIONS                                    = "Missions";
+    public const PREF_PRO_POLICE_PISTES                                     = "Pistes";
     public const PREF_PRO_POLICE_POP_COMMISSIONS                            = "PDP/Commissions";
     public const PREF_PRO_POLICE_POP_PARTENAIRES                            = "PDP/Partenaires";
     public const PREF_PRO_POLICE_POP_TAXES                                  = "PDP/Taxes";
@@ -560,7 +561,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_taxes_assureurs_solde                   => 62,
         self::PREF_calc_sinistre_dommage_total                  => 63,
         self::PREF_calc_sinistre_indemnisation_total            => 64,
-        self::PREF_calc_sinistre_indice_SP                      => 65
+        self::PREF_calc_sinistre_indice_SP                      => 65,
+        self::PREF_PRO_POLICE_PISTES                            => 66
     ];
     //PRODUCTION - PRODUIT
     public const PREF_PRO_PRODUIT_ID                        = "Id";

@@ -84,6 +84,7 @@ class PisteCrudController extends AbstractCrudController
             //->add('contacts')
             ->add('expiredAt')
             ->add('etape')
+            ->add('police')
             //->add('utilisateur')
             //->add('actionCRMs')
         ;
@@ -122,6 +123,7 @@ class PisteCrudController extends AbstractCrudController
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
 
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));

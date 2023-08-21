@@ -216,6 +216,7 @@ class ServiceCrossCanal
             ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_PRO_POLICE_PISTES)
             ->set("titre", $tabData['titre'])
             ->set("avenant[type]", $tabData['nomAvenant'])
             ->set("avenant[reference]", $tabData['reference'])
@@ -889,6 +890,24 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_ajouterPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "NOUVELLE PISTE - [Police: " . $police . "]")
+            ->set(self::CROSSED_ENTITY_POLICE, $police->getId())
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_MISSION_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_MISSION_COTATION)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
+            ->set("champsACacher[3]", PreferenceCrudController::PREF_CRM_MISSION_PISTE)
+            ->setEntityId(null)
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Cotation_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Cotation */
@@ -1433,6 +1452,22 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_Police_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Police */
+        $police = $context->getEntity()->getInstance();
+        $url = $adminUrlGenerator
+            ->setController(PisteCrudController::class)
+            ->setAction(Action::INDEX)
+            ->set("titre", "LISTE DES PISTES - [Police: " . $police . "]")
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $police->getId()) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Police_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
@@ -1773,6 +1808,18 @@ class ServiceCrossCanal
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(EtapeCrm::class)->find($paramID);
             $piste->setEtape($objet);
+        }
+        return $piste;
+    }
+
+    public function crossCanal_Piste_setPolice(Piste $piste, AdminUrlGenerator $adminUrlGenerator): Piste
+    {
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
+        if ($paramID != null) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($paramID);
+            $piste->setPolice($police);
+            $piste->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION]);
         }
         return $piste;
     }

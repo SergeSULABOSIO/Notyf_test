@@ -180,11 +180,11 @@ class PoliceCrudController extends AbstractCrudController
         $objet = new Police();
         $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-    
+
         return $objet;
     }
 
-    
+
 
     public function configureFields(string $pageName): iterable
     {
@@ -364,6 +364,23 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $mission_ajouter)
             ->add(Crud::PAGE_INDEX, $mission_ajouter);
 
+
+        $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
+            ->setIcon('fas fa-location-crosshairs')
+            ->linkToCrudAction('cross_canal_ajouterPiste');
+
+        $piste_lister = Action::new(ServiceCrossCanal::OPTION_PISTE_LISTER)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getPistes()) != 0;
+            })
+            ->setIcon('fas fa-location-crosshairs')
+            ->linkToCrudAction('cross_canal_listerPiste');
+
+        $actions
+            ->add(Crud::PAGE_DETAIL, $piste_lister)
+            ->add(Crud::PAGE_INDEX, $piste_lister)
+            ->add(Crud::PAGE_DETAIL, $piste_ajouter)
+            ->add(Crud::PAGE_INDEX, $piste_ajouter);
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -639,6 +656,16 @@ class PoliceCrudController extends AbstractCrudController
     public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerMission($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_ajouterPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPiste($context, $adminUrlGenerator));
+    }
+
+    public function cross_canal_listerPiste(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPiste($context, $adminUrlGenerator));
     }
 
     public function cross_canal_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

@@ -4,9 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Client;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
-use App\Service\ServiceCrossCanal;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;

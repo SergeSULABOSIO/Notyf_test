@@ -31,6 +31,7 @@ use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
+use App\Entity\Facture;
 use App\Entity\Preference;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
@@ -167,6 +168,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('FINANCES', 'fas fa-sack-dollar')->setSubItems([ //<i class="fa-solid fa-sack-dollar"></i>
             MenuItem::linkToCrud('Taxes', 'fas fa-landmark-dome', Taxe::class), //<i class="fa-solid fa-landmark-dome"></i>
             MenuItem::linkToCrud('Monnaies', 'fas fa-money-bill-1', Monnaie::class), //<i class="fa-regular fa-money-bill-1"></i>
+            MenuItem::linkToCrud('Factures', 'fas fa-money-bill-1', Facture::class), //<i class="fa-regular fa-money-bill-1"></i>
             MenuItem::linkToCrud('Commissions reçues', 'fas fa-person-arrow-down-to-line', PaiementCommission::class), //<i class="fa-solid fa-person-arrow-down-to-line"></i>
             MenuItem::linkToCrud('Retrocom. payées', 'fas fa-person-arrow-up-from-line', PaiementPartenaire::class), //<i class="fa-solid fa-person-arrow-up-from-line"></i>
             MenuItem::linkToCrud('Taxes payées', 'fas fa-person-chalkboard', PaiementTaxe::class) //<i class="fa-solid fa-person-chalkboard"></i>

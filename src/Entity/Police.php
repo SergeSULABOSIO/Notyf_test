@@ -199,6 +199,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Piste::class)]
     private Collection $pistes;
+
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: ElementFacture::class)]
+    private Collection $elementFactures;
     
     
     public function __construct()
@@ -211,6 +214,7 @@ class Police extends CalculableEntity
         $this->actionCRMs = new ArrayCollection();
         $this->automobiles = new ArrayCollection();
         $this->pistes = new ArrayCollection();
+        $this->elementFactures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1034,6 +1038,36 @@ class Police extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($piste->getPolice() === $this) {
                 $piste->setPolice(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ElementFacture>
+     */
+    public function getElementFactures(): Collection
+    {
+        return $this->elementFactures;
+    }
+
+    public function addElementFacture(ElementFacture $elementFacture): self
+    {
+        if (!$this->elementFactures->contains($elementFacture)) {
+            $this->elementFactures->add($elementFacture);
+            $elementFacture->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElementFacture(ElementFacture $elementFacture): self
+    {
+        if ($this->elementFactures->removeElement($elementFacture)) {
+            // set the owning side to null (unless already changed)
+            if ($elementFacture->getPolice() === $this) {
+                $elementFacture->setPolice(null);
             }
         }
 

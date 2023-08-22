@@ -54,6 +54,9 @@ class PaiementTaxe
     #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
     private ?DocPiece $piece = null;
 
+    #[ORM\ManyToOne(inversedBy: 'paiementTaxes')]
+    private ?Facture $facture = null;
+
     public function __construct()
     {
         
@@ -197,6 +200,18 @@ class PaiementTaxe
     public function setPiece(?DocPiece $piece): self
     {
         $this->piece = $piece;
+
+        return $this;
+    }
+
+    public function getFacture(): ?Facture
+    {
+        return $this->facture;
+    }
+
+    public function setFacture(?Facture $facture): self
+    {
+        $this->facture = $facture;
 
         return $this;
     }

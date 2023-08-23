@@ -677,6 +677,31 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_MONNAIE_DATE_DE_CREATION                 => 8,
         self::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION             => 9
     ];
+
+    //FINANCE - FACTURE
+    public const PREF_FIN_FACTURE_ID                    = "Id";
+    public const PREF_FIN_MONNAIE_NOM                   = "Nom de la monnaie";
+    public const PREF_FIN_MONNAIE_CODE                  = "Code";
+    public const PREF_FIN_MONNAIE_TAUX_USD              = "Taux (en USD)";
+    public const PREF_FIN_MONNAIE_FONCTION              = "Fonction Système";
+    public const PREF_FIN_MONNAIE_IS_LOCALE             = "Locale?";
+    public const PREF_FIN_MONNAIE_UTILISATEUR           = "Utilisateur";
+    public const PREF_FIN_MONNAIE_ENTREPRISE            = "Entreprise";
+    public const PREF_FIN_MONNAIE_DATE_DE_CREATION      = "Date de création";
+    public const PREF_FIN_MONNAIE_DERNIRE_MODIFICATION  = "Dernière modification";
+    public const TAB_FIN_MONNAIES = [
+        self::PREF_FIN_MONNAIE_ID                               => 0,
+        self::PREF_FIN_MONNAIE_NOM                              => 1,
+        self::PREF_FIN_MONNAIE_CODE                             => 2,
+        self::PREF_FIN_MONNAIE_FONCTION                         => 3,
+        self::PREF_FIN_MONNAIE_TAUX_USD                         => 4,
+        self::PREF_FIN_MONNAIE_IS_LOCALE                        => 5,
+        self::PREF_FIN_MONNAIE_UTILISATEUR                      => 6,
+        self::PREF_FIN_MONNAIE_ENTREPRISE                       => 7,
+        self::PREF_FIN_MONNAIE_DATE_DE_CREATION                 => 8,
+        self::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION             => 9
+    ];
+
     //FINANCE - PAIEMENTS COMMISSIONS
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_ID                      = "Id";
     public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                    = "Date";

@@ -55,6 +55,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
+use App\Entity\Facture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query\Expr\Func;
@@ -205,6 +206,9 @@ class ServicePreferences
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof PaiementTaxe) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof Facture) {
             $this->setTailleFIN($preference, $crud);
         }
         //GROUPE SINISTRE
@@ -460,6 +464,17 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_Monnaies_Index($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Monnaies_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Monnaies_form($tabAttributs);
+        }
+        if ($objetInstance instanceof Facture) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fa-solid fa-receipt') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Facture / Note de débit.")
+            ];
+            //$tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Factures_Index($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_FACTURES, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Factures_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Factures_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
             $tabAttributs = [

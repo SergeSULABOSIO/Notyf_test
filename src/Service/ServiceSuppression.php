@@ -42,6 +42,8 @@ class ServiceSuppression
     public const FINANCE_PAIEMENT_TAXE = 2;
     public const FINANCE_PAIEMENT_COMMISSION = 3;
     public const FINANCE_PAIEMENT_PARTENAIRE = 4;
+    public const FINANCE_FACTURE = 5;
+    public const FINANCE_ELEMENT_FACTURE = 6;
 
     public const PRODUCTION_CONTACT = 5;
     public const PRODUCTION_ENGIN = 6;
@@ -96,6 +98,14 @@ class ServiceSuppression
                 break;
 
             case self::FINANCE_MONNAIE: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::FINANCE_FACTURE: //Il faut supprimer les données filles
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::FINANCE_ELEMENT_FACTURE: //Il faut supprimer les données filles
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 

@@ -57,6 +57,12 @@ class Facture
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementTaxe::class)]
     private Collection $paiementTaxes;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $totalDu = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $totalRecu = null;
+
     public function __construct()
     {
         $this->elementFactures = new ArrayCollection();
@@ -306,6 +312,30 @@ class Facture
                 $paiementTax->setFacture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTotalDu(): ?float
+    {
+        return $this->totalDu;
+    }
+
+    public function setTotalDu(?float $totalDu): self
+    {
+        $this->totalDu = $totalDu;
+
+        return $this;
+    }
+
+    public function getTotalRecu(): ?float
+    {
+        return $this->totalRecu;
+    }
+
+    public function setTotalRecu(?float $totalRecu): self
+    {
+        $this->totalRecu = $totalRecu;
 
         return $this;
     }

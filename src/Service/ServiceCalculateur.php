@@ -5,8 +5,10 @@ namespace App\Service;
 use App\Entity\Assureur;
 use App\Entity\CalculableEntity;
 use App\Entity\Client;
+use App\Entity\ElementFacture;
 use App\Entity\Police;
 use App\Entity\Entreprise;
+use App\Entity\Facture;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
@@ -18,6 +20,7 @@ use App\Entity\Taxe;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -32,6 +35,7 @@ class ServiceCalculateur
     private $paiements_com = null;
     private $polices = null;
     private $sinistres = null;
+    private $elementFactures = null;
 
     public const RUBRIQUE_POLICE = 0;
     public const RUBRIQUE_PARTENAIRE = 1;
@@ -41,6 +45,7 @@ class ServiceCalculateur
     public const RUBRIQUE_PISTE = 5;
     public const RUBRIQUE_TAXE = 6;
     public const RUBRIQUE_SINISTRE = 7;
+    public const RUBRIQUE_FACTURE = 8;
 
 
     public function __construct(
@@ -132,6 +137,16 @@ class ServiceCalculateur
                 );
                 foreach ($liste as $pol) {
                     $this->updateSinistreCalculableFileds($pol);
+                }
+                break;
+
+            case self::RUBRIQUE_FACTURE:
+                $entityManager = $container->get('doctrine')->getManagerForClass(Facture::class);
+                $liste = $entityManager->getRepository(Facture::class)->findBy(
+                    ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+                );
+                foreach ($liste as $fact) {
+                    $this->updateFactureCalculableFileds($fact);
                 }
                 break;
 
@@ -246,6 +261,17 @@ class ServiceCalculateur
         $this->calculer($obj);
     }
 
+    public function updateFactureCalculableFileds(?Facture $facture)
+    {
+        $this->calculerElementFactures(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'fature' => $facture,
+            ]
+        );
+        $this->calculerFactureMontantDu($facture);
+    }
+
     private function calculer(?CalculableEntity $obj)
     {
         $this->calculerPrimes($obj);
@@ -259,11 +285,29 @@ class ServiceCalculateur
         $this->calculerSinistre($obj);
     }
 
+    private function calculerFactureMontantDu(?Facture $facture)
+    {
+        $totDu = 0;
+        foreach ($this->elementFactures as $elementFacture) {
+            /** @var ElementFacture */
+            $ef = $elementFacture;
+            $totDu += $ef->getMontant();
+        }
+        $facture->setTotalDu($totDu);
+    }
+
 
     private function calculerPolices($criteres)
     {
 
         $this->polices = $this->entityManager->getRepository(Police::class)->findBy($criteres);
+        //  dd("SERGE");
+    }
+
+    private function calculerElementFactures($criteres)
+    {
+
+        $this->elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy($criteres);
         //  dd("SERGE");
     }
 

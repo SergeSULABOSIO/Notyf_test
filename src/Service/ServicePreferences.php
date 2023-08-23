@@ -471,10 +471,9 @@ class ServicePreferences
                     ->setIcon('fa-solid fa-receipt') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Facture / Note de débit.")
             ];
-            //$tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
-            $tabAttributs = $this->setFIN_Fields_Factures_Index($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_FACTURES, $tabAttributs);
-            $tabAttributs = $this->setFIN_Fields_Factures_Details($tabAttributs);
-            $tabAttributs = $this->setFIN_Fields_Factures_form($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Facture_Index($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
             $tabAttributs = [
@@ -1055,6 +1054,211 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setFIN_Fields_Facture_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS])) {
+            $tabAttributs[] = TextField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION])) {
+            $tabAttributs[] = DateTimeField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION])) {
+            $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET])) {
+            $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION])) {
+            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE])) {
+            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT])) {
+            $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT])) {
+            $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+                ->onlyOnIndex()
+                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+                ->renderAsBadges([
+                    // $value => $badgeStyleName
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger', //info
+                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
+                ]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CLIENT])) {
+            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRODUIT])) {
+            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_COTATION])) {
+            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS])) {
+            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ACTIONS])) {
+            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_PRO_POLICE_ACTIONS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PISTES])) {
+            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_POLICE_PISTES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_SINISTRES])) {
+            $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES])) {
+            $tabAttributs[] = AssociationField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
+            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS])) {
+            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES])) {
+            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES])) {
+            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
+            $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+                ->onlyOnIndex();
+        }
+
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CAPITAL])) {
+            $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+            ->formatValue(function ($value, Police $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT])) {
+            $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+                ->onlyOnIndex()
+                ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE])) {
+            $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+            ->formatValue(function ($value, Police $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimenette());
+            })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        
+        
+        
+        
+        
+        
+        
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU])) {
+            $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
+                ->formatValue(function ($value, Facture $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU])) {
+            $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
+                ->formatValue(function ($value, Facture $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION])) {
+            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE])) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR])) {
+            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                ->onlyOnIndex();
+            }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS])) {
+            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES])) {
+            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES])) {
+            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)
+            ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        
+
+        return $tabAttributs;
+    }
+    
     public function setCRM_Fields_Produits_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_PRODUIT_ID)
@@ -1440,7 +1644,7 @@ class ServicePreferences
             ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
         $tabAttributs[] = FormField::addPanel("Commission hors taxe sur Fronting")
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)//"Montant ht"
+        $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM) //"Montant ht"
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()

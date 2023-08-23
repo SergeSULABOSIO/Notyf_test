@@ -680,26 +680,41 @@ class PreferenceCrudController extends AbstractCrudController
 
     //FINANCE - FACTURE
     public const PREF_FIN_FACTURE_ID                    = "Id";
-    public const PREF_FIN_MONNAIE_NOM                   = "Nom de la monnaie";
-    public const PREF_FIN_MONNAIE_CODE                  = "Code";
-    public const PREF_FIN_MONNAIE_TAUX_USD              = "Taux (en USD)";
-    public const PREF_FIN_MONNAIE_FONCTION              = "Fonction Système";
-    public const PREF_FIN_MONNAIE_IS_LOCALE             = "Locale?";
-    public const PREF_FIN_MONNAIE_UTILISATEUR           = "Utilisateur";
-    public const PREF_FIN_MONNAIE_ENTREPRISE            = "Entreprise";
-    public const PREF_FIN_MONNAIE_DATE_DE_CREATION      = "Date de création";
-    public const PREF_FIN_MONNAIE_DERNIRE_MODIFICATION  = "Dernière modification";
-    public const TAB_FIN_MONNAIES = [
-        self::PREF_FIN_MONNAIE_ID                               => 0,
-        self::PREF_FIN_MONNAIE_NOM                              => 1,
-        self::PREF_FIN_MONNAIE_CODE                             => 2,
-        self::PREF_FIN_MONNAIE_FONCTION                         => 3,
-        self::PREF_FIN_MONNAIE_TAUX_USD                         => 4,
-        self::PREF_FIN_MONNAIE_IS_LOCALE                        => 5,
-        self::PREF_FIN_MONNAIE_UTILISATEUR                      => 6,
-        self::PREF_FIN_MONNAIE_ENTREPRISE                       => 7,
-        self::PREF_FIN_MONNAIE_DATE_DE_CREATION                 => 8,
-        self::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION             => 9
+    public const PREF_FIN_FACTURE_ELEMENTS              = "Eléments";
+    public const PREF_FIN_FACTURE_REFERENCE             = "Référence";
+    public const PREF_FIN_FACTURE_UTILISATEUR           = "Utilisateur";
+    public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
+    public const PREF_FIN_FACTURE_DATE_DE_CREATION      = "Date de création";
+    public const PREF_FIN_FACTURE_DERNIRE_MODIFICATION  = "Dernière modification";
+    public const PREF_FIN_FACTURE_TYE                   = "Type";
+    public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
+    public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
+    public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
+    public const PREF_FIN_FACTURE_PIECE                 = "Pièce";
+    public const PREF_FIN_FACTURE_POP_COMMISSIONS       = "POP Commissions";
+    public const PREF_FIN_FACTURE_POP_PARTENAIRES       = "POP Partenaires";
+    public const PREF_FIN_FACTURE_POP_TAXES             = "POP Taxes";
+    public const PREF_FIN_FACTURE_TOTAL_DU              = "Total Du";
+    public const PREF_FIN_FACTURE_TOTAL_RECU            = "Total Reçu";
+
+    public const TAB_FIN_FACTURE = [
+        self::PREF_FIN_FACTURE_ID                       => 0,
+        self::PREF_FIN_FACTURE_ELEMENTS                 => 1,
+        self::PREF_FIN_FACTURE_REFERENCE                => 2,
+        self::PREF_FIN_FACTURE_UTILISATEUR              => 3,
+        self::PREF_FIN_FACTURE_ENTREPRISE               => 4,
+        self::PREF_FIN_FACTURE_DATE_DE_CREATION         => 5,
+        self::PREF_FIN_FACTURE_DERNIRE_MODIFICATION     => 6,
+        self::PREF_FIN_FACTURE_TYE                      => 7,
+        self::PREF_FIN_FACTURE_ASSUREUR                 => 8,
+        self::PREF_FIN_FACTURE_PARTENAIRE               => 9,
+        self::PREF_FIN_FACTURE_DESCRIPTION              => 10,
+        self::PREF_FIN_FACTURE_PIECE                    => 11,
+        self::PREF_FIN_FACTURE_POP_COMMISSIONS          => 12,
+        self::PREF_FIN_FACTURE_POP_PARTENAIRES          => 13,
+        self::PREF_FIN_FACTURE_POP_TAXES                => 14,
+        self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
+        self::PREF_FIN_FACTURE_TOTAL_RECU               => 16
     ];
 
     //FINANCE - PAIEMENTS COMMISSIONS

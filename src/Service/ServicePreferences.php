@@ -473,8 +473,8 @@ class ServicePreferences
                     ->setHelp("Facture / Note de débit.")
             ];
             $tabAttributs = $this->setFIN_Fields_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
-            //$tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
-            //$tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
             $tabAttributs = [

@@ -686,7 +686,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
     public const PREF_FIN_FACTURE_DATE_DE_CREATION      = "Date de création";
     public const PREF_FIN_FACTURE_DERNIRE_MODIFICATION  = "Dernière modification";
-    public const PREF_FIN_FACTURE_TYE                   = "Type";
+    public const PREF_FIN_FACTURE_TYE                   = "Type de facture";
     public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
     public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
@@ -1218,6 +1218,11 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_PAIEMENTS_TAXES),
+                ChoiceField::new('finFactures', "Attributs Factures")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_FIN_FACTURE),
 
             //Onglet 05 - SINISTRE
             FormField::addTab(' SINISTRE')

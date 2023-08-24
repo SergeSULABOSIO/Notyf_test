@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\ElementFactureRepository;
+use App\Entity\Facture;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ElementFactureRepository;
 
 #[ORM\Entity(repositoryClass: ElementFactureRepository::class)]
 class ElementFacture

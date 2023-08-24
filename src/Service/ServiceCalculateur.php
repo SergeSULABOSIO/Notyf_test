@@ -145,6 +145,7 @@ class ServiceCalculateur
                 $liste = $entityManager->getRepository(Facture::class)->findBy(
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
                 );
+                
                 foreach ($liste as $fact) {
                     $this->updateFactureCalculableFileds($fact);
                 }
@@ -266,7 +267,7 @@ class ServiceCalculateur
         $this->calculerElementFactures(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'fature' => $facture,
+                'facture' => $facture,
             ]
         );
         $this->calculerFactureMontantDu($facture);

@@ -127,6 +127,9 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $parUtilisateurs = [];
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finFactures = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -579,5 +582,17 @@ class Preference
     public function __toString()
     {
         return "Paramètres d'affichage / " . $this->utilisateur;
+    }
+
+    public function getFinFactures(): array
+    {
+        return $this->finFactures;
+    }
+
+    public function setFinFactures(?array $finFactures): self
+    {
+        $this->finFactures = $finFactures;
+
+        return $this;
     }
 }

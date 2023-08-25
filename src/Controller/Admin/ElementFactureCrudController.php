@@ -21,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ElementFactureCrudController extends AbstractCrudController
@@ -72,14 +73,28 @@ class ElementFactureCrudController extends AbstractCrudController
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("POLICE")
-            ->setEntityLabelInPlural("Police d'assurance")
-            ->setPageTitle("index", "POLICES")
+            ->setEntityLabelInSingular("ELEMENTE")
+            ->setEntityLabelInPlural("Elément")
+            ->setPageTitle("index", "ELEMENTS")
             ->setDefaultSort(['updatedAt' => 'DESC'])
-            ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
+            ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
         return $crud;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {
+            $filters->add('utilisateur');
+        }
+        return $filters
+            ->add('facture');
+    }
+
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
     }
 
 

@@ -47,6 +47,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\ElementFactureCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -56,6 +57,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\ElementFacture;
 use App\Entity\Facture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -210,6 +212,9 @@ class ServicePreferences
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof Facture) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof ElementFacture) {
             $this->setTailleFIN($preference, $crud);
         }
         //GROUPE SINISTRE
@@ -1072,6 +1077,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS])) {
             $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+                ->formatValue(function ($value, Facture $entity) {
+                    return count($entity->getElementFactures()) == 0 ? "Aucun élément" : $entity->getElementFactures() . " élement(s).";
+                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU])) {
@@ -1110,14 +1118,23 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS])) {
             $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
+                ->formatValue(function ($value, Facture $entity) {
+                    return count($entity->getPaiementCommissions()) == 0 ? "Aucun paiement" : $entity->getPaiementCommissions() . " paiement(s).";
+                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES])) {
             $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)
+                ->formatValue(function ($value, Facture $entity) {
+                    return count($entity->getPaiementPartenaires()) == 0 ? "Aucun paiement" : $entity->getPaiementPartenaires() . " paiement(s).";
+                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES])) {
             $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
+                ->formatValue(function ($value, Facture $entity) {
+                    return count($entity->getPaiementTaxes()) == 0 ? "Aucun paiement" : $entity->getPaiementTaxes() . " paiement(s).";
+                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
@@ -1137,6 +1154,80 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)
                 ->onlyOnIndex();
         }
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Facture_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYE)
+            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Facture_form($tabAttributs)
+    {
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYE)
+            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+            ->setRequired(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+            ->setRequired(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+            ->useEntryCrudForm(ElementFactureCrudController::class)
+            ->setEntryIsComplex()
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+            ->setEntryIsComplex()
+            ->setColumns(6)
+            ->onlyOnForms();
+
         return $tabAttributs;
     }
 
@@ -5139,6 +5230,7 @@ class ServicePreferences
         $preference->setFinCommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         $preference->setFinRetrocommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         $preference->setFinTaxesPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        $preference->setFinFactures([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
         //SIN
         $preference->setSinTaille(100);
         $preference->setSinEtapes([1, 2, 3, 4, 5, 6, 7, 8]);

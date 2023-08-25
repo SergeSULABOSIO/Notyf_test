@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\FactureCrudController;
 use App\Repository\FactureRepository;
+use App\Service\ServiceMonnaie;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -338,5 +340,28 @@ class Facture
         $this->totalRecu = $totalRecu;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        $tiers = "à nous.";
+        switch ($this->type) {
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
+                $tiers = " à " . $this->assureur;
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                $tiers =  " à " . $this->partenaire;
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                $tiers = " à l'Autorité de régulation";
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                $tiers = " à l'Autorité fiscale";
+                break;
+            default:
+                $tiers = ".";
+                break;
+        }
+        return "Facture " . $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers;
     }
 }

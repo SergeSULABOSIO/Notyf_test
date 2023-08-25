@@ -680,7 +680,7 @@ class PreferenceCrudController extends AbstractCrudController
 
     //FINANCE - FACTURE
     public const PREF_FIN_FACTURE_ID                    = "Id";
-    public const PREF_FIN_FACTURE_ELEMENTS              = "Eléments";
+    public const PREF_FIN_FACTURE_ELEMENTS              = "Eléments facturés";
     public const PREF_FIN_FACTURE_REFERENCE             = "Référence";
     public const PREF_FIN_FACTURE_UTILISATEUR           = "Utilisateur";
     public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
@@ -690,7 +690,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
     public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
-    public const PREF_FIN_FACTURE_PIECE                 = "Pièce";
+    public const PREF_FIN_FACTURE_PIECE                 = "Pièce justificative";
     public const PREF_FIN_FACTURE_POP_COMMISSIONS       = "POP Commissions";
     public const PREF_FIN_FACTURE_POP_PARTENAIRES       = "POP Partenaires";
     public const PREF_FIN_FACTURE_POP_TAXES             = "POP Taxes";

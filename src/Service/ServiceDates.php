@@ -5,6 +5,7 @@ namespace App\Service;
 use DateTime;
 use DateInterval;
 use DateTimeImmutable;
+use Symfony\Component\Validator\Constraints\Date;
 
 class ServiceDates
 {
@@ -28,6 +29,10 @@ class ServiceDates
         $txt = "PT" . $nbMinutes . "M";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
+    }
+
+    public function getTexte(DateTime $date): string{
+        return $date->format('d-m-Y à H:i');
     }
 
     public function aujourdhui(): DateTimeImmutable{

@@ -130,6 +130,10 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $finFactures = [];
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finElementFactures = [];
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -592,6 +596,18 @@ class Preference
     public function setFinFactures(?array $finFactures): self
     {
         $this->finFactures = $finFactures;
+
+        return $this;
+    }
+
+    public function getFinElementFactures(): array
+    {
+        return $this->finElementFactures;
+    }
+
+    public function setFinElementFactures(?array $finElementFactures): self
+    {
+        $this->finElementFactures = $finElementFactures;
 
         return $this;
     }

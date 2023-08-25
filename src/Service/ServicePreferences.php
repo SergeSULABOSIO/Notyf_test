@@ -5230,7 +5230,8 @@ class ServicePreferences
         $preference->setFinCommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         $preference->setFinRetrocommissionsPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         $preference->setFinTaxesPayees([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-        $preference->setFinFactures([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        $preference->setFinFactures([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+        $preference->setFinElementFactures([1, 2, 3, 4, 5, 6, 7]);
         //SIN
         $preference->setSinTaille(100);
         $preference->setSinEtapes([1, 2, 3, 4, 5, 6, 7, 8]);

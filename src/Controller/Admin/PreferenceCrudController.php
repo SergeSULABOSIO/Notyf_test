@@ -651,7 +651,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_taxes_assureurs                         => 13,
         self::PREF_calc_taxes_assureurs_payees                  => 14,
         self::PREF_calc_taxes_assureurs_solde                   => 15
-        
+
     ];
 
     //FINANCE - MONNAIE
@@ -715,6 +715,27 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_POP_TAXES                => 14,
         self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
         self::PREF_FIN_FACTURE_TOTAL_RECU               => 16
+    ];
+
+    //FINANCE - FACTURE
+    public const PREF_FIN_ELEMENT_FACTURE_ID                = "Id";
+    public const PREF_FIN_ELEMENT_FACTURE_POLICE            = "Police";
+    public const PREF_FIN_ELEMENT_FACTURE_FACTURE           = "Facture";
+    public const PREF_FIN_ELEMENT_FACTURE_MONTANT           = "Montant";
+    public const PREF_FIN_ELEMENT_FACTURE_ENTREPRISE        = "Entreprise";
+    public const PREF_FIN_ELEMENT_FACTURE_UTILISATEUR       = "Utilisateur";
+    public const PREF_FIN_ELEMENT_FACTURE_DATE_CREATION     = "Date de création";
+    public const PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION = "Dernière Modification";
+
+    public const TAB_FIN_ELEMENT_FACTURE = [
+        self::PREF_FIN_ELEMENT_FACTURE_ID                => 0,
+        self::PREF_FIN_ELEMENT_FACTURE_POLICE            => 1,
+        self::PREF_FIN_ELEMENT_FACTURE_FACTURE           => 2,
+        self::PREF_FIN_ELEMENT_FACTURE_MONTANT           => 3,
+        self::PREF_FIN_ELEMENT_FACTURE_ENTREPRISE        => 4,
+        self::PREF_FIN_ELEMENT_FACTURE_UTILISATEUR       => 5,
+        self::PREF_FIN_ELEMENT_FACTURE_DATE_CREATION     => 6,
+        self::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION => 7
     ];
 
     //FINANCE - PAIEMENTS COMMISSIONS
@@ -1120,28 +1141,28 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
-            NumberField::new('crmTaille', "Eléments par page")->setColumns(2), //->setColumns(3),
-            ChoiceField::new('crmPistes', "Attributs Piste")
+            NumberField::new('crmTaille', "Eléments par page"),//->setColumns(2), //->setColumns(3),
+            ChoiceField::new('crmPistes', "Piste")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_PISTE),
-            ChoiceField::new('crmMissions', "Attributs Mission")
+            ChoiceField::new('crmMissions', "Mission")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_MISSIONS),
-            ChoiceField::new('crmFeedbacks', "Attributs Feedback")
+            ChoiceField::new('crmFeedbacks', "Feedback")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_FEEDBACKS),
-            ChoiceField::new('crmCotations', "Attributs Cotations")
+            ChoiceField::new('crmCotations', "Cotations")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_CRM_COTATIONS),
-            ChoiceField::new('crmEtapes', "Attributs Etapes")
+            ChoiceField::new('crmEtapes', "Etapes")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
@@ -1151,38 +1172,38 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' PRODUCTION')
                 ->setIcon('fas fa-bag-shopping')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PRODUCTION."),
-            NumberField::new('proTaille', "Eléments par page")->setColumns(2),
-            ChoiceField::new('proAssureurs', "Attributs Assureur")
+            NumberField::new('proTaille', "Eléments par page"),//->setColumns(2),
+            ChoiceField::new('proAssureurs', "Assureur")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_ASSUREURS),
-            ChoiceField::new('proPolices', "Attributs Polices")
+            ChoiceField::new('proPolices', "Polices")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_POLICES),
-            ChoiceField::new('proProduits', "Attributs Produits")
+            ChoiceField::new('proProduits', "Produits")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_PRODUITS),
-            ChoiceField::new('proClients', "Attributs Clients")
+            ChoiceField::new('proClients', "Clients")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_CLIENTS),
-            ChoiceField::new('proPartenaires', "Attributs Partenaires")
+            ChoiceField::new('proPartenaires', "Partenaires")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_PARTENAIRES),
-            ChoiceField::new('proAutomobiles', "Attributs Engins")
+            ChoiceField::new('proAutomobiles', "Engins")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_PRO_ENGINS),
-            ChoiceField::new('proContacts', "Attributs Contact")
+            ChoiceField::new('proContacts', "Contact")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
@@ -1192,59 +1213,64 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' FINANCES')
                 ->setIcon('fas fa-sack-dollar')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section FINANCES."),
-            NumberField::new('finTaille', "Eléments par page")->setColumns(2),
-            ChoiceField::new('finTaxes', "Attributs Taxes")
+            NumberField::new('finTaille', "Eléments par page"),//->setColumns(12),
+            ChoiceField::new('finTaxes', "Taxes")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_TAXES),
-            ChoiceField::new('finMonnaies', "Attributs Monnaies")
+            ChoiceField::new('finMonnaies', "Monnaies")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_MONNAIES),
-            ChoiceField::new('finCommissionsPayees', "Attributs Com. encaissées")
+            ChoiceField::new('finCommissionsPayees', "Com. encaissées")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_PAIEMENTS_COMMISSIONS),
-            ChoiceField::new('finRetrocommissionsPayees', "Attributs RetroCom. payées")
+            ChoiceField::new('finRetrocommissionsPayees', "RetroCom. payées")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS),
-            ChoiceField::new('finTaxesPayees', "Attributs Taxes payées")
+            ChoiceField::new('finTaxesPayees', "Taxes payées")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_PAIEMENTS_TAXES),
-                ChoiceField::new('finFactures', "Attributs Factures")
+            ChoiceField::new('finFactures', "Factures")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_FACTURE),
+            ChoiceField::new('finElementFactures', "Eléments de Facture")
+                ->setColumns(2)
+                ->renderExpanded()
+                ->allowMultipleChoices()
+                ->setChoices(self::TAB_FIN_ELEMENT_FACTURE),
 
             //Onglet 05 - SINISTRE
             FormField::addTab(' SINISTRE')
                 ->setIcon('fas fa-fire')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
-            NumberField::new('sinTaille', "Eléments par page")->setColumns(2),
-            ChoiceField::new('sinSinistres', "Attributs Sinistres")
+            NumberField::new('sinTaille', "Eléments par page"),//->setColumns(2),
+            ChoiceField::new('sinSinistres', "Sinistres")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_SINISTRES),
-            ChoiceField::new('sinEtapes', "Attributs Etapes")
+            ChoiceField::new('sinEtapes', "Etapes")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_ETAPES),
-            ChoiceField::new('sinExperts', "Attributs Experts")
+            ChoiceField::new('sinExperts', "Experts")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_SIN_EXPERTS),
-            ChoiceField::new('sinVictimes', "Attributs Victimes")
+            ChoiceField::new('sinVictimes', "Victimes")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
@@ -1255,18 +1281,18 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' BIBLIOTHEQUE')
                 ->setIcon('fas fa-book')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section BIBLIOTHEQUE."),
-            NumberField::new('bibTaille', "Eléments par page")->setColumns(2),
-            ChoiceField::new('bibCategories', "Attributs Catégories")
+            NumberField::new('bibTaille', "Eléments par page"),//->setColumns(2),
+            ChoiceField::new('bibCategories', "Catégories")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_BIB_CATEGORIES),
-            ChoiceField::new('bibClasseurs', "Attributs Classeurs")
+            ChoiceField::new('bibClasseurs', "Classeurs")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_BIB_CLASSEURS),
-            ChoiceField::new('bibPieces', "Attributs Documents")
+            ChoiceField::new('bibPieces', "Documents")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()
@@ -1276,8 +1302,8 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' PARAMETRES')
                 ->setIcon('fas fa-gears')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
-            NumberField::new('parTaille', "Eléments par page")->setColumns(2),
-            ChoiceField::new('parUtilisateurs', "Attributs Utilisateurs")
+            NumberField::new('parTaille', "Eléments par page"),//->setColumns(2),
+            ChoiceField::new('parUtilisateurs', "Utilisateurs")
                 ->setColumns(2)
                 ->renderExpanded()
                 ->allowMultipleChoices()

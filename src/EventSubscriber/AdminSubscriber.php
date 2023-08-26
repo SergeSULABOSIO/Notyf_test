@@ -144,7 +144,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
                 $elementfacture->setUpdatedAt($this->serviceDates->aujourdhui());
                 $elementfacture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                $elementfacture->setUtilisateur($this->serviceEntreprise->getEntreprise());
+                $elementfacture->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());

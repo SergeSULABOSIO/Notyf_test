@@ -1089,7 +1089,7 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS])) {
             $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
                 ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getElementFactures()) == 0 ? "Aucun élément" : $entity->getElementFactures() . " élement(s).";
+                    return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
                 })
                 ->onlyOnIndex();
         }

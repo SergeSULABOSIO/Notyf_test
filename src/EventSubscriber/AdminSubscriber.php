@@ -6,13 +6,16 @@ use App\Controller\Admin\MonnaieCrudController;
 use App\Entity\Piste;
 use App\Entity\Cotation;
 use App\Entity\ActionCRM;
+use App\Entity\ElementFacture;
 use App\Entity\Entreprise;
+use App\Entity\Facture;
 use App\Entity\FeedbackCRM;
 use App\Entity\Monnaie;
 use App\Entity\Police;
 use App\Entity\Preference;
 use App\Entity\Utilisateur;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use DateTimeImmutable;
@@ -29,6 +32,7 @@ class AdminSubscriber implements EventSubscriberInterface
 {
 
     public function __construct(
+        private ServiceDates $serviceDates,
         private UserPasswordHasherInterface $hasher,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceCalculateur $serviceCalculateur,
@@ -81,6 +85,15 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
         }
 
+        if ($entityInstance instanceof Facture) {
+            foreach ($entityInstance->getElementFactures() as $ef) {
+                /** @var ElementFacture */
+                $elementfactire = $ef;
+                $elementfactire->setCreatedAt($this->serviceDates->aujourdhui());
+                $elementfactire->setUpdatedAt($this->serviceDates->aujourdhui());
+            }
+        }
+
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
@@ -102,6 +115,7 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         //dd($event);
         $entityInstance = $event->getEntityInstance();
+        //dd($entityInstance);
 
         if ($entityInstance instanceof Monnaie) {
             $entityInstance = $this->updateNomMonnaie($entityInstance);
@@ -121,7 +135,20 @@ class AdminSubscriber implements EventSubscriberInterface
                 $response = $this->security->logout(false);
             } */
         }
-
+        if ($entityInstance instanceof Facture) {
+            foreach ($entityInstance->getElementFactures() as $ef) {
+                /** @var ElementFacture */
+                $elementfacture = $ef;
+                if($elementfacture->getCreatedAt() == null){
+                    $elementfacture->setCreatedAt($this->serviceDates->aujourdhui());
+                }
+                $elementfacture->setUpdatedAt($this->serviceDates->aujourdhui());
+                $elementfacture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $elementfacture->setUtilisateur($this->serviceEntreprise->getEntreprise());
+            }
+        }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
+
+        //dd($entityInstance);
     }
 }

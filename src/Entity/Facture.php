@@ -65,7 +65,7 @@ class Facture
     #[ORM\Column(nullable: true)]
     private ?float $totalRecu = null;
 
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class, cascade:['remove', 'persist', 'refresh', 'merge', 'detach'])]
+    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $elementFactures;
 
     public function __construct()

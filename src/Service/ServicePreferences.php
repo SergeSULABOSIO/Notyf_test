@@ -1111,10 +1111,10 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION])) {
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION])) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
                 ->onlyOnIndex();
-        }
+        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE])) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->onlyOnIndex();
@@ -1320,6 +1320,8 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
             ->useEntryCrudForm(ElementFactureCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
             ->setColumns(12)

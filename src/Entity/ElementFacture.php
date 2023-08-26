@@ -33,7 +33,7 @@ class ElementFacture
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures')]
+    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade:['remove', 'persist', 'refresh'])]
     private ?Facture $facture = null;
 
     public function getId(): ?int
@@ -115,7 +115,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "id:" . $this->id . " | Mnt: um " . $this->montant/100 . " | " . $this->police;
+        return "Id@" . $this->id . ", Mnt@" . $this->montant/100 . ", Pol@" . $this->police . "";
     }
 
     public function getFacture(): ?Facture

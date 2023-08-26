@@ -2,28 +2,30 @@
 
 namespace App\EventSubscriber;
 
-use App\Controller\Admin\MonnaieCrudController;
 use App\Entity\Piste;
+use App\Entity\Police;
+use DateTimeImmutable;
+use App\Entity\Facture;
+use App\Entity\Monnaie;
 use App\Entity\Cotation;
 use App\Entity\ActionCRM;
-use App\Entity\ElementFacture;
 use App\Entity\Entreprise;
-use App\Entity\Facture;
-use App\Entity\FeedbackCRM;
-use App\Entity\Monnaie;
-use App\Entity\Police;
 use App\Entity\Preference;
+use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
-use App\Service\ServiceCalculateur;
 use App\Service\ServiceDates;
+use App\Entity\ElementFacture;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
-use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Controller\Admin\MonnaieCrudController;
+use App\Service\ServiceSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -32,11 +34,13 @@ class AdminSubscriber implements EventSubscriberInterface
 {
 
     public function __construct(
+        private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
         private UserPasswordHasherInterface $hasher,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceCalculateur $serviceCalculateur,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceSuppression $serviceSuppression
     ) {
     }
 
@@ -98,6 +102,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
+        $this->cleanElementFacture();
     }
 
     public function updateNomMonnaie(Monnaie $entityInstance): Monnaie
@@ -148,7 +153,20 @@ class AdminSubscriber implements EventSubscriberInterface
             }
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-
+        $this->cleanElementFacture();
         //dd($entityInstance);
+    }
+
+    private function cleanElementFacture(){
+        $elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($elementFactures);
+        foreach ($elementFactures as $ef) {
+            /** @var ElementFacture */
+            if($ef->getFacture() == null){
+                $this->serviceSuppression->supprimer($ef, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
+            }
+        }
     }
 }

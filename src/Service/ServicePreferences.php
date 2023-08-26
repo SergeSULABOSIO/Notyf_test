@@ -310,8 +310,9 @@ class ServicePreferences
         return false;
     }
 
-    public function definirAttributsPages($objetInstance, Preference $preference, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
+    public function definirAttributsPages($objetInstance, Preference $preference, $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        //dd($crud);
         $this->crud = $crud;
         $this->adminUrlGenerator = $adminUrlGenerator;
 
@@ -473,13 +474,23 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Facture) {
             $tabAttributs = [
-                FormField::addPanel('Informations générales')
+                FormField::addPanel('Facture')
                     ->setIcon('fa-solid fa-receipt') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Facture / Note de débit.")
             ];
             $tabAttributs = $this->setFIN_Fields_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
+        }
+        if ($objetInstance instanceof ElementFacture) {
+            $tabAttributs = [
+                FormField::addPanel('Elément')
+                    ->setIcon('fa-solid fa-cart-plus') //<i class="fa-solid fa-cart-plus"></i>
+                    ->setHelp("Elément à inclure dans la facture.")
+            ];
+            $tabAttributs = $this->setFIN_Fields_Element_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_ELEMENT_FACTURE, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Element_Facture_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Element_Facture_form($tabAttributs);
         }
         if ($objetInstance instanceof PaiementCommission) {
             $tabAttributs = [
@@ -1157,6 +1168,95 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setFIN_Fields_Element_Facture_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE])) {
+            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_FACTURE])) {
+            $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_FACTURE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT])) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
+                ->formatValue(function ($value, ElementFacture $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_CREATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ENTREPRISE)
+                ->onlyOnIndex();
+        }
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Element_Facture_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_FACTURE)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
+            ->formatValue(function ($value, ElementFacture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_CREATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ENTREPRISE)
+            ->onlyOnDetail();
+
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Element_Facture_form($tabAttributs)
+    {
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+            ->setColumns(9)
+            ->setRequired(false)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
+            ->formatValue(function ($value, ElementFacture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->setColumns(3)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
     public function setFIN_Fields_Facture_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
@@ -1189,9 +1289,9 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
             ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
@@ -1221,11 +1321,12 @@ class ServicePreferences
         $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
             ->useEntryCrudForm(ElementFactureCrudController::class)
             ->setEntryIsComplex()
-            ->setColumns(6)
+            ->setRequired(false)
+            ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = CollectionField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-            ->setEntryIsComplex()
-            ->setColumns(6)
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+            ->setRequired(false)
+            ->setColumns(12)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -5195,7 +5296,7 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function getChamps($objetInstance, Crud $crud, AdminUrlGenerator $adminUrlGenerator)
+    public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //définition des attributs des pages
@@ -5277,70 +5378,72 @@ class ServicePreferences
 
     public function setTitreReporting(Police $police)
     {
-        //dd($this->adminUrlGenerator->get("codeReporting"));
-        if ($this->adminUrlGenerator->get("codeReporting") != null) {
-            //COMMISSION
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
-                $this->total_unpaidcommission += $police->getUnpaidcommission();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
-            }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
-                $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
-            }
-            //RETRO-COMMISSION
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM) {
-                $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
-            }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
-                $this->total_paidretrocommission += $police->calc_retrocom_payees;
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
-            }
-            //TAXES
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE) {
-                $this->total_unpaidtaxe += $police->getUnpaidtaxe();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxe) . "]");
-            }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE) {
-                $this->total_paidtaxe += $police->getPaidtaxe();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxe) . "]");
-            }
-            //TAXES COURTIERS
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_COURTIER) {
-                $this->total_unpaidtaxecourtier += $police->getUnpaidtaxecourtier();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxecourtier) . "]");
-            }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_COURTIER) {
-                $this->total_paidtaxecourtier += $police->getPaidtaxecourtier();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxecourtier) . "]");
-            }
-            //TAXES ASSUREUR
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_ASSUREUR) {
-                $this->total_unpaidtaxeassureur += $police->getUnpaidtaxeassureur();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxeassureur) . "]");
-            }
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR) {
-                $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxeassureur) . "]");
-            }
-            //PRODUCTION GLOBALE
-            if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS) {
-                $this->total_prime_nette += $police->getPrimenette();
-                $this->total_prime_fronting += $police->getFronting();
-                $this->total_prime_accessoire += $police->getFraisadmin();
-                $this->total_prime_arca += $police->getArca();
-                $this->total_prime_tva += $police->getTva();
-                $this->total_prime_ttc += $police->getPrimetotale();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
-                [
-                    Prime totale: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_ttc) . ", 
-                    Prime nette: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_nette) . ",
-                    Fronting: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_fronting) . ",
-                    " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_tva) . ",
-                    " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_arca) . ",
-                    Accessoires: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_accessoire) . ",
-                ]");
+        if ($this->crud) {
+            //dd($this->adminUrlGenerator->get("codeReporting"));
+            if ($this->adminUrlGenerator->get("codeReporting") != null) {
+                //COMMISSION
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
+                    $this->total_unpaidcommission += $police->getUnpaidcommission();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
+                }
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
+                    $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
+                }
+                //RETRO-COMMISSION
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM) {
+                    $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
+                }
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
+                    $this->total_paidretrocommission += $police->calc_retrocom_payees;
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
+                }
+                //TAXES
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE) {
+                    $this->total_unpaidtaxe += $police->getUnpaidtaxe();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxe) . "]");
+                }
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE) {
+                    $this->total_paidtaxe += $police->getPaidtaxe();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxe) . "]");
+                }
+                //TAXES COURTIERS
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_COURTIER) {
+                    $this->total_unpaidtaxecourtier += $police->getUnpaidtaxecourtier();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxecourtier) . "]");
+                }
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_COURTIER) {
+                    $this->total_paidtaxecourtier += $police->getPaidtaxecourtier();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxecourtier) . "]");
+                }
+                //TAXES ASSUREUR
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_ASSUREUR) {
+                    $this->total_unpaidtaxeassureur += $police->getUnpaidtaxeassureur();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxeassureur) . "]");
+                }
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR) {
+                    $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxeassureur) . "]");
+                }
+                //PRODUCTION GLOBALE
+                if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS) {
+                    $this->total_prime_nette += $police->getPrimenette();
+                    $this->total_prime_fronting += $police->getFronting();
+                    $this->total_prime_accessoire += $police->getFraisadmin();
+                    $this->total_prime_arca += $police->getArca();
+                    $this->total_prime_tva += $police->getTva();
+                    $this->total_prime_ttc += $police->getPrimetotale();
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
+                    [
+                        Prime totale: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_ttc) . ", 
+                        Prime nette: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_nette) . ",
+                        Fronting: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_fronting) . ",
+                        " . strtoupper($this->serviceTaxes->getNomTaxeAssureur()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_tva) . ",
+                        " . strtoupper($this->serviceTaxes->getNomTaxeCourtier()) . ": " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_arca) . ",
+                        Accessoires: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_accessoire) . ",
+                    ]");
+                }
             }
         }
     }
@@ -5368,12 +5471,14 @@ class ServicePreferences
                     }
                 }
 
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
-                [
-                    Revenus potentiels: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_piste_caff_esperes) . ",
-                    Revenus générés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($com_ttc) . ",
-                    Primes générées: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($prime_ttc) . "
-                ]");
+                if ($this->crud) {
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
+                    [
+                        Revenus potentiels: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_piste_caff_esperes) . ",
+                        Revenus générés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($com_ttc) . ",
+                        Primes générées: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($prime_ttc) . "
+                    ]");
+                }
             }
         }
     }
@@ -5386,11 +5491,14 @@ class ServicePreferences
             if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_SINISTRE_TOUS) {
                 $this->total_sinistre_cout += $sinistre->getCout();
                 $this->total_sinistre_indemnisation += $sinistre->getMontantPaye();
-                $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
-                [
-                    Dégâts estimés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_cout) . ", 
-                    Compensation versée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_indemnisation) . "
-                ]");
+
+                if ($this->crud) {
+                    $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
+                    [
+                        Dégâts estimés: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_cout) . ", 
+                        Compensation versée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_sinistre_indemnisation) . "
+                    ]");
+                }
             }
         }
     }

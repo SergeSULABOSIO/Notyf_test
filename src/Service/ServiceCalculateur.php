@@ -46,6 +46,7 @@ class ServiceCalculateur
     public const RUBRIQUE_TAXE = 6;
     public const RUBRIQUE_SINISTRE = 7;
     public const RUBRIQUE_FACTURE = 8;
+    public const RUBRIQUE_ELEMENT_FACTURE = 9;
 
 
     public function __construct(

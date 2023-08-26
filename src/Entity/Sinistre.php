@@ -228,7 +228,7 @@ class Sinistre extends CalculableEntity
 
     public function __toString()
     {
-        return $this->numero . " / " . $this->titre;
+        return $this->numero;
     }
 
     public function getNumero(): ?string

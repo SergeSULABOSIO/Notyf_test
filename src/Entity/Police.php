@@ -476,7 +476,7 @@ class Police extends CalculableEntity
 
     public function __toString()
     {
-        return "Réf.: " . $this->getReference() . " / Prime TTC: " . $this->getPrimetotale()/100 . " / Client: " . $this->client . " / " . $this->getAssureur() . " / " . $this->getProduit();
+        return "Réf.: " . $this->getReference();// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
     }
 
     public function getReassureurs(): ?string

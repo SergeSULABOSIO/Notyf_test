@@ -17,8 +17,8 @@ class Facture
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class)]
-    private Collection $elementFactures;
+    /* #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class)]
+    private Collection $elementFactures; */
 
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
@@ -65,47 +65,20 @@ class Facture
     #[ORM\Column(nullable: true)]
     private ?float $totalRecu = null;
 
+    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class)]
+    private Collection $elementFactures;
+
     public function __construct()
     {
-        $this->elementFactures = new ArrayCollection();
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
         $this->paiementTaxes = new ArrayCollection();
+        $this->elementFactures = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, ElementFacture>
-     */
-    public function getElementFactures(): Collection
-    {
-        return $this->elementFactures;
-    }
-
-    public function addElementFacture(ElementFacture $elementFacture): self
-    {
-        if (!$this->elementFactures->contains($elementFacture)) {
-            $this->elementFactures->add($elementFacture);
-            $elementFacture->setFacture($this);
-        }
-
-        return $this;
-    }
-
-    public function removeElementFacture(ElementFacture $elementFacture): self
-    {
-        if ($this->elementFactures->removeElement($elementFacture)) {
-            // set the owning side to null (unless already changed)
-            if ($elementFacture->getFacture() === $this) {
-                $elementFacture->setFacture(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getReference(): ?string
@@ -363,5 +336,35 @@ class Facture
                 break;
         }
         return "Facture " . $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers;
+    }
+
+    /**
+     * @return Collection<int, ElementFacture>
+     */
+    public function getElementFactures(): Collection
+    {
+        return $this->elementFactures;
+    }
+
+    public function addElementFacture(ElementFacture $elementFacture): self
+    {
+        if (!$this->elementFactures->contains($elementFacture)) {
+            $this->elementFactures->add($elementFacture);
+            $elementFacture->setFacture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElementFacture(ElementFacture $elementFacture): self
+    {
+        if ($this->elementFactures->removeElement($elementFacture)) {
+            // set the owning side to null (unless already changed)
+            if ($elementFacture->getFacture() === $this) {
+                $elementFacture->setFacture(null);
+            }
+        }
+
+        return $this;
     }
 }

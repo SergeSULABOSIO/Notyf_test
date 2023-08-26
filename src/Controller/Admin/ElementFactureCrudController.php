@@ -9,6 +9,7 @@ use App\Service\ServiceAvenant;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceDates;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +31,7 @@ class ElementFactureCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
@@ -67,7 +69,7 @@ class ElementFactureCrudController extends AbstractCrudController
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new ElementFacture(), $crud);
-        $this->crud = $crud
+        $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             //->setDateTimeFormat('dd/MM/yyyy')
             ->setDateFormat('dd/MM/yyyy')
@@ -80,6 +82,7 @@ class ElementFactureCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...
         ;
+        $this->crud = $crud;
         return $crud;
     }
 
@@ -97,13 +100,29 @@ class ElementFactureCrudController extends AbstractCrudController
         $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
     }
 
+    public function createEntity(string $entityFqcn)
+    {
+        $objet = new ElementFacture();
+        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $objet->setCreatedAt($this->serviceDates->aujourdhui());
+        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
+        //$objet->setMontant(0);
+        //$objet->setFacture(null);
+        //$objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
+        //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+        return $objet;
+    }
+
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            //IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
+        if($this->crud){
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
+        }
+        
+        //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_ELEMENT_FACTURE);
+        return $this->servicePreferences->getChamps(new ElementFacture(), $this->crud, $this->adminUrlGenerator);
     }
 }

@@ -388,14 +388,42 @@ class PoliceCrudController extends AbstractCrudController
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
-        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+
+
+        //LES ACTIONS BATCH
+        $batch_creer_facture_commission = Action::new("facture_commissions", "Créer une facture pour Commissions")
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getActionCRMs()) != 0;
+            })
+            ->linkToCrudAction('facture_commissions')
+            //->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-receipt');
+        $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Créer une facture pour Retrocommissions")
+            ->linkToCrudAction('facture_retrocommissions')
+            //->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-receipt');
+        $batch_creer_facture_tva = Action::new("facture_tva", "Créer une note de perception pour TVA")
+            ->linkToCrudAction('facture_tva')
+            //->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-receipt');
+        $batch_creer_facture_arca = Action::new("facture_arca", "Créer une note de perception pour le régulateur")
+            ->linkToCrudAction('facture_arca')
+            //->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-receipt');
+
+        $batch_exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
-            ->addCssClass('btn btn-primary')
+            //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
 
         $actions
             //Sur la page Index - Selection
-            ->addBatchAction($exporter_ms_excels)
+            ->addBatchAction($batch_exporter_ms_excels)
+            ->addBatchAction($batch_creer_facture_arca)
+            ->addBatchAction($batch_creer_facture_tva)
+            ->addBatchAction($batch_creer_facture_retrocommission)
+            ->addBatchAction($batch_creer_facture_commission)
+
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -536,8 +564,6 @@ class PoliceCrudController extends AbstractCrudController
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
         ;
         //Ajout des opérations arca
-
-
         return $actions;
     }
 
@@ -570,6 +596,24 @@ class PoliceCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+
+    public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+        return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
+    }
+
+    public function creerFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $type)
+    {
+        //$className = $batchActionDto->getEntityFqcn();
+        //$entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+        //dd($batchActionDto->getEntityIds());
+        $tabIdPolices = [];
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            $tabIdPolices [] = $id;
+        }
+        //dd($tabIdPolices);
+        return $this->redirect($this->serviceCrossCanal->crossCanal_creer_facture($adminUrlGenerator, $tabIdPolices, $type));
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

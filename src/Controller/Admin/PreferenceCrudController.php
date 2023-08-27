@@ -686,7 +686,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
     public const PREF_FIN_FACTURE_DATE_DE_CREATION      = "Date de création";
     public const PREF_FIN_FACTURE_DERNIRE_MODIFICATION  = "Dernière modification";
-    public const PREF_FIN_FACTURE_TYE                   = "Type de facture";
+    public const PREF_FIN_FACTURE_TYPE                   = "Type de facture";
     public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
     public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
@@ -705,7 +705,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_ENTREPRISE               => 4,
         self::PREF_FIN_FACTURE_DATE_DE_CREATION         => 5,
         self::PREF_FIN_FACTURE_DERNIRE_MODIFICATION     => 6,
-        self::PREF_FIN_FACTURE_TYE                      => 7,
+        self::PREF_FIN_FACTURE_TYPE                      => 7,
         self::PREF_FIN_FACTURE_ASSUREUR                 => 8,
         self::PREF_FIN_FACTURE_PARTENAIRE               => 9,
         self::PREF_FIN_FACTURE_DESCRIPTION              => 10,

@@ -52,6 +52,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use Symfony\Component\Validator\Constraints\Date;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\FeedbackCRMCrudController;
@@ -61,6 +62,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use DateInterval;
+use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -1680,6 +1682,34 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdPolice, $typeFacture)
+    {
+        //$entite = $context->getEntity()->getInstance();
+        switch ($typeFacture) {
+            case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                $adminUrlGenerator
+                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                    ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
+                    break;
+
+            default:
+                # code...
+                break;
+        }
+        $url = $adminUrlGenerator
+            ->setController(FactureCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", $typeFacture)
+            ->set("donnees[type]", $typeFacture)
+            ->set("donnees[tabPolices]", $tabIdPolice)
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();
@@ -2282,6 +2312,7 @@ class ServiceCrossCanal
         return $adminUrlGenerator
             ->unset("titre")
             ->unset("filters")
+            ->unset("donnees")
             ->unset("champsACacher")
             ->unset("codeReporting")
             ->unset("avenant");

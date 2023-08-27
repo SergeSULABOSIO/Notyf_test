@@ -310,6 +310,19 @@ class ServicePreferences
         return false;
     }
 
+    public function canShow_url($indice_attribut)
+    {
+        //dd($this->adminUrlGenerator->get("champsACacher"));
+        if ($this->adminUrlGenerator->get("champsACacher")) {
+            foreach ($this->adminUrlGenerator->get("champsACacher") as $champsACacher) {
+                if ($champsACacher == $indice_attribut) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public function definirAttributsPages($objetInstance, Preference $preference, $crud, AdminUrlGenerator $adminUrlGenerator)
     {
         //dd($crud);
@@ -1077,8 +1090,8 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TYE])) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYE)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TYPE])) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->onlyOnIndex()
                 ->setChoices(FactureCrudController::TAB_TYPE_FACTURE);
         }
@@ -1260,7 +1273,7 @@ class ServicePreferences
     public function setFIN_Fields_Facture_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYE)
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
             ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
@@ -1300,36 +1313,52 @@ class ServicePreferences
 
     public function setFIN_Fields_Facture_form($tabAttributs)
     {
-        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYE)
-            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-            ->setRequired(false)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-            ->setRequired(false)
-            ->setColumns(6)
-            ->onlyOnForms();
-        $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
-            ->useEntryCrudForm(ElementFactureCrudController::class)
-            ->allowAdd(true)
-            ->allowDelete(true)
-            ->setEntryIsComplex()
-            ->setRequired(false)
-            ->setColumns(12)
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-            ->setRequired(false)
-            ->setColumns(12)
-            ->onlyOnForms();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TYPE)) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)) {
+            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                ->setRequired(false)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
+            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+                ->setRequired(false)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
+            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)) {
+            $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+                ->useEntryCrudForm(ElementFactureCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex()
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        //On désactive les champs non éditables
+        $this->appliquerCanDesable($tabAttributs);
 
         return $tabAttributs;
     }

@@ -10,6 +10,7 @@ use App\Service\ServiceAvenant;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceFacture;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,6 +48,7 @@ class FactureCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceFacture $serviceFacture,
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
@@ -125,14 +127,8 @@ class FactureCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Facture();
-        //$objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceFacture->initFature($objet, $this->adminUrlGenerator);
         //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-        $objet->setType(self::TAB_TYPE_FACTURE[self::TYPE_FACTURE_COMMISSIONS]);
-        $objet->setCreatedAt($this->serviceDates->aujourdhui());
-        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
-        $objet->setDescription("Facture"); //Date("dmYHis")
-        $ref = "ND" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y");
-        $objet->setReference(strtoupper(str_replace(" ", "", $ref)));
         return $objet;
     }
 

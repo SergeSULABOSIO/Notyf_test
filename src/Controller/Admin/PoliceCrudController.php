@@ -603,16 +603,24 @@ class PoliceCrudController extends AbstractCrudController
         return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
     }
 
+    public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+        return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
+    }
+
+    public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+        return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
+    }
+
+    public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+        return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
+    }
+
     public function creerFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $type)
     {
-        //$className = $batchActionDto->getEntityFqcn();
-        //$entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-        //dd($batchActionDto->getEntityIds());
         $tabIdPolices = [];
         foreach ($batchActionDto->getEntityIds() as $id) {
             $tabIdPolices [] = $id;
         }
-        //dd($tabIdPolices);
         return $this->redirect($this->serviceCrossCanal->crossCanal_creer_facture($adminUrlGenerator, $tabIdPolices, $type));
     }
 

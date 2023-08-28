@@ -1727,6 +1727,7 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", $typeFacture)
             ->set("donnees[type]", $typeFacture)
+            ->set("donnees[action]", "facture")
             ->set("donnees[tabPolices]", $tabIdPolice)
             ->setEntityId(null)
             ->generateUrl();

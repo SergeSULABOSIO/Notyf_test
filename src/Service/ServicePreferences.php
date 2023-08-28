@@ -496,11 +496,21 @@ class ServicePreferences
             $tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
         }
         if ($objetInstance instanceof ElementFacture) {
+
+            //dd($adminUrlGenerator->get("donnees"));
             $tabAttributs = [
                 FormField::addPanel('Elément')
                     ->setIcon('fa-solid fa-cart-plus') //<i class="fa-solid fa-cart-plus"></i>
                     ->setHelp("Elément à inclure dans la facture.")
             ];
+            
+            if($adminUrlGenerator->get("donnees")){
+                $donnees = $adminUrlGenerator->get("donnees");
+                if($donnees["action"] == "facture"){
+                    $tabAttributs = [];
+                }
+            }
+            
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_ELEMENT_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_form($tabAttributs);

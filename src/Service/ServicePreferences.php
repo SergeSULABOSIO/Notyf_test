@@ -499,17 +499,10 @@ class ServicePreferences
 
             //dd($adminUrlGenerator->get("donnees"));
             $tabAttributs = [
-                FormField::addPanel('Elément')
+                FormField::addPanel('Elément facture')
                     ->setIcon('fa-solid fa-cart-plus') //<i class="fa-solid fa-cart-plus"></i>
                     ->setHelp("Elément à inclure dans la facture.")
             ];
-            
-            if($adminUrlGenerator->get("donnees")){
-                $donnees = $adminUrlGenerator->get("donnees");
-                if($donnees["action"] == "facture"){
-                    $tabAttributs = [];
-                }
-            }
             
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_ELEMENT_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Details($tabAttributs);
@@ -1270,10 +1263,10 @@ class ServicePreferences
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
-            ->setColumns(8)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
-            ->setColumns(8)
+            ->setColumns(12)
             ->setRequired(false)
             ->onlyOnForms();
 
@@ -1358,7 +1351,7 @@ class ServicePreferences
                 ->allowDelete(true)
                 ->setEntryIsComplex()
                 ->setRequired(false)
-                ->setColumns(10)
+                ->setColumns(6)
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {

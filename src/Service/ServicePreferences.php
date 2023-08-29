@@ -1264,17 +1264,17 @@ class ServicePreferences
 
     public function setFIN_Fields_Element_Facture_form($tabAttributs)
     {
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
-            ->setColumns(9)
-            ->setRequired(false)
-            ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
             ->formatValue(function ($value, ElementFacture $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
-            ->setColumns(3)
+            ->setColumns(8)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+            ->setColumns(8)
+            ->setRequired(false)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -1358,7 +1358,7 @@ class ServicePreferences
                 ->allowDelete(true)
                 ->setEntryIsComplex()
                 ->setRequired(false)
-                ->setColumns(12)
+                ->setColumns(10)
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {

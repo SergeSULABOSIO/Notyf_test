@@ -60,21 +60,77 @@ class ServiceFacture
         return $facture;
     }
 
-    public function canIssueFactureCommissions(BatchActionDto $batchActionDto, $typeFacture): bool{
-        $reponseComNull = false;
+    public function canIssueFactureComm(BatchActionDto $batchActionDto, $typeFacture): bool{
+        $soldeComNotNull = true;
         $tabAssureur = new ArrayCollection();
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
-            //Si la commission due n'est pas nulle
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            //Si la commission due est nulle
             if($police->calc_revenu_ttc_solde_restant_du == 0){
-                $reponseComNull = true;
+                $soldeComNotNull = false;
             }
-            //Si toutes ces polices sont liées à un seul et unique assureur
-            ici
-            //$tabAssureur->contains($police->getAssureur())
+            $tabAssureur->add($police->getAssureur()); 
         }
-        return false;
+        //dd($soldeComNotNull);
+        return $this->hasUniqueData($tabAssureur) && $soldeComNotNull;
+    }
+
+    public function canIssueFactureRetroComm(BatchActionDto $batchActionDto, $typeFacture): bool{
+        $reponseRetroComNotNull = true;
+        $tabPartenaire = new ArrayCollection();        
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($id);
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            //Si la commission due est nulle
+            if($police->calc_retrocom_solde == 0){
+                $reponseRetroComNotNull = false;
+            }
+            $tabPartenaire->add($police->getPartenaire()); 
+        }
+        return $this->hasUniqueData($tabPartenaire) && $reponseRetroComNotNull;
+    }
+
+    public function canIssueFactureTaxeArca(BatchActionDto $batchActionDto, $typeFacture): bool{
+        $reponseTaxeArcaNotNull = true;
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($id);
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            //Si la commission due est nulle
+            if($police->calc_taxes_courtier_solde == 0){
+                $reponseTaxeArcaNotNull = false;
+            }
+        }
+        return $reponseTaxeArcaNotNull;
+    }
+
+    public function canIssueFactureTaxeTva(BatchActionDto $batchActionDto, $typeFacture): bool{
+        $reponseTaxeAssNotNull = true;
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            /** @var Police */
+            $police = $this->entityManager->getRepository(Police::class)->find($id);
+            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
+            //Si la commission due est nulle
+            if($police->calc_taxes_assureurs_solde == 0){
+                $reponseTaxeAssNotNull = false;
+            }
+        }
+        return $reponseTaxeAssNotNull;
+    }
+
+    public function hasUniqueData(ArrayCollection $tab): bool{
+         //Si toutes ces polices sont liées à un seul et unique assureur
+        $reponseAssureurUnique = true;
+        $ass01 = $tab->get(0);
+        foreach ($tab as $assureur) {
+            if($ass01 != $assureur){
+                $reponseAssureurUnique = false;
+            }
+        }
+        return $reponseAssureurUnique;
     }
 
     public function canCollectCommissions(Police $police){
@@ -114,7 +170,7 @@ class ServiceFacture
                         $ef = new ElementFacture();
                         $ef->setPolice($oPolice);
                         $ef->setMontant($oPolice->calc_retrocom_solde);
-                        $facture->setAssureur($oPolice->getPartenaire());
+                        $facture->setPartenaire($oPolice->getPartenaire());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                         /** @var Taxe */

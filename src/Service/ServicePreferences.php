@@ -1139,6 +1139,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS])) {
+            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
             $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                 ->onlyOnIndex();
@@ -1298,6 +1302,7 @@ class ServicePreferences
         $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
             ->onlyOnDetail();
@@ -1335,6 +1340,12 @@ class ServicePreferences
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+                ->setRequired(false)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
+            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
                 ->setRequired(false)
                 ->setColumns(4)
                 ->onlyOnForms();

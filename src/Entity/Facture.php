@@ -52,7 +52,7 @@ class Facture
 
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementCommission::class)]
     private Collection $paiementCommissions;
-
+    
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementPartenaire::class)]
     private Collection $paiementPartenaires;
 
@@ -67,6 +67,9 @@ class Facture
 
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $elementFactures;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $autreTiers = null;
 
     public function __construct()
     {
@@ -364,6 +367,18 @@ class Facture
                 $elementFacture->setFacture(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAutreTiers(): ?string
+    {
+        return $this->autreTiers;
+    }
+
+    public function setAutreTiers(?string $autreTiers): self
+    {
+        $this->autreTiers = $autreTiers;
 
         return $this;
     }

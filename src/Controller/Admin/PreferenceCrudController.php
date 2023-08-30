@@ -689,6 +689,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_TYPE                   = "Type de facture";
     public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
     public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
+    public const PREF_FIN_FACTURE_AUTRE_TIERS           = "Tiers";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
     public const PREF_FIN_FACTURE_PIECE                 = "Pièce justificative";
     public const PREF_FIN_FACTURE_POP_COMMISSIONS       = "POP Commissions";
@@ -705,7 +706,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_ENTREPRISE               => 4,
         self::PREF_FIN_FACTURE_DATE_DE_CREATION         => 5,
         self::PREF_FIN_FACTURE_DERNIRE_MODIFICATION     => 6,
-        self::PREF_FIN_FACTURE_TYPE                      => 7,
+        self::PREF_FIN_FACTURE_TYPE                     => 7,
         self::PREF_FIN_FACTURE_ASSUREUR                 => 8,
         self::PREF_FIN_FACTURE_PARTENAIRE               => 9,
         self::PREF_FIN_FACTURE_DESCRIPTION              => 10,
@@ -714,7 +715,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_POP_PARTENAIRES          => 13,
         self::PREF_FIN_FACTURE_POP_TAXES                => 14,
         self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
-        self::PREF_FIN_FACTURE_TOTAL_RECU               => 16
+        self::PREF_FIN_FACTURE_TOTAL_RECU               => 16,
+        self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17
     ];
 
     //FINANCE - FACTURE

@@ -1690,6 +1690,7 @@ class ServiceCrossCanal
                 $adminUrlGenerator
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                     ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                     ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
@@ -1698,6 +1699,7 @@ class ServiceCrossCanal
                 $adminUrlGenerator
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                     ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                     ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE);
@@ -1708,7 +1710,8 @@ class ServiceCrossCanal
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE);
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
                 break;
             case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                 $adminUrlGenerator
@@ -1716,7 +1719,8 @@ class ServiceCrossCanal
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE);
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
                 break;
             default:
                 # code...

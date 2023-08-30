@@ -17,6 +17,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\FactureCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -60,17 +61,18 @@ class ServiceFacture
     }
 
     public function canIssueFactureCommissions(BatchActionDto $batchActionDto, $typeFacture): bool{
-        $reponse = false;
-        $tabPolices = [];
+        $reponseComNull = false;
+        $tabAssureur = new ArrayCollection();
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
-            //Si la com est differente du null
-            if($police){
-
+            //Si la commission due n'est pas nulle
+            if($police->calc_revenu_ttc_solde_restant_du == 0){
+                $reponseComNull = true;
             }
-            
-            $tabPolices[] = null;
+            //Si toutes ces polices sont liées à un seul et unique assureur
+            ici
+            //$tabAssureur->contains($police->getAssureur())
         }
         return false;
     }

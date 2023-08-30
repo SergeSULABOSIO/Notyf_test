@@ -10,6 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceFacture;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,6 +81,7 @@ class PoliceCrudController extends AbstractCrudController
     ];
 
     public function __construct(
+        private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
@@ -390,23 +392,35 @@ class PoliceCrudController extends AbstractCrudController
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
 
+        //dd($this->adminUrlGenerator->get("codeReporting"));
+
         //LES ACTIONS BATCH
         $batch_creer_facture_commission = Action::new("facture_commissions", "Créer une facture pour Commissions")
             ->displayIf(static function (?Police $entity) {
-                return count($entity->getActionCRMs()) != 0;
+                //return count($entity->getActionCRMs()) != 0;
+                return $entity->calc_revenu_ttc_solde_restant_du != 0;
             })
             ->linkToCrudAction('facture_commissions')
             //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
         $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Créer une facture pour Retrocommissions")
+            ->displayIf(static function (?Police $entity) {
+                return $entity->calc_retrocom_solde != 0;
+            })
             ->linkToCrudAction('facture_retrocommissions')
             //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
         $batch_creer_facture_tva = Action::new("facture_tva", "Créer une note de perception pour TVA")
+            ->displayIf(static function (?Police $entity) {
+                return $entity->calc_taxes_assureurs_solde != 0;
+            })
             ->linkToCrudAction('facture_tva')
             //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
         $batch_creer_facture_arca = Action::new("facture_arca", "Créer une note de perception pour le régulateur")
+            ->displayIf(static function (?Police $entity) {
+                return $entity->calc_taxes_courtier_solde != 0;
+            })
             ->linkToCrudAction('facture_arca')
             //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
@@ -599,19 +613,28 @@ class PoliceCrudController extends AbstractCrudController
     }
 
 
-    public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
-        return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
+    public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
+        if ($this->serviceFacture->canIssueFactureCommissions($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS)) {
+            return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
+        } else {
+            $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". Il n'est pas possible d'émettre la facture pour collecte des commissions.");
+            //return $this->redirect($adminUrlGenerator->generateUrl());
+        }
     }
 
-    public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+    public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
         return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
     }
 
-    public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+    public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
         return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
     }
 
-    public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator){
+    public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
         return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
     }
 
@@ -619,7 +642,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         $tabIdPolices = [];
         foreach ($batchActionDto->getEntityIds() as $id) {
-            $tabIdPolices [] = $id;
+            $tabIdPolices[] = $id;
         }
         return $this->redirect($this->serviceCrossCanal->crossCanal_creer_facture($adminUrlGenerator, $tabIdPolices, $type));
     }

@@ -615,6 +615,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
+        ici
         if ($this->serviceFacture->canIssueFactureCommissions($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS)) {
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         } else {

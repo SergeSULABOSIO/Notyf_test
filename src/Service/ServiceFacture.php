@@ -65,7 +65,10 @@ class ServiceFacture
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
-            ici
+            //Si la com est differente du null
+            if($police){
+
+            }
             
             $tabPolices[] = null;
         }

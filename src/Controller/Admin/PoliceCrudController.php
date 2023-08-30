@@ -619,7 +619,7 @@ class PoliceCrudController extends AbstractCrudController
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         } else {
             $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". Il n'est pas possible d'émettre la facture pour collecte des commissions.");
-            //return $this->redirect($adminUrlGenerator->generateUrl());
+            return $this->redirect($batchActionDto->getReferrerUrl());
         }
     }
 

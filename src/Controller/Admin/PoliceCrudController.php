@@ -608,14 +608,19 @@ class PoliceCrudController extends AbstractCrudController
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = 
-        if ($this->serviceFacture->canIssueFactureComm($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS)) {
+        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
+        dd($reponse);
+
+        ici
+        /* if ($this->serviceFacture->canIssueFactureComm($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS)) {
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         } else {
             $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". 
             Impossible d'émettre la facture. Assurez-vous que le solde des commissions dues est différent du nul et que la sélection actuelle ne concerne qu'un même assureur.");
             return $this->redirect($batchActionDto->getReferrerUrl());
-        }
+        } */
+
+
     }
 
     public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)

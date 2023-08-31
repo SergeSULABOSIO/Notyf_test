@@ -60,92 +60,115 @@ class ServiceFacture
         return $facture;
     }
 
-    public function canIssueFactureComm(BatchActionDto $batchActionDto, $typeFacture): bool{
-        $soldeComNotNull = true;
+    public function canIssueFacture(BatchActionDto $batchActionDto, $typeFacture): bool
+    {
+        $reponses = [];
+        $soldeComNull = false;
         $tabAssureur = new ArrayCollection();
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
             $this->serviceCalculateur->updatePoliceCalculableFileds($police);
-            //Si la commission due est nulle
-            if($police->calc_revenu_ttc_solde_restant_du == 0){
-                $soldeComNotNull = false;
+            //il faut switcher ici : On agit différemment selon le type de facture
+            switch ($typeFacture) {
+                case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                    $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
+                    $tabAssureur->add($police->getAssureur());
+                    break;
+
+                default:
+                    # code...
+                    break;
             }
-            $tabAssureur->add($police->getAssureur()); 
         }
-        //dd($soldeComNotNull);
-        return $this->hasUniqueData($tabAssureur) && $soldeComNotNull;
+        //return $this->hasUniqueData($tabAssureur) && $soldeComNotNull;
+        if ($this->hasUniqueData($tabAssureur)) {
+            $reponses["status"] = false;
+            $reponses["Messages"] = "La séléction concerne plusieurs assureurs différents. Elle ne devrait conerner qu'un seul assureur à la fois. ";
+        }
+        if ($soldeComNull) {
+            $reponses["status"] = false;
+            $reponses["Messages"] = $reponses["Messages"] . "La commission due est nulle, donc rien à collecter.";
+        }
     }
 
-    public function canIssueFactureRetroComm(BatchActionDto $batchActionDto, $typeFacture): bool{
+    public function canIssueFactureRetroComm(BatchActionDto $batchActionDto, $typeFacture): bool
+    {
         $reponseRetroComNotNull = true;
-        $tabPartenaire = new ArrayCollection();        
+        $tabPartenaire = new ArrayCollection();
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
             $this->serviceCalculateur->updatePoliceCalculableFileds($police);
             //Si la commission due est nulle
-            if($police->calc_retrocom_solde == 0){
+            if ($police->calc_retrocom_solde == 0) {
                 $reponseRetroComNotNull = false;
             }
-            $tabPartenaire->add($police->getPartenaire()); 
+            $tabPartenaire->add($police->getPartenaire());
         }
         return $this->hasUniqueData($tabPartenaire) && $reponseRetroComNotNull;
     }
 
-    public function canIssueFactureTaxeArca(BatchActionDto $batchActionDto, $typeFacture): bool{
+    public function canIssueFactureTaxeArca(BatchActionDto $batchActionDto, $typeFacture): bool
+    {
         $reponseTaxeArcaNotNull = true;
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
             $this->serviceCalculateur->updatePoliceCalculableFileds($police);
             //Si la commission due est nulle
-            if($police->calc_taxes_courtier_solde == 0){
+            if ($police->calc_taxes_courtier_solde == 0) {
                 $reponseTaxeArcaNotNull = false;
             }
         }
         return $reponseTaxeArcaNotNull;
     }
 
-    public function canIssueFactureTaxeTva(BatchActionDto $batchActionDto, $typeFacture): bool{
+    public function canIssueFactureTaxeTva(BatchActionDto $batchActionDto, $typeFacture): bool
+    {
         $reponseTaxeAssNotNull = true;
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
             $this->serviceCalculateur->updatePoliceCalculableFileds($police);
             //Si la commission due est nulle
-            if($police->calc_taxes_assureurs_solde == 0){
+            if ($police->calc_taxes_assureurs_solde == 0) {
                 $reponseTaxeAssNotNull = false;
             }
         }
         return $reponseTaxeAssNotNull;
     }
 
-    public function hasUniqueData(ArrayCollection $tab): bool{
-         //Si toutes ces polices sont liées à un seul et unique assureur
+    public function hasUniqueData(ArrayCollection $tab): bool
+    {
+        //Si toutes ces polices sont liées à un seul et unique assureur
         $reponseAssureurUnique = true;
         $ass01 = $tab->get(0);
         foreach ($tab as $assureur) {
-            if($ass01 != $assureur){
+            if ($ass01 != $assureur) {
                 $reponseAssureurUnique = false;
             }
         }
         return $reponseAssureurUnique;
     }
 
-    public function canCollectCommissions(Police $police){
+    public function canCollectCommissions(Police $police)
+    {
         return $police->calc_revenu_ttc_solde_restant_du != 0;
     }
 
-    public function canPayPartner(Police $police){
+    public function canPayPartner(Police $police)
+    {
         return $police->calc_retrocom_solde != 0;
     }
 
-    public function canPayVAT(Police $police){
+    public function canPayVAT(Police $police)
+    {
         return $police->calc_taxes_assureurs_solde != 0;
     }
 
-    public function canPayRegulator(Police $police){
+    public function canPayRegulator(Police $police)
+    {
         return $police->calc_taxes_courtier_solde != 0;
     }
 

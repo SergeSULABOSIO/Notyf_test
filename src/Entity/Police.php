@@ -196,7 +196,7 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $paidtaxe = null;
-
+    
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Piste::class)]
     private Collection $pistes;
 

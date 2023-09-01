@@ -392,21 +392,21 @@ class PoliceCrudController extends AbstractCrudController
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
         //LES ACTIONS BATCH
-        $batch_creer_facture_commission = Action::new("facture_commissions", "Créer une facture pour Commissions")
+        $batch_creer_facture_commission = Action::new("facture_commissions", "Facture pour Commissions")
             ->linkToCrudAction('facture_commissions')
             ->setIcon('fa-solid fa-receipt');
-        $batch_creer_facture_frais_de_gestion = Action::new("facture_frais_de_gestion", "Facture pour Frais de gestion/Honoraires")
+        $batch_creer_facture_frais_de_gestion = Action::new("facture_frais_de_gestion", "Facture pour Frais de Gestion (Honoraires, etc.)")
             ->linkToCrudAction('facture_frais_de_gestion')
             ->setIcon('fa-solid fa-receipt');
-        $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Créer une facture pour Retrocommissions")
+        $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Facture pour Retrocommissions")
             ->linkToCrudAction('facture_retrocommissions')
             ->setIcon('fa-solid fa-receipt');
         $nomTaxe = $this->serviceTaxes->getTaxe(false) ? $this->serviceTaxes->getTaxe(false)->getNom() : "TVA";
-        $batch_creer_facture_tva = Action::new("facture_tva", "Créer une note de perception pour " . $nomTaxe)
+        $batch_creer_facture_tva = Action::new("facture_tva", "Note de perception pour " . $nomTaxe)
             ->linkToCrudAction('facture_tva')
             ->setIcon('fa-solid fa-receipt');
         $nomTaxe = $this->serviceTaxes->getTaxe(true) ? $this->serviceTaxes->getTaxe(true)->getNom() : "le régulateur";
-        $batch_creer_facture_arca = Action::new("facture_arca", "Créer une note de perception pour " . $nomTaxe)
+        $batch_creer_facture_arca = Action::new("facture_arca", "Note de perception pour " . $nomTaxe)
             ->linkToCrudAction('facture_arca')
             ->setIcon('fa-solid fa-receipt');
 

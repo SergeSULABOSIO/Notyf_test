@@ -66,9 +66,8 @@ class ServiceFacture
             "status" => true,
             "Messages" => "Salut " . $this->serviceEntreprise->getUtilisateur() . ". Vous pouvez ajuster la facture à volonté et même y revenir quand cela vous arrange."
         ];
-
         $soldeComNull = false;
-        $tabAssureur = new ArrayCollection();
+        $tabTiers = new ArrayCollection();
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($id);
@@ -77,20 +76,34 @@ class ServiceFacture
             switch ($typeFacture) {
                 case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                     $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
-                    $tabAssureur->add($police->getAssureur());
+                    $tabTiers->add($police->getAssureur());
                     break;
-ici
+                case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+                    $soldeComNull = ($police->calc_retrocom_solde == 0);
+                    $tabTiers->add($police->getPartenaire());
+                    break;
+                case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+                    $soldeComNull = ($police->calc_taxes_assureurs_solde == 0);
+                    $tabTiers->add($this->serviceTaxes->getTaxe(false)->getOrganisation());
+                    break;
+                case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+                    $soldeComNull = ($police->calc_taxes_courtier_solde == 0);
+                    $tabTiers->add($this->serviceTaxes->getTaxe(true)->getOrganisation());
+                    break;
                 default:
                     # code...
                     break;
             }
         }
 
+        /** @var Taxe */
+        $taxeArca = $this->serviceTaxes->getTaxe(true);
+        /** @var Taxe */
+        $taxeTva = $this->serviceTaxes->getTaxe(false);
         //Construction des messages / réponses
         switch ($typeFacture) {
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
-                //return $this->hasUniqueData($tabAssureur) && $soldeComNotNull;
-                if ($this->hasUniqueData($tabAssureur)) {
+                if ($this->hasUniqueData($tabTiers)) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction concerne plusieurs assureurs différents. Elle ne devrait conerner qu'un seul assureur à la fois. ";
                 }
@@ -99,12 +112,33 @@ ici
                     $reponses["Messages"] = $reponses["Messages"] . "La commission due est nulle, donc rien à collecter.";
                 }
                 break;
+            case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+                if ($this->hasUniqueData($tabTiers)) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction concerne plusieurs partenaires différents. Elle ne devrait conerner qu'un seul partenaire à la fois. ";
+                }
+                if ($soldeComNull) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = $reponses["Messages"] . "La retro-commission due est nulle, donc rien à retrocéder.";
+                }
+                break;
+            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+                if ($soldeComNull) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La ". $taxeTva->getNom() ." due est nulle, donc rien à payer à " . $taxeTva->getOrganisation() . ". ";
+                }
+                break;
+            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+                if ($soldeComNull) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". " . $taxeTva->getNom(). " due est nulle, donc rien à payer à " . $taxeArca->getOrganisation() . ". ";
+                }
+                break;
 
             default:
                 # code...
                 break;
         }
-
         return $reponses;
     }
 

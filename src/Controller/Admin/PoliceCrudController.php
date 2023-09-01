@@ -609,60 +609,58 @@ class PoliceCrudController extends AbstractCrudController
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
         $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
-        dd($reponse);
-
-        ici
-        /* if ($this->serviceFacture->canIssueFactureComm($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS)) {
+        //dd($reponse);
+        if ($reponse["status"]) {
+            $this->addFlash("success", $reponse["Messages"]); 
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         } else {
-            $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". 
-            Impossible d'émettre la facture. Assurez-vous que le solde des commissions dues est différent du nul et que la sélection actuelle ne concerne qu'un même assureur.");
+            $this->addFlash("danger", $reponse["Messages"]); 
             return $this->redirect($batchActionDto->getReferrerUrl());
-        } */
-
-
+        }
     }
 
     public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        if ($this->serviceFacture->canIssueFactureRetroComm($batchActionDto, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS)) {
+        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
+        //dd($reponse);
+        if ($reponse["status"]) {
+            $this->addFlash("success", $reponse["Messages"]); 
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
         } else {
-            $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". 
-            Impossible d'émettre la facture. Assurez-vous que le solde des retro-commissions est différent du nul et que la sélection actuelle ne concerne qu'un même partenaire.");
+            $this->addFlash("danger", $reponse["Messages"]); 
             return $this->redirect($batchActionDto->getReferrerUrl());
         }
     }
 
     public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        if ($this->serviceFacture->canIssueFactureTaxeArca($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA)) {
+        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
+        //dd($reponse);
+        if ($reponse["status"]) {
+            $this->addFlash("success", $reponse["Messages"]); 
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
         } else {
-            $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". 
-            Impossible d'émettre la facture. Il semble que le solde des taxes dues au régulateur est nul.");
+            $this->addFlash("danger", $reponse["Messages"]); 
             return $this->redirect($batchActionDto->getReferrerUrl());
         }
     }
 
     public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        if ($this->serviceFacture->canIssueFactureTaxeTva($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA)) {
+        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
+        //dd($reponse);
+        if ($reponse["status"]) {
+            $this->addFlash("success", $reponse["Messages"]); 
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
         } else {
-            $this->addFlash("warning", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". 
-            Impossible d'émettre la facture. Il semble que le solde des tva dues à l'autorité fiscale est nul.");
+            $this->addFlash("danger", $reponse["Messages"]); 
             return $this->redirect($batchActionDto->getReferrerUrl());
         }
     }
 
     public function creerFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $type)
     {
-        $tabIdPolices = [];
-        foreach ($batchActionDto->getEntityIds() as $id) {
-            $tabIdPolices[] = $id;
-        }
-        return $this->redirect($this->serviceCrossCanal->crossCanal_creer_facture($adminUrlGenerator, $tabIdPolices, $type));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_creer_facture($adminUrlGenerator, $batchActionDto->getEntityIds(), $type));
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

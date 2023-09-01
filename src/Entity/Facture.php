@@ -71,12 +71,16 @@ class Facture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $autreTiers = null;
 
+    #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures', cascade:['remove', 'persist', 'refresh'])]
+    private Collection $police;
+
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
         $this->paiementTaxes = new ArrayCollection();
         $this->elementFactures = new ArrayCollection();
+        $this->police = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -379,6 +383,33 @@ class Facture
     public function setAutreTiers(?string $autreTiers): self
     {
         $this->autreTiers = $autreTiers;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolice(): Collection
+    {
+        return $this->police;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->police->contains($police)) {
+            $this->police->add($police);
+            $police->addFacture($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->police->removeElement($police)) {
+            $police->removeFacture($this);
+        }
 
         return $this;
     }

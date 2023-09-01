@@ -202,6 +202,9 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: ElementFacture::class)]
     private Collection $elementFactures;
+
+    #[ORM\ManyToMany(targetEntity: Facture::class, inversedBy: 'police', cascade:['remove', 'persist', 'refresh'])]
+    private Collection $factures;
     
     
     public function __construct()
@@ -215,6 +218,7 @@ class Police extends CalculableEntity
         $this->automobiles = new ArrayCollection();
         $this->pistes = new ArrayCollection();
         $this->elementFactures = new ArrayCollection();
+        $this->factures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1070,6 +1074,30 @@ class Police extends CalculableEntity
                 $elementFacture->setPolice(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Facture>
+     */
+    public function getFactures(): Collection
+    {
+        return $this->factures;
+    }
+
+    public function addFacture(Facture $facture): self
+    {
+        if (!$this->factures->contains($facture)) {
+            $this->factures->add($facture);
+        }
+
+        return $this;
+    }
+
+    public function removeFacture(Facture $facture): self
+    {
+        $this->factures->removeElement($facture);
 
         return $this;
     }

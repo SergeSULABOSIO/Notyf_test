@@ -610,7 +610,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         //dd($reponse);
-        if ($reponse["status"]) {
+        if ($reponse["status"] == true) {
             $this->addFlash("success", $reponse["Messages"]); 
             return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
         } else {

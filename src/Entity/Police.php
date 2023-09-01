@@ -163,7 +163,7 @@ class Police extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
-
+    
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Automobile::class)]
     private Collection $automobiles;
 
@@ -196,7 +196,7 @@ class Police extends CalculableEntity
 
     #[ORM\Column(nullable: true)]
     private ?float $paidtaxe = null;
-    
+
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: Piste::class)]
     private Collection $pistes;
 

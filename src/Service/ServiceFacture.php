@@ -79,6 +79,13 @@ class ServiceFacture
                     }
                     $tabTiers->add($police->getAssureur());
                     break;
+                case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                    $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
+                    if (!$tabTiers->contains($police->getClient())) {
+                        $tabTiers_str = $tabTiers_str  . $police->getClient()->getNom() . ", ";
+                    }
+                    $tabTiers->add($police->getClient());
+                    break;
                 case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                     $soldeComNull = ($police->calc_retrocom_solde == 0);
                     if ($police->getPartenaire()) {
@@ -90,13 +97,13 @@ class ServiceFacture
                     break;
                 case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                     $soldeComNull = ($police->calc_taxes_assureurs_solde == 0);
-                    if($this->serviceTaxes->getTaxe(false)){
+                    if ($this->serviceTaxes->getTaxe(false)) {
                         $tabTiers->add($this->serviceTaxes->getTaxe(false)->getOrganisation());
                     }
                     break;
                 case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
                     $soldeComNull = ($police->calc_taxes_courtier_solde == 0);
-                    if($this->serviceTaxes->getTaxe(false)){
+                    if ($this->serviceTaxes->getTaxe(false)) {
                         $tabTiers->add($this->serviceTaxes->getTaxe(true)->getOrganisation());
                     }
                     break;
@@ -110,8 +117,8 @@ class ServiceFacture
         /** @var Taxe */
         $taxeTva = $this->serviceTaxes->getTaxe(false);
         //Petit toiletage du string de la liste
-        if(strlen($tabTiers_str)>2){
-            $tabTiers_str = substr($tabTiers_str,0,-2); //on enlève la dernière virgule et l'espace ", "
+        if (strlen($tabTiers_str) > 2) {
+            $tabTiers_str = substr($tabTiers_str, 0, -2); //on enlève la dernière virgule et l'espace ", "
             $tabTiers_str = strtolower($tabTiers_str);
             $tabTiers_str = ucwords($tabTiers_str);
         }
@@ -125,6 +132,16 @@ class ServiceFacture
                 if ($soldeComNull) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = $reponses["Messages"] . "La commission due est nulle, donc rien à collecter.";
+                }
+                break;
+            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                if ($this->hasUniqueData($tabTiers) == false) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs assurés différents (nous avons trouvé " . $tabTiers_str . "). Elle ne devrait conerner qu'un seul assuré à la fois. ";
+                }
+                if ($soldeComNull) {
+                    $reponses["status"] = false;
+                    $reponses["Messages"] = $reponses["Messages"] . "Le montant du est nul, donc rien à facturer.";
                 }
                 break;
             case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
@@ -206,6 +223,13 @@ class ServiceFacture
                         $ef->setPolice($oPolice);
                         $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
                         $facture->setAssureur($oPolice->getAssureur());
+                        break;
+                    case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                        /** @var ElementFacture */
+                        $ef = new ElementFacture();
+                        $ef->setPolice($oPolice);
+                        $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
+                        $facture->setAutreTiers($oPolice->getClient()->getNom());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                         /** @var ElementFacture */

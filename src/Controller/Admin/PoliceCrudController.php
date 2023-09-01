@@ -395,6 +395,9 @@ class PoliceCrudController extends AbstractCrudController
         $batch_creer_facture_commission = Action::new("facture_commissions", "Créer une facture pour Commissions")
             ->linkToCrudAction('facture_commissions')
             ->setIcon('fa-solid fa-receipt');
+        $batch_creer_facture_frais_de_gestion = Action::new("facture_frais_de_gestion", "Facture pour Frais de gestion/Honoraires")
+            ->linkToCrudAction('facture_frais_de_gestion')
+            ->setIcon('fa-solid fa-receipt');
         $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Créer une facture pour Retrocommissions")
             ->linkToCrudAction('facture_retrocommissions')
             ->setIcon('fa-solid fa-receipt');
@@ -418,6 +421,7 @@ class PoliceCrudController extends AbstractCrudController
             ->addBatchAction($batch_creer_facture_arca)
             ->addBatchAction($batch_creer_facture_tva)
             ->addBatchAction($batch_creer_facture_retrocommission)
+            ->addBatchAction($batch_creer_facture_frais_de_gestion)
             ->addBatchAction($batch_creer_facture_commission)
 
             //les Updates sur la page détail
@@ -604,6 +608,11 @@ class PoliceCrudController extends AbstractCrudController
             $this->addFlash("danger", $reponse["Messages"]);
             return $this->redirect($batchActionDto->getReferrerUrl());
         }
+    }
+
+    public function facture_frais_de_gestion(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION);
     }
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)

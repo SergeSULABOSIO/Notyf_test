@@ -114,6 +114,7 @@ class FactureCrudController extends AbstractCrudController
             ->add('partenaire')
             ->add('assureur')
             ->add('piece')
+            ->add('elementFactures')
             ->add('paiementCommissions')
             ->add('paiementPartenaires')
             ->add('paiementTaxes')

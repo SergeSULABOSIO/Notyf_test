@@ -54,9 +54,6 @@ class ServiceFacture
             }
             $facture->setDescription($description);
         }
-
-        //$facture->setType(self::TAB_TYPE_FACTURE[self::TYPE_FACTURE_COMMISSIONS]);
-
         return $facture;
     }
 
@@ -108,7 +105,6 @@ class ServiceFacture
                     break;
             }
         }
-
         /** @var Taxe */
         $taxeArca = $this->serviceTaxes->getTaxe(true);
         /** @var Taxe */
@@ -162,17 +158,17 @@ class ServiceFacture
     }
 
 
-    public function hasUniqueData(ArrayCollection $tab): bool
+    public function hasUniqueData(ArrayCollection $tabData): bool
     {
-        //Si toutes ces polices sont liées à un seul et unique assureur
-        $reponseAssureurUnique = true;
-        $ass01 = $tab->get(0);
-        foreach ($tab as $assureur) {
-            if ($ass01 != $assureur) {
-                $reponseAssureurUnique = false;
+        //S'il s'agit de la même données
+        $isSameData = true;
+        $firstData = $tabData->get(0);
+        foreach ($tabData as $currentData) {
+            if ($firstData != $currentData) {
+                $isSameData = false;
             }
         }
-        return $reponseAssureurUnique;
+        return $isSameData;
     }
 
     public function canCollectCommissions(Police $police)

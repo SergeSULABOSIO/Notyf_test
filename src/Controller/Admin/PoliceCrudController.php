@@ -391,31 +391,20 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
-
-        //dd($this->adminUrlGenerator->get("codeReporting"));
-
         //LES ACTIONS BATCH
         $batch_creer_facture_commission = Action::new("facture_commissions", "Créer une facture pour Commissions")
             ->linkToCrudAction('facture_commissions')
-            //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
         $batch_creer_facture_retrocommission = Action::new("facture_retrocommissions", "Créer une facture pour Retrocommissions")
             ->linkToCrudAction('facture_retrocommissions')
-            //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
-        $batch_creer_facture_tva = Action::new("facture_tva", "Créer une note de perception pour TVA")
-            ->displayIf(static function (?Police $entity) {
-                return $entity->calc_taxes_assureurs_solde != 0;
-            })
+        $nomTaxe = $this->serviceTaxes->getTaxe(false) ? $this->serviceTaxes->getTaxe(false)->getNom() : "TVA";
+        $batch_creer_facture_tva = Action::new("facture_tva", "Créer une note de perception pour " . $nomTaxe)
             ->linkToCrudAction('facture_tva')
-            //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
-        $batch_creer_facture_arca = Action::new("facture_arca", "Créer une note de perception pour le régulateur")
-            ->displayIf(static function (?Police $entity) {
-                return $entity->calc_taxes_courtier_solde != 0;
-            })
+        $nomTaxe = $this->serviceTaxes->getTaxe(true) ? $this->serviceTaxes->getTaxe(true)->getNom() : "le régulateur";
+        $batch_creer_facture_arca = Action::new("facture_arca", "Créer une note de perception pour " . $nomTaxe)
             ->linkToCrudAction('facture_arca')
-            //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-receipt');
 
         $batch_exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
@@ -605,57 +594,36 @@ class PoliceCrudController extends AbstractCrudController
         return $this->redirect($url);
     }
 
+    public function construireFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $typeFacture)
+    {
+        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, $typeFacture);
+        if ($reponse["status"] == true) {
+            $this->addFlash("success", $reponse["Messages"]);
+            return $this->creerFacture($batchActionDto, $adminUrlGenerator, $typeFacture);
+        } else {
+            $this->addFlash("danger", $reponse["Messages"]);
+            return $this->redirect($batchActionDto->getReferrerUrl());
+        }
+    }
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
-        //dd($reponse);
-        if ($reponse["status"] == true) {
-            $this->addFlash("success", $reponse["Messages"]); 
-            return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
-        } else {
-            $this->addFlash("danger", $reponse["Messages"]); 
-            return $this->redirect($batchActionDto->getReferrerUrl());
-        }
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
     }
 
     public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
-        //dd($reponse);
-        if ($reponse["status"]) {
-            $this->addFlash("success", $reponse["Messages"]); 
-            return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
-        } else {
-            $this->addFlash("danger", $reponse["Messages"]); 
-            return $this->redirect($batchActionDto->getReferrerUrl());
-        }
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
     }
 
     public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
-        //dd($reponse);
-        if ($reponse["status"]) {
-            $this->addFlash("success", $reponse["Messages"]); 
-            return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
-        } else {
-            $this->addFlash("danger", $reponse["Messages"]); 
-            return $this->redirect($batchActionDto->getReferrerUrl());
-        }
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
     }
 
     public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->serviceFacture->canIssueFacture($batchActionDto, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
-        //dd($reponse);
-        if ($reponse["status"]) {
-            $this->addFlash("success", $reponse["Messages"]); 
-            return $this->creerFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
-        } else {
-            $this->addFlash("danger", $reponse["Messages"]); 
-            return $this->redirect($batchActionDto->getReferrerUrl());
-        }
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
     }
 
     public function creerFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $type)

@@ -277,5 +277,7 @@ class ServiceFacture
         $ef->setUpdatedAt($this->serviceDates->aujourdhui());
         $ef->setFacture($facture);
         $facture->addElementFacture($ef);
+        //Il faut établir la connexion entre la police et facture
+        $facture->addPolice($ef->getPolice());
     }
 }

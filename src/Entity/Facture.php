@@ -324,7 +324,7 @@ class Facture
 
     public function __toString()
     {
-        $tiers = "à nous.";
+        $tiers = " à nous.";
         switch ($this->type) {
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
                 $tiers = " à " . $this->assureur;
@@ -339,10 +339,10 @@ class Facture
                 $tiers = " à l'Autorité fiscale";
                 break;
             default:
-                $tiers = ".";
+                //$tiers = ".";
                 break;
         }
-        return "Facture " . $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers;
+        return "Facture " . $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers . $this->description;
     }
 
     /**

@@ -267,16 +267,14 @@ class ServiceFacture
                 $this->setAutresAttributs($facture, $ef);
             }
         }
-
         //Etablissement du lient entre Police et Facture
+        //C'est super important.
         foreach ($facture->getElementFactures() as $ef) {
             /** @var Police */
             $oPolice = $ef->getPolice();
             $oPolice->addFacture($facture);
         }
         //dd($facture);
-        
-
         return $total;
     }
 

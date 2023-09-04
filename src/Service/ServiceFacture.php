@@ -216,6 +216,7 @@ class ServiceFacture
             $oPolice = $this->entityManager->getRepository(Police::class)->find($idPolice);
             if ($oPolice) {
                 $this->serviceCalculateur->updatePoliceCalculableFileds($oPolice);
+
                 switch ($typeFacture) {
                     case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                         /** @var ElementFacture */
@@ -266,6 +267,16 @@ class ServiceFacture
                 $this->setAutresAttributs($facture, $ef);
             }
         }
+
+        //Etablissement du lient entre Police et Facture
+        foreach ($facture->getElementFactures() as $ef) {
+            /** @var Police */
+            $oPolice = $ef->getPolice();
+            $oPolice->addFacture($facture);
+        }
+        //dd($facture);
+        
+
         return $total;
     }
 
@@ -277,7 +288,5 @@ class ServiceFacture
         $ef->setUpdatedAt($this->serviceDates->aujourdhui());
         $ef->setFacture($facture);
         $facture->addElementFacture($ef);
-        //Il faut établir la connexion entre la police et facture
-        $facture->addPolice($ef->getPolice());
     }
 }

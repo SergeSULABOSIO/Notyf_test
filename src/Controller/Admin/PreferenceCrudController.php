@@ -493,6 +493,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_ENTREPRISE                                 = "Entreprise";
     public const PREF_PRO_POLICE_DATE_DE_CREATION                           = "Date de création";
     public const PREF_PRO_POLICE_DATE_DE_MODIFICATION                       = "Dernière modification";
+    public const PREF_PRO_POLICE_FACTURES                                   = "Factures";
 
     public const TAB_PRO_POLICES = [
         self::PREF_PRO_POLICE_ID                                => 0,
@@ -562,7 +563,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_sinistre_dommage_total                  => 63,
         self::PREF_calc_sinistre_indemnisation_total            => 64,
         self::PREF_calc_sinistre_indice_SP                      => 65,
-        self::PREF_PRO_POLICE_PISTES                            => 66
+        self::PREF_PRO_POLICE_PISTES                            => 66,
+        self::PREF_PRO_POLICE_FACTURES                          => 67
     ];
     //PRODUCTION - PRODUIT
     public const PREF_PRO_PRODUIT_ID                        = "Id";

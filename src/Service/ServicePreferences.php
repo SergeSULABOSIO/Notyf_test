@@ -1098,14 +1098,14 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE])) {
+            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TYPE])) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->onlyOnIndex()
                 ->setChoices(FactureCrudController::TAB_TYPE_FACTURE);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE])) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS])) {
             $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)

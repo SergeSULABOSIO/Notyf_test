@@ -267,7 +267,7 @@ class ServiceFacture
                 $this->setAutresAttributs($facture, $ef);
             }
         }
-        //Etablissement du lient entre Police et Facture
+        //Etablissement du lien entre Police et Facture
         //C'est super important.
         foreach ($facture->getElementFactures() as $ef) {
             /** @var Police */

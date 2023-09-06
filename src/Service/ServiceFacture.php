@@ -188,6 +188,15 @@ class ServiceFacture
         return $isSameData;
     }
 
+    public function getType(int $typeFacture){
+        foreach (FactureCrudController::TAB_TYPE_FACTURE as $key => $value) {
+            if($typeFacture === $value){
+                return $key;
+            }
+        }
+        return null;
+    }
+
     public function canCollectCommissions(Police $police)
     {
         return $police->calc_revenu_ttc_solde_restant_du != 0;

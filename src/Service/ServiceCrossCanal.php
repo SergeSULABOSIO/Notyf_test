@@ -1682,13 +1682,7 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator){
-
-    }
-
-    public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdPolice, $typeFacture)
-    {
-        //$entite = $context->getEntity()->getInstance();
+    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, $typeFacture){
         switch ($typeFacture) {
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                 $adminUrlGenerator
@@ -1739,6 +1733,13 @@ class ServiceCrossCanal
                 # code...
                 break;
         }
+        return $adminUrlGenerator;
+    }
+
+    public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdPolice, $typeFacture)
+    {
+        //$entite = $context->getEntity()->getInstance();
+        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::NEW)

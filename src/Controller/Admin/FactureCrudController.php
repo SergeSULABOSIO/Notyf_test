@@ -136,27 +136,17 @@ class FactureCrudController extends AbstractCrudController
         return $objet;
     }
 
-    public function edit(AdminContext $context)
-    {
-        /** @var Facture */
-        $facture = $context->getEntity()->getInstance();
-        dd($context);
-
-        /* $url = $this->adminUrlGenerator
-            ->setController(self::class)
-            ->set("titre", "Modification")
-            ->setAction(Action::EDIT)
-            ->setEntityId($facture->getId())
-            ->generateUrl(); */
-
-        //return $this->redirect($url);
-    }
-
     public function configureFields(string $pageName): iterable
     {
-        if($pageName == Crud::PAGE_EDIT){
-            //dd("Page de modification");
+        if ($pageName == Crud::PAGE_EDIT) {
+            /** @var Facture */
+            $facture = $this->getContext()->getEntity()->getInstance();
+            //dd($facture);$this->serviceFacture
+            $this->adminUrlGenerator = $this->serviceCrossCanal->initChampsFacture($this->adminUrlGenerator, $this->serviceFacture->getType($facture->getType()));//$facture->getType()
+            dd($this->adminUrlGenerator);
         }
+
+
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
@@ -239,9 +229,8 @@ class FactureCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            
-            ->remove(Crud::PAGE_INDEX, Action::NEW)
-            ;
+
+            ->remove(Crud::PAGE_INDEX, Action::NEW);
 
         return $actions;
     }

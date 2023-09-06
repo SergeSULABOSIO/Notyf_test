@@ -63,11 +63,15 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?DocClasseur $classeur = null;
 
+    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: Paiement::class)]
+    private Collection $paiements;
+
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
         $this->paiementTaxes = new ArrayCollection();
+        $this->paiements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -310,6 +314,36 @@ class DocPiece
     public function setClasseur(?DocClasseur $classeur): self
     {
         $this->classeur = $classeur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+            $paiement->setPiece($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getPiece() === $this) {
+                $paiement->setPiece(null);
+            }
+        }
 
         return $this;
     }

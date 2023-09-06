@@ -74,6 +74,9 @@ class Facture
     #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures', cascade:['persist', 'refresh'])]
     private Collection $police;
 
+    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: Paiement::class)]
+    private Collection $paiements;
+
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
@@ -81,6 +84,7 @@ class Facture
         $this->paiementTaxes = new ArrayCollection();
         $this->elementFactures = new ArrayCollection();
         $this->police = new ArrayCollection();
+        $this->paiements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -409,6 +413,36 @@ class Facture
     {
         if ($this->police->removeElement($police)) {
             $police->removeFacture($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+            $paiement->setFacture($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getFacture() === $this) {
+                $paiement->setFacture(null);
+            }
         }
 
         return $this;

@@ -69,6 +69,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Paiement::class)]
+    private Collection $paiements;
+
 /* 
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
@@ -77,6 +80,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         //$this->actionCRMs = new ArrayCollection();
+        $this->paiements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -262,6 +266,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($actionCRM->getAttributedTo() === $this) {
                 $actionCRM->setAttributedTo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+            $paiement->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getUtilisateur() === $this) {
+                $paiement->setUtilisateur(null);
             }
         }
 

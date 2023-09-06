@@ -54,9 +54,13 @@ class Entreprise
     #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Utilisateur::class)]
     private Collection $utilisateurs;
 
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Paiement::class)]
+    private Collection $paiements;
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
+        $this->paiements = new ArrayCollection();
     }
 
     
@@ -214,6 +218,36 @@ class Entreprise
             // set the owning side to null (unless already changed)
             if ($utilisateur->getEntreprise() === $this) {
                 $utilisateur->setEntreprise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+            $paiement->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            // set the owning side to null (unless already changed)
+            if ($paiement->getEntreprise() === $this) {
+                $paiement->setEntreprise(null);
             }
         }
 

@@ -133,7 +133,7 @@ class CotationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
     }
 

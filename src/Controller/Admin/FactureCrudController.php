@@ -143,8 +143,7 @@ class FactureCrudController extends AbstractCrudController
             /** @var Facture */
             $this->facture = $this->getContext()->getEntity()->getInstance();
         }
-        
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);

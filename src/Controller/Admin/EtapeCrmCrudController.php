@@ -116,6 +116,7 @@ class EtapeCrmCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         return $this->servicePreferences->getChamps(new EtapeCrm(), $this->crud, $this->adminUrlGenerator);
     }
 

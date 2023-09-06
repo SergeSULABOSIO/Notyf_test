@@ -6,6 +6,7 @@ use App\Entity\Taxe;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,6 +51,7 @@ class TaxeCrudController extends AbstractCrudController
     private ?Crud $crud = null;
 
     public function __construct(
+        private ServiceCrossCanal $serviceCrossCanal,
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
@@ -128,6 +130,7 @@ class TaxeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_TAXE);
         return $this->servicePreferences->getChamps(new Taxe(), $this->crud, $this->adminUrlGenerator);

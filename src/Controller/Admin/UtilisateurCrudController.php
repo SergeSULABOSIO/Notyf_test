@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Controller\SecurityController;
 use DateTime;
 use App\Entity\Utilisateur;
+use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -70,6 +71,7 @@ class UtilisateurCrudController extends AbstractCrudController
     private ?Crud $crud = null;
     
     public function __construct(
+        private ServiceCrossCanal $serviceCrossCanal,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
@@ -162,6 +164,7 @@ class UtilisateurCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         return $this->servicePreferences->getChamps(new Utilisateur(), $this->crud, $this->adminUrlGenerator);
     }
 

@@ -133,7 +133,7 @@ class PisteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         return $this->servicePreferences->getChamps(new Piste(), $this->crud, $this->adminUrlGenerator);
     }

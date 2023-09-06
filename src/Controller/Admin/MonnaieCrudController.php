@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Monnaie;
+use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -240,6 +241,7 @@ class MonnaieCrudController extends AbstractCrudController
     private ?Crud $crud;
 
     public function __construct(
+        private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -318,6 +320,7 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         return $this->servicePreferences->getChamps(new Monnaie(), $this->crud, $this->adminUrlGenerator);
     }
 

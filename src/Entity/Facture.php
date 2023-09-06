@@ -71,7 +71,7 @@ class Facture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $autreTiers = null;
 
-    #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures', cascade:['persist', 'refresh'])]
     private Collection $police;
 
     public function __construct()

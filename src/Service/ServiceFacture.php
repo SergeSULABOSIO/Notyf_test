@@ -25,6 +25,7 @@ class ServiceFacture
 {
     private $taxes = [];
     public function __construct(
+        private ServiceSuppression $serviceSuppression,
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceDates $serviceDates,
@@ -295,5 +296,19 @@ class ServiceFacture
         $ef->setUpdatedAt($this->serviceDates->aujourdhui());
         $ef->setFacture($facture);
         $facture->addElementFacture($ef);
+    }
+
+    public function cleanElementFacture(Facture $facture){
+        $elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //dd($elementFactures);
+        foreach ($elementFactures as $ef) {
+            /** @var ElementFacture */
+            if($ef->getFacture() == null){
+                $facture->removePolice($ef->getPolice());
+                $this->serviceSuppression->supprimer($ef, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
+            }
+        }
     }
 }

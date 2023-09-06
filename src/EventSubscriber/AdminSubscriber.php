@@ -21,6 +21,7 @@ use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\ServiceFacture;
 use App\Service\ServiceSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -34,6 +35,7 @@ class AdminSubscriber implements EventSubscriberInterface
 {
 
     public function __construct(
+        private ServiceFacture $serviceFacture,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
         private UserPasswordHasherInterface $hasher,
@@ -89,20 +91,11 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
         }
 
-        if ($entityInstance instanceof Facture) {
-            foreach ($entityInstance->getElementFactures() as $ef) {
-                /** @var ElementFacture */
-                $elementfactire = $ef;
-                $elementfactire->setCreatedAt($this->serviceDates->aujourdhui());
-                $elementfactire->setUpdatedAt($this->serviceDates->aujourdhui());
-            }
-        }
-
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-        $this->cleanElementFacture();
+        //$this->cleanElementFacture();
     }
 
     public function updateNomMonnaie(Monnaie $entityInstance): Monnaie
@@ -141,33 +134,12 @@ class AdminSubscriber implements EventSubscriberInterface
             } */
         }
         if ($entityInstance instanceof Facture) {
-            foreach ($entityInstance->getElementFactures() as $ef) {
-                /** @var ElementFacture */
-                $elementfacture = $ef;
-                if($elementfacture->getCreatedAt() == null){
-                    $elementfacture->setCreatedAt($this->serviceDates->aujourdhui());
-                }
-                $elementfacture->setUpdatedAt($this->serviceDates->aujourdhui());
-                $elementfacture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                $elementfacture->setEntreprise($this->serviceEntreprise->getEntreprise());
-            }
+            $this->serviceFacture->cleanElementFacture($entityInstance);
         }
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
-        //$this->cleanElementFacture();
         //ici il faut aussi actualiser les instances de Police et Facture
         //dd($entityInstance);
     }
 
-    private function cleanElementFacture(){
-        $elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        //dd($elementFactures);
-        foreach ($elementFactures as $ef) {
-            /** @var ElementFacture */
-            if($ef->getFacture() == null){
-                $this->serviceSuppression->supprimer($ef, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
-            }
-        }
-    }
+    
 }

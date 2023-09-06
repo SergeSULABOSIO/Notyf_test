@@ -1682,6 +1682,10 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator){
+
+    }
+
     public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdPolice, $typeFacture)
     {
         //$entite = $context->getEntity()->getInstance();

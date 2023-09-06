@@ -136,8 +136,27 @@ class FactureCrudController extends AbstractCrudController
         return $objet;
     }
 
+    public function edit(AdminContext $context)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        dd($context);
+
+        /* $url = $this->adminUrlGenerator
+            ->setController(self::class)
+            ->set("titre", "Modification")
+            ->setAction(Action::EDIT)
+            ->setEntityId($facture->getId())
+            ->generateUrl(); */
+
+        //return $this->redirect($url);
+    }
+
     public function configureFields(string $pageName): iterable
     {
+        if($pageName == Crud::PAGE_EDIT){
+            //dd("Page de modification");
+        }
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);

@@ -61,6 +61,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
+use App\Entity\Facture;
 use DateInterval;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
@@ -158,6 +159,7 @@ class ServiceCrossCanal
 
 
     public function __construct(
+        private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
         private ServiceDates $serviceDates,
         private EntityManagerInterface $entityManager,
@@ -1748,6 +1750,25 @@ class ServiceCrossCanal
             ->set("donnees[action]", "facture")
             ->set("donnees[tabPolices]", $tabIdPolice)
             ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function crossCanal_modifier_facture(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
+    {
+        //$entite = $context->getEntity()->getInstance();
+        $typeFacture = $this->serviceFacture->getType($facture->getType());
+        
+        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $url = $adminUrlGenerator
+            ->setController(FactureCrudController::class)
+            ->setAction(Action::EDIT)
+            ->set("titre", $typeFacture)
+            //->set("donnees[type]", $typeFacture)
+            //->set("donnees[action]", "facture")
+            //->set("donnees[tabPolices]", $tabIdPolice)
+            ->setEntityId($facture->getId())
             ->generateUrl();
 
         return $url;

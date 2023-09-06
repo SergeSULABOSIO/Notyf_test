@@ -33,6 +33,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class FactureCrudController extends AbstractCrudController
 {
+    public ?Facture $facture = null;
     public const TYPE_FACTURE_FRAIS_DE_GESTION          = "NOTE DE DEBIT POUR FRAIS DE GESTION";
     public const TYPE_FACTURE_COMMISSIONS               = "NOTE DE DEBIT POUR COMMISSION";
     public const TYPE_FACTURE_RETROCOMMISSIONS          = "FATURE POUR RETRO-COMMISSION";
@@ -140,10 +141,7 @@ class FactureCrudController extends AbstractCrudController
     {
         if ($pageName == Crud::PAGE_EDIT) {
             /** @var Facture */
-            $facture = $this->getContext()->getEntity()->getInstance();
-            //dd($this->adminUrlGenerator);
-            $this->adminUrlGenerator = $this->serviceCrossCanal->initChampsFacture($this->adminUrlGenerator, $this->serviceFacture->getType($facture->getType()));//$facture->getType()
-            dd($this->adminUrlGenerator);
+            $this->facture = $this->getContext()->getEntity()->getInstance();
         }
 
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator);
@@ -157,6 +155,10 @@ class FactureCrudController extends AbstractCrudController
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
+        $modifier = Action::new(DashboardController::ACTION_MODIFIER)
+            ->setIcon('fa-solid fa-pen-to-square')
+            //->addCssClass('btn btn-primary')
+            ->linkToCrudAction('editEntite');
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
@@ -209,15 +211,19 @@ class FactureCrudController extends AbstractCrudController
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
+
+            //action custom Modifier
+            ->add(Crud::PAGE_INDEX, $modifier)
+            ->add(Crud::PAGE_DETAIL, $modifier)
+            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_MODIFIER, function (Action $action) {
+                return $action->addCssClass('btn btn-primary'); //<i class="fa-solid fa-floppy-disk"></i>
+            })
+
+
             //action dupliquer Assureur
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
-
-
-            //Reorganisation des boutons
-            ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -228,8 +234,21 @@ class FactureCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-
-            ->remove(Crud::PAGE_INDEX, Action::NEW);
+            
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
+            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
+            
+            //Reorganisation des boutons
+            ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            ->reorder(Crud::PAGE_DETAIL, [
+                DashboardController::ACTION_DUPLICATE,
+                Action::INDEX, 
+                DashboardController::ACTION_MODIFIER,
+                Action::DELETE, 
+                ])
+            ;
 
         return $actions;
     }
@@ -247,6 +266,13 @@ class FactureCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function editEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        return $this->redirect($this->serviceCrossCanal->crossCanal_modifier_facture($adminUrlGenerator, $facture));
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

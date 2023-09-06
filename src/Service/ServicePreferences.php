@@ -312,7 +312,7 @@ class ServicePreferences
 
     public function canShow_url($indice_attribut)
     {
-        //dd($this->adminUrlGenerator->get("champsACacher"));
+        //dd($this->adminUrlGenerator);
         if ($this->adminUrlGenerator->get("champsACacher")) {
             foreach ($this->adminUrlGenerator->get("champsACacher") as $champsACacher) {
                 if ($champsACacher == $indice_attribut) {
@@ -1326,8 +1326,6 @@ class ServicePreferences
 
     public function setFIN_Fields_Facture_form($tabAttributs)
     {
-        //dd($this->adminUrlGenerator);
-
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TYPE)) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)

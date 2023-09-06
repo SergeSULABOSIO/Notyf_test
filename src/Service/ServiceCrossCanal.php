@@ -1764,7 +1764,7 @@ class ServiceCrossCanal
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::EDIT)
-            ->set("titre", $typeFacture)
+            ->set("titre", "Modification de " . $typeFacture . " [" . $facture->getReference()."]")
             //->set("donnees[type]", $typeFacture)
             //->set("donnees[action]", "facture")
             //->set("donnees[tabPolices]", $tabIdPolice)
@@ -2149,6 +2149,7 @@ class ServiceCrossCanal
         $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
         $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
         $crud->setPageTitle(Crud::PAGE_NEW, $adminUrlGenerator->get("titre"));
+        $crud->setPageTitle(Crud::PAGE_EDIT, $adminUrlGenerator->get("titre"));
         return $crud;
     }
 

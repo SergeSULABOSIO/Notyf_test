@@ -34,6 +34,12 @@ class Paiement
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     private ?DocPiece $piece = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,5 +132,29 @@ class Paiement
     public function __toString()
     {
         return "Le " . $this->paidAt->format('d-m-Y') . " | Mont.: " . ($this->montant/100) . " | Réf. ND: " . $this->facture->getReference() . " | Desc.: " . $this->description;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

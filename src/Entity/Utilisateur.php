@@ -72,6 +72,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Paiement::class)]
     private Collection $paiements;
 
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: CompteBancaire::class)]
+    private Collection $compteBancaires;
+
 /* 
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
@@ -81,6 +84,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         //$this->actionCRMs = new ArrayCollection();
         $this->paiements = new ArrayCollection();
+        $this->compteBancaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -296,6 +300,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($paiement->getUtilisateur() === $this) {
                 $paiement->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CompteBancaire>
+     */
+    public function getCompteBancaires(): Collection
+    {
+        return $this->compteBancaires;
+    }
+
+    public function addCompteBancaire(CompteBancaire $compteBancaire): self
+    {
+        if (!$this->compteBancaires->contains($compteBancaire)) {
+            $this->compteBancaires->add($compteBancaire);
+            $compteBancaire->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompteBancaire(CompteBancaire $compteBancaire): self
+    {
+        if ($this->compteBancaires->removeElement($compteBancaire)) {
+            // set the owning side to null (unless already changed)
+            if ($compteBancaire->getUtilisateur() === $this) {
+                $compteBancaire->setUtilisateur(null);
             }
         }
 

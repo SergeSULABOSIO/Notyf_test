@@ -37,6 +37,9 @@ class CompteBancaire
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $codeMonnaie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,23 @@ class CompteBancaire
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->banque . " - " . $this->numero . " - " . $this->codeMonnaie;
+    }
+
+    public function getCodeMonnaie(): ?string
+    {
+        return $this->codeMonnaie;
+    }
+
+    public function setCodeMonnaie(string $codeMonnaie): self
+    {
+        $this->codeMonnaie = $codeMonnaie;
 
         return $this;
     }

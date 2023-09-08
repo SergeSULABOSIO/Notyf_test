@@ -133,6 +133,12 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $finElementFactures = [];
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finCompteBancaires = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $finPaiement = [];
+
 
     public function getId(): ?int
     {
@@ -608,6 +614,30 @@ class Preference
     public function setFinElementFactures(?array $finElementFactures): self
     {
         $this->finElementFactures = $finElementFactures;
+
+        return $this;
+    }
+
+    public function getFinCompteBancaires(): array
+    {
+        return $this->finCompteBancaires;
+    }
+
+    public function setFinCompteBancaires(?array $finCompteBancaires): self
+    {
+        $this->finCompteBancaires = $finCompteBancaires;
+
+        return $this;
+    }
+
+    public function getFinPaiement(): array
+    {
+        return $this->finPaiement;
+    }
+
+    public function setFinPaiement(?array $finPaiement): self
+    {
+        $this->finPaiement = $finPaiement;
 
         return $this;
     }

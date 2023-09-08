@@ -122,8 +122,6 @@ class CompteBancaireCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
         return $this->servicePreferences->getChamps(new CompteBancaire(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -155,7 +153,7 @@ class CompteBancaireCrudController extends AbstractCrudController
             })
             //Updates sur la page Index
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setIcon('fas fa-landmark-dome')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
+                return $action->setIcon('fa-solid fa-piggy-bank')->setCssClass('btn btn-primary')->setLabel(DashboardController::ACTION_AJOUTER);
             })
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER); //<i class="fa-solid fa-trash"></i>

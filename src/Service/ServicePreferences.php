@@ -509,7 +509,7 @@ class ServicePreferences
                     ->setIcon('fa-solid fa-piggy-bank') //<i class="fa-solid fa-piggy-bank"></i>
                     ->setHelp("Votre compte bancaire tout simplement.")
             ];
-            $tabAttributs = $this->setFIN_Fields_CompteBancaire_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_CompteBancaire_Index($preference->getFinCompteBancaires(), PreferenceCrudController::TAB_FIN_COMPTE_BANCAIRE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_CompteBancaire_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_CompteBancaire_form($tabAttributs);
         }

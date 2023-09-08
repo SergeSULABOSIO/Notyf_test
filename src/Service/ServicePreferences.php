@@ -1961,7 +1961,11 @@ class ServicePreferences
     public function setFIN_Fields_CompteBancaire_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)
-            ->setColumns(12)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
+            ->setColumns(6)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIES)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)
             ->setColumns(6)
@@ -1971,10 +1975,6 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)
             ->setColumns(3)
-            ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
-            ->setColumns(6)
-            ->setChoices(MonnaieCrudController::TAB_MONNAIES)
             ->onlyOnForms();
 
         return $tabAttributs;

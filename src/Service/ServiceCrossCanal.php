@@ -1684,7 +1684,8 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, $typeFacture){
+    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, $typeFacture)
+    {
         switch ($typeFacture) {
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                 $adminUrlGenerator
@@ -1759,7 +1760,7 @@ class ServiceCrossCanal
     {
         //$entite = $context->getEntity()->getInstance();
         $typeFacture = $this->serviceFacture->getType($facture->getType());
-        
+
         $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
@@ -2146,9 +2147,14 @@ class ServiceCrossCanal
 
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator, $entite): Crud
     {
-        $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
-        $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
-        $crud->setPageTitle(Crud::PAGE_NEW, $adminUrlGenerator->get("titre"));
+        //dd($crud->getAsDto());
+        if ($adminUrlGenerator->get("titre")) {
+            $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
+            $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
+            $crud->setPageTitle(Crud::PAGE_NEW, $adminUrlGenerator->get("titre"));
+        }
+        $crud->setPageTitle(Crud::PAGE_NEW, "Nouveau - " . ucfirst(strtolower($crud->getAsDto()->getEntityLabelInSingular())));
+        $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
         return $crud;
     }

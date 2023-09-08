@@ -81,9 +81,9 @@ class CompteBancaireCrudController extends AbstractCrudController
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
             ->setHelp(Crud::PAGE_NEW, "Votre compte bancaire à travers lequel vous pouvez recevoir les fonds.")
-            ->setEntityLabelInSingular("COMPTE BANCAIRE")
+            ->setEntityLabelInSingular("Compte Bancaire")
             ->setEntityLabelInPlural("Comptes Bancaires")
-            ->setPageTitle("index", "COMPTES BANCAIRES")
+            ->setPageTitle("index", "Liste des Comptes Bancaires")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...

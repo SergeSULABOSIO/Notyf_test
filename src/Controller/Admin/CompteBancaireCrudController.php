@@ -101,10 +101,7 @@ class CompteBancaireCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            //->setChoices(MonnaieCrudController::TAB_MONNAIES)
-            //->add(ChoiceFilter::new("codeMonnaie", "Dévise"))//'codeMonnaie')
-            ->add('codeMonnaie')
-            ;
+            ->add(ChoiceFilter::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)->setChoices(MonnaieCrudController::TAB_MONNAIES));
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void

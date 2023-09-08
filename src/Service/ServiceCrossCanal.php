@@ -2152,9 +2152,10 @@ class ServiceCrossCanal
             $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_NEW, $adminUrlGenerator->get("titre"));
+        } else {
+            $crud->setPageTitle(Crud::PAGE_NEW, "Nouveau - " . ucfirst(strtolower($crud->getAsDto()->getEntityLabelInSingular())));
+            $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         }
-        $crud->setPageTitle(Crud::PAGE_NEW, "Nouveau - " . ucfirst(strtolower($crud->getAsDto()->getEntityLabelInSingular())));
-        $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
         return $crud;
     }

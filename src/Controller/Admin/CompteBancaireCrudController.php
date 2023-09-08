@@ -252,16 +252,4 @@ class CompteBancaireCrudController extends AbstractCrudController
 
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-
-
-    /*
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
-    }
-    */
 }

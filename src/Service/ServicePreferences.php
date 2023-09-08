@@ -1960,23 +1960,21 @@ class ServicePreferences
 
     public function setFIN_Fields_CompteBancaire_form($tabAttributs)
     {
-        $tabAttributs[] = ChoiceField::new('intitule', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+        $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('banque', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)
+            ->setColumns(3)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
             ->setColumns(6)
             ->setChoices(MonnaieCrudController::TAB_MONNAIES)
-            ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
-            ->setColumns(2)
-            ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
-            ->setCurrency("USD")
-            ->setStoredAsCents()
-            ->setNumDecimals(4)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
-            ->setColumns(2)
-            ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
             ->onlyOnForms();
 
         return $tabAttributs;

@@ -42,8 +42,6 @@ class ServiceSuppression
     public const FINANCE_PAIEMENT_TAXE = 2;
     public const FINANCE_PAIEMENT_COMMISSION = 3;
     public const FINANCE_PAIEMENT_PARTENAIRE = 4;
-    public const FINANCE_FACTURE = 5;
-    public const FINANCE_ELEMENT_FACTURE = 6;
 
     public const PRODUCTION_CONTACT = 5;
     public const PRODUCTION_ENGIN = 6;
@@ -72,6 +70,11 @@ class ServiceSuppression
     public const PAREMETRE_UTILISATEUR = 25;
     public const PAREMETRE_ENTREPRISE = 26;
 
+    public const FINANCE_FACTURE = 27;
+    public const FINANCE_ELEMENT_FACTURE = 28;
+    public const FINANCE_COMPTE_BANCAIRE = 29;
+    public const FINANCE_PAIEMENT = 30;
+
 
     public function __construct(
         private RouterInterface $router,
@@ -86,6 +89,14 @@ class ServiceSuppression
     {
         switch ($entityIndex) {
             case self::FINANCE_PAIEMENT_TAXE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::FINANCE_COMPTE_BANCAIRE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::FINANCE_PAIEMENT:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 

@@ -31,6 +31,7 @@ use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
+use App\Entity\CompteBancaire;
 use App\Entity\Facture;
 use App\Entity\Preference;
 use App\Service\ServiceCrossCanal;
@@ -166,6 +167,7 @@ class DashboardController extends AbstractDashboardController
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION]);;
 
         yield MenuItem::subMenu('FINANCES', 'fas fa-sack-dollar')->setSubItems([ //<i class="fa-solid fa-sack-dollar"></i>
+            MenuItem::linkToCrud('Comptes bancaires', 'fa-solid fa-piggy-bank', CompteBancaire::class), 
             MenuItem::linkToCrud('Taxes', 'fas fa-landmark-dome', Taxe::class), //<i class="fa-solid fa-landmark-dome"></i>
             MenuItem::linkToCrud('Monnaies', 'fas fa-money-bill-1', Monnaie::class), //<i class="fa-regular fa-money-bill-1"></i>
             MenuItem::linkToCrud('Factures', 'fa-solid fa-receipt', Facture::class), //<i class="fa-solid fa-receipt"></i>

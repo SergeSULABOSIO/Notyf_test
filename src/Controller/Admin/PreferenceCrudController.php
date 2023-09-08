@@ -721,6 +721,55 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17
     ];
 
+    //COMPTE BANCAIRE
+    public const PREF_FIN_COMPTE_BANCAIRE_ID = "Id";
+    public const PREF_FIN_COMPTE_BANCAIRE_INTITULE = "Intitulé du Compte";
+    public const PREF_FIN_COMPTE_BANCAIRE_NUMERO = "Numéro du Compte";
+    public const PREF_FIN_COMPTE_BANCAIRE_BANQUE = "Banque";
+    public const PREF_FIN_COMPTE_BANCAIRE_CODESWIFT = "Code Swift";
+    public const PREF_FIN_COMPTE_BANCAIRE_MONNAIE = "Dévise";
+    public const PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE = "Entreprise";
+    public const PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR = "Utilisateur";
+    public const PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION = "Date de création";
+    public const PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION = "Dernière modification";
+
+    public const TAB_FIN_COMPTE_BANCAIRE = [
+        self::PREF_FIN_COMPTE_BANCAIRE_ID => 0,
+        self::PREF_FIN_COMPTE_BANCAIRE_INTITULE => 1,
+        self::PREF_FIN_COMPTE_BANCAIRE_NUMERO => 2,
+        self::PREF_FIN_COMPTE_BANCAIRE_BANQUE => 3,
+        self::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT => 4,
+        self::PREF_FIN_COMPTE_BANCAIRE_MONNAIE => 5,
+        self::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE => 6,
+        self::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR => 7,
+        self::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION => 8,
+        self::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION => 9,
+    ];
+
+
+    //PAIEMENT
+    public const PREF_FIN_PAIEMENT_ID = "Id";
+    public const PREF_FIN_PAIEMENT_DATE = "Date de paiement";
+    public const PREF_FIN_PAIEMENT_MONTANT = "Montant";
+    public const PREF_FIN_PAIEMENT_DESCRIPTION = "Description";
+    public const PREF_FIN_PAIEMENT_FACTURE = "Facture concernée";
+    public const PREF_FIN_PAIEMENT_ENTREPRISE = "Entreprise";
+    public const PREF_FIN_PAIEMENT_UTILISATEUR = "Utilisateur";
+    public const PREF_FIN_PAIEMENT_DATE_CREATION = "Date de création";
+    public const PREF_FIN_PAIEMENT_DATE_MODIFICATION = "Dernière modification";
+
+    public const TAB_FIN_PAIEMENT = [
+        self::PREF_FIN_PAIEMENT_ID => 0,
+        self::PREF_FIN_PAIEMENT_DATE => 1,
+        self::PREF_FIN_PAIEMENT_MONTANT => 2,
+        self::PREF_FIN_PAIEMENT_DESCRIPTION => 3,
+        self::PREF_FIN_PAIEMENT_FACTURE => 4,
+        self::PREF_FIN_PAIEMENT_ENTREPRISE => 5,
+        self::PREF_FIN_PAIEMENT_UTILISATEUR => 6,
+        self::PREF_FIN_PAIEMENT_DATE_CREATION => 7,
+        self::PREF_FIN_PAIEMENT_DATE_MODIFICATION => 8,
+    ];
+
     //FINANCE - FACTURE
     public const PREF_FIN_ELEMENT_FACTURE_ID                = "Id";
     public const PREF_FIN_ELEMENT_FACTURE_POLICE            = "Police";
@@ -1145,7 +1194,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' COMMERCIAL / CRM')
                 ->setIcon('fas fa-bullseye')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section CRM."),
-            NumberField::new('crmTaille', "Eléments par page"),//->setColumns(2), //->setColumns(3),
+            NumberField::new('crmTaille', "Eléments par page"), //->setColumns(2), //->setColumns(3),
             ChoiceField::new('crmPistes', "Piste")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1176,7 +1225,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' PRODUCTION')
                 ->setIcon('fas fa-bag-shopping')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PRODUCTION."),
-            NumberField::new('proTaille', "Eléments par page"),//->setColumns(2),
+            NumberField::new('proTaille', "Eléments par page"), //->setColumns(2),
             ChoiceField::new('proAssureurs', "Assureur")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1217,7 +1266,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' FINANCES')
                 ->setIcon('fas fa-sack-dollar')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section FINANCES."),
-            NumberField::new('finTaille', "Eléments par page"),//->setColumns(12),
+            NumberField::new('finTaille', "Eléments par page"), //->setColumns(12),
             ChoiceField::new('finTaxes', "Taxes")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1258,7 +1307,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' SINISTRE')
                 ->setIcon('fas fa-fire')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section SINISTRE."),
-            NumberField::new('sinTaille', "Eléments par page"),//->setColumns(2),
+            NumberField::new('sinTaille', "Eléments par page"), //->setColumns(2),
             ChoiceField::new('sinSinistres', "Sinistres")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1285,7 +1334,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' BIBLIOTHEQUE')
                 ->setIcon('fas fa-book')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section BIBLIOTHEQUE."),
-            NumberField::new('bibTaille', "Eléments par page"),//->setColumns(2),
+            NumberField::new('bibTaille', "Eléments par page"), //->setColumns(2),
             ChoiceField::new('bibCategories', "Catégories")
                 ->setColumns(2)
                 ->renderExpanded()
@@ -1306,7 +1355,7 @@ class PreferenceCrudController extends AbstractCrudController
             FormField::addTab(' PARAMETRES')
                 ->setIcon('fas fa-gears')
                 ->setHelp("Les paramètres qui s'appliquent uniquement sur les fonctions de la section PARAMETRES."),
-            NumberField::new('parTaille', "Eléments par page"),//->setColumns(2),
+            NumberField::new('parTaille', "Eléments par page"), //->setColumns(2),
             ChoiceField::new('parUtilisateurs', "Utilisateurs")
                 ->setColumns(2)
                 ->renderExpanded()

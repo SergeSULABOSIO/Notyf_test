@@ -181,7 +181,6 @@ class PoliceCrudController extends AbstractCrudController
         $objet = new Police();
         $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-
         return $objet;
     }
 

@@ -57,8 +57,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\CompteBancaire;
 use App\Entity\ElementFacture;
 use App\Entity\Facture;
+use App\Entity\Paiement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query\Expr\Func;
@@ -197,6 +199,12 @@ class ServicePreferences
         }
         //GROUPE FINANCE
         if ($instance instanceof Taxe) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof CompteBancaire) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof Paiement) {
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof Monnaie) {
@@ -495,6 +503,16 @@ class ServicePreferences
             $tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Facture_form($tabAttributs);
         }
+        if ($objetInstance instanceof CompteBancaire) {
+            $tabAttributs = [
+                FormField::addPanel('Compte Bancaire')
+                    ->setIcon('fa-solid fa-piggy-bank') //<i class="fa-solid fa-piggy-bank"></i>
+                    ->setHelp("Votre compte bancaire tout simplement.")
+            ];
+            $tabAttributs = $this->setFIN_Fields_CompteBancaire_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_CompteBancaire_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_CompteBancaire_form($tabAttributs);
+        }
         if ($objetInstance instanceof ElementFacture) {
 
             //dd($adminUrlGenerator->get("donnees"));
@@ -503,7 +521,7 @@ class ServicePreferences
                     ->setIcon('fa-solid fa-cart-plus') //<i class="fa-solid fa-cart-plus"></i>
                     ->setHelp("Elément à inclure dans la facture.")
             ];
-            
+
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_ELEMENT_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_form($tabAttributs);
@@ -1193,6 +1211,52 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setFIN_Fields_CompteBancaire_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE])) {
+            $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO])) {
+            $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE])) {
+            $tabAttributs[] = TextField::new('banque', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT])) {
+            $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE])) {
+            $tabAttributs[] = TextField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE)
+                ->onlyOnIndex();
+        }
+        return $tabAttributs;
+    }
+
     public function setFIN_Fields_Element_Facture_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID])) {
@@ -1281,6 +1345,26 @@ class ServicePreferences
 
         return $tabAttributs;
     }
+
+    public function setFIN_Fields_CompteBancaire_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('banque', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
+            ->setChoices(PreferenceCrudController::TAB_FIN_MONNAIES)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)->onlyOnDetail();
+        return $tabAttributs;
+    }
+
 
     public function setFIN_Fields_Facture_Details($tabAttributs)
     {
@@ -1853,6 +1937,30 @@ class ServicePreferences
     public function setCRM_Fields_Monnaies_form($tabAttributs)
     {
         $tabAttributs[] = ChoiceField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+            ->setColumns(6)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIES)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
+            ->setCurrency("USD")
+            ->setStoredAsCents()
+            ->setNumDecimals(4)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+            ->onlyOnForms();
+
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_CompteBancaire_form($tabAttributs)
+    {
+        $tabAttributs[] = ChoiceField::new('intitule', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
             ->setColumns(6)
             ->setChoices(MonnaieCrudController::TAB_MONNAIES)
             ->onlyOnForms();

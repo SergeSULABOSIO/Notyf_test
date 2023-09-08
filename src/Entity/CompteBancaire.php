@@ -143,7 +143,7 @@ class CompteBancaire
 
     public function __toString()
     {
-        return $this->banque . " - " . $this->numero . " - " . $this->codeMonnaie;
+        return $this->banque . " - " . $this->numero . " / " . $this->codeMonnaie;
     }
 
     public function getCodeMonnaie(): ?string

@@ -29,6 +29,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class CompteBancaireCrudController extends AbstractCrudController
 {
@@ -80,7 +81,10 @@ class CompteBancaireCrudController extends AbstractCrudController
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
-            ->setHelp(Crud::PAGE_NEW, "Votre compte bancaire à travers lequel vous pouvez recevoir les fonds.")
+            ->setHelp(Crud::PAGE_NEW, "Founissez les informations recquises puis validez le formulaire pour les sauvegarder.")
+            ->setHelp(Crud::PAGE_INDEX, "Résultat du filtrage.")
+            ->setHelp(Crud::PAGE_DETAIL, "Information détailée sur l'enregistrement séléctioné.")
+            ->setHelp(Crud::PAGE_EDIT, "Mise à jour d'un enregistrement. N'oubliez pas de valider le formulaire.")
             ->setEntityLabelInSingular("Compte Bancaire")
             ->setEntityLabelInPlural("Comptes Bancaires")
             ->setPageTitle("index", "Liste des Comptes Bancaires")
@@ -97,7 +101,10 @@ class CompteBancaireCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('codeMonnaie');
+            //->setChoices(MonnaieCrudController::TAB_MONNAIES)
+            //->add(ChoiceFilter::new("codeMonnaie", "Dévise"))//'codeMonnaie')
+            ->add('codeMonnaie')
+            ;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void

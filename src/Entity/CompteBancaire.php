@@ -40,6 +40,9 @@ class CompteBancaire
     #[ORM\Column(length: 255)]
     private ?string $codeMonnaie = null;
 
+    #[ORM\ManyToOne(inversedBy: 'compteBancaires')]
+    private ?Facture $facture = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,6 +157,18 @@ class CompteBancaire
     public function setCodeMonnaie(string $codeMonnaie): self
     {
         $this->codeMonnaie = $codeMonnaie;
+
+        return $this;
+    }
+
+    public function getFacture(): ?Facture
+    {
+        return $this->facture;
+    }
+
+    public function setFacture(?Facture $facture): self
+    {
+        $this->facture = $facture;
 
         return $this;
     }

@@ -683,6 +683,7 @@ class PreferenceCrudController extends AbstractCrudController
     //FINANCE - FACTURE
     public const PREF_FIN_FACTURE_ID                    = "Id";
     public const PREF_FIN_FACTURE_ELEMENTS              = "Eléments facturés";
+    public const PREF_FIN_FACTURE_COMPTES_BANCIARES     = "Comptes Bancaires";
     public const PREF_FIN_FACTURE_REFERENCE             = "Référence";
     public const PREF_FIN_FACTURE_UTILISATEUR           = "Utilisateur";
     public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
@@ -718,7 +719,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_POP_TAXES                => 14,
         self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
         self::PREF_FIN_FACTURE_TOTAL_RECU               => 16,
-        self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17
+        self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17,
+        self::PREF_FIN_FACTURE_COMPTES_BANCIARES        => 18
     ];
 
     //COMPTE BANCAIRE

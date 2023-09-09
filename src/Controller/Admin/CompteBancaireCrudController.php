@@ -34,7 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 class CompteBancaireCrudController extends AbstractCrudController
 {
     public ?Crud $crud = null;
-
+    
     public function __construct(
         private ServiceDates $serviceDates,
         private ServiceFacture $serviceFacture,

@@ -1150,10 +1150,6 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnIndex();
         }
-        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION])) {
-            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
-                ->onlyOnIndex();
-        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE])) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->onlyOnIndex();
@@ -1164,6 +1160,13 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS])) {
             $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES])) {
+            $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+                ->formatValue(function ($value, Facture $entity) {
+                    return count($entity->getCompteBancaires()) == 0 ? "Aucun Compte" : count($entity->getCompteBancaires()) . " compte(s).";
+                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
@@ -1391,17 +1394,14 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
         $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
-            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->onlyOnDetail();
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
         return $tabAttributs;
     }
@@ -1448,6 +1448,12 @@ class ServicePreferences
                 ->allowAdd(true)
                 ->allowDelete(true)
                 ->setEntryIsComplex()
+                ->setRequired(false)
+                ->setColumns(6)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
+            $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
                 ->setRequired(false)
                 ->setColumns(6)
                 ->onlyOnForms();

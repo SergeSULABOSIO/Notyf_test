@@ -91,13 +91,15 @@ class FactureCrudController extends AbstractCrudController
         $this->servicePreferences->appliquerPreferenceTaille(new Facture(), $crud);
         $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
-            //->setDateTimeFormat('dd/MM/yyyy')
             ->setDateFormat('dd/MM/yyyy')
-            //->setPaginatorPageSize(100)
+            ->setHelp(Crud::PAGE_NEW, "Founissez les informations recquises puis validez le formulaire pour les sauvegarder.")
+            ->setHelp(Crud::PAGE_INDEX, "Résultat du filtrage.")
+            ->setHelp(Crud::PAGE_DETAIL, "Information détailée sur l'enregistrement séléctioné.")
+            ->setHelp(Crud::PAGE_EDIT, "Mise à jour d'un enregistrement. N'oubliez pas de valider le formulaire.")
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("FACTURE")
-            ->setEntityLabelInPlural("Facture")
-            ->setPageTitle("index", "FACTURES")
+            ->setEntityLabelInSingular("Facture / Note de débit")
+            ->setEntityLabelInPlural("Factures")
+            ->setPageTitle("index", "Liste des Factures / Notes de débit")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...

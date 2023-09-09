@@ -341,16 +341,16 @@ class Facture
                 $tiers =  " à " . $this->partenaire;
                 break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
-                $tiers = " à l'Autorité de régulation";
+                $tiers = " venant de l'Autorité de régulation";
                 break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
-                $tiers = " à l'Autorité fiscale";
+                $tiers = " venant de l'Autorité fiscale";
                 break;
             default:
                 //$tiers = ".";
                 break;
         }
-        return "Facture " . $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers . $this->description;
+        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers . $this->description;
     }
 
     /**

@@ -692,7 +692,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_TYPE                   = "Type de facture";
     public const PREF_FIN_FACTURE_ASSUREUR              = "Assureur";
     public const PREF_FIN_FACTURE_PARTENAIRE            = "Partenaire";
-    public const PREF_FIN_FACTURE_AUTRE_TIERS           = "Tiers";
+    public const PREF_FIN_FACTURE_AUTRE_TIERS           = "Tiers Concerné";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
     public const PREF_FIN_FACTURE_PIECE                 = "Pièce justificative";
     public const PREF_FIN_FACTURE_POP_COMMISSIONS       = "POP Commissions";

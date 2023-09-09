@@ -276,15 +276,17 @@ class FactureCrudController extends AbstractCrudController
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        /**@var Assureur $assureur */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
+        //dd("ici");
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $facture));
+        /* $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::DETAIL)
             ->setEntityId($entite->getId())
             ->generateUrl();
 
-        return $this->redirect($url);
+        return $this->redirect($url); */
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

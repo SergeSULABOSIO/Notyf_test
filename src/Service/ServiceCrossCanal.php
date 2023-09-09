@@ -1775,6 +1775,18 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_ouvrir_facture(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
+    {
+        $typeFacture = $this->serviceFacture->getType($facture->getType());
+        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $url = $adminUrlGenerator
+            ->setController(FactureCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($facture->getId())
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         $entite = $context->getEntity()->getInstance();

@@ -1401,7 +1401,9 @@ class ServicePreferences
                 ->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
-            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)->onlyOnDetail();
+            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+                ->renderAsHtml()
+                ->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();

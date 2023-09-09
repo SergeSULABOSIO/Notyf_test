@@ -188,6 +188,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
@@ -197,6 +198,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        //dd($this->adminUrlGenerator->get("codeReporting"));
         //cross canal
         $automobile_ajouter = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_AJOUTER)
             ->setIcon('fas fa-car')
@@ -562,7 +564,6 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
         ;
-        //Ajout des opérations arca
         return $actions;
     }
 

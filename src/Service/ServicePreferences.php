@@ -122,6 +122,7 @@ class ServicePreferences
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
+        private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceCalculateur $serviceCalculateur

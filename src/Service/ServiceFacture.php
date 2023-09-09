@@ -26,6 +26,7 @@ class ServiceFacture
     private $taxes = [];
     public function __construct(
         private ServiceSuppression $serviceSuppression,
+        private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceDates $serviceDates,
@@ -55,6 +56,7 @@ class ServiceFacture
             }
             $facture->setDescription($description);
         }
+        $this->serviceCompteBancaire->setComptes($facture, "");
         return $facture;
     }
 

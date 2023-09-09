@@ -88,7 +88,7 @@ class Facture
         $this->elementFactures = new ArrayCollection();
         $this->police = new ArrayCollection();
         $this->paiements = new ArrayCollection();
-        //$this->compteBancaires = new ArrayCollection();
+        $this->compteBancaires = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -2352,6 +2352,7 @@ class ServiceCrossCanal
             ->set('filters[unpaidretrocommission][comparison]', '>') //!=
             ->setEntityId(null)
             ->generateUrl();
+
         return $url;
     }
 

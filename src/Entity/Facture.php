@@ -77,7 +77,7 @@ class Facture
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: Paiement::class)]
     private Collection $paiements;
 
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: CompteBancaire::class)]
+    #[ORM\ManyToMany(targetEntity: CompteBancaire::class, inversedBy: 'factures')]
     private Collection $compteBancaires;
 
     public function __construct()
@@ -88,7 +88,7 @@ class Facture
         $this->elementFactures = new ArrayCollection();
         $this->police = new ArrayCollection();
         $this->paiements = new ArrayCollection();
-        $this->compteBancaires = new ArrayCollection();
+        //$this->compteBancaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -464,7 +464,6 @@ class Facture
     {
         if (!$this->compteBancaires->contains($compteBancaire)) {
             $this->compteBancaires->add($compteBancaire);
-            $compteBancaire->setFacture($this);
         }
 
         return $this;
@@ -472,12 +471,7 @@ class Facture
 
     public function removeCompteBancaire(CompteBancaire $compteBancaire): self
     {
-        if ($this->compteBancaires->removeElement($compteBancaire)) {
-            // set the owning side to null (unless already changed)
-            if ($compteBancaire->getFacture() === $this) {
-                $compteBancaire->setFacture(null);
-            }
-        }
+        $this->compteBancaires->removeElement($compteBancaire);
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompteBancaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompteBancaireRepository::class)]
@@ -40,8 +42,13 @@ class CompteBancaire
     #[ORM\Column(length: 255)]
     private ?string $codeMonnaie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'compteBancaires')]
-    private ?Facture $facture = null;
+    #[ORM\ManyToMany(targetEntity: Facture::class, mappedBy: 'compteBancaires')]
+    private Collection $factures;
+
+    public function __construct()
+    {
+        $this->factures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -161,14 +168,29 @@ class CompteBancaire
         return $this;
     }
 
-    public function getFacture(): ?Facture
+    /**
+     * @return Collection<int, Facture>
+     */
+    public function getFactures(): Collection
     {
-        return $this->facture;
+        return $this->factures;
     }
 
-    public function setFacture(?Facture $facture): self
+    public function addFacture(Facture $facture): self
     {
-        $this->facture = $facture;
+        if (!$this->factures->contains($facture)) {
+            $this->factures->add($facture);
+            $facture->addCompteBancaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFacture(Facture $facture): self
+    {
+        if ($this->factures->removeElement($facture)) {
+            $facture->removeCompteBancaire($this);
+        }
 
         return $this;
     }

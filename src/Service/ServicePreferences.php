@@ -1163,9 +1163,9 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES])) {
-            $tabAttributs[] = CollectionField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+            $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
                 ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getCompteBancaires()) == 0 ? "Aucun Compte" : count($entity->getCompteBancaires()) . " compte(s).";
+                    return count($entity->getCompteBancaires()) == 0 ? "Aucun Compte Bancaire" : count($entity->getCompteBancaires()) . " compte(s) bancaire(s).";
                 })
                 ->onlyOnIndex();
         }

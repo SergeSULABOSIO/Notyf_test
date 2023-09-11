@@ -9,15 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ServicePdf
 {
-    public ?Dompdf $dompdf;
-    public ?Options $pdfOptions; // = new Options();
-
     public function __construct()
     {
-        // Configure Dompdf according to your needs
-        
-        // Instantiate Dompdf with our options
-        
     }
 
     public function openFacture()

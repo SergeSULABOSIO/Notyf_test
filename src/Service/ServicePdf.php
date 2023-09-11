@@ -25,18 +25,12 @@ class ServicePdf
 
     public function openFacture()
     {
-        // Load HTML to Dompdf
-        $this->dompdf->loadHtml("Salut SERGE SULA.");
-
-        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
-        $this->dompdf->setPaper('A4', 'portrait');
-
+        $this->dompdf->loadHtml('hello world');
+        // (Optional) Setup the paper size and orientation
+        $this->dompdf->setPaper('A4', 'landscape');
         // Render the HTML as PDF
         $this->dompdf->render();
-
-        // Output the generated PDF to Browser (force download)
-        $this->dompdf->stream("mypdf.pdf", [
-            "Attachment" => true
-        ]);
+        // Output the generated PDF to Browser
+        $this->dompdf->stream();
     }
 }

@@ -308,6 +308,12 @@ class FactureCrudController extends AbstractCrudController
         //return new Response("The PDF file has been succesfully generated !");
         
         $this->servicePdf->openFacture();
+
+        return new Response (
+            $dompdf->stream('resume', ["Attachment" => false]),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/pdf']
+        );
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

@@ -2,9 +2,6 @@
 
 namespace App\Service;
 
-use DateTime;
-use DateInterval;
-use DateTimeImmutable;
 // Include Dompdf required namespaces
 use Dompdf\Dompdf;
 use Dompdf\Options;

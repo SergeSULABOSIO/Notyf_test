@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+
 use App\Entity\Taxe;
 use NumberFormatter;
 use App\Entity\Piste;
@@ -157,6 +158,8 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_TAXE = "taxe";
     public const CROSSED_ENTITY_SINISTRE = "sinistre";
 
+    
+
 
     public function __construct(
         private ServiceFacture $serviceFacture,
@@ -169,6 +172,7 @@ class ServiceCrossCanal
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie
     ) {
+        
     }
 
     public function crossCanal_Action_ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
@@ -1788,6 +1792,22 @@ class ServiceCrossCanal
             ->setEntityId($facture->getId())
             ->generateUrl();
         return $url;
+    }
+
+    public function crossCanal_ouvrir_facture_pdf(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
+    {
+        $typeFacture = $this->serviceFacture->getType($facture->getType());
+
+        //dd("ici");
+
+        /* $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $url = $adminUrlGenerator
+            ->setController(FactureCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($facture->getId())
+            ->generateUrl(); 
+            return $url; */
+
     }
 
     public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)

@@ -2,18 +2,23 @@
 
 namespace App\Controller\Admin;
 
+
+
+
 use App\Entity\Facture;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceAvenant;
+use App\Service\ServiceFacture;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
-use App\Service\ServiceFacture;
+use App\Service\ServicePdf;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
@@ -49,9 +54,10 @@ class FactureCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
-
+    
     public function __construct(
         private ServiceFacture $serviceFacture,
+        private ServicePdf $servicePdf,
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
@@ -63,6 +69,8 @@ class FactureCrudController extends AbstractCrudController
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceTaxes $serviceTaxes
     ) {
+        //$this->dompdf = new Dompdf();
+
     }
 
     public static function getEntityFqcn(): string
@@ -153,9 +161,13 @@ class FactureCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        $ouvrir_pdf = Action::new(DashboardController::ACTION_OPEN_PDF)
+            ->setIcon('fa-regular fa-file-pdf') //<i class="fa-regular fa-file-pdf"></i>
+            ->linkToCrudAction('ouvrirPDF');
+
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
-            ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
+            ->linkToCrudAction('dupliquerEntite');
         $modifier = Action::new(DashboardController::ACTION_MODIFIER)
             ->setIcon('fa-solid fa-pen-to-square')
             //->addCssClass('btn btn-primary')
@@ -226,6 +238,10 @@ class FactureCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
 
+            ->add(Crud::PAGE_DETAIL, $ouvrir_pdf)
+            ->add(Crud::PAGE_EDIT, $ouvrir_pdf)
+            ->add(Crud::PAGE_INDEX, $ouvrir_pdf)
+
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::EDIT, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -235,21 +251,20 @@ class FactureCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            
+
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
             ->remove(Crud::PAGE_DETAIL, Action::EDIT)
-            
+
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_DETAIL, [
                 DashboardController::ACTION_DUPLICATE,
-                Action::INDEX, 
+                Action::INDEX,
                 DashboardController::ACTION_MODIFIER,
-                Action::DELETE, 
-                ])
-            ;
+                Action::DELETE,
+            ]);
 
         return $actions;
     }
@@ -281,6 +296,17 @@ class FactureCrudController extends AbstractCrudController
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $facture));
+    }
+
+    public function ouvrirPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        //return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture_pdf($adminUrlGenerator, $facture));
+
+        // Send some text response
+        //return new Response("The PDF file has been succesfully generated !");
+        $this->servicePdf->openFacture();
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

@@ -3,6 +3,8 @@
 namespace App\Service;
 
 // Include Dompdf required namespaces
+
+use App\Entity\Facture;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +28,13 @@ class ServicePdf
         $dompdf->render();
         // Output the generated PDF to Browser
         $dompdf->stream();
+
+        /* $dompdf->stream("mypdf.pdf", [
+            "attachment" => false
+        ]); */
     }
 
-    public function downloadFacture()
+    public function genererFacture(?Facture $facture)
     {
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
@@ -40,8 +46,8 @@ class ServicePdf
         // Render the HTML as PDF
         $dompdf->render();
         // Output the generated PDF to Browser (force download)
-        $dompdf->stream("mypdf.pdf", [
-            "Attachment" => true
+        $dompdf->stream("facture.pdf", [
+            "attachment" => true
         ]);
     }
 }

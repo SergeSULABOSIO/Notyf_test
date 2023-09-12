@@ -302,13 +302,8 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        //return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture_pdf($adminUrlGenerator, $facture));
-
-        // Send some text response
-        //return new Response("The PDF file has been succesfully generated !");
-        
-        //$this->servicePdf->openFacture();        
-        $this->servicePdf->downloadFacture(); 
+        $this->servicePdf->genererFacture($facture);
+        return new Response();
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

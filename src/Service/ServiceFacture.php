@@ -1,21 +1,17 @@
 <?php
 
 namespace App\Service;
+//require '../vendor/autoload.php';
 
-use DateTime;
-use DateInterval;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Taxe;
-use App\Entity\Piste;
 use App\Entity\Police;
-use DateTimeImmutable;
 use App\Entity\Facture;
-use App\Entity\Cotation;
 use App\Entity\ElementFacture;
-use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\Controller\Admin\TaxeCrudController;
-use App\Controller\Admin\PoliceCrudController;
+use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
@@ -23,7 +19,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class ServiceFacture
 {
-    private $taxes = [];
+    private ?Dompdf $dompdf;
+    private ?Options $pdfOptions;
+
     public function __construct(
         private ServiceSuppression $serviceSuppression,
         private ServiceCompteBancaire $serviceCompteBancaire,
@@ -35,6 +33,10 @@ class ServiceFacture
         private ServiceEntreprise $serviceEntreprise,
         private Security $security
     ) {
+        $this->pdfOptions = new Options();
+        $this->pdfOptions->set('defaultFont', 'Arial');
+        $this->dompdf = new Dompdf($this->pdfOptions);
+        $this->dompdf->setPaper('A4', 'portrait'); // ou 'landscape'
     }
 
     public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
@@ -191,9 +193,10 @@ class ServiceFacture
         return $isSameData;
     }
 
-    public function getType(int $typeFacture){
+    public function getType(int $typeFacture)
+    {
         foreach (FactureCrudController::TAB_TYPE_FACTURE as $key => $value) {
-            if($typeFacture === $value){
+            if ($typeFacture === $value) {
                 return $key;
             }
         }
@@ -300,17 +303,50 @@ class ServiceFacture
         $facture->addElementFacture($ef);
     }
 
-    public function cleanElementFacture(Facture $facture){
+    public function cleanElementFacture(Facture $facture)
+    {
         $elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
         //dd($elementFactures);
         foreach ($elementFactures as $ef) {
             /** @var ElementFacture */
-            if($ef->getFacture() == null){
+            if ($ef->getFacture() == null) {
                 $facture->removePolice($ef->getPolice());
                 $this->serviceSuppression->supprimer($ef, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
             }
+        }
+    }
+
+
+    private function getNomFichierFacture(?Facture $f): string
+    {
+        return $f != null ? "Facture_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
+    }
+
+    public function visualiserFacture(?Facture $facture)
+    {
+        if ($facture != null) {
+            $this->dompdf->loadHtml('hello world');
+            $this->dompdf->render();
+            return new Response(
+                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => false]),
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/pdf']
+            );
+        }
+    }
+
+    public function telechargerFacture(?Facture $facture)
+    {
+        if ($facture != null) {
+            $this->dompdf->loadHtml('hello world');
+            $this->dompdf->render();
+            return new Response(
+                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => true]),
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/pdf']
+            );
         }
     }
 }

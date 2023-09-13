@@ -175,6 +175,7 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
             //on persiste l'entreprise
             $manager->persist($entreprise);
 
+            /** @var Utilisateur */
             $utilisateur->setEntreprise($entreprise);
             $utilisateur->setUtilisateur($utilisateur);
             

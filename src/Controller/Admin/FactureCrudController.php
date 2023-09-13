@@ -3,8 +3,7 @@
 namespace App\Controller\Admin;
 
 
-
-
+use App\Controller\FactureController;
 use App\Entity\Facture;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
@@ -54,10 +53,9 @@ class FactureCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
-    
+
     public function __construct(
         private ServiceFacture $serviceFacture,
-        private ServicePdf $servicePdf,
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
@@ -161,9 +159,13 @@ class FactureCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $ouvrir_pdf = Action::new(DashboardController::ACTION_OPEN_PDF)
-            ->setIcon('fa-regular fa-file-pdf') //<i class="fa-regular fa-file-pdf"></i>
-            ->linkToCrudAction('ouvrirPDF');
+        $telecharger_facture = Action::new(DashboardController::ACTION_TELECHARGER_PDF)
+            ->setIcon('fa-solid fa-download') //<i class="fa-solid fa-download"></i>
+            ->linkToCrudAction('downloadPDF');
+
+        $visualiser_facture = Action::new(DashboardController::ACTION_VISUALISER_PDF)
+            ->setIcon('fa-solid fa-expand') //<i class="fa-solid fa-expand"></i>
+            ->linkToCrudAction('visualiser');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -238,9 +240,17 @@ class FactureCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
 
-            ->add(Crud::PAGE_DETAIL, $ouvrir_pdf)
-            ->add(Crud::PAGE_EDIT, $ouvrir_pdf)
-            ->add(Crud::PAGE_INDEX, $ouvrir_pdf)
+            ->add(Crud::PAGE_DETAIL, $telecharger_facture)
+            ->add(Crud::PAGE_INDEX, $telecharger_facture)
+            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_TELECHARGER_PDF, function (Action $action) {
+                return $action->addCssClass('btn btn-warning'); //<i class="fa-solid fa-floppy-disk"></i>
+            })
+
+            ->add(Crud::PAGE_DETAIL, $visualiser_facture)
+            ->add(Crud::PAGE_INDEX, $visualiser_facture)
+            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_VISUALISER_PDF, function (Action $action) {
+                return $action->addCssClass('btn btn-primary'); //<i class="fa-solid fa-floppy-disk"></i>
+            })
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -298,12 +308,18 @@ class FactureCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $facture));
     }
 
-    public function ouvrirPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function downloadPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        $this->servicePdf->genererFacture($facture);
-        return new Response();
+        return $this->serviceFacture->telechargerFacture($facture);
+    }
+
+    public function visualiser(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        return $this->serviceFacture->visualiserFacture($facture);
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

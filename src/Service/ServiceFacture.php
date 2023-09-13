@@ -324,29 +324,33 @@ class ServiceFacture
         return $f != null ? "Facture_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
     }
 
+    private function dessinerContenuFacture(?Facture $facture)
+    {
+        $html = "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference();
+        $this->dompdf->loadHtml($html);
+        $this->dompdf->render();
+    }
+
     public function visualiserFacture(?Facture $facture)
     {
-        if ($facture != null) {
-            $this->dompdf->loadHtml('hello world');
-            $this->dompdf->render();
-            return new Response(
-                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => false]),
-                Response::HTTP_OK,
-                ['Content-Type' => 'application/pdf']
-            );
-        }
+        return $this->produireFacture($facture, false);
     }
 
     public function telechargerFacture(?Facture $facture)
     {
+        return $this->produireFacture($facture, true);
+    }
+
+    private function produireFacture(?Facture $facture, bool $canDownload){
         if ($facture != null) {
-            $this->dompdf->loadHtml('hello world');
-            $this->dompdf->render();
+            $this->dessinerContenuFacture($facture);
             return new Response(
-                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => true]),
+                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => $canDownload]),
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/pdf']
             );
+        }else{
+            return new Response("", Response::HTTP_NO_CONTENT, []);
         }
     }
 }

@@ -165,7 +165,7 @@ class FactureCrudController extends AbstractCrudController
 
         $visualiser_facture = Action::new(DashboardController::ACTION_VISUALISER_PDF)
             ->setIcon('fa-solid fa-expand') //<i class="fa-solid fa-expand"></i>
-            ->linkToCrudAction('visualiser');
+            ->linkToCrudAction('visualiserPDF');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -312,14 +312,36 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        return $this->serviceFacture->telechargerFacture($facture);
+        $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
+        $data = [
+            'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
+            'facture'       => $facture,
+            'name'          => 'John Doe',
+            'address'       => 'USA',
+            'mobileNumber'  => '000000000',
+            'email'         => 'john.doe@email.com',
+            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
+        ];
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
+        return $this->serviceFacture->telechargerFacture($facture, $contenuHtml);
     }
 
-    public function visualiser(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function visualiserPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        return $this->serviceFacture->visualiserFacture($facture);
+        $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
+        $data = [
+            'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
+            'facture'       => $facture,
+            'name'          => 'John Doe',
+            'address'       => 'USA',
+            'mobileNumber'  => '000000000',
+            'email'         => 'john.doe@email.com',
+            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
+        ];
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
+        return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

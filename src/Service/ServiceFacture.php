@@ -324,32 +324,41 @@ class ServiceFacture
         return $f != null ? "Facture_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
     }
 
-    private function dessinerContenuFacture(?Facture $facture)
+    public function imageToBase64($path) {
+        $path = $path;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    }
+
+    private function dessinerContenuFacture(?Facture $facture, $contenuHtml)
     {
-        $html = "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference();
-        $this->dompdf->loadHtml($html);
+        
+        $this->dompdf->loadHtml($contenuHtml);
         $this->dompdf->render();
     }
 
-    public function visualiserFacture(?Facture $facture)
+    public function visualiserFacture(?Facture $facture, $contenuHtml)
     {
-        return $this->produireFacture($facture, false);
+        return $this->produireFacture($facture, false, $contenuHtml);
     }
 
-    public function telechargerFacture(?Facture $facture)
+    public function telechargerFacture(?Facture $facture, $contenuHtml)
     {
-        return $this->produireFacture($facture, true);
+        return $this->produireFacture($facture, true, $contenuHtml);
     }
 
-    private function produireFacture(?Facture $facture, bool $canDownload){
+    private function produireFacture(?Facture $facture, bool $canDownload, $contenuHtml)
+    {
         if ($facture != null) {
-            $this->dessinerContenuFacture($facture);
+            $this->dessinerContenuFacture($facture, $contenuHtml);
             return new Response(
                 $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => $canDownload]),
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/pdf']
             );
-        }else{
+        } else {
             return new Response("", Response::HTTP_NO_CONTENT, []);
         }
     }

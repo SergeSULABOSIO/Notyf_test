@@ -334,7 +334,6 @@ class ServiceFacture
 
     private function dessinerContenuFacture(?Facture $facture, $contenuHtml)
     {
-        
         $this->dompdf->loadHtml($contenuHtml);
         $this->dompdf->render();
     }

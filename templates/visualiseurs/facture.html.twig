@@ -2,45 +2,127 @@
 <html>
 <head>
     <style>
-        {# Alignements #}
-        .centrer-texte{
+        .texte-titre{
+            padding: 3px;
+            text-align: center;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+        .texte-normal{
+            padding: 3px;
+            font-size: 9pt;
+        }
+        .texte-petit{
+            padding: 3px;
+            font-size: 8pt;
+        }
+        .texte-centre{
+            padding: 3px;
             text-align: center;
         }
-        .droiter-texte{
-            text-align: right;
-        }
-        .gaucher-texte{
+        .texte-gauche{
+            padding: 3px;
             text-align: left;
         }
-        .centrer-contenu{
-            align: center;
+        .texte-droite{
+            padding: 3px;
+            text-align: right;
         }
-        
+        .bordure-top{
+            border-top: 0.5px solid black;
+        }
+        .bordure-bottom{
+            border-bottom: 0.5px solid black;
+        }
+        .bordure-zero{
+            border: 0px solid black;
+        }
+        .bordure-normale{
+            border: 0.5px solid black;
+        }
+        .bg-sombre{
+            background-color: lightgray;
+        }
+        .largeur-max{
+            width: 100%;
+        }
+        .centre{
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .espace-bordure-nul{
+            border-spacing: 0px;
+        }        
+        .titre-document{
+            margin-top: 30px;
+            background-color: lightgray;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-size: 10pt;
+            font-weight: bold;
+            border-top: 0.5px solid black;
+            border-bottom: 0.5px solid black;
+            width: 100%;
+        }
+        .largeur-logo{
+            width: 30%;
+        }
+        .image-centre{
+            margin-left: 30%;
+            margin-right: 30%;
+            width: 40%;
+        }
+        .marge-top-large{
+            margin-top: 50px;
+        }
+        .marge-top-moyen{
+            margin-top: 20px;
+        }
+        .tableau-entete{
+            border-spacing: 0px;
+            background-color: lightgray;
+            padding: 3px;
+            text-align: center;
+            border: 0.5px solid black;
+        }
+        .tableau-contenu{
+            padding: 3px;
+            border: 0.5px solid black;
+        }
+        .tableau-contenu-droite{
+            padding: 3px;
+            border: 0.5px solid black;
+            text-align: right;
+        }
+        .tableau{
+            border-spacing: 0px;
+        }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture</title>
 </head>
 <body>
-    <div id="body">
+    <div id="body" class="texte-normal">
         {# Entête de la page #}
-        <div id="section_header" style="font-size: 9pt;">
+        <div id="section_header">
             {# barre du logo #}
-            <table class="centrer-texte" width="100%" style="border: 0px solid black;">
+            <table class="centre">
                 <tr>
                     <td>
-                        <img src="{{imageSrc}}"> 
+                        <img src="{{imageSrc}}" class="image-centre"> 
                     </td>
                 </tr>
                 <tr>
-                    <td>AIB RDC Sarl</td>
+                    <td class="texte-titre texte-centre">AIB RDC Sarl</td>
                 </tr>
                 <tr>
-                    <td>Av. de la Gombe, Kinshasa / RDC</td>
+                    <td class="texte-normal texte-centre">Av. de la Gombe, Kinshasa / RDC</td>
                 </tr>
             </table>
 
             {# barre de titre #}
-            <table class="centrer-texte" style="width: 100%; border-top: 1px solid black; border-bottom: 1px solid black; font-size: 10pt; margin-top:10px; background-color: lightgray;">
+            <table class="titre-document">
                 <tr>
                     <td>
                         <strong>FACTURE</strong>
@@ -51,26 +133,26 @@
 
 
         {# Contenu de la page #}
-        <div id="content" style="font-size: 9pt">
+        <div id="content">
             <div class="page">
                 {# Référence, date et type de facture #}
-                <table style="width: 100%; border-bottom: 1px solid black" border="0">
+                <table class="largeur-max bordure-bottom">
                     <tr>
                         <td>RCCM: <strong>132-003</strong></td>
-                        <td class="droiter-texte">DATE: <strong>15/09/2023 à 15:43</strong></td>
+                        <td class="texte-droite">DATE: <strong>15/09/2023 à 15:43</strong></td>
                     </tr>
                     <tr>
                         <td>NIF: <strong>001524-CD-450</strong></td>
-                        <td class="droiter-texte">REFERENCE: <strong>ND1245787878/AIB RDC/2023</strong></td>
+                        <td class="texte-droite">REFERENCE: <strong>ND1245787878/AIB RDC/2023</strong></td>
                     </tr>
                     <tr>
                         <td>ID. NAT: <strong>KO11455500012-23</strong></td>
-                        <td class="droiter-texte">NATURE: <strong>NOTE DE DEBIT POUR COMMISSION</strong></td>
+                        <td class="texte-droite">NATURE: <strong>NOTE DE DEBIT POUR COMMISSION</strong></td>
                     </tr>
                 </table>
 
                 {# Facture à l'attention de... & Description de la facture #}
-                <table style="width: 100%; margin-top:50px" border="0">
+                <table class="largeur-max marge-top-large">
                     <tr>
                         <td>
                             Pour:</br>
@@ -79,7 +161,7 @@
                                 Blvd du 30 juin, Kinshasa, Gombe / RDC
                             </strong>
                         </td>
-                        <td class="droiter-texte">
+                        <td class="texte-droite">
                             Description: </br>
                             <strong>
                                 Bordereau de production / Juin 2023
@@ -90,32 +172,32 @@
 
 
                 {# Synthèse des totaux #}
-                <table align="center" style="width: 30%; margin-top:100px; border-spacing: 0px;">
+                <table class="tableau centre marge-top-large">
                     <tr>
-                        <td class="centrer-texte" colspan="2" style="padding: 3px; border-bottom: 0.5px solid black;">Synthèse</td>
+                        <td class="texte-centre" colspan="2">Synthèse</td>
                     </tr>
                     <tr>
-                        <td style="background-color: lightgray; text-align: center; padding: 3px; border: 0.5px solid black;"><strong>RUBRIQUES</strong></td>
-                        <td style="background-color: lightgray; text-align: center; padding: 3px; border: 0.5px solid black;"><strong>MONTANTS</strong></td>
+                        <td class="tableau-entete"><strong>RUBRIQUES</strong></td>
+                        <td class="tableau-entete"><strong>MONTANTS</strong></td>
                     </tr>
                     <tr class="even_row">
-                        <td style="padding: 3px; border: 0.5px solid black;">Montant dû</td>
-                        <td class="droiter-texte" style="padding: 3px; border: 0.5px solid black;">10.000,45 $</td>
+                        <td class="tableau-contenu">Montant dû</td>
+                        <td class="tableau-contenu-droite">10.000,45 $</td>
                     </tr>
                     <tr>
                         <td style="padding: 3px; border: 0.5px solid black;">Taxes (tva @16%)</td>
-                        <td class="droiter-texte" style="padding: 3px; border: 0.5px solid black;">100,05 $</td>
+                        <td class="tableau-contenu-droite">100,05 $</td>
                     </tr>
                     <tr>
                         <td style="background-color: lightgray; padding: 3px; border: 0.5px solid black;"><strong>Total à payer</strong></td>
-                        <td class="droiter-texte"style="background-color: lightgray; padding: 3px; border: 0.5px solid black;"><strong>10.100,50 $</strong></td>
+                        <td class="texte-alignement-droite"style="background-color: lightgray; padding: 3px; border: 0.5px solid black;"><strong>10.100,50 $</strong></td>
                     </tr>
                 </table>
 
                 {# Signatiare de la facture #}
                 <table style="width: 100%; margin-top:100px" border="0">
                     <tr>
-                        <td style="text-align: right;">
+                        <td class="texte-alignement-droite">
                             {# Nom et Signature #}
                             <strong>Serge SULA BOSIO</strong></br>
                             {# Titre du signataire #}
@@ -124,40 +206,37 @@
                     </tr>
                 </table>
 
-
-
             </div>
         </div>
 
         <div id="section_footer" style="font-size: 8pt">
-
             {# Les Comptes bancaires et leurs numéros #}
             <table style="width: 100%; margin-top:100px; border-spacing: 0px;">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>
-                <tr style="text-align: center; background-color: lightgray;">
+                <tr class="texte-alignement-centre" style="background-color: lightgray;">
                     <td style="border: 0.5px solid black; padding: 3px;">Intitulé</td>
                     <td style="border: 0.5px solid black;padding: 3px;">Numéro</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Banque</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Code Swift</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Devise</td>
                 </tr>
-                <tr style="background-color: lightcyan;">
+                <tr class="texte-alignement-centre" style="background-color: lightcyan;">
                     <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
                     <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Rawbank RDC SA</td>
                     <td style="border: 0.5px solid black; padding: 3px;">CDKNRWB</td>
                     <td style="border: 0.5px solid black; padding: 3px;">USD</td>
                 </tr>
-                <tr>
+                <tr class="texte-alignement-centre">
                     <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
                     <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Equity BCDC</td>
                     <td style="border: 0.5px solid black; padding: 3px;">CDKNRWB</td>
                     <td style="border: 0.5px solid black; padding: 3px;">USD</td>
                 </tr>
-                <tr style="background-color: lightcyan;">
+                <tr class="texte-alignement-centre" style="background-color: lightcyan;">
                     <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
                     <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
                     <td style="border: 0.5px solid black; padding: 3px;">Sofibank RDC SA</td>
@@ -169,7 +248,7 @@
             {# Nom de la société et autres informations de pieds de page #}
             <table style="width: 100%; border-top: 1px solid black; font-size: 8pt; padding:10px;">
                 <tr>
-                    <td align="center">
+                    <td class="texte-alignement-centre" align="center">
                         <strong>AIB RDC Sarl</strong><br>
                         Prins Van School, Avenue de la Gombe, Kinshasa / RDC<br>
                         www.aib-brokers.com | infos@aib-brokers.com | (+243) 82-87-27-706, (+243) 98-87-27-706 | Capital Social: CDF 1.000.000.000.<br>
@@ -177,7 +256,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="center">
+                    <td class="texte-alignement-centre">
                         Page 1/1
                     </td>
                 </tr>

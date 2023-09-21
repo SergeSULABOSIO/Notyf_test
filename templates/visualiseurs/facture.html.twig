@@ -166,20 +166,20 @@
                     <tr>
                         <td>
                             Pour:</br>
-                            <strong>
-                                {{pour}}
-                            </strong>
+                            {{pour|raw}}
                         </td>
                         <td class="texte-droite">
                             Description: </br>
                             <strong>
-                                {% set description = {'data': 'facture[description]'} %}
-                                {{description.data | raw}}
+                                {{facture.description|raw}}
                             </strong>
                         </td>
                     </tr>
                 </table>
 
+                {% set montant_ht = facture.totalDu / 100 / 1.16 %}
+                {% set montant_taxe = (montant_ht * 16) / 100 %}
+                {% set montant_ttc = montant_ht + montant_taxe %}
 
                 {# Synthèse des totaux #}
                 <table class="tableau-bordure-zero centre marge-top-extralarge">
@@ -192,15 +192,15 @@
                     </tr>
                     <tr class="bg-pair">
                         <td class="texte-normal">Montant dû</td>
-                        <td class="texte-normal texte-droite">10.000,45 $</td>
+                        <td class="texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                     <tr>
                         <td class="texte-normal">Taxes (tva @16%)</td>
-                        <td class="texte-normal texte-droite">100,05 $</td>
+                        <td class="texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                     <tr class="bg-sombre">
                         <td class="texte-normal texte-gras">Total à payer</td>
-                        <td class="texte-normal texte-droite texte-gras">10.100,50 $</td>
+                        <td class="texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                 </table>
 

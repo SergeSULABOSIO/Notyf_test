@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\FactureController;
 use App\Entity\Assureur;
+use App\Entity\Client;
 use App\Entity\Facture;
 use App\Entity\Partenaire;
 use App\Service\ServiceDates;
@@ -15,6 +16,7 @@ use App\Service\ServiceFacture;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceMonnaie;
 use App\Service\ServicePdf;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
@@ -57,6 +59,7 @@ class FactureCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceMonnaie $serviceMonnaie,
         private ServiceFacture $serviceFacture,
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
@@ -320,7 +323,7 @@ class FactureCrudController extends AbstractCrudController
             'facture'       => $facture,
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
-            'address'       => 'USA',
+            'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',
             'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
@@ -335,21 +338,24 @@ class FactureCrudController extends AbstractCrudController
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                 /** @var Assureur */
                 $assureur = $facture->getAssureur();
-                return $assureur->getNom() . ", " . $assureur->getTelephone() . ", " . $assureur->getAdresse();
+                return "<span class = 'texte-gras'>" . $assureur->getNom() . ",</span></br>" . $assureur->getTelephone() . ", " . $assureur->getAdresse();
                 break;
             case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                return $facture->getAutreTiers();
+                return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
+                break;
+            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
             case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                 /** @var Partenaire */
                 $partenaire = $facture->getPartenaire();
-                return $partenaire->getNom() . ", " . $partenaire->getEmail() . ", " . $partenaire->getAdresse();
+                return "<span class = 'texte-gras'>" . $partenaire->getNom() . ",</span></br>" . $partenaire->getEmail() . ", " . $partenaire->getAdresse();
                 break;
             case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
-                return $facture->getAutreTiers();
+                return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
             case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
-                return $facture->getAutreTiers();
+                return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
             default:
                 return "Inconnu";
@@ -367,7 +373,7 @@ class FactureCrudController extends AbstractCrudController
             'facture'       => $facture,
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
-            'address'       => 'USA',
+            'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',
             'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()

@@ -317,6 +317,7 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
@@ -336,6 +337,7 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
@@ -347,6 +349,7 @@ class FactureCrudController extends AbstractCrudController
             'email'         => 'john.doe@email.com',
             'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
         ];
+        //dd($data);
         $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
         return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }

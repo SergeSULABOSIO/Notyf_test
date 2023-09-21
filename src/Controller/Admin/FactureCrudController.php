@@ -4,7 +4,9 @@ namespace App\Controller\Admin;
 
 
 use App\Controller\FactureController;
+use App\Entity\Assureur;
 use App\Entity\Facture;
+use App\Entity\Partenaire;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -316,7 +318,8 @@ class FactureCrudController extends AbstractCrudController
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
-            'name'          => 'John Doe',
+            'nature'        => $this->serviceFacture->getType($facture->getType()),
+            'pour'          => $this->getPour($facture),
             'address'       => 'USA',
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',
@@ -324,6 +327,34 @@ class FactureCrudController extends AbstractCrudController
         ];
         $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
         return $this->serviceFacture->telechargerFacture($facture, $contenuHtml);
+    }
+
+    private function getPour(?Facture $facture)
+    {
+        switch ($this->serviceFacture->getType($facture->getType())) {
+            case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                /** @var Assureur */
+                $assureur = $facture->getAssureur();
+                return $assureur->getNom() . ", " . $assureur->getTelephone() . ", " . $assureur->getAdresse();
+                break;
+            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                return $facture->getAutreTiers();
+                break;
+            case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+                /** @var Partenaire */
+                $partenaire = $facture->getPartenaire();
+                return $partenaire->getNom() . ", " . $partenaire->getEmail() . ", " . $partenaire->getAdresse();
+                break;
+            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+                return $facture->getAutreTiers();
+                break;
+            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+                return $facture->getAutreTiers();
+                break;
+            default:
+                return "Inconnu";
+                break;
+        }
     }
 
     public function visualiserPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -334,7 +365,8 @@ class FactureCrudController extends AbstractCrudController
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
-            'name'          => 'John Doe',
+            'nature'        => $this->serviceFacture->getType($facture->getType()),
+            'pour'          => $this->getPour($facture),
             'address'       => 'USA',
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',

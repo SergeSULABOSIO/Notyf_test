@@ -685,6 +685,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_ELEMENTS              = "Eléments facturés";
     public const PREF_FIN_FACTURE_COMPTES_BANCIARES     = "Comptes Bancaires";
     public const PREF_FIN_FACTURE_REFERENCE             = "Référence";
+    public const PREF_FIN_FACTURE_SIGNED_BY             = "Signée par";
+    public const PREF_FIN_FACTURE_POSTE_SIGNED_BY       = "Poste";
     public const PREF_FIN_FACTURE_UTILISATEUR           = "Utilisateur";
     public const PREF_FIN_FACTURE_ENTREPRISE            = "Entreprise";
     public const PREF_FIN_FACTURE_DATE_DE_CREATION      = "Date de création";
@@ -720,7 +722,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
         self::PREF_FIN_FACTURE_TOTAL_RECU               => 16,
         self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17,
-        self::PREF_FIN_FACTURE_COMPTES_BANCIARES        => 18
+        self::PREF_FIN_FACTURE_COMPTES_BANCIARES        => 18,
+        self::PREF_FIN_FACTURE_SIGNED_BY                => 19,
+        self::PREF_FIN_FACTURE_POSTE_SIGNED_BY          => 20
     ];
 
     //COMPTE BANCAIRE

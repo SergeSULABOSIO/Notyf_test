@@ -332,6 +332,25 @@ class FactureCrudController extends AbstractCrudController
         return $this->serviceFacture->telechargerFacture($facture, $contenuHtml);
     }
 
+    public function visualiserPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
+        $data = [
+            'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
+            'facture'       => $facture,
+            'nature'        => $this->serviceFacture->getType($facture->getType()),
+            'pour'          => $this->getPour($facture),
+            'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
+            'mobileNumber'  => '000000000',
+            'email'         => 'john.doe@email.com',
+            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
+        ];
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
+        return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
+    }
+
     private function getPour(?Facture $facture)
     {
         switch ($this->serviceFacture->getType($facture->getType())) {
@@ -361,25 +380,6 @@ class FactureCrudController extends AbstractCrudController
                 return "Inconnu";
                 break;
         }
-    }
-
-    public function visualiserPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        /** @var Facture */
-        $facture = $context->getEntity()->getInstance();
-        $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
-        $data = [
-            'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
-            'facture'       => $facture,
-            'nature'        => $this->serviceFacture->getType($facture->getType()),
-            'pour'          => $this->getPour($facture),
-            'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
-            'mobileNumber'  => '000000000',
-            'email'         => 'john.doe@email.com',
-            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
-        ];
-        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
-        return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

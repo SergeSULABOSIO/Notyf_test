@@ -39,6 +39,9 @@
         .bg-sombre{
             background-color: lightgray;
         }
+        .bg-pair{
+            background-color: whitesmoke;
+        }
         .largeur-max{
             width: 100%;
         }
@@ -143,7 +146,7 @@
             <div class="page">
                 {# Référence, date et type de facture #}
                 <table class="tableau-bordure-bottom centre texte-normal" style="width: 98%;">
-                    <tr>
+                    <tr class="bg-pair">
                         <td>RCCM: <strong>132-003</strong></td>
                         <td class="texte-droite">DATE: <strong>15/09/2023 à 15:43</strong></td>
                     </tr>
@@ -151,7 +154,7 @@
                         <td>NIF: <strong>001524-CD-450</strong></td>
                         <td class="texte-droite">REFERENCE: <strong>ND1245787878/AIB RDC/2023</strong></td>
                     </tr>
-                    <tr>
+                    <tr class="bg-pair">
                         <td>ID. NAT: <strong>KO11455500012-23</strong></td>
                         <td class="texte-droite">NATURE: <strong>NOTE DE DEBIT POUR COMMISSION</strong></td>
                     </tr>
@@ -213,39 +216,39 @@
             </div>
         </div>
 
-        <div id="section_footer" style="font-size: 8pt">
+        <div id="section_footer" class="texte-petit">
             {# Les Comptes bancaires et leurs numéros #}
-            <table style="width: 100%; margin-top:100px; border-spacing: 0px;">
+            <table class="tableau-bordure-zero largeur-max marge-top-extralarge">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>
-                <tr class="texte-alignement-centre" style="background-color: lightgray;">
-                    <td style="border: 0.5px solid black; padding: 3px;">Intitulé</td>
-                    <td style="border: 0.5px solid black;padding: 3px;">Numéro</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Banque</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Code Swift</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Devise</td>
+                <tr class="texte-gras texte-centre bg-sombre">
+                    <td class="tableau-bordure">Intitulé</td>
+                    <td class="tableau-bordure">Numéro</td>
+                    <td class="tableau-bordure">Banque</td>
+                    <td class="tableau-bordure">Code Swift</td>
+                    <td class="tableau-bordure">Devise</td>
                 </tr>
-                <tr class="texte-alignement-centre" style="background-color: lightcyan;">
-                    <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Rawbank RDC SA</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">CDKNRWB</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">USD</td>
+                <tr class="texte-centre bg-pair">
+                    <td class="tableau-bordure">AIB RDC Sarl</td>
+                    <td class="tableau-bordure">01112-2335458-121-15488</td>
+                    <td class="tableau-bordure">Rawbank RDC SA</td>
+                    <td class="tableau-bordure">CDKNRWB</td>
+                    <td class="tableau-bordure">USD</td>
                 </tr>
-                <tr class="texte-alignement-centre">
-                    <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Equity BCDC</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">CDKNRWB</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">USD</td>
+                <tr class="texte-centre">
+                    <td class="tableau-bordure">AIB RDC Sarl</td>
+                    <td class="tableau-bordure">01112-2335458-121-15488</td>
+                    <td class="tableau-bordure">Equity BCDC</td>
+                    <td class="tableau-bordure">CDKNRWB</td>
+                    <td class="tableau-bordure">USD</td>
                 </tr>
-                <tr class="texte-alignement-centre" style="background-color: lightcyan;">
-                    <td style="border: 0.5px solid black; padding: 3px;">AIB RDC Sarl</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">01112-2335458-121-15488</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">Sofibank RDC SA</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">CDKNRWB</td>
-                    <td style="border: 0.5px solid black; padding: 3px;">USD</td>
+                <tr class="texte-centre bg-pair">
+                    <td class="tableau-bordure">AIB RDC Sarl</td>
+                    <td class="tableau-bordure">01112-2335458-121-15488</td>
+                    <td class="tableau-bordure">Sofibank RDC SA</td>
+                    <td class="tableau-bordure">CDKNRWB</td>
+                    <td class="tableau-bordure">USD</td>
                 </tr>
             </table>
 

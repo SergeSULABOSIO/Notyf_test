@@ -80,6 +80,12 @@ class Facture
     #[ORM\ManyToMany(targetEntity: CompteBancaire::class, inversedBy: 'factures')]
     private Collection $compteBancaires;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $signedBy = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $posteSignedBy = null;
+
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
@@ -472,6 +478,30 @@ class Facture
     public function removeCompteBancaire(CompteBancaire $compteBancaire): self
     {
         $this->compteBancaires->removeElement($compteBancaire);
+
+        return $this;
+    }
+
+    public function getSignedBy(): ?string
+    {
+        return $this->signedBy;
+    }
+
+    public function setSignedBy(?string $signedBy): self
+    {
+        $this->signedBy = $signedBy;
+
+        return $this;
+    }
+
+    public function getPosteSignedBy(): ?string
+    {
+        return $this->posteSignedBy;
+    }
+
+    public function setPosteSignedBy(?string $posteSignedBy): self
+    {
+        $this->posteSignedBy = $posteSignedBy;
 
         return $this;
     }

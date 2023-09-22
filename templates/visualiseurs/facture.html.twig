@@ -124,14 +124,17 @@
             border-spacing: 0px;
             padding: 3px;
         }
+        .page{
+            page-break-after: always;
+        }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture - {{facture.id}}</title>
 </head>
 <body>
-    <div id="body" class="texte-normal">
+    <div class="page texte-normal">
         {# Entête de la page #}
-        <div id="section_header">
+        <div class="header">
             {# barre du logo #}
             <table class="tableau-bordure-zero centre">
                 <tr>
@@ -146,86 +149,82 @@
                     </td>
                 </tr>
             </table>
-
             {# barre de titre #}
             <div class="titre-document">FACTURE N°{{facture.reference}}</div>
         </div>
         {# Contenu de la page #}
-        <div id="content">
-            <div class="page">
-                {# Référence, date et type de facture #}
-                <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
-                    <tr class="bg-pair">
-                        <td>RCCM: <strong>{{facture.entreprise.rccm}}</strong></td>
-                        <td class="texte-droite">DATE: <strong>{{facture.createdAt | date("d/m/Y à G:H:i")}}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>NIF: <strong>{{facture.entreprise.numimpot}}</strong></td>
-                        <td class="texte-droite">REFERENCE: <strong>{{facture.reference}}</strong></td>
-                    </tr>
-                    <tr class="bg-pair">
-                        <td>ID. NAT: <strong>{{facture.entreprise.idnat}}</strong></td>
-                        <td class="texte-droite">NATURE: <strong>{{nature}}</strong></td>
-                    </tr>
-                </table>
+        <div class="corps">
+            {# Référence, date et type de facture #}
+            <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
+                <tr class="bg-pair">
+                    <td>RCCM: <strong>{{facture.entreprise.rccm}}</strong></td>
+                    <td class="texte-droite">DATE: <strong>{{facture.createdAt | date("d/m/Y à G:H:i")}}</strong></td>
+                </tr>
+                <tr>
+                    <td>NIF: <strong>{{facture.entreprise.numimpot}}</strong></td>
+                    <td class="texte-droite">REFERENCE: <strong>{{facture.reference}}</strong></td>
+                </tr>
+                <tr class="bg-pair">
+                    <td>ID. NAT: <strong>{{facture.entreprise.idnat}}</strong></td>
+                    <td class="texte-droite">NATURE: <strong>{{nature}}</strong></td>
+                </tr>
+            </table>
 
-                {# Facture à l'attention de... & Description de la facture #}
-                <table class="tableau-bordure-zero centre marge-top-large" style="width: 98%;">
-                    <tr>
-                        <td>
-                            Pour:</br>
-                            {{pour|raw}}
-                        </td>
-                        <td class="texte-droite">
-                            Description: </br>
-                            <strong>
-                                {{facture.description|raw}}
-                            </strong>
-                        </td>
-                    </tr>
-                </table>
+            {# Facture à l'attention de... & Description de la facture #}
+            <table class="tableau-bordure-zero centre marge-top-large" style="width: 98%;">
+                <tr>
+                    <td>
+                        Pour:</br>
+                        {{pour|raw}}
+                    </td>
+                    <td class="texte-droite">
+                        Description: </br>
+                        <strong>
+                            {{facture.description|raw}}
+                        </strong>
+                    </td>
+                </tr>
+            </table>
 
-                {% set montant_ht = facture.totalDu / 100 / 1.16 %}
-                {% set montant_taxe = (montant_ht * 16) / 100 %}
-                {% set montant_ttc = montant_ht + montant_taxe %}
+            {% set montant_ht = facture.totalDu / 100 / 1.16 %}
+            {% set montant_taxe = (montant_ht * 16) / 100 %}
+            {% set montant_ttc = montant_ht + montant_taxe %}
 
-                {# Synthèse des totaux #}
-                <table class="tableau-bordure-zero centre marge-top-extralarge">
-                    <tr>
-                        <td class="texte-centre" colspan="2">Synthèse</td>
-                    </tr>
-                    <tr>
-                        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>RUBRIQUES</strong></td>
-                        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>MONTANTS</strong></td>
-                    </tr>
-                    <tr class="bg-pair">
-                        <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
-                        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    </tr>
-                    <tr>
-                        <td class="tableau-bordure-blanche texte-normal">Taxes (tva @16%)</td>
-                        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    </tr>
-                    <tr class="bg-sombre">
-                        <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
-                        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    </tr>
-                </table>
+            {# Synthèse des totaux #}
+            <table class="tableau-bordure-zero centre marge-top-extralarge">
+                <tr>
+                    <td class="texte-centre" colspan="2">Synthèse</td>
+                </tr>
+                <tr>
+                    <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>RUBRIQUES</strong></td>
+                    <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>MONTANTS</strong></td>
+                </tr>
+                <tr class="bg-pair">
+                    <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
+                    <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+                <tr>
+                    <td class="tableau-bordure-blanche texte-normal">Taxes (tva @16%)</td>
+                    <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+                <tr class="bg-sombre">
+                    <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
+                    <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+            </table>
 
-                {# Signatiare de la facture #}
-                <table class="tableau-bordure-zero droite marge-top-extralarge">
-                    <tr>
-                        <td class="texte-centre">
-                            <span class="texte-titre">{{facture.signedBy}}</span></br>
-                            <span class="texte-normal">{{facture.posteSignedBy}}</span>
-                        </td>
-                    </tr>
-                </table>
-
-            </div>
+            {# Signatiare de la facture #}
+            <table class="tableau-bordure-zero droite marge-top-extralarge">
+                <tr>
+                    <td class="texte-centre">
+                        <span class="texte-titre">{{facture.signedBy}}</span></br>
+                        <span class="texte-normal">{{facture.posteSignedBy}}</span>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <div id="section_footer" class="texte-petit marge-top-large">
+        <div class="footer texte-petit marge-top-large">
             {# Les Comptes bancaires et leurs numéros #}
             <table class="tableau-bordure-zero largeur-max">
                 <tr>
@@ -255,7 +254,6 @@
                     {% set x = x + 1 %}
                 {% endfor %}
             </table>
-
             {# Nom de la société et autres informations de pieds de page #}
             <table class="tableau-bordure-top largeur-max">
                 <tr>
@@ -273,5 +271,6 @@
             </table>
         </div>
     </div>
+    Autre Page Ici.
 </body>
 </html>

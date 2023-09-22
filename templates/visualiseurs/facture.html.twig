@@ -76,6 +76,9 @@
         .marge-top-extralarge{
             margin-top: 100px;
         }
+        .marge-bottom-zero{
+            bottom: 0px;
+        }
         .marge-top-large{
             margin-top: 50px;
         }
@@ -222,9 +225,9 @@
             </div>
         </div>
 
-        <div id="section_footer" class="texte-petit">
+        <div id="section_footer" class="texte-petit marge-top-large">
             {# Les Comptes bancaires et leurs numéros #}
-            <table class="tableau-bordure-zero largeur-max marge-top-extralarge">
+            <table class="tableau-bordure-zero largeur-max">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>
@@ -254,12 +257,11 @@
             </table>
 
             {# Nom de la société et autres informations de pieds de page #}
-            <table class="tableau-bordure-top marge-top-large largeur-max">
+            <table class="tableau-bordure-top largeur-max">
                 <tr>
                     <td class="texte-centre">
                         <span class="texte-gras">{{facture.entreprise.nom}}</span><br>
-                        {{facture.entreprise.adresse}}<br>
-                        Tél: {{facture.entreprise.telephone}} | Capital Social: CDF 1.000.000.000.<br>
+                        {{facture.entreprise.adresse}} | Tél: {{facture.entreprise.telephone}}<br>
                         RCCM: {{facture.entreprise.rccm}} | ID.NAT: {{facture.entreprise.idnat}} | NUM. IMPOT: {{facture.entreprise.numimpot}}
                     </td>
                 </tr>

@@ -101,6 +101,11 @@
             border-spacing: 0px;
             padding: 3px;
         }
+        .tableau-bordure-blanche{
+            border: 1px solid white;
+            border-spacing: 0px;
+            padding: 3px;
+        }
         .tableau-bordure-bottom{
             border-bottom: 0.5px solid black;
             border-spacing: 0px;
@@ -187,20 +192,20 @@
                         <td class="texte-centre" colspan="2">Synthèse</td>
                     </tr>
                     <tr>
-                        <td class="texte-titre bg-sombre"><strong>RUBRIQUES</strong></td>
-                        <td class="texte-titre bg-sombre"><strong>MONTANTS</strong></td>
+                        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>RUBRIQUES</strong></td>
+                        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>MONTANTS</strong></td>
                     </tr>
                     <tr class="bg-pair">
-                        <td class="texte-normal">Montant dû (ht)</td>
-                        <td class="texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                        <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
+                        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                     <tr>
-                        <td class="texte-normal">Taxes (tva @16%)</td>
-                        <td class="texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                        <td class="tableau-bordure-blanche texte-normal">Taxes (tva @16%)</td>
+                        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                     <tr class="bg-sombre">
-                        <td class="texte-normal texte-gras">Total à payer</td>
-                        <td class="texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                        <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
+                        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     </tr>
                 </table>
 
@@ -224,32 +229,32 @@
                     <td colspan="5">Références bancaires</td>
                 </tr>
                 <tr class="texte-gras texte-centre bg-sombre">
-                    <td>Intitulé</td>
-                    <td>Numéro</td>
-                    <td>Banque</td>
-                    <td>Code Swift</td>
-                    <td>Devise</td>
+                    <td class = "tableau-bordure-blanche">Intitulé</td>
+                    <td class = "tableau-bordure-blanche">Numéro</td>
+                    <td class = "tableau-bordure-blanche">Banque</td>
+                    <td class = "tableau-bordure-blanche">Code Swift</td>
+                    <td class = "tableau-bordure-blanche">Devise</td>
                 </tr>
                 <tr class="texte-centre bg-pair">
-                    <td>AIB RDC Sarl</td>
-                    <td>01112-2335458-121-15488</td>
-                    <td>Rawbank RDC SA</td>
-                    <td>CDKNRWB</td>
-                    <td>USD</td>
+                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
+                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
+                    <td class = "tableau-bordure-blanche">Rawbank RDC SA</td>
+                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
+                    <td class = "tableau-bordure-blanche">USD</td>
                 </tr>
                 <tr class="texte-centre">
-                    <td>AIB RDC Sarl</td>
-                    <td>01112-2335458-121-15488</td>
-                    <td>Equity BCDC</td>
-                    <td>CDKNRWB</td>
-                    <td>USD</td>
+                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
+                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
+                    <td class = "tableau-bordure-blanche">Equity BCDC</td>
+                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
+                    <td class = "tableau-bordure-blanche">USD</td>
                 </tr>
                 <tr class="texte-centre bg-pair">
-                    <td>AIB RDC Sarl</td>
-                    <td>01112-2335458-121-15488</td>
-                    <td>Sofibank RDC SA</td>
-                    <td>CDKNRWB</td>
-                    <td>USD</td>
+                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
+                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
+                    <td class = "tableau-bordure-blanche">Sofibank RDC SA</td>
+                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
+                    <td class = "tableau-bordure-blanche">USD</td>
                 </tr>
             </table>
 

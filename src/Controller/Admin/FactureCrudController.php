@@ -399,5 +399,4 @@ class FactureCrudController extends AbstractCrudController
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-    //Petit exemple.
 }

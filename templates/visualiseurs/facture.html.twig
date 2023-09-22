@@ -235,27 +235,22 @@
                     <td class = "tableau-bordure-blanche">Code Swift</td>
                     <td class = "tableau-bordure-blanche">Devise</td>
                 </tr>
-                <tr class="texte-centre bg-pair">
-                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
-                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
-                    <td class = "tableau-bordure-blanche">Rawbank RDC SA</td>
-                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
-                    <td class = "tableau-bordure-blanche">USD</td>
-                </tr>
-                <tr class="texte-centre">
-                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
-                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
-                    <td class = "tableau-bordure-blanche">Equity BCDC</td>
-                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
-                    <td class = "tableau-bordure-blanche">USD</td>
-                </tr>
-                <tr class="texte-centre bg-pair">
-                    <td class = "tableau-bordure-blanche">AIB RDC Sarl</td>
-                    <td class = "tableau-bordure-blanche">01112-2335458-121-15488</td>
-                    <td class = "tableau-bordure-blanche">Sofibank RDC SA</td>
-                    <td class = "tableau-bordure-blanche">CDKNRWB</td>
-                    <td class = "tableau-bordure-blanche">USD</td>
-                </tr>
+                {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
+                {% set x = 0 %}
+                {% for compteBancaire in facture.compteBancaires %}
+                    {% if (x % 2) == 0 %}
+                        <tr class="texte-centre bg-pair">
+                        {% else %}
+                        <tr class="texte-centre">
+                    {% endif %}
+                            <td class = "tableau-bordure-blanche">{{ compteBancaire.intitule}}</td>
+                            <td class = "tableau-bordure-blanche">{{ compteBancaire.numero}}</td>
+                            <td class = "tableau-bordure-blanche">{{ compteBancaire.banque}}</td>
+                            <td class = "tableau-bordure-blanche">{{ compteBancaire.codeSwift}}</td>
+                            <td class = "tableau-bordure-blanche">{{ compteBancaire.codeMonnaie}}</td>
+                        </tr>
+                    {% set x = x + 1 %}
+                {% endfor %}
             </table>
 
             {# Nom de la société et autres informations de pieds de page #}

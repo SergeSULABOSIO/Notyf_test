@@ -317,7 +317,6 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
@@ -337,7 +336,6 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
@@ -384,9 +382,8 @@ class FactureCrudController extends AbstractCrudController
                 break;
         }
     }
-
-    public function exporterMSExcels(BatchActionDto $batchActionDto)
-    {
+    
+    public function exporterMSExcels(BatchActionDto $batchActionDto){
         $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 

@@ -136,27 +136,11 @@
 </head>
 <body>
     <div class="page texte-normal">
-        {# Entête de la page #}
-        <div class="header">
-            {# barre du logo #}
-            <table class="tableau-bordure-zero centre">
-                <tr>
-                    <td>
-                        <img src="{{imageSrc}}" class="image-centre"> 
-                    </td>
-                </tr>
-                <tr>
-                    <td class="texte-centre">
-                        <span class="texte-titre">{{facture.entreprise.nom}}</span><br>
-                        <span class="texte-normal">{{facture.entreprise.adresse}}<span>
-                    </td>
-                </tr>
-            </table>
-            {# barre de titre #}
-            <div class="titre-document">FACTURE N°{{facture.reference}}</div>
-        </div>
+        {% include 'segments/_factureheader.html.twig' %}
         {# Contenu de la page #}
         <div class="corps">
+            {# barre de titre #}
+            <div class="titre-document">FACTURE N°{{facture.reference}}</div>
             {# Référence, date et type de facture #}
             <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
                 <tr class="bg-pair">
@@ -225,11 +209,9 @@
                     </td>
                 </tr>
             </table>
-        </div>
 
-        <div class="footer texte-petit marge-top-large">
             {# Les Comptes bancaires et leurs numéros #}
-            <table class="tableau-bordure-zero largeur-max">
+            <table class="tableau-bordure-zero texte-petit largeur-max marge-top-large">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>
@@ -257,34 +239,29 @@
                     {% set x = x + 1 %}
                 {% endfor %}
             </table>
-            {# Nom de la société et autres informations de pieds de page #}
-            <table class="tableau-bordure-top largeur-max">
-                <tr>
-                    <td class="texte-centre">
-                        <span class="texte-gras">{{facture.entreprise.nom}}</span><br>
-                        {{facture.entreprise.adresse}} | Tél: {{facture.entreprise.telephone}}<br>
-                        RCCM: {{facture.entreprise.rccm}} | ID.NAT: {{facture.entreprise.idnat}} | NUM. IMPOT: {{facture.entreprise.numimpot}}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="texte-centre bordure-top">
-                        Page 1/1
-                    </td>
-                </tr>
-            </table>
         </div>
+        {# Footer etait ici #}
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
     <div class="page">
-        Page 2
+        {% include 'segments/_factureheader.html.twig' %}
+            toto
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
     </div>
     <div class="page">
-        Page 3
+        {% include 'segments/_factureheader.html.twig' %}
+            toto
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 3, 'totalPage': 5} %}
     </div>
     <div class="page">
-        Page 4
+        {% include 'segments/_factureheader.html.twig' %}
+            toto
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 4, 'totalPage': 5} %}
     </div>
     <div class="page">
-        Page 5
+        {% include 'segments/_factureheader.html.twig' %}
+            toto
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 5, 'totalPage': 5} %}
     </div>
 </body>
 </html>

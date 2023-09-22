@@ -127,6 +127,9 @@
         .page{
             page-break-after: always;
         }
+        .page:last-child{
+            page-break-after: unset;
+        }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture - {{facture.id}}</title>
@@ -271,6 +274,17 @@
             </table>
         </div>
     </div>
-    Autre Page Ici.
+    <div class="page">
+        Page 2
+    </div>
+    <div class="page">
+        Page 3
+    </div>
+    <div class="page">
+        Page 4
+    </div>
+    <div class="page">
+        Page 5
+    </div>
 </body>
 </html>

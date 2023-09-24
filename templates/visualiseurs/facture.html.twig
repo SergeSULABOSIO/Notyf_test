@@ -85,6 +85,12 @@
         .marge-top-moyen{
             margin-top: 20px;
         }
+        .marge-bottom-large{
+            margin-top: 50px;
+        }
+        .marge-bottom-zero{
+            margin-bottom: 0px;
+        }
         .tableau-contenu-entete{
             border: 0.5px solid black;
             border-spacing: 0px;
@@ -125,6 +131,8 @@
             padding: 3px;
         }
         .page{
+            width: 100%;
+            background-color: aqua;
             page-break-after: always;
         }
         .page:last-child{
@@ -140,7 +148,13 @@
         {# Contenu de la page #}
         <div class="corps">
             {# barre de titre #}
-            <div class="titre-document">FACTURE N°{{facture.reference}}</div>
+            <table class="titre-document">
+                <tr>
+                    <td>
+                        <div>FACTURE N°{{facture.reference}}</div>
+                    </td>
+                </tr>
+            </table>
             {# Référence, date et type de facture #}
             <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
                 <tr class="bg-pair">
@@ -158,7 +172,7 @@
             </table>
 
             {# Facture à l'attention de... & Description de la facture #}
-            <table class="tableau-bordure-zero centre marge-top-large" style="width: 98%;">
+            <table class="tableau-bordure-zero centre" style="width: 98%;">
                 <tr>
                     <td>
                         Pour:</br>
@@ -178,7 +192,7 @@
             {% set montant_ttc = montant_ht + montant_taxe %}
 
             {# Synthèse des totaux #}
-            <table class="tableau-bordure-zero centre marge-top-extralarge">
+            <table class="tableau-bordure-zero centre">
                 <tr>
                     <td class="texte-centre" colspan="2">Synthèse</td>
                 </tr>
@@ -201,7 +215,7 @@
             </table>
 
             {# Signatiare de la facture #}
-            <table class="tableau-bordure-zero droite marge-top-extralarge">
+            <table class="tableau-bordure-zero droite">
                 <tr>
                     <td class="texte-centre">
                         <span class="texte-titre">{{facture.signedBy}}</span></br>
@@ -211,7 +225,7 @@
             </table>
 
             {# Les Comptes bancaires et leurs numéros #}
-            <table class="tableau-bordure-zero texte-petit largeur-max marge-top-large">
+            <table class="tableau-bordure-zero texte-petit largeur-max">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>
@@ -243,22 +257,22 @@
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
-    <div class="page">
+    <div class="page texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             toto
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
     </div>
-    <div class="page">
+    <div class="page texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             toto
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 3, 'totalPage': 5} %}
     </div>
-    <div class="page">
+    <div class="page texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             toto
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 4, 'totalPage': 5} %}
     </div>
-    <div class="page">
+    <div class="page texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             toto
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 5, 'totalPage': 5} %}

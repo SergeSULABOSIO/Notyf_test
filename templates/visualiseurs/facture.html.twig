@@ -139,9 +139,6 @@
         .page:last-child{
             page-break-after: unset;
         }
-        .page-paysage{
-            size: landscape;
-        }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture - {{facture.id}}</title>
@@ -261,9 +258,9 @@
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
-    <div class="page page-paysage texte-normal">
+    <div class="page texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
-            toto
+            toto paysage
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
     </div>
     <div class="page texte-normal">

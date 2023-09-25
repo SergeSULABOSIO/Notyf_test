@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
+    <style type="text/css">
         .texte-titre{
             padding: 3px;
             text-align: center;
@@ -140,8 +140,13 @@
             page-break-after: unset;
         }
         @page{
+            size: portrait;
+        }
+        @page : rotated{
             size: landscape;
-            page-orientation: rotate-left;
+        }
+        paysage{
+            page: rotated;
         }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

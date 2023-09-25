@@ -130,21 +130,25 @@
             border-spacing: 0px;
             padding: 3px;
         }
-        .page{
+        .page-js{
             width: 100%;
             height: 1010px;
             {# background-color: aqua; #}
             page-break-after: always;
         }
-        .page:last-child{
+        .page-js:last-child{
             page-break-after: unset;
+        }
+        @page{
+            size: landscape;
+            page-orientation: rotate-left;
         }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture - {{facture.id}}</title>
 </head>
 <body>
-    <div class="page texte-normal">
+    <div class="page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
         {# Contenu de la page #}
         <div class="corps">
@@ -258,24 +262,24 @@
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
-    <div class="page texte-normal">
+    <div class="page-js paysage texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
-            toto paysage
+            Toto paysage pour la page 2
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
     </div>
-    <div class="page texte-normal">
+    <div class="page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
-            toto
+            Toto pour la page 3
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 3, 'totalPage': 5} %}
     </div>
-    <div class="page texte-normal">
+    <div class="page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
-            toto
+            Total pour la page 4
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 4, 'totalPage': 5} %}
     </div>
-    <div class="page texte-normal">
+    <div class="page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
-            toto
+            Toto pour la page 5
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 5, 'totalPage': 5} %}
     </div>
 </body>

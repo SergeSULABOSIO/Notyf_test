@@ -139,21 +139,24 @@
         .page-js:last-child{
             page-break-after: unset;
         }
-        @page{
-            size: portrait;
+        @page portrait{
+            size: 6in 9in;
         }
-        @page : rotated{
-            size: landscape;
+        @page landscape{
+            size: 9in 6in;
         }
-        paysage{
-            page: rotated;
+        div.landscape-content{
+            page: landscape;
+        }
+        div.portrait-content{
+            page: portrait;
         }
     </style>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Facture - {{facture.id}}</title>
 </head>
 <body>
-    <div class="page-js texte-normal">
+    <div class="portrait-content page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
         {# Contenu de la page #}
         <div class="corps">
@@ -267,22 +270,22 @@
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
-    <div class="page-js paysage texte-normal">
-        {% include 'segments/_factureheader.html.twig' %}
+    <div class="landscape-content">
+        {# {% include 'segments/_factureheader.html.twig' %} #}
             Toto paysage pour la page 2
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
+        {# {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %} #}
     </div>
-    <div class="page-js texte-normal">
+    <div class="portrait-content page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             Toto pour la page 3
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 3, 'totalPage': 5} %}
     </div>
-    <div class="page-js texte-normal">
+    <div class="portrait-content page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             Total pour la page 4
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 4, 'totalPage': 5} %}
     </div>
-    <div class="page-js texte-normal">
+    <div class="portrait-content page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
             Toto pour la page 5
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 5, 'totalPage': 5} %}

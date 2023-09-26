@@ -140,10 +140,10 @@
             page-break-after: unset;
         }
         @page portrait{
-            size: 6in 9in;
+            size: 9in 6in;
         }
         @page landscape{
-            size: 9in 6in;
+            size: 6in 9in;
         }
         div.landscape-content{
             page: landscape;
@@ -270,10 +270,10 @@
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
     </div>
-    <div class="landscape-content">
-        {# {% include 'segments/_factureheader.html.twig' %} #}
+    <div class="landscape-content page-js texte-normal">
+        {% include 'segments/_factureheader.html.twig' %}
             Toto paysage pour la page 2
-        {# {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %} #}
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
     </div>
     <div class="portrait-content page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}

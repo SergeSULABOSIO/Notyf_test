@@ -335,9 +335,13 @@
                 <td class = "tableau-bordure-blanche texte-droite">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
         </table>
+        {% set tailleTab = x %}
+        {% set maxTab = 10 %}
+        {% set excedentTab = maxTab - tailleTab %}
+        {% set tailleBoucle = 33 + excedentTab %}
         {# Ajout des lignes pour ajuster la taille de la page #}
-        {% for i in 0..33 %}
-            <br>
+        {% for i in 0..tailleBoucle %}
+            {{i}} <br>
         {% endfor %}
         {# Fin liste des avenants #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 2} %}

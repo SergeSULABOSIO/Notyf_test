@@ -324,6 +324,7 @@ class FactureCrudController extends AbstractCrudController
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
+            'TauxTaxe'      => $this->serviceTaxes->getTaxe(false)->getTaux(),
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',
             'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
@@ -343,6 +344,7 @@ class FactureCrudController extends AbstractCrudController
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
+            'taxe'      => $this->serviceTaxes->getTaxe(false),
             'mobileNumber'  => '000000000',
             'email'         => 'john.doe@email.com',
             'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()

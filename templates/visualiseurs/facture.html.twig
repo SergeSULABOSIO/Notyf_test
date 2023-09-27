@@ -232,7 +232,10 @@
                     </td>
                 </tr>
             </table>
-
+            {# Ajout des lignes pour ajuster la taille de la page #}
+            {% for i in 0..4 %}
+                <br>
+            {% endfor %}
             {# Les Comptes bancaires et leurs numéros #}
             <table class="tableau-bordure-zero texte-petit largeur-max marge-top-extralarge">
                 <tr>
@@ -264,12 +267,12 @@
             </table>
         </div>
         {# Footer etait ici #}
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 5} %}
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 1, 'totalPage': 2} %}
     </div>
     <div class="page-js texte-normal">
         {% include 'segments/_factureheader.html.twig' %}
         {# Liste des avenants concernés par cette note de débit #}
-        <table class="tableau-bordure-zero texte-petit largeur-max marge-top-extralarge">
+        <table class="tableau-bordure-zero texte-petit largeur-max marge-top-large">
             <tr>
                 <td colspan="5">Liste détailée des avénants ou articles concernés par la note de débit.</td>
             </tr>
@@ -332,23 +335,12 @@
                 <td class = "tableau-bordure-blanche texte-droite">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
         </table>
+        {# Ajout des lignes pour ajuster la taille de la page #}
+        {% for i in 0..33 %}
+            <br>
+        {% endfor %}
         {# Fin liste des avenants #}
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 5} %}
-    </div>
-    <div class="page-js texte-normal">
-        {% include 'segments/_factureheader.html.twig' %}
-            Toto pour la page 3
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 3, 'totalPage': 5} %}
-    </div>
-    <div class="page-js texte-normal">
-        {% include 'segments/_factureheader.html.twig' %}
-            Total pour la page 4
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 4, 'totalPage': 5} %}
-    </div>
-    <div class="page-js texte-normal">
-        {% include 'segments/_factureheader.html.twig' %}
-            Toto pour la page 5
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 5, 'totalPage': 5} %}
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': 2, 'totalPage': 2} %}
     </div>
 </body>
 </html>

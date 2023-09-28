@@ -240,136 +240,23 @@
                     </td>
                 </tr>
             </table>
-
-            {# système de gestion des interlignes vides #}
-            {% set tailleTabActuel = facture.compteBancaires|length %}
-            {% set tailleTabMax = 5 %}
-            {% set tailleTabVariation = tailleTabMax - tailleTabActuel %}
-            {% set tailleBoucle = 6 + tailleTabVariation %}
-            {# Ajout des lignes pour ajuster la taille de la page #}
-            <table class="tableau-bordure-zero texte-petit largeur-max">
-                {% for i in 0..tailleBoucle %}
-                    <tr class="tableau-bordure-blanche">
-                        <td class="tableau-bordure-blanche"><span class="texte-blanc">{{i}}</span></td>
-                    </tr>
-                {% endfor %}
-            </table>
-            {# Fin liste des avenants #}
-
-
-            {# Les Comptes bancaires et leurs numéros #}
-            <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
-                <tr>
-                    <td colspan="5">Références bancaires</td>
-                </tr>
-                <tr class="texte-gras texte-centre bg-sombre">
-                    <td class = "tableau-bordure-blanche">Intitulé</td>
-                    <td class = "tableau-bordure-blanche">Numéro</td>
-                    <td class = "tableau-bordure-blanche">Banque</td>
-                    <td class = "tableau-bordure-blanche">Code Swift</td>
-                    <td class = "tableau-bordure-blanche">Devise</td>
-                </tr>
-                {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
-                {% set x = 0 %}
-                {% for compteBancaire in facture.compteBancaires %}
-                    {% if (x % 2) == 0 %}
-                        <tr class="texte-centre bg-pair">
-                        {% else %}
-                        <tr class="texte-centre">
-                    {% endif %}
-                            <td class = "tableau-bordure-blanche">{{ compteBancaire.intitule}}</td>
-                            <td class = "tableau-bordure-blanche">{{ compteBancaire.numero}}</td>
-                            <td class = "tableau-bordure-blanche">{{ compteBancaire.banque}}</td>
-                            <td class = "tableau-bordure-blanche">{{ compteBancaire.codeSwift}}</td>
-                            <td class = "tableau-bordure-blanche">{{ compteBancaire.codeMonnaie}}</td>
-                        </tr>
-                    {% set x = x + 1 %}
-                {% endfor %}
-            </table>
+            {# Ressort #}
+            {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %}
+            {# Ici comptes bancaires #}
+            {% include 'segments/_facturecomptesbancaires.html.twig' with {'facture': facture} %}
         </div>
         {# Footer etait ici #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
     </div>
     <div class="page-js texte-normal">
         {% set page = 2 %}
+        {% set x = 0 %}
+        {# Entête de la page #}
         {% include 'segments/_factureheader.html.twig' %}
-        {# Liste des avenants concernés par cette note de débit #}
-        <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
-            <tr>
-                <td colspan="5">Liste détailée des avénants ou articles concernés par la note de débit.</td>
-            </tr>
-            <tr class="texte-gras texte-centre bg-sombre">
-                <td class = "tableau-bordure-blanche">N°</td>
-                <td class = "tableau-bordure-blanche">Police</td>
-                <td class = "tableau-bordure-blanche">Avenant</td>
-                <td class = "tableau-bordure-blanche">Risque</td>
-                <td class = "tableau-bordure-blanche">Client</td>
-                <td class = "tableau-bordure-blanche">Prime nette</td>
-                <td class = "tableau-bordure-blanche">Fronting</td>
-                <td class = "tableau-bordure-blanche">Montant (ht)</td>
-                <td class = "tableau-bordure-blanche">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
-                <td class = "tableau-bordure-blanche">Total</td>
-            </tr>
-            {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
-            {% set x = 0 %}
-            {# Les variables à cumuler #}
-            {% set total_fronting = 0 %}
-            {% set total_prime_nette = 0 %}
-            {% set total_montant = 0 %}
-            {% set total_tva = 0 %}
-            {% set total_montant_ttc = 0 %}
-            {# fin - Les variables à cumuler #}
-            {% for elementFacture in facture.elementFactures %}
-                {% if (x % 2) == 0 %}
-                    <tr class="texte-centre bg-pair">
-                    {% else %}
-                    <tr class="texte-centre">
-                {% endif %}
-                        {% set fronting = elementFacture.police.fronting / 100 %}
-                        {% set prime_nette = elementFacture.police.primenette / 100 %}
-                        {% set montant = (elementFacture.montant / 100 / 1.16) %}
-                        {% set tva = montant * taxe.taux %}
-                        {% set montant_ttc = (montant + tva) %}
-                        <td class = "tableau-bordure-blanche">{{(x+1)}}</td>
-                        <td class = "tableau-bordure-blanche">{{elementFacture.police.reference}}</td>
-                        <td class = "tableau-bordure-blanche">Type@{{elementFacture.police.typeAvenant}} / id@{{elementFacture.police.idAvenant}}</td>
-                        <td class = "tableau-bordure-blanche">{{elementFacture.police.produit.code}}</td>
-                        <td class = "tableau-bordure-blanche">{{elementFacture.police.client.nom}}</td>
-                        <td class = "tableau-bordure-blanche texte-droite">{{(prime_nette)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                        <td class = "tableau-bordure-blanche texte-droite">{{(fronting)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                        <td class = "tableau-bordure-blanche texte-droite">{{(montant)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                        <td class = "tableau-bordure-blanche texte-droite">{{(tva)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                        <td class = "tableau-bordure-blanche texte-droite">{{(montant_ttc)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    </tr>
-                    {% set total_fronting = total_fronting + fronting %}
-                    {% set total_prime_nette = total_prime_nette + prime_nette %}
-                    {% set total_montant = total_montant + montant %}
-                    {% set total_tva = total_tva + tva %}
-                    {% set total_montant_ttc = total_montant_ttc + montant_ttc %}
-                {% set x = x + 1 %}
-            {% endfor %}
-            <tr class="tableau-bordure-blanche texte-gras bg-sombre">
-                <td colspan="5" class = "tableau-bordure-blanche">Total général</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{total_tva|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-        </table>
-        {# système de gestion des interlignes vides #}
-        {% set tailleTab = x %}
-        {% set maxTab = 10 %}
-        {% set excedentTab = maxTab - tailleTab %}
-        {% set tailleBoucle = 25 + excedentTab %}
-        {# Ajout des lignes pour ajuster la taille de la page #}
-        <table class="tableau-bordure-zero texte-petit largeur-max">
-            {% for i in 0..tailleBoucle %}
-                <tr class="tableau-bordure-blanche">
-                    <td class="tableau-bordure-blanche"><span class="texte-blanc">{{i}}</span></td>
-                </tr>
-            {% endfor %}
-        </table>
+        {# ici liste d'articles #}
+        {% include 'segments/_facturearticles.html.twig' %}
+        {# Ressort #}
+        {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': x, 'tailleTabMax': 10, 'tailleBoucleMin': 15} %}
         {# Fin liste des avenants #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
     </div>

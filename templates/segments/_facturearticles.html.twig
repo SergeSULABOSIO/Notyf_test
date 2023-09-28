@@ -1,0 +1,64 @@
+{# Liste des avenants concernés par cette note de débit #}
+<table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
+    <tr>
+        <td colspan="5">Liste détailée des avénants ou articles concernés par la note de débit.</td>
+    </tr>
+    <tr class="texte-gras texte-centre bg-sombre">
+        <td class = "tableau-bordure-blanche">N°</td>
+        <td class = "tableau-bordure-blanche">Police</td>
+        <td class = "tableau-bordure-blanche">Avenant</td>
+        <td class = "tableau-bordure-blanche">Risque</td>
+        <td class = "tableau-bordure-blanche">Client</td>
+        <td class = "tableau-bordure-blanche">Prime nette</td>
+        <td class = "tableau-bordure-blanche">Fronting</td>
+        <td class = "tableau-bordure-blanche">Montant (ht)</td>
+        <td class = "tableau-bordure-blanche">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
+        <td class = "tableau-bordure-blanche">Total</td>
+    </tr>
+    {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
+    
+    {# Les variables à cumuler #}
+    {% set total_fronting = 0 %}
+    {% set total_prime_nette = 0 %}
+    {% set total_montant = 0 %}
+    {% set total_tva = 0 %}
+    {% set total_montant_ttc = 0 %}
+    {# fin - Les variables à cumuler #}
+    {% for elementFacture in facture.elementFactures %}
+        {% if (x % 2) == 0 %}
+            <tr class="texte-centre bg-pair">
+            {% else %}
+            <tr class="texte-centre">
+        {% endif %}
+                {% set fronting = elementFacture.police.fronting / 100 %}
+                {% set prime_nette = elementFacture.police.primenette / 100 %}
+                {% set montant = (elementFacture.montant / 100 / 1.16) %}
+                {% set tva = montant * taxe.taux %}
+                {% set montant_ttc = (montant + tva) %}
+                <td class = "tableau-bordure-blanche">{{(x+1)}}</td>
+                <td class = "tableau-bordure-blanche">{{elementFacture.police.reference}}</td>
+                <td class = "tableau-bordure-blanche">Type@{{elementFacture.police.typeAvenant}} / id@{{elementFacture.police.idAvenant}}</td>
+                <td class = "tableau-bordure-blanche">{{elementFacture.police.produit.code}}</td>
+                <td class = "tableau-bordure-blanche">{{elementFacture.police.client.nom}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(prime_nette)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(fronting)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(montant)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(tva)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(montant_ttc)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            {% set total_fronting = total_fronting + fronting %}
+            {% set total_prime_nette = total_prime_nette + prime_nette %}
+            {% set total_montant = total_montant + montant %}
+            {% set total_tva = total_tva + tva %}
+            {% set total_montant_ttc = total_montant_ttc + montant_ttc %}
+        {% set x = x + 1 %}
+    {% endfor %}
+    <tr class="tableau-bordure-blanche texte-gras bg-sombre">
+        <td colspan="5" class = "tableau-bordure-blanche">Total général</td>
+        <td class = "tableau-bordure-blanche texte-droite">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tableau-bordure-blanche texte-droite">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tableau-bordure-blanche texte-droite">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tableau-bordure-blanche texte-droite">{{total_tva|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tableau-bordure-blanche texte-droite">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+</table>

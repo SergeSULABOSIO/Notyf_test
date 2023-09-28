@@ -1,0 +1,12 @@
+{# système de gestion des interlignes vides #}
+{% set tailleTabVariation = tailleTabMax - tailleTabActuel %}
+{% set tailleBoucle = tailleBoucleMin + tailleTabVariation %}
+{# Ajout des lignes pour ajuster la taille de la page #}
+<table class="tableau-bordure-zero texte-petit largeur-max">
+    {% for i in 0..tailleBoucle %}
+        <tr>
+            <td class="tableau-bordure-blanche"><span class="texte-blanc">{{i}}</span></td>
+        </tr>
+    {% endfor %}
+</table>
+{# Fin liste des avenants #}

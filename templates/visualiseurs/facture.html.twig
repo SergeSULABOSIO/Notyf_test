@@ -242,10 +242,10 @@
             </table>
 
             {# système de gestion des interlignes vides #}
-            {% set tailleTab = facture.compteBancaires|length %}
-            {% set maxTab = 1 %}
-            {% set excedentTab = maxTab - tailleTab %}
-            {% set tailleBoucle = 25 + excedentTab %}
+            {% set tailleTabActuel = facture.compteBancaires|length %}
+            {% set tailleTabMax = 5 %}
+            {% set tailleTabVariation = tailleTabMax - tailleTabActuel %}
+            {% set tailleBoucle = 6 + tailleTabVariation %}
             {# Ajout des lignes pour ajuster la taille de la page #}
             <table class="tableau-bordure-zero texte-petit largeur-max bg-sombre">
                 {% for i in 0..tailleBoucle %}
@@ -256,9 +256,9 @@
             </table>
             {# Fin liste des avenants #}
 
-            
+
             {# Les Comptes bancaires et leurs numéros #}
-            <table class="tableau-bordure-zero texte-petit largeur-max marge-top-extralarge">
+            <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
                 <tr>
                     <td colspan="5">Références bancaires</td>
                 </tr>

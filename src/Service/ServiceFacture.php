@@ -54,7 +54,7 @@ class ServiceFacture
                 $description = $description . "<br>" . count($data["tabPolices"]) . " élément(s).";
                 $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
                 $total = $this->chargerElementFactures($facture, $data["type"], $data["tabPolices"]);
-                $description = $description . "<br>Montant Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total);
+                //$description = $description . "<br>Montant Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total);
             }
             $facture->setDescription($description);
         }

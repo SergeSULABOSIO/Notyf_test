@@ -155,6 +155,10 @@
             background-color: red;
             transform: translate(100vw) rotate(90deg);
         }
+        .wrapper{
+            transform: rotate(90deg);
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -182,7 +186,7 @@
         {# ici liste d'articles #}
         {% include 'segments/_facturearticles.html.twig' %}
         {# Ressort #}
-        {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.elementFactures|length, 'tailleTabMax': 10, 'tailleBoucleMin': 25} %}
+        {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.elementFactures|length, 'tailleTabMax': 10, 'tailleBoucleMin': 1} %}
         {# Fin liste des avenants #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
     </div>

@@ -36,10 +36,10 @@
                 {% set montant = (elementFacture.montant / 100 / (taxe.taux + 1)) %}
                 {% set tva = montant * taxe.taux %}
                 {% set montant_ttc = (montant + tva) %}
-                <td class = "tableau-bordure-blanche">{{(x+1)}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 25px;">{{(x+1)}}</td>
                 <td class = "tableau-bordure-blanche">{{elementFacture.police.reference}}</td>
                 <td class = "tableau-bordure-blanche">Type@{{elementFacture.police.typeAvenant}} / id@{{elementFacture.police.idAvenant}}</td>
-                <td class = "tableau-bordure-blanche">{{elementFacture.police.produit.code}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 35px;">{{elementFacture.police.produit.code}}</td>
                 <td class = "tableau-bordure-blanche">{{elementFacture.police.client.nom}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(prime_nette)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(fronting)|format_currency(monnaie, {fraction_digit: 2})}}</td>

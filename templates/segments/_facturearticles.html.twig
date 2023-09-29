@@ -11,13 +11,15 @@
         <td class = "tableau-bordure-blanche">Client</td>
         <td class = "tableau-bordure-blanche">Prime nette</td>
         <td class = "tableau-bordure-blanche">Fronting</td>
-        <td class = "tableau-bordure-blanche">Montant (ht)</td>
+        <td class = "tableau-bordure-blanche">Taux</td>
+        <td class = "tableau-bordure-blanche">Com (ht)</td>
         <td class = "tableau-bordure-blanche">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
-        <td class = "tableau-bordure-blanche">Total</td>
+        <td class = "tableau-bordure-blanche">Total dû</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
     
     {# Les variables à cumuler #}
+    {% set x = 0 %}
     {% set total_fronting = 0 %}
     {% set total_prime_nette = 0 %}
     {% set total_montant = 0 %}
@@ -32,7 +34,7 @@
         {% endif %}
                 {% set fronting = elementFacture.police.fronting / 100 %}
                 {% set prime_nette = elementFacture.police.primenette / 100 %}
-                {% set montant = (elementFacture.montant / 100 / 1.16) %}
+                {% set montant = (elementFacture.montant / 100 / (taxe.taux + 1)) %}
                 {% set tva = montant * taxe.taux %}
                 {% set montant_ttc = (montant + tva) %}
                 <td class = "tableau-bordure-blanche">{{(x+1)}}</td>
@@ -42,6 +44,7 @@
                 <td class = "tableau-bordure-blanche">{{elementFacture.police.client.nom}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(prime_nette)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(fronting)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{((montant / prime_nette) * 100)|number_format('2', ',', '.')}}%</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(montant)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(tva)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite">{{(montant_ttc)|format_currency(monnaie, {fraction_digit: 2})}}</td>
@@ -53,10 +56,11 @@
             {% set total_montant_ttc = total_montant_ttc + montant_ttc %}
         {% set x = x + 1 %}
     {% endfor %}
-    <tr class="tableau-bordure-blanche texte-gras bg-sombre">
+    <tr class="texte-gras bg-sombre">
         <td colspan="5" class = "tableau-bordure-blanche">Total général</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tableau-bordure-blanche texte-droite"></td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_tva|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>

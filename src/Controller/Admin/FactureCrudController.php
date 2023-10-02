@@ -318,19 +318,7 @@ class FactureCrudController extends AbstractCrudController
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
-        $data = [
-            'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
-            'facture'       => $facture,
-            'nature'        => $this->serviceFacture->getType($facture->getType()),
-            'pour'          => $this->getPour($facture),
-            'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
-            'TauxTaxe'      => $this->serviceTaxes->getTaxe(false)->getTaux(),
-            'mobileNumber'  => '000000000',
-            'email'         => 'john.doe@email.com',
-            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
-        ];
-        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture));
         return $this->serviceFacture->telechargerFacture($facture, $contenuHtml);
     }
 
@@ -339,21 +327,20 @@ class FactureCrudController extends AbstractCrudController
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture));
+        return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
+    }
+
+    public function getDataTransform(Facture $facture): array{
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
-        $data = [
+        return [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
             'taxe'          => $this->serviceTaxes->getTaxe(false),
-            'mobileNumber'  => '000000000',
-            'email'         => 'john.doe@email.com',
-            'autreTexte'    => "Salut Serge SULA BOSIO. Je vais contruire, ici, la facture n°" . $facture->getReference()
         ];
-        //dd($data);
-        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $data);
-        return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }
 
     private function getPour(?Facture $facture)

@@ -167,10 +167,18 @@
     </style>
 </head>
 <body>
+    {% if isBordereau == 1 %}
+        Il s'agit du bordereau.
+    {% else %}
+        Il s'agit de la facture.
+    {% endif %}
+
+
+
+
     <div class="page-js texte-normal">
         {% set page = 1 %}
         {% set pageTotale = 2 %}
-        Mode d'affichage est {{isBordereau}}
         {% include 'segments/_factureheader.html.twig' %}
         {# Titre #}
         {% include 'segments/_facturetitre.html.twig' %}

@@ -36,7 +36,6 @@ class ServiceFacture
         $this->pdfOptions = new Options();
         $this->pdfOptions->set('defaultFont', 'Arial');
         $this->dompdf = new Dompdf($this->pdfOptions);
-        $this->dompdf->setPaper('A4', 'portrait'); // ou 'landscape'
     }
 
     public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
@@ -324,7 +323,8 @@ class ServiceFacture
         return $f != null ? "Facture_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
     }
 
-    public function imageToBase64($path) {
+    public function imageToBase64($path)
+    {
         $path = $path;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
@@ -332,26 +332,32 @@ class ServiceFacture
         return $base64;
     }
 
-    private function dessinerContenuFacture(?Facture $facture, $contenuHtml)
+    private function dessinerContenuFacture(?Facture $facture, $contenuHtml, bool $isBordereau)
     {
+        if ($isBordereau) {
+            $this->dompdf->setPaper('A4', 'landscape'); // ou 'landscape'
+        } else {
+            $this->dompdf->setPaper('A4', 'portrait'); // ou ''
+        }
+
         $this->dompdf->loadHtml($contenuHtml);
         $this->dompdf->render();
     }
 
     public function visualiserFacture(?Facture $facture, $contenuHtml)
     {
-        return $this->produireFacture($facture, false, $contenuHtml);
+        return $this->produireFacture($facture, false, $contenuHtml, false);
     }
 
-    public function telechargerFacture(?Facture $facture, $contenuHtml)
+    public function visualiserBordereau(?Facture $facture, $contenuHtml)
     {
-        return $this->produireFacture($facture, true, $contenuHtml);
+        return $this->produireFacture($facture, false, $contenuHtml, true);
     }
 
-    private function produireFacture(?Facture $facture, bool $canDownload, $contenuHtml)
+    private function produireFacture(?Facture $facture, bool $canDownload, $contenuHtml, bool $isBordereau)
     {
         if ($facture != null) {
-            $this->dessinerContenuFacture($facture, $contenuHtml);
+            $this->dessinerContenuFacture($facture, $contenuHtml, $isBordereau);
             return new Response(
                 $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => $canDownload]),
                 Response::HTTP_OK,

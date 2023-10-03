@@ -164,13 +164,13 @@ class FactureCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $telecharger_facture = Action::new(DashboardController::ACTION_TELECHARGER_PDF)
-            ->setIcon('fa-solid fa-download') //<i class="fa-solid fa-download"></i>
-            ->linkToCrudAction('downloadPDF');
+        $generer_facture = Action::new(DashboardController::ACTION_GENERER_FACTURE_PDF)
+            ->setIcon('fa-solid fa-receipt') //<i class="fa-solid fa-download"></i>
+            ->linkToCrudAction('genererFacturePDF');
 
-        $visualiser_facture = Action::new(DashboardController::ACTION_VISUALISER_PDF)
+        $generer_bordereau = Action::new(DashboardController::ACTION_GENERER_BORDEREAU_PDF)
             ->setIcon('fa-solid fa-expand') //<i class="fa-solid fa-expand"></i>
-            ->linkToCrudAction('visualiserPDF');
+            ->linkToCrudAction('genererBordereauPDF');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
             ->setIcon('fa-solid fa-copy')
@@ -245,15 +245,15 @@ class FactureCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
 
-            ->add(Crud::PAGE_DETAIL, $telecharger_facture)
-            ->add(Crud::PAGE_INDEX, $telecharger_facture)
-            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_TELECHARGER_PDF, function (Action $action) {
+            ->add(Crud::PAGE_DETAIL, $generer_bordereau)
+            ->add(Crud::PAGE_INDEX, $generer_bordereau)
+            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_GENERER_BORDEREAU_PDF, function (Action $action) {
                 return $action->addCssClass('btn btn-warning'); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
-            ->add(Crud::PAGE_DETAIL, $visualiser_facture)
-            ->add(Crud::PAGE_INDEX, $visualiser_facture)
-            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_VISUALISER_PDF, function (Action $action) {
+            ->add(Crud::PAGE_DETAIL, $generer_facture)
+            ->add(Crud::PAGE_INDEX, $generer_facture)
+            ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_GENERER_FACTURE_PDF, function (Action $action) {
                 return $action->addCssClass('btn btn-primary'); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
@@ -313,34 +313,37 @@ class FactureCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $facture));
     }
 
-    public function downloadPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function genererFacturePDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture));
-        return $this->serviceFacture->telechargerFacture($facture, $contenuHtml);
-    }
-
-    public function visualiserPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        /** @var Facture */
-        $facture = $context->getEntity()->getInstance();
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture));
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture, false));
         return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }
 
-    public function getDataTransform(Facture $facture): array{
+    public function genererBordereauPDF(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
+        $contenuHtml = $this->renderView('visualiseurs/facture.html.twig', $this->getDataTransform($facture, true));
+        return $this->serviceFacture->visualiserBordereau($facture, $contenuHtml);
+    }
+
+    public function getDataTransform(Facture $facture, bool $isBordereau): array{
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
-        return [
+        $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
             'taxe'          => $this->serviceTaxes->getTaxe(false),
+            'isBordereau'   => $isBordereau == true ? 1 : 0,
         ];
+        //dd($data);
+        return $data;
     }
 
     private function getPour(?Facture $facture)

@@ -167,42 +167,39 @@
     </style>
 </head>
 <body>
-    {% include 'segments/_factureheader.html.twig' %}
     {% if isBordereau == 1 %}
-        Il s'agit du bordereau.
+        <div class="page-js texte-normal">
+            {% set page = 2 %}
+            {% set pageTotale = 2 %}
+            {# Entête de la page #}
+            {% include 'segments/_factureheader.html.twig' %}
+            {# ici liste d'articles #}
+            {% include 'segments/_facturearticles.html.twig' %}
+            {# Ressort #}
+            {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.elementFactures|length, 'tailleTabMax': 10, 'tailleBoucleMin': 1} %}
+            {# Fin liste des avenants #}
+            {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
+        
+         </div>
     {% else %}
-        Il s'agit de la facture...
+        <div class="page-js texte-normal">
+            {% set page = 1 %}
+            {% set pageTotale = 2 %}
+            {# Entête de la page #}
+            {% include 'segments/_factureheader.html.twig' %}
+            {# Titre #}
+            {% include 'segments/_facturetitre.html.twig' %}
+            {# Synthèse numérique de la facture #}
+            {% include 'segments/_facturesynthese.html.twig' %}
+            {# Signatiare de la facture #}
+            {% include 'segments/_facturesignataire.html.twig' %}
+            {# Ressort #}
+            {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %}
+            {# Comptes bancaires #}
+            {% include 'segments/_facturecomptesbancaires.html.twig' %}
+            {# Footer etait ici #}
+            {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
+        </div>
     {% endif %}
-
-
-
-
-    <div class="page-js texte-normal">
-        {% set page = 1 %}
-        {% set pageTotale = 2 %}
-        {# Titre #}
-        {% include 'segments/_facturetitre.html.twig' %}
-        {# Synthèse numérique de la facture #}
-        {% include 'segments/_facturesynthese.html.twig' %}
-        {# Signatiare de la facture #}
-        {% include 'segments/_facturesignataire.html.twig' %}
-        {# Ressort #}
-        {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %}
-        {# Comptes bancaires #}
-        {% include 'segments/_facturecomptesbancaires.html.twig' %}
-        {# Footer etait ici #}
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
-    </div>
-    <div class="page-js texte-normal">
-        {% set page = 2 %}
-        {# Entête de la page #}
-        {% include 'segments/_factureheader.html.twig' %}
-        {# ici liste d'articles #}
-        {% include 'segments/_facturearticles.html.twig' %}
-        {# Ressort #}
-        {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.elementFactures|length, 'tailleTabMax': 10, 'tailleBoucleMin': 1} %}
-        {# Fin liste des avenants #}
-        {% include 'segments/_facturefooter.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
-    </div>
 </body>
 </html>

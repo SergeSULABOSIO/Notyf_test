@@ -1,5 +1,5 @@
 {# Liste des avenants concernés par cette note de débit #}
-<table class="tableau-bordure-zero texte-petit largeur-max marge-top-extralarge">
+<table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
     <tr>
         <td colspan="5">Liste détailée des avénants ou articles concernés par la note de débit.</td>
     </tr>
@@ -25,7 +25,28 @@
     {% set total_tva = 0 %}
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
-    {% for elementFacture in facture.elementFactures %}
+    {% for i in 0..19 %}
+        {% if (x % 2) == 0 %}
+            <tr class="texte-centre bg-pair">
+        {% else %}
+            <tr class="texte-centre">
+        {% endif %}
+                <td class = "tableau-bordure-blanche" style="width: 25px;">{{(x+1)}}</td>
+                <td class = "tableau-bordure-blanche a-la-ligne-auto">XCXCXC4787454578{{x}}</td>
+                <td class = "tableau-bordure-blanche">Type@{{i}} / id@{{x}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 35px;">CD{{i}}{{x}}</td>
+                <td class = "tableau-bordure-blanche a-la-ligne-auto">BGFibank RDC SA</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(100000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{((15) * 100)|number_format('2', ',', '.')}}%</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+        {% set x = x + 1 %}
+    {% endfor %}
+    
+    {# {% for elementFacture in facture.elementFactures %}
         {% if (x % 2) == 0 %}
             <tr class="texte-centre bg-pair">
             {% else %}
@@ -54,7 +75,7 @@
             {% set total_tva = total_tva + tva %}
             {% set total_montant_ttc = total_montant_ttc + montant_ttc %}
         {% set x = x + 1 %}
-    {% endfor %}
+    {% endfor %} #}
     <tr class="texte-gras bg-sombre">
         <td colspan="5" class = "tableau-bordure-blanche">Total général</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>

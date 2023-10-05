@@ -318,9 +318,14 @@ class ServiceFacture
     }
 
 
-    private function getNomFichierFacture(?Facture $f): string
+    private function getNomFichierFacture(?Facture $f, bool $isBordereau): string
     {
-        return $f != null ? "Facture_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
+        if ($isBordereau == true) {
+            return $f != null ? "Bordereau_id_" . $f->getId() . ".pdf" : "Bordereau_sans_nom.pdf";
+        } else {
+            return $f != null ? "Facture_id_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
+        }
+        
     }
 
     public function imageToBase64($path)
@@ -359,7 +364,7 @@ class ServiceFacture
         if ($facture != null) {
             $this->dessinerContenuFacture($facture, $contenuHtml, $isBordereau);
             return new Response(
-                $this->dompdf->stream($this->getNomFichierFacture($facture), ["Attachment" => $canDownload]),
+                $this->dompdf->stream($this->getNomFichierFacture($facture, $isBordereau), ["Attachment" => $canDownload]),
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/pdf']
             );

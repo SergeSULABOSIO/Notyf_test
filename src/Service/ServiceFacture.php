@@ -49,8 +49,8 @@ class ServiceFacture
             $data = $adminUrlGenerator->get("donnees");
             $description = "";
             if ($data["type"] && $data["tabPolices"]) {
-                $description = $data["type"] . "<br>Ref.:" . $facture->getReference();
-                $description = $description . "<br>" . count($data["tabPolices"]) . " élément(s).";
+                $description = $data["type"] . ", Ref.:" . $facture->getReference();
+                //$description = $description . "<br>" . count($data["tabPolices"]) . " élément(s).";
                 $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
                 $total = $this->chargerElementFactures($facture, $data["type"], $data["tabPolices"]);
                 //$description = $description . "<br>Montant Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total);

@@ -68,7 +68,7 @@
             background-color: lightgray;
             font-size: 10pt;
             font-weight: bold;
-            margin-top: 20px;
+            {# margin-top: 20px; #}
             text-align: center;
             padding: 3px;
             width: 100%;
@@ -170,7 +170,9 @@
     {% set page = 2 %}
     {% set pageTotale = 2 %}
     {# Entête de la page #}
-    {% include 'segments/_factureheader.html.twig' %}
+    {% include 'segments/_factureheader_bordereau.html.twig' %}
+    {# Titre #}
+    {% include 'segments/_facturetitre_bordereau.html.twig' %}
     {# ici liste d'articles #}
     {% include 'segments/_facturearticles.html.twig' %}
     {# Fin liste des avenants #}

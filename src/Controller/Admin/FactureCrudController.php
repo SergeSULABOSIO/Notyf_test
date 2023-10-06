@@ -147,6 +147,7 @@ class FactureCrudController extends AbstractCrudController
         $objet = new Facture();
         $objet = $this->serviceFacture->initFature($objet, $this->adminUrlGenerator);
         //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+        //dd($objet);
         return $objet;
     }
 

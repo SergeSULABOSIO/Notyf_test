@@ -33,15 +33,15 @@
         {% endif %}
                 <td class = "tableau-bordure-blanche" style="width: 25px;">{{(x+1)}}</td>
                 <td class = "tableau-bordure-blanche a-la-ligne-auto">XCXCXC4787454578{{x}}</td>
-                <td class = "tableau-bordure-blanche">Type@{{i}} / id@{{x}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 65px;">Type@{{i}} / id@{{x}}</td>
                 <td class = "tableau-bordure-blanche" style="width: 35px;">CD{{i}}{{x}}</td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto">BGFibank RDC SA</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 35px;">{{(100000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{((15) * 100)|number_format('2', ',', '.')}}%</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">BGFibank RDC SA</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{15|number_format('2', ',', '.')}}%</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
         {% set x = x + 1 %}
     {% endfor %}

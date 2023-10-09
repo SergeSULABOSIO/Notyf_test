@@ -212,7 +212,7 @@ class Client extends CalculableEntity
 
     public function __toString()
     {
-        return $this->nom;
+        return "" . $this->nom;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

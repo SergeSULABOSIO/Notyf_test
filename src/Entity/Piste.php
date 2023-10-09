@@ -170,7 +170,7 @@ class Piste
 
     public function __toString()
     {
-        return $this->nom . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
+        return "" . $this->nom;// . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     public function getEtape(): ?EtapeCrm

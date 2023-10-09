@@ -62,14 +62,24 @@ class AppFixtures extends Fixture
         );
         
         $client = new Client();
+        $client->setNom("ABS Cooling - " . $faker->company());
         $client->setAdresse("18c, Av. Moanda, Q. Matonge, C. KALAMU, Kinshasa / RDC");
-        $client->setCreatedAt(new \DateTimeImmutable());
         $client->setEmail("ssula@aib-brokers.com");
-        $client->setIdnat("IDNAT");
+        $client->setIdnat("IDNAT" . $faker->randomNumber(5, false));
+        $client->setIspersonnemorale(true);
+        $client->setNumipot("IMPOT" . $faker->randomNumber(5, false));
+        $client->setRccm("RCCM" . $faker->randomNumber(5, false));
+        $client->setSecteur(0);
+        $client->setSiteweb("www.aib-brokers.com");
+        $client->setTelephone("+243828727706");
+        $client->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $client->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $client->setCreatedAt(new \DateTimeImmutable());
+        $client->setUpdatedAt(new \DateTimeImmutable());
 
-        foreach ($this->produits as $produit) {
-            
-        }
-        //dd($this->produits);
+        $piste = new Piste();
+
+        $manager->persist($client);
+        $manager->flush();
     }
 }

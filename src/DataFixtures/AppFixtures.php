@@ -60,9 +60,16 @@ class AppFixtures extends Fixture
         $this->produits = $this->entityManager->getRepository(Produit::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
+        
+        $client = new Client();
+        $client->setAdresse("18c, Av. Moanda, Q. Matonge, C. KALAMU, Kinshasa / RDC");
+        $client->setCreatedAt(new \DateTimeImmutable());
+        $client->setEmail("ssula@aib-brokers.com");
+        $client->setIdnat("IDNAT");
+
         foreach ($this->produits as $produit) {
             
         }
-        dd($this->produits);
+        //dd($this->produits);
     }
 }

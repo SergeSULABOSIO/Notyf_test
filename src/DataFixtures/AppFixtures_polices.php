@@ -32,18 +32,11 @@ use App\Entity\Piste;
 use App\Entity\Produit;
 use App\Entity\Taxe;
 use App\Entity\Victime;
-use App\Service\ServiceEntreprise;
-use App\Service\ServiceMonnaie;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(
-        private UserPasswordHasherInterface $hasher,
-        private ServiceEntreprise $serviceEntreprise,
-        private ServiceMonnaie $serviceMonnaie
-        )
+    public function __construct(private UserPasswordHasherInterface $hasher)
     {
-        
     }
 
     public function load(ObjectManager $manager): void
@@ -53,6 +46,34 @@ class AppFixtures extends Fixture
 
         // use the factory to create a Faker\Generator instance
         $faker = Factory::create();
+        //On va charger 20 produits automatiquement dans la base de données
+        for ($i = 1; $i < 20; $i++) {
+            $article = new Article();
+            $article->setCode(substr($faker->ean13(), 4));
+            $article->setNom($faker->company(10));
+            $article->setPrix(9.99);
+            $article->setDescription("Un savon de lux et de très bonne qualité.");
+            $article->setCreatedAt(new \DateTimeImmutable());
+            $article->setUpdatedAt(new \DateTimeImmutable());
+
+            //On persiste dans la base de données
+            $manager->persist($article);
+            $manager->flush();
+            //Test = OK
+
+            //On le charge dans le stock
+            $entree_stock = new EntreeStock();
+            $entree_stock->setQuantite($faker->randomDigitNotNull());
+            $entree_stock->setPrixUnitaire($faker->randomFloat(2, 100, 5000));
+            $entree_stock->setDate(new \DateTimeImmutable());
+            $entree_stock->setArticle($article);
+            $entree_stock->setCreatedAt(new \DateTimeImmutable());
+            $entree_stock->setUpdatedAt(new \DateTimeImmutable());
+
+            //On persiste dans la base de données
+            $manager->persist($entree_stock);
+            $manager->flush();
+        }
 
         $user_admin = new Utilisateur();
         $user_admin->setNom("Admin_" . $faker->name());
@@ -320,6 +341,7 @@ class AppFixtures extends Fixture
                 $contact->setPoste($faker->jobTitle());
                 $contact->setTelephone($faker->phoneNumber());
                 $contact->setEmail($faker->email());
+                $contact->setClient($client);
                 $contact->setEntreprise($entreprise);
                 $contact->setCreatedAt(new \DateTimeImmutable());
                 $contact->setUpdatedAt(new \DateTimeImmutable());
@@ -339,6 +361,7 @@ class AppFixtures extends Fixture
                 $auto->setMarque($marqueAuto);
                 $auto->setPuissance($faker->numberBetween(8, 20) . "CV");
                 $auto->setValeur($faker->numberBetween(1000, 25000));
+                $auto->setMonnaie($monnaieUSD);
                 $auto->setNbsieges($faker->numberBetween(4, 8));
                 $auto->setNature(1);
                 $auto->setUtilite(1);
@@ -403,6 +426,19 @@ class AppFixtures extends Fixture
         }
 
 
+        //COMMENTAIRE
+        for ($a = 0; $a < 10; $a++) {
+            $comment = new CommentaireSinistre();
+            $comment->setMessage("Blabla blablablablabla Blabla blablablablabla Blabla blablablablabla");
+            $comment->setEntreprise($entreprise);
+            $comment->setUtilisateur($user_admin);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setUpdatedAt(new \DateTimeImmutable());
+            $comment->setUtilisateur($user_admin);
+
+            $manager->persist($comment);
+        }
+
         //DOC - CATEGORIE
         $doc_categorie_police = new DocCategorie();
         $doc_categorie_police->setNom("Police d'assurance");
@@ -463,6 +499,8 @@ class AppFixtures extends Fixture
         $doc_piece_a = new DocPiece();
         $doc_piece_a->setNom("Police 1245787878/2023-10001 - Documentation");
         $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_andy);
         $doc_piece_a->setUtilisateur($user_admin);
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
@@ -474,6 +512,8 @@ class AppFixtures extends Fixture
         $doc_piece_a = new DocPiece();
         $doc_piece_a->setNom("Police 1245787878/2023-10012 - Documentation");
         $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_michee);
         $doc_piece_a->setUtilisateur($user_admin);
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
@@ -485,6 +525,8 @@ class AppFixtures extends Fixture
         $doc_piece_a = new DocPiece();
         $doc_piece_a->setNom("Police 1245787878/2023-10145 - Documentation");
         $doc_piece_a->setDescription("Bablablablabla blablabla Police 1245787878/2023-10001 - Documentation");
+        $doc_piece_a->addCategorie($doc_categorie_police);
+        $doc_piece_a->addClasseur($doc_classeur_syntyche);
         $doc_piece_a->setUtilisateur($user_admin);
         $doc_piece_a->setEntreprise($entreprise);
         $doc_piece_a->setCreatedAt(new \DateTimeImmutable());
@@ -528,6 +570,7 @@ class AppFixtures extends Fixture
         $action->setStartedAt(new \DateTimeImmutable());
         $action->setEndedAt(new \DateTimeImmutable());
         $action->setClos(true);
+        $action->addAttributedTo($user_admin);
         $action->setUtilisateur($user_admin);
         $action->setEntreprise($entreprise);
         $action->setCreatedAt(new \DateTimeImmutable());
@@ -553,6 +596,7 @@ class AppFixtures extends Fixture
         $piste->setMontant(450000);
         $piste->setExpiredAt(new \DateTimeImmutable());
         $piste->setEtape($etape_crm_a);
+        $piste->addAction($action);
         $piste->setUtilisateur($user_admin);
         $piste->setEntreprise($entreprise);
         $piste->setCreatedAt(new \DateTimeImmutable());

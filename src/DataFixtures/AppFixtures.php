@@ -38,6 +38,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
     private $produits;
+    private $etapes;
     private $clients;
 
 
@@ -60,6 +61,16 @@ class AppFixtures extends Fixture
         $this->produits = $this->entityManager->getRepository(Produit::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
+        //Chargement des etapes
+        $this->etapes = $this->entityManager->getRepository(EtapeCrm::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+
+        $piste = new Piste();
+        $piste->setCreatedAt(new \DateTimeImmutable());
+        $piste->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $piste->setEtape();
+
         
         $client = new Client();
         $client->setNom("ABS Cooling - " . $faker->company());

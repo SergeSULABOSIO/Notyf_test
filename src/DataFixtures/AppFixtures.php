@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Controller\Admin\PoliceCrudController;
 use Faker\Factory;
 use App\Entity\Taxe;
 use App\Entity\Piste;
@@ -65,15 +66,22 @@ class AppFixtures extends Fixture
         $this->etapes = $this->entityManager->getRepository(EtapeCrm::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
-
+        //On charge la dernière étape d'une piste dans le CRM
         $dernireEtapeCrm = $this->etapes[count($this->etapes)-1];
 
         $piste = new Piste();
-        $piste->setCreatedAt(new \DateTimeImmutable());
-        $piste->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $piste->setNom("Nouvelle piste");
+        $piste->setObjectif("Placer la police RC Auto");
+        $piste->setMontant(1000);
         $piste->setEtape($dernireEtapeCrm);
+        $piste->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
+        $piste->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $piste->setEntreprise($this->serviceEntreprise->getEntreprise());
         $piste->setExpiredAt(new \DateTimeImmutable());
-
+        $piste->setUpdatedAt(new \DateTimeImmutable());
+        $piste->setCreatedAt(new \DateTimeImmutable());
+        
+                
         
         $client = new Client();
         $client->setNom("ABS Cooling - " . $faker->company());
@@ -91,7 +99,6 @@ class AppFixtures extends Fixture
         $client->setCreatedAt(new \DateTimeImmutable());
         $client->setUpdatedAt(new \DateTimeImmutable());
 
-        $piste = new Piste();
 
         $manager->persist($client);
         $manager->flush();

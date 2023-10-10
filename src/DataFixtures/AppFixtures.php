@@ -66,10 +66,13 @@ class AppFixtures extends Fixture
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
 
+        $dernireEtapeCrm = $this->etapes[count($this->etapes)-1];
+
         $piste = new Piste();
         $piste->setCreatedAt(new \DateTimeImmutable());
         $piste->setEntreprise($this->serviceEntreprise->getEntreprise());
-        $piste->setEtape();
+        $piste->setEtape($dernireEtapeCrm);
+        $piste->setExpiredAt(new \DateTimeImmutable());
 
         
         $client = new Client();

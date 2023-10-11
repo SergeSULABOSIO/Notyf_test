@@ -1,19 +1,4 @@
 {# Liste des avenants concernés par cette note de débit #}
-
-{% set pg_tableauMax = 23 %}
-{% set pg_volumeDonnees = 24 %}
-{% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
-{% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
-    {% if pg_reste > 0 %}
-        {% set pg_nb_pages = pg_nb_pages + 1 %}
-    {% endif %}
-
-Taille Max du tableau: {{pg_tableauMax}}<br>
-Volume des données: {{pg_volumeDonnees}}<br>
-NB des pages: {{pg_nb_pages}}<br>
-Reste: {{pg_volumeDonnees % pg_tableauMax}}<br>
-
-
 <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
     <tr>
         <td colspan="5">Liste détailée d'articles concernés par la note de débit / facture.</td>

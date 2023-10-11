@@ -169,6 +169,22 @@
 <body>
     {% set page = 2 %}
     {% set pageTotale = 2 %}
+
+    {% set pg_tableauMax = 23 %}
+    {% set pg_volumeDonnees = 23 %}
+    {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
+    {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
+        {% if pg_reste > 0 %}
+            {% set pg_nb_pages = pg_nb_pages + 1 %}
+        {% endif %}
+    
+    Taille Max du tableau: {{pg_tableauMax}}<br>
+    Volume des données: {{pg_volumeDonnees}}<br>
+    NB des pages: {{pg_nb_pages}}<br>
+    Reste d'élement pour la dernière page: {{pg_volumeDonnees % pg_tableauMax}}<br>
+
+
+        
     {# Titre #}
     {% include 'segments/_facturetitre_bordereau.html.twig' %}
     {# ici liste d'articles #}

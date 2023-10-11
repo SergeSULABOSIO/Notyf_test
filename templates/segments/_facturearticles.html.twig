@@ -31,15 +31,21 @@
         {% else %}
             <tr class="texte-centre">
         {% endif %}
-                {% set art_numero = x %}
+                {% set art_numero = x  %}
                 {% set art_reference = '12005-33002-0012-13001-00004352-2022' %}
                 {% set art_avenant = 'Type@220/id@230' %}
                 {% set art_code_produit = 'CDDK' %}
                 {% set art_cient = 'Allied Insurance Brokers RDC SA' %}
 
-                <td class = "tableau-bordure-blanche" style="width: 25px;">{{art_numero}}</td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 170px;">{{art_reference}}</td>
-                <td class = "tableau-bordure-blanche" style="width: 70px;">{{art_avenant}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 25px;">
+                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
+                </td>
+                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 170px;">
+                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 36} %}
+                </td>
+                <td class = "tableau-bordure-blanche" style="width: 70px;">
+                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
+                </td>
                 <td class = "tableau-bordure-blanche" style="width: 35px;">{{art_code_produit}}</td>
                 <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">{{art_cient}}</td>
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>

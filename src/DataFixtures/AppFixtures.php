@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\PoliceCrudController;
 use Faker\Factory;
 use App\Entity\Taxe;
@@ -41,6 +42,7 @@ class AppFixtures extends Fixture
     private $produits;
     private $etapes;
     private $clients;
+    private $assureurs;
 
 
     public const FIXTURES_PRODUCTION_GENERER_POLICES = "production-generer-police";
@@ -66,25 +68,23 @@ class AppFixtures extends Fixture
         $this->etapes = $this->entityManager->getRepository(EtapeCrm::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
+        //Chargement des assureurs
+        $this->assureurs = $this->entityManager->getRepository(Assureur::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        //Chargement des clients
+        $this->clients = $this->entityManager->getRepository(Client::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+
+
         //On charge la dernière étape d'une piste dans le CRM
         $dernireEtapeCrm = $this->etapes[count($this->etapes)-1];
+        $dernierAssureur = $this->assureurs[0];
 
-        $piste = new Piste();
-        $piste->setNom("Nouvelle piste");
-        $piste->setObjectif("Placer la police RC Auto");
-        $piste->setMontant(1000);
-        $piste->setEtape($dernireEtapeCrm);
-        $piste->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
-        $piste->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $piste->setEntreprise($this->serviceEntreprise->getEntreprise());
-        $piste->setExpiredAt(new \DateTimeImmutable());
-        $piste->setUpdatedAt(new \DateTimeImmutable());
-        $piste->setCreatedAt(new \DateTimeImmutable());
-        
-                
         
         $client = new Client();
-        $client->setNom("ABS Cooling - " . $faker->company());
+        $client->setNom("Test Client - " . $faker->company());
         $client->setAdresse("18c, Av. Moanda, Q. Matonge, C. KALAMU, Kinshasa / RDC");
         $client->setEmail("ssula@aib-brokers.com");
         $client->setIdnat("IDNAT" . $faker->randomNumber(5, false));
@@ -98,9 +98,9 @@ class AppFixtures extends Fixture
         $client->setEntreprise($this->serviceEntreprise->getEntreprise());
         $client->setCreatedAt(new \DateTimeImmutable());
         $client->setUpdatedAt(new \DateTimeImmutable());
-
-
+        
         $manager->persist($client);
+
         $manager->flush();
     }
 }

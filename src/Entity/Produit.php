@@ -18,7 +18,7 @@ class Produit extends CalculableEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 4)]
     private ?string $code = null;
 
     #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]

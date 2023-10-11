@@ -1,4 +1,12 @@
 {# Liste des avenants concernés par cette note de débit #}
+
+{% set tableauMax = 23 %}
+{% set volumeDonnees = 35 %}
+
+Taille Max du tableau: {{tableauMax}}<br>
+Volume des données: {{volumeDonnees}}<br>
+NB des pages: {{volumeDonnees / tableauMax}}<br>
+
 <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
     <tr>
         <td colspan="5">Liste détailée d'articles concernés par la note de débit / facture.</td>
@@ -26,9 +34,8 @@
     {% set total_tva = 0 %}
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
-    {% set tableauMax = 23 %}
 
-    {% for i in 0..23 %}
+    {% for i in 0..tableauMax %}
         {% if (x % 2) == 0 %}
             <tr class="texte-centre bg-pair">
         {% else %}

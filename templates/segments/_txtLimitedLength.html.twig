@@ -1,6 +1,6 @@
 {# Footer #}
 {% if txtLimitedLength_texte|length > txtLimitedLength_tailleMax  %}
-    {{(txtLimitedLength_texte[:txtLimitedLength_tailleMax]) ~ '...'}}
+    {{(txtLimitedLength_texte[:txtLimitedLength_tailleMax-2]) ~ '...'}}
 {% else %}
     {{txtLimitedLength_texte}}
 {% endif %}

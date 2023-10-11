@@ -1,7 +1,7 @@
 {# Liste des avenants concernés par cette note de débit #}
 <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
     <tr>
-        <td colspan="5">Liste détailée des avénants ou articles concernés par la note de débit.</td>
+        <td colspan="5">Liste détailée d'articles concernés par la note de débit / facture.</td>
     </tr>
     <tr class="texte-gras texte-centre bg-sombre">
         <td class = "tableau-bordure-blanche">N°</td>
@@ -17,6 +17,7 @@
         <td class = "tableau-bordure-blanche">Total dû</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
+
     {# Les variables à cumuler #}
     {% set x = 0 %}
     {% set total_fronting = 0 %}
@@ -25,18 +26,21 @@
     {% set total_tva = 0 %}
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
+    {% set tableauMax = 23 %}
+
     {% for i in 0..23 %}
         {% if (x % 2) == 0 %}
             <tr class="texte-centre bg-pair">
         {% else %}
             <tr class="texte-centre">
         {% endif %}
+                {# Les variables textes #}
                 {% set art_numero = x  %}
                 {% set art_reference = '12005-33002-0012-13001-00004352-2022' %}
                 {% set art_avenant = 'Type@220/id@230' %}
                 {% set art_code_produit = 'CDDK' %}
                 {% set art_cient = 'Allied Insurance Brokers RDC SA' %}
-
+                
                 <td class = "tableau-bordure-blanche" style="width: 25px;">
                     {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
                 </td>
@@ -46,8 +50,12 @@
                 <td class = "tableau-bordure-blanche" style="width: 70px;">
                     {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
                 </td>
-                <td class = "tableau-bordure-blanche" style="width: 35px;">{{art_code_produit}}</td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">{{art_cient}}</td>
+                <td class = "tableau-bordure-blanche" style="width: 35px;">
+                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
+                </td>
+                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">
+                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_cient, 'txtLimitedLength_tailleMax': 31} %}
+                </td>
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 40px;">{{15|number_format('2', ',', '.')}}%</td>
@@ -55,6 +63,12 @@
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
+        {# Ici on incrémente les variables numériques #}
+        {% set total_prime_nette = total_prime_nette + 100 %}
+        {% set total_fronting = total_fronting + 100 %}
+        {% set total_montant = total_montant + 100 %}
+        {% set total_tva = total_tva + 0 %}
+        {% set total_montant_ttc = total_montant_ttc + 50 %}
         {% set x = x + 1 %}
     {% endfor %}
     

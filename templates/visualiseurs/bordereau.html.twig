@@ -167,9 +167,6 @@
     </style>
 </head>
 <body>
-    {% set currentPage = 2 %}
-    {% set pageTotale = 2 %}
-
     {% set pg_tableauMax = 23 %}
     {% set pg_volumeDonnees = 21 %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
@@ -182,18 +179,20 @@
         {% endif %}
     {% endif %}
     
-    Capacité du tableau: {{pg_tableauMax}}<br>
+    {# Capacité du tableau: {{pg_tableauMax}}<br>
     Volume des données: {{pg_volumeDonnees}}<br>
     NB des pages: {{pg_nb_pages}}<br>
-    Reste dans la dernière page: {{pg_volumeDonnees % pg_tableauMax}}<br>
+    Reste dans la dernière page: {{pg_volumeDonnees % pg_tableauMax}}<br> #}
 
-
-
-    {# Titre #}
-    {% include 'segments/_facturetitre_bordereau.html.twig' %}
-    {# ici liste d'articles #}
-    {% include 'segments/_facturearticles.html.twig' %}
-    {# Fin liste des avenants #}
-    {% include 'segments/_facturefooter.html.twig' with {'currentPage': currentPage, 'totalPage': pageTotale} %}
+    {% for currentPage in 1..pg_nb_pages %}
+        {# * Page n°{{currentPage}}<br> #}
+        {# Titre #}
+        {% include 'segments/_facturetitre_bordereau.html.twig' %}
+        {# ici liste d'articles #}
+        {% include 'segments/_facturearticles.html.twig' %}
+        {# Fin liste des avenants #}
+        {% include 'segments/_facturefooter.html.twig' with {'currentPage': currentPage, 'totalPage': pg_nb_pages} %}
+   {% endfor %}
+    
 </body>
 </html>

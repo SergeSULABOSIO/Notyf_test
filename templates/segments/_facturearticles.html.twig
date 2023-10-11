@@ -1,11 +1,18 @@
 {# Liste des avenants concernés par cette note de débit #}
 
-{% set tableauMax = 23 %}
-{% set volumeDonnees = 35 %}
+{% set pg_tableauMax = 23 %}
+{% set pg_volumeDonnees = 24 %}
+{% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
+{% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
+    {% if pg_reste > 0 %}
+        {% set pg_nb_pages = pg_nb_pages + 1 %}
+    {% endif %}
 
-Taille Max du tableau: {{tableauMax}}<br>
-Volume des données: {{volumeDonnees}}<br>
-NB des pages: {{volumeDonnees / tableauMax}}<br>
+Taille Max du tableau: {{pg_tableauMax}}<br>
+Volume des données: {{pg_volumeDonnees}}<br>
+NB des pages: {{pg_nb_pages}}<br>
+Reste: {{pg_volumeDonnees % pg_tableauMax}}<br>
+
 
 <table class="tableau-bordure-zero texte-petit largeur-max marge-top-petit">
     <tr>
@@ -35,7 +42,7 @@ NB des pages: {{volumeDonnees / tableauMax}}<br>
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
 
-    {% for i in 0..tableauMax %}
+    {% for i in 0..pg_tableauMax %}
         {% if (x % 2) == 0 %}
             <tr class="texte-centre bg-pair">
         {% else %}

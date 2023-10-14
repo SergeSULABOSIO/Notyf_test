@@ -40,8 +40,15 @@
                     {% set art_numero = x  %}
                     {% set art_reference = facture.elementFactures[i - 1].police.reference %} {# '12005-33002-0012-13001-00004352-2022' #}
                     {% set art_avenant = 'Type@' ~ facture.elementFactures[i - 1].police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].police.id %} {# 'Type@220/id@230' #}
-                    {% set art_code_produit = 'CDDK' %}
-                    {% set art_cient = 'Allied Insurance Brokers RDC SA' %}
+                    {% set art_code_produit = facture.elementFactures[i - 1].police.produit.code %} {# 'CDDK' #}
+                    {% set art_cient = facture.elementFactures[i - 1].police.client.nom %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_prime_nette = facture.elementFactures[i - 1].police.primenette %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_com_ht = facture.elementFactures[i - 1].montant %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_fronting = facture.elementFactures[i - 1].police.fronting %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_taux = (art_com_ht / art_prime_nette) * 100 %}
+                    {% set art_taxes = (art_com_ht * taxe.taux) / 100 %}
+                    {% set art_com_ttc = art_taxes + art_com_ht %}
+                        
                     
                     <td class = "tableau-bordure-blanche" style="width: 25px;">
                         {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
@@ -58,21 +65,21 @@
                     <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">
                         {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_cient, 'txtLimitedLength_tailleMax': 31} %}
                     </td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 40px;">{{15|number_format('2', ',', '.')}}%</td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{art_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 40px;">{{art_taux|number_format('2', ',', '.')}}%</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{art_com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{art_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{art_com_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 </tr>
                 {% set y = y + 1 %}
             {% endif %}
         {# Ici on incrémente les variables numériques #}
-        {% set total_prime_nette = total_prime_nette + 100 %}
-        {% set total_fronting = total_fronting + 100 %}
-        {% set total_montant = total_montant + 100 %}
-        {% set total_tva = total_tva + 0 %}
-        {% set total_montant_ttc = total_montant_ttc + 50 %}
+        {% set total_prime_nette = total_prime_nette + art_prime_nette %}
+        {% set total_fronting = total_fronting + art_fronting %}
+        {% set total_montant = total_montant + art_com_ht %}
+        {% set total_tva = total_tva + art_taxes %}
+        {% set total_montant_ttc = total_montant_ttc + art_com_ttc %}
         
         {# S'il atteind le maximum du tableau, il fait un saut à la page suivante #}
         {% if (x % pg_tableauMax) == 0 %}

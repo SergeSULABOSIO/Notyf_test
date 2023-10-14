@@ -20,6 +20,7 @@
 
     {# Les variables à cumuler #}
     {% set x = 1 %}
+    {% set pg = 1 %}
     {% set total_fronting = 0 %}
     {% set total_prime_nette = 0 %}
     {% set total_montant = 0 %}
@@ -28,10 +29,7 @@
     {# fin - Les variables à cumuler #}
 
     {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
-            {% if x  %}
-                
-            {% endif %}
-            {% if x <= pg_tableauMax %}
+            {% if (x <= pg_tableauMax) and (pg == currentPage) %}
                 {% if (x % 2) == 0 %}
                     <tr class="texte-centre bg-pair">
                 {% else %}
@@ -74,6 +72,9 @@
         {% set total_tva = total_tva + 0 %}
         {% set total_montant_ttc = total_montant_ttc + 50 %}
         {% set x = x + 1 %}
+        {% if x % pg_tableauMax == 0 %}
+            {% set pg = pg + 1 %}
+        {% endif %}
     {% endfor %}
     
     <tr class="texte-gras bg-sombre">

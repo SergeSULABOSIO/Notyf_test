@@ -28,6 +28,9 @@
     {# fin - Les variables à cumuler #}
 
     {% for i in 0..pg_tableauMax %}
+        {{currentPage}}
+        
+
         {% if (x % 2) == 0 %}
             <tr class="texte-centre bg-pair">
         {% else %}

@@ -168,7 +168,7 @@
 </head>
 <body>
     {% set pg_tableauMax = 23 %}
-    {% set pg_volumeDonnees = 21 %}
+    {% set pg_volumeDonnees = 25 %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
     {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
     {% if pg_tableauMax > pg_volumeDonnees and pg_tableauMax != 0 %}
@@ -189,7 +189,7 @@
         {# Titre #}
         {% include 'segments/_facturetitre_bordereau.html.twig' %}
         {# ici liste d'articles #}
-        {% include 'segments/_facturearticles.html.twig' %}
+        {% include 'segments/_facturearticles.html.twig' with {'currentPage': currentPage} %}
         {# Fin liste des avenants #}
         {% include 'segments/_facturefooter.html.twig' with {'currentPage': currentPage, 'totalPage': pg_nb_pages} %}
    {% endfor %}

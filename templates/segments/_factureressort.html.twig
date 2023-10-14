@@ -2,15 +2,16 @@
 {% set tailleTabVariation = tailleTabMax - tailleTabActuel %}
 {% set tailleBoucle = tailleBoucleMin + tailleTabVariation %}
 {# Ajout des lignes pour ajuster la taille de la page #}
-<table class="tableau-bordure-zero texte-petit largeur-max">
-    {% for i in 0..tailleBoucle %}
-        <tr class="texte-gras">
-            <td class="tableau-bordure-blanche"><span class="texte-blanc">{{i}}</span></td>
-        </tr>
-    {% endfor %}
-    {% set tailleBoucle = 0 %}
-    {% set tailleTabMax = 0 %}
-    {% set tailleTabActuel = 0 %}
-    {% set tailleBoucleMin = 0 %}
-</table>
-{# Fin liste des avenants #}
+{% if tailleBoucle != 0 %}
+    <table class="tableau-bordure-zero texte-petit largeur-max">
+        {% for i in 0..tailleBoucle %}
+            <tr class="texte-gras">
+                <td class="tableau-bordure-blanche"><span class="texte-blanc">.</span></td>
+            </tr>
+        {% endfor %}
+        {% set tailleBoucle = 0 %}
+        {% set tailleTabMax = 0 %}
+        {% set tailleTabActuel = 0 %}
+        {% set tailleBoucleMin = 0 %}
+    </table>
+{% endif %}

@@ -19,7 +19,7 @@
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
 
     {# Les variables à cumuler #}
-    {% set x = 0 %}
+    {% set x = 1 %}
     {% set total_fronting = 0 %}
     {% set total_prime_nette = 0 %}
     {% set total_montant = 0 %}
@@ -27,44 +27,43 @@
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
 
-    {% for i in 0..pg_tableauMax %}
-        {{currentPage}}
-        
-
-        {% if (x % 2) == 0 %}
-            <tr class="texte-centre bg-pair">
-        {% else %}
-            <tr class="texte-centre">
-        {% endif %}
-                {# Les variables textes #}
-                {% set art_numero = x  %}
-                {% set art_reference = '12005-33002-0012-13001-00004352-2022' %}
-                {% set art_avenant = 'Type@220/id@230' %}
-                {% set art_code_produit = 'CDDK' %}
-                {% set art_cient = 'Allied Insurance Brokers RDC SA' %}
-                
-                <td class = "tableau-bordure-blanche" style="width: 25px;">
-                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
-                </td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 170px;">
-                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 36} %}
-                </td>
-                <td class = "tableau-bordure-blanche" style="width: 70px;">
-                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
-                </td>
-                <td class = "tableau-bordure-blanche" style="width: 35px;">
-                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
-                </td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">
-                    {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_cient, 'txtLimitedLength_tailleMax': 31} %}
-                </td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 40px;">{{15|number_format('2', ',', '.')}}%</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
+    {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
+            {% if x <= pg_tableauMax %}
+                {% if (x % 2) == 0 %}
+                    <tr class="texte-centre bg-pair">
+                {% else %}
+                    <tr class="texte-centre">
+                {% endif %}
+                    {# Les variables textes #}
+                    {% set art_numero = x  %}
+                    {% set art_reference = '12005-33002-0012-13001-00004352-2022' %}
+                    {% set art_avenant = 'Type@220/id@230' %}
+                    {% set art_code_produit = 'CDDK' %}
+                    {% set art_cient = 'Allied Insurance Brokers RDC SA' %}
+                    
+                    <td class = "tableau-bordure-blanche" style="width: 25px;">
+                        {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 170px;">
+                        {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 36} %}
+                    </td>
+                    <td class = "tableau-bordure-blanche" style="width: 70px;">
+                        {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
+                    </td>
+                    <td class = "tableau-bordure-blanche" style="width: 35px;">
+                        {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class = "tableau-bordure-blanche a-la-ligne-auto" style="width: 130px;">
+                        {% include 'segments/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_cient, 'txtLimitedLength_tailleMax': 31} %}
+                    </td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1000000)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(4500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 40px;">{{15|number_format('2', ',', '.')}}%</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1500)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(350)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class = "tableau-bordure-blanche texte-droite" style="width: 65px;">{{(1850)|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+            {% endif %}
         {# Ici on incrémente les variables numériques #}
         {% set total_prime_nette = total_prime_nette + 100 %}
         {% set total_fronting = total_fronting + 100 %}

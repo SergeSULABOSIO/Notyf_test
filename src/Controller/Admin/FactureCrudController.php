@@ -334,6 +334,7 @@ class FactureCrudController extends AbstractCrudController
 
     public function getDataTransform(Facture $facture, bool $isBordereau): array{
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
+        //dd($facture->getType());
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
@@ -343,7 +344,7 @@ class FactureCrudController extends AbstractCrudController
             'taxe'          => $this->serviceTaxes->getTaxe(false),
             'isBordereau'   => $isBordereau == true ? 1 : 0,
         ];
-        //dd($data);
+        dd($data);
         return $data;
     }
 

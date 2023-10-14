@@ -42,11 +42,11 @@
                     {% set art_avenant = 'Type@' ~ facture.elementFactures[i - 1].police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].police.id %} {# 'Type@220/id@230' #}
                     {% set art_code_produit = facture.elementFactures[i - 1].police.produit.code %} {# 'CDDK' #}
                     {% set art_cient = facture.elementFactures[i - 1].police.client.nom %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_prime_nette = facture.elementFactures[i - 1].police.primenette %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_com_ht = facture.elementFactures[i - 1].montant %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_fronting = facture.elementFactures[i - 1].police.fronting %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_prime_nette = facture.elementFactures[i - 1].police.primenette / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_com_ht = (facture.elementFactures[i - 1].montant / 100) / (taxe.taux + 1) %} {# (facture.elementFactures[i - 1].montant / 100) / (taxe.taux + 1) #}
+                    {% set art_fronting = facture.elementFactures[i - 1].police.fronting / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
                     {% set art_taux = (art_com_ht / art_prime_nette) * 100 %}
-                    {% set art_taxes = (art_com_ht * taxe.taux) / 100 %}
+                    {% set art_taxes = (art_com_ht * taxe.taux) %}
                     {% set art_com_ttc = art_taxes + art_com_ht %}
                         
                     

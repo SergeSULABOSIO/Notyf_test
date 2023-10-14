@@ -73,36 +73,6 @@
         {% set x = x + 1 %}
     {% endfor %}
     
-    {# {% for elementFacture in facture.elementFactures %}
-        {% if (x % 2) == 0 %}
-            <tr class="texte-centre bg-pair">
-            {% else %}
-            <tr class="texte-centre">
-        {% endif %}
-                {% set fronting = elementFacture.police.fronting / 100 %}
-                {% set prime_nette = elementFacture.police.primenette / 100 %}
-                {% set montant = (elementFacture.montant / 100 / (taxe.taux + 1)) %}
-                {% set tva = montant * taxe.taux %}
-                {% set montant_ttc = (montant + tva) %}
-                <td class = "tableau-bordure-blanche" style="width: 25px;">{{(x+1)}}</td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto">{{elementFacture.police.reference}}</td>
-                <td class = "tableau-bordure-blanche">Type@{{elementFacture.police.typeAvenant}} / id@{{elementFacture.police.idAvenant}}</td>
-                <td class = "tableau-bordure-blanche" style="width: 35px;">{{elementFacture.police.produit.code}}</td>
-                <td class = "tableau-bordure-blanche a-la-ligne-auto">{{elementFacture.police.client.nom}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(prime_nette)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(fronting)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{((montant / prime_nette) * 100)|number_format('2', ',', '.')}}%</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(montant)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(tva)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class = "tableau-bordure-blanche texte-droite">{{(montant_ttc)|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            {% set total_fronting = total_fronting + fronting %}
-            {% set total_prime_nette = total_prime_nette + prime_nette %}
-            {% set total_montant = total_montant + montant %}
-            {% set total_tva = total_tva + tva %}
-            {% set total_montant_ttc = total_montant_ttc + montant_ttc %}
-        {% set x = x + 1 %}
-    {% endfor %} #}
     <tr class="texte-gras bg-sombre">
         <td colspan="5" class = "tableau-bordure-blanche">Total général</td>
         <td class = "tableau-bordure-blanche texte-droite">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>

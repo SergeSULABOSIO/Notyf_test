@@ -4,11 +4,14 @@
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
 {% elseif facture.type == 1 %}
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
-    {% include 'segments/_synthese_note_de_debit.html.twig' %}
+    {% include 'segments/_synthese_retrocom.html.twig' %}
 {% elseif facture.type == 2 %}
+    {# NOTE DE CREDIT #}
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
 {% elseif facture.type == 3 %}
+    {# NOTE DE CREDIT #}
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
 {% elseif facture.type == 4 %}
+    {# NOTE DE DEBIT #}
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
 {% endif %}

@@ -42,9 +42,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class FactureCrudController extends AbstractCrudController
 {
     public ?Facture $facture = null;
-    public const TYPE_FACTURE_FRAIS_DE_GESTION          = "NOTE DE DEBIT POUR FRAIS DE GESTION";
-    public const TYPE_FACTURE_COMMISSIONS               = "NOTE DE DEBIT POUR COMMISSION";
-    public const TYPE_FACTURE_RETROCOMMISSIONS          = "FATURE POUR RETRO-COMMISSION";
+    public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
+    public const TYPE_FACTURE_COMMISSIONS               = "COMMISSION DE COURTAGE";
+    public const TYPE_FACTURE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
     public const TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA    = "NOTE DE PERCEPTION - TVA";
     public const TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA   = "NOTE DE PERCEPTION - REGULATEUR";
 

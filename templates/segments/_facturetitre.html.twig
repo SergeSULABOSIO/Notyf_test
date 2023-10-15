@@ -30,7 +30,19 @@
     </tr>
     <tr class="bg-pair">
         <td>ID. NAT: <strong>{{facture.entreprise.idnat}}</strong></td>
-        <td class="texte-droite">NATURE: <strong>{{nature}}</strong></td>
+        <td class="texte-droite">NATURE: 
+            <strong>
+                {% if facture.type == 0 %}
+                    COMMISSION DE COURTAGE
+                {% elseif facture.type == 1 %}
+                    RETROCOMMISSION DUE AU PARTENAIRE
+                {% elseif facture.type == 2  or facture.type == 3 %}
+                    NOTE DE CREDIT
+                {% elseif facture.type == 4 %}
+                    FRAIS DE GESTION
+                {% endif %}
+            </strong>
+        </td>
     </tr>
 </table>
 {# Facture à l'attention de... & Description de la facture #}

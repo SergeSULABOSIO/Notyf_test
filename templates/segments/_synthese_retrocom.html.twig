@@ -12,15 +12,31 @@
         <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>MONTANTS</strong></td>
     </tr>
     <tr class="bg-pair">
-        <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
-        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class="tableau-bordure-blanche texte-normal">Commission totale</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr class="texte-rouge">
+        <td class="tableau-bordure-blanche texte-normal"> - Tva (16%)</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr class="bg-pair texte-rouge">
+        <td class="tableau-bordure-blanche texte-normal"> - Arca (16%)</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
     <tr>
-        <td class="tableau-bordure-blanche texte-normal">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
-        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class="tableau-bordure-blanche texte-normal">Comission (ht) partageable</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr class="bg-pair">
+        <td class="tableau-bordure-blanche texte-normal">Part dûe au partenaire (50%)</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr class="texte-rouge">
+        <td class="tableau-bordure-blanche texte-normal"> - Montant payé au partenaire</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
     <tr class="bg-sombre">
-        <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
-        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû au  partenaire</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
 </table>

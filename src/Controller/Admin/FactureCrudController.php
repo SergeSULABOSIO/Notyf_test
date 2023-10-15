@@ -344,7 +344,7 @@ class FactureCrudController extends AbstractCrudController
             'taxe'          => $this->serviceTaxes->getTaxe(false),
             'isBordereau'   => $isBordereau == true ? 1 : 0,
         ];
-        dd($data);
+        //dd($data);
         return $data;
     }
 

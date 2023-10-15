@@ -2,7 +2,19 @@
 <table class="titre-document">
     <tr>
         <td>
-            <div>{{nature}}  N°{{facture.reference}}</div>
+            <div>
+                {% if facture.type == 0 %}
+                    NOTE DE DEBIT (COMMISSION) N°{{facture.reference}}
+                {% elseif facture.type == 1 %}
+                    NOTE DE CREDIT (RETROCOMMISSION) N°{{facture.reference}}
+                {% elseif facture.type == 2 %}
+                    NOTE DE CREDIT N°{{facture.reference}}
+                {% elseif facture.type == 3 %}
+                    NOTE DE CREDIT N°{{facture.reference}}
+                {% elseif facture.type == 4 %}
+                    NOTE DE DEBIT (FRAIS DE GESTION) N°{{facture.reference}}
+                {% endif %}
+            </div>
         </td>
     </tr>
 </table>

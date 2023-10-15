@@ -1,0 +1,26 @@
+{% set montant_ht = (facture.totalDu / 100) / (taxe.taux + 1) %}
+{% set montant_taxe = (montant_ht * taxe.taux) %}
+{% set montant_ttc = montant_ht + montant_taxe %}
+
+{# Synthèse des totaux #}
+<table class="tableau-bordure-zero centre marge-top-large">
+    <tr>
+        <td class="texte-centre" colspan="2">Synthèse</td>
+    </tr>
+    <tr>
+        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>RUBRIQUES</strong></td>
+        <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>MONTANTS</strong></td>
+    </tr>
+    <tr class="bg-pair">
+        <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr>
+        <td class="tableau-bordure-blanche texte-normal">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+    <tr class="bg-sombre">
+        <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
+        <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+</table>

@@ -1,0 +1,25 @@
+{% extends 'pdf/composants/_base.html.twig' %}
+
+{% block title %}Note de débit - {{facture.reference}}{% endblock %}
+
+{% block body %}
+	<div class="page-js texte-normal">
+        {% set page = 1 %}
+        {% set pageTotale = 2 %}
+		JE SUIS LA.
+        {# Entête de la page #}
+        {# {% include 'segments/_factureheader.html.twig' %} #}
+        {# Titre #}
+        {# {% include 'segments/_facturetitre.html.twig' %} #}
+        {# Synthèse numérique de la facture #}
+        {# {% include 'segments/_facturesynthese.html.twig' %} #}
+        {# Signatiare de la facture #}
+        {# {% include 'segments/_facturesignataire.html.twig' %} #}
+        {# Ressort #}
+        {# {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %} #}
+        {# Comptes bancaires #}
+        {# {% include 'segments/_facturecomptesbancaires.html.twig' %} #}
+        {# Footer etait ici #}
+        {% include 'pdf/composants/_footer.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
+    </div>
+{% endblock %}

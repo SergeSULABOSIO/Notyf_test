@@ -6,13 +6,12 @@
 	<div class="page-js texte-normal">
         {% set page = 1 %}
         {% set pageTotale = 2 %}
-		JE SUIS LA.
         {# Entête de la page #}
-        {# {% include 'segments/_factureheader.html.twig' %} #}
+        {% include 'pdf/composants/_header.html.twig' %}
         {# Titre #}
-        {# {% include 'segments/_facturetitre.html.twig' %} #}
+        {% include 'pdf/composants/_titre.html.twig' %}
         {# Synthèse numérique de la facture #}
-        {# {% include 'segments/_facturesynthese.html.twig' %} #}
+        {% include 'pdf/composants/_synthese.html.twig' %}
         {# Signatiare de la facture #}
         {# {% include 'segments/_facturesignataire.html.twig' %} #}
         {# Ressort #}

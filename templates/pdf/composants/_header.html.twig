@@ -1,0 +1,17 @@
+{# Entête de la page #}
+<div class="header">
+    {# barre du logo #}
+    <table class="tableau-bordure-zero centre" style="width: 120;">
+        <tr>
+            <td>
+                <img src="{{imageSrc}}" class="image-centre"> 
+            </td>
+        </tr>
+        <tr>
+            <td class="texte-centre texte-bleu">
+                <span class="texte-titre">{{facture.entreprise.nom}}</span><br>
+                <span class="texte-normal">{{facture.entreprise.adresse}}<span>
+            </td>
+        </tr>
+    </table>
+</div>

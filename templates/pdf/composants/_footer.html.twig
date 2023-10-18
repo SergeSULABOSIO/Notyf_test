@@ -2,17 +2,17 @@
 <div class="footer texte-petit">
     {# Nom de la société et autres informations de pieds de page #}
     <table class="tableau-bordure-top largeur-max">
-        <tr>
+        <tr class="tableau-bordure-bleu">
             <td class="texte-centre">
                 <span class="texte-gras texte-bleu">{{facture.entreprise.nom}}</span><br>
                 <span class="texte-bleu">
-                    {{facture.entreprise.adresse}} | Tél: {{facture.entreprise.telephone}}<br>
-                    RCCM: {{facture.entreprise.rccm}} | ID.NAT: {{facture.entreprise.idnat}} | NUM. IMPOT: {{facture.entreprise.numimpot}}
+                    RCCM: {{facture.entreprise.rccm}} | ID.NAT: {{facture.entreprise.idnat}} | NUM. IMPOT: {{facture.entreprise.numimpot}}<br>
+                    {{facture.entreprise.adresse}} | Tél: {{facture.entreprise.telephone}}
                 </span>
             </td>
         </tr>
         <tr>
-            <td class="texte-centre bordure-top">
+            <td class="texte-centre bordure-top tableau-bordure-bleu texte-bleu">
                 Page {{currentPage}}
             </td>
         </tr>

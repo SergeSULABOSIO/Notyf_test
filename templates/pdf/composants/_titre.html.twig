@@ -13,15 +13,15 @@
             <td>
                 <div>
                     {% if facture.type == 0 %}
-                        NOTE DE DEBIT (COMMISSION) N°{{facture.reference}}
+                        NOTE DE DEBIT
                     {% elseif facture.type == 1 %}
-                        NOTE DE CREDIT (RETROCOMMISSION) N°{{facture.reference}}
+                        NOTE DE CREDIT
                     {% elseif facture.type == 2 %}
-                        NOTE DE CREDIT N°{{facture.reference}}
+                        NOTE DE CREDIT
                     {% elseif facture.type == 3 %}
-                        NOTE DE CREDIT N°{{facture.reference}}
+                        NOTE DE CREDIT
                     {% elseif facture.type == 4 %}
-                        NOTE DE DEBIT (FRAIS DE GESTION) N°{{facture.reference}}
+                        NOTE DE DEBIT
                     {% endif %}
                 </div>
             </td>

@@ -13,11 +13,11 @@
         {# Synthèse numérique de la facture #}
         {% include 'pdf/composants/_synthese.html.twig' %}
         {# Signatiare de la facture #}
-        {# {% include 'segments/_facturesignataire.html.twig' %} #}
+        {% include 'pdf/composants/_signataire.html.twig' %}
         {# Ressort #}
-        {# {% include 'segments/_factureressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %} #}
+        {% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 5, 'tailleBoucleMin': 5} %}
         {# Comptes bancaires #}
-        {# {% include 'segments/_facturecomptesbancaires.html.twig' %} #}
+        {% include 'pdf/composants/_comptesbancaires.html.twig' %}
         {# Footer etait ici #}
         {% include 'pdf/composants/_footer.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %}
     </div>

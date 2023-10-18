@@ -328,7 +328,7 @@ class FactureCrudController extends AbstractCrudController
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        $contenuHtml = $this->renderView('visualiseurs/bordereau.html.twig', $this->getDataTransform($facture, true));
+        $contenuHtml = $this->renderView('pdf/instances/bordereau/index.html.twig', $this->getDataTransform($facture, true));
         return $this->serviceFacture->visualiserBordereau($facture, $contenuHtml);
     }
 

@@ -1,8 +1,5 @@
 
-{% if facture.type == 0 %}
-   {#  NOTE DE DEBIT (COMMISSION) #}
-    {% include 'segments/_synthese_note_de_debit.html.twig' %}
-{% elseif facture.type == 1 %}
+{% if facture.type == 1 %}
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
     {% include 'segments/_synthese_retrocom.html.twig' %}
 {% elseif facture.type == 2 %}
@@ -11,8 +8,8 @@
 {% elseif facture.type == 3 %}
     {# NOTE DE CREDIT #}
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
-{% elseif facture.type == 4 %}
-    {# NOTE DE DEBIT #}
+{% elseif facture.type == 4 or facture.type == 0 %}
+    {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
     {% set montant_ht = (facture.totalDu / 100) / (taxe.taux + 1) %}
     {% set montant_taxe = (montant_ht * taxe.taux) %}
     {% set montant_ttc = montant_ht + montant_taxe %}

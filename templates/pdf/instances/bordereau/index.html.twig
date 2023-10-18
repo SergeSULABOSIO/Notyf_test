@@ -1,0 +1,31 @@
+{% extends 'pdf/composants/_base.html.twig' %}
+
+{% block title %}Bordereau - Note - {{facture.reference}}{% endblock %}
+
+{% block body %}
+    {% set pg_tableauMax = 23 %}
+    {% set pg_volumeDonnees = facture.elementFactures|length %}
+    {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
+    {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
+    {% if pg_tableauMax > pg_volumeDonnees and pg_tableauMax != 0 %}
+        {% set pg_nb_pages = 1 %}
+    {% else %}
+        {% if pg_reste > 0 %}
+            {% set pg_nb_pages = pg_nb_pages + 1 %}
+        {% endif %}
+    {% endif %}
+    
+    {# Capacité du tableau: {{pg_tableauMax}}<br>
+    Volume des données: {{pg_volumeDonnees}}<br>
+    NB des pages: {{pg_nb_pages}}<br>
+    Reste dans la dernière page: {{pg_volumeDonnees % pg_tableauMax}}<br> #}
+
+    {% for currentPage in 1..pg_nb_pages %}
+        {# Titre #}
+        {% include 'pdf/composants/_titre.html.twig' %}
+        {# ici liste d'articles #}
+        {% include 'pdf/composants/_articles.html.twig' with {'currentPage': currentPage} %}
+        {# Fin liste des avenants #}
+        {% include 'pdf/composants/_footer.html.twig' with {'currentPage': currentPage, 'totalPage': pg_nb_pages} %}
+    {% endfor %}
+{% endblock %}

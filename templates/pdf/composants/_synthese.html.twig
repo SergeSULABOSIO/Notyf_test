@@ -15,19 +15,15 @@
             <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>Valeurs</strong></td>
         </tr>
         <tr class="bg-pair">
-            <td class="tableau-bordure-blanche texte-normal">Commission totale</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr class="texte-rouge">
-            <td class="tableau-bordure-blanche texte-normal"> - Tva (16%)</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tableau-bordure-blanche texte-normal">Commission Hors Taxe</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-pair texte-rouge">
             <td class="tableau-bordure-blanche texte-normal"> - Arca (16%)</td>
             <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tableau-bordure-blanche texte-normal">Comission (ht) partageable</td>
+            <td class="tableau-bordure-blanche texte-normal">Commission à distribuer</td>
             <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-pair">
@@ -39,7 +35,7 @@
             <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
-            <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû au  partenaire</td>
+            <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû au partenaire</td>
             <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>

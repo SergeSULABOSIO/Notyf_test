@@ -1,7 +1,48 @@
 
+{% set montant_ht = (facture.totalDu / 100) / (taxe.taux + 1) %}
+{% set montant_taxe = (montant_ht * taxe.taux) %}
+{% set montant_ttc = montant_ht + montant_taxe %}
+
 {% if facture.type == 1 %}
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
-    {% include 'segments/_synthese_retrocom.html.twig' %}
+    {# Synthèse des totaux #}
+    <table class="tableau-bordure-zero centre marge-top-large">
+        <tr>
+            <td class="texte-centre" colspan="2">Synthèse</td>
+        </tr>
+        <tr>
+            <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>Libellés</strong></td>
+            <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>Valeurs</strong></td>
+        </tr>
+        <tr class="bg-pair">
+            <td class="tableau-bordure-blanche texte-normal">Commission totale</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="texte-rouge">
+            <td class="tableau-bordure-blanche texte-normal"> - Tva (16%)</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="bg-pair texte-rouge">
+            <td class="tableau-bordure-blanche texte-normal"> - Arca (16%)</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tableau-bordure-blanche texte-normal">Comission (ht) partageable</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="bg-pair">
+            <td class="tableau-bordure-blanche texte-normal">Part dûe au partenaire (50%)</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="texte-rouge">
+            <td class="tableau-bordure-blanche texte-normal"> - Montant payé au partenaire</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="bg-sombre">
+            <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû au  partenaire</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+    </table>
 {% elseif facture.type == 2 %}
     {# NOTE DE CREDIT #}
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
@@ -10,9 +51,6 @@
     {% include 'segments/_synthese_note_de_debit.html.twig' %}
 {% elseif facture.type == 4 or facture.type == 0 %}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
-    {% set montant_ht = (facture.totalDu / 100) / (taxe.taux + 1) %}
-    {% set montant_taxe = (montant_ht * taxe.taux) %}
-    {% set montant_ttc = montant_ht + montant_taxe %}
     {# Synthèse des totaux #}
     <table class="tableau-bordure-zero centre marge-top-large">
         <tr>

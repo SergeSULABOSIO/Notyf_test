@@ -57,7 +57,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_LISTE = "Revenir sur la liste";
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_GENERER_BORDEREAU_PDF = "Produire la bordereau (pdf)";
-    public const ACTION_GENERER_FACTURE_PDF = "Produire la facture (pdf)";
+    public const ACTION_GENERER_FACTURE_PDF = "Produire la note (pdf)";
     public const ACTION_RESET = "Réinitialiser";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";

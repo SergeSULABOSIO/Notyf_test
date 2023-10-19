@@ -323,7 +323,7 @@ class ServiceFacture
         if ($isBordereau == true) {
             return $f != null ? "Bordereau_id_" . $f->getId() . ".pdf" : "Bordereau_sans_nom.pdf";
         } else {
-            return $f != null ? "Facture_id_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
+            return $f != null ? "Note_id_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
         }
         
     }

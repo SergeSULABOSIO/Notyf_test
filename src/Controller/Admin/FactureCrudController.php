@@ -8,6 +8,7 @@ use App\Entity\Assureur;
 use App\Entity\Client;
 use App\Entity\Facture;
 use App\Entity\Partenaire;
+use App\Entity\Police;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -334,7 +335,14 @@ class FactureCrudController extends AbstractCrudController
 
     public function getDataTransform(Facture $facture, bool $isBordereau): array{
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
-        //dd($facture->getType());
+        //dd(count($facture->getElementFactures()));
+        //On actualise les attributs calculables des Polices
+        foreach ($facture->getElementFactures() as $ef) {
+            /** @var Police  */
+            $pol = $ef->getPolice();
+            $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
+        }
+
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,

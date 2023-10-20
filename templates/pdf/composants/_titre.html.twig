@@ -1,6 +1,6 @@
 {# barre de titre #}
 {% if isBordereau == 1 %}
-    <table class="titre-document">
+    <table class="titre-grand-label">
         <tr>
             <td>
                 <div>N°{{facture.reference}} - BORDEREAU - {{nature}}</div>
@@ -8,7 +8,7 @@
         </tr>
     </table>
 {% else %}
-    <table class="titre-document">
+    <table class="titre-grand-label">
         <tr>
             <td>
                 <div>
@@ -29,7 +29,7 @@
     </table>
     {# Référence, date et type de facture #}
     <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
-        <tr class="bg-pair">
+        <tr>
             <td>RCCM: <strong>{{facture.entreprise.rccm}}</strong></td>
             <td class="texte-droite">DATE: <strong>{{facture.createdAt | date("d/m/Y")}}</strong></td> {# date("d/m/Y à G:H:i") #}
         </tr>
@@ -37,7 +37,7 @@
             <td>NIF: <strong>{{facture.entreprise.numimpot}}</strong></td>
             <td class="texte-droite">REFERENCE: <strong>{{facture.reference}}</strong></td>
         </tr>
-        <tr class="bg-pair">
+        <tr>
             <td>ID. NAT: <strong>{{facture.entreprise.idnat}}</strong></td>
             <td class="texte-droite">NATURE: 
                 <strong>

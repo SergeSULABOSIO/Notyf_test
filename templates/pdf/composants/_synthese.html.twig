@@ -16,7 +16,7 @@
     {% montant_pret_a_payer = 0 %}
     {% for i in 0..facture.elementFactures|length - 1 %}
         {% set police = facture.elementFactures[i].police %}
-        {% com_ttc = 0 %}
+        {% com_ttc = police.calc_revenu_ttc %}
         {% com_ttc_payee = 0 %}
         {% com_ttc_solde = 0 %}
         {% com_ht = 0 %}
@@ -27,8 +27,6 @@
         {% com_partenaire_solde = 0 %}
         {% montant_pret_a_payer = 0 %}
 
-            //Com TTC
-            $com_ttc += $policeEF->calc_revenu_ttc;
             //Com TTC RECUE
             $com_ttc_payee += $policeEF->calc_revenu_ttc_encaisse;
             //Com TTC SOLDE

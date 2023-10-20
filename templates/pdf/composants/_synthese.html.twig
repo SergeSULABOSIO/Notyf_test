@@ -4,6 +4,62 @@
 {% set montant_ttc = montant_ht + montant_taxe %}
 
 {% if facture.type == 1 %}
+    {% com_ttc = 0 %}
+    {% com_ttc_payee = 0 %}
+    {% com_ttc_solde = 0 %}
+    {% com_ht = 0 %}
+    {% taxe_court = 0 %}
+    {% com_partageable = 0 %}
+    {% com_partenaire = 0 %}
+    {% com_partenaire_payee = 0 %}
+    {% com_partenaire_solde = 0 %}
+    {% montant_pret_a_payer = 0 %}
+    {% for i in 0..facture.elementFactures|length - 1 %}
+        {% set police = facture.elementFactures[i].police %}
+        {% com_ttc = 0 %}
+        {% com_ttc_payee = 0 %}
+        {% com_ttc_solde = 0 %}
+        {% com_ht = 0 %}
+        {% taxe_court = 0 %}
+        {% com_partageable = 0 %}
+        {% com_partenaire = 0 %}
+        {% com_partenaire_payee = 0 %}
+        {% com_partenaire_solde = 0 %}
+        {% montant_pret_a_payer = 0 %}
+
+            //Com TTC
+            $com_ttc += $policeEF->calc_revenu_ttc;
+            //Com TTC RECUE
+            $com_ttc_payee += $policeEF->calc_revenu_ttc_encaisse;
+            //Com TTC SOLDE
+            $com_ttc_solde += $policeEF->calc_revenu_ttc_solde_restant_du;
+            //Com HT
+            $com_ht += $policeEF->calc_revenu_ht;
+            //Taxe Courtier
+            $taxe_court += $policeEF->calc_taxes_courtier;
+            //Com A Distribuer
+            $com_partageable += $policeEF->calc_revenu_partageable;
+            //Part du partenaire
+            $com_partenaire += $policeEF->calc_retrocom;
+            //Part payée au partenaire
+            $com_partenaire_payee += $policeEF->calc_retrocom_payees;
+            //Solde dû au partenaire
+            $com_partenaire_solde += $policeEF->calc_retrocom_solde;
+            //Montant prêt à payer
+            $montant_pret_a_payer += $elementFacture->getMontant();
+
+
+        ** {{police}}
+    {% endfor %}
+    
+
+
+    
+
+
+
+
+
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
     {# Synthèse des totaux #}
     <table class="tableau-bordure-zero centre marge-top-large">
@@ -16,26 +72,26 @@
         </tr>
         <tr class="bg-pair">
             <td class="tableau-bordure-blanche texte-normal">Commission nette totale</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-pair texte-rouge">
-            <td class="tableau-bordure-blanche texte-normal"> - Frais Arca (16%)</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tableau-bordure-blanche texte-normal"> - Frais {{taxe_courtier.nom}} ({{0}}%)</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tableau-bordure-blanche texte-normal">Commission à distribuer</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-pair">
-            <td class="tableau-bordure-blanche texte-normal">Part dûe au partenaire (50%)</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{100|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tableau-bordure-blanche texte-normal">Part dûe à {{facture.partenaire.nom}} ({{0}}%)</td>
+            <td class="tableau-bordure-blanche texte-normal texte-droite">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tableau-bordure-blanche texte-normal"> - Montant total payé au partenaire</td>
+            <td class="tableau-bordure-blanche texte-normal"> - Montant total payé à {{facture.partenaire.nom}}</td>
             <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
-            <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû au partenaire</td>
+            <td class="tableau-bordure-blanche texte-normal texte-gras">Solde restant dû à {{facture.partenaire.nom}}</td>
             <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>

@@ -325,7 +325,6 @@ class ServiceFacture
         } else {
             return $f != null ? "Note_id_" . $f->getId() . ".pdf" : "Facture_sans_nom.pdf";
         }
-        
     }
 
     public function imageToBase64($path)

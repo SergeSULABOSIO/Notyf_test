@@ -5,12 +5,12 @@
         <tr>
             <td colspan="5">Références bancaires</td>
         </tr>
-        <tr class="texte-gras texte-centre bg-sombre">
-            <td class = "tableau-bordure-blanche">Intitulé</td>
-            <td class = "tableau-bordure-blanche">Numéro</td>
-            <td class = "tableau-bordure-blanche">Banque</td>
-            <td class = "tableau-bordure-blanche">Code Swift</td>
-            <td class = "tableau-bordure-blanche">Devise</td>
+        <tr class="texte-gras texte-centre">
+            <td class="tab-titre-label">Intitulé du compte</td>
+            <td class="tab-titre-valeur">Numéro du compte</td>
+            <td class="tab-titre-valeur">Banque</td>
+            <td class="tab-titre-valeur">Code Swift</td>
+            <td class="tab-titre-valeur">Devise</td>
         </tr>
         {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
         {% set x = 0 %}
@@ -20,11 +20,11 @@
                 {% else %}
                 <tr class="texte-centre">
             {% endif %}
-                    <td class = "tableau-bordure-blanche">{{ compteBancaire.intitule}}</td>
-                    <td class = "tableau-bordure-blanche">{{ compteBancaire.numero}}</td>
-                    <td class = "tableau-bordure-blanche">{{ compteBancaire.banque}}</td>
-                    <td class = "tableau-bordure-blanche">{{ compteBancaire.codeSwift}}</td>
-                    <td class = "tableau-bordure-blanche">{{ compteBancaire.codeMonnaie}}</td>
+                    <td class="tab-ligne-label">{{ compteBancaire.intitule}}</td>
+                    <td class="tab-ligne-valeur">{{ compteBancaire.numero}}</td>
+                    <td class="tab-ligne-valeur">{{ compteBancaire.banque}}</td>
+                    <td class="tab-ligne-valeur">{{ compteBancaire.codeSwift}}</td>
+                    <td class="tab-ligne-valeur">{{ compteBancaire.codeMonnaie}}</td>
                 </tr>
             {% set x = x + 1 %}
         {% endfor %}

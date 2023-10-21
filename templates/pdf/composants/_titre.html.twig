@@ -30,27 +30,25 @@
     {# Référence, date et type de facture #}
     <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
         <tr>
-            <td>RCCM: <strong>{{facture.entreprise.rccm}}</strong></td>
-            <td class="texte-droite">DATE: <strong>{{facture.createdAt | date("d/m/Y")}}</strong></td> {# date("d/m/Y à G:H:i") #}
+            <td><span class="texte-bleu">RCCM:</span> {{facture.entreprise.rccm}}</td>
+            <td class="texte-droite"><span class="texte-bleu">DATE:</span> {{facture.createdAt | date("d/m/Y")}}</td> {# date("d/m/Y à G:H:i") #}
         </tr>
         <tr>
-            <td>NIF: <strong>{{facture.entreprise.numimpot}}</strong></td>
-            <td class="texte-droite">REFERENCE: <strong>{{facture.reference}}</strong></td>
+            <td><span class="texte-bleu">NIF:</span> {{facture.entreprise.numimpot}}</td>
+            <td class="texte-droite"><span class="texte-bleu">REFERENCE:</span> {{facture.reference}}</td>
         </tr>
         <tr>
-            <td>ID. NAT: <strong>{{facture.entreprise.idnat}}</strong></td>
-            <td class="texte-droite">NATURE: 
-                <strong>
-                    {% if facture.type == 0 %}
-                        COMMISSION DE COURTAGE
-                    {% elseif facture.type == 1 %}
-                        RETROCOMMISSION DUE A {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)
-                    {% elseif facture.type == 2  or facture.type == 3 %}
-                        NOTE DE CREDIT
-                    {% elseif facture.type == 4 %}
-                        FRAIS DE GESTION
-                    {% endif %}
-                </strong>
+            <td><span class="texte-bleu">ID. NAT:</span> {{facture.entreprise.idnat}}</td>
+            <td class="texte-droite"><span class="texte-bleu">NATURE:</span> 
+                {% if facture.type == 0 %}
+                    COMMISSION DE COURTAGE
+                {% elseif facture.type == 1 %}
+                    RETROCOMMISSION DUE A {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)
+                {% elseif facture.type == 2  or facture.type == 3 %}
+                    NOTE DE CREDIT
+                {% elseif facture.type == 4 %}
+                    FRAIS DE GESTION
+                {% endif %}
             </td>
         </tr>
     </table>
@@ -58,11 +56,11 @@
     <table class="tableau-bordure-zero centre marge-top-large" style="width: 98%;">
         <tr>
             <td>
-                Pour:</br>
+                <span class="texte-bleu">POUR:</span></br>
                 {{pour|raw}}
             </td>
             <td class="texte-droite">
-                Description: </br>
+                <span class="texte-bleu">DESCRIPTION:</span> </br>
                 <strong>
                     {{facture.description|raw}}
                 </strong>

@@ -1,6 +1,6 @@
 
-{% set montant_ht = (facture.totalDu / 100) / (taxe.taux + 1) %}
-{% set montant_taxe = (montant_ht * taxe.taux) %}
+{% set montant_ht = (facture.totalDu / 100) / (taxe_assureur.taux + 1) %}
+{% set montant_taxe = (montant_ht * taxe_assureur.taux) %}
 {% set montant_ttc = montant_ht + montant_taxe %}
 
 {% if facture.type == 1 %}
@@ -8,7 +8,8 @@
     {% set com_ttc_payee = 0 %}
     {% set com_ttc_solde = 0 %}
     {% set com_ht = 0 %}
-    {% set taxe_court = 0 %}
+    {% set montant_taxe_courtier = 0 %}
+    {% set montant_taxe_assureur = 0 %}
     {% set com_partageable = 0 %}
     {% set com_partenaire = 0 %}
     {% set com_partenaire_payee = 0 %}
@@ -21,7 +22,8 @@
         {% set com_ttc_payee = com_ttc_payee + (police.calc_revenu_ttc_encaisse / 100) %}
         {% set com_ttc_solde = com_ttc_solde + (police.calc_revenu_ttc_solde_restant_du / 100) %}
         {% set com_ht = com_ht + (police.calc_revenu_ht / 100) %}
-        {% set taxe_court = taxe_court + (police.calc_taxes_courtier / 100) %}
+        {% set montant_taxe_courtier = montant_taxe_courtier + (police.calc_taxes_courtier / 100) %}
+        {% set montant_taxe_assureur = montant_taxe_assureur + (police.calc_taxes_assureurs / 100) %}
         {% set com_partageable = com_partageable + (police.calc_revenu_partageable / 100) %}
         {% set com_partenaire = com_partenaire + (police.calc_retrocom / 100) %}
         {% set com_partenaire_payee = com_partenaire_payee + (police.calc_retrocom_payees / 100) %}
@@ -31,9 +33,9 @@
     
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
     {# Synthèse des totaux #}
-    <table class="tableau-bordure-zero centre marge-top-large">
+    <table class="tableau-bordure-zero centre marge-top-moyen">
         <tr>
-            <td class="texte-centre" colspan="2">Synthèse</td>
+            <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>
         <tr>
             <td class="tab-titre-label"><strong>Libellés</strong></td>
@@ -43,29 +45,33 @@
             <td class="tab-ligne-label">Commission totale (ttc)</td>
             <td class="tab-ligne-valeur">{{com_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
+        <tr class="texte-rouge">
+            <td class="tab-ligne-label"> - Taxes ({{taxe_assureur.nom}} @{{ taxe_assureur.taux * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
         <tr>
             <td class="tab-ligne-label">Commission totale hors taxes</td>
             <td class="tab-ligne-valeur">{{com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}} ({{0}}%)</td>
-            <td class="tab-ligne-valeur">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.taux * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Commission à partager avec {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">{{com_partageable|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Part dûe à {{facture.partenaire.nom}} ({{0}}%)</td>
-            <td class="tab-ligne-valeur">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Part dûe à {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{com_partenaire|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">{{com_partenaire_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{0|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">{{com_partenaire_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
             <td class="tab-ligne-label">Montant à payer à {{facture.partenaire.nom}}</td>
@@ -83,23 +89,23 @@
     {# Synthèse des totaux #}
     <table class="tableau-bordure-zero centre marge-top-large">
         <tr>
-            <td class="texte-centre" colspan="2">Synthèse</td>
+            <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>
         <tr>
-            <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>Libellé</strong></td>
-            <td class="tableau-bordure-blanche texte-titre bg-sombre"><strong>Valeurs</strong></td>
-        </tr>
-        <tr class="bg-pair">
-            <td class="tableau-bordure-blanche texte-normal">Montant dû (ht)</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-titre-label"><strong>Libellé</strong></td>
+            <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
         <tr>
-            <td class="tableau-bordure-blanche texte-normal">{{taxe.nom}} ({{(taxe.taux * 100)|number_format(0, ',', '.')}}%)</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Montant dû (ht)</td>
+            <td class="tab-ligne-valeur">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.taux * 100)|number_format(0, ',', '.')}}%)</td>
+            <td class="tab-ligne-valeur">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
-            <td class="tableau-bordure-blanche texte-normal texte-gras">Total à payer</td>
-            <td class="tableau-bordure-blanche texte-normal texte-droite texte-gras">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Total à payer</td>
+            <td class="tab-ligne-valeur">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
 {% endif %}

@@ -349,8 +349,8 @@ class FactureCrudController extends AbstractCrudController
             'nature'        => $this->serviceFacture->getType($facture->getType()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
-            'taxe'          => $this->serviceTaxes->getTaxe(false),
             'taxe_courtier' => $this->serviceTaxes->getTaxe(true),
+            'taxe_assureur' => $this->serviceTaxes->getTaxe(false),
             'isBordereau'   => $isBordereau == true ? 1 : 0,
         ];
         //dd($data);

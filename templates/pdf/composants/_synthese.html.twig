@@ -47,7 +47,7 @@
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Taxes ({{taxe_assureur.nom}} @{{ taxe_assureur.taux * 100}}%)</td>
-            <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">-{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Commission totale hors taxes</td>
@@ -55,7 +55,7 @@
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.taux * 100}}%)</td>
-            <td class="tab-ligne-valeur">{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">-{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Commission à partager avec {{facture.partenaire.nom}}</td>
@@ -67,7 +67,7 @@
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{com_partenaire_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">-{{com_partenaire_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
@@ -139,7 +139,7 @@
             </tr>
             <tr class="texte-rouge">
                 <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}} déjà payés</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_courtier_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class="tab-ligne-valeur">-{{montant_taxe_courtier_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
             <tr>
                 <td class="tab-ligne-label">Solde restant dû</td>
@@ -156,7 +156,7 @@
             </tr>
             <tr class="texte-rouge">
                 <td class="tab-ligne-label"> - {{taxe_assureur.nom}} déjà payés</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_assureur_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                <td class="tab-ligne-valeur">-{{montant_taxe_assureur_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
             <tr>
                 <td class="tab-ligne-label">Solde restant dû</td>

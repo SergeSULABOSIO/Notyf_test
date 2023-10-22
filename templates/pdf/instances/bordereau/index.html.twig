@@ -29,7 +29,7 @@
         {% elseif facture.type == 1 %}{# RETROCOMMISSION AU PARTENAIRE #}
             {% include 'pdf/composants/_articlesretrocommissions.html.twig' with {'currentPage': currentPage} %}
         {% elseif facture.type == 2  or facture.type == 3 %} {# NOTE DE CREDIT POUR TVA ET ARCA #}
-            
+            {% include 'pdf/composants/_articlesfiscalite.html.twig' with {'currentPage': currentPage} %}
         {% endif %}
         {# Fin liste des avenants #}
         {% include 'pdf/composants/_footer.html.twig' with {'currentPage': currentPage, 'totalPage': pg_nb_pages} %}

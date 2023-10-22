@@ -15,17 +15,13 @@
         {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
         {% set x = 0 %}
         {% for compteBancaire in facture.compteBancaires %}
-            {% if (x % 2) == 0 %}
-                <tr class="texte-centre bg-pair">
-                {% else %}
-                <tr class="texte-centre">
-            {% endif %}
-                    <td class="tab-ligne-label">{{ compteBancaire.intitule}}</td>
-                    <td class="tab-ligne-valeur">{{ compteBancaire.numero}}</td>
-                    <td class="tab-ligne-valeur">{{ compteBancaire.banque}}</td>
-                    <td class="tab-ligne-valeur">{{ compteBancaire.codeSwift}}</td>
-                    <td class="tab-ligne-valeur">{{ compteBancaire.codeMonnaie}}</td>
-                </tr>
+            <tr class="texte-centre">
+                <td class="tab-ligne-label">{{ compteBancaire.intitule}}</td>
+                <td class="tab-ligne-valeur">{{ compteBancaire.numero}}</td>
+                <td class="tab-ligne-valeur">{{ compteBancaire.banque}}</td>
+                <td class="tab-ligne-valeur">{{ compteBancaire.codeSwift}}</td>
+                <td class="tab-ligne-valeur">{{ compteBancaire.codeMonnaie}}</td>
+            </tr>       
             {% set x = x + 1 %}
         {% endfor %}
     </table>

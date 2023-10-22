@@ -78,12 +78,97 @@
             <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
-{% elseif facture.type == 2 %}
-    {# NOTE DE CREDIT #}
-    {% include 'segments/_synthese_note_de_debit.html.twig' %}
-{% elseif facture.type == 3 %}
-    {# NOTE DE CREDIT #}
-    {% include 'segments/_synthese_note_de_debit.html.twig' %}
+{% elseif facture.type == 3 or facture.type == 2 %}
+    {% set nb_avenant = facture.elementFactures|length %}
+    {% set primes_totale = 0 %}
+    {% set primes_nettes = 0 %}
+    {% set com_ht = 0 %}
+    {% set montant_taxe_courtier = 0 %}
+    {% set montant_taxe_assureur = 0 %}
+    {% set montant_taxe_courtier_payee = 0 %}
+    {% set montant_taxe_courtier_solde = 0 %}
+    {% set montant_taxe_assureur_payee = 0 %}
+    {% set montant_taxe_assureur_solde = 0 %}
+    {% set montant_pret_a_payer = 0 %}
+
+    {% for i in 0..facture.elementFactures|length - 1 %}
+        {% set police = facture.elementFactures[i].police %}
+        {% set primes_totale = primes_totale + (police.primetotale / 100) %}
+        {% set primes_nettes = primes_nettes + (police.primenette / 100) %}
+        {% set com_ht = com_ht + (police.calc_revenu_ht / 100) %}
+        {% if facture.type == 3 %} {# ARCA #}
+            {% set montant_taxe_courtier = montant_taxe_courtier + (police.calc_taxes_courtier / 100) %}
+            {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (police.calc_taxes_courtier_payees / 100) %}
+            {% set montant_taxe_courtier_solde = montant_taxe_courtier_solde + (police.calc_taxes_courtier_solde / 100) %}
+        {% elseif facture.type == 2 %} {# TVA #}
+            {% set montant_taxe_assureur = montant_taxe_assureur + (police.calc_taxes_assureurs / 100) %}
+            {% set montant_taxe_assureur_payee = montant_taxe_assureur_payee + (police.calc_taxes_assureurs_payees / 100) %}
+            {% set montant_taxe_assureur_solde = montant_taxe_assureur_solde + (police.calc_taxes_assureurs_solde / 100) %}
+        {% endif %}
+        {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
+    {% endfor %}
+    {# NOTE DE CREDIT ARCA #}
+    <table class="tableau-bordure-zero centre marge-top-large">
+        <tr>
+            <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
+        </tr>
+        <tr>
+            <td class="tab-titre-label"><strong>Libellé</strong></td>
+            <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Nombre total d'opérations / avénants</td>
+            <td class="tab-ligne-valeur">{{nb_avenant|number_format('0', ',', '.')}} avénant(s)</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Primes totales générées</td>
+            <td class="tab-ligne-valeur">{{primes_totale|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Primes nettes après deduction des taxes</td>
+            <td class="tab-ligne-valeur">{{primes_nettes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Commissions totales hors taxes</td>
+            <td class="tab-ligne-valeur">{{com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        {% if facture.type == 3 %} {# ARCA #}
+            <tr>
+                <td class="tab-ligne-label">Frais {{taxe_courtier.nom}} ({{(taxe_courtier.taux * 100)|number_format(0, ',', '.')}}%)</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr class="texte-rouge">
+                <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}} déjà payés</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_courtier_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr>
+                <td class="tab-ligne-label">Solde restant dû</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_courtier_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr class="bg-sombre">
+                <td class="tab-ligne-label">Total à payer à {{taxe_courtier.organisation}}</td>
+                <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+        {% elseif facture.type == 2 %} {# TVA #}
+            <tr>
+                <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.taux * 100)|number_format(0, ',', '.')}}%)</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr class="texte-rouge">
+                <td class="tab-ligne-label"> - {{taxe_assureur.nom}} déjà payés</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_assureur_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr>
+                <td class="tab-ligne-label">Solde restant dû</td>
+                <td class="tab-ligne-valeur">{{montant_taxe_assureur_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+            <tr class="bg-sombre">
+                <td class="tab-ligne-label">Total à payer à {{taxe_assureur.organisation}}</td>
+                <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            </tr>
+        {% endif %}
+        
+    </table>
 {% elseif facture.type == 4 or facture.type == 0 %}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
     {# Synthèse des totaux #}

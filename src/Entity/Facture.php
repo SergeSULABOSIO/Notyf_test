@@ -17,9 +17,6 @@ class Facture
     #[ORM\Column]
     private ?int $id = null;
 
-    /* #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class)]
-    private Collection $elementFactures; */
-
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
 

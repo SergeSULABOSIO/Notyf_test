@@ -3,7 +3,7 @@
 {% set tailleBoucle = tailleBoucleMin + tailleTabVariation %}
 {# Ajout des lignes pour ajuster la taille de la page #}
 {% if tailleBoucle != 0 %}
-    <table class="tableau-bordure-zero texte-petit largeur-max">
+    <table class="tableau-bordure-zero largeur-max texte-taille-petit">
         {% for i in 0..tailleBoucle %}
             <tr class="texte-gras">
                 <td class="tableau-bordure-blanche"><span class="texte-blanc">.</span></td>

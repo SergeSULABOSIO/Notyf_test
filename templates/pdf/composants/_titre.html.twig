@@ -1,6 +1,6 @@
 {# barre de titre #}
 {% if isBordereau == 1 %}
-    <table class="titre-grand-label">
+    <table class="titre-grand-label texte-taille-petit">
         <tr>
             <td>
                 <div>N°{{facture.reference}} - BORDEREAU - {{nature}}</div>
@@ -8,7 +8,7 @@
         </tr>
     </table>
 {% else %}
-    <table class="titre-grand-label">
+    <table class="titre-grand-label texte-taille-normale">
         <tr>
             <td>
                 <div>
@@ -28,7 +28,7 @@
         </tr>
     </table>
     {# Référence, date et type de facture #}
-    <table class="tableau-bordure-zero centre texte-normal" style="width: 98%;">
+    <table class="tableau-bordure-zero centre texte-taille-normale" style="width: 98%;">
         <tr>
             <td><span class="texte-bleu">RCCM:</span> {{facture.entreprise.rccm}}</td>
             <td class="texte-droite"><span class="texte-bleu">DATE:</span> {{facture.createdAt | date("d/m/Y")}}</td> {# date("d/m/Y à G:H:i") #}
@@ -53,7 +53,7 @@
         </tr>
     </table>
     {# Facture à l'attention de... & Description de la facture #}
-    <table class="tableau-bordure-zero centre marge-top-large" style="width: 98%;">
+    <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale" style="width: 98%;">
         <tr>
             <td>
                 <span class="texte-bleu">POUR:</span></br>

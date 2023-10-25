@@ -33,7 +33,7 @@
     
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
     {# Synthèse des totaux #}
-    <table class="tableau-bordure-zero centre marge-top-moyen">
+    <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>
@@ -108,7 +108,7 @@
         {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
     {% endfor %}
     {# NOTE DE CREDIT ARCA #}
-    <table class="tableau-bordure-zero centre marge-top-large">
+    <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>
@@ -172,7 +172,7 @@
 {% elseif facture.type == 4 or facture.type == 0 %}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
     {# Synthèse des totaux #}
-    <table class="tableau-bordure-zero centre marge-top-large">
+    <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>

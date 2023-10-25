@@ -67,7 +67,7 @@
                     {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
                 </td>
                 <td class="tab-ligne-label a-la-ligne-auto" style="width: 170px;">
-                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 30} %}
+                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 40} %}
                 </td>
                 <td class="tab-ligne-label" style="width: 35px;">
                     {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
@@ -131,4 +131,4 @@
     </tr>
 </table>
 {# On insère le ressort ici pour ajouter ou supprimer les lignes manquantes #}
-{% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': y, 'tailleTabMax': pg_tableauMax, 'tailleBoucleMin': 0} %}
+{% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': y, 'tailleTabMax': pg_tableauMax, 'tailleBoucleMin': 3} %}

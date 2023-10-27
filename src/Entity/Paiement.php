@@ -40,6 +40,9 @@ class Paiement
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'paiements')]
+    private ?CompteBancaire $compteBancaire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,6 +157,18 @@ class Paiement
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCompteBancaire(): ?CompteBancaire
+    {
+        return $this->compteBancaire;
+    }
+
+    public function setCompteBancaire(?CompteBancaire $compteBancaire): self
+    {
+        $this->compteBancaire = $compteBancaire;
 
         return $this;
     }

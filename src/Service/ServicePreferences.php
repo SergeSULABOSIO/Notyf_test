@@ -560,6 +560,17 @@ class ServicePreferences
             $tabAttributs = $this->setCRM_Fields_PaiementTaxes_Details($tabAttributs);
             $tabAttributs = $this->setCRM_Fields_PaiementTaxes_form($tabAttributs);
         }
+        if ($objetInstance instanceof Paiement) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fa-solid fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                    ->setHelp("Cashflow.")
+            ];
+            //$tabAttributs = $this->setCRM_Fields_PaiementTaxes_Index_Details($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_TAXES, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Paiement_Index($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENT, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Paiement_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Paiement_form($tabAttributs);
+        }
         //GROUPE SINISTRE
         if ($objetInstance instanceof EtapeSinistre) {
             $tabAttributs = [
@@ -1218,6 +1229,62 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)
+                ->onlyOnIndex();
+        }
+        return $tabAttributs;
+    }
+
+
+    public function setFIN_Fields_Paiement_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENT_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE])) {
+            $tabAttributs[] = TextField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
+                ->formatValue(function ($value, Paiement $paiement) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION])) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE])) {
+            $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE])) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE])) {
+            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_CREATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_MODIFICATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENT_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENT_ENTREPRISE)
                 ->onlyOnIndex();
         }
         return $tabAttributs;

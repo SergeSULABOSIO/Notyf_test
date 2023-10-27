@@ -170,6 +170,10 @@ class FactureCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt') //<i class="fa-solid fa-download"></i>
             ->linkToCrudAction('genererFacturePDF');
 
+        $payer_facture = Action::new(DashboardController::ACTION_AJOUTER_PAIEMENT)
+            ->setIcon('fa-solid fa-cash-register') //<i class="fa-solid fa-download"></i>
+            ->linkToCrudAction('payerFacture');
+
         $generer_bordereau = Action::new(DashboardController::ACTION_GENERER_BORDEREAU_PDF)
             ->setIcon('fa-solid fa-expand') //<i class="fa-solid fa-expand"></i>
             ->linkToCrudAction('genererBordereauPDF');
@@ -258,6 +262,9 @@ class FactureCrudController extends AbstractCrudController
             ->update(Crud::PAGE_DETAIL, DashboardController::ACTION_GENERER_FACTURE_PDF, function (Action $action) {
                 return $action->addCssClass('btn btn-primary'); //<i class="fa-solid fa-floppy-disk"></i>
             })
+
+            ->add(Crud::PAGE_DETAIL, $payer_facture)
+            ->add(Crud::PAGE_INDEX, $payer_facture)
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -400,5 +407,10 @@ class FactureCrudController extends AbstractCrudController
         }
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function payerFacture(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        return $this->redirect($this->serviceCrossCanal->crossCanal_payerFacture($context, $adminUrlGenerator));
     }
 }

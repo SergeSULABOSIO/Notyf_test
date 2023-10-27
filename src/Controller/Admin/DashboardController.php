@@ -59,6 +59,7 @@ class DashboardController extends AbstractDashboardController
     public const ACTION_DUPLICATE = "Dupliquer";
     public const ACTION_GENERER_BORDEREAU_PDF = "Produire la bordereau (pdf)";
     public const ACTION_GENERER_FACTURE_PDF = "Produire la note (pdf)";
+    public const ACTION_AJOUTER_PAIEMENT = "Ajouter un paiement";
     public const ACTION_RESET = "Réinitialiser";
     public const ACTION_SUPPRIMER = "Supprimer";
     public const ACTION_MODIFIER = "Modifier";
@@ -101,7 +102,7 @@ class DashboardController extends AbstractDashboardController
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
 
-        //dd($this->serviceEntreprise);
+        
 
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $connected_utilisateur = $this->serviceEntreprise->getUtilisateur();

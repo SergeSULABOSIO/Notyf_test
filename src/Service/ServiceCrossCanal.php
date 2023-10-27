@@ -61,8 +61,10 @@ use App\Controller\Admin\PaiementTaxeCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Controller\Admin\PaiementCommissionCrudController;
+use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\PaiementPartenaireCrudController;
 use App\Entity\Facture;
+use App\Entity\Paiement;
 use DateInterval;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
@@ -140,6 +142,7 @@ class ServiceCrossCanal
 
     public const CROSSED_ENTITY_ACTION = "action";
     public const CROSSED_ENTITY_COTATION = "cotation";
+    public const CROSSED_ENTITY_FACTURE = "facture";
     public const CROSSED_ENTITY_CLIENT = "client";
     public const CROSSED_ENTITY_ETAPE_CRM = "etape";
     public const CROSSED_ENTITY_ETAPE_SINISTRE = "etape";
@@ -158,7 +161,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_TAXE = "taxe";
     public const CROSSED_ENTITY_SINISTRE = "sinistre";
 
-    
+
 
 
     public function __construct(
@@ -172,7 +175,6 @@ class ServiceCrossCanal
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie
     ) {
-        
     }
 
     public function crossCanal_Action_ajouterFeedback(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
@@ -1763,6 +1765,31 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_payerFacture(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var Facture */
+        $facture = $context->getEntity()->getInstance();
+        //dd($facture);
+        /* $adminUrlGenerator
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+            ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR); */
+
+        $url = $adminUrlGenerator
+            ->setController(PaiementCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", "Paiement de la facture " . $facture)
+            ->set(self::CROSSED_ENTITY_FACTURE, $facture->getId())
+            ->set("donnees[facture]", $facture->getId())
+            ->setEntityId(null)
+            ->generateUrl();
+
+        return $url;
+    }
+
     public function crossCanal_modifier_facture(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
     {
         //$entite = $context->getEntity()->getInstance();
@@ -1807,7 +1834,6 @@ class ServiceCrossCanal
             ->setEntityId($facture->getId())
             ->generateUrl(); 
             return $url; */
-
     }
 
     public function crossCanal_Partenaire_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
@@ -1860,6 +1886,16 @@ class ServiceCrossCanal
             $docPiece->setCotation($objet);
         }
         return $docPiece;
+    }
+
+    public function crossCanal_Paiement_setFacture(Paiement $paiement, AdminUrlGenerator $adminUrlGenerator): Paiement
+    {
+        $paramIDFacture = $adminUrlGenerator->get(self::CROSSED_ENTITY_FACTURE);
+        if ($paramIDFacture != null) {
+            $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
+            $paiement->setFacture($objetFacture);
+        }
+        return $paiement;
     }
 
     public function crossCanal_Piece_setPolice(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
@@ -2182,7 +2218,6 @@ class ServiceCrossCanal
 
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator, $entite): Crud
     {
-        //dd($crud->getAsDto());
         if ($adminUrlGenerator->get("titre")) {
             $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));
@@ -2191,7 +2226,9 @@ class ServiceCrossCanal
             $crud->setPageTitle(Crud::PAGE_NEW, "Nouveau - " . ucfirst(strtolower($crud->getAsDto()->getEntityLabelInSingular())));
             $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         }
-        $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
+        if($entite){
+            $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
+        }
         return $crud;
     }
 

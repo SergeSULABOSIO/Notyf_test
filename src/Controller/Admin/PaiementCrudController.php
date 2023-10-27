@@ -49,7 +49,7 @@ class PaiementCrudController extends AbstractCrudController
         //$this->dompdf = new Dompdf();
     }
 
-    
+
     public static function getEntityFqcn(): string
     {
         return Paiement::class;
@@ -72,8 +72,12 @@ class PaiementCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        //dd($this->serviceEntreprise->getEntreprise());
         //Application de la préférence sur la taille de la liste
-        $this->servicePreferences->appliquerPreferenceTaille(new Paiement(), $crud);
+        if ($this->serviceEntreprise->getUtilisateur() != null || $this->serviceEntreprise->getEntreprise() != null) {
+            $this->servicePreferences->appliquerPreferenceTaille(new Paiement(), $crud);
+        }
+
         $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
@@ -116,8 +120,8 @@ class PaiementCrudController extends AbstractCrudController
         $objet->setPaidAt(new \DateTimeImmutable("now"));
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $objet->setMontant(0);
-        //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($objet, $this->adminUrlGenerator);
+        //$objet->setMontant(0);
         //dd($objet);
         return $objet;
     }
@@ -128,6 +132,7 @@ class PaiementCrudController extends AbstractCrudController
             /** @var Paiement */
             $this->paiement = $this->getContext()->getEntity()->getInstance();
         }
+        //dd($this->getContext()->getEntity()->getInstance());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
@@ -254,17 +259,18 @@ class PaiementCrudController extends AbstractCrudController
     {
         /** @var Paiement */
         $paiement = $context->getEntity()->getInstance();
-        return $this->redirect($this->serviceCrossCanal->crossCanal_modifier_facture($adminUrlGenerator, $paiement));
+        //return $this->redirect($this->serviceCrossCanal->crossCanal_modifier_facture($adminUrlGenerator, $paiement));
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /** @var Paiement */
         $paiement = $context->getEntity()->getInstance();
-        return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $paiement));
+        //return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $paiement));
     }
 
-    public function exporterMSExcels(BatchActionDto $batchActionDto){
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
         $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 

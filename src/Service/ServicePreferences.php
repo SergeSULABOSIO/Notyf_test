@@ -139,12 +139,15 @@ class ServicePreferences
     public function chargerPreference(Utilisateur $utilisateur, Entreprise $entreprise): Preference
     {
         //dd($utilisateur);
-        $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
-            [
-                'entreprise' => $entreprise,
-                'utilisateur' => $utilisateur,
-            ]
-        );
+        if ($utilisateur != null && $entreprise != null) {
+            $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
+                [
+                    'entreprise' => $entreprise,
+                    'utilisateur' => $utilisateur,
+                ]
+            );
+        }
+
         return $preferences[0];
     }
 
@@ -160,6 +163,7 @@ class ServicePreferences
     {
         //dd($this->serviceEntreprise);
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+
         //GROUPE CRM
         if ($instance instanceof Action) {
             $this->setTailleCRM($preference, $crud);
@@ -1242,7 +1246,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE])) {
-            $tabAttributs[] = TextField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
+            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
@@ -1291,85 +1295,90 @@ class ServicePreferences
     }
 
     public function setFIN_Fields_Paiement_Details($tabAttributs)
-    {Je suis ici
-        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TYPE)) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENT_ID)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
+            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
                 ->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)) {
-            $tabAttributs[] = ArrayField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)) {
-            $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
+                ->formatValue(function ($value, Paiement $paiement) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
                 ->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)) {
-            $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
-            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)) {
+            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
                 ->renderAsHtml()
                 ->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {
+            $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
+            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_CREATION)) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_CREATION)->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
-            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_MODIFICATION)) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE_MODIFICATION)->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
-            $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)) {
-            $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)) {
-            $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)) {
-            $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_UTILISATEUR)) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENT_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])->onlyOnDetail();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_ENTREPRISE)) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENT_ENTREPRISE)->onlyOnDetail();
         }
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Paiement_form($tabAttributs)
+    {
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {
+            $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
+            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
+            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
+                ->setColumns(4)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setColumns(2);
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+                ->setRequired(false)
+                ->setColumns(6)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)) {
+            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        //On désactive les champs non éditables
+        $this->appliquerCanDesable($tabAttributs);
         return $tabAttributs;
     }
 
@@ -5673,8 +5682,8 @@ class ServicePreferences
 
     public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
-        $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         //définition des attributs des pages
+        $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
         return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
     }
 

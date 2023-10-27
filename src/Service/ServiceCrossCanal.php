@@ -1888,12 +1888,16 @@ class ServiceCrossCanal
         return $docPiece;
     }
 
+
+    
     public function crossCanal_Paiement_setFacture(Paiement $paiement, AdminUrlGenerator $adminUrlGenerator): Paiement
     {
         $paramIDFacture = $adminUrlGenerator->get(self::CROSSED_ENTITY_FACTURE);
         if ($paramIDFacture != null) {
+            /** @var Facture  */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
             $paiement->setFacture($objetFacture);
+            $paiement->setMontant($objetFacture->getTotalDu());
         }
         return $paiement;
     }

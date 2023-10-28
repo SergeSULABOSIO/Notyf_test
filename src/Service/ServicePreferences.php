@@ -1245,10 +1245,6 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENT_ID)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE])) {
-            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
-                ->onlyOnIndex();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
                 ->formatValue(function ($value, Paiement $paiement) {
@@ -1258,10 +1254,14 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION])) {
-            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DATE])) {
+            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
                 ->onlyOnIndex();
         }
+        /* if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION])) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
+                ->onlyOnIndex();
+        } */
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE])) {
             $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
                 ->onlyOnIndex();

@@ -40,7 +40,7 @@ class Facture
 
     #[ORM\ManyToOne(inversedBy: 'factures')]
     private ?Assureur $assureur = null;
-    
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
@@ -338,10 +338,10 @@ class Facture
         $tiers = " à nous.";
         switch ($this->type) {
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
-                $tiers = " à " . $this->assureur;
+                $tiers = ", dû par " . $this->assureur;
                 break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
-                $tiers =  " à " . $this->partenaire;
+                $tiers =  " dû à " . $this->partenaire;
                 break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
                 $tiers = " venant de l'Autorité de régulation";
@@ -353,7 +353,7 @@ class Facture
                 //$tiers = ".";
                 break;
         }
-        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers . $this->description;
+        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers;// . $this->description;
     }
 
     /**

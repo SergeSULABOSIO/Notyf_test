@@ -13,6 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\DocPiece;
+use App\Entity\Paiement;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -176,6 +178,15 @@ class ServiceFacture
                 break;
         }
         return $reponses;
+    }
+
+    public function updatePieceInfos(Paiement $paiement){
+        foreach ($paiement->getPieces() as $piece) {
+            $piece->setCreatedAt($paiement->getCreatedAt());
+            $piece->setUpdatedAt($paiement->getUpdatedAt());
+            $piece->setEntreprise($paiement->getEntreprise());
+            $piece->setUtilisateur($paiement->getUtilisateur());
+        }
     }
 
 

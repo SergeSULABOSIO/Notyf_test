@@ -79,7 +79,7 @@ class PaiementCrudController extends AbstractCrudController
         }
 
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy')
             ->setDateFormat('dd/MM/yyyy')
             ->setHelp(Crud::PAGE_NEW, "Founissez les informations recquises puis validez le formulaire pour les sauvegarder.")
             ->setHelp(Crud::PAGE_INDEX, "Résultat du filtrage.")
@@ -118,9 +118,12 @@ class PaiementCrudController extends AbstractCrudController
     {
         $objet = new Paiement();
         $objet->setPaidAt(new \DateTimeImmutable("now"));
+        $objet->setCreatedAt(new \DateTimeImmutable("now"));
+        $objet->setUpdatedAt(new \DateTimeImmutable("now"));
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($objet, $this->adminUrlGenerator);
+        
         //dd($objet);
         return $objet;
     }

@@ -21,6 +21,7 @@ use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Entity\Paiement;
 use App\Service\ServiceFacture;
 use App\Service\ServiceSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -89,6 +90,9 @@ class AdminSubscriber implements EventSubscriberInterface
             $entityInstance->setCreatedAt(new \DateTimeImmutable());
             $entityInstance->setUpdatedAt(new \DateTimeImmutable());
             $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
+        }
+        if($entityInstance instanceof Paiement){
+            $this->serviceFacture->updatePieceInfos($entityInstance);
         }
 
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());

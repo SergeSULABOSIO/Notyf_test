@@ -112,6 +112,7 @@ class PaiementCrudController extends AbstractCrudController
         }
         return $filters
             ->add('facture')
+            ->add(ChoiceFilter::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)->setChoices(self::TAB_TYPE_PAIEMENT))
             ->add('paidAt')
             ->add('createdAt')
             ->add('updatedAt');

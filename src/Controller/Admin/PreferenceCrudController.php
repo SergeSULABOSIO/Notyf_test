@@ -1052,13 +1052,13 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //BIBLIOTHEQUE - DOCUMENT
     public const PREF_BIB_DOCUMENT_ID                   = "Id";
-    public const PREF_BIB_DOCUMENT_NOM                  = "Intitulé du document";
+    public const PREF_BIB_DOCUMENT_NOM                  = "Intitulé";
     public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
     public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
-    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation concernée";
-    public const PREF_BIB_DOCUMENT_POLICE               = "Police concernée";
-    public const PREF_BIB_DOCUMENT_SINISTRE             = "Sinistre concernée";
+    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation";
+    public const PREF_BIB_DOCUMENT_POLICE               = "Police";
+    public const PREF_BIB_DOCUMENT_SINISTRE             = "Sinistre";
     public const PREF_BIB_DOCUMENT_POP_COMMISSIONS      = "Pdp Commissions";
     public const PREF_BIB_DOCUMENT_POP_PARTENAIRES      = "Pdp Partenaires";
     public const PREF_BIB_DOCUMENT_POP_TAXES            = "Pdp Taxes";

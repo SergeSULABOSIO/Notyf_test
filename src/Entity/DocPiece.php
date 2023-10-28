@@ -63,15 +63,14 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?DocClasseur $classeur = null;
 
-    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: Paiement::class)]
-    private Collection $paiements;
+    #[ORM\ManyToOne(inversedBy: 'pieces', cascade:['remove', 'persist', 'refresh'])]
+    private ?Paiement $paiement = null;
 
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
         $this->paiementPartenaires = new ArrayCollection();
         $this->paiementTaxes = new ArrayCollection();
-        $this->paiements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -318,32 +317,14 @@ class DocPiece
         return $this;
     }
 
-    /**
-     * @return Collection<int, Paiement>
-     */
-    public function getPaiements(): Collection
+    public function getPaiement(): ?Paiement
     {
-        return $this->paiements;
+        return $this->paiement;
     }
 
-    public function addPaiement(Paiement $paiement): self
+    public function setPaiement(?Paiement $paiement): self
     {
-        if (!$this->paiements->contains($paiement)) {
-            $this->paiements->add($paiement);
-            $paiement->setPiece($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiement(Paiement $paiement): self
-    {
-        if ($this->paiements->removeElement($paiement)) {
-            // set the owning side to null (unless already changed)
-            if ($paiement->getPiece() === $this) {
-                $paiement->setPiece(null);
-            }
-        }
+        $this->paiement = $paiement;
 
         return $this;
     }

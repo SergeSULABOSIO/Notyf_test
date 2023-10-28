@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PaiementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
@@ -31,9 +33,6 @@ class Paiement
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'paiements')]
-    private ?DocPiece $piece = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -42,6 +41,14 @@ class Paiement
 
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     private ?CompteBancaire $compteBancaire = null;
+
+    #[ORM\OneToMany(mappedBy: 'paiement', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $pieces;
+
+    public function __construct()
+    {
+        $this->pieces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,18 +127,6 @@ class Paiement
         return $this;
     }
 
-    public function getPiece(): ?DocPiece
-    {
-        return $this->piece;
-    }
-
-    public function setPiece(?DocPiece $piece): self
-    {
-        $this->piece = $piece;
-
-        return $this;
-    }
-
     public function __toString()
     {
         return "Le " . $this->paidAt->format('d-m-Y') . " | Mont.: " . ($this->montant/100) . " | Réf. ND: " . $this->facture->getReference() . " | Desc.: " . $this->description;
@@ -169,6 +164,36 @@ class Paiement
     public function setCompteBancaire(?CompteBancaire $compteBancaire): self
     {
         $this->compteBancaire = $compteBancaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getPieces(): Collection
+    {
+        return $this->pieces;
+    }
+
+    public function addPiece(DocPiece $piece): self
+    {
+        if (!$this->pieces->contains($piece)) {
+            $this->pieces->add($piece);
+            $piece->setPaiement($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiece(DocPiece $piece): self
+    {
+        if ($this->pieces->removeElement($piece)) {
+            // set the owning side to null (unless already changed)
+            if ($piece->getPaiement() === $this) {
+                $piece->setPaiement(null);
+            }
+        }
 
         return $this;
     }

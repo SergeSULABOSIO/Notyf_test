@@ -1267,7 +1267,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE])) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE])) {
@@ -1319,7 +1319,7 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)->onlyOnDetail();
+            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
             $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)->onlyOnDetail();
@@ -1372,7 +1372,11 @@ class ServicePreferences
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+                ->useEntryCrudForm(DocPieceCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex()
                 ->setRequired(false)
                 ->setColumns(6)
                 ->onlyOnForms();
@@ -2532,8 +2536,10 @@ class ServicePreferences
 
     public function setCRM_Fields_BibliothequePieces_form($tabAttributs)
     {
+        //dd($this->adminUrlGenerator);
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)) {
             $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
@@ -2543,7 +2549,8 @@ class ServicePreferences
                         ->Where('e.entreprise = :ese')
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
-                ->setColumns(3)
+                //->setColumns(3)
+                ->setColumns(12)
                 ->setRequired(false)
                 ->onlyOnForms();
         }
@@ -2555,7 +2562,8 @@ class ServicePreferences
                         ->Where('e.entreprise = :ese')
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
-                ->setColumns(3)
+                //->setColumns(3)
+                ->setColumns(12)
                 ->setRequired(false)
                 ->onlyOnForms();
         }
@@ -2563,11 +2571,15 @@ class ServicePreferences
             ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
             ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
             ->setSortable(false)
+            //->setColumns(12)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)) {
+            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+                //->setColumns(12)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)) {
             $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -2577,6 +2589,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -2589,6 +2602,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -2601,6 +2615,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -2613,6 +2628,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -2625,6 +2641,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -2637,6 +2654,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 })
                 ->setRequired(false)
+                //->setColumns(12)
                 ->setColumns(12)
                 ->onlyOnForms();
         }

@@ -755,6 +755,7 @@ class PreferenceCrudController extends AbstractCrudController
 
     //PAIEMENT
     public const PREF_FIN_PAIEMENT_ID = "Id";
+    public const PREF_FIN_PAIEMENT_TYPE = "Type";
     public const PREF_FIN_PAIEMENT_DATE = "Date de paiement";
     public const PREF_FIN_PAIEMENT_MONTANT = "Montant";
     public const PREF_FIN_PAIEMENT_DESCRIPTION = "Description";
@@ -778,6 +779,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_PAIEMENT_DATE_MODIFICATION => 8,
         self::PREF_FIN_PAIEMENT_PIECE => 9,
         self::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE => 10,
+        self::PREF_FIN_PAIEMENT_TYPE => 11,
     ];
 
     //FINANCE - FACTURE

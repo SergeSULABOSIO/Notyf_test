@@ -45,6 +45,9 @@ class Paiement
     #[ORM\OneToMany(mappedBy: 'paiement', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $pieces;
 
+    #[ORM\Column]
+    private ?int $type = null;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
@@ -194,6 +197,18 @@ class Paiement
                 $piece->setPaiement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -57,6 +57,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
 use App\Controller\Admin\FactureCrudController;
+use App\Controller\Admin\PaiementCrudController;
 use App\Entity\CompteBancaire;
 use App\Entity\ElementFacture;
 use App\Entity\Facture;
@@ -1245,10 +1246,19 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENT_ID)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE])) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
+                ->onlyOnIndex()
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT);
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
                 ->formatValue(function ($value, Paiement $paiement) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
+                    if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]){
+                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
+                    }else{
+                        return '- ' . $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
+                    }
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
@@ -1297,6 +1307,11 @@ class ServicePreferences
     public function setFIN_Fields_Paiement_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENT_ID)->onlyOnDetail();
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+                ->onlyOnDetail();
+        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
             $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
                 ->onlyOnDetail();
@@ -1342,10 +1357,16 @@ class ServicePreferences
 
     public function setFIN_Fields_Paiement_form($tabAttributs)
     {
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+                ->setColumns(2)
+                ->onlyOnForms();
+        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {
             $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
                 ->setRequired(false)
-                ->setColumns(12)
+                ->setColumns(10)
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {

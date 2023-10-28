@@ -1777,7 +1777,8 @@ class ServiceCrossCanal
             ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
             ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
             ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE);
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
 
         $url = $adminUrlGenerator
             ->setController(PaiementCrudController::class)
@@ -1890,7 +1891,7 @@ class ServiceCrossCanal
     }
 
 
-    
+
     public function crossCanal_Paiement_setFacture(Paiement $paiement, AdminUrlGenerator $adminUrlGenerator): Paiement
     {
         $paramIDFacture = $adminUrlGenerator->get(self::CROSSED_ENTITY_FACTURE);
@@ -1899,6 +1900,26 @@ class ServiceCrossCanal
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
             $paiement->setFacture($objetFacture);
             $paiement->setMontant($objetFacture->getTotalDu());
+            switch ($objetFacture->getType()) {
+                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
+                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                    break;
+                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
+                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                    break;
+                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    break;
+                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    break;
+                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
+                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    break;
+                default:
+                    # code...
+                    break;
+            }
         }
         return $paiement;
     }
@@ -2231,7 +2252,7 @@ class ServiceCrossCanal
             $crud->setPageTitle(Crud::PAGE_NEW, "Nouveau - " . ucfirst(strtolower($crud->getAsDto()->getEntityLabelInSingular())));
             $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         }
-        if($entite){
+        if ($entite) {
             $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
         }
         return $crud;

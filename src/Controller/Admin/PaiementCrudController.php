@@ -30,6 +30,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PaiementCrudController extends AbstractCrudController
 {
+    public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
+    public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
+    
+    public const TAB_TYPE_PAIEMENT = [
+        self::TYPE_PAIEMENT_ENTREE  => 0,
+        self::TYPE_PAIEMENT_SORTIE  => 1
+    ];
+
     public ?Paiement $paiement = null;
     public ?Crud $crud = null;
 

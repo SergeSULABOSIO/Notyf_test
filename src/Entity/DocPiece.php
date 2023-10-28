@@ -63,7 +63,7 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?DocClasseur $classeur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pieces', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'pieces')]
     private ?Paiement $paiement = null;
 
     public function __construct()

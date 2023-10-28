@@ -140,7 +140,7 @@ class FactureCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::FINANCE_MONNAIE);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::FINANCE_FACTURE);
     }
 
     public function createEntity(string $entityFqcn)

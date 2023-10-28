@@ -27,6 +27,8 @@ use App\Entity\EtapeSinistre;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\CommentaireSinistre;
+use App\Entity\Facture;
+use App\Entity\Paiement;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
@@ -97,7 +99,8 @@ class ServiceSuppression
                 break;
 
             case self::FINANCE_PAIEMENT:
-                $this->supprimerEntiteSingleton($entityObject);
+                //$this->supprimerEntiteSingleton($entityObject);
+                $this->supprimerPaiement($entityObject);
                 break;
 
             case self::FINANCE_PAIEMENT_COMMISSION:
@@ -113,7 +116,8 @@ class ServiceSuppression
                 break;
 
             case self::FINANCE_FACTURE: //Il faut supprimer les données filles
-                $this->supprimerEntiteSingleton($entityObject);
+                //$this->supprimerEntiteSingleton($entityObject);
+                $this->supprimerFacture($entityObject);
                 break;
 
             case self::FINANCE_ELEMENT_FACTURE: //Il faut supprimer les données filles
@@ -263,6 +267,45 @@ class ServiceSuppression
                 $message = "Désolé " . $this->serviceEntreprise->getUtilisateur()->getNom() . ", seul l'administrateur peut supprimer cette entreprise.";
                 $this->afficherFlashMessage("danger", $message);
             }
+        } catch (\Throwable $th) {
+            dd($th);
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
+            $this->afficherFlashMessage("danger", $message);
+        }
+    }
+
+    public function supprimerPaiement($entityInstance)
+    {
+        try {
+            $this->activerContrainteIntegrite(true);
+            /** @var Paiement */
+            $paiement = $entityInstance;
+            foreach ($paiement->getPieces() as $piece) {
+                $this->entityManager->remove($piece);
+            }
+            $this->entityManager->remove($paiement);
+            $this->entityManager->flush();
+
+            $this->activerContrainteIntegrite(false);
+        } catch (\Throwable $th) {
+            dd($th);
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
+            $this->afficherFlashMessage("danger", $message);
+        }
+    }
+
+    public function supprimerFacture($entityInstance)
+    {
+        try {
+            $this->activerContrainteIntegrite(true);
+            /** @var Facture */
+            $facture = $entityInstance;
+            foreach ($facture->getElementFactures() as $elementfacture) {
+                $this->entityManager->remove($elementfacture);
+            }
+            $this->entityManager->remove($facture);
+            $this->entityManager->flush();
+            $this->activerContrainteIntegrite(false);
         } catch (\Throwable $th) {
             dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";

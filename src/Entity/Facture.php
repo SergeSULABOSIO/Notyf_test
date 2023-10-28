@@ -40,7 +40,7 @@ class Facture
 
     #[ORM\ManyToOne(inversedBy: 'factures')]
     private ?Assureur $assureur = null;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 

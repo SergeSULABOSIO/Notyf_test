@@ -1348,17 +1348,6 @@ class ServicePreferences
                 ->setColumns(12)
                 ->onlyOnForms();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
-            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
-            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
@@ -1366,15 +1355,26 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(2);
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
+            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
                 ->setRequired(false)
                 ->setColumns(6)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
+            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
+                ->setColumns(4)
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)) {
             $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
                 ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
+            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+                ->setRequired(false)
+                ->setColumns(6)
                 ->onlyOnForms();
         }
         //On désactive les champs non éditables

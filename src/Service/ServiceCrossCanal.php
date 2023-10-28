@@ -1770,13 +1770,8 @@ class ServiceCrossCanal
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         //dd($facture);
-        /* $adminUrlGenerator
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
-            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-            ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR); */
+        $adminUrlGenerator
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE);
 
         $url = $adminUrlGenerator
             ->setController(PaiementCrudController::class)

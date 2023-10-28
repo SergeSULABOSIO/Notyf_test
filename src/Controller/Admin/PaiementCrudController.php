@@ -121,7 +121,6 @@ class PaiementCrudController extends AbstractCrudController
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($objet, $this->adminUrlGenerator);
-        //$objet->setMontant(0);
         //dd($objet);
         return $objet;
     }

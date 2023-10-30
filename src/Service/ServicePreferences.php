@@ -1249,7 +1249,11 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE])) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
                 ->onlyOnIndex()
-                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT);
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+                ->renderAsBadges([
+                    PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE] => 'success', //info
+                    PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE] => 'danger', //info
+                ]);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)

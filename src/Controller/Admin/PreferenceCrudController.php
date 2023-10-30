@@ -761,7 +761,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_PAIEMENT_DESCRIPTION = "Description";
     public const PREF_FIN_PAIEMENT_PIECE = "Pièces";
     public const PREF_FIN_PAIEMENT_COMPTE_BANCAIRE = "Compte bancaire";
-    public const PREF_FIN_PAIEMENT_FACTURE = "Facture concernée";
+    public const PREF_FIN_PAIEMENT_FACTURE = "Facture";
     public const PREF_FIN_PAIEMENT_ENTREPRISE = "Entreprise";
     public const PREF_FIN_PAIEMENT_UTILISATEUR = "Utilisateur";
     public const PREF_FIN_PAIEMENT_DATE_CREATION = "Date de création";

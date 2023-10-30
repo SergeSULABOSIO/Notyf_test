@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
+use Doctrine\Persistence\ObjectManager;
 
 class ServiceSuppression
 {
@@ -274,12 +275,11 @@ class ServiceSuppression
         }
     }
 
-    public function supprimerPaiement($entityInstance)
+    public function supprimerPaiement(Paiement $paiement)
     {
         try {
             $this->activerContrainteIntegrite(true);
             /** @var Paiement */
-            $paiement = $entityInstance;
             foreach ($paiement->getPieces() as $piece) {
                 $this->entityManager->remove($piece);
             }
@@ -294,17 +294,36 @@ class ServiceSuppression
         }
     }
 
-    public function supprimerFacture($entityInstance)
+    public function supprimerFacture(Facture $facture)
     {
+        //dd($facture);
         try {
             $this->activerContrainteIntegrite(true);
-            /** @var Facture */
-            $facture = $entityInstance;
+
+            //Il faut aussi modifier les paiements qui sont éventuellement liés à cette facture
+            //Il faut les détacher de ce paiement que nous allons supprimer.
+            $paiements = $this->entityManager->getRepository(Paiement::class)->findBy(
+                [
+                    'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                    'facture' => $facture->getId()
+                ]
+            );
+            foreach ($paiements as $paiement) {
+                if ($paiement->getFacture()->getId() == $facture->getId()) {
+                    $paiement->setFacture(null);
+                    $this->entityManager->persist($paiement);
+                    $this->entityManager->flush();
+                }
+            }
+            //On supprime les élements facture
             foreach ($facture->getElementFactures() as $elementfacture) {
                 $this->entityManager->remove($elementfacture);
+                $this->entityManager->flush();
             }
+            //On détruire maintenant la facture.
             $this->entityManager->remove($facture);
             $this->entityManager->flush();
+
             $this->activerContrainteIntegrite(false);
         } catch (\Throwable $th) {
             dd($th);

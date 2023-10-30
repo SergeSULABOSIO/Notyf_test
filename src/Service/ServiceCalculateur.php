@@ -9,6 +9,7 @@ use App\Entity\ElementFacture;
 use App\Entity\Police;
 use App\Entity\Entreprise;
 use App\Entity\Facture;
+use App\Entity\Paiement;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
 use App\Entity\PaiementTaxe;
@@ -30,9 +31,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 class ServiceCalculateur
 {
     private $taxes = null;
-    private $paiements_taxes = null;
-    private $paiements_retrocom = null;
-    private $paiements_com = null;
+    private $paiements = null;
     private $polices = null;
     private $sinistres = null;
     private $elementFactures = null;
@@ -271,7 +270,14 @@ class ServiceCalculateur
                 'facture' => $facture,
             ]
         );
+        $this->chargerPaiements(
+            [
+                'entreprise' => $this->serviceEntreprise->getEntreprise(),
+                'facture' => $facture,
+            ]
+        );
         $this->calculerFactureMontantDu($facture);
+        $this->calculerFactureMontantPaye($facture);
     }
 
     private function calculer(?CalculableEntity $obj)
@@ -298,6 +304,17 @@ class ServiceCalculateur
         $facture->setTotalDu($totDu);
     }
 
+    private function calculerFactureMontantPaye(?Facture $facture)
+    {
+        $totPaid = 0;
+        foreach ($this->paiements as $paiement) {
+            /** @var Paiement */
+            $pyt = $paiement;
+            $totPaid += $pyt->getMontant();
+        }
+        $facture->setTotalRecu($totPaid);
+    }
+
 
     private function calculerPolices($criteres)
     {
@@ -310,6 +327,13 @@ class ServiceCalculateur
     {
 
         $this->elementFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy($criteres);
+        //  dd("SERGE");
+    }
+
+    private function chargerPaiements($criteres)
+    {
+
+        $this->paiements = $this->entityManager->getRepository(Paiement::class)->findBy($criteres);
         //  dd("SERGE");
     }
 

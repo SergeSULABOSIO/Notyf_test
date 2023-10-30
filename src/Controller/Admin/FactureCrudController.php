@@ -172,6 +172,9 @@ class FactureCrudController extends AbstractCrudController
 
         $payer_facture = Action::new(DashboardController::ACTION_AJOUTER_PAIEMENT)
             ->setIcon('fa-solid fa-cash-register') //<i class="fa-solid fa-download"></i>
+            ->displayIf(static function (?Facture $facture) {
+                return ($facture->getTotalDu() - $facture->getTotalRecu()) != 0;
+            })
             ->linkToCrudAction('payerFacture');
 
         $generer_bordereau = Action::new(DashboardController::ACTION_GENERER_BORDEREAU_PDF)

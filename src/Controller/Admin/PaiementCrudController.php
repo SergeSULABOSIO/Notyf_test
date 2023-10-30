@@ -131,7 +131,7 @@ class PaiementCrudController extends AbstractCrudController
         $objet->setUpdatedAt(new \DateTimeImmutable("now"));
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($this->container, $objet, $this->adminUrlGenerator);
         
         //dd($objet);
         return $objet;

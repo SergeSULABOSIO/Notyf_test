@@ -1892,34 +1892,41 @@ class ServiceCrossCanal
 
 
 
-    public function crossCanal_Paiement_setFacture(Paiement $paiement, AdminUrlGenerator $adminUrlGenerator): Paiement
+    public function crossCanal_Paiement_setFacture($container, Paiement $paiement, AdminUrlGenerator $adminUrlGenerator): Paiement
     {
         $paramIDFacture = $adminUrlGenerator->get(self::CROSSED_ENTITY_FACTURE);
         if ($paramIDFacture != null) {
             /** @var Facture  */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
-            $paiement->setFacture($objetFacture);
-            $paiement->setMontant($objetFacture->getTotalDu());
-            switch ($objetFacture->getType()) {
-                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
-                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
-                    break;
-                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
-                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
-                    break;
-                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
-                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
-                    break;
-                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
-                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
-                    break;
-                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
-                    $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
-                    break;
-                default:
-                    # code...
-                    break;
+            
+            $this->serviceCalculateur->calculate($container, ServiceCalculateur::RUBRIQUE_FACTURE);
+            //dd($objetFacture);
+
+            if($objetFacture != null){
+                $paiement->setFacture($objetFacture);
+                $paiement->setMontant($objetFacture->getTotalDu() - $objetFacture->getTotalRecu());
+                switch ($objetFacture->getType()) {
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
+                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                        break;
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
+                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                        break;
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                        break;
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                        break;
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
+                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
             }
+            
         }
         return $paiement;
     }

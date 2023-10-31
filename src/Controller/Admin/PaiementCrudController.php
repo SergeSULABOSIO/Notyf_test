@@ -253,16 +253,15 @@ class PaiementCrudController extends AbstractCrudController
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        /**@var Assureur $assureur */
-        $entite = $context->getEntity()->getInstance();
-        $entiteDuplique = clone $entite;
-        parent::persistEntity($em, $entiteDuplique);
+        /** @var Paiement */
+        $paiement = $context->getEntity()->getInstance();
+        $paiementDuplique = clone $paiement;
+        parent::persistEntity($em, $paiementDuplique);
         $url = $adminUrlGenerator
             ->setController(self::class)
             ->setAction(Action::DETAIL)
-            ->setEntityId($entiteDuplique->getId())
+            ->setEntityId($paiementDuplique->getId())
             ->generateUrl();
-
         return $this->redirect($url);
     }
 
@@ -277,7 +276,7 @@ class PaiementCrudController extends AbstractCrudController
     {
         /** @var Paiement */
         $paiement = $context->getEntity()->getInstance();
-        //return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_facture($adminUrlGenerator, $paiement));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_ouvrir_paiement($adminUrlGenerator, $paiement));
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)

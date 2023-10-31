@@ -1823,6 +1823,18 @@ class ServiceCrossCanal
         return $url;
     }
 
+    public function crossCanal_ouvrir_paiement(AdminUrlGenerator $adminUrlGenerator, Paiement $paiement)
+    {
+        //$typeFacture = $this->serviceFacture->getType($facture->getType());
+        //$adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $url = $adminUrlGenerator
+            ->setController(PaiementCrudController::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($paiement->getId())
+            ->generateUrl();
+        return $url;
+    }
+
     public function crossCanal_ouvrir_facture_pdf(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
     {
         $typeFacture = $this->serviceFacture->getType($facture->getType());
@@ -1901,7 +1913,6 @@ class ServiceCrossCanal
             
             $this->serviceCalculateur->calculate($container, ServiceCalculateur::RUBRIQUE_FACTURE);
             //dd($objetFacture);
-
             if($objetFacture != null){
                 $paiement->setFacture($objetFacture);
                 $paiement->setMontant($objetFacture->getTotalDu() - $objetFacture->getTotalRecu());

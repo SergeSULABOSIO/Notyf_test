@@ -136,7 +136,7 @@ class Paiement
         if($this->facture != null){
             $ref = $this->facture->getReference();
         }
-        return "Le " . $this->paidAt->format('d-m-Y') . " | Mont.: " . ($this->montant/100) . " | Réf. ND: " . $ref . " | Desc.: " . $this->description;
+        return "Paiement du " . $this->paidAt->format('d-m-Y') . " | Mont.: " . ($this->montant/100) . " | Réf. ND: " . $ref . " | Desc.: " . $this->description;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

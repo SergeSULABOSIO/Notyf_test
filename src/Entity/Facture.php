@@ -83,6 +83,12 @@ class Facture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $posteSignedBy = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $totalSolde = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $status = null;
+
     public function __construct()
     {
         $this->paiementCommissions = new ArrayCollection();
@@ -499,6 +505,30 @@ class Facture
     public function setPosteSignedBy(?string $posteSignedBy): self
     {
         $this->posteSignedBy = $posteSignedBy;
+
+        return $this;
+    }
+
+    public function getTotalSolde(): ?float
+    {
+        return $this->totalSolde;
+    }
+
+    public function setTotalSolde(?float $totalSolde): self
+    {
+        $this->totalSolde = $totalSolde;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

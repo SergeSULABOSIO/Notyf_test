@@ -57,6 +57,16 @@ class FactureCrudController extends AbstractCrudController
         self::TYPE_FACTURE_FRAIS_DE_GESTION         => 4
     ];
 
+    public const STATUS_FACTURE_IMPAYEE     = "Impayée";
+    public const STATUS_FACTURE_ENCOURS     = "En cours...";
+    public const STATUS_FACTURE_SOLDEE      = "Soldée";
+
+    public const TAB_STATUS_FACTURE = [
+        self::STATUS_FACTURE_IMPAYEE    => 0,
+        self::STATUS_FACTURE_ENCOURS    => 1,
+        self::STATUS_FACTURE_SOLDEE     => 2,
+    ];
+
     public ?Crud $crud = null;
 
     public function __construct(

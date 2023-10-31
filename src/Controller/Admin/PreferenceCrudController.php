@@ -702,6 +702,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_POP_TAXES             = "POP Taxes";
     public const PREF_FIN_FACTURE_TOTAL_DU              = "Total Du";
     public const PREF_FIN_FACTURE_TOTAL_RECU            = "Total Reçu";
+    public const PREF_FIN_FACTURE_TOTAL_SOLDE           = "Total Solde";
+    public const PREF_FIN_FACTURE_STATUS                = "Status";
 
     public const TAB_FIN_FACTURE = [
         self::PREF_FIN_FACTURE_ID                       => 0,
@@ -724,7 +726,10 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17,
         self::PREF_FIN_FACTURE_COMPTES_BANCIARES        => 18,
         self::PREF_FIN_FACTURE_SIGNED_BY                => 19,
-        self::PREF_FIN_FACTURE_POSTE_SIGNED_BY          => 20
+        self::PREF_FIN_FACTURE_POSTE_SIGNED_BY          => 20,
+        self::PREF_FIN_FACTURE_TOTAL_SOLDE              => 21,
+        self::PREF_FIN_FACTURE_STATUS                   => 22,
+
     ];
 
     //COMPTE BANCAIRE

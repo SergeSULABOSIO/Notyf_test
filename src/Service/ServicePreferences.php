@@ -1133,6 +1133,16 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_STATUS])) {
+            $tabAttributs[] = ChoiceField::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)
+                ->onlyOnIndex()
+                ->setChoices(FactureCrudController::TAB_STATUS_FACTURE)
+                ->renderAsBadges([
+                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE] => 'success', //info
+                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE] => 'danger', //info
+                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS] => 'info', //info
+                ]);
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE])) {
             $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->onlyOnIndex();
@@ -1162,6 +1172,15 @@ class ServicePreferences
             $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
                 ->formatValue(function ($value, Facture $entity) {
                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE])) {
+            $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
+                ->formatValue(function ($value, Facture $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()

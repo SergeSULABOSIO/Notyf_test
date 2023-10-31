@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\Admin\FactureCrudController;
 use App\Entity\Assureur;
 use App\Entity\CalculableEntity;
 use App\Entity\Client;
@@ -278,6 +279,14 @@ class ServiceCalculateur
         );
         $this->calculerFactureMontantDu($facture);
         $this->calculerFactureMontantPaye($facture);
+        $facture->setTotalSolde($facture->getTotalDu() - $facture->getTotalRecu());
+        if($facture->getTotalSolde() == 0){
+            $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE]);
+        }else if($facture->getTotalSolde() > 0 && $facture->getTotalDu() > $facture->getTotalSolde()){
+            $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS]);
+        }else{
+            $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
+        }
     }
 
     private function calculer(?CalculableEntity $obj)

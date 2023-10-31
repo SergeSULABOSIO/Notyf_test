@@ -47,15 +47,6 @@ class Facture
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?DocPiece $piece = null;
 
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementCommission::class)]
-    private Collection $paiementCommissions;
-    
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementPartenaire::class)]
-    private Collection $paiementPartenaires;
-
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: PaiementTaxe::class)]
-    private Collection $paiementTaxes;
-
     #[ORM\Column(nullable: true)]
     private ?float $totalDu = null;
 
@@ -91,9 +82,6 @@ class Facture
 
     public function __construct()
     {
-        $this->paiementCommissions = new ArrayCollection();
-        $this->paiementPartenaires = new ArrayCollection();
-        $this->paiementTaxes = new ArrayCollection();
         $this->elementFactures = new ArrayCollection();
         $this->police = new ArrayCollection();
         $this->paiements = new ArrayCollection();
@@ -221,96 +209,6 @@ class Facture
     public function setPiece(?DocPiece $piece): self
     {
         $this->piece = $piece;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementCommission>
-     */
-    public function getPaiementCommissions(): Collection
-    {
-        return $this->paiementCommissions;
-    }
-
-    public function addPaiementCommission(PaiementCommission $paiementCommission): self
-    {
-        if (!$this->paiementCommissions->contains($paiementCommission)) {
-            $this->paiementCommissions->add($paiementCommission);
-            $paiementCommission->setFacture($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementCommission(PaiementCommission $paiementCommission): self
-    {
-        if ($this->paiementCommissions->removeElement($paiementCommission)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementCommission->getFacture() === $this) {
-                $paiementCommission->setFacture(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementPartenaire>
-     */
-    public function getPaiementPartenaires(): Collection
-    {
-        return $this->paiementPartenaires;
-    }
-
-    public function addPaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
-    {
-        if (!$this->paiementPartenaires->contains($paiementPartenaire)) {
-            $this->paiementPartenaires->add($paiementPartenaire);
-            $paiementPartenaire->setFacture($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
-    {
-        if ($this->paiementPartenaires->removeElement($paiementPartenaire)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementPartenaire->getFacture() === $this) {
-                $paiementPartenaire->setFacture(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementTaxe>
-     */
-    public function getPaiementTaxes(): Collection
-    {
-        return $this->paiementTaxes;
-    }
-
-    public function addPaiementTax(PaiementTaxe $paiementTax): self
-    {
-        if (!$this->paiementTaxes->contains($paiementTax)) {
-            $this->paiementTaxes->add($paiementTax);
-            $paiementTax->setFacture($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementTax(PaiementTaxe $paiementTax): self
-    {
-        if ($this->paiementTaxes->removeElement($paiementTax)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementTax->getFacture() === $this) {
-                $paiementTax->setFacture(null);
-            }
-        }
 
         return $this;
     }

@@ -54,16 +54,10 @@ class ServiceCalculateur
         private ServiceEntreprise $serviceEntreprise,
         private ServiceMonnaie $serviceMonnaie
     ) {
-        $this->paiements_com = $this->entityManager->getRepository(PaiementCommission::class)->findBy(
+        $this->paiements = $this->entityManager->getRepository(Paiement::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
         $this->taxes = $this->entityManager->getRepository(Taxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        $this->paiements_taxes = $this->entityManager->getRepository(PaiementTaxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        );
-        $this->paiements_retrocom = $this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
     }
@@ -146,7 +140,7 @@ class ServiceCalculateur
                 $liste = $entityManager->getRepository(Facture::class)->findBy(
                     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
                 );
-                
+
                 foreach ($liste as $fact) {
                     $this->updateFactureCalculableFileds($fact);
                 }
@@ -280,16 +274,15 @@ class ServiceCalculateur
         $this->calculerFactureMontantDu($facture);
         $this->calculerFactureMontantPaye($facture);
         $facture->setTotalSolde($facture->getTotalDu() - $facture->getTotalRecu());
-        if($facture->getTotalSolde() == 0){
+        if ($facture->getTotalSolde() == 0) {
             $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE]);
-        }else if($facture->getTotalSolde() > 0 && $facture->getTotalDu() > $facture->getTotalSolde()){
+        } else if ($facture->getTotalSolde() > 0 && $facture->getTotalDu() > $facture->getTotalSolde()) {
             $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS]);
-        }else{
+        } else {
             $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         }
         $this->entityManager->persist($facture);
         $this->entityManager->flush();
-
     }
 
     private function calculer(?CalculableEntity $obj)
@@ -408,9 +401,17 @@ class ServiceCalculateur
     private function calculerRevenusEncaisses(?CalculableEntity $obj)
     {
         foreach ($this->polices as $police) {
-            foreach ($this->paiements_com as $paiement_com) {
-                if ($paiement_com->getPolice() === $police) {
-                    $obj->calc_revenu_ttc_encaisse += $paiement_com->getMontant();
+            /** @var Paiement */
+            foreach ($this->paiements as $paiement) {
+                if ($paiement->getFacture()) {
+                    foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
+                        if ($elementFacture->getPolice() === $police) {
+                            $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                            $totPaid = $paiement->getMontant() / 100;
+                            $proportionPaid = ($totPaid / $totDue);
+                            $obj->calc_revenu_ttc_encaisse += $proportionPaid * $obj->calc_revenu_ttc_solde_restant_du;
+                        }
+                    }
                 }
             }
             $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
@@ -447,10 +448,17 @@ class ServiceCalculateur
             }
             //dd($obj->calc_retrocom);
 
-            foreach ($this->paiements_retrocom as $paiement_retrocom) {
-                //dd($paiement_retrocom->getPolice());
-                if ($police === $paiement_retrocom->getPolice()) {
-                    $obj->calc_retrocom_payees += $paiement_retrocom->getMontant();
+            /** @var Paiement */
+            foreach ($this->paiements as $paiement) {
+                if ($paiement->getFacture()) {
+                    foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
+                        if ($police === $elementFacture->getPolice()) {
+                            $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                            $totPaid = $paiement->getMontant() / 100;
+                            $proportionPaid = ($totPaid / $totDue);
+                            $obj->calc_retrocom_payees += $proportionPaid * $obj->calc_retrocom_solde;
+                        }
+                    }
                 }
             }
             $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
@@ -500,9 +508,17 @@ class ServiceCalculateur
     {
         $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
         $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
-        foreach ($this->paiements_taxes as $paiement_taxe) {
-            if ($paiement_taxe->getTaxe() === $taxe && $paiement_taxe->getPolice() === $police) {
-                $calculableEntity->calc_taxes_courtier_payees += $paiement_taxe->getMontant();
+        /** @var Paiement */
+        foreach ($this->paiements as $paiement) {
+            if ($paiement->getFacture()) {
+                foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
+                    if ($elementFacture->getPolice() === $police) {
+                        $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                        $totPaid = $paiement->getMontant() / 100;
+                        $proportionPaid = ($totPaid / $totDue);
+                        $calculableEntity->calc_taxes_courtier_payees += $proportionPaid * $calculableEntity->calc_taxes_courtier_solde;
+                    }
+                }
             }
         }
         $calculableEntity->calc_taxes_courtier_solde += ($calculableEntity->calc_taxes_courtier - $calculableEntity->calc_taxes_courtier_payees);
@@ -512,9 +528,17 @@ class ServiceCalculateur
     {
         $calculableEntity->calc_taxes_assureurs_tab[] = $taxe;
         $calculableEntity->calc_taxes_assureurs += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
-        foreach ($this->paiements_taxes as $paiement_taxe) {
-            if ($paiement_taxe->getTaxe() == $taxe && $paiement_taxe->getPolice() === $police) {
-                $calculableEntity->calc_taxes_assureurs_payees += $paiement_taxe->getMontant();
+        /** @var Paiement */
+        foreach ($this->paiements as $paiement) {
+            if ($paiement->getFacture()) {
+                foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
+                    if ($elementFacture->getPolice() === $police) {
+                        $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                        $totPaid = $paiement->getMontant() / 100;
+                        $proportionPaid = ($totPaid / $totDue);
+                        $calculableEntity->calc_taxes_assureurs_payees += $proportionPaid * $calculableEntity->calc_taxes_assureurs_solde;
+                    }
+                }
             }
         }
         $calculableEntity->calc_taxes_assureurs_solde += ($calculableEntity->calc_taxes_assureurs - $calculableEntity->calc_taxes_assureurs_payees);

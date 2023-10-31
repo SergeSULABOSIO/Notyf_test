@@ -269,7 +269,7 @@ class PaiementCrudController extends AbstractCrudController
     {
         /** @var Paiement */
         $paiement = $context->getEntity()->getInstance();
-        //return $this->redirect($this->serviceCrossCanal->crossCanal_modifier_facture($adminUrlGenerator, $paiement));
+        return $this->redirect($this->serviceCrossCanal->crossCanal_modifier_paiement($adminUrlGenerator, $paiement));
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

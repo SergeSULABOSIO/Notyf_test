@@ -1770,16 +1770,7 @@ class ServiceCrossCanal
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
         //dd($facture);
-        $adminUrlGenerator
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
-            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
-
+        $this->paiement_definirChampsCollectionPieces($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PaiementCrudController::class)
             ->setAction(Action::NEW)
@@ -1806,6 +1797,37 @@ class ServiceCrossCanal
             //->set("donnees[action]", "facture")
             //->set("donnees[tabPolices]", $tabIdPolice)
             ->setEntityId($facture->getId())
+            ->generateUrl();
+
+        return $url;
+    }
+
+    public function paiement_definirChampsCollectionPieces(AdminUrlGenerator $adminUrlGenerator){
+        $adminUrlGenerator
+        ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+        ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+        ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
+        ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
+        ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
+        ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+        ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+        ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
+    }
+
+    public function crossCanal_modifier_paiement(AdminUrlGenerator $adminUrlGenerator, Paiement $paiement)
+    {
+        //$entite = $context->getEntity()->getInstance();
+        //$typeFacture = $this->serviceFacture->getType($facture->getType());
+        //$adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $this->paiement_definirChampsCollectionPieces($adminUrlGenerator);
+        $url = $adminUrlGenerator
+            ->setController(PaiementCrudController::class)
+            ->setAction(Action::EDIT)
+            ->set("titre", "Modification de " . $paiement)
+            //->set("donnees[type]", $typeFacture)
+            //->set("donnees[action]", "facture")
+            //->set("donnees[tabPolices]", $tabIdPolice)
+            ->setEntityId($paiement->getId())
             ->generateUrl();
 
         return $url;

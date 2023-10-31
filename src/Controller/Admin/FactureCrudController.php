@@ -135,7 +135,8 @@ class FactureCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add(ChoiceFilter::new('type', 'Type de facture')->setChoices(self::TAB_TYPE_FACTURE))
+            ->add(ChoiceFilter::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)->setChoices(self::TAB_TYPE_FACTURE))
+            ->add(ChoiceFilter::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)->setChoices(self::TAB_STATUS_FACTURE))
             ->add('partenaire')
             ->add('assureur')
             ->add('piece')

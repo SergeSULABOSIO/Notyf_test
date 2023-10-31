@@ -287,6 +287,9 @@ class ServiceCalculateur
         }else{
             $facture->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         }
+        $this->entityManager->persist($facture);
+        $this->entityManager->flush();
+
     }
 
     private function calculer(?CalculableEntity $obj)

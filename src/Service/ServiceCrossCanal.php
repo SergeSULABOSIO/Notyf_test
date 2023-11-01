@@ -835,38 +835,6 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Police_ajouterPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var Police */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(PaiementPartenaireCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE PDP PARTENAIRE - [Police: " . $entite . "]")
-            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
-    public function crossCanal_Police_ajouterPOPTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, Taxe $taxe)
-    {
-        /** @var Police */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(PaiementTaxeCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE PDP TAXE - [Police: " . $entite . "]")
-            ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
-            ->set(self::CROSSED_ENTITY_TAXE, $taxe->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
     public function crossCanal_Police_ajouterSinistre(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {
         /** @var Police */
@@ -1993,42 +1961,42 @@ class ServiceCrossCanal
     public function crossCanal_Piece_setPOPCom(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
     {
         /** @var PaiementCommission */
-        $paiementCommission = null;
-        $paramIDPOPCom = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_COMMISSIONS);
-        if ($paramIDPOPCom != null) {
-            $paiementCommission = $this->entityManager->getRepository(PaiementCommission::class)->find($paramIDPOPCom);
-            $docPiece->setPolice($paiementCommission->getPolice());
-            $docPiece->setCotation($paiementCommission->getPolice()->getCotation());
-            $docPiece->addPaiementCommission($paiementCommission);
-        }
+        //$paiementCommission = null;
+        //$paramIDPOPCom = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_COMMISSIONS);
+        //if ($paramIDPOPCom != null) {
+        //    $paiementCommission = $this->entityManager->getRepository(PaiementCommission::class)->find($paramIDPOPCom);
+        //    $docPiece->setPolice($paiementCommission->getPolice());
+        //    $docPiece->setCotation($paiementCommission->getPolice()->getCotation());
+        //    $docPiece->addPaiementCommission($paiementCommission);
+        //}
         return $docPiece;
     }
 
     public function crossCanal_Piece_setPOPPartenaire(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
     {
         /** @var PaiementPartenaire */
-        $paiementPartenaire = null;
-        $paramIDPOPPartenaire = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_PARTENAIRE);
-        if ($paramIDPOPPartenaire != null) {
-            $paiementPartenaire = $this->entityManager->getRepository(PaiementPartenaire::class)->find($paramIDPOPPartenaire);
-            $docPiece->setPolice($paiementPartenaire->getPolice());
-            $docPiece->setCotation($paiementPartenaire->getPolice()->getCotation());
-            $docPiece->addPaiementPartenaire($paiementPartenaire);
-        }
+        //$paiementPartenaire = null;
+        //$paramIDPOPPartenaire = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_PARTENAIRE);
+        //if ($paramIDPOPPartenaire != null) {
+        //    $paiementPartenaire = $this->entityManager->getRepository(PaiementPartenaire::class)->find($paramIDPOPPartenaire);
+        //    $docPiece->setPolice($paiementPartenaire->getPolice());
+        //    $docPiece->setCotation($paiementPartenaire->getPolice()->getCotation());
+        //    $docPiece->addPaiementPartenaire($paiementPartenaire);
+        //}
         return $docPiece;
     }
 
     public function crossCanal_Piece_setPOPTaxe(DocPiece $docPiece, AdminUrlGenerator $adminUrlGenerator): DocPiece
     {
         /** @var PaiementTaxe */
-        $paiementTaxe = null;
-        $paramIDPOPTaxe = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_TAXE);
-        if ($paramIDPOPTaxe != null) {
-            $paiementTaxe = $this->entityManager->getRepository(PaiementTaxe::class)->find($paramIDPOPTaxe);
-            $docPiece->setPolice($paiementTaxe->getPolice());
-            $docPiece->setCotation($paiementTaxe->getPolice()->getCotation());
-            $docPiece->addPaiementTax($paiementTaxe);
-        }
+        //$paiementTaxe = null;
+        //$paramIDPOPTaxe = $adminUrlGenerator->get(self::CROSSED_ENTITY_POP_TAXE);
+        //if ($paramIDPOPTaxe != null) {
+        //    $paiementTaxe = $this->entityManager->getRepository(PaiementTaxe::class)->find($paramIDPOPTaxe);
+        //    $docPiece->setPolice($paiementTaxe->getPolice());
+        //    $docPiece->setCotation($paiementTaxe->getPolice()->getCotation());
+        //    $docPiece->addPaiementTax($paiementTaxe);
+        //}
         return $docPiece;
     }
 
@@ -2131,7 +2099,7 @@ class ServiceCrossCanal
         return $victime;
     }
 
-    public function crossCanal_POPComm_setPolice(PaiementCommission $paiementCommission, AdminUrlGenerator $adminUrlGenerator): PaiementCommission
+    public function crossCanal_POPComm_setPolice($paiementCommission, AdminUrlGenerator $adminUrlGenerator)
     {
         $objet = null;
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
@@ -2145,7 +2113,7 @@ class ServiceCrossCanal
         return $paiementCommission;
     }
 
-    public function crossCanal_POPTaxe_setPolice(PaiementTaxe $paiementTaxe, AdminUrlGenerator $adminUrlGenerator): PaiementTaxe
+    public function crossCanal_POPTaxe_setPolice($paiementTaxe, AdminUrlGenerator $adminUrlGenerator)
     {
         $police = null;
         $paramPoliceID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
@@ -2190,7 +2158,7 @@ class ServiceCrossCanal
     }
 
 
-    public function crossCanal_POPRetroComm_setPolice(PaiementPartenaire $paiementPartenaire, AdminUrlGenerator $adminUrlGenerator): PaiementPartenaire
+    public function crossCanal_POPRetroComm_setPolice($paiementPartenaire, AdminUrlGenerator $adminUrlGenerator)
     {
         $objet = null;
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);

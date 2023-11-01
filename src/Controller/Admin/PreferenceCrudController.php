@@ -15,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -808,84 +807,6 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION => 7
     ];
 
-    //FINANCE - PAIEMENTS COMMISSIONS
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_ID                      = "Id";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                    = "Date";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                  = "Police";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                 = "Montant";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION             = "Description";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS               = "Pièce justificative";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR             = "Utilisateur";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE              = "Entreprise";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION        = "Date de création";
-    public const PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION    = "Dernière modification";
-    public const TAB_FIN_PAIEMENTS_COMMISSIONS = [
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ID                         => 0,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE                       => 1,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE                     => 2,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT                    => 3,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE                => 4,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION                => 5,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS                  => 6,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR                => 7,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE                 => 8,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION           => 9,
-        self::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION       => 10
-    ];
-    //FINANCE - PAIEMENTS RETROCOMMISSIONS
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                      = "Id";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                    = "Date";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                  = "Police";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                 = "Montant";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE             = "Réf. Note de débit";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE              = "Partenaire";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS               = "Pièce Justificative";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR             = "Utilisateur";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE              = "Entreprise";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION        = "Date de création";
-    public const PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION    = "Dernière modification";
-    public const TAB_FIN_PAIEMENTS_RETROCOMMISSIONS = [
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID                         => 0,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE                       => 1,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE                     => 2,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT                    => 3,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE                => 4,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE                 => 5,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS                  => 6,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR                => 7,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE                 => 8,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION           => 9,
-        self::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION       => 10
-    ];
-    //FINANCE - PAIEMENTS TAXES
-    public const PREF_FIN_PAIEMENTS_TAXE_ID                     = "Id";
-    public const PREF_FIN_PAIEMENTS_TAXE_DATE                   = "Date";
-    public const PREF_FIN_PAIEMENTS_TAXE_TAXE                   = "Taxe concernée";
-    public const PREF_FIN_PAIEMENTS_TAXE_POLICE                 = "Police d'assurance";
-    public const PREF_FIN_PAIEMENTS_TAXE_MONTANT                = "Montant";
-    public const PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT          = "Réf. Note de débit";
-    public const PREF_FIN_PAIEMENTS_TAXE_EXERCICE               = "Exercice comptable";
-    public const PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS              = "Pièce Justificative";
-    public const PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR            = "Utilisateur";
-    public const PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE             = "Entreprise";
-    public const PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION       = "Date de création";
-    public const PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION   = "Dernière modification";
-    public const TAB_FIN_PAIEMENTS_TAXES = [
-        self::PREF_FIN_PAIEMENTS_TAXE_ID                    => 0,
-        self::PREF_FIN_PAIEMENTS_TAXE_DATE                  => 1,
-        self::PREF_FIN_PAIEMENTS_TAXE_TAXE                  => 2,
-        self::PREF_FIN_PAIEMENTS_TAXE_POLICE                => 3,
-        self::PREF_FIN_PAIEMENTS_TAXE_MONTANT               => 4,
-        self::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT         => 5,
-        self::PREF_FIN_PAIEMENTS_TAXE_EXERCICE              => 6,
-        self::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS             => 7,
-        self::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR           => 8,
-        self::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE            => 9,
-        self::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION      => 10,
-        self::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION  => 11
-    ];
-
     //SINISTRE - ETAPE
     public const PREF_SIN_ETAPE_ID                      = "Id";
     public const PREF_SIN_ETAPE_NOM                     = "Intitulé de l'étape";
@@ -1294,21 +1215,6 @@ class PreferenceCrudController extends AbstractCrudController
                 ->renderExpanded()
                 ->allowMultipleChoices()
                 ->setChoices(self::TAB_FIN_MONNAIES),
-            ChoiceField::new('finCommissionsPayees', "Com. encaissées")
-                ->setColumns(2)
-                ->renderExpanded()
-                ->allowMultipleChoices()
-                ->setChoices(self::TAB_FIN_PAIEMENTS_COMMISSIONS),
-            ChoiceField::new('finRetrocommissionsPayees', "RetroCom. payées")
-                ->setColumns(2)
-                ->renderExpanded()
-                ->allowMultipleChoices()
-                ->setChoices(self::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS),
-            ChoiceField::new('finTaxesPayees', "Taxes payées")
-                ->setColumns(2)
-                ->renderExpanded()
-                ->allowMultipleChoices()
-                ->setChoices(self::TAB_FIN_PAIEMENTS_TAXES),
             ChoiceField::new('finFactures', "Factures")
                 ->setColumns(2)
                 ->renderExpanded()

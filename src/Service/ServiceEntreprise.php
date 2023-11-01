@@ -4,16 +4,11 @@ namespace App\Service;
 
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\SecurityBundle\Security;
-
 
 class ServiceEntreprise
 {
-
     private ?Utilisateur $utilisateur = null;
     private ?Entreprise $entreprise = null;
     private $isAdmin = false;
@@ -23,27 +18,31 @@ class ServiceEntreprise
         private EntityManagerInterface $entityManager,
         private Security $security
     ) {
-        //Chargement de l'utilisateur
-        $this->utilisateur = $this->security->getUser();
-
-        if ($this->utilisateur != null) {
-            //Chargement de l'entreprise de cet utilisateur
-
-            //Si nous somme en face d'un administrateur
-            if ($this->utilisateur->getEntreprise() == null) {
-                $this->isAdmin = true;
-                $this->hasEntreprise = false;
-                foreach (($this->entityManager->getRepository(Entreprise::class))->findAll() as $entreprise) {
-                    if ($entreprise->getUtilisateur() == $this->utilisateur) {
-                        $this->entreprise = $entreprise;
+        //dd($this->security->getUser());
+        if ($this->security != null) {
+            if ($this->security->getUser()) {
+                //Chargement de l'utilisateur
+                /** @var Utilisateur */
+                $this->utilisateur = $this->security->getUser();
+                if ($this->utilisateur != null) {
+                    //Chargement de l'entreprise de cet utilisateur
+                    //Si nous somme en face d'un administrateur
+                    if ($this->utilisateur->getEntreprise() == null) {
+                        $this->isAdmin = true;
+                        $this->hasEntreprise = false;
+                        foreach (($this->entityManager->getRepository(Entreprise::class))->findAll() as $entreprise) {
+                            if ($entreprise->getUtilisateur() == $this->utilisateur) {
+                                $this->entreprise = $entreprise;
+                                $this->hasEntreprise = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        $this->entreprise = $this->utilisateur->getEntreprise();
+                        $this->isAdmin = false;
                         $this->hasEntreprise = true;
-                        break;
                     }
                 }
-            } else {
-                $this->entreprise = $this->utilisateur->getEntreprise();
-                $this->isAdmin = false;
-                $this->hasEntreprise = true;
             }
         }
     }

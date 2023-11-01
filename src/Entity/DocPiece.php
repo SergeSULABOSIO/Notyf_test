@@ -45,15 +45,6 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'docPieces')]
     private ?Sinistre $sinistre = null;
 
-    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementCommission::class)]
-    private Collection $paiementCommissions;
-
-    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementPartenaire::class)]
-    private Collection $paiementPartenaires;
-
-    #[ORM\OneToMany(mappedBy: 'piece', targetEntity: PaiementTaxe::class)]
-    private Collection $paiementTaxes;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fichier = null;
 
@@ -68,9 +59,6 @@ class DocPiece
 
     public function __construct()
     {
-        $this->paiementCommissions = new ArrayCollection();
-        $this->paiementPartenaires = new ArrayCollection();
-        $this->paiementTaxes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,96 +175,6 @@ class DocPiece
     public function setSinistre(?Sinistre $sinistre): self
     {
         $this->sinistre = $sinistre;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementCommission>
-     */
-    public function getPaiementCommissions(): Collection
-    {
-        return $this->paiementCommissions;
-    }
-
-    public function addPaiementCommission(PaiementCommission $paiementCommission): self
-    {
-        if (!$this->paiementCommissions->contains($paiementCommission)) {
-            $this->paiementCommissions->add($paiementCommission);
-            $paiementCommission->setPiece($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementCommission(PaiementCommission $paiementCommission): self
-    {
-        if ($this->paiementCommissions->removeElement($paiementCommission)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementCommission->getPiece() === $this) {
-                $paiementCommission->setPiece(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementPartenaire>
-     */
-    public function getPaiementPartenaires(): Collection
-    {
-        return $this->paiementPartenaires;
-    }
-
-    public function addPaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
-    {
-        if (!$this->paiementPartenaires->contains($paiementPartenaire)) {
-            $this->paiementPartenaires->add($paiementPartenaire);
-            $paiementPartenaire->setPiece($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementPartenaire(PaiementPartenaire $paiementPartenaire): self
-    {
-        if ($this->paiementPartenaires->removeElement($paiementPartenaire)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementPartenaire->getPiece() === $this) {
-                $paiementPartenaire->setPiece(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PaiementTaxe>
-     */
-    public function getPaiementTaxes(): Collection
-    {
-        return $this->paiementTaxes;
-    }
-
-    public function addPaiementTax(PaiementTaxe $paiementTax): self
-    {
-        if (!$this->paiementTaxes->contains($paiementTax)) {
-            $this->paiementTaxes->add($paiementTax);
-            $paiementTax->setPiece($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaiementTax(PaiementTaxe $paiementTax): self
-    {
-        if ($this->paiementTaxes->removeElement($paiementTax)) {
-            // set the owning side to null (unless already changed)
-            if ($paiementTax->getPiece() === $this) {
-                $paiementTax->setPiece(null);
-            }
-        }
 
         return $this;
     }

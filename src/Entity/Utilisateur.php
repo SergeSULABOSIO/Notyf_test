@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\ActionCRM;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
@@ -20,38 +21,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\Email()]
     private ?string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
 
-    
     private ?string $plainPassword = null;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
-    #[Assert\Length(
-        min: 3,
-        max: 50,
-        minMessage: 'Désolé, le texte doit avoir au moins {{ limit }} charactères.',
-        maxMessage: 'Désolé, votre texte ne doit pas dépasser {{ limit }} charactères.',
-    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 20)]
-    #[Assert\Length(
-        min: 10,
-        max: 20,
-        minMessage: 'Désolé, le texte doit avoir au moins {{ limit }} charactères.',
-        maxMessage: 'Désolé, votre texte ne doit pas dépasser {{ limit }} charactères.',
-    )]
     private ?string $pseudo = null;
 
     #[ORM\Column]

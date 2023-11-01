@@ -176,9 +176,6 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Monnaies', 'fas fa-money-bill-1', Monnaie::class), //<i class="fa-regular fa-money-bill-1"></i>
             MenuItem::linkToCrud('Factures', 'fa-solid fa-receipt', Facture::class), //<i class="fa-solid fa-receipt"></i>
             MenuItem::linkToCrud('Cashflow', 'fa-solid fa-cash-register', Paiement::class), //<i class="fa-solid fa-cash-register"></i>
-            MenuItem::linkToCrud('Commissions reçues', 'fas fa-person-arrow-down-to-line', PaiementCommission::class), //<i class="fa-solid fa-person-arrow-down-to-line"></i>
-            MenuItem::linkToCrud('Retrocom. payées', 'fas fa-person-arrow-up-from-line', PaiementPartenaire::class), //<i class="fa-solid fa-person-arrow-up-from-line"></i>
-            MenuItem::linkToCrud('Taxes payées', 'fas fa-person-chalkboard', PaiementTaxe::class) //<i class="fa-solid fa-person-chalkboard"></i>
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES]);
 

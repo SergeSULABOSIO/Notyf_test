@@ -26,25 +26,17 @@ use App\Entity\DocClasseur;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
 use App\Entity\DocCategorie;
-use App\Entity\PaiementTaxe;
 use App\Entity\EtapeSinistre;
 use App\Entity\CalculableEntity;
-use App\Entity\PaiementCommission;
-use App\Entity\PaiementPartenaire;
 use Doctrine\ORM\EntityRepository;
-use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
-use function PHPUnit\Framework\returnSelf;
-use phpDocumentor\Reflection\Types\Boolean;
 use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PoliceCrudController;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ProduitCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
 use App\Controller\Admin\ElementFactureCrudController;
@@ -63,8 +55,6 @@ use App\Entity\ElementFacture;
 use App\Entity\Facture;
 use App\Entity\Paiement;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Query\Expr\Func;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -73,18 +63,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use PhpParser\Node\Expr\Cast\Bool_;
-use PHPUnit\Framework\MockObject\ReturnValueNotConfiguredException;
 
 class ServicePreferences
 {
@@ -214,15 +199,6 @@ class ServicePreferences
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof Monnaie) {
-            $this->setTailleFIN($preference, $crud);
-        }
-        if ($instance instanceof PaiementCommission) {
-            $this->setTailleFIN($preference, $crud);
-        }
-        if ($instance instanceof PaiementPartenaire) {
-            $this->setTailleFIN($preference, $crud);
-        }
-        if ($instance instanceof PaiementTaxe) {
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof Facture) {
@@ -531,39 +507,6 @@ class ServicePreferences
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_ELEMENT_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Element_Facture_form($tabAttributs);
-        }
-        if ($objetInstance instanceof PaiementCommission) {
-            $tabAttributs = [
-                FormField::addPanel('Informations générales')
-                    ->setIcon('fas fa-person-arrow-down-to-line') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Commission de courtage encaissée.")
-            ];
-            //$tabAttributs = $this->setCRM_Fields_PaiementCommissions_Index_Details($preference->getFinCommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_COMMISSIONS, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementCommissions_Index($preference->getFinCommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_COMMISSIONS, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementCommissions_Details($tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementCommissions_form($tabAttributs);
-        }
-        if ($objetInstance instanceof PaiementPartenaire) {
-            $tabAttributs = [
-                FormField::addPanel('Informations générales')
-                    ->setIcon('fas fa-person-arrow-up-from-line') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Retrocommission de courtage décaissée ou payée au partenaire.")
-            ];
-            //$tabAttributs = $this->setCRM_Fields_PaiementPartenaires_Index_Details($preference->getFinRetrocommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_Index($preference->getFinRetrocommissionsPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_RETROCOMMISSIONS, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_Details($tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementPartenaires_form($tabAttributs);
-        }
-        if ($objetInstance instanceof PaiementTaxe) {
-            $tabAttributs = [
-                FormField::addPanel('Informations générales')
-                    ->setIcon('fas fa-person-chalkboard') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Taxe payée.")
-            ];
-            //$tabAttributs = $this->setCRM_Fields_PaiementTaxes_Index_Details($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_TAXES, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementTaxes_Index($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_TAXES, $tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementTaxes_Details($tabAttributs);
-            $tabAttributs = $this->setCRM_Fields_PaiementTaxes_form($tabAttributs);
         }
         if ($objetInstance instanceof Paiement) {
             $tabAttributs = [
@@ -1215,27 +1158,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
             $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS])) {
-            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)
-                ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getPaiementCommissions()) == 0 ? "Aucun paiement" : $entity->getPaiementCommissions() . " paiement(s).";
-                })
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES])) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)
-                ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getPaiementPartenaires()) == 0 ? "Aucun paiement" : $entity->getPaiementPartenaires() . " paiement(s).";
-                })
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES])) {
-            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)
-                ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getPaiementTaxes()) == 0 ? "Aucun paiement" : $entity->getPaiementTaxes() . " paiement(s).";
-                })
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
@@ -2256,159 +2178,7 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setCRM_Fields_PaiementCommissions_form($tabAttributs)
-    {
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
-            ->setColumns(12)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-            ->setColumns(6)
-            ->setRequired(false)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            })
-            ->onlyOnForms();
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
-
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementPartenaires_form($tabAttributs)
-    {
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
-                ->setColumns(12)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->onlyOnForms();
-        }
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setColumns(2)
-            ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
-                ->setColumns(4)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
-                ->setHelp("Si la pièce justificative ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette preuve de paiement.")
-                ->setRequired(false)
-                ->setColumns(4)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->onlyOnForms();
-        }
-        $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE)
-            ->setColumns(2)
-            ->onlyOnForms();
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementTaxes_form($tabAttributs)
-    {
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setColumns(2)
-            ->onlyOnForms();
-
-        $tabAttributs[] = TextField::new('exercice', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE)
-            ->setColumns(2)
-            ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)) {
-            $tabAttributs[] = AssociationField::new('taxe', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                ->setColumns(3)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
-                ->setHelp("Si votre pièce justificative ne figure pas sur cette liste, ne vous inquiètez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette preueve de paiement.")
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
-            ->setColumns(2)
-            ->onlyOnForms();
-
-        return $tabAttributs;
-    }
-
-
+    
     public function setCRM_Fields_EtapeSinistres_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
@@ -2817,285 +2587,8 @@ class ServicePreferences
         }
         return $tabAttributs;
     }
-
-
-    public function setCRM_Fields_PaiementCommissions_Details($tabAttributs)
-    {
-        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ID)
-            ->onlyOnDetail();
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
-            ->formatValue(function ($value, PaiementCommission $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
-            ->onlyOnDetail();
-        $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
-            ->onlyOnDetail();
-        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE)
-            ->onlyOnDetail();
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementCommissions_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
-    {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE])) {
-            $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_REF_FACTURE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_MONTANT)
-                ->formatValue(function ($value, PaiementCommission $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_POLICE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE])) {
-            $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION])) {
-            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DESCRIPTION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS])) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DOCUMENTS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_COMMISSIONS_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementPartenaires_Details($tabAttributs)
-    {
-        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
-            ->onlyOnDetail();
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE)
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT)
-            ->formatValue(function ($value, PaiementPartenaire $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE)
-            ->onlyOnDetail();
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementPartenaires_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
-    {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE])) {
-            $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_REF_FACTURE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_MONTANT)
-                ->formatValue(function ($value, PaiementPartenaire $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_POLICE)
-                ->onlyOnIndex();
-        }
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE])) {
-            $tabAttributs[] = DateField::new('Date', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS])) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DOCUMENTS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_RETROCOMMISSIONS_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementTaxes_Details($tabAttributs)
-    {
-        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ID)
-            ->onlyOnDetail();
-        $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('taxe', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
-            ->formatValue(function ($value, PaiementTaxe $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = TextField::new('exercice', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE)
-            ->onlyOnDetail();
-        $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE)
-            ->onlyOnDetail();
-
-        return $tabAttributs;
-    }
-
-    public function setCRM_Fields_PaiementTaxes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
-    {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT])) {
-            $tabAttributs[] = TextField::new('refnotededebit', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_NOTE_DE_DEBIT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE])) {
-            $tabAttributs[] = AssociationField::new('taxe', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_TAXE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_POLICE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_MONTANT)
-                ->formatValue(function ($value, PaiementTaxe $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE])) {
-            $tabAttributs[] = TextField::new('exercice', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_EXERCICE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE])) {
-            $tabAttributs[] = DateField::new('date', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS])) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DOCUMENTS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_PAIEMENTS_TAXE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-
-        return $tabAttributs;
-    }
-
+    
+    
     public function setCRM_Fields_EtapeSinistres_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_ETAPE_ID)

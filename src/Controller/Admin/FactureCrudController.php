@@ -112,8 +112,8 @@ class FactureCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Facture(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
-            ->setDateFormat('dd/MM/yyyy')
+            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss') // 
+            ->setDateFormat('dd/MM/yyyy à HH:mm:ss')
             ->setHelp(Crud::PAGE_NEW, "Founissez les informations recquises puis validez le formulaire pour les sauvegarder.")
             ->setHelp(Crud::PAGE_INDEX, "Résultat du filtrage.")
             ->setHelp(Crud::PAGE_DETAIL, "Information détailée sur l'enregistrement séléctioné.")
@@ -137,14 +137,12 @@ class FactureCrudController extends AbstractCrudController
         return $filters
             ->add(ChoiceFilter::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)->setChoices(self::TAB_TYPE_FACTURE))
             ->add(ChoiceFilter::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)->setChoices(self::TAB_STATUS_FACTURE))
+            ->add('paiements')
             ->add('partenaire')
             ->add('assureur')
             ->add('piece')
             ->add('police')
             ->add('elementFactures')
-            ->add('paiementCommissions')
-            ->add('paiementPartenaires')
-            ->add('paiementTaxes')
             ->add('createdAt')
             ->add('updatedAt');
     }

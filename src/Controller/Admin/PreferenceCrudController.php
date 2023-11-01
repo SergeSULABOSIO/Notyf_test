@@ -700,6 +700,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_TOTAL_RECU            = "Total Reçu";
     public const PREF_FIN_FACTURE_TOTAL_SOLDE           = "Total Solde";
     public const PREF_FIN_FACTURE_STATUS                = "Status";
+    public const PREF_FIN_FACTURE_PAIEMENTS             = "Paiements";
 
     public const TAB_FIN_FACTURE = [
         self::PREF_FIN_FACTURE_ID                       => 0,
@@ -722,6 +723,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_POSTE_SIGNED_BY          => 20,
         self::PREF_FIN_FACTURE_TOTAL_SOLDE              => 21,
         self::PREF_FIN_FACTURE_STATUS                   => 22,
+        self::PREF_FIN_FACTURE_PAIEMENTS                => 23,
 
     ];
 

@@ -1546,6 +1546,10 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnDetail();
         }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PAIEMENTS)) {
+            $tabAttributs[] = ArrayField::new('paiements', PreferenceCrudController::PREF_FIN_FACTURE_PAIEMENTS)
+                ->onlyOnDetail();
+        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
                 ->renderAsHtml()

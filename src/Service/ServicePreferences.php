@@ -1537,6 +1537,15 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnDetail();
         }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)) {
+            $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
+                ->formatValue(function ($value, Facture $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnDetail();
+        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
             $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
                 ->renderAsHtml()
@@ -1562,15 +1571,6 @@ class ServicePreferences
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
             $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)) {
-            $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_FIN_FACTURE_POP_COMMISSIONS)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)) {
-            $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_FIN_FACTURE_POP_PARTENAIRES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)) {
-            $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_FIN_FACTURE_POP_TAXES)->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)) {
             $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
@@ -2433,46 +2433,6 @@ class ServicePreferences
                 ->setColumns(12)
                 ->onlyOnForms();
         }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)) {
-            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)) {
-            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-
         return $tabAttributs;
     }
 
@@ -3105,12 +3065,6 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->onlyOnDetail();
         //Les fichiers
         $tabAttributs[] = TextField::new('fichierA', 'Fichier A')->onlyOnDetail();
         $tabAttributs[] = TextField::new('fichierB', 'Fichier B')->onlyOnDetail();
@@ -3162,18 +3116,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
             $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS])) {
-            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES])) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES])) {
-            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {

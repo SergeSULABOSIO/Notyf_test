@@ -120,15 +120,6 @@ class ServiceCrossCanal
     //Cotation
     public const OPTION_COTATION_AJOUTER = "Ajouter une cotation";
     public const OPTION_COTATION_LISTER = "Voire les cotations";
-    //POP Commissions
-    public const OPTION_POP_COMMISSION_LISTER = "Voire les Pdp Comm";
-    public const OPTION_POP_COMMISSION_AJOUTER = "Encaisser la Comm";
-    //POP Partenaire
-    public const OPTION_POP_PARTENAIRE_LISTER = "Voir les Pdp Partenaire";
-    public const OPTION_POP_PARTENAIRE_AJOUTER = "Payer Partenaire";
-    //POP Taxe
-    public const OPTION_POP_TAXE_LISTER = "Voir les Pdp Taxe";
-    public const OPTION_POP_TAXE_AJOUTER = "Payer Taxe";
     //Sinistre
     public const OPTION_SINISTRE_LISTER = "Voir les sinistres";
     public const OPTION_SINISTRE_AJOUTER = "Ajouter un sinistre";
@@ -152,9 +143,6 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_CATEGORIE = "categorie";
     public const CROSSED_ENTITY_CLASSEUR = "classeur";
     public const CROSSED_ENTITY_DOC_PIECE = "piece";
-    public const CROSSED_ENTITY_POP_COMMISSIONS = "paiementCommissions";
-    public const CROSSED_ENTITY_POP_PARTENAIRE = "paiementPartenaires";
-    public const CROSSED_ENTITY_POP_TAXE = "paiementTaxes";
     public const CROSSED_ENTITY_PRODUIT = "produit";
     public const CROSSED_ENTITY_PARTENAIRE = "partenaire";
     public const CROSSED_ENTITY_ASSUREUR = "assureur";
@@ -203,9 +191,6 @@ class ServiceCrossCanal
             ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
 
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
@@ -739,69 +724,6 @@ class ServiceCrossCanal
             ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
-    public function crossCanal_POPCom_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var PaiementCommission */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(DocPieceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE PIECE (Pdp) - [Commissions encaissées: " . $entite . "]")
-            ->set(self::CROSSED_ENTITY_POP_COMMISSIONS, $entite->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
-    public function crossCanal_POPPartenaire_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var PaiementPartenaire */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(DocPieceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE PIECE (Pdp) - [Retrocommission payée: " . $entite . "]")
-            ->set(self::CROSSED_ENTITY_POP_PARTENAIRE, $entite->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
-
-    public function crossCanal_POPTaxe_attacherPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var PaiementTaxe */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(DocPieceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", "NOUVELLE PIECE (Pdp) - [Taxe payée: " . $entite . "]")
-            ->set(self::CROSSED_ENTITY_POP_TAXE, $entite->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -965,9 +887,6 @@ class ServiceCrossCanal
             ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
             ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
             ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-            ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1302,22 +1221,6 @@ class ServiceCrossCanal
             ->set('filters[' . self::CROSSED_ENTITY_CLASSEUR . '][comparison]', '=')
             ->setEntityId(null)
             ->generateUrl();
-        return $url;
-    }
-
-    public function crossCanal_POPCom_listerPiece(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var PaiementCommission */
-        $entite = $context->getEntity()->getInstance();
-        $url = $adminUrlGenerator
-            ->setController(DocPieceCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES PIECES - [Commissions encaissées: " . $entite . "]")
-            ->set('filters[' . self::CROSSED_ENTITY_POP_COMMISSIONS . '][value]', [$entite->getId()]) //il faut juste passer son ID
-            ->set('filters[' . self::CROSSED_ENTITY_POP_COMMISSIONS . '][comparison]', '=')
-            ->setEntityId(null)
-            ->generateUrl();
-
         return $url;
     }
 
@@ -1770,16 +1673,14 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function paiement_definirChampsCollectionPieces(AdminUrlGenerator $adminUrlGenerator){
+    public function paiement_definirChampsCollectionPieces(AdminUrlGenerator $adminUrlGenerator)
+    {
         $adminUrlGenerator
-        ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-        ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-        ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_TAXES)
-        ->set("champsACacher[3]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_PARTENAIRES)
-        ->set("champsACacher[4]", PreferenceCrudController::PREF_BIB_DOCUMENT_POP_COMMISSIONS)
-        ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-        ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
-        ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
+            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+            ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
     }
 
     public function crossCanal_modifier_paiement(AdminUrlGenerator $adminUrlGenerator, Paiement $paiement)
@@ -1810,6 +1711,7 @@ class ServiceCrossCanal
             ->setAction(Action::DETAIL)
             ->setEntityId($facture->getId())
             ->generateUrl();
+        //dd($url);
         return $url;
     }
 
@@ -1900,10 +1802,10 @@ class ServiceCrossCanal
         if ($paramIDFacture != null) {
             /** @var Facture  */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
-            
+
             $this->serviceCalculateur->calculate($container, ServiceCalculateur::RUBRIQUE_FACTURE);
             //dd($objetFacture);
-            if($objetFacture != null){
+            if ($objetFacture != null) {
                 $paiement->setFacture($objetFacture);
                 $paiement->setMontant($objetFacture->getTotalDu() - $objetFacture->getTotalRecu());
                 switch ($objetFacture->getType()) {
@@ -1927,7 +1829,6 @@ class ServiceCrossCanal
                         break;
                 }
             }
-            
         }
         return $paiement;
     }

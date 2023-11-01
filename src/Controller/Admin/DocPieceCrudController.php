@@ -105,8 +105,7 @@ class DocPieceCrudController extends AbstractCrudController
             ->add('classeur')
             ->add('cotation')
             ->add('police')
-            ->add('sinistre')
-            ->add('paiementCommissions');
+            ->add('sinistre');
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -140,37 +139,6 @@ class DocPieceCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        //Cross Canal
-        $paiementCommissions_lister = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_LISTER)
-            ->displayIf(static function (?DocPiece $entity) {
-                return count($entity->getPaiementCommissions()) != 0;
-            })
-            ->setIcon('fas fa-person-arrow-down-to-line')
-            ->linkToCrudAction('cross_canal_listerPaiementCommission');
-
-        $paiementPartenaires_lister = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_LISTER)
-            ->displayIf(static function (?DocPiece $entity) {
-                return count($entity->getPaiementPartenaires()) != 0;
-            })
-            ->setIcon('fas fa-person-arrow-up-from-line')
-            ->linkToCrudAction('cross_canal_listerPaiementPartenaire');
-
-        $paiementTaxe_lister = Action::new(ServiceCrossCanal::OPTION_POP_TAXE_LISTER)
-            ->displayIf(static function (?DocPiece $entity) {
-                return count($entity->getPaiementTaxes()) != 0;
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_listerPaiementTaxe');
-
-        $actions
-            ->add(Crud::PAGE_DETAIL, $paiementCommissions_lister)
-            ->add(Crud::PAGE_INDEX, $paiementCommissions_lister)
-            ->add(Crud::PAGE_DETAIL, $paiementPartenaires_lister)
-            ->add(Crud::PAGE_INDEX, $paiementPartenaires_lister)
-            ->add(Crud::PAGE_DETAIL, $paiementTaxe_lister)
-            ->add(Crud::PAGE_INDEX, $paiementTaxe_lister);
-
-
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)

@@ -696,9 +696,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_FACTURE_AUTRE_TIERS           = "Tiers Concerné";
     public const PREF_FIN_FACTURE_DESCRIPTION           = "Description";
     public const PREF_FIN_FACTURE_PIECE                 = "Pièce justificative";
-    public const PREF_FIN_FACTURE_POP_COMMISSIONS       = "POP Commissions";
-    public const PREF_FIN_FACTURE_POP_PARTENAIRES       = "POP Partenaires";
-    public const PREF_FIN_FACTURE_POP_TAXES             = "POP Taxes";
     public const PREF_FIN_FACTURE_TOTAL_DU              = "Total Du";
     public const PREF_FIN_FACTURE_TOTAL_RECU            = "Total Reçu";
     public const PREF_FIN_FACTURE_TOTAL_SOLDE           = "Total Solde";
@@ -717,9 +714,6 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_FACTURE_PARTENAIRE               => 9,
         self::PREF_FIN_FACTURE_DESCRIPTION              => 10,
         self::PREF_FIN_FACTURE_PIECE                    => 11,
-        self::PREF_FIN_FACTURE_POP_COMMISSIONS          => 12,
-        self::PREF_FIN_FACTURE_POP_PARTENAIRES          => 13,
-        self::PREF_FIN_FACTURE_POP_TAXES                => 14,
         self::PREF_FIN_FACTURE_TOTAL_DU                 => 15,
         self::PREF_FIN_FACTURE_TOTAL_RECU               => 16,
         self::PREF_FIN_FACTURE_AUTRE_TIERS              => 17,
@@ -987,9 +981,6 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_BIB_DOCUMENT_COTATION             = "Cotation";
     public const PREF_BIB_DOCUMENT_POLICE               = "Police";
     public const PREF_BIB_DOCUMENT_SINISTRE             = "Sinistre";
-    public const PREF_BIB_DOCUMENT_POP_COMMISSIONS      = "Pdp Commissions";
-    public const PREF_BIB_DOCUMENT_POP_PARTENAIRES      = "Pdp Partenaires";
-    public const PREF_BIB_DOCUMENT_POP_TAXES            = "Pdp Taxes";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";
@@ -1006,10 +997,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8,
         self::PREF_BIB_DOCUMENT_COTATION                => 9,
         self::PREF_BIB_DOCUMENT_POLICE                  => 10,
-        self::PREF_BIB_DOCUMENT_SINISTRE                => 11,
-        self::PREF_BIB_DOCUMENT_POP_COMMISSIONS         => 12,
-        self::PREF_BIB_DOCUMENT_POP_PARTENAIRES         => 13,
-        self::PREF_BIB_DOCUMENT_POP_TAXES               => 14
+        self::PREF_BIB_DOCUMENT_SINISTRE                => 11
     ];
     //PARAMETRES - UTILISATEUR
     public const PREF_PAR_UTILISATEUR_ID                    = "Id";

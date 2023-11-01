@@ -21,8 +21,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class ServiceFacture
 {
-    private ?Dompdf $dompdf;
-    private ?Options $pdfOptions;
+    private ?Dompdf $dompdf = null;
+    private ?Options $pdfOptions = null;
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,

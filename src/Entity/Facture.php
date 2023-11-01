@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Controller\Admin\FactureCrudController;
 use App\Repository\FactureRepository;
-use App\Service\ServiceMonnaie;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

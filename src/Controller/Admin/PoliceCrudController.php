@@ -256,33 +256,6 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister);
 
-        $paiementCommission_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_AJOUTER)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_revenu_ttc_solde_restant_du != 0);
-            })
-            ->setIcon('fas fa-person-arrow-down-to-line')
-            ->linkToCrudAction('cross_canal_ajouterPOPComm');
-        $paiementCommission_lister = Action::new(ServiceCrossCanal::OPTION_POP_COMMISSION_LISTER)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_revenu_ttc_encaisse != 0);
-            })
-            ->setIcon('fas fa-person-arrow-down-to-line')
-            ->linkToCrudAction('cross_canal_listerPOPComm');
-
-        $paiementPartenaire_ajouter = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_AJOUTER)
-            ->displayIf(static function (?Police $entity) {
-                //Attention on ne paie pas le partenaire tant que la comm n a pas ete encaissée
-                return ($entity->getPartenaire() != null) && ($entity->calc_retrocom_solde != 0) && $entity->calc_revenu_ttc_encaisse != 0;
-            })
-            ->setIcon('fas fa-person-arrow-up-from-line')
-            ->linkToCrudAction('cross_canal_ajouterPOPRetroComm');
-        $paiementPartenaire_lister = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_LISTER)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_retrocom_payees != 0);
-            })
-            ->setIcon('fas fa-person-arrow-up-from-line')
-            ->linkToCrudAction('cross_canal_listerPOPRetroComm');
-
         $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
         $txtTaxeAssureur = $this->serviceTaxes->getTaxe(false) != null ? $this->serviceTaxes->getNomTaxeAssureur() : "";
         $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
@@ -470,18 +443,6 @@ class PoliceCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $duplicate)
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
-
-            //cross canal
-
-            ->add(Crud::PAGE_DETAIL, $paiementCommission_ajouter)
-            ->add(Crud::PAGE_INDEX, $paiementCommission_ajouter)
-            ->add(Crud::PAGE_DETAIL, $paiementPartenaire_ajouter)
-            ->add(Crud::PAGE_INDEX, $paiementPartenaire_ajouter)
-            ->add(Crud::PAGE_DETAIL, $paiementCommission_lister)
-            ->add(Crud::PAGE_INDEX, $paiementCommission_lister)
-            ->add(Crud::PAGE_DETAIL, $paiementPartenaire_lister)
-            ->add(Crud::PAGE_INDEX, $paiementPartenaire_lister)
-
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -675,29 +636,14 @@ class PoliceCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPComm($context, $adminUrlGenerator));
     }
 
-    public function cross_canal_ajouterPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPRetroComm($context, $adminUrlGenerator));
-    }
-
     public function cross_canal_listerPOPRetroComm(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPRetroComm($context, $adminUrlGenerator));
     }
 
-    public function cross_canal_ajouterPOPTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(true)));
-    }
-
     public function cross_canal_listerPOPTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Police_listerPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(true)));
-    }
-
-    public function cross_canal_ajouterPOPTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Police_ajouterPOPTaxe($context, $adminUrlGenerator, $this->serviceTaxes->getTaxe(false)));
     }
 
     public function cross_canal_listerPOPTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

@@ -44,10 +44,10 @@ class FactureCrudController extends AbstractCrudController
 {
     public ?Facture $facture = null;
     public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
-    public const TYPE_FACTURE_COMMISSIONS               = "COMMISSION DE COURTAGE";
+    public const TYPE_FACTURE_COMMISSIONS               = "COMMISSION";
     public const TYPE_FACTURE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
-    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA    = "NOTE DE PERCEPTION - TVA";
-    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA   = "NOTE DE PERCEPTION - REGULATEUR";
+    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA    = "TVA";
+    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA   = "REGULATEUR";
 
     public const TAB_TYPE_FACTURE = [
         self::TYPE_FACTURE_COMMISSIONS              => 0,

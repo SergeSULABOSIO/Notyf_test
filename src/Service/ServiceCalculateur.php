@@ -406,10 +406,35 @@ class ServiceCalculateur
                 if ($paiement->getFacture()) {
                     foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
                         if ($elementFacture->getPolice() === $police) {
+
                             $totDue = $paiement->getFacture()->getTotalDu() / 100;
                             $totPaid = $paiement->getMontant() / 100;
                             $proportionPaid = ($totPaid / $totDue);
-                            $obj->calc_revenu_ttc_encaisse += $proportionPaid * $obj->calc_revenu_ttc_solde_restant_du;
+
+                            switch ($paiement->getFacture()->getType()) {
+                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
+                                    $obj->calc_revenu_ttc_encaisse = $obj->calc_revenu_ttc_encaisse + $elementFacture->getMontant();
+                                    dd("J'ai trouvé le paiement de commission de courtage. Montant = " . ($obj->calc_revenu_ttc_encaisse/100) * $proportionPaid . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                                    
+                                    break;
+                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
+                                    dd("J'ai trouvé le paiement de frais de gestion. Taux de paiement = " . $proportionPaid . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                                    break;
+                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                                    dd("J'ai trouvé le paiement de frais Arca. Taux de paiement = " . $proportionPaid . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                                    break;
+                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
+                                    dd("J'ai trouvé le paiement de la Tva. Taux de paiement = " . $proportionPaid . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                                    break;
+                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                                    dd("J'ai trouvé le paiement de frais de gestion. Taux de paiement = " + $proportionPaid . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                                    break;
+
+                                default:
+                                    # code...
+                                    break;
+                            }
+                            //$obj->calc_revenu_ttc_encaisse += $proportionPaid * $obj->calc_revenu_ttc_solde_restant_du;
                         }
                     }
                 }

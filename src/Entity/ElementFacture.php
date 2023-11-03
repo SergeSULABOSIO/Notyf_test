@@ -36,6 +36,12 @@ class ElementFacture
     #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade:['remove', 'persist', 'refresh'])]
     private ?Facture $facture = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $idavenant = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $typeavenant = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,6 +132,30 @@ class ElementFacture
     public function setFacture(?Facture $facture): self
     {
         $this->facture = $facture;
+
+        return $this;
+    }
+
+    public function getIdavenant(): ?int
+    {
+        return $this->idavenant;
+    }
+
+    public function setIdavenant(?int $idavenant): self
+    {
+        $this->idavenant = $idavenant;
+
+        return $this;
+    }
+
+    public function getTypeavenant(): ?string
+    {
+        return $this->typeavenant;
+    }
+
+    public function setTypeavenant(?string $typeavenant): self
+    {
+        $this->typeavenant = $typeavenant;
 
         return $this;
     }

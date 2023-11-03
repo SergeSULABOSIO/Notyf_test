@@ -194,9 +194,6 @@ class Police extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: ElementFacture::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $elementFactures;
 
-    /* #[ORM\ManyToMany(targetEntity: Facture::class, inversedBy: 'police')]//, cascade:['persist', 'refresh']
-    private Collection $factures; */
-
     public function __construct()
     {
         $this->docPieces = new ArrayCollection();

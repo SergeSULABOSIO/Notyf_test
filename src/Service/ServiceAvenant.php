@@ -11,6 +11,7 @@ use App\Entity\Cotation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
+use App\Entity\ElementFacture;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class ServiceAvenant
@@ -208,6 +209,26 @@ class ServiceAvenant
             $entite->setFrontingcom(0);
         }
         return $entite;
+    }
+
+    public function generateIdAvenant(Police $police): int{
+        $id = -100;
+        if($this->serviceEntreprise->getEntreprise()){
+            $nbAvenantPolice = count($this->entityManager->getRepository(Police::class)->findBy(
+                [
+                    'reference' => $police->getReference(),
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            ));
+            $nbAvenantElementFacture = count($this->entityManager->getRepository(ElementFacture::class)->findBy(
+                [
+                    'police' => $police,
+                    'entreprise' => $this->serviceEntreprise->getEntreprise()
+                ]
+            ));
+            $id = $nbAvenantElementFacture + $nbAvenantPolice;
+        }
+        return $id;
     }
 
     public function setAutresModifications($entite, array $avenant_data, AdminUrlGenerator $adminUrlGenerator)

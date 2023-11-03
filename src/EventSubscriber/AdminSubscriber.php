@@ -21,7 +21,9 @@ use App\Service\ServicePreferences;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\PoliceCrudController;
 use App\Entity\Paiement;
+use App\Service\ServiceAvenant;
 use App\Service\ServiceFacture;
 use App\Service\ServiceSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -43,7 +45,8 @@ class AdminSubscriber implements EventSubscriberInterface
         private ServiceEntreprise $serviceEntreprise,
         private ServiceCalculateur $serviceCalculateur,
         private ServicePreferences $servicePreferences,
-        private ServiceSuppression $serviceSuppression
+        private ServiceSuppression $serviceSuppression,
+        private ServiceAvenant $serviceAvenant
     ) {
     }
 
@@ -93,6 +96,20 @@ class AdminSubscriber implements EventSubscriberInterface
         }
         if($entityInstance instanceof Paiement){
             $this->serviceFacture->updatePieceInfos($entityInstance);
+            // il faut définir le IDAVENANT de l'avenant et le TYPEAVENANT, utiles pour la génération des prudentiels de l'autorité de régulation
+            //dd($entityInstance);
+            /** @var Facture */
+            $facture = $entityInstance->getFacture();
+            foreach ($facture->getElementFactures() as $elementFacture) {
+                /** @var ElementFacture */
+                $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($elementFacture->getPolice()));
+                $elementFacture->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION]);
+                $elementFacture->setUpdatedAt(new \DateTimeImmutable());
+                //ici il faut actualiser la base de données
+                $this->entityManager->persist($elementFacture);
+                $this->entityManager->flush();
+            }
+            //dd($facture->getElementFactures());
         }
 
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());

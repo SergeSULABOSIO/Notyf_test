@@ -294,11 +294,11 @@ class ServiceFacture
         }
         //Etablissement du lien entre Police et Facture
         //C'est super important.
-        foreach ($facture->getElementFactures() as $ef) {
+        //foreach ($facture->getElementFactures() as $ef) {
             /** @var Police */
-            $oPolice = $ef->getPolice();
-            $oPolice->addFacture($facture);
-        }
+            //$oPolice = $ef->getPolice();
+            //$oPolice->addFacture($facture);
+        //}
         //dd($facture);
         return $total;
     }

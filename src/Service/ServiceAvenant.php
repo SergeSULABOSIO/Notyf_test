@@ -54,7 +54,7 @@ class ServiceAvenant
     {
         $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
         if ($entite instanceof Police) {
-            $entite->setIdavenant(0);
+            $entite->setIdavenant($this->generateIdAvenant($entite));
             $entite->setModepaiement(0);
             $entite->setRemarques("Souscription.");
             $entite->setReassureurs("Voir le traité de réassurance en place.");
@@ -211,22 +211,27 @@ class ServiceAvenant
         return $entite;
     }
 
-    public function generateIdAvenant(Police $police): int{
+    public function generateIdAvenant(Police $police): int
+    {
         $id = -100;
-        if($this->serviceEntreprise->getEntreprise()){
-            $nbAvenantPolice = count($this->entityManager->getRepository(Police::class)->findBy(
-                [
-                    'reference' => $police->getReference(),
-                    'entreprise' => $this->serviceEntreprise->getEntreprise()
-                ]
-            ));
-            $nbAvenantElementFacture = count($this->entityManager->getRepository(ElementFacture::class)->findBy(
-                [
-                    'police' => $police,
-                    'entreprise' => $this->serviceEntreprise->getEntreprise()
-                ]
-            ));
-            $id = $nbAvenantElementFacture + $nbAvenantPolice;
+        if ($this->serviceEntreprise->getEntreprise()) {
+            if ($police) {
+                $nbAvenantPolice = count($this->entityManager->getRepository(Police::class)->findBy(
+                    [
+                        'reference' => $police->getReference(),
+                        'entreprise' => $this->serviceEntreprise->getEntreprise()
+                    ]
+                ));
+                $nbAvenantElementFacture = count($this->entityManager->getRepository(ElementFacture::class)->findBy(
+                    [
+                        'police' => $police,
+                        'entreprise' => $this->serviceEntreprise->getEntreprise()
+                    ]
+                ));
+                $id = $nbAvenantElementFacture + $nbAvenantPolice;
+            }else{
+                $id = 0;
+            }
         }
         return $id;
     }
@@ -262,7 +267,7 @@ class ServiceAvenant
             //On tente de récupérer l'avenant de souscription
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
-            $entite->setIdavenant(count($policesConcernees));
+            $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
             $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
@@ -344,7 +349,7 @@ class ServiceAvenant
             //On tente de récupérer l'avenant de souscription
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
-            $entite->setIdavenant(count($policesConcernees));
+            $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
             $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
@@ -425,7 +430,7 @@ class ServiceAvenant
             //On tente de récupérer l'avenant de souscription
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
-            $entite->setIdavenant(count($policesConcernees));
+            $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
             $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
@@ -499,7 +504,7 @@ class ServiceAvenant
             //On tente de récupérer l'avenant de souscription
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
-            $entite->setIdavenant(count($policesConcernees));
+            $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
             $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
@@ -583,7 +588,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite
-                ->setIdavenant(count($policesConcernees))
+                ->setIdavenant($this->generateIdAvenant($policeDeBase))
                 ->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']])
                 ->setReference($policeDeBase->getReference())
                 ->setDateoperation($this->serviceDates->aujourdhui())
@@ -643,7 +648,7 @@ class ServiceAvenant
                 ]
             );
             if ($entite instanceof Police) {
-                $entite->setIdavenant(count($policesConcernees));
+                $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
                 $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
                 $entite->setReference($policeDeBase->getReference());
                 $entite->setDateoperation($this->serviceDates->aujourdhui());

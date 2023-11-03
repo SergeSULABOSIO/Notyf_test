@@ -141,7 +141,6 @@ class FactureCrudController extends AbstractCrudController
             ->add('partenaire')
             ->add('assureur')
             ->add('piece')
-            ->add('police')
             ->add('elementFactures')
             ->add('createdAt')
             ->add('updatedAt');

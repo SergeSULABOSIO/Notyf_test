@@ -622,7 +622,7 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('factures', PreferenceCrudController::PREF_PRO_POLICE_FACTURES)->onlyOnDetail();
+        //$tabAttributs[] = ArrayField::new('factures', PreferenceCrudController::PREF_PRO_POLICE_FACTURES)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
         $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
@@ -638,9 +638,6 @@ class ServicePreferences
         $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementCommissions', PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementTaxes', PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES)->onlyOnDetail();
         $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)->onlyOnDetail();
         $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
@@ -830,10 +827,6 @@ class ServicePreferences
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
                 ]);
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FACTURES])) {
-            $tabAttributs[] = AssociationField::new('factures', PreferenceCrudController::PREF_PRO_POLICE_FACTURES)
-                ->onlyOnIndex();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
             $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
                 ->onlyOnIndex();
@@ -872,18 +865,6 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS])) {
-            $tabAttributs[] = AssociationField::new('paiementCommissions', PreferenceCrudController::PREF_PRO_POLICE_POP_COMMISSIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES])) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_POLICE_POP_PARTENAIRES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES])) {
-            $tabAttributs[] = AssociationField::new('paiementTaxes', PreferenceCrudController::PREF_PRO_POLICE_POP_TAXES)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
@@ -1201,6 +1182,7 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
                 ->formatValue(function ($value, Paiement $paiement) {
+                    $this->setTotauxPaiement($paiement);
                     if ($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]) {
                         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
                     } else {
@@ -5335,15 +5317,42 @@ class ServicePreferences
         }
     }
 
+    public $tDu = 0;
+    public $tRecu = 0;
+    public $tSolde = 0;
+    public $str_totaux = 0;
+
     public function setTotauxFacture(Facture $facture)
     {
         //dd($this->crud);
         if ($this->crud) {
-            $tDu = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalDu());
-            $tRecu = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalRecu());
-            $tSolde = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalSolde());
-            $str_totaux = "[Total: " . $tDu . ", Payé: " . $tRecu . ", Solde: " . $tSolde . "]";
+            $this->tDu = $this->tDu + $facture->getTotalDu();
+            $this->tRecu = $this->tRecu + $facture->getTotalRecu();
+            $this->tSolde = $this->tSolde + $facture->getTotalSolde();
+
+            $str_totaux = "[Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->tDu) . ", Payé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->tRecu) . ", Solde: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->tSolde) . "]";
+
             $this->crud->setPageTitle(Crud::PAGE_INDEX, "Factures - " . $str_totaux);
+        }
+    }
+
+
+    public $tEntrees = 0;
+    public $tSorties = 0;
+
+    public function setTotauxPaiement(Paiement $paiement)
+    {
+        //dd($this->crud);
+        if ($this->crud) {
+            if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]){
+                $this->tEntrees = $this->tEntrees + $paiement->getMontant();
+            }
+            if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]){
+                $this->tSorties = $this->tSorties + $paiement->getMontant();
+            }
+
+            $str_totaux = "[Entrées: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->tEntrees) . ", Sortie: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->tSorties) . ", Solde: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage(($this->tEntrees - $this->tSorties)) . "]";
+            $this->crud->setPageTitle(Crud::PAGE_INDEX, "Cashflow - " . $str_totaux);
         }
     }
 

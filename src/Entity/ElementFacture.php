@@ -115,7 +115,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "Id@" . $this->id . ", Mnt@" . $this->montant/100 . ", Pol@" . $this->police . "";
+        return "Id: " . $this->id . " | Police: " . $this->police . " | Mnt: " . ($this->montant/100). "";
     }
 
     public function getFacture(): ?Facture

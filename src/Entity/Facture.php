@@ -58,8 +58,8 @@ class Facture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $autreTiers = null;
 
-    #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures', cascade:['persist', 'refresh'])]
-    private Collection $police;
+    /* #[ORM\ManyToMany(targetEntity: Police::class, mappedBy: 'factures')] //, cascade:['persist', 'refresh']
+    private Collection $police; */
 
     #[ORM\OneToMany(mappedBy: 'facture', targetEntity: Paiement::class)]
     private Collection $paiements;

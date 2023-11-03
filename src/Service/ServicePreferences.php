@@ -9,6 +9,7 @@ use App\Entity\Expert;
 use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Contact;
+use App\Entity\Facture;
 use App\Entity\Monnaie;
 use App\Entity\Produit;
 use App\Entity\Victime;
@@ -16,6 +17,7 @@ use App\Entity\Assureur;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
+use App\Entity\Paiement;
 use App\Entity\Sinistre;
 use App\Entity\ActionCRM;
 use App\Entity\Automobile;
@@ -27,19 +29,23 @@ use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
 use App\Entity\DocCategorie;
 use App\Entity\EtapeSinistre;
+use App\Entity\CompteBancaire;
+use App\Entity\ElementFacture;
 use App\Entity\CalculableEntity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\ClientCrudController;
 use App\Controller\Admin\PoliceCrudController;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ProduitCrudController;
 use App\Controller\Admin\DocPieceCrudController;
+use App\Controller\Admin\PaiementCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
-use App\Controller\Admin\ElementFactureCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -48,18 +54,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use App\Controller\Admin\EtapeSinistreCrudController;
-use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\PaiementCrudController;
-use App\Entity\CompteBancaire;
-use App\Entity\ElementFacture;
-use App\Entity\Facture;
-use App\Entity\Paiement;
-use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use Symfony\Component\HttpFoundation\Session\Session;
+use App\Controller\Admin\ElementFactureCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
@@ -122,10 +123,11 @@ class ServicePreferences
         );
     }
 
-    public function chargerPreference(Utilisateur $utilisateur, Entreprise $entreprise): Preference
+    public function chargerPreference(?Utilisateur $utilisateur, ?Entreprise $entreprise): Preference
     {
         //dd($utilisateur);
-        if ($utilisateur != null && $entreprise != null) {
+        $preferences = [];
+        if ($utilisateur && $entreprise) {
             $preferences = $this->entityManager->getRepository(Preference::class)->findBy(
                 [
                     'entreprise' => $entreprise,
@@ -133,7 +135,6 @@ class ServicePreferences
                 ]
             );
         }
-
         return $preferences[0];
     }
 
@@ -1104,8 +1105,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU])) {
             $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
+                ->formatValue(function ($value, Facture $facture) {
+                    $this->setTotauxFacture($facture);
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalDu());
                 })
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setStoredAsCents()
@@ -1199,9 +1201,9 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT])) {
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
                 ->formatValue(function ($value, Paiement $paiement) {
-                    if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]){
+                    if ($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]) {
                         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
-                    }else{
+                    } else {
                         return '- ' . $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant());
                     }
                 })
@@ -2182,7 +2184,7 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    
+
     public function setCRM_Fields_EtapeSinistres_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_ETAPE_NOM)
@@ -2551,8 +2553,8 @@ class ServicePreferences
         }
         return $tabAttributs;
     }
-    
-    
+
+
     public function setCRM_Fields_EtapeSinistres_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_ETAPE_ID)
@@ -5330,6 +5332,18 @@ class ServicePreferences
                     ]");
                 }
             }
+        }
+    }
+
+    public function setTotauxFacture(Facture $facture)
+    {
+        //dd($this->crud);
+        if ($this->crud) {
+            $tDu = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalDu());
+            $tRecu = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalRecu());
+            $tSolde = $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalSolde());
+            $str_totaux = "[Total: " . $tDu . ", Payé: " . $tRecu . ", Solde: " . $tSolde . "]";
+            $this->crud->setPageTitle(Crud::PAGE_INDEX, "Factures - " . $str_totaux);
         }
     }
 

@@ -121,7 +121,7 @@ class FactureCrudController extends AbstractCrudController
             ->renderContentMaximized()
             ->setEntityLabelInSingular("Facture / Note de débit")
             ->setEntityLabelInPlural("Factures")
-            ->setPageTitle("index", "Liste des Factures / Notes de débit")
+            ->setPageTitle("index", "Factures")
             ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_FINANCES])
             // ...

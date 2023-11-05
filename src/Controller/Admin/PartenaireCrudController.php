@@ -132,13 +132,6 @@ class PartenaireCrudController extends AbstractCrudController
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
 
-        $paiementPartenaire_lister = Action::new(ServiceCrossCanal::OPTION_POP_PARTENAIRE_LISTER)
-            ->displayIf(static function (?Partenaire $entity) {
-                return count($entity->getPaiementPartenaires()) != 0;
-            })
-            ->setIcon('fas fa-person-arrow-up-from-line')
-            ->linkToCrudAction('cross_canal_listerPOPRetrocom');
-
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
@@ -200,9 +193,6 @@ class PartenaireCrudController extends AbstractCrudController
             //cross canal
             ->add(Crud::PAGE_DETAIL, $polices_lister)
             ->add(Crud::PAGE_INDEX, $polices_lister)
-            ->add(Crud::PAGE_DETAIL, $paiementPartenaire_lister)
-            ->add(Crud::PAGE_INDEX, $paiementPartenaire_lister)
-
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])

@@ -322,7 +322,7 @@ class ServiceFacture
         foreach ($elementFactures as $ef) {
             /** @var ElementFacture */
             if ($ef->getFacture() == null) {
-                $facture->removePolice($ef->getPolice());
+                //$facture->removePolice($ef->getPolice());
                 $this->serviceSuppression->supprimer($ef, ServiceSuppression::FINANCE_ELEMENT_FACTURE);
             }
         }

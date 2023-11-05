@@ -9,6 +9,7 @@ use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceDates;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,6 +48,7 @@ class PisteCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
+        private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
@@ -124,7 +126,10 @@ class PisteCrudController extends AbstractCrudController
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
-
+        $objet->setCreatedAt($this->serviceDates->aujourdhui());
+        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
+        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

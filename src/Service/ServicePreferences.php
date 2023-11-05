@@ -403,7 +403,7 @@ class ServicePreferences
             $tabAttributs = [
                 FormField::addPanel('Informations générales')
                     ->setIcon('fas fa-address-book') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Tout simple un contact au sens littéral du terme. Une personne à contacter dans le cadre des assurances."),
+                    ->setHelp("Tout simplement un contact au sens littéral du terme. Une personne à contacter dans le cadre des assurances."),
             ];
             //$tabAttributs = $this->setCRM_Fields_Contacts_Index_Details($preference->getProContacts(), PreferenceCrudController::TAB_PRO_CONTACTS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Contacts_Index($preference->getProContacts(), PreferenceCrudController::TAB_PRO_CONTACTS, $tabAttributs);

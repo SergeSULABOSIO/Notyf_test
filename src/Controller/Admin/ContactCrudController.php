@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Contact;
 use App\Service\ServiceCrossCanal;
+use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -40,7 +41,8 @@ class ContactCrudController extends AbstractCrudController
     public ?Crud $crud = null;
 
     public function __construct(
-        private EntityManagerInterface $entityManager, 
+        private EntityManagerInterface $entityManager,
+        private ServiceDates $serviceDates, 
         private ServiceEntreprise $serviceEntreprise,
         private ServiceSuppression $serviceSuppression,
         private ServicePreferences $servicePreferences,
@@ -116,6 +118,10 @@ class ContactCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Contact();
+        $objet->setCreatedAt($this->serviceDates->aujourdhui());
+        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
+        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         //$objet = $this->serviceCrossCanal->crossCanal_Piste_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));

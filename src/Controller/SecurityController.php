@@ -158,6 +158,8 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
 
         /** @var Utilisateur */
         $utilisateur = new Utilisateur();
+        
+        /** @var Utilisateur */
         $utilisateur = $security->getUser();
 
         //dd($utilisateur);
@@ -175,7 +177,6 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
             //on persiste l'entreprise
             $manager->persist($entreprise);
 
-            /** @var Utilisateur */
             $utilisateur->setEntreprise($entreprise);
             $utilisateur->setUtilisateur($utilisateur);
             

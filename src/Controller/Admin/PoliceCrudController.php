@@ -80,6 +80,8 @@ class PoliceCrudController extends AbstractCrudController
         self::AVENANT_TYPE_AUTRE_MODIFICATION => 7
     ];
 
+    //private $codeReporting = -100;
+
     public function __construct(
         private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
@@ -117,6 +119,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
+        
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
         $this->crud = $crud
@@ -188,7 +191,6 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
@@ -377,6 +379,9 @@ class PoliceCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt');
         $nomTaxe = $this->serviceTaxes->getTaxe(false) ? $this->serviceTaxes->getTaxe(false)->getNom() : "TVA";
         $batch_creer_facture_tva = Action::new("facture_tva", "Note de perception pour " . $nomTaxe)
+            ->displayIf(static function (?Police $entity) {
+                return count($entity->getPistes()) != 0;
+            })
             ->linkToCrudAction('facture_tva')
             ->setIcon('fa-solid fa-receipt');
         $nomTaxe = $this->serviceTaxes->getTaxe(true) ? $this->serviceTaxes->getTaxe(true)->getNom() : "le régulateur";
@@ -388,6 +393,9 @@ class PoliceCrudController extends AbstractCrudController
             ->linkToCrudAction('exporterMSExcels')
             //->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel');
+
+        //dd($this->codeReporting);
+        //ici
 
         $actions
             //Sur la page Index - Selection

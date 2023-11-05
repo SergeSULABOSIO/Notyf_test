@@ -2404,10 +2404,10 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         $subItemsComm = [];
-        $subItemsComm[] = MenuItem::linkToUrl('VIA TOUS', 'fas fa-umbrella', $this->reporting_commission_tous($this->adminUrlGenerator, $unpaid));
+        $subItemsComm[] = MenuItem::linkToUrl('Tout', 'fas fa-umbrella', $this->reporting_commission_tous($this->adminUrlGenerator, $unpaid));
         //dd($subItemsCommPayee);
         foreach ($assureurs as $assureur) {
-            $subItemsComm[] = MenuItem::linkToUrl('VIA ' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
+            $subItemsComm[] = MenuItem::linkToUrl('' . strtoupper($assureur->getNom()), 'fas fa-umbrella', $this->reporting_commission_assureur($this->adminUrlGenerator, $unpaid, $assureur));
         }
         return $subItemsComm;
     }
@@ -2418,10 +2418,10 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         $subItemsRetroComm = [];
-        $subItemsRetroComm[] = MenuItem::linkToUrl('A TOUS', 'fas fa-handshake', $this->reporting_retrocommission_tous($this->adminUrlGenerator, $unpaid));
+        $subItemsRetroComm[] = MenuItem::linkToUrl('Tout', 'fas fa-handshake', $this->reporting_retrocommission_tous($this->adminUrlGenerator, $unpaid));
         //dd($subItemsCommPayee);
         foreach ($partenaires as $partenaire) {
-            $subItemsRetroComm[] = MenuItem::linkToUrl('A ' . strtoupper($partenaire->getNom()), 'fas fa-handshake', $this->reporting_retrocommission_unpaid_parteniare($this->adminUrlGenerator, $unpaid, $partenaire));
+            $subItemsRetroComm[] = MenuItem::linkToUrl('' . strtoupper($partenaire->getNom()), 'fas fa-handshake', $this->reporting_retrocommission_unpaid_parteniare($this->adminUrlGenerator, $unpaid, $partenaire));
         }
         return $subItemsRetroComm;
     }
@@ -2433,9 +2433,9 @@ class ServiceCrossCanal
         ]);
         $subItemsTaxes = [];
         if ($unpaid == true) {
-            $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator));
+            $subItemsTaxes[] = MenuItem::linkToUrl('Tout', 'fas fa-landmark-dome', $this->reporting_taxe_unpaid($this->adminUrlGenerator));
         } else {
-            $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-landmark-dome', $this->reporting_taxe_paid($this->adminUrlGenerator));
+            $subItemsTaxes[] = MenuItem::linkToUrl('Tout', 'fas fa-landmark-dome', $this->reporting_taxe_paid($this->adminUrlGenerator));
         }
         //dd($subItemsCommPayee);
         //Courtier
@@ -2469,7 +2469,7 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         //TOUS
-        $subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fas fa-umbrella', $this->reporting_production_assureur_tous($this->adminUrlGenerator));
+        $subItemsTaxes[] = MenuItem::linkToUrl('Tout', 'fas fa-umbrella', $this->reporting_production_assureur_tous($this->adminUrlGenerator));
         //PART ASSUREURS
         foreach ($assureurs as $assureur) {
             $subItemsTaxes[] = MenuItem::linkToUrl(strtoupper($assureur), 'fas fa-umbrella', $this->reporting_production_assureur($this->adminUrlGenerator, $assureur));
@@ -2525,7 +2525,7 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         //TOUS
-        $subItemsTaxes[] = MenuItem::linkToUrl('TOUTES', 'fas fa-location-crosshairs', $this->reporting_piste_tous($this->adminUrlGenerator));
+        $subItemsTaxes[] = MenuItem::linkToUrl('Tout', 'fas fa-location-crosshairs', $this->reporting_piste_tous($this->adminUrlGenerator));
 
         //ETAPES
         foreach ($etapes as $etape) {
@@ -2554,7 +2554,7 @@ class ServiceCrossCanal
             'entreprise' => $this->serviceEntreprise->getEntreprise()
         ]);
         //TOUS
-        $subItemsTaxes[] = MenuItem::linkToUrl('TOUS', 'fas fa-bell', $this->reporting_sinistre_tous($this->adminUrlGenerator));
+        $subItemsTaxes[] = MenuItem::linkToUrl('Tout', 'fas fa-bell', $this->reporting_sinistre_tous($this->adminUrlGenerator));
 
         //ETAPES
         foreach ($etapes as $etape) {

@@ -27,9 +27,7 @@ class ServiceIngredients
 
     public function creerIngredients($utilisateur, $entreprise)
     {
-
-        $faker = Factory::create();
-
+        //$faker = Factory::create();
         $taMonnaies = [
             [
                 "setCode" => "USD",

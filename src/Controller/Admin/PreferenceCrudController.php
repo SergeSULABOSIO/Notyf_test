@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Facture;
 use App\Entity\Preference;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;

@@ -53,7 +53,6 @@ class Piste
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
 
-
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'pistes')]
     private Collection $contacts;
 

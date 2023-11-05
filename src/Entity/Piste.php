@@ -53,11 +53,11 @@ class Piste
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
 
-    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'pistes')]
-    private Collection $contacts;
-
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Police $police = null;
+
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $contacts;
 
     public function __construct()
     {
@@ -257,6 +257,18 @@ class Piste
         return $this;
     }
 
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Contact>
      */
@@ -269,6 +281,7 @@ class Piste
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts->add($contact);
+            $contact->setPiste($this);
         }
 
         return $this;
@@ -276,19 +289,12 @@ class Piste
 
     public function removeContact(Contact $contact): self
     {
-        $this->contacts->removeElement($contact);
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getPiste() === $this) {
+                $contact->setPiste(null);
+            }
+        }
 
         return $this;
     }

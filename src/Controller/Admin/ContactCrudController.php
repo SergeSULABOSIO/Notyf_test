@@ -73,6 +73,29 @@ class ContactCrudController extends AbstractCrudController
         ;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        //Application de la préférence sur la taille de la liste
+        $this->servicePreferences->appliquerPreferenceTaille(new Contact(), $crud);
+        $this->crud = $crud
+            ->setDateTimeFormat ('dd/MM/yyyy à HH:mm:ss')
+            ->setDateFormat ('dd/MM/yyyy')
+            //->setPaginatorPageSize(100)
+            ->setHelp(Crud::PAGE_NEW, "Founissez les informations recquises puis validez le formulaire pour les sauvegarder.")
+            ->setHelp(Crud::PAGE_INDEX, "Résultat du filtrage.")
+            ->setHelp(Crud::PAGE_DETAIL, "Information détailée sur l'enregistrement séléctioné.")
+            ->setHelp(Crud::PAGE_EDIT, "Mise à jour d'un enregistrement. N'oubliez pas de valider le formulaire.")
+            ->renderContentMaximized()
+            ->setEntityLabelInSingular("Contact")
+            ->setEntityLabelInPlural("Contacts")
+            ->setPageTitle("index", "Contacts")
+            ->setDefaultSort(['updatedAt' => 'DESC'])
+            ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
+            // ...
+        ;
+        return $crud;
+    }
+
     public function configureFilters(Filters $filters): Filters
     {
         if($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])){
@@ -80,27 +103,8 @@ class ContactCrudController extends AbstractCrudController
         }
         return $filters
             //->add('client')
-            ->add('pistes')
+            ->add('piste')
         ;
-    }
-
-    public function configureCrud(Crud $crud): Crud
-    {
-        //Application de la préférence sur la taille de la liste
-        $this->servicePreferences->appliquerPreferenceTaille(new Contact(), $crud);
-        $this->crud = $crud
-            ->setDateTimeFormat ('dd/MM/yyyy HH:mm:ss')
-            ->setDateFormat ('dd/MM/yyyy')
-            //->setPaginatorPageSize(100)
-            ->renderContentMaximized()
-            ->setEntityLabelInSingular("Contact")
-            ->setEntityLabelInPlural("Contacts")
-            ->setPageTitle("index", "Liste des contacts")
-            ->setDefaultSort(['updatedAt' => 'DESC'])
-            ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
-            // ...
-        ;
-        return $crud;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -112,7 +116,7 @@ class ContactCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Contact();
-        $objet = $this->serviceCrossCanal->crossCanal_Piste_setPiste($objet, $this->adminUrlGenerator);
+        //$objet = $this->serviceCrossCanal->crossCanal_Piste_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
@@ -121,7 +125,9 @@ class ContactCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        if($this->crud){
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        }
         return $this->servicePreferences->getChamps(new Contact(), $this->crud, $this->adminUrlGenerator);
     }
 

@@ -44,12 +44,12 @@ class Contact
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToMany(targetEntity: Piste::class, mappedBy: 'contacts')]
-    private Collection $pistes;
+    #[ORM\ManyToOne(inversedBy: 'contacts')]
+    private ?Piste $piste = null;
 
     public function __construct()
     {
-        $this->pistes = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -158,29 +158,14 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Collection<int, Piste>
-     */
-    public function getPistes(): Collection
+    public function getPiste(): ?Piste
     {
-        return $this->pistes;
+        return $this->piste;
     }
 
-    public function addPiste(Piste $piste): self
+    public function setPiste(?Piste $piste): self
     {
-        if (!$this->pistes->contains($piste)) {
-            $this->pistes->add($piste);
-            $piste->addContact($this);
-        }
-
-        return $this;
-    }
-
-    public function removePiste(Piste $piste): self
-    {
-        if ($this->pistes->removeElement($piste)) {
-            $piste->removeContact($this);
-        }
+        $this->piste = $piste;
 
         return $this;
     }

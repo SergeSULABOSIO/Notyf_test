@@ -46,6 +46,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\ContactCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -3574,7 +3575,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_PISTE])) {
-            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
+            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR])) {
@@ -3605,7 +3606,7 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('poste', PreferenceCrudController::PREF_PRO_CONTACT_POSTE)->onlyOnDetail();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE)->onlyOnDetail();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_CONTACT_UTILISATEUR)
             ->onlyOnDetail()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
@@ -3620,18 +3621,22 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CONTACT_NOM)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
+        //->setColumns(6);
         $tabAttributs[] = TextField::new('poste', PreferenceCrudController::PREF_PRO_CONTACT_POSTE)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
+        //->setColumns(6);
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CONTACT_TELEPHONE)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
+        //->setColumns(6);
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CONTACT_EMAIL)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
+        //->setColumns(6);
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_CONTACT_PISTE)) {
-            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
+            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
                 ->onlyOnForms()
                 ->setColumns(12)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -5148,16 +5153,17 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
             ->onlyOnForms()
             ->setColumns(3);
-        $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+        $tabAttributs[] = CollectionField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
             ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
-            ->onlyOnForms()
-            ->setColumns(12)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+            ->useEntryCrudForm(ContactCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(6)
+            ->onlyOnForms();
+
+
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);
@@ -5344,10 +5350,10 @@ class ServicePreferences
     {
         //dd($this->crud);
         if ($this->crud) {
-            if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]){
+            if ($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]) {
                 $this->tEntrees = $this->tEntrees + $paiement->getMontant();
             }
-            if($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]){
+            if ($paiement->getType() == PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]) {
                 $this->tSorties = $this->tSorties + $paiement->getMontant();
             }
 

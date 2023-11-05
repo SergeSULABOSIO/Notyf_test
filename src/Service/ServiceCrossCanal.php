@@ -1925,17 +1925,6 @@ class ServiceCrossCanal
         return $piste;
     }
 
-    public function crossCanal_Piste_setPiste(Contact $contact, AdminUrlGenerator $adminUrlGenerator): Contact
-    {
-        $objet = null;
-        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
-        if ($paramID != null) {
-            $objet = $this->entityManager->getRepository(Piste::class)->find($paramID);
-            $contact->addPiste($objet);
-        }
-        return $contact;
-    }
-
     public function crossCanal_Cotation_setPiste($cotation, AdminUrlGenerator $adminUrlGenerator): Cotation
     {
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);

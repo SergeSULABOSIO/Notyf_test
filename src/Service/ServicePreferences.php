@@ -3635,18 +3635,6 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(12);
         //->setColumns(6);
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_CONTACT_PISTE)) {
-            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_PRO_CONTACT_PISTE)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-
         return $tabAttributs;
     }
 

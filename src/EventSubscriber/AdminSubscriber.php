@@ -94,7 +94,7 @@ class AdminSubscriber implements EventSubscriberInterface
             $entityInstance->setUpdatedAt(new \DateTimeImmutable());
             $this->servicePreferences->creerPreference($entityInstance, $this->serviceEntreprise->getEntreprise());
         }
-        if($entityInstance instanceof Paiement){
+        if ($entityInstance instanceof Paiement) {
             $this->serviceFacture->updatePieceInfos($entityInstance);
             // il faut définir le IDAVENANT de l'avenant et le TYPEAVENANT, utiles pour la génération des prudentiels de l'autorité de régulation
             //dd($entityInstance);
@@ -110,6 +110,17 @@ class AdminSubscriber implements EventSubscriberInterface
                 $this->entityManager->flush();
             }
             //dd($facture->getElementFactures());
+        }
+
+        if ($entityInstance instanceof Piste) {
+            /** @var Piste */
+            $piste = $entityInstance;
+            foreach ($piste->getContacts() as $contact) {
+                $contact->setCreatedAt(new \DateTimeImmutable());
+                $contact->setUpdatedAt(new \DateTimeImmutable());
+                $contact->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
+            }
         }
 
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -161,6 +172,4 @@ class AdminSubscriber implements EventSubscriberInterface
         //ici il faut aussi actualiser les instances de Police et Facture
         //dd($entityInstance);
     }
-
-    
 }

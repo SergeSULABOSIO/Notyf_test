@@ -139,6 +139,7 @@ class ServiceCrossCanal
     public const CROSSED_ENTITY_ETAPE_SINISTRE = "etape";
     public const CROSSED_ENTITY_EXPERT = "expert";
     public const CROSSED_ENTITY_PISTE = "piste";
+    public const CROSSED_ENTITY_CONTACT = "contact";
     public const CROSSED_ENTITY_POLICE = "police";
     public const CROSSED_ENTITY_CATEGORIE = "categorie";
     public const CROSSED_ENTITY_CLASSEUR = "classeur";
@@ -1002,15 +1003,16 @@ class ServiceCrossCanal
     {
         /** @var Piste */
         $entite = $context->getEntity()->getInstance();
+
         $url = $adminUrlGenerator
             ->setController(ContactCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES CONTACTS - [Piste: " . $entite . "]")
-            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', [$entite->getId()]) //il faut juste passer son ID
+            ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][value]', $entite->getId()) //il faut juste passer son ID
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', ComparisonType::EQ) //'='
             ->setEntityId(null)
             ->generateUrl();
-
+        
         return $url;
     }
 
@@ -1925,6 +1927,17 @@ class ServiceCrossCanal
         return $piste;
     }
 
+    public function crossCanal_Contact_setPiste(Contact $contact, AdminUrlGenerator $adminUrlGenerator): Contact
+    {
+        $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
+        if ($paramID != null) {
+            /** @var Piste */
+            $piste = $this->entityManager->getRepository(Piste::class)->find($paramID);
+            $contact->setPiste($piste);
+        }
+        return $contact;
+    }
+
     public function crossCanal_Cotation_setPiste($cotation, AdminUrlGenerator $adminUrlGenerator): Cotation
     {
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_PISTE);
@@ -2142,6 +2155,7 @@ class ServiceCrossCanal
 
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator, $entite): Crud
     {
+        
         if ($adminUrlGenerator->get("titre")) {
             $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));

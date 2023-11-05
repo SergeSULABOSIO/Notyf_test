@@ -122,18 +122,21 @@ class ContactCrudController extends AbstractCrudController
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
-        //$objet = $this->serviceCrossCanal->crossCanal_Piste_setPiste($objet, $this->adminUrlGenerator);
+        $objet = $this->serviceCrossCanal->crossCanal_Contact_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
+        //dd($objet);
         return $objet;
     }
 
     public function configureFields(string $pageName): iterable
     {
+        
         if($this->crud){
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
+        //dd($this->adminUrlGenerator);
         return $this->servicePreferences->getChamps(new Contact(), $this->crud, $this->adminUrlGenerator);
     }
 

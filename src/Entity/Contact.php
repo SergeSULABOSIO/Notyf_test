@@ -44,7 +44,7 @@ class Contact
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'contacts')]
+    #[ORM\ManyToOne(inversedBy: 'contacts', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     public function __construct()

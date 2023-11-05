@@ -294,6 +294,7 @@ class ServicePreferences
 
     public function canShow(array $tab, $indice_attribut)
     {
+        //dd($tab);
         foreach ($tab as $valeur) {
             if ($valeur == $indice_attribut) {
                 return true;
@@ -3595,7 +3596,6 @@ class ServicePreferences
             $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_MODIFICATION)
                 ->onlyOnIndex();
         }
-
         return $tabAttributs;
     }
 
@@ -4973,7 +4973,8 @@ class ServicePreferences
             ->onlyOnIndex(); //->setColumns(6);
 
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
-            $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+                ->renderAsHtml()
                 ->onlyOnIndex(); //->setColumns(6);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
@@ -5035,7 +5036,9 @@ class ServicePreferences
             ->onlyOnDetail()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)->onlyOnDetail();
-        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)->onlyOnDetail();
+        $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            ->renderAsHtml()
+            ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->formatValue(function ($value, Piste $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
@@ -5161,8 +5164,10 @@ class ServicePreferences
 
     public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        
         //définition des attributs des pages
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
+        
         return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
     }
 

@@ -35,7 +35,7 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    #[ORM\ManyToOne(inversedBy: 'cotations', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\ManyToOne(inversedBy: 'cotations')]

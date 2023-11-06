@@ -50,7 +50,7 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $contacts;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $cotations;
 
     #[ORM\Column(length: 255, nullable: true)]

@@ -5046,7 +5046,6 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
@@ -5061,6 +5060,15 @@ class ServicePreferences
             ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)->onlyOnDetail();
+
+        //Onglet Cotations
+        $tabAttributs[] = FormField::addTab(' Missions')
+            ->setIcon('fas fa-paper-plane')
+            ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
+
+
 
         //Onglet Cotations
         $tabAttributs[] = FormField::addTab(' Cotations')

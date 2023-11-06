@@ -47,6 +47,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
 use App\Controller\Admin\ContactCrudController;
+use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -4395,6 +4396,7 @@ class ServicePreferences
         //dd($champsACacher);
         $reponse = !$champsACacher->contains($nomChamp);
         //dd($champsACacher . ": " . $reponse);
+
         return $reponse;
     }
 
@@ -4866,12 +4868,13 @@ class ServicePreferences
             //->setFormType(CKEditorType::class)
             ->onlyOnForms()
             ->setColumns(12);
-        $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
-            ->onlyOnForms()
-            ->setColumns(12)
-            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
-            ->setChoices(ActionCRMCrudController::STATUS_MISSION);
-
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_STATUS)) {
+            $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
+                ->setChoices(ActionCRMCrudController::STATUS_MISSION);
+        }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_PISTE)) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->setRequired(false)
@@ -4993,7 +4996,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
-            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+            $tabAttributs[] = AssociationField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
@@ -5030,7 +5033,6 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->formatValue(function ($value, Piste $piste) {
                 $this->setTitreReportingCRM($piste);
-                //dd($piste);
                 return $value;
             })
             ->onlyOnDetail(); //->setColumns(6);
@@ -5067,7 +5069,7 @@ class ServicePreferences
             ->setIcon('fas fa-paper-plane')
             ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
 
 
 
@@ -5183,14 +5185,13 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
 
-
         //Onglet Contacts
         $tabAttributs[] = FormField::addTab(' Contacts')
             ->setIcon('fas fa-address-book')
             ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
             ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
-            ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
             ->useEntryCrudForm(ContactCrudController::class)
             ->allowAdd(true)
             ->allowDelete(true)
@@ -5204,9 +5205,24 @@ class ServicePreferences
             ->setIcon('fas fa-paper-plane')
             ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
             ->onlyOnForms();
-        $tabAttributs[] = CollectionField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
-            ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
+        $tabAttributs[] = CollectionField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
             ->useEntryCrudForm(ActionCRMCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(7)
+            ->onlyOnForms();
+
+        //Onglet Cotations
+        $tabAttributs[] = FormField::addTab(' Cotations')
+            ->setIcon('fas fa-cash-register')
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(CotationCrudController::class)
             ->allowAdd(true)
             ->allowDelete(true)
             ->setEntryIsComplex()

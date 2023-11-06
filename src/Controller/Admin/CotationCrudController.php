@@ -54,7 +54,6 @@ class CotationCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        
     }
 
 
@@ -133,7 +132,9 @@ class CotationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        if ($this->crud != null) {
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        }
         return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -307,7 +308,7 @@ class CotationCrudController extends AbstractCrudController
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_creerPolice($context, $adminUrlGenerator));
     }
-    
+
     public function cross_canal_ouvrirPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_ouvrirPolice($context, $adminUrlGenerator));

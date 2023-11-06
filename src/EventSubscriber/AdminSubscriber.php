@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use App\Entity\Facture;
 use App\Entity\Monnaie;
 use App\Entity\Cotation;
+use App\Entity\Paiement;
 use App\Entity\ActionCRM;
 use App\Entity\Entreprise;
 use App\Entity\Preference;
@@ -15,17 +16,18 @@ use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
 use App\Entity\ElementFacture;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceFacture;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
-use App\Controller\Admin\MonnaieCrudController;
-use App\Controller\Admin\PoliceCrudController;
-use App\Entity\Paiement;
-use App\Service\ServiceAvenant;
-use App\Service\ServiceFacture;
 use App\Service\ServiceSuppression;
+use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
+use Symfony\Bundle\SecurityBundle\Security;
+use App\Controller\Admin\PoliceCrudController;
+use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\ActionCRMCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -112,22 +114,42 @@ class AdminSubscriber implements EventSubscriberInterface
             //dd($facture->getElementFactures());
         }
 
-        if ($entityInstance instanceof Piste) {
-            /** @var Piste */
-            $piste = $entityInstance;
-            foreach ($piste->getContacts() as $contact) {
-                $contact->setCreatedAt(new \DateTimeImmutable());
-                $contact->setUpdatedAt(new \DateTimeImmutable());
-                $contact->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
-            }
-        }
+        $this->updateCollectionsPourPiste($entityInstance, true);
 
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $entityInstance->setEntreprise($this->serviceEntreprise->getEntreprise());
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
         //$this->cleanElementFacture();
+    }
+
+    private function updateCollectionsPourPiste($entityInstance, bool $isCreate)
+    {
+        if ($entityInstance instanceof Piste) {
+            /** @var Piste */
+            $piste = $entityInstance;
+            //Collection pour Contact
+            foreach ($piste->getContacts() as $contact) {
+                if ($isCreate || $contact->getCreatedAt() == null) {
+                    $contact->setCreatedAt(new \DateTimeImmutable());
+                }
+                $contact->setUpdatedAt(new \DateTimeImmutable());
+                $contact->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
+            }
+            //Collection pour Action
+            foreach ($piste->getActionsCRMs() as $action) {
+                if ($isCreate || $action->getCreatedAt() == null) {
+                    $action->setCreatedAt(new \DateTimeImmutable());
+                    $action->setClos(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
+                }
+                $action->setUpdatedAt(new \DateTimeImmutable());
+                $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $action->setEntreprise($this->serviceEntreprise->getEntreprise());
+            }
+            
+            //dd($piste);
+        }
     }
 
     public function updateNomMonnaie(Monnaie $entityInstance): Monnaie
@@ -168,6 +190,9 @@ class AdminSubscriber implements EventSubscriberInterface
         if ($entityInstance instanceof Facture) {
             $this->serviceFacture->cleanElementFacture($entityInstance);
         }
+
+        $this->updateCollectionsPourPiste($entityInstance, false);
+
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
         //ici il faut aussi actualiser les instances de Police et Facture
         //dd($entityInstance);

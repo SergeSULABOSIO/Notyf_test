@@ -45,8 +45,8 @@ class ActionCRM
     #[ORM\Column]
     private ?bool $clos = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
-    private ?Piste $piste = null;
+    /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    private ?Piste $piste = null; */
 
     #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
     private Collection $feedbackCRMs;
@@ -62,6 +62,9 @@ class ActionCRM
 
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Sinistre $sinistre = null;
+
+    #[ORM\ManyToOne(inversedBy: 'actionsCRMs', cascade:['remove', 'persist', 'refresh'])]
+    private ?Piste $piste = null;
 
     
     public function __construct()
@@ -185,20 +188,9 @@ class ActionCRM
 
     public function __toString()
     {
-        return $this->mission . " / Piste: " . $this->piste;
+        return "La mission \"" . $this->mission . "(...)\" | status : " . ($this->clos == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
     }
 
-    public function getPiste(): ?Piste
-    {
-        return $this->piste;
-    }
-
-    public function setPiste(?Piste $piste): self
-    {
-        $this->piste = $piste;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, FeedbackCRM>
@@ -274,6 +266,18 @@ class ActionCRM
     public function setSinistre(?Sinistre $sinistre): self
     {
         $this->sinistre = $sinistre;
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
 
         return $this;
     }

@@ -44,8 +44,11 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?EtapeCrm $etape = null;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class)]
-    private Collection $actionCRMs;
+    /* #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $actionCRMs; */
+
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $contacts;
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class)]
     private Collection $cotations;
@@ -56,14 +59,14 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Police $police = null;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
-    private Collection $contacts;
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $actionsCRMs;
 
     public function __construct()
     {
-        $this->actionCRMs = new ArrayCollection();
         $this->cotations = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->actionsCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,7 +172,7 @@ class Piste
 
     public function __toString()
     {
-        return "" . $this->nom;// . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
+        return "la piste " . $this->nom;// . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     public function getEtape(): ?EtapeCrm
@@ -183,37 +186,6 @@ class Piste
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, ActionCRM>
-     */
-    public function getActionCRMs(): Collection
-    {
-        return $this->actionCRMs;
-    }
-
-    public function addActionCRM(ActionCRM $actionCRM): self
-    {
-        if (!$this->actionCRMs->contains($actionCRM)) {
-            $this->actionCRMs->add($actionCRM);
-            $actionCRM->setPiste($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActionCRM(ActionCRM $actionCRM): self
-    {
-        if ($this->actionCRMs->removeElement($actionCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($actionCRM->getPiste() === $this) {
-                $actionCRM->setPiste(null);
-            }
-        }
-
-        return $this;
-    }
-
 
     /**
      * @return Collection<int, Cotation>
@@ -293,6 +265,36 @@ class Piste
             // set the owning side to null (unless already changed)
             if ($contact->getPiste() === $this) {
                 $contact->setPiste(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ActionCRM>
+     */
+    public function getActionsCRMs(): Collection
+    {
+        return $this->actionsCRMs;
+    }
+
+    public function addActionsCRM(ActionCRM $actionsCRM): self
+    {
+        if (!$this->actionsCRMs->contains($actionsCRM)) {
+            $this->actionsCRMs->add($actionsCRM);
+            $actionsCRM->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActionsCRM(ActionCRM $actionsCRM): self
+    {
+        if ($this->actionsCRMs->removeElement($actionsCRM)) {
+            // set the owning side to null (unless already changed)
+            if ($actionsCRM->getPiste() === $this) {
+                $actionsCRM->setPiste(null);
             }
         }
 

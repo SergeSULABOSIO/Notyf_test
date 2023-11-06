@@ -92,43 +92,43 @@ class ServiceCrossCanal
 
 
     //Feedback
-    public const OPTION_FEEDBACK_AJOUTER = "Ajouter un feedback";
-    public const OPTION_FEEDBACK_LISTER = "Voire les feedbacks";
+    public const OPTION_FEEDBACK_AJOUTER = "New feedback";
+    public const OPTION_FEEDBACK_LISTER = "Feedbacks";
     //Piece
-    public const OPTION_PIECE_AJOUTER = "Ajouter une pièce";
-    public const OPTION_PIECE_LISTER = "Voire les pièces";
-    public const OPTION_PIECE_ATTACHER = "Attacher une pièce";
+    public const OPTION_PIECE_AJOUTER = "New pièce";
+    public const OPTION_PIECE_LISTER = "Pièces";
+    public const OPTION_PIECE_ATTACHER = "New pièce";
     //Automobile
-    public const OPTION_AUTOMOBILE_AJOUTER = "Ajouter un engin";
-    public const OPTION_AUTOMOBILE_LISTER = "Voire les engins";
+    public const OPTION_AUTOMOBILE_AJOUTER = "New engin";
+    public const OPTION_AUTOMOBILE_LISTER = "Engins";
     //Piste
-    public const OPTION_PISTE_AJOUTER = "Ajouter une piste";
-    public const OPTION_PISTE_LISTER = "Voire les pistes";
+    public const OPTION_PISTE_AJOUTER = "New piste";
+    public const OPTION_PISTE_LISTER = "Pistes";
     //Police
-    public const OPTION_POLICE_LISTER = "Voire les polices";
-    public const OPTION_POLICE_OUVRIR = "Voire la police";
-    public const OPTION_POLICE_CREER = "Créer la police";
+    public const OPTION_POLICE_LISTER = "Polices";
+    public const OPTION_POLICE_OUVRIR = "Police";
+    public const OPTION_POLICE_CREER = "New police";
     //Client
-    public const OPTION_CLIENT_OUVRIR = "Voire le client";
-    public const OPTION_CLIENT_CREER = "Créer le client";
+    public const OPTION_CLIENT_OUVRIR = "Client";
+    public const OPTION_CLIENT_CREER = "New client";
     //Mission
-    public const OPTION_MISSION_AJOUTER = "Ajouter une mission";
-    public const OPTION_MISSION_LISTER = "Voire les missions";
+    public const OPTION_MISSION_AJOUTER = "New mission";
+    public const OPTION_MISSION_LISTER = "Missions";
     //Contact
-    public const OPTION_CONTACT_AJOUTER = "Ajouter un contact";
-    public const OPTION_CONTACT_LISTER = "Voire les contacts";
+    public const OPTION_CONTACT_AJOUTER = "New contact";
+    public const OPTION_CONTACT_LISTER = "Contacts";
     //Cotation
-    public const OPTION_COTATION_AJOUTER = "Ajouter une cotation";
-    public const OPTION_COTATION_LISTER = "Voire les cotations";
+    public const OPTION_COTATION_AJOUTER = "New cotation";
+    public const OPTION_COTATION_LISTER = "Cotations";
     //Sinistre
-    public const OPTION_SINISTRE_LISTER = "Voir les sinistres";
-    public const OPTION_SINISTRE_AJOUTER = "Ajouter un sinistre";
+    public const OPTION_SINISTRE_LISTER = "Sinistres";
+    public const OPTION_SINISTRE_AJOUTER = "New sinistre";
     //Expert Sinistre
-    public const OPTION_EXPERT_AJOUTER = "Ajouter un expert";
-    public const OPTION_EXPERT_LISTER = "Lister les experts";
+    public const OPTION_EXPERT_AJOUTER = "New expert";
+    public const OPTION_EXPERT_LISTER = "Experts";
     //Victime Sinistre
-    public const OPTION_VICTIME_AJOUTER = "Ajouter une victime";
-    public const OPTION_VICTIME_LISTER = "Lister les victimes";
+    public const OPTION_VICTIME_AJOUTER = "New victime";
+    public const OPTION_VICTIME_LISTER = "Victimes";
 
 
     public const CROSSED_ENTITY_ACTION = "action";

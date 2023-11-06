@@ -152,7 +152,7 @@ class PisteCrudController extends AbstractCrudController
             ->linkToCrudAction('cross_canal_ajouterMission');
         $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Piste $entity) {
-                return count($entity->getActionCRMs()) != 0;
+                return count($entity->getActionsCRMs()) != 0;
             })
             ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerMission');

@@ -130,7 +130,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet = new ActionCRM();
         $objet->setStartedAt(new DateTimeImmutable("+1 day"));
         $objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        $objet->setClos(0);
+        $objet->setClos(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setCotation($objet, $this->adminUrlGenerator);
@@ -142,6 +142,14 @@ class ActionCRMCrudController extends AbstractCrudController
     {
         if ($this->crud != null) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        }else{
+            $this->adminUrlGenerator->set("champsACacher", [
+                PreferenceCrudController::PREF_CRM_MISSION_POLICE,
+                PreferenceCrudController::PREF_CRM_MISSION_COTATION,
+                PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
+                //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
+                PreferenceCrudController::PREF_CRM_MISSION_PISTE,
+            ]);
         }
         return $this->servicePreferences->getChamps(new ActionCRM(), $this->crud, $this->adminUrlGenerator);
     }

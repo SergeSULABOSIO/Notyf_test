@@ -3613,6 +3613,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CONTACT_ENTREPRISE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_MODIFICATION)->onlyOnDetail();
+
         return $tabAttributs;
     }
 
@@ -5035,7 +5036,6 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->onlyOnDetail()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)->onlyOnDetail();
         $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->renderAsHtml()
             ->onlyOnDetail();
@@ -5046,9 +5046,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
@@ -5056,6 +5054,28 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)->onlyOnDetail();
+
+        //Onglet Contacts
+        $tabAttributs[] = FormField::addTab(' Contacts')
+            ->setIcon('fas fa-address-book')
+            ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)->onlyOnDetail();
+
+        //Onglet Cotations
+        $tabAttributs[] = FormField::addTab(' Cotations')
+            ->setIcon('fas fa-cash-register')
+            ->setHelp("Les cotations produites dans le cadre de cette piste.")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->onlyOnDetail();
+
+        //Onglet Cotations
+        $tabAttributs[] = FormField::addTab(' Polices')
+            ->setIcon('fas fa-file-shield')
+            ->setHelp("Les polices produites et placées à partir de cette piste.")
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)->onlyOnDetail();
+
 
         return $tabAttributs;
     }
@@ -5164,10 +5184,10 @@ class ServicePreferences
 
     public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
-        
+
         //définition des attributs des pages
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-        
+
         return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
     }
 

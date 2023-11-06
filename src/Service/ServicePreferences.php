@@ -5140,11 +5140,19 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->onlyOnForms()
-            ->setColumns(5);
+            ->setColumns(3);
+
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->onlyOnForms()
+            ->setColumns(2);
+
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
-            ->setColumns(4)
+            ->setColumns(2)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
             ->setColumns(3)
@@ -5154,6 +5162,15 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
+
+        $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
+            ->onlyOnForms()
+            ->setColumns(2);
+
+        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            ->onlyOnForms()
+            ->setColumns(12);
+
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
             ->setColumns(12)
@@ -5164,14 +5181,13 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
-            ->onlyOnForms()
-            ->setColumns(3);
+
+
+        //Onglet Contacts
+        $tabAttributs[] = FormField::addTab(' Contacts')
+            ->setIcon('fas fa-address-book')
+            ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
+            ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
             ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
             ->useEntryCrudForm(ContactCrudController::class)
@@ -5183,9 +5199,6 @@ class ServicePreferences
             ->onlyOnForms();
 
 
-        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            ->onlyOnForms()
-            ->setColumns(12);
         //dd($tabAttributs);
         return $tabAttributs;
     }

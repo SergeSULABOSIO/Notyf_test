@@ -97,8 +97,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->add('cotation')
             ->add('sinistre')
             ->add('clos')
-            ->add('attributedTo')
-            ;
+            ->add('attributedTo');
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -141,7 +140,9 @@ class ActionCRMCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        if ($this->crud != null) {
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        }
         return $this->servicePreferences->getChamps(new ActionCRM(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -153,7 +154,7 @@ class ActionCRMCrudController extends AbstractCrudController
             ->setIcon('fas fa-comments')
             ->linkToCrudAction('cross_canal_ajouterFeedback');
         $feedback_lister = Action::new(ServiceCrossCanal::OPTION_FEEDBACK_LISTER)
-            ->setIcon('fa-solid fa-rectangle-list')//<i class="fa-solid fa-rectangle-list"></i>
+            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
             ->linkToCrudAction('cross_canal_listerFeedback');
 
 

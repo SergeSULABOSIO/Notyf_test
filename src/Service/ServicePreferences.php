@@ -4815,11 +4815,11 @@ class ServicePreferences
     {
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
             ->onlyOnForms()
-            ->setColumns(8);
+            ->setColumns(12);
         $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
             ->setRequired(false)
             ->onlyOnForms()
-            ->setColumns(4)
+            ->setColumns(12)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -4868,13 +4868,14 @@ class ServicePreferences
             ->setColumns(12);
         $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
             ->onlyOnForms()
-            ->setColumns(6)
+            ->setColumns(12)
             ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
             ->setChoices(ActionCRMCrudController::STATUS_MISSION);
+
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_PISTE)) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->setRequired(false)
-                ->setColumns(6)
+                ->setColumns(12)
                 ->onlyOnForms()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -4885,10 +4886,10 @@ class ServicePreferences
         }
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
             ->onlyOnForms()
-            ->setColumns(6);
+            ->setColumns(12);
         return $tabAttributs;
     }
 
@@ -5195,9 +5196,23 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(6)
+            ->setColumns(7)
             ->onlyOnForms();
 
+        //Onglet Cotations
+        $tabAttributs[] = FormField::addTab(' Missions')
+            ->setIcon('fas fa-paper-plane')
+            ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('actionCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+            ->setHelp("Si votre contact ne figure pas sur cette liste, ne vous inquietez pas car vous avez la possibilité d'en ajouter après l'enregistrement de cette piste.")
+            ->useEntryCrudForm(ActionCRMCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(7)
+            ->onlyOnForms();
 
         //dd($tabAttributs);
         return $tabAttributs;

@@ -67,10 +67,17 @@ class Client extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Cotation::class)]
     private Collection $cotations;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Piste::class)]
+    private Collection $pistes;
+
+    #[ORM\ManyToOne(inversedBy: 'prospect')]
+    private ?Piste $piste = null;
+
     public function __construct()
     {
         $this->police = new ArrayCollection();
         $this->cotations = new ArrayCollection();
+        $this->pistes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -307,6 +314,48 @@ class Client extends CalculableEntity
                 $cotation->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getClient() === $this) {
+                $piste->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
 
         return $this;
     }

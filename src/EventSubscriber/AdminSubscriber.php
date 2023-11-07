@@ -28,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Entity\Client;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -147,7 +148,28 @@ class AdminSubscriber implements EventSubscriberInterface
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $action->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
-            
+
+            //Collection pour Prospect
+            if (count($piste->getProspect())) {
+                //on ne prend que le tout premier prospect comme client
+                /** @var Client */
+                $newClient = $piste->getProspect()[0];
+                $newClient->setCreatedAt(new \DateTimeImmutable());
+                $newClient->setUpdatedAt(new \DateTimeImmutable());
+                $newClient->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $newClient->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                //ici il faut actualiser la base de données
+                $this->entityManager->persist($newClient);
+                $this->entityManager->flush();
+                $piste->setClient($newClient);
+
+                //On vide la liste des prospects
+                $tabProspect = $piste->getProspect();
+                foreach ($tabProspect as $pros) {
+                    $piste->removeProspect($pros);
+                }
+            }
             //dd($piste);
         }
     }

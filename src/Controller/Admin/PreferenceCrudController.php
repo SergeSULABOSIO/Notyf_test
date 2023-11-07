@@ -171,11 +171,11 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //CRM - PISTE
     public const PREF_CRM_PISTE_ID                          = "Id";
-    public const PREF_CRM_PISTE_NOM                         = "Intitulé de la piste";
+    public const PREF_CRM_PISTE_NOM                         = "Intitulé";
     public const PREF_CRM_PISTE_CONTACT                     = "Contacts";
-    public const PREF_CRM_PISTE_OBJECTIF                    = "Objectif à atteindre";
+    public const PREF_CRM_PISTE_OBJECTIF                    = "Objectif";
     public const PREF_CRM_PISTE_MONTANT                     = "CAFF potentiels";
-    public const PREF_CRM_PISTE_ETAPE                       = "Etape actuelle";
+    public const PREF_CRM_PISTE_ETAPE                       = "Etape";
     public const PREF_CRM_PISTE_DATE_EXPIRATION             = "Echéance";
     public const PREF_CRM_PISTE_ACTIONS                     = "Missions";
     public const PREF_CRM_PISTE_COTATION                    = "Cotations";
@@ -184,7 +184,9 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_DATE_DE_CREATION            = "Date de création";
     public const PREF_CRM_PISTE_DATE_DE_MODIFICATION        = "Dernière modification";
     public const PREF_CRM_PISTE_TYPE_AVENANT                = "Avenant";
-    public const PREF_CRM_PISTE_POLICE                      = "Police de base";
+    public const PREF_CRM_PISTE_POLICE                      = "Police";
+    public const PREF_CRM_PISTE_CLIENT                      = "Client";
+    public const PREF_CRM_PISTE_PROSPECTS                   = "Prospects";
     public const TAB_CRM_PISTE = [
         self::PREF_CRM_PISTE_ID                                 => 0,
         self::PREF_CRM_PISTE_NOM                                => 1,
@@ -200,7 +202,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_PISTE_DATE_DE_CREATION                   => 11,
         self::PREF_CRM_PISTE_DATE_DE_MODIFICATION               => 12,
         self::PREF_CRM_PISTE_TYPE_AVENANT                       => 13,
-        self::PREF_CRM_PISTE_POLICE                             => 14
+        self::PREF_CRM_PISTE_POLICE                             => 14,
+        self::PREF_CRM_PISTE_CLIENT                             => 15,
+        self::PREF_CRM_PISTE_PROSPECTS                          => 16
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";

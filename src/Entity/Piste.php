@@ -44,9 +44,6 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?EtapeCrm $etape = null;
 
-    /* #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade:['remove', 'persist', 'refresh'])]
-    private Collection $actionCRMs; */
-
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $contacts;
 
@@ -55,18 +52,25 @@ class Piste
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Police $police = null;
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $actionsCRMs;
 
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Client $client = null;
+
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Client::class)]
+    private Collection $prospect;
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->actionsCRMs = new ArrayCollection();
+        $this->prospect = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -295,6 +299,48 @@ class Piste
             // set the owning side to null (unless already changed)
             if ($actionsCRM->getPiste() === $this) {
                 $actionsCRM->setPiste(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getProspect(): Collection
+    {
+        return $this->prospect;
+    }
+
+    public function addProspect(Client $prospect): self
+    {
+        if (!$this->prospect->contains($prospect)) {
+            $this->prospect->add($prospect);
+            $prospect->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProspect(Client $prospect): self
+    {
+        if ($this->prospect->removeElement($prospect)) {
+            // set the owning side to null (unless already changed)
+            if ($prospect->getPiste() === $this) {
+                $prospect->setPiste(null);
             }
         }
 

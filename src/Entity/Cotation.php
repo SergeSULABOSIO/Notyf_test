@@ -40,7 +40,7 @@ class Cotation
 
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Assureur $assureur = null;
-
+    
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
     private Collection $docPieces;
 

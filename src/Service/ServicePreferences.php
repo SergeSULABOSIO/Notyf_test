@@ -3458,46 +3458,59 @@ class ServicePreferences
     public function setCRM_Fields_Clients_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CLIENT_NOM)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_CLIENT_TELEPHONE)
-            ->setColumns(6)
+            ->setColumns(12)
+            //->setColumns(6)
             ->onlyOnForms();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_CLIENT_EMAIL)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_CLIENT_SITEWEB)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('ispersonnemorale', PreferenceCrudController::PREF_PRO_CLIENT_PERSONNE_MORALE)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms()
             ->setChoices(ClientCrudController::TAB_CLIENT_IS_PERSONNE_MORALE);
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_CLIENT_RCCM)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_CLIENT_IDNAT)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('numipot', PreferenceCrudController::PREF_PRO_CLIENT_NUM_IMPOT)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('secteur', PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR)
-            ->setColumns(6)
+            //->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms()
             ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
-        $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-            ->onlyOnForms()
-            ->setColumns(12)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)) {
+            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+        }
 
         return $tabAttributs;
     }
@@ -4418,18 +4431,21 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM)) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)
                 ->onlyOnForms()
-                ->setColumns(6);
+                //->setColumns(6);
+                ->setColumns(12);
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)) {
             $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
-                ->setColumns(6)
+                ->setColumns(12)
+                //->setColumns(6)
                 ->onlyOnForms()
                 ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->setRequired(false)
-                ->setColumns(6)
+                //->setColumns(6)
+                ->setColumns(12)
                 ->onlyOnForms()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -4441,7 +4457,8 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CLIENT)) {
             $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_COTATION_CLIENT)
                 ->setHelp("Si l'assuré (client/prospect) concerné n'existe pas sur cette liste, ne vous inquiètez pas car vous pouvez créer un client après l'enregistrement de cette cotation.")
-                ->setColumns(6)
+                //->setColumns(6)
+                ->setColumns(12)
                 ->setRequired(false)
                 ->onlyOnForms()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -4454,7 +4471,8 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)) {
             $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)
                 ->setRequired(false)
-                ->setColumns(4)
+                //->setColumns(4)
+                ->setColumns(12)
                 ->onlyOnForms()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -4468,13 +4486,15 @@ class ServicePreferences
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
-                ->setColumns(2);
+                //->setColumns(2);
+                ->setColumns(12);
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PISTE)) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
                 ->setRequired(false)
                 ->onlyOnForms()
-                ->setColumns(6)
+                //->setColumns(6)
+                ->setColumns(12)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
                         ->createQueryBuilder('e')
@@ -4966,6 +4986,10 @@ class ServicePreferences
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info'
                 ]);
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CLIENT])) {
+            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
                 ->onlyOnIndex();
@@ -5036,6 +5060,8 @@ class ServicePreferences
                 return $value;
             })
             ->onlyOnDetail(); //->setColumns(6);
+        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
+            ->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->onlyOnDetail()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
@@ -5185,6 +5211,34 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
 
+        //Onglet Client ou Prospect
+        $tabAttributs[] = FormField::addTab(' Client')
+            ->setIcon('fas fa-person-shelter')
+            ->setHelp("Le client ou prospect concerné par cette piste.")
+            ->onlyOnForms();
+            
+        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
+            ->setHelp("Si le client n'existe pas encore sur cette liste, vous pouvez l'ajouter comme prospect. Pour cela, il faut allez sur le champ d'ajout de prospect.")
+            ->onlyOnForms()
+            ->setColumns(5)
+            ->setRequired(false)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+
+        $tabAttributs[] = CollectionField::new('prospect', PreferenceCrudController::PREF_CRM_PISTE_PROSPECTS)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(ClientCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(7)
+            ->onlyOnForms();
+
         //Onglet Contacts
         $tabAttributs[] = FormField::addTab(' Contacts')
             ->setIcon('fas fa-address-book')
@@ -5218,7 +5272,7 @@ class ServicePreferences
         //Onglet Cotations
         $tabAttributs[] = FormField::addTab(' Cotations')
             ->setIcon('fas fa-cash-register')
-            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->setHelp("Offres de proposition pour le client / prospect.")
             ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
             ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")

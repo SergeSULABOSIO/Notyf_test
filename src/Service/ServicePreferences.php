@@ -4731,7 +4731,9 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_MISSION_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)->onlyOnDetail();
-        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)->onlyOnDetail();
+        $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+            ->renderAsHtml()
+            ->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
             ->onlyOnDetail()
             ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
@@ -5216,7 +5218,7 @@ class ServicePreferences
             ->setIcon('fas fa-person-shelter')
             ->setHelp("Le client ou prospect concerné par cette piste.")
             ->onlyOnForms();
-            
+
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->setHelp("Si le client n'existe pas encore sur cette liste, vous pouvez l'ajouter comme prospect. Pour cela, il faut allez sur le champ d'ajout de prospect.")
             ->onlyOnForms()

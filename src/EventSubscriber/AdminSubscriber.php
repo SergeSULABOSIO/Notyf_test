@@ -148,7 +148,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $action->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
-
+            
             //Collection pour Prospect
             if (count($piste->getProspect())) {
                 //on ne prend que le tout premier prospect comme client
@@ -158,17 +158,16 @@ class AdminSubscriber implements EventSubscriberInterface
                 $newClient->setUpdatedAt(new \DateTimeImmutable());
                 $newClient->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $newClient->setEntreprise($this->serviceEntreprise->getEntreprise());
-
+            
                 //ici il faut actualiser la base de données
                 $this->entityManager->persist($newClient);
                 $this->entityManager->flush();
                 $piste->setClient($newClient);
-
-                //On vide la liste des prospects
-                $tabProspect = $piste->getProspect();
-                foreach ($tabProspect as $pros) {
-                    $piste->removeProspect($pros);
-                }
+            }
+            //On vide la liste des prospects
+            $tabProspect = $piste->getProspect();
+            foreach ($tabProspect as $pros) {
+                $piste->removeProspect($pros);
             }
             //dd($piste);
         }

@@ -20,6 +20,12 @@ class Cotation
 
     #[ORM\Column]
     private ?float $primeTotale = null;
+    
+    #[ORM\ManyToOne(inversedBy: 'cotations', cascade:['remove', 'persist', 'refresh'])]
+    private ?Piste $piste = null;
+    
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Assureur $assureur = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -35,34 +41,12 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations', cascade:['remove', 'persist', 'refresh'])]
-    private ?Piste $piste = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $validated = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations')]
-    private ?Assureur $assureur = null;
-
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
-    private Collection $docPieces;
-
-    #[ORM\OneToOne(mappedBy: 'cotation', cascade: ['persist', 'remove'])]
-    private ?Police $police = null;
-
-    #[ORM\ManyToOne(inversedBy: 'cotations')]
-    private ?Produit $produit = null;
-
-    #[ORM\ManyToOne(inversedBy: 'cotations')]
-    private ?Client $client = null;
-
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: ActionCRM::class)]
-    private Collection $actionCRMs;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $typeavenant = null;
 
     public function __construct()
     {
-        $this->docPieces = new ArrayCollection();
-        $this->actionCRMs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,120 +155,14 @@ class Cotation
         return $this;
     }
 
-    /**
-     * @return Collection<int, DocPiece>
-     */
-    public function getDocPieces(): Collection
+    public function getValidated(): ?int
     {
-        return $this->docPieces;
+        return $this->validated;
     }
 
-    public function addDocPiece(DocPiece $docPiece): self
+    public function setValidated(?int $validated): self
     {
-        if (!$this->docPieces->contains($docPiece)) {
-            $this->docPieces->add($docPiece);
-            $docPiece->setCotation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDocPiece(DocPiece $docPiece): self
-    {
-        if ($this->docPieces->removeElement($docPiece)) {
-            // set the owning side to null (unless already changed)
-            if ($docPiece->getCotation() === $this) {
-                $docPiece->setCotation(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($police === null && $this->police !== null) {
-            $this->police->setCotation(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($police !== null && $police->getCotation() !== $this) {
-            $police->setCotation($this);
-        }
-
-        $this->police = $police;
-
-        return $this;
-    }
-
-    public function getProduit(): ?Produit
-    {
-        return $this->produit;
-    }
-
-    public function setProduit(?Produit $produit): self
-    {
-        $this->produit = $produit;
-
-        return $this;
-    }
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): self
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ActionCRM>
-     */
-    public function getActionCRMs(): Collection
-    {
-        return $this->actionCRMs;
-    }
-
-    public function addActionCRM(ActionCRM $actionCRM): self
-    {
-        if (!$this->actionCRMs->contains($actionCRM)) {
-            $this->actionCRMs->add($actionCRM);
-            $actionCRM->setCotation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActionCRM(ActionCRM $actionCRM): self
-    {
-        if ($this->actionCRMs->removeElement($actionCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($actionCRM->getCotation() === $this) {
-                $actionCRM->setCotation(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getTypeavenant(): ?string
-    {
-        return $this->typeavenant;
-    }
-
-    public function setTypeavenant(?string $typeavenant): self
-    {
-        $this->typeavenant = $typeavenant;
+        $this->validated = $validated;
 
         return $this;
     }

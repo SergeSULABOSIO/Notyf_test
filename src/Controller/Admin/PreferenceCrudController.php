@@ -184,8 +184,9 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_DATE_DE_CREATION            = "Date de création";
     public const PREF_CRM_PISTE_DATE_DE_MODIFICATION        = "Dernière modification";
     public const PREF_CRM_PISTE_TYPE_AVENANT                = "Avenant";
-    public const PREF_CRM_PISTE_POLICE                      = "Police";
+    public const PREF_CRM_PISTE_POLICE                      = "Police source";
     public const PREF_CRM_PISTE_CLIENT                      = "Client";
+    public const PREF_CRM_PISTE_PRODUIT                     = "Produit";
     public const PREF_CRM_PISTE_PROSPECTS                   = "Prospects";
     public const TAB_CRM_PISTE = [
         self::PREF_CRM_PISTE_ID                                 => 0,
@@ -204,7 +205,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_PISTE_TYPE_AVENANT                       => 13,
         self::PREF_CRM_PISTE_POLICE                             => 14,
         self::PREF_CRM_PISTE_CLIENT                             => 15,
-        self::PREF_CRM_PISTE_PROSPECTS                          => 16
+        self::PREF_CRM_PISTE_PROSPECTS                          => 16,
+        self::PREF_CRM_PISTE_PRODUIT                            => 17
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";

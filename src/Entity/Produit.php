@@ -61,10 +61,14 @@ class Produit extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Police::class)]
     private Collection $police;
 
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Piste::class)]
+    private Collection $pistes;
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
         $this->police = new ArrayCollection();
+        $this->pistes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -263,6 +267,36 @@ class Produit extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($police->getProduit() === $this) {
                 $police->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getProduit() === $this) {
+                $piste->setProduit(null);
             }
         }
 

@@ -30,7 +30,7 @@ class Cotation
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
-
+    
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
@@ -40,7 +40,7 @@ class Cotation
 
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Assureur $assureur = null;
-    
+
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class)]
     private Collection $docPieces;
 

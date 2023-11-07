@@ -64,6 +64,9 @@ class Piste
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Client::class)]
     private Collection $prospect;
+    
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Produit $produit = null;
 
     public function __construct()
     {
@@ -187,7 +190,6 @@ class Piste
     public function setEtape(?EtapeCrm $etape): self
     {
         $this->etape = $etape;
-
         return $this;
     }
 
@@ -343,6 +345,18 @@ class Piste
                 $prospect->setPiste(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): self
+    {
+        $this->produit = $produit;
 
         return $this;
     }

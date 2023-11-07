@@ -4972,6 +4972,12 @@ class ServicePreferences
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)
                 ->onlyOnIndex();
         }
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
+            ->formatValue(function ($value, Piste $piste) {
+                $this->setTitreReportingCRM($piste);
+                return $value;
+            })
+            ->onlyOnIndex(); //->setColumns(6);
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT])) {
             $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
                 ->onlyOnIndex()
@@ -4992,16 +4998,15 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_PRODUIT])) {
+            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
                 ->onlyOnIndex();
         }
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
-            ->formatValue(function ($value, Piste $piste) {
-                $this->setTitreReportingCRM($piste);
-                return $value;
-            })
-            ->onlyOnIndex(); //->setColumns(6);
+
 
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
             $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
@@ -5064,11 +5069,15 @@ class ServicePreferences
             ->onlyOnDetail(); //->setColumns(6);
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
+            ->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->onlyOnDetail()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->renderAsHtml()
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->formatValue(function ($value, Piste $entity) {
@@ -5198,13 +5207,9 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(2);
 
-        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            ->onlyOnForms()
-            ->setColumns(12);
-
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
-            ->setColumns(12)
+            ->setColumns(6)
             ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5212,6 +5217,21 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
+
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
+            ->onlyOnForms()
+            ->setColumns(6)
+            ->setRequired(true)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+
+        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            ->onlyOnForms()
+            ->setColumns(12);
 
         //Onglet Client ou Prospect
         $tabAttributs[] = FormField::addTab(' Client')

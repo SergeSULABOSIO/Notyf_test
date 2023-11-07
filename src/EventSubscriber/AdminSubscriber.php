@@ -169,6 +169,18 @@ class AdminSubscriber implements EventSubscriberInterface
             foreach ($tabProspect as $pros) {
                 $piste->removeProspect($pros);
             }
+
+            //Collection pour Cotation
+            foreach ($piste->getCotations() as $cotation) {
+                if ($isCreate || $cotation->getCreatedAt() == null) {
+                    $cotation->setCreatedAt(new \DateTimeImmutable());
+                }
+                $cotation->setAssureur($cotation->getAssureur());
+                $cotation->setPiste($cotation->getPiste());
+                $cotation->setUpdatedAt(new \DateTimeImmutable());
+                $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $cotation->setEntreprise($this->serviceEntreprise->getEntreprise());
+            }
             //dd($piste);
         }
     }

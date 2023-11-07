@@ -4434,44 +4434,18 @@ class ServicePreferences
                 //->setColumns(6);
                 ->setColumns(12);
         }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)) {
-            $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)) {
+            $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
                 ->setColumns(12)
+                ->setRequired(true)
                 //->setColumns(6)
                 ->onlyOnForms()
-                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+                ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->setRequired(false)
                 //->setColumns(6)
-                ->setColumns(12)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CLIENT)) {
-            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_COTATION_CLIENT)
-                ->setHelp("Si l'assuré (client/prospect) concerné n'existe pas sur cette liste, ne vous inquiètez pas car vous pouvez créer un client après l'enregistrement de cette cotation.")
-                //->setColumns(6)
-                ->setColumns(12)
-                ->setRequired(false)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)) {
-            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)
-                ->setRequired(false)
-                //->setColumns(4)
                 ->setColumns(12)
                 ->onlyOnForms()
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
@@ -4489,45 +4463,6 @@ class ServicePreferences
                 //->setColumns(2);
                 ->setColumns(12);
         }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PISTE)) {
-            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)
-                ->setRequired(false)
-                ->onlyOnForms()
-                //->setColumns(6)
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_POLICE)) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_COTATION_POLICE)
-                ->setRequired(false)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)) {
-            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
-                ->setRequired(false)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-
         return $tabAttributs;
     }
 
@@ -4589,13 +4524,6 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_COTATION_TYPE_AVENANT)
-            ->onlyOnDetail()
-            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_COTATION_CLIENT)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_COTATION_POLICE)->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
             ->formatValue(function ($value, Cotation $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
@@ -4603,9 +4531,12 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
+            ->onlyOnDetail()
+            ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_CRM_COTATION_PIECES)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -5234,7 +5165,7 @@ class ServicePreferences
             });
 
         $tabAttributs[] = CollectionField::new('prospect', PreferenceCrudController::PREF_CRM_PISTE_PROSPECTS)
-            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->setHelp("Vous avez la possibilité d'ajouter des données à volonté. Mais seul le premier sera pris en compte.")
             ->useEntryCrudForm(ClientCrudController::class)
             ->allowAdd(true)
             ->allowDelete(true)

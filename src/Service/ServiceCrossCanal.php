@@ -929,28 +929,28 @@ class ServiceCrossCanal
 
 
 
-    public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var Piste */
-        $entite = $context->getEntity()->getInstance();
-        $nomAvenant = $this->serviceAvenant->getNomavenant($entite->getTypeavenant());
-        //dd($entite->getTypeavenant());
-        $url = $adminUrlGenerator
-            ->setController(CotationCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("titre", $nomAvenant . " - Nouvelle Cotation - [Piste: " . $entite . "]")
-            //Champs de saisie à cacher obligatoirement car inutiles
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_COTATION_POLICE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_COTATION_PISTE)
-            ->set("avenant[type]", $nomAvenant)
-            ->set("avenant[police]", $nomAvenant)
-            ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
-            ->setEntityId(null)
-            ->generateUrl();
-        //dd($url);
-        return $url;
-    }
+    // public function crossCanal_Piste_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    // {
+    //     /** @var Piste */
+    //     $entite = $context->getEntity()->getInstance();
+    //     $nomAvenant = $this->serviceAvenant->getNomavenant($entite->getTypeavenant());
+    //     //dd($entite->getTypeavenant());
+    //     $url = $adminUrlGenerator
+    //         ->setController(CotationCrudController::class)
+    //         ->setAction(Action::NEW)
+    //         ->set("titre", $nomAvenant . " - Nouvelle Cotation - [Piste: " . $entite . "]")
+    //         //Champs de saisie à cacher obligatoirement car inutiles
+    //         ->set("champsACacher[0]", PreferenceCrudController::PREF_CRM_COTATION_POLICE)
+    //         ->set("champsACacher[1]", PreferenceCrudController::PREF_CRM_COTATION_MISSIONS)
+    //         ->set("champsACacher[2]", PreferenceCrudController::PREF_CRM_COTATION_PISTE)
+    //         ->set("avenant[type]", $nomAvenant)
+    //         ->set("avenant[police]", $nomAvenant)
+    //         ->set(self::CROSSED_ENTITY_PISTE, $entite->getId())
+    //         ->setEntityId(null)
+    //         ->generateUrl();
+    //     //dd($url);
+    //     return $url;
+    // }
 
     public function crossCanal_Piste_ajouterContact(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
     {

@@ -36,7 +36,7 @@ class Cotation
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
-    
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
@@ -128,7 +128,7 @@ class Cotation
 
     public function __toString()
     {
-        return "" . $this->nom;
+        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | " . ($this->primeTotale / 100) . ($this->validated == 0 ? " [validée].":".");
     }
 
     public function getPiste(): ?Piste

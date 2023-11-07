@@ -296,10 +296,10 @@ class PisteCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_listerContact($context, $adminUrlGenerator));
     }
 
-    public function cross_canal_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_ajouterCotation($context, $adminUrlGenerator));
-    }
+    // public function cross_canal_ajouterCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect($this->serviceCrossCanal->crossCanal_Piste_ajouterCotation($context, $adminUrlGenerator));
+    // }
 
     public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {

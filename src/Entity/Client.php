@@ -296,28 +296,6 @@ class Client extends CalculableEntity
         return $this->cotations;
     }
 
-    public function addCotation(Cotation $cotation): self
-    {
-        if (!$this->cotations->contains($cotation)) {
-            $this->cotations->add($cotation);
-            $cotation->setClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCotation(Cotation $cotation): self
-    {
-        if ($this->cotations->removeElement($cotation)) {
-            // set the owning side to null (unless already changed)
-            if ($cotation->getClient() === $this) {
-                $cotation->setClient(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Piste>
      */

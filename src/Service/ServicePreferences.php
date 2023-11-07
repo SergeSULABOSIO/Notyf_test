@@ -5515,15 +5515,15 @@ class ServicePreferences
                 foreach ($piste->getCotations() as $cotation) {
                     /** @var Cotation */
                     $cota = $cotation;
-                    if ($cota->getPolice() != null) {
-                        /** @var Police */
-                        $pol = $cota->getPolice();
-                        //On force le calcul des champs calculables
-                        $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
-                        $prime_ttc += $pol->getPrimetotale();
-                        $com_ttc += $pol->calc_revenu_ttc;
-                        //dd($pol);
-                    }
+                    // if ($cota->getPolice() != null) {
+                    //     /** @var Police */
+                    //     $pol = $cota->getPolice();
+                    //     //On force le calcul des champs calculables
+                    //     $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
+                    //     $prime_ttc += $pol->getPrimetotale();
+                    //     $com_ttc += $pol->calc_revenu_ttc;
+                    //     //dd($pol);
+                    // }
                 }
 
                 if ($this->crud) {

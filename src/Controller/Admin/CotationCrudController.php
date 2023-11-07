@@ -153,18 +153,19 @@ class CotationCrudController extends AbstractCrudController
         $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
             ->setIcon('fas fa-paper-plane')
             ->linkToCrudAction('cross_canal_ajouterMission');
-        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
+        /* $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
             ->displayIf(static function (?Cotation $entity) {
                 return count($entity->getActionCRMs()) != 0;
             })
             ->setIcon('fas fa-paper-plane')
-            ->linkToCrudAction('cross_canal_listerMission');
+            ->linkToCrudAction('cross_canal_listerMission'); */
 
         $actions
             ->add(Crud::PAGE_DETAIL, $mission_ajouter)
             ->add(Crud::PAGE_INDEX, $mission_ajouter)
-            ->add(Crud::PAGE_DETAIL, $mission_lister)
-            ->add(Crud::PAGE_INDEX, $mission_lister);
+            //->add(Crud::PAGE_DETAIL, $mission_lister)
+            //->add(Crud::PAGE_INDEX, $mission_lister)
+            ;
 
         $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
             ->setIcon('fa-solid fa-paperclip')
@@ -174,32 +175,32 @@ class CotationCrudController extends AbstractCrudController
             ->linkToCrudAction('cross_canal_listerPiece');
 
         //cross canal
-        $police_creer = Action::new(ServiceCrossCanal::OPTION_POLICE_CREER)
+        /* $police_creer = Action::new(ServiceCrossCanal::OPTION_POLICE_CREER)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getPolice() == null;
             })
             ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_creerPolice');
-        $police_ouvrir = Action::new(ServiceCrossCanal::OPTION_POLICE_OUVRIR)
+            ->linkToCrudAction('cross_canal_creerPolice'); */
+        /* $police_ouvrir = Action::new(ServiceCrossCanal::OPTION_POLICE_OUVRIR)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getPolice() != null;
             })
             ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_ouvrirPolice');
+            ->linkToCrudAction('cross_canal_ouvrirPolice'); */
 
         //cross canal
-        $client_creer = Action::new(ServiceCrossCanal::OPTION_CLIENT_CREER)
+        /* $client_creer = Action::new(ServiceCrossCanal::OPTION_CLIENT_CREER)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getClient() == null;
             })
             ->setIcon('fas fa-person-shelter')
-            ->linkToCrudAction('cross_canal_creerClient');
-        $client_ouvrir = Action::new(ServiceCrossCanal::OPTION_CLIENT_OUVRIR)
+            ->linkToCrudAction('cross_canal_creerClient'); */
+        /* $client_ouvrir = Action::new(ServiceCrossCanal::OPTION_CLIENT_OUVRIR)
             ->displayIf(static function (?Cotation $entity) {
                 return $entity->getClient() != null;
             })
             ->setIcon('fas fa-person-shelter')
-            ->linkToCrudAction('cross_canal_ouvrirClient');
+            ->linkToCrudAction('cross_canal_ouvrirClient'); */
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -267,17 +268,17 @@ class CotationCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $piece_lister)
             ->add(Crud::PAGE_INDEX, $piece_lister)
 
-            ->add(Crud::PAGE_DETAIL, $police_creer)
-            ->add(Crud::PAGE_INDEX, $police_creer)
+            /* ->add(Crud::PAGE_DETAIL, $police_creer)
+            ->add(Crud::PAGE_INDEX, $police_creer) */
 
-            ->add(Crud::PAGE_DETAIL, $police_ouvrir)
-            ->add(Crud::PAGE_INDEX, $police_ouvrir)
+            /* ->add(Crud::PAGE_DETAIL, $police_ouvrir)
+            ->add(Crud::PAGE_INDEX, $police_ouvrir) */
 
-            ->add(Crud::PAGE_DETAIL, $client_creer)
-            ->add(Crud::PAGE_INDEX, $client_creer)
+            /* ->add(Crud::PAGE_DETAIL, $client_creer)
+            ->add(Crud::PAGE_INDEX, $client_creer) */
 
-            ->add(Crud::PAGE_DETAIL, $client_ouvrir)
-            ->add(Crud::PAGE_INDEX, $client_ouvrir)
+            /* ->add(Crud::PAGE_DETAIL, $client_ouvrir)
+            ->add(Crud::PAGE_INDEX, $client_ouvrir) */
 
 
             ->remove(Crud::PAGE_INDEX, Action::NEW)
@@ -312,10 +313,10 @@ class CotationCrudController extends AbstractCrudController
         return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_listerPiece($context, $adminUrlGenerator));
     }
 
-    public function cross_canal_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_creerPolice($context, $adminUrlGenerator));
-    }
+    // public function cross_canal_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_creerPolice($context, $adminUrlGenerator));
+    // }
 
     public function cross_canal_ouvrirPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {

@@ -61,10 +61,10 @@ class Piste
 
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Client $client = null;
-
+    
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Client::class)]
     private Collection $prospect;
-    
+
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Produit $produit = null;
 

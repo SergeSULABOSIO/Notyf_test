@@ -199,29 +199,29 @@ class ServiceCrossCanal
         return $url;
     }
 
-    public function crossCanal_Cotation_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
-    {
-        /** @var Cotation */
-        $cotation = $context->getEntity()->getInstance();
-        $tabData = $this->serviceAvenant->getAvenantPRT($cotation);
-        //dd($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()));
-        $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()), $adminUrlGenerator);
-        $url = $adminUrlGenerator
-            ->setController(PoliceCrudController::class)
-            ->setAction(Action::NEW)
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-            ->set("champsACacher[3]", PreferenceCrudController::PREF_PRO_POLICE_PISTES)
-            ->set("titre", $tabData['titre'])
-            ->set("avenant[type]", $tabData['nomAvenant'])
-            ->set("avenant[reference]", $tabData['reference'])
-            ->set("avenant[police]", $tabData['idPolice'])
-            ->set(self::CROSSED_ENTITY_COTATION, $cotation->getId())
-            ->setEntityId(null)
-            ->generateUrl();
-        return $url;
-    }
+    // public function crossCanal_Cotation_creerPolice(AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    // {
+    //     /** @var Cotation */
+    //     $cotation = $context->getEntity()->getInstance();
+    //     $tabData = $this->serviceAvenant->getAvenantPRT($cotation);
+    //     //dd($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()));
+    //     $this->appliquerDesactivations($this->serviceAvenant->getNomAvenant($cotation->getTypeavenant()), $adminUrlGenerator);
+    //     $url = $adminUrlGenerator
+    //         ->setController(PoliceCrudController::class)
+    //         ->setAction(Action::NEW)
+    //         ->set("champsACacher[0]", PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+    //         ->set("champsACacher[1]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
+    //         ->set("champsACacher[2]", PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
+    //         ->set("champsACacher[3]", PreferenceCrudController::PREF_PRO_POLICE_PISTES)
+    //         ->set("titre", $tabData['titre'])
+    //         ->set("avenant[type]", $tabData['nomAvenant'])
+    //         ->set("avenant[reference]", $tabData['reference'])
+    //         ->set("avenant[police]", $tabData['idPolice'])
+    //         ->set(self::CROSSED_ENTITY_COTATION, $cotation->getId())
+    //         ->setEntityId(null)
+    //         ->generateUrl();
+    //     return $url;
+    // }
 
     private function appliquerDesactivations($typeAvenant, AdminUrlGenerator $adminUrlGenerator)
     {
@@ -2148,7 +2148,7 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_COTATION);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Cotation::class)->find($paramID);
-            $client->addCotation($objet);
+            //$client->addCotation($objet);
         }
         return $client;
     }

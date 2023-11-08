@@ -4437,6 +4437,7 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)) {
             $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
                 ->setColumns(12)
+                ->renderExpanded()
                 ->setRequired(true)
                 //->setColumns(6)
                 ->onlyOnForms()

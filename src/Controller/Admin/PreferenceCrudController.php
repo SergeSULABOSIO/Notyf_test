@@ -1027,6 +1027,33 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_ENTREPRISE = "Entreprise";
 
 
+    public const PREF_FIN_REVENU_ID                     = 'Id';
+    public const PREF_FIN_REVENU_TYPE                   = "Type";
+    public const PREF_FIN_REVENU_PARTAGEABLE            = "Partageable";
+    public const PREF_FIN_REVENU_TAXABLE                = "Taxable";
+    public const PREF_FIN_REVENU_BASE                   = "Base";
+    public const PREF_FIN_REVENU_TAXU                   = "Taux";
+    public const PREF_FIN_REVENU_MONTANT_FLAT           = "Montant fixe";
+    public const PREF_FIN_REVENU_UTILISATEUR            = "Utilisateur";
+    public const PREF_FIN_REVENU_ENTREPRISE             = "Entreprise";
+    public const PREF_FIN_REVENU__DATE_CREATION         = "Date de création";
+    public const PREF_FIN_REVENU_DERNIRE_MODIFICATION   = "Dernière modification";
+
+    public const TAB_FIN_REVENU = [
+        self::PREF_FIN_REVENU_ID                     => 0,
+        self::PREF_FIN_REVENU_TYPE                   => 1,
+        self::PREF_FIN_REVENU_PARTAGEABLE            => 2,
+        self::PREF_FIN_REVENU_TAXABLE                => 3,
+        self::PREF_FIN_REVENU_BASE                   => 4,
+        self::PREF_FIN_REVENU_TAXU                   => 5,
+        self::PREF_FIN_REVENU_MONTANT_FLAT           => 6,
+        self::PREF_FIN_REVENU_UTILISATEUR            => 7,
+        self::PREF_FIN_REVENU_ENTREPRISE             => 8,
+        self::PREF_FIN_REVENU__DATE_CREATION         => 9,
+        self::PREF_FIN_REVENU_DERNIRE_MODIFICATION   => 10
+    ];
+
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,

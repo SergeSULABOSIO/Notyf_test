@@ -44,9 +44,13 @@ class Cotation
     #[ORM\Column(nullable: true)]
     private ?int $validated = null;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class)]
+    private Collection $revenus;
+
 
     public function __construct()
     {
+        $this->revenus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,6 +167,36 @@ class Cotation
     public function setValidated(?int $validated): self
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Revenu>
+     */
+    public function getRevenus(): Collection
+    {
+        return $this->revenus;
+    }
+
+    public function addRevenu(Revenu $revenu): self
+    {
+        if (!$this->revenus->contains($revenu)) {
+            $this->revenus->add($revenu);
+            $revenu->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRevenu(Revenu $revenu): self
+    {
+        if ($this->revenus->removeElement($revenu)) {
+            // set the owning side to null (unless already changed)
+            if ($revenu->getCotation() === $this) {
+                $revenu->setCotation(null);
+            }
+        }
 
         return $this;
     }

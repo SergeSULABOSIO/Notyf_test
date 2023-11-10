@@ -15,7 +15,7 @@ class Revenu
 
     #[ORM\Column]
     private ?int $type = null;
-
+    
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
@@ -42,6 +42,9 @@ class Revenu
 
     #[ORM\Column]
     private ?float $montant = null;
+
+    #[ORM\ManyToOne(inversedBy: 'revenus')]
+    private ?Cotation $cotation = null;
 
     public function getId(): ?int
     {
@@ -164,6 +167,18 @@ class Revenu
     public function setMontant(float $montant): self
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
 
         return $this;
     }

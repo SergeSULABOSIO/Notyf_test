@@ -63,6 +63,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Admin\ElementFactureCrudController;
+use App\Controller\Admin\RevenuCrudController;
+use App\Entity\Revenu;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
@@ -73,6 +75,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use SebastianBergmann\CodeCoverage\Util\Percentage;
 
 class ServicePreferences
 {
@@ -208,6 +211,9 @@ class ServicePreferences
             $this->setTailleFIN($preference, $crud);
         }
         if ($instance instanceof ElementFacture) {
+            $this->setTailleFIN($preference, $crud);
+        }
+        if ($instance instanceof Revenu) {
             $this->setTailleFIN($preference, $crud);
         }
         //GROUPE SINISTRE
@@ -499,6 +505,16 @@ class ServicePreferences
             $tabAttributs = $this->setFIN_Fields_CompteBancaire_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_CompteBancaire_form($tabAttributs);
         }
+        if ($objetInstance instanceof Revenu) {
+            $tabAttributs = [
+                FormField::addPanel('Revenu')
+                    ->setIcon('fa-solid fa-burger') //<i class="fa-solid fa-burger"></i>
+                    ->setHelp("Une de vos sources de revenu.")
+            ];
+            $tabAttributs = $this->setFIN_Fields_Revenu_Index($preference->getFinRevenu(), PreferenceCrudController::TAB_FIN_REVENU, $tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Revenu_Details($tabAttributs);
+            $tabAttributs = $this->setFIN_Fields_Revenu_form($tabAttributs);
+        }
         if ($objetInstance instanceof ElementFacture) {
 
             //dd($adminUrlGenerator->get("donnees"));
@@ -776,6 +792,38 @@ class ServicePreferences
             ->setStoredAsCents()
             ->onlyOnDetail();
 
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Revenu_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_REVENU_ID)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
+            ->onlyOnDetail()
+            ->setChoices(RevenuCrudController::TAB_TYPE);
+        $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
+            ->onlyOnDetail()
+            ->setChoices(RevenuCrudController::TAB_PARTAGEABLE);
+        $tabAttributs[] = ChoiceField::new('taxable', PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)
+            ->onlyOnDetail()
+            ->setChoices(RevenuCrudController::TAB_TAXABLE);
+        $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
+            ->onlyOnDetail()
+            ->setChoices(RevenuCrudController::TAB_BASE);
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE)->onlyOnDetail();
         return $tabAttributs;
     }
 
@@ -1339,6 +1387,55 @@ class ServicePreferences
         return $tabAttributs;
     }
 
+    public function setFIN_Fields_Revenu_form($tabAttributs)
+    {
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_TYPE)) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
+                ->setChoices(RevenuCrudController::TAB_TYPE)
+                ->setColumns(12)
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)) {
+            $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
+                ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
+                ->setColumns(12)
+                ->renderExpanded()
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)) {
+            $tabAttributs[] = ChoiceField::new('taxable', PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)
+                ->setChoices(RevenuCrudController::TAB_TAXABLE)
+                ->setColumns(12)
+                ->renderExpanded()
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_BASE)) {
+            $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
+                ->setChoices(RevenuCrudController::TAB_BASE)
+                ->setColumns(12)
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_TAUX)) {
+            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setColumns(12);
+        }
+        //On désactive les champs non éditables
+        $this->appliquerCanDesable($tabAttributs);
+        return $tabAttributs;
+    }
+
     public function setFIN_Fields_CompteBancaire_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID])) {
@@ -1380,6 +1477,75 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE)
+                ->onlyOnIndex();
+        }
+        return $tabAttributs;
+    }
+
+    public function setFIN_Fields_Revenu_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_REVENU_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TYPE])) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
+                ->onlyOnIndex()
+                ->setChoices(RevenuCrudController::TAB_TYPE);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE])) {
+            $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
+                ->onlyOnIndex()
+                ->renderExpanded()
+                ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
+                ->renderAsBadges([
+                    RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON] => 'dark',
+                    RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI] => 'success',
+                ]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TAXABLE])) {
+            $tabAttributs[] = ChoiceField::new('taxable', PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)
+                ->onlyOnIndex()
+                ->renderExpanded()
+                ->setChoices(RevenuCrudController::TAB_TAXABLE)
+                ->renderAsBadges([
+                    RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'danger',
+                    RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'success',
+                ]);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_BASE])) {
+            $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
+                ->onlyOnIndex()
+                ->setChoices(RevenuCrudController::TAB_BASE);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TAUX])) {
+            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT])) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+                ->formatValue(function ($value, Revenu $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE)
                 ->onlyOnIndex();
         }
         return $tabAttributs;
@@ -4464,6 +4630,18 @@ class ServicePreferences
                 //->setColumns(2);
                 ->setColumns(12);
         }
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENUS)) {
+            $tabAttributs[] = CollectionField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)
+                ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+                ->useEntryCrudForm(RevenuCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex()
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+
         return $tabAttributs;
     }
 

@@ -77,6 +77,7 @@ class ServiceSuppression
     public const FINANCE_ELEMENT_FACTURE = 28;
     public const FINANCE_COMPTE_BANCAIRE = 29;
     public const FINANCE_PAIEMENT = 30;
+    public const FINANCE_REVENU = 31;
 
 
     public function __construct(

@@ -126,6 +126,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
+    public const PREF_CRM_COTATION_REVENUS              = "Revenus";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
     public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
     public const PREF_CRM_COTATION_DATE_MODIFICATION    = "Dernière modification";
@@ -142,7 +143,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_ENTREPRISE                                      => 7,
         self::PREF_CRM_COTATION_DATE_CREATION                                   => 8,
         self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 9,
-        self::PREF_CRM_COTATION_RESULTAT                                     => 10
+        self::PREF_CRM_COTATION_RESULTAT                                        => 10,
+        self::PREF_CRM_COTATION_REVENUS                                         => 11
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";
@@ -1032,7 +1034,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_REVENU_PARTAGEABLE            = "Partageable";
     public const PREF_FIN_REVENU_TAXABLE                = "Taxable";
     public const PREF_FIN_REVENU_BASE                   = "Base";
-    public const PREF_FIN_REVENU_TAXU                   = "Taux";
+    public const PREF_FIN_REVENU_TAUX                   = "Taux";
     public const PREF_FIN_REVENU_MONTANT_FLAT           = "Montant fixe";
     public const PREF_FIN_REVENU_UTILISATEUR            = "Utilisateur";
     public const PREF_FIN_REVENU_ENTREPRISE             = "Entreprise";
@@ -1045,7 +1047,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_REVENU_PARTAGEABLE            => 2,
         self::PREF_FIN_REVENU_TAXABLE                => 3,
         self::PREF_FIN_REVENU_BASE                   => 4,
-        self::PREF_FIN_REVENU_TAXU                   => 5,
+        self::PREF_FIN_REVENU_TAUX                   => 5,
         self::PREF_FIN_REVENU_MONTANT_FLAT           => 6,
         self::PREF_FIN_REVENU_UTILISATEUR            => 7,
         self::PREF_FIN_REVENU_ENTREPRISE             => 8,

@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\RevenuCrudController;
 use App\Repository\RevenuRepository;
+use App\Service\ServiceMonnaie;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
@@ -15,7 +17,7 @@ class Revenu
 
     #[ORM\Column]
     private ?int $type = null;
-    
+
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
@@ -43,7 +45,7 @@ class Revenu
     #[ORM\Column]
     private ?float $montant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'revenus')]
+    #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
 
     public function getId(): ?int
@@ -181,5 +183,52 @@ class Revenu
         $this->cotation = $cotation;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        $strType = "";
+        foreach (RevenuCrudController::TAB_TYPE as $key => $value) {
+            if ($value == $this->type) {
+                $strType = $key;
+            }
+        }
+
+        $strBase = "";
+        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
+            if ($value == $this->base) {
+                $strBase = $key;
+            }
+        }
+        //On calcul le revennu total
+        $data = $this->getComNette($strBase);
+        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")";
+    }
+
+    private function getComNette($strBase)
+    {
+        $data = [];
+        $prmNette = ($this->getCotation()->getPrimeNette() / 100);
+        $fronting = ($this->getCotation()->getFronting() / 100);
+        $montantFlat = ($this->montant / 100);
+        $taux = $this->taux;
+        switch ($strBase) {
+            case RevenuCrudController::BASE_PRIME_NETTE:
+                $data['comNette'] = number_format(($taux * $prmNette), 2, ",", ".");
+                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".");
+                break;
+            case RevenuCrudController::BASE_FRONTING:
+                $data['comNette'] = number_format(($taux * $fronting), 2, ",", ".");
+                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".");
+                break;
+            case RevenuCrudController::BASE_MONTANT_FIXE:
+                $data['comNette'] = number_format($montantFlat, 2, ",", ".");
+                $data['formule'] = "une valeur fixe";
+                break;
+            default:
+                # code...
+                break;
+        }
+        return $data;
     }
 }

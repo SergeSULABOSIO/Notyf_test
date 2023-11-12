@@ -45,24 +45,24 @@ class RevenuCrudController extends AbstractCrudController
     ];
 
     //Partageable?
-    public const PARTAGEABLE_OUI = "Partageable";
-    public const PARTAGEABLE_NON = "Non Partageable";
+    public const PARTAGEABLE_OUI = "Ce revenu est partageable avec le partenaire";
+    public const PARTAGEABLE_NON = "Non ce revenu n'est pas partageable";
     public const TAB_PARTAGEABLE = [
         self::PARTAGEABLE_NON   => 0,
         self::PARTAGEABLE_OUI   => 1
     ];
 
     //Taxable?
-    public const TAXABLE_OUI = "Taxable";
-    public const TAXABLE_NON = "Non Taxable";
+    public const TAXABLE_OUI = "Ce revenu est taxable";
+    public const TAXABLE_NON = "Non ce revenu n'est pas taxable";
     public const TAB_TAXABLE = [
         self::TAXABLE_NON   => 0,
         self::TAXABLE_OUI   => 1
     ];
 
     //Base des calculs
-    public const BASE_FRONTING = "Un % sur le Fronting";
-    public const BASE_PRIME_NETTE = "Un % sur la prime nette";
+    public const BASE_FRONTING = "Un % du Fronting";
+    public const BASE_PRIME_NETTE = "Un % de la prime nette";
     public const BASE_MONTANT_FIXE = "Une valeur fixe";
     public const TAB_BASE = [
         self::BASE_FRONTING   => 0,
@@ -158,11 +158,10 @@ class RevenuCrudController extends AbstractCrudController
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
-
+        //dd($objet);
         return $objet;
     }
 
-    
     public function configureFields(string $pageName): iterable
     {
         if($this->crud){
@@ -293,9 +292,7 @@ class RevenuCrudController extends AbstractCrudController
             $user = $entityManager->find($className, $id);
             $user->approve();
         }
-
         $entityManager->flush();
-
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
    

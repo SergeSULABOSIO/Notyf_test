@@ -17,9 +17,6 @@ class Cotation
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
-    #[ORM\Column]
-    private ?float $primeTotale = null;
     
     #[ORM\ManyToOne(inversedBy: 'cotations', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
@@ -44,8 +41,26 @@ class Cotation
     #[ORM\Column(nullable: true)]
     private ?int $validated = null;
 
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class)]
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $revenus;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $primeNette = 0;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $fronting = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $accessoires = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $taxes = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $fraisArca = null;
+    
+    #[ORM\Column]
+    private ?float $primeTotale = null;
 
 
     public function __construct()
@@ -132,7 +147,7 @@ class Cotation
 
     public function __toString()
     {
-        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | " . ($this->primeTotale / 100) . ($this->validated == 0 ? " [validée].":".");
+        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | " . number_format(($this->primeTotale / 100), 2, ",", ".") . ($this->validated == 0 ? " [validée].":".");
     }
 
     public function getPiste(): ?Piste
@@ -197,6 +212,66 @@ class Cotation
                 $revenu->setCotation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrimeNette(): ?float
+    {
+        return $this->primeNette;
+    }
+
+    public function setPrimeNette(?float $primeNette): self
+    {
+        $this->primeNette = $primeNette;
+
+        return $this;
+    }
+
+    public function getFronting(): ?float
+    {
+        return $this->fronting;
+    }
+
+    public function setFronting(?float $fronting): self
+    {
+        $this->fronting = $fronting;
+
+        return $this;
+    }
+
+    public function getAccessoires(): ?float
+    {
+        return $this->accessoires;
+    }
+
+    public function setAccessoires(?float $accessoires): self
+    {
+        $this->accessoires = $accessoires;
+
+        return $this;
+    }
+
+    public function getTaxes(): ?float
+    {
+        return $this->taxes;
+    }
+
+    public function setTaxes(?float $taxes): self
+    {
+        $this->taxes = $taxes;
+
+        return $this;
+    }
+
+    public function getFraisArca(): ?float
+    {
+        return $this->fraisArca;
+    }
+
+    public function setFraisArca(?float $fraisArca): self
+    {
+        $this->fraisArca = $fraisArca;
 
         return $this;
     }

@@ -262,6 +262,8 @@ class PisteCrudController extends AbstractCrudController
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
 
+            //->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
+
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::EDIT, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -359,7 +361,7 @@ class PisteCrudController extends AbstractCrudController
         $piste = $context->getEntity()->getInstance();
         $url = $this->adminUrlGenerator
             ->setController(PisteCrudController::class)
-            ->setAction(Action::DETAIL)
+            ->setAction(Action::EDIT)
             ->setEntityId($piste->getId())
             ->generateUrl();
         $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La piste " . $piste->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");

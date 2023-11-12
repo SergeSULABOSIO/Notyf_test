@@ -125,6 +125,11 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
+    public const PREF_CRM_COTATION_PRIME_NETTE          = "Prime nette";
+    public const PREF_CRM_COTATION_ACCESSOIRES          = "Accéssoires";
+    public const PREF_CRM_COTATION_FRONTING             = "Fronting";
+    public const PREF_CRM_COTATION_TAXE                 = "Taxes";
+    public const PREF_CRM_COTATION_ARCA                 = "Frais de surveillance";
     public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_REVENUS              = "Revenus";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
@@ -144,7 +149,13 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_DATE_CREATION                                   => 8,
         self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 9,
         self::PREF_CRM_COTATION_RESULTAT                                        => 10,
-        self::PREF_CRM_COTATION_REVENUS                                         => 11
+        self::PREF_CRM_COTATION_REVENUS                                         => 11,
+        self::PREF_CRM_COTATION_PRIME_NETTE                                     => 12,
+        self::PREF_CRM_COTATION_ACCESSOIRES                                     => 13,
+        self::PREF_CRM_COTATION_ARCA                                            => 14,
+        self::PREF_CRM_COTATION_TAXE                                            => 15,
+        self::PREF_CRM_COTATION_REVENUS                                         => 16,
+        self::PREF_CRM_COTATION_FRONTING                                        => 17
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";
@@ -1031,8 +1042,8 @@ class PreferenceCrudController extends AbstractCrudController
 
     public const PREF_FIN_REVENU_ID                     = 'Id';
     public const PREF_FIN_REVENU_TYPE                   = "Type";
-    public const PREF_FIN_REVENU_PARTAGEABLE            = "Partageable";
-    public const PREF_FIN_REVENU_TAXABLE                = "Taxable";
+    public const PREF_FIN_REVENU_PARTAGEABLE            = "Partageable?";
+    public const PREF_FIN_REVENU_TAXABLE                = "Taxable?";
     public const PREF_FIN_REVENU_BASE                   = "Base";
     public const PREF_FIN_REVENU_TAUX                   = "Taux";
     public const PREF_FIN_REVENU_MONTANT_FLAT           = "Montant fixe";

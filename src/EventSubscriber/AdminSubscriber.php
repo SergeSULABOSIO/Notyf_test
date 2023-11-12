@@ -148,7 +148,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $action->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
-            
+
             //Collection pour Prospect
             if (count($piste->getProspect())) {
                 //on ne prend que le tout premier prospect comme client
@@ -158,7 +158,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $newClient->setUpdatedAt(new \DateTimeImmutable());
                 $newClient->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $newClient->setEntreprise($this->serviceEntreprise->getEntreprise());
-            
+
                 //ici il faut actualiser la base de données
                 $this->entityManager->persist($newClient);
                 $this->entityManager->flush();
@@ -180,7 +180,23 @@ class AdminSubscriber implements EventSubscriberInterface
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
                 $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $cotation->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                foreach ($cotation->getRevenus() as $revenu) {
+                    if ($isCreate || $revenu->getCreatedAt() == null) {
+                        $revenu->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $revenu->setUpdatedAt(new \DateTimeImmutable());
+                    $revenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $revenu->setEntreprise($this->serviceEntreprise->getEntreprise());
+                    if($revenu->getMontant() == null){
+                        $revenu->setMontant(0);
+                    }
+                    if($revenu->getTaux() == null){
+                        $revenu->setTaux(0);
+                    }
+                }
             }
+
             //dd($piste);
         }
     }

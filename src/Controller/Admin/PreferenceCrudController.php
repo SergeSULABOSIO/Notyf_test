@@ -1071,6 +1071,29 @@ class PreferenceCrudController extends AbstractCrudController
     ];
 
 
+    public const PREF_PROD_CHARGEMENT_ID                     = 'Id';
+    public const PREF_PROD_CHARGEMENT_TYPE                   = "Type";
+    public const PREF_PROD_CHARGEMENT_MONTANT                = "Montant";
+    public const PREF_PROD_CHARGEMENT_DESCRIPTION            = "Description";
+    public const PREF_PROD_CHARGEMENT_COTATION               = "Cotation";
+    public const PREF_PROD_CHARGEMENT_UTILISATEUR            = "Utilisateur";
+    public const PREF_PROD_CHARGEMENT_ENTREPRISE             = "Entreprise";
+    public const PREF_PROD_CHARGEMENT_DATE_CREATION          = "Date de création";
+    public const PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION   = "Dernière modification";
+
+    public const TAB_PROD_CHARGEMENT = [
+        self::PREF_PROD_CHARGEMENT_ID                   => 0,
+        self::PREF_PROD_CHARGEMENT_TYPE                 => 1,
+        self::PREF_PROD_CHARGEMENT_MONTANT              => 2,
+        self::PREF_PROD_CHARGEMENT_DESCRIPTION          => 3,
+        self::PREF_PROD_CHARGEMENT_COTATION             => 4,
+        self::PREF_PROD_CHARGEMENT_UTILISATEUR          => 5,
+        self::PREF_PROD_CHARGEMENT_ENTREPRISE           => 6,
+        self::PREF_PROD_CHARGEMENT_DATE_CREATION        => 7,
+        self::PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION => 8
+    ];
+
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,

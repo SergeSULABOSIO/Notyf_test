@@ -46,6 +46,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\AutomobileCrudController;
+use App\Controller\Admin\ChargementCrudController;
 use App\Controller\Admin\ContactCrudController;
 use App\Controller\Admin\CotationCrudController;
 use App\Controller\Admin\PreferenceCrudController;
@@ -65,6 +66,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Admin\ElementFactureCrudController;
 use App\Controller\Admin\PartenaireCrudController;
 use App\Controller\Admin\RevenuCrudController;
+use App\Entity\Chargement;
 use App\Entity\Revenu;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -175,6 +177,9 @@ class ServicePreferences
         }
         //GROUPE PRODUCTION
         if ($instance instanceof Assureur) {
+            $this->setTaillePRO($preference, $crud);
+        }
+        if ($instance instanceof Chargement) {
             $this->setTaillePRO($preference, $crud);
         }
         if ($instance instanceof Automobile) {
@@ -516,6 +521,18 @@ class ServicePreferences
             $tabAttributs = $this->setFIN_Fields_Revenu_Details($tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Revenu_form($tabAttributs);
         }
+        if ($objetInstance instanceof Chargement) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ->setIcon('fa-solid fa-comment-dollar') //<i class="fa-solid fa-comment-dollar"></i>
+                    ->setHelp("Frais chargé au client par l'assureur, visible sur la facture.")
+            ];
+            //$tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
+            $tabAttributs = $this->setPROD_Fields_Chargement_Index($preference->getProdChargement(), PreferenceCrudController::TAB_PROD_CHARGEMENT, $tabAttributs);
+            $tabAttributs = $this->setPROD_Fields_Chargement_Details($tabAttributs);
+            ici
+            $tabAttributs = $this->setPROD_Fields_Chargement_form($tabAttributs);
+        }
         if ($objetInstance instanceof ElementFacture) {
 
             //dd($adminUrlGenerator->get("donnees"));
@@ -825,6 +842,30 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE)->onlyOnDetail();
+        return $tabAttributs;
+    }
+
+    public function setPROD_Fields_Chargement_Details($tabAttributs)
+    {
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PROD_CHARGEMENT_ID)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
+            ->onlyOnDetail()
+            ->setChoices(ChargementCrudController::TAB_TYPE);
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT)
+            ->formatValue(function ($value, Chargement $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PROD_CHARGEMENT_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PROD_CHARGEMENT_DATE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PROD_CHARGEMENT_ENTREPRISE)->onlyOnDetail();
         return $tabAttributs;
     }
 
@@ -1549,6 +1590,50 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE])) {
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE)
+                ->onlyOnIndex();
+        }
+        return $tabAttributs;
+    }
+
+    public function setPROD_Fields_Chargement_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
+    {
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_ID])) {
+            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PROD_CHARGEMENT_ID)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE])) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
+                ->onlyOnIndex()
+                ->setChoices(ChargementCrudController::TAB_TYPE);
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION])) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT])) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT)
+                ->formatValue(function ($value, Chargement $entity) {
+                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                })
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setStoredAsCents()
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_DATE_CREATION])) {
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PROD_CHARGEMENT_DATE_CREATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION])) {
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_UTILISATEUR])) {
+            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PROD_CHARGEMENT_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_ENTREPRISE])) {
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PROD_CHARGEMENT_ENTREPRISE)
                 ->onlyOnIndex();
         }
         return $tabAttributs;
@@ -5568,7 +5653,6 @@ class ServicePreferences
 
     public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
-
         //définition des attributs des pages
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
 

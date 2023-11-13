@@ -78,6 +78,7 @@ class ServiceSuppression
     public const FINANCE_COMPTE_BANCAIRE = 29;
     public const FINANCE_PAIEMENT = 30;
     public const FINANCE_REVENU = 31;
+    public const PRODUCTION_CHARGEMENT = 32;
 
 
     public function __construct(
@@ -155,6 +156,10 @@ class ServiceSuppression
                 break;
 
             case self::PRODUCTION_PRODUIT:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
+            case self::PRODUCTION_CHARGEMENT:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 

@@ -142,6 +142,9 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $finRevenu = [];
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $prodChargement = [];
+
 
     public function getId(): ?int
     {
@@ -653,6 +656,18 @@ class Preference
     public function setFinRevenu(?array $finRevenu): self
     {
         $this->finRevenu = $finRevenu;
+
+        return $this;
+    }
+
+    public function getProdChargement(): array
+    {
+        return $this->prodChargement;
+    }
+
+    public function setProdChargement(?array $prodChargement): self
+    {
+        $this->prodChargement = $prodChargement;
 
         return $this;
     }

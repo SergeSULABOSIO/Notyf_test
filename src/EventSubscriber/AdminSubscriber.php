@@ -163,12 +163,14 @@ class AdminSubscriber implements EventSubscriberInterface
                 $this->entityManager->persist($newClient);
                 $this->entityManager->flush();
                 $piste->setClient($newClient);
+
+                //On vide la liste des prospects
+                $tabProspect = $piste->getProspect();
+                foreach ($tabProspect as $pros) {
+                    $piste->removeProspect($pros);
+                }
             }
-            //On vide la liste des prospects
-            $tabProspect = $piste->getProspect();
-            foreach ($tabProspect as $pros) {
-                $piste->removeProspect($pros);
-            }
+
 
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
@@ -188,10 +190,10 @@ class AdminSubscriber implements EventSubscriberInterface
                     $revenu->setUpdatedAt(new \DateTimeImmutable());
                     $revenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $revenu->setEntreprise($this->serviceEntreprise->getEntreprise());
-                    if($revenu->getMontant() == null){
+                    if ($revenu->getMontant() == null) {
                         $revenu->setMontant(0);
                     }
-                    if($revenu->getTaux() == null){
+                    if ($revenu->getTaux() == null) {
                         $revenu->setTaux(0);
                     }
                 }

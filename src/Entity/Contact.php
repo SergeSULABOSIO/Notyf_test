@@ -119,7 +119,7 @@ class Contact
 
     public function __toString()
     {
-        return $this->nom . ", Tél.: " . $this->telephone. ", Email: " . $this->email;
+        return $this->nom . ", " . $this->poste . " | " . $this->telephone. " | " . $this->email;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

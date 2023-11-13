@@ -29,6 +29,7 @@ use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Entity\Client;
+use App\Entity\Partenaire;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -171,6 +172,27 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
             }
 
+            //Collection pour Partenaire
+            if (count($piste->getNewpartenaire())) {
+                //on ne prend que le tout premier prospect comme client
+                /** @var Partenaire */
+                $newPartenaire = $piste->getNewpartenaire()[0];
+                $newPartenaire->setCreatedAt(new \DateTimeImmutable());
+                $newPartenaire->setUpdatedAt(new \DateTimeImmutable());
+                $newPartenaire->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $newPartenaire->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                //ici il faut actualiser la base de données
+                $this->entityManager->persist($newPartenaire);
+                $this->entityManager->flush();
+                $piste->setPartenaire($newPartenaire);
+
+                //On vide la liste des nouveaux partenaires
+                $tabNewPartenaire = $piste->getNewpartenaire();
+                foreach ($tabNewPartenaire as $newPart) {
+                    $piste->removeNewpartenaire($newPart);
+                }
+            }
 
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {

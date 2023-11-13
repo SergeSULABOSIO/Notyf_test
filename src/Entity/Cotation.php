@@ -147,7 +147,16 @@ class Cotation
 
     public function __toString()
     {
-        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | " . number_format(($this->primeTotale / 100), 2, ",", ".") . ($this->validated == 0 ? " [validée].":".");
+        $strCommission = "";
+        if($this->getRevenus()){
+            $totRev = 0;
+            foreach ($this->getRevenus() as $revenu) {
+                $totRev = $totRev + $revenu->calc_getRevenuFinal();
+            }
+            $strCommission = " | Com. ht: " . number_format($totRev, 2, ",", ".")."";
+        }
+
+        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->primeTotale / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée].":".");
     }
 
     public function getPiste(): ?Piste

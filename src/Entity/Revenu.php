@@ -205,6 +205,17 @@ class Revenu
         return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")";
     }
 
+    public function calc_getRevenuFinal(){
+        $strBase = "";
+        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
+            if ($value == $this->base) {
+                $strBase = $key;
+            }
+        }
+        //On calcul le revennu total
+        return $this->getComNette($strBase)['revenufinal'];
+    }
+
     private function getComNette($strBase)
     {
         $data = [];
@@ -214,14 +225,17 @@ class Revenu
         $taux = $this->taux;
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
+                $data['revenufinal'] = ($taux * $prmNette);
                 $data['comNette'] = number_format(($taux * $prmNette), 2, ",", ".");
                 $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".");
                 break;
             case RevenuCrudController::BASE_FRONTING:
+                $data['revenufinal'] = ($taux * $fronting);
                 $data['comNette'] = number_format(($taux * $fronting), 2, ",", ".");
                 $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".");
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
+                $data['revenufinal'] = ($montantFlat);
                 $data['comNette'] = number_format($montantFlat, 2, ",", ".");
                 $data['formule'] = "une valeur fixe";
                 break;

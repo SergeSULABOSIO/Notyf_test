@@ -5326,9 +5326,9 @@ class ServicePreferences
 
 
         //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Cotations')
+        $tabAttributs[] = FormField::addTab(' Propositions')
             ->setIcon('fas fa-cash-register')
-            ->setHelp("Les cotations produites dans le cadre de cette piste.")
+            ->setHelp("Les propositions ou cotations produites dans le cadre de cette piste.")
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->onlyOnDetail();
 
@@ -5507,7 +5507,7 @@ class ServicePreferences
             ->onlyOnForms();
 
         //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Cotations')
+        $tabAttributs[] = FormField::addTab(' Propositions')
             ->setIcon('fas fa-cash-register')
             ->setHelp("Offres de proposition pour le client / prospect.")
             ->onlyOnForms();

@@ -64,9 +64,15 @@ class Piste
     
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Client::class)]
     private Collection $prospect;
-
+    
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Produit $produit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Partenaire $partenaire = null;
+
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Partenaire::class)]
+    private Collection $newpartenaire;
 
     public function __construct()
     {
@@ -74,6 +80,7 @@ class Piste
         $this->contacts = new ArrayCollection();
         $this->actionsCRMs = new ArrayCollection();
         $this->prospect = new ArrayCollection();
+        $this->newpartenaire = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -357,6 +364,48 @@ class Piste
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Partenaire>
+     */
+    public function getNewpartenaire(): Collection
+    {
+        return $this->newpartenaire;
+    }
+
+    public function addNewpartenaire(Partenaire $newpartenaire): self
+    {
+        if (!$this->newpartenaire->contains($newpartenaire)) {
+            $this->newpartenaire->add($newpartenaire);
+            $newpartenaire->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNewpartenaire(Partenaire $newpartenaire): self
+    {
+        if ($this->newpartenaire->removeElement($newpartenaire)) {
+            // set the owning side to null (unless already changed)
+            if ($newpartenaire->getPiste() === $this) {
+                $newpartenaire->setPiste(null);
+            }
+        }
 
         return $this;
     }

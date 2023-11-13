@@ -64,10 +64,17 @@ class Partenaire extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: Facture::class)]
     private Collection $factures;
 
+    #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: Piste::class)]
+    private Collection $pistes;
+
+    #[ORM\ManyToOne(inversedBy: 'newpartenaire')]
+    private ?Piste $piste = null;
+
     public function __construct()
     {
         $this->police = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->pistes = new ArrayCollection();
     }
 
 
@@ -282,6 +289,48 @@ class Partenaire extends CalculableEntity
                 $facture->setPartenaire(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getPartenaire() === $this) {
+                $piste->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
 
         return $this;
     }

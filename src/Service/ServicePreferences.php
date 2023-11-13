@@ -63,6 +63,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Admin\ElementFactureCrudController;
+use App\Controller\Admin\PartenaireCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Revenu;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -3397,29 +3398,37 @@ class ServicePreferences
     public function setCRM_Fields_Partenaires_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM)
-            ->setColumns(10)
+            ->setColumns(12)
+            //->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
             ->setNumDecimals(2)
-            ->setColumns(2)
+            ->setColumns(12)
+            //->setColumns(2)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT)
-            ->setColumns(4)
+            ->setColumns(12)
+            //->setColumns(4)
             ->onlyOnForms();
 
         return $tabAttributs;
@@ -5213,6 +5222,10 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE])) {
+            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_PRODUIT])) {
             $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
                 ->onlyOnIndex();
@@ -5282,6 +5295,8 @@ class ServicePreferences
                 return $value;
             })
             ->onlyOnDetail(); //->setColumns(6);
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
+            ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
@@ -5448,12 +5463,37 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(12);
 
+        //Onglet Partenaire
+        $tabAttributs[] = FormField::addTab(' Partenaire')
+            ->setIcon('fas fa-handshake')
+            ->setHelp("Intermédiaire (parrain) à travers lequel vous êtes entrés en contact avec cette piste.")
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
+            ->setHelp("Si le partenaire n'existe pas encore sur cette liste, vous pouvez l'ajouter. Pour cela, il faut allez sur le champ d'ajout du partenaire.")
+            ->onlyOnForms()
+            ->setColumns(5)
+            ->setRequired(false)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = CollectionField::new('newpartenaire', PreferenceCrudController::PREF_CRM_PISTE_NEW_PARTENAIRE)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté, mais seul la première sera finalement prise en compte.")
+            ->useEntryCrudForm(PartenaireCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(7)
+            ->onlyOnForms();
+
         //Onglet Client ou Prospect
         $tabAttributs[] = FormField::addTab(' Client')
             ->setIcon('fas fa-person-shelter')
             ->setHelp("Le client ou prospect concerné par cette piste.")
             ->onlyOnForms();
-
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->setHelp("Si le client n'existe pas encore sur cette liste, vous pouvez l'ajouter comme prospect. Pour cela, il faut allez sur le champ d'ajout de prospect.")
             ->onlyOnForms()
@@ -5520,6 +5560,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(7)
             ->onlyOnForms();
+
 
         //dd($tabAttributs);
         return $tabAttributs;

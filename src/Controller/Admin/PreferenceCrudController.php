@@ -191,6 +191,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_TYPE_AVENANT                = "Avenant";
     public const PREF_CRM_PISTE_POLICE                      = "Police source";
     public const PREF_CRM_PISTE_CLIENT                      = "Client";
+    public const PREF_CRM_PISTE_PARTENAIRE                  = "Partenaire";
+    public const PREF_CRM_PISTE_NEW_PARTENAIRE              = "Nouveau partenaire";
     public const PREF_CRM_PISTE_PRODUIT                     = "Produit";
     public const PREF_CRM_PISTE_PROSPECTS                   = "Prospects";
     public const TAB_CRM_PISTE = [
@@ -211,7 +213,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_PISTE_POLICE                             => 14,
         self::PREF_CRM_PISTE_CLIENT                             => 15,
         self::PREF_CRM_PISTE_PROSPECTS                          => 16,
-        self::PREF_CRM_PISTE_PRODUIT                            => 17
+        self::PREF_CRM_PISTE_PRODUIT                            => 17,
+        self::PREF_CRM_PISTE_PARTENAIRE                         => 18,
+        self::PREF_CRM_PISTE_NEW_PARTENAIRE                     => 19
     ];
     //PRODUCTION - ASSUEUR
     public const PREF_PRO_ASSUREUR_ID                       = "Id";

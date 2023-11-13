@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\ChargementCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Repository\RevenuRepository;
 use App\Service\ServiceMonnaie;
@@ -205,7 +206,8 @@ class Revenu
         return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")";
     }
 
-    public function calc_getRevenuFinal(){
+    public function calc_getRevenuFinal()
+    {
         $strBase = "";
         foreach (RevenuCrudController::TAB_BASE as $key => $value) {
             if ($value == $this->base) {
@@ -219,8 +221,14 @@ class Revenu
     private function getComNette($strBase)
     {
         $data = [];
-        $prmNette = ($this->getCotation()->getPrimeNette() / 100);
-        $fronting = ($this->getCotation()->getFronting() / 100);
+        $prmNette = 0;
+        $fronting = 0;
+        if ($this->getCotation()) {
+            /** @var Cotation */
+            $quote = $this->getCotation();
+            $prmNette = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
+            $fronting = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE[ChargementCrudController::TYPE_FRONTING]) / 100);
+        }
         $montantFlat = ($this->montant / 100);
         $taux = $this->taux;
         switch ($strBase) {

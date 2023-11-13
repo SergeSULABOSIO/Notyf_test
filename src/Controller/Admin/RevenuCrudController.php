@@ -45,16 +45,16 @@ class RevenuCrudController extends AbstractCrudController
     ];
 
     //Partageable?
-    public const PARTAGEABLE_OUI = "Ce revenu est partageable avec le partenaire";
-    public const PARTAGEABLE_NON = "Non ce revenu n'est pas partageable";
+    public const PARTAGEABLE_OUI = "Oui (avec le partenaire)";
+    public const PARTAGEABLE_NON = "Pas du tout";
     public const TAB_PARTAGEABLE = [
         self::PARTAGEABLE_NON   => 0,
         self::PARTAGEABLE_OUI   => 1
     ];
 
     //Taxable?
-    public const TAXABLE_OUI = "Ce revenu est taxable";
-    public const TAXABLE_NON = "Non ce revenu n'est pas taxable";
+    public const TAXABLE_OUI = "Oui";
+    public const TAXABLE_NON = "Pas du tout.";
     public const TAB_TAXABLE = [
         self::TAXABLE_NON   => 0,
         self::TAXABLE_OUI   => 1

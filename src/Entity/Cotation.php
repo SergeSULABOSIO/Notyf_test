@@ -44,28 +44,14 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $revenus;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $primeNette = 0;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $fronting = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $accessoires = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $taxes = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $fraisArca = null;
-    
-    #[ORM\Column]
-    private ?float $primeTotale = null;
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade:['remove', 'persist', 'refresh'])]
+    private Collection $chargements;
 
 
     public function __construct()
     {
         $this->revenus = new ArrayCollection();
+        $this->chargements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,17 +71,6 @@ class Cotation
         return $this;
     }
 
-    public function getPrimeTotale(): ?float
-    {
-        return $this->primeTotale;
-    }
-
-    public function setPrimeTotale(float $primeTotale): self
-    {
-        $this->primeTotale = $primeTotale;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -145,6 +120,28 @@ class Cotation
         return $this;
     }
 
+    public function calc_getPrimeTTC(){
+        $total = 0;
+        if($this->getChargements()){
+            foreach ($this->getChargements() as $chargement) {
+                $total = $total + $chargement->getMontant();
+            }
+        }
+        return $total;
+    }
+
+    public function calc_getChargement($type){
+        $total = 0;
+        if($this->getChargements()){
+            foreach ($this->getChargements() as $chargement) {
+                if($type == $chargement->getType()){
+                    $total = $total + $chargement->getMontant();
+                }
+            }
+        }
+        return $total;
+    }
+
     public function __toString()
     {
         $strCommission = "";
@@ -156,7 +153,7 @@ class Cotation
             $strCommission = " | Com. ht: " . number_format($totRev, 2, ",", ".")."";
         }
 
-        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->primeTotale / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée].":".");
+        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->calc_getPrimeTTC() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée].":".");
     }
 
     public function getPiste(): ?Piste
@@ -225,62 +222,32 @@ class Cotation
         return $this;
     }
 
-    public function getPrimeNette(): ?float
+    /**
+     * @return Collection<int, Chargement>
+     */
+    public function getChargements(): Collection
     {
-        return $this->primeNette;
+        return $this->chargements;
     }
 
-    public function setPrimeNette(?float $primeNette): self
+    public function addChargement(Chargement $chargement): self
     {
-        $this->primeNette = $primeNette;
+        if (!$this->chargements->contains($chargement)) {
+            $this->chargements->add($chargement);
+            $chargement->setCotation($this);
+        }
 
         return $this;
     }
 
-    public function getFronting(): ?float
+    public function removeChargement(Chargement $chargement): self
     {
-        return $this->fronting;
-    }
-
-    public function setFronting(?float $fronting): self
-    {
-        $this->fronting = $fronting;
-
-        return $this;
-    }
-
-    public function getAccessoires(): ?float
-    {
-        return $this->accessoires;
-    }
-
-    public function setAccessoires(?float $accessoires): self
-    {
-        $this->accessoires = $accessoires;
-
-        return $this;
-    }
-
-    public function getTaxes(): ?float
-    {
-        return $this->taxes;
-    }
-
-    public function setTaxes(?float $taxes): self
-    {
-        $this->taxes = $taxes;
-
-        return $this;
-    }
-
-    public function getFraisArca(): ?float
-    {
-        return $this->fraisArca;
-    }
-
-    public function setFraisArca(?float $fraisArca): self
-    {
-        $this->fraisArca = $fraisArca;
+        if ($this->chargements->removeElement($chargement)) {
+            // set the owning side to null (unless already changed)
+            if ($chargement->getCotation() === $this) {
+                $chargement->setCotation(null);
+            }
+        }
 
         return $this;
     }

@@ -141,9 +141,10 @@ class CotationCrudController extends AbstractCrudController
     {
         if ($this->crud != null) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        }else{
+        } else {
             $this->adminUrlGenerator->set("champsACacher", [
-                //PreferenceCrudController::PREF_CRM_COTATION_POLICE,
+                //PreferenceCrudController::PREF_CRM_COTATION_REVENUS,
+                //PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT,
                 //PreferenceCrudController::PREF_CRM_COTATION_MISSIONS,
                 //PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
                 //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
@@ -172,7 +173,7 @@ class CotationCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $mission_ajouter)
             //->add(Crud::PAGE_DETAIL, $mission_lister)
             //->add(Crud::PAGE_INDEX, $mission_lister)
-            ;
+        ;
 
         $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
             ->setIcon('fa-solid fa-paperclip')

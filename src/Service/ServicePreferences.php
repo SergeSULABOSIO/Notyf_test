@@ -68,6 +68,7 @@ use App\Controller\Admin\PartenaireCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
 use App\Entity\Revenu;
+use App\Entity\Tranche;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
@@ -531,6 +532,17 @@ class ServicePreferences
             $tabAttributs = $this->setPROD_Fields_Chargement_Index($preference->getProdChargement(), PreferenceCrudController::TAB_PROD_CHARGEMENT, $tabAttributs);
             $tabAttributs = $this->setPROD_Fields_Chargement_Details($tabAttributs);
             $tabAttributs = $this->setPROD_Fields_Chargement_form($tabAttributs);
+        }
+        if ($objetInstance instanceof Tranche) {
+            $tabAttributs = [
+                FormField::addPanel('Informations générales')
+                    ici->setIcon('fa-solid fa-comment-dollar') //<i class="fa-solid fa-comment-dollar"></i>
+                    ->setHelp("Portion de la prime totale valide pour une période bien déterminée.")
+            ];
+            //$tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
+            $tabAttributs = $this->setPROD_Fields_Tranche_Index($preference->getProdChargement(), PreferenceCrudController::TAB_PROD_CHARGEMENT, $tabAttributs);
+            $tabAttributs = $this->setPROD_Fields_Tranche_Details($tabAttributs);
+            $tabAttributs = $this->setPROD_Fields_Tranche_form($tabAttributs);
         }
         if ($objetInstance instanceof ElementFacture) {
 

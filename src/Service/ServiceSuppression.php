@@ -79,6 +79,7 @@ class ServiceSuppression
     public const FINANCE_PAIEMENT = 30;
     public const FINANCE_REVENU = 31;
     public const PRODUCTION_CHARGEMENT = 32;
+    public const PRODUCTION_TRANCHE = 33;
 
 
     public function __construct(

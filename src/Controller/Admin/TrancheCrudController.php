@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Chargement;
+use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
@@ -24,26 +24,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class ChargementCrudController extends AbstractCrudController
+class TrancheCrudController extends AbstractCrudController
 {
-
-    //Type de revenu
-    public const TYPE_PRIME_NETTE = "Prime nette";
-    public const TYPE_ACCESSOIRES = "Frais accéssoires / admin.";
-    public const TYPE_FRONTING = "Fronting";
-    public const TYPE_FRAIS_DE_SURVEILLANCE_ARCA = "Frais de surveillance";
-    public const TYPE_TVA = "Tva";
-    public const TYPE_AUTRE = "Autre chargement";
-
-    public const TAB_TYPE = [
-        self::TYPE_PRIME_NETTE                  => 0,
-        self::TYPE_ACCESSOIRES                  => 1,
-        self::TYPE_FRONTING                     => 2,
-        self::TYPE_TVA                          => 3,
-        self::TYPE_FRAIS_DE_SURVEILLANCE_ARCA   => 4,
-        self::TYPE_AUTRE                        => 5
-    ];
-
     public ?Crud $crud = null;
 
     public function __construct(
@@ -60,7 +42,7 @@ class ChargementCrudController extends AbstractCrudController
 
     public static function getEntityFqcn(): string
     {
-        return Chargement::class;
+        return Tranche::class;
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -97,16 +79,16 @@ class ChargementCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         //Application de la préférence sur la taille de la liste
-        $this->servicePreferences->appliquerPreferenceTaille(new Chargement(), $crud);
+        $this->servicePreferences->appliquerPreferenceTaille(new Tranche(), $crud);
 
         $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
-            ->setEntityLabelInSingular("Chargement")
-            ->setEntityLabelInPlural("Chargements")
-            ->setPageTitle("index", "Liste des chargements")
+            ->setEntityLabelInSingular("Tranche")
+            ->setEntityLabelInPlural("Tranches")
+            ->setPageTitle("index", "Liste des tranches")
             ->setDefaultSort(['updatedAt' => 'ASC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
@@ -117,15 +99,14 @@ class ChargementCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CHARGEMENT);
+        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_TRANCHE);
     }
 
     public function createEntity(string $entityFqcn)
     {
-        $objet = new Chargement();
-        $objet->setType(self::TAB_TYPE[self::TYPE_PRIME_NETTE]);
-        $objet->setDescription("...");
-        $objet->setMontant(0);
+        $objet = new Tranche();
+        $objet->setNom("");
+        $objet->setTaux(100);
         $objet->setCreatedAt($this->serviceDates->aujourdhui());
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -134,16 +115,17 @@ class ChargementCrudController extends AbstractCrudController
         return $objet;
     }
 
-    
+
+
     public function configureFields(string $pageName): iterable
     {
-        if($this->crud){
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Chargement(), $this->crud, $this->adminUrlGenerator);
+        return $this->servicePreferences->getChamps(new Tranche(), $this->crud, $this->adminUrlGenerator);
     }
-   
+
     public function configureActions(Actions $actions): Actions
     {
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -226,7 +208,7 @@ class ChargementCrudController extends AbstractCrudController
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        /** @var Revenu */
+        /** @var Tranche */
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
         parent::persistEntity($em, $entiteDuplique);
@@ -254,4 +236,5 @@ class ChargementCrudController extends AbstractCrudController
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
+
 }

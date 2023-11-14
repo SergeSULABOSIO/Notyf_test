@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\ChargementCrudController;
 use App\Repository\ChargementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -136,5 +137,17 @@ class Chargement
         $this->cotation = $cotation;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        $strType = "";
+        foreach (ChargementCrudController::TAB_TYPE as $key => $value) {
+            if ($value == $this->type) {
+                $strType = $key;
+            }
+        }
+        //On calcul la prime totale
+        return $strType . " (" . number_format($this->getMontant()/100, 2, ",", ".") . ")";
     }
 }

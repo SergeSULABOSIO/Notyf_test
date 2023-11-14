@@ -125,13 +125,10 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
-    public const PREF_CRM_COTATION_PRIME_NETTE          = "Prime nette";
-    public const PREF_CRM_COTATION_ACCESSOIRES          = "Accéssoires";
-    public const PREF_CRM_COTATION_FRONTING             = "Fronting";
-    public const PREF_CRM_COTATION_TAXE                 = "Taxes";
-    public const PREF_CRM_COTATION_ARCA                 = "Frais de surveillance";
-    public const PREF_CRM_COTATION_PRIME_TOTALE         = "Prime totale";
     public const PREF_CRM_COTATION_REVENUS              = "Revenus";
+    public const PREF_CRM_COTATION_CHARGEMENT           = "Chargements";
+    public const PREF_CRM_COTATION_PRIME_TTC            = "Prime totale";
+    public const PREF_CRM_COTATION_REVENU_TOTAL_HT      = "Revenu total ht";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
     public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
     public const PREF_CRM_COTATION_DATE_MODIFICATION    = "Dernière modification";
@@ -142,20 +139,16 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_NOM                                             => 1,
         self::PREF_CRM_COTATION_ASSUREUR                                        => 2,
         self::PREF_CRM_COTATION_PRODUIT                                         => 3,
-        self::PREF_CRM_COTATION_PRIME_TOTALE                                    => 4,
-        self::PREF_CRM_COTATION_PISTE                                           => 5,
-        self::PREF_CRM_COTATION_UTILISATEUR                                     => 6,
-        self::PREF_CRM_COTATION_ENTREPRISE                                      => 7,
-        self::PREF_CRM_COTATION_DATE_CREATION                                   => 8,
-        self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 9,
-        self::PREF_CRM_COTATION_RESULTAT                                        => 10,
-        self::PREF_CRM_COTATION_REVENUS                                         => 11,
-        self::PREF_CRM_COTATION_PRIME_NETTE                                     => 12,
-        self::PREF_CRM_COTATION_ACCESSOIRES                                     => 13,
-        self::PREF_CRM_COTATION_ARCA                                            => 14,
-        self::PREF_CRM_COTATION_TAXE                                            => 15,
-        self::PREF_CRM_COTATION_REVENUS                                         => 16,
-        self::PREF_CRM_COTATION_FRONTING                                        => 17
+        self::PREF_CRM_COTATION_PISTE                                           => 4,
+        self::PREF_CRM_COTATION_UTILISATEUR                                     => 5,
+        self::PREF_CRM_COTATION_ENTREPRISE                                      => 6,
+        self::PREF_CRM_COTATION_DATE_CREATION                                   => 7,
+        self::PREF_CRM_COTATION_DATE_MODIFICATION                               => 8,
+        self::PREF_CRM_COTATION_RESULTAT                                        => 9,
+        self::PREF_CRM_COTATION_REVENUS                                         => 10,
+        self::PREF_CRM_COTATION_CHARGEMENT                                      => 11,
+        self::PREF_CRM_COTATION_PRIME_TTC                                       => 12,
+        self::PREF_CRM_COTATION_REVENU_TOTAL_HT                                 => 13
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";

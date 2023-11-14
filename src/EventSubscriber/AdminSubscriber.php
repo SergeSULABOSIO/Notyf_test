@@ -205,6 +205,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $cotation->setEntreprise($this->serviceEntreprise->getEntreprise());
 
+                //Les revenus de la cotation
                 foreach ($cotation->getRevenus() as $revenu) {
                     if ($isCreate || $revenu->getCreatedAt() == null) {
                         $revenu->setCreatedAt(new \DateTimeImmutable());
@@ -217,6 +218,19 @@ class AdminSubscriber implements EventSubscriberInterface
                     }
                     if ($revenu->getTaux() == null) {
                         $revenu->setTaux(0);
+                    }
+                }
+
+                //Les chargements de la cotation
+                foreach ($cotation->getChargements() as $chargement) {
+                    if ($isCreate || $chargement->getCreatedAt() == null) {
+                        $chargement->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $chargement->setUpdatedAt(new \DateTimeImmutable());
+                    $chargement->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $chargement->setEntreprise($this->serviceEntreprise->getEntreprise());
+                    if ($chargement->getMontant() == null) {
+                        $chargement->setMontant(0);
                     }
                 }
             }

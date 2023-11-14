@@ -525,12 +525,11 @@ class ServicePreferences
             $tabAttributs = [
                 FormField::addPanel('Informations générales')
                     ->setIcon('fa-solid fa-comment-dollar') //<i class="fa-solid fa-comment-dollar"></i>
-                    ->setHelp("Frais chargé au client par l'assureur, visible sur la facture.")
+                    ->setHelp("Frais chargés au client par l'assureur, visibles sur la facture.")
             ];
             //$tabAttributs = $this->setCRM_Fields_Monnaies_Index_Details($preference->getFinMonnaies(), PreferenceCrudController::TAB_FIN_MONNAIES, $tabAttributs);
             $tabAttributs = $this->setPROD_Fields_Chargement_Index($preference->getProdChargement(), PreferenceCrudController::TAB_PROD_CHARGEMENT, $tabAttributs);
             $tabAttributs = $this->setPROD_Fields_Chargement_Details($tabAttributs);
-            ici
             $tabAttributs = $this->setPROD_Fields_Chargement_form($tabAttributs);
         }
         if ($objetInstance instanceof ElementFacture) {
@@ -1471,6 +1470,32 @@ class ServicePreferences
             $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        //On désactive les champs non éditables
+        $this->appliquerCanDesable($tabAttributs);
+        return $tabAttributs;
+    }
+
+    public function setPROD_Fields_Chargement_form($tabAttributs)
+    {
+        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)) {
+            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
+                ->setChoices(ChargementCrudController::TAB_TYPE)
+                ->setColumns(12)
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT)) {
+            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT)
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)) {
+            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -4728,51 +4753,23 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)) {
-            $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                //->setColumns(2);
-                ->setColumns(12);
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
+            $tabAttributs[] = CollectionField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)
+                ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+                ->useEntryCrudForm(ChargementCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex()
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
         }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)) {
-            $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)) {
+            $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
-                //->setColumns(2);
-                ->setColumns(12);
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_FRONTING)) {
-            $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_CRM_COTATION_FRONTING)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                //->setColumns(2);
-                ->setColumns(12);
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_TAXE)) {
-            $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                //->setColumns(2);
-                ->setColumns(12);
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ARCA)) {
-            $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                //->setColumns(2);
-                ->setColumns(12);
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)) {
-            $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
+                ->setDisabled(true)
                 //->setColumns(2);
                 ->setColumns(12);
         }
@@ -4786,6 +4783,15 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
+        }
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)) {
+            $tabAttributs[] = MoneyField::new('revenuTotalHT', PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                //->setColumns(2);
+                ->setColumns(12);
         }
 
         return $tabAttributs;
@@ -4808,51 +4814,51 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE])) {
-            $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
-                ->formatValue(function ($value, Cotation $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeNette());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES])) {
-            $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
-                ->formatValue(function ($value, Cotation $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_TAXE])) {
-            $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
-                ->formatValue(function ($value, Cotation $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ARCA])) {
-            $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
-                ->formatValue(function ($value, Cotation $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
-            $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-                ->formatValue(function ($value, Cotation $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE])) {
+        //     $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
+        //         ->formatValue(function ($value, Cotation $entity) {
+        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeNette());
+        //         })
+        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //         ->setStoredAsCents()
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES])) {
+        //     $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
+        //         ->formatValue(function ($value, Cotation $entity) {
+        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
+        //         })
+        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //         ->setStoredAsCents()
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_TAXE])) {
+        //     $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
+        //         ->formatValue(function ($value, Cotation $entity) {
+        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
+        //         })
+        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //         ->setStoredAsCents()
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ARCA])) {
+        //     $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
+        //         ->formatValue(function ($value, Cotation $entity) {
+        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
+        //         })
+        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //         ->setStoredAsCents()
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
+        //     $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
+        //         ->formatValue(function ($value, Cotation $entity) {
+        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+        //         })
+        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //         ->setStoredAsCents()
+        //         ->onlyOnIndex();
+        // }
         // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRODUIT])) {
         //     $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnIndex();
         // }
@@ -4885,48 +4891,51 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeNette());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_CRM_COTATION_FRONTING)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)->onlyOnDetail();
+
+        // $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeNette());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_CRM_COTATION_FRONTING)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
+        //     ->formatValue(function ($value, Cotation $entity) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
             ->onlyOnDetail()
             ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);

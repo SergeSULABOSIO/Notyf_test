@@ -17,10 +17,10 @@ class Cotation
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-    
-    #[ORM\ManyToOne(inversedBy: 'cotations', cascade:['remove', 'persist', 'refresh'])]
+
+    #[ORM\ManyToOne(inversedBy: 'cotations', cascade: ['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Assureur $assureur = null;
 
@@ -41,11 +41,14 @@ class Cotation
     #[ORM\Column(nullable: true)]
     private ?int $validated = null;
 
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $revenus;
 
-    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $chargements;
+
+    private ?float $primeTotale;
+    private ?float $revenuTotalHT;
 
 
     public function __construct()
@@ -120,21 +123,14 @@ class Cotation
         return $this;
     }
 
-    public function calc_getPrimeTTC(){
-        $total = 0;
-        if($this->getChargements()){
-            foreach ($this->getChargements() as $chargement) {
-                $total = $total + $chargement->getMontant();
-            }
-        }
-        return $total;
-    }
 
-    public function calc_getChargement($type){
+
+    public function calc_getChargement($type)
+    {
         $total = 0;
-        if($this->getChargements()){
+        if ($this->getChargements()) {
             foreach ($this->getChargements() as $chargement) {
-                if($type == $chargement->getType()){
+                if ($type == $chargement->getType()) {
                     $total = $total + $chargement->getMontant();
                 }
             }
@@ -145,15 +141,10 @@ class Cotation
     public function __toString()
     {
         $strCommission = "";
-        if($this->getRevenus()){
-            $totRev = 0;
-            foreach ($this->getRevenus() as $revenu) {
-                $totRev = $totRev + $revenu->calc_getRevenuFinal();
-            }
-            $strCommission = " | Com. ht: " . number_format($totRev, 2, ",", ".")."";
+        if ($this->getRevenus()) {
+            $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . "";
         }
-
-        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->calc_getPrimeTTC() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée].":".");
+        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée]." : ".");
     }
 
     public function getPiste(): ?Piste
@@ -248,6 +239,60 @@ class Cotation
                 $chargement->setCotation(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of primeTotale
+     */
+    public function getPrimeTotale()
+    {
+        $tot = 0;
+        if ($this->getChargements()) {
+            foreach ($this->getChargements() as $chargement) {
+                $tot = $tot + $chargement->getMontant();
+            }
+        }
+        $this->primeTotale = $tot;
+        return $this->primeTotale;
+    }
+
+    /**
+     * Set the value of primeTotale
+     *
+     * @return  self
+     */
+    public function setPrimeTotale($primeTotale)
+    {
+        $this->primeTotale = $primeTotale;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of revenuTotalHT
+     */
+    public function getRevenuTotalHT()
+    {
+        $tot = 0;
+        if ($this->getRevenus()) {
+            foreach ($this->getRevenus() as $revenu) {
+                $tot = $tot + $revenu->calc_getRevenuFinal();
+            }
+        }
+        $this->revenuTotalHT = $tot * 100;
+        return $this->revenuTotalHT;
+    }
+
+    /**
+     * Set the value of revenuTotalHT
+     *
+     * @return  self
+     */
+    public function setRevenuTotalHT($revenuTotalHT)
+    {
+        $this->revenuTotalHT = $revenuTotalHT;
 
         return $this;
     }

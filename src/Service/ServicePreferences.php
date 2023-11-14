@@ -4754,6 +4754,8 @@ class ServicePreferences
                 });
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
+            $tabAttributs[] = FormField::addPanel("Détails relatifs à la prime d'assurance")
+                ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)
                 ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
                 ->useEntryCrudForm(ChargementCrudController::class)
@@ -4763,17 +4765,19 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)) {
             $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
-                //->setColumns(2);
+                //->setColumns(4);
                 ->setColumns(12);
         }
+        // if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)) {
+        // }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENUS)) {
+            $tabAttributs[] = FormField::addPanel("Détails relatifs à la commission de courtage")
+                ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)
                 ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
                 ->useEntryCrudForm(RevenuCrudController::class)
@@ -4783,16 +4787,16 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)) {
             $tabAttributs[] = MoneyField::new('revenuTotalHT', PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
-                //->setColumns(2);
+                //->setColumns(4);
                 ->setColumns(12);
         }
+        // if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)) {
+        // }
 
         return $tabAttributs;
     }

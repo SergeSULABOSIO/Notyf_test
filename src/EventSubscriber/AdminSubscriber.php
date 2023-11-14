@@ -240,8 +240,6 @@ class AdminSubscriber implements EventSubscriberInterface
             }
             //dd($entityInstance);
             $this->cleanCotations();
-            $this->cleanChargements();
-            $this->cleanRevenus();
         }
     }
 
@@ -345,6 +343,8 @@ class AdminSubscriber implements EventSubscriberInterface
                 $this->entityManager->flush();
             }
         }
+        $this->cleanChargements();
+        $this->cleanRevenus();
         //dd($cotations);
     }
 }

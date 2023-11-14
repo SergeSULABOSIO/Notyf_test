@@ -145,6 +145,9 @@ class Preference
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $prodChargement = [];
 
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $proTranches = [];
+
 
     public function getId(): ?int
     {
@@ -668,6 +671,18 @@ class Preference
     public function setProdChargement(?array $prodChargement): self
     {
         $this->prodChargement = $prodChargement;
+
+        return $this;
+    }
+
+    public function getProTranches(): array
+    {
+        return $this->proTranches;
+    }
+
+    public function setProTranches(array $proTranches): self
+    {
+        $this->proTranches = $proTranches;
 
         return $this;
     }

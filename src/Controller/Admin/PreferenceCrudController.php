@@ -1086,6 +1086,30 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PROD_CHARGEMENT_DERNIRE_MODIFICATION => 8
     ];
 
+    public const PREF_PROD_TRANCHE_ID                   = 'Id';
+    public const PREF_PROD_TRANCHE_NOM                  = "Nom";
+    public const PREF_PROD_TRANCHE_TAUX                 = "Taux";
+    public const PREF_PROD_TRANCHE_MONTANT              = "Montant";
+    public const PREF_PROD_TRANCHE_DEBUT                = "Début";
+    public const PREF_PROD_TRANCHE_FIN                  = "Echéance";
+    public const PREF_PROD_TRANCHE_UTILISATEUR          = "Utilisateur";
+    public const PREF_PROD_TRANCHE_ENTREPRISE           = "Entreprise";
+    public const PREF_PROD_TRANCHE_DATE_CREATION        = "Date de création";
+    public const PREF_PROD_TRANCHE_DERNIRE_MODIFICATION = "Dernière modification";
+
+    public const TAB_PROD_TRANCHE = [
+        self::PREF_PROD_TRANCHE_ID                      => 0,
+        self::PREF_PROD_TRANCHE_NOM                     => 1,
+        self::PREF_PROD_TRANCHE_TAUX                    => 2,
+        self::PREF_PROD_TRANCHE_MONTANT                 => 3,
+        self::PREF_PROD_TRANCHE_DEBUT                   => 4,
+        self::PREF_PROD_TRANCHE_FIN                     => 5,
+        self::PREF_PROD_TRANCHE_UTILISATEUR             => 6,
+        self::PREF_PROD_TRANCHE_ENTREPRISE              => 7,
+        self::PREF_PROD_TRANCHE_DATE_CREATION           => 8,
+        self::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION    => 9,
+    ];
+
 
     public function __construct(
         private EntityManagerInterface $entityManager,

@@ -160,6 +160,10 @@ class ServiceSuppression
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
+            case self::PRODUCTION_TRANCHE:
+                $this->supprimerEntiteSingleton($entityObject);
+                break;
+
             case self::PRODUCTION_CHARGEMENT:
                 $this->supprimerEntiteSingleton($entityObject);
                 break;

@@ -28,8 +28,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Entity\Chargement;
 use App\Entity\Client;
+use App\Entity\Contact;
 use App\Entity\Partenaire;
+use App\Entity\Revenu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -127,6 +130,7 @@ class AdminSubscriber implements EventSubscriberInterface
 
     private function updateCollectionsPourPiste($entityInstance, bool $isCreate)
     {
+        //dd($entityInstance);
         if ($entityInstance instanceof Piste) {
             /** @var Piste */
             $piste = $entityInstance;
@@ -139,6 +143,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $contact->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
+
             //Collection pour Action
             foreach ($piste->getActionsCRMs() as $action) {
                 if ($isCreate || $action->getCreatedAt() == null) {
@@ -199,7 +204,6 @@ class AdminSubscriber implements EventSubscriberInterface
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
-                $cotation->setAssureur($cotation->getAssureur());
                 $cotation->setPiste($cotation->getPiste());
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
                 $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -234,8 +238,10 @@ class AdminSubscriber implements EventSubscriberInterface
                     }
                 }
             }
-
-            //dd($piste);
+            //dd($entityInstance);
+            $this->cleanCotations();
+            $this->cleanChargements();
+            $this->cleanRevenus();
         }
     }
 
@@ -283,5 +289,62 @@ class AdminSubscriber implements EventSubscriberInterface
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
         //ici il faut aussi actualiser les instances de Police et Facture
         //dd($entityInstance);
+    }
+
+
+    private function cleanChargements()
+    {
+        $chargements = $this->entityManager->getRepository(Chargement::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var Chargement */
+        foreach ($chargements as $chargement) {
+            if ($chargement->getCotation() == null) {
+                $this->entityManager->remove($chargement);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function cleanRevenus()
+    {
+        $revenus = $this->entityManager->getRepository(Revenu::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var Revenu */
+        foreach ($revenus as $revenu) {
+            if ($revenu->getCotation() == null) {
+                $this->entityManager->remove($revenu);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function cleanCotations()
+    {
+        $cotations = $this->entityManager->getRepository(Cotation::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var Cotation */
+        foreach ($cotations as $cotation) {
+            if ($cotation->getPiste() == null) {
+                //On vide les chargement
+                /** @var Chargement */
+                foreach ($cotation->getChargements() as $chargement) {
+                    $this->entityManager->remove($chargement);
+                    $this->entityManager->flush();
+                }
+                //On vide les revenus
+                /** @var Revenu */
+                foreach ($cotation->getRevenus() as $revenu) {
+                    $this->entityManager->remove($revenu);
+                    $this->entityManager->flush();
+                }
+                //On detruit enfin la cotation
+                $this->entityManager->remove($cotation);
+                $this->entityManager->flush();
+            }
+        }
+        //dd($cotations);
     }
 }

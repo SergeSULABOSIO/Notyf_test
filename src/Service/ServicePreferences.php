@@ -4939,7 +4939,7 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
             ->onlyOnDetail()
             ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
-        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
+        //$tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)

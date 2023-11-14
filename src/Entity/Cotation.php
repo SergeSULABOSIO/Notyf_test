@@ -144,7 +144,15 @@ class Cotation
         if ($this->getRevenus()) {
             $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . "";
         }
-        return "" . $this->nom . " | " . $this->assureur->getNom() . " | " . $this->piste->getProduit()->getNom() . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée]." : ".");
+        $strNomAssureur = "";
+        if($this->assureur){
+            $strNomAssureur = $this->assureur->getNom();
+        }
+        $strNomProduit = "";
+        if($this->piste->getProduit()){
+            $strNomProduit = $this->piste->getProduit()->getNom();
+        }
+        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée]." : ".");
     }
 
     public function getPiste(): ?Piste

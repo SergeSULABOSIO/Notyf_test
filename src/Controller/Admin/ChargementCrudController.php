@@ -32,7 +32,7 @@ class ChargementCrudController extends AbstractCrudController
     public const TYPE_ACCESSOIRES = "Frais accéssoires / admin.";
     public const TYPE_FRONTING = "Fronting";
     public const TYPE_FRAIS_DE_SURVEILLANCE_ARCA = "Frais de surveillance";
-    public const TYPE_TVA = "Tva (taxe sur la valeur ajoutée)";
+    public const TYPE_TVA = "Tva";
     public const TYPE_AUTRE = "Autre chargement";
 
     public const TAB_TYPE = [

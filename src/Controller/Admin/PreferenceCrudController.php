@@ -127,6 +127,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
     public const PREF_CRM_COTATION_REVENUS              = "Revenus";
     public const PREF_CRM_COTATION_CHARGEMENT           = "Chargements";
+    public const PREF_CRM_COTATION_TRANCHES             = "Tranches";
     public const PREF_CRM_COTATION_PRIME_TTC            = "Prime totale";
     public const PREF_CRM_COTATION_REVENU_TOTAL_HT      = "Revenu total ht";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
@@ -148,7 +149,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_REVENUS                                         => 10,
         self::PREF_CRM_COTATION_CHARGEMENT                                      => 11,
         self::PREF_CRM_COTATION_PRIME_TTC                                       => 12,
-        self::PREF_CRM_COTATION_REVENU_TOTAL_HT                                 => 13
+        self::PREF_CRM_COTATION_REVENU_TOTAL_HT                                 => 13,
+        self::PREF_CRM_COTATION_TRANCHES                                        => 14
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";
@@ -1087,6 +1089,7 @@ class PreferenceCrudController extends AbstractCrudController
     ];
 
     public const PREF_PROD_TRANCHE_ID                   = 'Id';
+    public const PREF_PROD_TRANCHE_COTATION             = "Cotation";
     public const PREF_PROD_TRANCHE_NOM                  = "Nom";
     public const PREF_PROD_TRANCHE_TAUX                 = "Taux";
     public const PREF_PROD_TRANCHE_MONTANT              = "Montant";
@@ -1108,6 +1111,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PROD_TRANCHE_ENTREPRISE              => 7,
         self::PREF_PROD_TRANCHE_DATE_CREATION           => 8,
         self::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION    => 9,
+        self::PREF_PROD_TRANCHE_COTATION                => 10,
     ];
 
 

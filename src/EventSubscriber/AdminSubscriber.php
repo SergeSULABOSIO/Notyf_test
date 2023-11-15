@@ -33,6 +33,7 @@ use App\Entity\Client;
 use App\Entity\Contact;
 use App\Entity\Partenaire;
 use App\Entity\Revenu;
+use App\Entity\Tranche;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
@@ -237,6 +238,16 @@ class AdminSubscriber implements EventSubscriberInterface
                         $chargement->setMontant(0);
                     }
                 }
+
+                //Les tranches de la cotation
+                foreach ($cotation->getTranches() as $tranche) {
+                    if ($isCreate || $tranche->getCreatedAt() == null) {
+                        $tranche->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $tranche->setUpdatedAt(new \DateTimeImmutable());
+                    $tranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $tranche->setEntreprise($this->serviceEntreprise->getEntreprise());
+                }
             }
             //dd($entityInstance);
             $this->cleanCotations();
@@ -336,6 +347,12 @@ class AdminSubscriber implements EventSubscriberInterface
                 /** @var Revenu */
                 foreach ($cotation->getRevenus() as $revenu) {
                     $this->entityManager->remove($revenu);
+                    $this->entityManager->flush();
+                }
+                //On vide les tranches
+                /** @var Tranche */
+                foreach ($cotation->getTranches() as $tranche) {
+                    $this->entityManager->remove($tranche);
                     $this->entityManager->flush();
                 }
                 //On detruit enfin la cotation

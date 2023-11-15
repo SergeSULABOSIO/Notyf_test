@@ -50,11 +50,15 @@ class Cotation
     private ?float $primeTotale;
     private ?float $revenuTotalHT;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
+    private Collection $tranches;
+
 
     public function __construct()
     {
         $this->revenus = new ArrayCollection();
         $this->chargements = new ArrayCollection();
+        $this->tranches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -301,6 +305,36 @@ class Cotation
     public function setRevenuTotalHT($revenuTotalHT)
     {
         $this->revenuTotalHT = $revenuTotalHT;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tranche>
+     */
+    public function getTranches(): Collection
+    {
+        return $this->tranches;
+    }
+
+    public function addTranch(Tranche $tranch): self
+    {
+        if (!$this->tranches->contains($tranch)) {
+            $this->tranches->add($tranch);
+            $tranch->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTranch(Tranche $tranch): self
+    {
+        if ($this->tranches->removeElement($tranch)) {
+            // set the owning side to null (unless already changed)
+            if ($tranch->getCotation() === $this) {
+                $tranch->setCotation(null);
+            }
+        }
 
         return $this;
     }

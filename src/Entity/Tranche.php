@@ -37,6 +37,11 @@ class Tranche
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    private ?float $montant = 0;
+
+    #[ORM\ManyToOne(inversedBy: 'tranches', cascade:['remove', 'persist', 'refresh'])]
+    private ?Cotation $cotation = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,5 +141,48 @@ class Tranche
         $this->nom = $nom;
 
         return $this;
+    }
+
+    /**
+     * Get the value of montant
+     */ 
+    public function getMontant()
+    {
+        $mont = 0;
+        if($this->getCotation() != null){
+            $mont = (($this->getCotation()->getPrimeTotale() / 100) * $this->getTaux()) / 100;
+        }
+        $this->montant = $mont;
+        return $this->montant;
+    }
+
+    /**
+     * Set the value of montant
+     *
+     * @return  self
+     */ 
+    public function setMontant($montant)
+    {
+        $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        $strMont = "" . number_format($this->getMontant(), 2, ",", ".") . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y'));
+        return $this->getNom() . ": " . $strMont;
     }
 }

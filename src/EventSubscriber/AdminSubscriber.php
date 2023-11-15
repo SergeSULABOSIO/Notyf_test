@@ -240,6 +240,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
 
                 //Les tranches de la cotation
+                //Il faut aussi équilibrer les période des tranches pour être égale à la période de couverture globale
                 foreach ($cotation->getTranches() as $tranche) {
                     if ($isCreate || $tranche->getCreatedAt() == null) {
                         $tranche->setCreatedAt(new \DateTimeImmutable());
@@ -248,10 +249,24 @@ class AdminSubscriber implements EventSubscriberInterface
                     $tranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $tranche->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
+                //On équilibre les tranches
+                $this->equilibrerTranches($cotation);
             }
             //dd($entityInstance);
             $this->cleanCotations();
         }
+    }
+
+    /**
+     * L'objectif de cette fonction est de vérifier si la sommes des périodes des tranches
+     * est égale à la période globale définie dans la cotation.
+     * S'il y a des différences la fonction va soit ajouter, soit retrancher.
+     *
+     * @param Cotation|null $cotation
+     * @return void
+     */
+    public function equilibrerTranches(?Cotation $cotation){
+        ici
     }
 
     public function updateNomMonnaie(Monnaie $entityInstance): Monnaie

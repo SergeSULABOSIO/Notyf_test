@@ -265,8 +265,32 @@ class AdminSubscriber implements EventSubscriberInterface
      * @param Cotation|null $cotation
      * @return void
      */
-    public function equilibrerTranches(?Cotation $cotation){
-        ici
+    public function equilibrerTranches(?Cotation $cotation)
+    {
+        $dureeGlobale = $cotation->getDureeCouverture(); //En mois
+        $dureeTrancheTotale = 0;
+        $tauxTranchesTotale = 0;
+        if ($cotation->getTranches()) {
+            foreach ($cotation->getTranches() as $tranche) {
+                $dureeTrancheTotale = $dureeTrancheTotale + $tranche->getDuree();
+                $tauxTranchesTotale = $tauxTranchesTotale + $tranche->getTaux();
+            }
+        }
+        $diffDuree = $dureeGlobale - $dureeTrancheTotale;
+        $diffTaux = 1 - $tauxTranchesTotale;
+        //dd($diffTaux);
+        if ($diffDuree != 0 && $diffTaux != 0) {
+            $newTranche = new Tranche();
+            $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
+            $newTranche->setDuree($diffDuree);
+            $newTranche->setTaux($diffTaux);
+            $newTranche->setCotation($cotation);
+            $newTranche->setCreatedAt(new DateTimeImmutable());
+            $newTranche->setUpdatedAt(new DateTimeImmutable());
+            $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
+            $cotation->addTranch($newTranche);
+        }
     }
 
     public function updateNomMonnaie(Monnaie $entityInstance): Monnaie

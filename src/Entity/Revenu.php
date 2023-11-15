@@ -203,7 +203,33 @@ class Revenu
         }
         //On calcul le revennu total
         $data = $this->getComNette($strBase);
-        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")";
+
+        //Décomposition en tranches
+        $strTranches = "";
+        if ($this->getCotation()) {
+            if ($this->getCotation()->getTranches()) {
+                $tabTranches = $this->getCotation()->getTranches();
+                $portions = " ";
+                /** @var Tranche */
+                $i = 0;
+                foreach ($tabTranches as $tranche) {
+                    $i = $i + 1;
+                    $comTranche = (($tranche->getTaux()/100) * $data['revenufinal']) * 100;
+                    if ($i == count($tabTranches)) {
+                        $portions = $portions . " et " . $comTranche;
+                    }else if ($i == 1) {
+                        $portions = $comTranche;
+                    } else {
+                        $portions = $portions . ", " . $comTranche;
+                    }
+                }
+
+                $strTranches = ", commission de courtage payable en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
+            }
+        }
+
+
+        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
     }
 
     public function calc_getRevenuFinal()

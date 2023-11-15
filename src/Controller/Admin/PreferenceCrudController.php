@@ -1098,6 +1098,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PROD_TRANCHE_COTATION             = "Cotation";
     public const PREF_PROD_TRANCHE_NOM                  = "Nom";
     public const PREF_PROD_TRANCHE_TAUX                 = "Taux";
+    public const PREF_PROD_TRANCHE_DUREE                = "Durée (mois)";
     public const PREF_PROD_TRANCHE_MONTANT              = "Montant";
     public const PREF_PROD_TRANCHE_DEBUT                = "Début";
     public const PREF_PROD_TRANCHE_FIN                  = "Echéance";

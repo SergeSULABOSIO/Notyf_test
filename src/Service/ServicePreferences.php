@@ -1569,16 +1569,21 @@ class ServicePreferences
                 ->setColumns(12)
                 ->onlyOnForms();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)) {
-            $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
+        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_DUREE)) {
+            $tabAttributs[] = NumberField::new('duree', PreferenceCrudController::PREF_PROD_TRANCHE_DUREE)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
-        if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_FIN)) {
-            $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)) {
+        //     $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
+        //         ->setColumns(12)
+        //         ->onlyOnForms();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_FIN)) {
+        //     $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
+        //         ->setColumns(12)
+        //         ->onlyOnForms();
+        // }
         //On désactive les champs non éditables
         $this->appliquerCanDesable($tabAttributs);
         return $tabAttributs;

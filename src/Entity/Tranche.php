@@ -16,12 +16,6 @@ class Tranche
     #[ORM\Column]
     private ?float $taux = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $startedAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $endedAt = null;
-
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
@@ -41,6 +35,16 @@ class Tranche
 
     #[ORM\ManyToOne(inversedBy: 'tranches', cascade:['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
+
+    //#[ORM\Column]
+    private ?\DateTimeImmutable $startedAt = null;
+
+    //#[ORM\Column]
+    private ?\DateTimeImmutable $endedAt = null;
+
+    #[ORM\Column]
+    private ?int $duree = null;
+
 
     public function getId(): ?int
     {
@@ -182,7 +186,23 @@ class Tranche
 
     public function __toString()
     {
-        $strMont = "" . number_format($this->getMontant(), 2, ",", ".") . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y'));
+        $strPeriode = " pour durée de " . $this->getDuree() . " mois.";
+        if($this->getStartedAt() && $this->getEndedAt()){
+            $strPeriode = " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y')) . ".";
+        }
+        $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . $strPeriode;
         return $this->getNom() . ": " . $strMont;
+    }
+
+    public function getDuree(): ?int
+    {
+        return $this->duree;
+    }
+
+    public function setDuree(int $duree): self
+    {
+        $this->duree = $duree;
+
+        return $this;
     }
 }

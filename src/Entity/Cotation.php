@@ -52,7 +52,7 @@ class Cotation
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $tranches;
-
+    
     #[ORM\Column]
     private ?int $dureeCouverture = null;
 

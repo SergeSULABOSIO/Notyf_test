@@ -150,7 +150,7 @@ class Tranche
     {
         $mont = 0;
         if($this->getCotation() != null){
-            $mont = (($this->getCotation()->getPrimeTotale() / 100) * $this->getTaux()) / 100;
+            $mont = (($this->getCotation()->getPrimeTotale() / 100) * $this->getTaux());
         }
         $this->montant = $mont;
         return $this->montant;

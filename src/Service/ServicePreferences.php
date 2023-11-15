@@ -1545,7 +1545,7 @@ class ServicePreferences
     public function setPROD_Fields_Tranche_form($tabAttributs)
     {
         if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_NOM)) {
-            $tabAttributs[] = ChoiceField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
+            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
                 ->setColumns(12)
                 ->setRequired(true)
                 ->onlyOnForms();

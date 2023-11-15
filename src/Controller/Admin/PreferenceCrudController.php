@@ -121,8 +121,9 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //CRM - COTATION
     public const PREF_CRM_COTATION_ID                   = "Id";
-    public const PREF_CRM_COTATION_RESULTAT             = "Résultat";
+    public const PREF_CRM_COTATION_RESULTAT             = "L'offre est validée et l'avenant est en vigueur.";
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
+    public const PREF_CRM_COTATION_DUREE                = "Durée (en mois)";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
     public const PREF_CRM_COTATION_REVENUS              = "Revenus";
@@ -150,7 +151,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_CHARGEMENT                                      => 11,
         self::PREF_CRM_COTATION_PRIME_TTC                                       => 12,
         self::PREF_CRM_COTATION_REVENU_TOTAL_HT                                 => 13,
-        self::PREF_CRM_COTATION_TRANCHES                                        => 14
+        self::PREF_CRM_COTATION_TRANCHES                                        => 14,
+        self::PREF_CRM_COTATION_DUREE                                           => 15
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";

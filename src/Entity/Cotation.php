@@ -38,8 +38,8 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $validated = null;
+    // #[ORM\Column(nullable: true)]
+    // private ?int $validated = null;
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $revenus;
@@ -52,6 +52,12 @@ class Cotation
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $tranches;
+
+    #[ORM\Column]
+    private ?int $dureeCouverture = null;
+
+    #[ORM\Column]
+    private ?bool $validated = null;
 
 
     public function __construct()
@@ -156,7 +162,7 @@ class Cotation
         if($this->piste->getProduit()){
             $strNomProduit = $this->piste->getProduit()->getNom();
         }
-        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->validated == 0 ? " [validée]." : ".");
+        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
     }
 
     public function getPiste(): ?Piste
@@ -183,17 +189,17 @@ class Cotation
         return $this;
     }
 
-    public function getValidated(): ?int
-    {
-        return $this->validated;
-    }
+    // public function getValidated(): ?int
+    // {
+    //     return $this->validated;
+    // }
 
-    public function setValidated(?int $validated): self
-    {
-        $this->validated = $validated;
+    // public function setValidated(?int $validated): self
+    // {
+    //     $this->validated = $validated;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Revenu>
@@ -335,6 +341,30 @@ class Cotation
                 $tranch->setCotation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDureeCouverture(): ?int
+    {
+        return $this->dureeCouverture;
+    }
+
+    public function setDureeCouverture(int $dureeCouverture): self
+    {
+        $this->dureeCouverture = $dureeCouverture;
+
+        return $this;
+    }
+
+    public function isValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
 
         return $this;
     }

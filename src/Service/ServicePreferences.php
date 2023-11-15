@@ -4866,15 +4866,6 @@ class ServicePreferences
                 //->setColumns(6);
                 ->setColumns(12);
         }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)) {
-            $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
-                ->setColumns(12)
-                ->renderExpanded()
-                ->setRequired(true)
-                //->setColumns(6)
-                ->onlyOnForms()
-                ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
-        }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)) {
             $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)
                 ->setRequired(false)
@@ -4887,6 +4878,20 @@ class ServicePreferences
                         ->Where('e.entreprise = :ese')
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
+        }
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)) {
+            $tabAttributs[] = BooleanField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
+                ->setColumns(12)
+                ->renderAsSwitch(true) //il reste éditable
+                ->setRequired(true)
+                ->onlyOnForms();
+            //->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
+        }
+        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_DUREE)) {
+            $tabAttributs[] = NumberField::new('dureeCouverture', PreferenceCrudController::PREF_CRM_COTATION_DUREE)
+                ->setColumns(12)
+                ->onlyOnForms();
+            //->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la prime d'assurance")

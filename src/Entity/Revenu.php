@@ -49,6 +49,12 @@ class Revenu
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isparttranche = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $ispartclient = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -204,29 +210,53 @@ class Revenu
         //On calcul le revennu total
         $data = $this->getComNette($strBase);
 
-        //Décomposition en tranches
-        $strTranches = "";
-        if ($this->getCotation()) {
-            if ($this->getCotation()->getTranches()) {
-                $tabTranches = $this->getCotation()->getTranches();
-                $portions = " ";
-                /** @var Tranche */
-                $i = 0;
-                foreach ($tabTranches as $tranche) {
-                    $i = $i + 1;
-                    $comTranche = (($tranche->getTaux()/100) * $data['revenufinal']) * 100;
-                    if ($i == count($tabTranches)) {
-                        $portions = $portions . " et " . $comTranche;
-                    }else if ($i == 1) {
-                        $portions = $comTranche;
-                    } else {
-                        $portions = $portions . ", " . $comTranche;
+
+        $strRedevablePar = "";
+        if($this->isIspartclient() == true){
+            $strRedevablePar = "par le client";
+            if($this->getCotation()){
+                if($this->getCotation()->getPiste()){
+                    if($this->getCotation()->getPiste()->getClient()){
+                        $strRedevablePar = "par " . $this->getCotation()->getPiste()->getClient()->getNom();
                     }
                 }
-
-                $strTranches = ", commission de courtage payable en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
+            }
+        }else{
+            $strRedevablePar = "par l'assureur";
+            if($this->getCotation()){
+                if($this->getCotation()){
+                    if($this->getCotation()->getAssureur()){
+                        $strRedevablePar = "par " . $this->getCotation()->getAssureur()->getNom();
+                    }
+                }
             }
         }
+
+        //Décomposition en tranches
+        $strTranches = ", commission payable " . $strRedevablePar . " en une tranche sans délai.";
+        if ($this->isIsparttranche() == true) {
+            if ($this->getCotation()) {
+                if ($this->getCotation()->getTranches()) {
+                    $tabTranches = $this->getCotation()->getTranches();
+                    $portions = " ";
+                    /** @var Tranche */
+                    $i = 0;
+                    foreach ($tabTranches as $tranche) {
+                        $i = $i + 1;
+                        $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
+                        if ($i == count($tabTranches)) {
+                            $portions = $portions . " et " . $comTranche;
+                        } else if ($i == 1) {
+                            $portions = $comTranche;
+                        } else {
+                            $portions = $portions . ", " . $comTranche;
+                        }
+                    }
+                    $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
+                }
+            }
+        }
+
 
 
         return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
@@ -278,5 +308,29 @@ class Revenu
                 break;
         }
         return $data;
+    }
+
+    public function isIsparttranche(): ?bool
+    {
+        return $this->isparttranche;
+    }
+
+    public function setIsparttranche(bool $isparttranche): self
+    {
+        $this->isparttranche = $isparttranche;
+
+        return $this;
+    }
+
+    public function isIspartclient(): ?bool
+    {
+        return $this->ispartclient;
+    }
+
+    public function setIspartclient(?bool $ispartclient): self
+    {
+        $this->ispartclient = $ispartclient;
+
+        return $this;
     }
 }

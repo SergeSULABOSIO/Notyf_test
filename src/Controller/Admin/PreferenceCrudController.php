@@ -1043,6 +1043,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_REVENU_TYPE                   = "Type";
     public const PREF_FIN_REVENU_PARTAGEABLE            = "Partageable?";
     public const PREF_FIN_REVENU_TAXABLE                = "Taxable?";
+    public const PREF_FIN_REVENU_PAR_TRANCHE            = "Ce revenu est payable par tranche selon les termes de paiement.";
+    public const PREF_FIN_REVENU_PAR_CLIENT             = "Ce revenu est payable par le client, pas par l'assureur";
     public const PREF_FIN_REVENU_BASE                   = "Base";
     public const PREF_FIN_REVENU_TAUX                   = "Taux";
     public const PREF_FIN_REVENU_MONTANT_FLAT           = "Montant fixe";
@@ -1062,7 +1064,9 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_REVENU_UTILISATEUR            => 7,
         self::PREF_FIN_REVENU_ENTREPRISE             => 8,
         self::PREF_FIN_REVENU__DATE_CREATION         => 9,
-        self::PREF_FIN_REVENU_DERNIRE_MODIFICATION   => 10
+        self::PREF_FIN_REVENU_DERNIRE_MODIFICATION   => 10,
+        self::PREF_FIN_REVENU_PAR_TRANCHE            => 11,
+        self::PREF_FIN_REVENU_PAR_CLIENT             => 12,
     ];
 
 

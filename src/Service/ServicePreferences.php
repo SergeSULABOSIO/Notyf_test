@@ -1491,6 +1491,20 @@ class ServicePreferences
                 ->setRequired(true)
                 ->onlyOnForms();
         }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_PAR_TRANCHE)) {
+            $tabAttributs[] = BooleanField::new('isparttranche', PreferenceCrudController::PREF_FIN_REVENU_PAR_TRANCHE)
+                ->setColumns(12)
+                ->renderAsSwitch(true) //il reste éditable
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
+        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_PAR_CLIENT)) {
+            $tabAttributs[] = BooleanField::new('ispartclient', PreferenceCrudController::PREF_FIN_REVENU_PAR_CLIENT)
+                ->setColumns(12)
+                ->renderAsSwitch(true) //il reste éditable
+                ->setRequired(true)
+                ->onlyOnForms();
+        }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_BASE)) {
             $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
                 ->setChoices(RevenuCrudController::TAB_BASE)

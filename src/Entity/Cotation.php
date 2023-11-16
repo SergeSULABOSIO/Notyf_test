@@ -47,19 +47,21 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $chargements;
 
-    private ?float $primeTotale;
-    private ?float $revenuTotalHT;
-
+    
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $tranches;
     
     #[ORM\Column]
     private ?int $dureeCouverture = null;
-
+    
     #[ORM\Column]
     private ?bool $validated = null;
-
-
+    
+    //Les champs calculables automatiquement sur base des données existantes
+    private ?float $primeTotale;
+    private ?float $revenuTotalHT;
+    
+    
     public function __construct()
     {
         $this->revenus = new ArrayCollection();

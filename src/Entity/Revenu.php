@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Controller\Admin\ChargementCrudController;
+use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Repository\RevenuRepository;
 use App\Service\ServiceMonnaie;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\ErrorHandler\Collecting;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
 class Revenu
@@ -192,8 +195,37 @@ class Revenu
         return $this;
     }
 
+    private function getMonnaie($fonction)
+    {
+        foreach ($this->getEntreprise()->getMonnaies() as $monnaie) {
+            //dd($fonction);
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
+    }
+
+    private function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    private function getCodeMonnaieAffichage(): string{
+        $strMonnaie = "";
+        if($this->getMonnaie_Affichage() != null){
+            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $strMonnaie;
+    }
+
     public function __toString()
     {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
         $strType = "";
         foreach (RevenuCrudController::TAB_TYPE as $key => $value) {
             if ($value == $this->type) {
@@ -245,11 +277,11 @@ class Revenu
                         $i = $i + 1;
                         $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
                         if ($i == count($tabTranches)) {
-                            $portions = $portions . " et " . $comTranche;
+                            $portions = $portions . " et " . $comTranche . $strMonnaie;
                         } else if ($i == 1) {
-                            $portions = $comTranche;
+                            $portions = $comTranche . $strMonnaie;
                         } else {
-                            $portions = $portions . ", " . $comTranche;
+                            $portions = $portions . ", " . $comTranche . $strMonnaie;
                         }
                     }
                     $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
@@ -259,7 +291,7 @@ class Revenu
 
 
 
-        return $this->getEntreprise()->getTaxes()[0] . " *** "  .  $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
+        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
     }
 
     public function calc_getRevenuFinal()
@@ -276,6 +308,7 @@ class Revenu
 
     private function getComNette($strBase)
     {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
         $data = [];
         $prmNette = 0;
         $fronting = 0;
@@ -290,17 +323,17 @@ class Revenu
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
                 $data['revenufinal'] = ($taux * $prmNette);
-                $data['comNette'] = number_format(($taux * $prmNette), 2, ",", ".");
-                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".");
+                $data['comNette'] = number_format(($taux * $prmNette), 2, ",", ".") . $strMonnaie;
+                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $strMonnaie;
                 break;
             case RevenuCrudController::BASE_FRONTING:
                 $data['revenufinal'] = ($taux * $fronting);
-                $data['comNette'] = number_format(($taux * $fronting), 2, ",", ".");
-                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".");
+                $data['comNette'] = number_format(($taux * $fronting), 2, ",", ".") . $strMonnaie;
+                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $strMonnaie;
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
                 $data['revenufinal'] = ($montantFlat);
-                $data['comNette'] = number_format($montantFlat, 2, ",", ".");
+                $data['comNette'] = number_format($montantFlat, 2, ",", ".") . $strMonnaie;
                 $data['formule'] = "une valeur fixe";
                 break;
             default:

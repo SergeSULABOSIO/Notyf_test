@@ -201,12 +201,12 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
             }
 
-            
+
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
-                
+
                 //$cotation->setNom("Offre #" . count($piste->getCotations())+1);
-                
+
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
@@ -214,7 +214,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
                 $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $cotation->setEntreprise($this->serviceEntreprise->getEntreprise());
-                
+
 
                 //Les revenus de la cotation
                 foreach ($cotation->getRevenus() as $revenu) {
@@ -255,17 +255,18 @@ class AdminSubscriber implements EventSubscriberInterface
                     $tranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $tranche->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
+
                 //On équilibre les tranches
                 $this->equilibrerTranches($cotation);
 
                 //On équilibre le revenu par défaut
                 $this->equilibrerRevenu($cotation);
 
-                if($cotation->getNom() == null){
+                if ($cotation->getNom() == null) {
                     $cotation->setNom("Offre #" . count($piste->getCotations()));
                 }
             }
-            
+
             $this->cleanCotations();
         }
     }
@@ -280,29 +281,32 @@ class AdminSubscriber implements EventSubscriberInterface
      */
     public function equilibrerTranches(?Cotation $cotation)
     {
-        $dureeGlobale = $cotation->getDureeCouverture(); //En mois
-        $dureeTrancheTotale = 0;
-        $tauxTranchesTotale = 0;
-        if ($cotation->getTranches()) {
-            foreach ($cotation->getTranches() as $tranche) {
-                $dureeTrancheTotale = $dureeTrancheTotale + $tranche->getDuree();
-                $tauxTranchesTotale = $tauxTranchesTotale + $tranche->getTaux();
+        //On équilibre les données par défaut s'il y a les chargement
+        if (count($cotation->getChargements()) != 0) {
+            $dureeGlobale = $cotation->getDureeCouverture(); //En mois
+            $dureeTrancheTotale = 0;
+            $tauxTranchesTotale = 0;
+            if ($cotation->getTranches()) {
+                foreach ($cotation->getTranches() as $tranche) {
+                    $dureeTrancheTotale = $dureeTrancheTotale + $tranche->getDuree();
+                    $tauxTranchesTotale = $tauxTranchesTotale + $tranche->getTaux();
+                }
             }
-        }
-        $diffDuree = $dureeGlobale - $dureeTrancheTotale;
-        $diffTaux = 1 - $tauxTranchesTotale;
-        //dd($diffTaux);
-        if ($diffDuree != 0 && $diffTaux != 0) {
-            $newTranche = new Tranche();
-            $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
-            $newTranche->setDuree($diffDuree);
-            $newTranche->setTaux($diffTaux);
-            $newTranche->setCotation($cotation);
-            $newTranche->setCreatedAt(new DateTimeImmutable());
-            $newTranche->setUpdatedAt(new DateTimeImmutable());
-            $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-            $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
-            $cotation->addTranch($newTranche);
+            $diffDuree = $dureeGlobale - $dureeTrancheTotale;
+            $diffTaux = 1 - $tauxTranchesTotale;
+            //dd($diffTaux);
+            if ($diffDuree != 0 && $diffTaux != 0) {
+                $newTranche = new Tranche();
+                $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
+                $newTranche->setDuree($diffDuree);
+                $newTranche->setTaux($diffTaux);
+                $newTranche->setCotation($cotation);
+                $newTranche->setCreatedAt(new DateTimeImmutable());
+                $newTranche->setUpdatedAt(new DateTimeImmutable());
+                $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
+                $cotation->addTranch($newTranche);
+            }
         }
     }
 
@@ -314,37 +318,40 @@ class AdminSubscriber implements EventSubscriberInterface
      */
     public function equilibrerRevenu(?Cotation $cotation)
     {
-        if ($cotation->getRevenus()) {
-            if (count($cotation->getRevenus()) == 0) {
-                //On doit ajouter automatiquement un revenu standard.
-                if ($cotation->getPiste()) {
-                    if ($cotation->getPiste()->getProduit()) {
-                        $stanRevenu = new Revenu();
-                        $stanRevenu->setCotation($cotation);
-                        $stanRevenu->setMontant(0);
-                        $stanRevenu->setTaux($cotation->getPiste()->getProduit()->getTauxarca());
-                        $stanRevenu->setType(RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]);
-                        $stanRevenu->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
-                        $stanRevenu->setIspartclient(false);
-                        if (count($cotation->getTranches()) != 0) {
-                            $stanRevenu->setIsparttranche(true);
-                        } else {
-                            $stanRevenu->setIsparttranche(false);
-                        }
-                        if ($cotation->getPiste()->getPartenaire()) {
-                            $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]);
-                        } else {
-                            $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON]);
-                        }
-                        $stanRevenu->setTaxable(RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]);
-                        $stanRevenu->setUpdatedAt(new \DateTimeImmutable());
-                        $stanRevenu->setCreatedAt(new \DateTimeImmutable());
-                        $stanRevenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                        $stanRevenu->setEntreprise($this->serviceEntreprise->getEntreprise());
+        //On équilibre les données par défaut s'il y a les chargement
+        if (count($cotation->getChargements()) != 0) {
+            if ($cotation->getRevenus()) {
+                if (count($cotation->getRevenus()) == 0) {
+                    //On doit ajouter automatiquement un revenu standard.
+                    if ($cotation->getPiste()) {
+                        if ($cotation->getPiste()->getProduit()) {
+                            $stanRevenu = new Revenu();
+                            $stanRevenu->setCotation($cotation);
+                            $stanRevenu->setMontant(0);
+                            $stanRevenu->setTaux($cotation->getPiste()->getProduit()->getTauxarca());
+                            $stanRevenu->setType(RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]);
+                            $stanRevenu->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
+                            $stanRevenu->setIspartclient(false);
+                            if (count($cotation->getTranches()) != 0) {
+                                $stanRevenu->setIsparttranche(true);
+                            } else {
+                                $stanRevenu->setIsparttranche(false);
+                            }
+                            if ($cotation->getPiste()->getPartenaire()) {
+                                $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]);
+                            } else {
+                                $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON]);
+                            }
+                            $stanRevenu->setTaxable(RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]);
+                            $stanRevenu->setUpdatedAt(new \DateTimeImmutable());
+                            $stanRevenu->setCreatedAt(new \DateTimeImmutable());
+                            $stanRevenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                            $stanRevenu->setEntreprise($this->serviceEntreprise->getEntreprise());
 
-                        //ici il faut actualiser la base de données
-                        $this->entityManager->persist($stanRevenu);
-                        $this->entityManager->flush();
+                            //ici il faut actualiser la base de données
+                            $this->entityManager->persist($stanRevenu);
+                            $this->entityManager->flush();
+                        }
                     }
                 }
             }

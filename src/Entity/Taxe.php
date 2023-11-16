@@ -34,9 +34,9 @@ class Taxe extends CalculableEntity
     #[ORM\Column(length: 255)]
     private ?string $organisation = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
+    // #[ORM\ManyToOne]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Entreprise $entreprise = null;
 
     #[ORM\Column]
     private ?bool $payableparcourtier = null;
@@ -49,6 +49,9 @@ class Taxe extends CalculableEntity
 
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'taxes')]
+    private ?Entreprise $entreprise = null;
 
 
     public function __construct()
@@ -108,17 +111,17 @@ class Taxe extends CalculableEntity
         return $this;
     }
 
-    public function getEntreprise(): ?Entreprise
-    {
-        return $this->entreprise;
-    }
+    // public function getEntreprise(): ?Entreprise
+    // {
+    //     return $this->entreprise;
+    // }
 
-    public function setEntreprise(?Entreprise $entreprise): self
-    {
-        $this->entreprise = $entreprise;
+    // public function setEntreprise(?Entreprise $entreprise): self
+    // {
+    //     $this->entreprise = $entreprise;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function __toString()
     {
@@ -169,6 +172,18 @@ class Taxe extends CalculableEntity
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

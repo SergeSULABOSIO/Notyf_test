@@ -63,12 +63,16 @@ class Entreprise
     #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Taxe::class)]
     private Collection $taxes;
 
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Monnaie::class)]
+    private Collection $monnaies;
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
         $this->taxes = new ArrayCollection();
+        $this->monnaies = new ArrayCollection();
     }
 
     
@@ -316,6 +320,36 @@ class Entreprise
             // set the owning side to null (unless already changed)
             if ($tax->getEntreprise() === $this) {
                 $tax->setEntreprise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Monnaie>
+     */
+    public function getMonnaies(): Collection
+    {
+        return $this->monnaies;
+    }
+
+    public function addMonnaie(Monnaie $monnaie): self
+    {
+        if (!$this->monnaies->contains($monnaie)) {
+            $this->monnaies->add($monnaie);
+            $monnaie->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMonnaie(Monnaie $monnaie): self
+    {
+        if ($this->monnaies->removeElement($monnaie)) {
+            // set the owning side to null (unless already changed)
+            if ($monnaie->getEntreprise() === $this) {
+                $monnaie->setEntreprise(null);
             }
         }
 

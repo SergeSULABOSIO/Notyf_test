@@ -259,7 +259,7 @@ class Revenu
 
 
 
-        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
+        return $this->getEntreprise()->getTaxes()[0] . " *** "  .  $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
     }
 
     public function calc_getRevenuFinal()

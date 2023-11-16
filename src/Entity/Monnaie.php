@@ -30,10 +30,6 @@ class Monnaie
     #[ORM\Column]
     private ?bool $islocale = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -45,6 +41,9 @@ class Monnaie
 
     #[ORM\Column]
     private ?int $fonction = null;
+
+    #[ORM\ManyToOne(inversedBy: 'monnaies')]
+    private ?Entreprise $entreprise = null;
 
     public function getId(): ?int
     {
@@ -99,17 +98,17 @@ class Monnaie
         return $this;
     }
 
-    public function getEntreprise(): ?Entreprise
-    {
-        return $this->entreprise;
-    }
+    // public function getEntreprise(): ?Entreprise
+    // {
+    //     return $this->entreprise;
+    // }
 
-    public function setEntreprise(?Entreprise $entreprise): self
-    {
-        $this->entreprise = $entreprise;
+    // public function setEntreprise(?Entreprise $entreprise): self
+    // {
+    //     $this->entreprise = $entreprise;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function __toString()
     {
@@ -160,6 +159,18 @@ class Monnaie
     public function setFonction(int $fonction): self
     {
         $this->fonction = $fonction;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
 
         return $this;
     }

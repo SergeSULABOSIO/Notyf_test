@@ -197,8 +197,8 @@ class Revenu
 
     private function getMonnaie($fonction)
     {
-        foreach ($this->getEntreprise()->getMonnaies() as $monnaie) {
-            //dd($fonction);
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
             if($monnaie->getFonction() == $fonction){
                 return $monnaie;
             }
@@ -217,7 +217,8 @@ class Revenu
 
     private function getCodeMonnaieAffichage(): string{
         $strMonnaie = "";
-        if($this->getMonnaie_Affichage() != null){
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if($monnaieAff != null){
             $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
         }
         return $strMonnaie;

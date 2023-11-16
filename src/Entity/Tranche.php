@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\TrancheRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrancheRepository;
+use App\Controller\Admin\MonnaieCrudController;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche
@@ -186,11 +187,12 @@ class Tranche
 
     public function __toString()
     {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
         $strPeriode = " pour durée de " . $this->getDuree() . " mois.";
         if($this->getStartedAt() && $this->getEndedAt()){
             $strPeriode = " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y')) . ".";
         }
-        $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . $strPeriode;
+        $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . $strMonnaie . $strPeriode;
         return $this->getNom() . ": " . $strMont;
     }
 
@@ -204,5 +206,34 @@ class Tranche
         $this->duree = $duree;
 
         return $this;
+    }
+
+    private function getCodeMonnaieAffichage(): string{
+        $strMonnaie = "";
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if($monnaieAff != null){
+            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $strMonnaie;
+    }
+
+    private function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    private function getMonnaie($fonction)
+    {
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
     }
 }

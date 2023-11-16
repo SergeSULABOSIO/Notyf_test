@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ChargementCrudController;
-use App\Repository\ChargementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ChargementRepository;
+use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\ChargementCrudController;
 
 #[ORM\Entity(repositoryClass: ChargementRepository::class)]
 class Chargement
@@ -141,6 +142,7 @@ class Chargement
 
     public function __toString()
     {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
         $strType = "";
         foreach (ChargementCrudController::TAB_TYPE as $key => $value) {
             if ($value == $this->type) {
@@ -148,6 +150,35 @@ class Chargement
             }
         }
         //On calcul la prime totale
-        return $strType . " (" . number_format($this->getMontant()/100, 2, ",", ".") . ")";
+        return $strType . " (" . number_format($this->getMontant()/100, 2, ",", ".") . $strMonnaie . ")";
+    }
+
+    private function getCodeMonnaieAffichage(): string{
+        $strMonnaie = "";
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if($monnaieAff != null){
+            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $strMonnaie;
+    }
+
+    private function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    private function getMonnaie($fonction)
+    {
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CotationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CotationRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\Admin\MonnaieCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
 class Cotation
@@ -152,9 +153,10 @@ class Cotation
 
     public function __toString()
     {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
         $strCommission = "";
         if ($this->getRevenus()) {
-            $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . "";
+            $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . $strMonnaie . "";
         }
         $strNomAssureur = "";
         if($this->assureur){
@@ -164,7 +166,7 @@ class Cotation
         if($this->piste->getProduit()){
             $strNomProduit = $this->piste->getProduit()->getNom();
         }
-        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
+        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", "."). $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
     }
 
     public function getPiste(): ?Piste
@@ -369,5 +371,34 @@ class Cotation
         $this->validated = $validated;
 
         return $this;
+    }
+
+    private function getCodeMonnaieAffichage(): string{
+        $strMonnaie = "";
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if($monnaieAff != null){
+            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $strMonnaie;
+    }
+
+    private function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    private function getMonnaie($fonction)
+    {
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
     }
 }

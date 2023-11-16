@@ -4949,14 +4949,18 @@ class ServicePreferences
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
-                //->setColumns(4);
                 ->setColumns(12);
             $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
-                //->setColumns(4);
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('revenuNetPartageable', "Rev. partageable")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
                 ->setColumns(12);
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la retrocommission dûe au partenaire")
                 ->onlyOnForms();
@@ -4964,7 +4968,13 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = CollectionField::new('taxes', "Taxes")
+            $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
+                ->setColumns(12)
+                ->setNumDecimals(2)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Montant dû")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);

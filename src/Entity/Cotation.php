@@ -67,6 +67,9 @@ class Cotation
     private ?Taxe $taxeCourtier;
     private ?Partenaire $partenaire;
     private ?Collection $taxes;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $tauxretrocompartenaire = null;
     
     
     public function __construct()
@@ -487,6 +490,22 @@ class Cotation
      */ 
     public function getTaxeCourtierTotale()
     {
+        
         return $this->taxeCourtierTotale;
+    }
+
+    public function getTauxretrocompartenaire(): ?float
+    {
+        //On garde le taux standard du partenaire si c'est égale au taux retrocom de la cotation
+        //Dans le cas contraire, on considère le taux de la cotation
+        ici
+        return $this->tauxretrocompartenaire;
+    }
+
+    public function setTauxretrocompartenaire(?float $tauxretrocompartenaire): self
+    {
+        $this->tauxretrocompartenaire = $tauxretrocompartenaire;
+
+        return $this;
     }
 }

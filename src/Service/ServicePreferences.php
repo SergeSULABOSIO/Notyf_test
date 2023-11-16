@@ -4944,12 +4944,29 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('revenuTotalHT', PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)
+            $tabAttributs[] = MoneyField::new('revenuTotalHT', "Rev. hors " . $this->serviceTaxes->getNomTaxeAssureur())
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
                 //->setColumns(4);
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                //->setColumns(4);
+                ->setColumns(12);
+            $tabAttributs[] = FormField::addPanel("Détails relatifs à la retrocommission dûe au partenaire")
+                ->onlyOnForms();
+            $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = CollectionField::new('taxes', "Taxes")
+                ->onlyOnForms()
+                ->setDisabled(true)
                 ->setColumns(12);
         }
         // if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENU_TOTAL_HT)) {

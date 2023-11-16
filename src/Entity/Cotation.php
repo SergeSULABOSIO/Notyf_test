@@ -61,6 +61,12 @@ class Cotation
     //Les champs calculables automatiquement sur base des données existantes
     private ?float $primeTotale;
     private ?float $revenuTotalHT;
+    private ?float $taxeCourtierTotale;
+    private ?float $revenuNetPartageable;
+    private ?float $retroComPartenaire;
+    private ?Taxe $taxeCourtier;
+    private ?Partenaire $partenaire;
+    private ?Collection $taxes;
     
     
     public function __construct()
@@ -400,5 +406,87 @@ class Cotation
             }
         }
         return null;
+    }
+
+    /**
+     * Get the value of taxes
+     */ 
+    public function getTaxes()
+    {
+        if($this->getEntreprise()){
+            if($this->getEntreprise()->getTaxes()){
+                $this->taxes = $this->getEntreprise()->getTaxes();
+            }
+        }
+        return $this->taxes;
+    }
+
+    /**
+     * Set the value of taxes
+     *
+     * @return  self
+     */ 
+    public function setTaxes($taxes)
+    {
+        $this->taxes = $taxes;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of partenaire
+     */ 
+    public function getPartenaire()
+    {
+        if($this->getPiste()){
+            if($this->getPiste()->getPartenaire()){
+                $this->partenaire = $this->getPiste()->getPartenaire();
+            }
+        }
+        return $this->partenaire;
+    }
+
+    /**
+     * Set the value of partenaire
+     *
+     * @return  self
+     */ 
+    public function setPartenaire($partenaire)
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of taxeCourtier
+     */ 
+    public function getTaxeCourtier()
+    {
+        return $this->taxeCourtier;
+    }
+
+    /**
+     * Get the value of retroComPartenaire
+     */ 
+    public function getRetroComPartenaire()
+    {
+        return $this->retroComPartenaire;
+    }
+
+    /**
+     * Get the value of revenuNetPartageable
+     */ 
+    public function getRevenuNetPartageable()
+    {
+        return $this->revenuNetPartageable;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotale
+     */ 
+    public function getTaxeCourtierTotale()
+    {
+        return $this->taxeCourtierTotale;
     }
 }

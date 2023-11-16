@@ -129,6 +129,7 @@ class CotationCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Cotation();
+        $objet->setNom("Offre");
         $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Cotation_setPiste($objet, $this->adminUrlGenerator);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));

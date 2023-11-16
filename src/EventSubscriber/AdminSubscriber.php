@@ -28,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
 use App\Entity\Client;
 use App\Entity\Contact;
@@ -200,8 +201,13 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
             }
 
+            
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
+                if($cotation->getNom()){
+                }else{
+                    $cotation->setNom("Offre #" . count($piste->getCotations())+1);
+                }
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
@@ -209,6 +215,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
                 $cotation->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $cotation->setEntreprise($this->serviceEntreprise->getEntreprise());
+                
 
                 //Les revenus de la cotation
                 foreach ($cotation->getRevenus() as $revenu) {
@@ -251,8 +258,11 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
                 //On équilibre les tranches
                 $this->equilibrerTranches($cotation);
+
+                //On équilibre le revenu par défaut
+                $this->equilibrerRevenu($cotation);
             }
-            //dd($entityInstance);
+            
             $this->cleanCotations();
         }
     }
@@ -290,6 +300,51 @@ class AdminSubscriber implements EventSubscriberInterface
             $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
             $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
             $cotation->addTranch($newTranche);
+        }
+    }
+
+    /**
+     * Cette fonction charge le revenu par défaut selon le type de produit défini.
+     *
+     * @param Cotation|null $cotation
+     * @return void
+     */
+    public function equilibrerRevenu(?Cotation $cotation)
+    {
+        if ($cotation->getRevenus()) {
+            if (count($cotation->getRevenus()) == 0) {
+                //On doit ajouter automatiquement un revenu standard.
+                if ($cotation->getPiste()) {
+                    if ($cotation->getPiste()->getProduit()) {
+                        $stanRevenu = new Revenu();
+                        $stanRevenu->setCotation($cotation);
+                        $stanRevenu->setMontant(0);
+                        $stanRevenu->setTaux($cotation->getPiste()->getProduit()->getTauxarca());
+                        $stanRevenu->setType(RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]);
+                        $stanRevenu->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
+                        $stanRevenu->setIspartclient(false);
+                        if (count($cotation->getTranches()) != 0) {
+                            $stanRevenu->setIsparttranche(true);
+                        } else {
+                            $stanRevenu->setIsparttranche(false);
+                        }
+                        if ($cotation->getPiste()->getPartenaire()) {
+                            $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]);
+                        } else {
+                            $stanRevenu->setPartageable(RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON]);
+                        }
+                        $stanRevenu->setTaxable(RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]);
+                        $stanRevenu->setUpdatedAt(new \DateTimeImmutable());
+                        $stanRevenu->setCreatedAt(new \DateTimeImmutable());
+                        $stanRevenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                        $stanRevenu->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                        //ici il faut actualiser la base de données
+                        $this->entityManager->persist($stanRevenu);
+                        $this->entityManager->flush();
+                    }
+                }
+            }
         }
     }
 

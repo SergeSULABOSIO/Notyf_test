@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Cotation;
 use App\Entity\Piste;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;

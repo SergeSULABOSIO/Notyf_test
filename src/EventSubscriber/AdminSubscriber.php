@@ -262,7 +262,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $this->equilibrerRevenu($cotation);
 
                 if($cotation->getNom() == null){
-                    dd($entityInstance);
+                    $cotation->setNom("Offre #" . count($piste->getCotations()));
                 }
             }
             

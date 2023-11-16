@@ -4868,6 +4868,7 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM)) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)
                 ->onlyOnForms()
+                ->setRequired(false)
                 //->setColumns(6);
                 ->setColumns(12);
         }

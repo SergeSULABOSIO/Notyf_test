@@ -204,10 +204,9 @@ class AdminSubscriber implements EventSubscriberInterface
             
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
-                if($cotation->getNom()){
-                }else{
-                    $cotation->setNom("Offre #" . count($piste->getCotations())+1);
-                }
+                
+                //$cotation->setNom("Offre #" . count($piste->getCotations())+1);
+                
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
@@ -261,6 +260,10 @@ class AdminSubscriber implements EventSubscriberInterface
 
                 //On équilibre le revenu par défaut
                 $this->equilibrerRevenu($cotation);
+
+                if($cotation->getNom() == null){
+                    dd($entityInstance);
+                }
             }
             
             $this->cleanCotations();

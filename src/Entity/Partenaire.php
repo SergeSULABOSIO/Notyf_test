@@ -194,7 +194,7 @@ class Partenaire extends CalculableEntity
 
     public function __toString()
     {
-        return $this->nom . " (" . ($this->part * 100) . "%)";
+        return $this->nom . " (" . ($this->part * 100) . "% par défaut)";
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

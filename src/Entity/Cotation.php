@@ -69,7 +69,7 @@ class Cotation
     private ?Collection $taxes;
 
     #[ORM\Column(nullable: true)]
-    private ?float $tauxretrocompartenaire = null;
+    private ?float $tauxretrocompartenaire = 0;
     
     
     public function __construct()
@@ -496,9 +496,7 @@ class Cotation
 
     public function getTauxretrocompartenaire(): ?float
     {
-        //On garde le taux standard du partenaire si c'est égale au taux retrocom de la cotation
-        //Dans le cas contraire, on considère le taux de la cotation
-        ici
+        //$this->tauxretrocompartenaire = $this->getPartenaire()->getPart();
         return $this->tauxretrocompartenaire;
     }
 

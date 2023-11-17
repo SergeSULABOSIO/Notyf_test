@@ -4970,6 +4970,7 @@ class ServicePreferences
                 ->setColumns(12);
             $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
                 ->setColumns(12)
+                ->setHelp("Ne définissez rien si vous voullez appliquer le taux par défaut.")
                 ->setNumDecimals(2)
                 ->onlyOnForms();
             $tabAttributs[] = MoneyField::new('retroComPartenaire', "Montant dû")

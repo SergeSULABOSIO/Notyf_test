@@ -71,6 +71,7 @@ class Cotation
     private ?Partenaire $partenaire;
     private ?float $taxeCourtierTotalePartageable;
     private ?float $revenuNetTotalPartageable;
+    #[ORM\Column]
     private ?float $tauxretrocompartenaire = 0;
     private ?float $retroComPartenaire;
     
@@ -493,6 +494,13 @@ class Cotation
      */ 
     public function getRetroComPartenaire()
     {
+        $taux = 0;
+        if($this->getTauxretrocompartenaire() == 0){
+            $taux = $this->getPartenaire()->getPart();
+        }else{
+            $taux = $this->getTauxretrocompartenaire();
+        }
+        $this->retroComPartenaire = $this->getRevenuNetTotalPartageable() * $taux;
         return $this->retroComPartenaire;
     }
 
@@ -516,10 +524,6 @@ class Cotation
 
     public function getTauxretrocompartenaire(): ?float
     {
-        if($this->tauxretrocompartenaire == null){
-            $this->tauxretrocompartenaire = 0;
-        }
-        //$this->tauxretrocompartenaire = $this->getPartenaire()->getPart();
         return $this->tauxretrocompartenaire;
     }
 

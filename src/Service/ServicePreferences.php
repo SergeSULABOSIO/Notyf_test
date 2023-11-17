@@ -4944,8 +4944,9 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('revenuTotalHT', "Rev. hors " . $this->serviceTaxes->getNomTaxeAssureur())
+            $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setHelp("La partie partageable + la partie non partageable.")
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
@@ -4956,15 +4957,38 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('revenuNetPartageable', "Rev. partageable")
+            $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu net total")
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
+
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la retrocommission dûe au partenaire")
                 ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setHelp("Uniquement la partie partageable avec le partenaire.")
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net partageable")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setHelp("La partie du revenu net qui est parteageable avec le partenaire ou encore l'assiette.")
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
             $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+                //->setHelp("")
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
@@ -4973,8 +4997,9 @@ class ServicePreferences
                 ->setHelp("Ne définissez rien si vous voullez appliquer le taux par défaut.")
                 ->setNumDecimals(2)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Montant dû")
+            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Retrocommission")
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setHelp("Le montant total dû au partenaire.")
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CotationRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\RevenuCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
@@ -60,16 +61,24 @@ class Cotation
     
     //Les champs calculables automatiquement sur base des données existantes
     private ?float $primeTotale;
+    //parties partageable et non partageable tous confondues
     private ?float $revenuTotalHT;
     private ?float $taxeCourtierTotale;
-    private ?float $revenuNetPartageable;
-    private ?float $retroComPartenaire;
-    private ?Taxe $taxeCourtier;
+    private ?float $revenuNetTotal;
+
+    //partie partageable
+    private ?float $revenuTotalHTPartageable;
     private ?Partenaire $partenaire;
+    private ?float $taxeCourtierTotalePartageable;
+    private ?float $revenuNetTotalPartageable;
+    private ?float $tauxretrocompartenaire = 0;
+    private ?float $retroComPartenaire;
+    
+    private ?Taxe $taxeCourtier;
+    private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
 
     #[ORM\Column(nullable: true)]
-    private ?float $tauxretrocompartenaire = 0;
     
     
     public function __construct()
@@ -466,6 +475,16 @@ class Cotation
      */ 
     public function getTaxeCourtier()
     {
+        if($this->getEntreprise()){
+            if($this->getEntreprise()->getTaxes()){
+                /** @var Taxe */
+                foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                    if($taxe->isPayableparcourtier() == true){
+                        $this->taxeCourtier = $taxe;
+                    }
+                }
+            }
+        }
         return $this->taxeCourtier;
     }
 
@@ -478,24 +497,28 @@ class Cotation
     }
 
     /**
-     * Get the value of revenuNetPartageable
-     */ 
-    public function getRevenuNetPartageable()
-    {
-        return $this->revenuNetPartageable;
-    }
-
-    /**
      * Get the value of taxeCourtierTotale
      */ 
     public function getTaxeCourtierTotale()
     {
-        
+        $tot = 0;
+        if($this->getRevenus()){
+            /** @var Revenu */
+            foreach ($this->getRevenus() as $revenu) {
+                if($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]){
+                    $tot = $tot + ($revenu->calc_getRevenuFinal() * ($this->getTaxeCourtier()->getTaux()));
+                }
+            }
+        }
+        $this->taxeCourtierTotale = $tot * 100;
         return $this->taxeCourtierTotale;
     }
 
     public function getTauxretrocompartenaire(): ?float
     {
+        if($this->tauxretrocompartenaire == null){
+            $this->tauxretrocompartenaire = 0;
+        }
         //$this->tauxretrocompartenaire = $this->getPartenaire()->getPart();
         return $this->tauxretrocompartenaire;
     }
@@ -505,5 +528,79 @@ class Cotation
         $this->tauxretrocompartenaire = $tauxretrocompartenaire;
 
         return $this;
+    }
+
+    /**
+     * Get the value of revenuTotalHTPartageable
+     */ 
+    public function getRevenuTotalHTPartageable()
+    {
+        $tot = 0;
+        if ($this->getRevenus()) {
+            /** @var Revenu */
+            foreach ($this->getRevenus() as $revenu) {
+                if($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]){
+                    $tot = $tot + $revenu->calc_getRevenuFinal();
+                }
+            }
+        }
+        $this->revenuTotalHTPartageable = $tot * 100;
+        return $this->revenuTotalHTPartageable;
+    }
+
+    /**
+     * Get the value of revenuNetTotal
+     */ 
+    public function getRevenuNetTotal()
+    {
+        $this->revenuNetTotal = $this->getRevenuTotalHT() - $this->getTaxeCourtierTotale();
+        return $this->revenuNetTotal;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotalePartageable
+     */ 
+    public function getTaxeCourtierTotalePartageable()
+    {
+        $tot = 0;
+        if($this->getRevenus()){
+            /** @var Revenu */
+            foreach ($this->getRevenus() as $revenu) {
+                if($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]){
+                    if($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]){
+                        $tot = $tot + ($revenu->calc_getRevenuFinal() * ($this->getTaxeCourtier()->getTaux()));
+                    }
+                }
+            }
+        }
+        $this->taxeCourtierTotalePartageable = $tot * 100;
+        return $this->taxeCourtierTotalePartageable;
+    }
+
+    /**
+     * Get the value of revenuNetTotalPartageable
+     */ 
+    public function getRevenuNetTotalPartageable()
+    {
+        $this->revenuNetTotalPartageable = $this->getRevenuTotalHTPartageable() - $this->getTaxeCourtierTotalePartageable();
+        return $this->revenuNetTotalPartageable;
+    }
+
+    /**
+     * Get the value of taxeAssureur
+     */ 
+    public function getTaxeAssureur()
+    {
+        if($this->getEntreprise()){
+            if($this->getEntreprise()->getTaxes()){
+                /** @var Taxe */
+                foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                    if($taxe->isPayableparcourtier() == false){
+                        $this->taxeAssureur = $taxe;
+                    }
+                }
+            }
+        }
+        return $this->taxeAssureur;
     }
 }

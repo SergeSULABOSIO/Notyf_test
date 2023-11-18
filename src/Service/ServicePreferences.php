@@ -3822,9 +3822,10 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_CLIENT_NOM)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS])) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-                ->onlyOnIndex();
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE])) {
+            $tabAttributs[] = BooleanField::new('exoneree', PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE)
+                ->onlyOnIndex()
+                ->renderAsSwitch(false);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
@@ -3918,6 +3919,10 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms()
             ->setChoices(ClientCrudController::TAB_CLIENT_IS_PERSONNE_MORALE);
+        $tabAttributs[] = BooleanField::new('exoneree', PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE)
+            //->setColumns(6)
+            ->setColumns(12)
+            ->onlyOnForms();
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_CLIENT_RCCM)
             //->setColumns(6)
             ->setColumns(12)
@@ -3935,18 +3940,6 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms()
             ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
-
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_CLIENT_COTATIONS)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
 
         return $tabAttributs;
     }

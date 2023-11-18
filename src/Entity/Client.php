@@ -64,8 +64,8 @@ class Client extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Police::class)]
     private Collection $police;
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Cotation::class)]
-    private Collection $cotations;
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Cotation::class)]
+    // private Collection $cotations;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Piste::class)]
     private Collection $pistes;
@@ -73,10 +73,15 @@ class Client extends CalculableEntity
     #[ORM\ManyToOne(inversedBy: 'prospect')]
     private ?Piste $piste = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $exoneree = null;
+
+    
+
     public function __construct()
     {
         $this->police = new ArrayCollection();
-        $this->cotations = new ArrayCollection();
+        //$this->cotations = new ArrayCollection();
         $this->pistes = new ArrayCollection();
     }
 
@@ -288,13 +293,13 @@ class Client extends CalculableEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, Cotation>
-     */
-    public function getCotations(): Collection
-    {
-        return $this->cotations;
-    }
+    // /**
+    //  * @return Collection<int, Cotation>
+    //  */
+    // public function getCotations(): Collection
+    // {
+    //     return $this->cotations;
+    // }
 
     /**
      * @return Collection<int, Piste>
@@ -334,6 +339,18 @@ class Client extends CalculableEntity
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+    public function isExoneree(): ?bool
+    {
+        return $this->exoneree;
+    }
+
+    public function setExoneree(?bool $exoneree): self
+    {
+        $this->exoneree = $exoneree;
 
         return $this;
     }

@@ -160,6 +160,7 @@ class ClientCrudController extends AbstractCrudController
                 PreferenceCrudController::PREF_PRO_CLIENT_POLICES,
             ]);
         }
+
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_CLIENT);
         return $this->servicePreferences->getChamps(new Client(), $this->crud, $this->adminUrlGenerator);
@@ -175,12 +176,12 @@ class ClientCrudController extends AbstractCrudController
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
 
-        $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
-            ->displayIf(static function (?Client $entity) {
-                return count($entity->getCotations()) != 0;
-            })
-            ->setIcon('fas fa-cash-register')
-            ->linkToCrudAction('cross_canal_listerCotation');
+        // $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
+        //     ->displayIf(static function (?Client $entity) {
+        //         return count($entity->getCotations()) != 0;
+        //     })
+        //     ->setIcon('fas fa-cash-register')
+        //     ->linkToCrudAction('cross_canal_listerCotation');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -243,8 +244,8 @@ class ClientCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $police_lister)
             ->add(Crud::PAGE_INDEX, $police_lister)
 
-            ->add(Crud::PAGE_DETAIL, $cotation_lister)
-            ->add(Crud::PAGE_INDEX, $cotation_lister)
+            // ->add(Crud::PAGE_DETAIL, $cotation_lister)
+            // ->add(Crud::PAGE_INDEX, $cotation_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])

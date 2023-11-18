@@ -341,6 +341,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_CLIENT_ID                         = "Id";
     public const PREF_PRO_CLIENT_NOM                        = "Raison sociale";
     public const PREF_PRO_CLIENT_PERSONNE_MORALE            = "Forme Jurique";
+    public const PREF_PRO_CLIENT_EXONEREE                   = "Le client est exonéré de la taxe";
     public const PREF_PRO_CLIENT_ADRESSE                    = "Adresse";
     public const PREF_PRO_CLIENT_COTATIONS                  = "Cotations";
     public const PREF_PRO_CLIENT_POLICES                    = "Polices";
@@ -398,7 +399,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_taxes_assureurs_solde                   => 38,
         self::PREF_calc_sinistre_dommage_total                  => 39,
         self::PREF_calc_sinistre_indemnisation_total            => 40,
-        self::PREF_calc_sinistre_indice_SP                      => 41
+        self::PREF_calc_sinistre_indice_SP                      => 41,
+        self::PREF_PRO_CLIENT_EXONEREE                          => 42
     ];
     //PRODUCTION - PARTENAIRE
     public const PREF_PRO_PARTENAIRE_ID                         = "Id";

@@ -33,18 +33,9 @@ class Produit extends CalculableEntity
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $tauxarca = null;
 
-    #[ORM\Column]
-    private ?bool $isobligatoire = null;
-    
-    #[ORM\Column]
-    private ?bool $isabonnement = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-
-    #[ORM\Column]
-    private ?int $categorie = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -55,18 +46,24 @@ class Produit extends CalculableEntity
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Cotation::class)]
-    private Collection $cotations;
-
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Police::class)]
     private Collection $police;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Piste::class)]
     private Collection $pistes;
 
+    #[ORM\Column]
+    private ?bool $abonnement = null;
+
+    #[ORM\Column]
+    private ?bool $obligatoire = null;
+
+    #[ORM\Column]
+    private ?bool $iard = null;
+
     public function __construct()
     {
-        $this->cotations = new ArrayCollection();
+        //$this->cotations = new ArrayCollection();
         $this->police = new ArrayCollection();
         $this->pistes = new ArrayCollection();
     }
@@ -112,29 +109,29 @@ class Produit extends CalculableEntity
         return $this;
     }
 
-    public function isIsobligatoire(): ?bool
-    {
-        return $this->isobligatoire;
-    }
+    // public function isIsobligatoire(): ?bool
+    // {
+    //     return $this->isobligatoire;
+    // }
 
-    public function setIsobligatoire(bool $isobligatoire): self
-    {
-        $this->isobligatoire = $isobligatoire;
+    // public function setIsobligatoire(bool $isobligatoire): self
+    // {
+    //     $this->isobligatoire = $isobligatoire;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function isIsabonnement(): ?bool
-    {
-        return $this->isabonnement;
-    }
+    // public function isIsabonnement(): ?bool
+    // {
+    //     return $this->isabonnement;
+    // }
 
-    public function setIsabonnement(bool $isabonnement): self
-    {
-        $this->isabonnement = $isabonnement;
+    // public function setIsabonnement(bool $isabonnement): self
+    // {
+    //     $this->isabonnement = $isabonnement;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getEntreprise(): ?Entreprise
     {
@@ -153,17 +150,17 @@ class Produit extends CalculableEntity
         return  "[" . ($this->tauxarca * 100). "%] " . $this->nom;
     }
 
-    public function getCategorie(): ?int
-    {
-        return $this->categorie;
-    }
+    // public function getCategorie(): ?int
+    // {
+    //     return $this->categorie;
+    // }
 
-    public function setCategorie(int $categorie): self
-    {
-        $this->categorie = $categorie;
+    // public function setCategorie(int $categorie): self
+    // {
+    //     $this->categorie = $categorie;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -213,35 +210,35 @@ class Produit extends CalculableEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, Cotation>
-     */
-    public function getCotations(): Collection
-    {
-        return $this->cotations;
-    }
+    // /**
+    //  * @return Collection<int, Cotation>
+    //  */
+    // public function getCotations(): Collection
+    // {
+    //     return $this->cotations;
+    // }
 
-    public function addCotation(Cotation $cotation): self
-    {
-        if (!$this->cotations->contains($cotation)) {
-            $this->cotations->add($cotation);
-            $cotation->setProduit($this);
-        }
+    // public function addCotation(Cotation $cotation): self
+    // {
+    //     if (!$this->cotations->contains($cotation)) {
+    //         $this->cotations->add($cotation);
+    //         $cotation->setProduit($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeCotation(Cotation $cotation): self
-    {
-        if ($this->cotations->removeElement($cotation)) {
-            // set the owning side to null (unless already changed)
-            if ($cotation->getProduit() === $this) {
-                $cotation->setProduit(null);
-            }
-        }
+    // public function removeCotation(Cotation $cotation): self
+    // {
+    //     if ($this->cotations->removeElement($cotation)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($cotation->getProduit() === $this) {
+    //             $cotation->setProduit(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Police>
@@ -299,6 +296,42 @@ class Produit extends CalculableEntity
                 $piste->setProduit(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isAbonnement(): ?bool
+    {
+        return $this->abonnement;
+    }
+
+    public function setAbonnement(bool $abonnement): self
+    {
+        $this->abonnement = $abonnement;
+
+        return $this;
+    }
+
+    public function isObligatoire(): ?bool
+    {
+        return $this->obligatoire;
+    }
+
+    public function setObligatoire(bool $obligatoire): self
+    {
+        $this->obligatoire = $obligatoire;
+
+        return $this;
+    }
+
+    public function isIard(): ?bool
+    {
+        return $this->iard;
+    }
+
+    public function setIard(bool $iard): self
+    {
+        $this->iard = $iard;
 
         return $this;
     }

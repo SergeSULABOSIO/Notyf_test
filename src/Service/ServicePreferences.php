@@ -2087,14 +2087,14 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
             ->setNumDecimals(2)
             ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
+        $tabAttributs[] = ChoiceField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
             ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
+        $tabAttributs[] = ChoiceField::new('abonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
             ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
+        $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
+            ->setChoices(["IARD (Non Vie)" => 1, "VIE" => 0])
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
             ->onlyOnDetail();
@@ -2130,6 +2130,21 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
                 ->onlyOnIndex();
         }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_IARD])) {
+            $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
+                ->setChoices(ProduitCrudController::TAB_PRODUIT_IARD)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE])) {
+            $tabAttributs[] = ChoiceField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
+                ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
+            $tabAttributs[] = ChoiceField::new('abonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
+                ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
+                ->onlyOnIndex();
+        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION])) {
             $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
                 ->onlyOnIndex();
@@ -2137,21 +2152,6 @@ class ServicePreferences
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION])) {
             $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
                 ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE])) {
-            $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
-            $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
-            $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS])) {
@@ -2506,17 +2506,17 @@ class ServicePreferences
             ->setNumDecimals(2)
             ->setColumns(2)
             ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('isobligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
-            ->setColumns(1)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_OBLIGATOIRE)
+        $tabAttributs[] = BooleanField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
+            ->setColumns(12)
+            //->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
             ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('isabonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
-            ->setColumns(1)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_IS_ABONNEMENT)
+        $tabAttributs[] = BooleanField::new('abonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
+            ->setColumns(12)
+            //->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
             ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('categorie', PreferenceCrudController::PREF_PRO_PRODUIT_CATEGORIE)
-            ->setColumns(1)
-            ->setChoices(ProduitCrudController::TAB_PRODUIT_CATEGORIE)
+        $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
+            ->setColumns(12)
+            ->setChoices(["IARD (Non Vie)" => 1, "VIE" => 0])
             ->onlyOnForms();
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
             ->setColumns(12)
@@ -3823,9 +3823,12 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE])) {
-            $tabAttributs[] = BooleanField::new('exoneree', PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE)
-                ->onlyOnIndex()
-                ->renderAsSwitch(false);
+            $tabAttributs[] = ChoiceField::new('exoneree', PreferenceCrudController::PREF_PRO_CLIENT_EXONEREE)
+                ->setChoices([
+                    'Non' => 0,
+                    'Oui' => 1
+                ])
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)

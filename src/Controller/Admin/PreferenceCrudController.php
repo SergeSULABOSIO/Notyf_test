@@ -582,7 +582,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_PRODUIT_TAUX_COMMISSION           = "Taux/Comm.";
     public const PREF_PRO_PRODUIT_OBJIGATOIRE               = "Obligatoire";
     public const PREF_PRO_PRODUIT_ABONNEMENT                = "Abonnement";
-    public const PREF_PRO_PRODUIT_CATEGORIE                 = "Catégorie";
+    public const PREF_PRO_PRODUIT_IARD                      = "Branche";
     public const PREF_PRO_PRODUIT_COTATIONS                 = "Cotations";
     public const PREF_PRO_PRODUIT_POLICES                   = "Polices";
     public const PREF_PRO_PRODUIT_UTILISATEUR               = "Utilisateur";
@@ -597,7 +597,6 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_PRODUIT_TAUX_COMMISSION                  => 4,
         self::PREF_PRO_PRODUIT_OBJIGATOIRE                      => 5,
         self::PREF_PRO_PRODUIT_ABONNEMENT                       => 6,
-        self::PREF_PRO_PRODUIT_CATEGORIE                        => 7,
         self::PREF_PRO_PRODUIT_UTILISATEUR                      => 8,
         self::PREF_PRO_PRODUIT_ENTREPRISE                       => 9,
         self::PREF_PRO_PRODUIT_DATE_DE_CREATION                 => 10,
@@ -629,7 +628,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_calc_taxes_assureurs_solde                   => 35,
         self::PREF_calc_sinistre_dommage_total                  => 36,
         self::PREF_calc_sinistre_indemnisation_total            => 37,
-        self::PREF_calc_sinistre_indice_SP                      => 38
+        self::PREF_calc_sinistre_indice_SP                      => 38,
+        self::PREF_PRO_PRODUIT_IARD                             => 39
     ];
 
     //FINANCE - TAXES

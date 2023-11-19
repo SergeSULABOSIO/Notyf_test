@@ -42,19 +42,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ProduitCrudController extends AbstractCrudController
 {
-    public const TAB_PRODUIT_IS_OBLIGATOIRE = [
+    public const TAB_PRODUIT_OUI_NON = [
         'Non' => 0,
         'Oui' => 1
     ];
 
-    public const TAB_PRODUIT_IS_ABONNEMENT = [
-        'Non' => 0,
-        'Oui' => 1
-    ];
-
-    public const TAB_PRODUIT_CATEGORIE = [
-        'IARD' => 0,
-        'VIE' => 1
+    public const TAB_PRODUIT_IARD = [
+        'IARD (Non Vie)' => 1,
+        'VIE' => 0
     ];
 
     private ?Crud $crud = null;
@@ -96,8 +91,9 @@ class ProduitCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add(ChoiceFilter::new('isobligatoire', 'Obligatoire?')->setChoices(self::TAB_PRODUIT_IS_OBLIGATOIRE))
-            ->add(ChoiceFilter::new('isabonnement', 'Abonnement?')->setChoices(self::TAB_PRODUIT_IS_ABONNEMENT))
+            ->add(ChoiceFilter::new('abonnement', 'Abonnement?')->setChoices(self::TAB_PRODUIT_OUI_NON))
+            ->add(ChoiceFilter::new('obligatoire', 'Obligatoire?')->setChoices(self::TAB_PRODUIT_OUI_NON))
+            ->add(ChoiceFilter::new('iard', 'AIRD (Non vie)?')->setChoices(self::TAB_PRODUIT_IARD))
             ->add('tauxarca');
     }
 
@@ -129,10 +125,10 @@ class ProduitCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Produit();
-        $objet->setIsobligatoire(false);
-        $objet->setIsabonnement(false);
+        $objet->setIard(true);
+        $objet->setAbonnement(false);
+        $objet->setObligatoire(false);
         $objet->setTauxarca(0.1);
-        $objet->setCategorie(0);
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
         return $objet;
@@ -156,12 +152,12 @@ class ProduitCrudController extends AbstractCrudController
             })
             ->setIcon('fas fa-file-shield')
             ->linkToCrudAction('cross_canal_listerPolice');
-        $cotations_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
-            ->displayIf(static function (?Produit $entity) {
-                return count($entity->getCotations()) != 0;
-            })
-            ->setIcon('fas fa-cash-register')
-            ->linkToCrudAction('cross_canal_listerCotation');
+        // $cotations_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
+        //     ->displayIf(static function (?Produit $entity) {
+        //         return count($entity->getCotations()) != 0;
+        //     })
+        //     ->setIcon('fas fa-cash-register')
+        //     ->linkToCrudAction('cross_canal_listerCotation');
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
@@ -226,8 +222,8 @@ class ProduitCrudController extends AbstractCrudController
             ->add(Crud::PAGE_DETAIL, $polices_lister)
             ->add(Crud::PAGE_INDEX, $polices_lister)
 
-            ->add(Crud::PAGE_DETAIL, $cotations_lister)
-            ->add(Crud::PAGE_INDEX, $cotations_lister)
+            // ->add(Crud::PAGE_DETAIL, $cotations_lister)
+            // ->add(Crud::PAGE_INDEX, $cotations_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])

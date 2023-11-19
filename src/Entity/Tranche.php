@@ -192,7 +192,7 @@ class Tranche
         if($this->getStartedAt() && $this->getEndedAt()){
             $strPeriode = " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y')) . ".";
         }
-        $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . ($this->getCotation()->getPrimeTotale() / 100) . $strMonnaie . $strPeriode;
+        $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
         return $this->getNom() . ": " . $strMont;
     }
 

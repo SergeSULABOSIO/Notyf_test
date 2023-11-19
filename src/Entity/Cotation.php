@@ -49,16 +49,16 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $chargements;
 
-    
+
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $tranches;
-    
+
     #[ORM\Column]
     private ?int $dureeCouverture = null;
-    
+
     #[ORM\Column]
     private ?bool $validated = null;
-    
+
     //Les champs calculables automatiquement sur base des données existantes
     private ?float $primeTotale;
     //parties partageable et non partageable tous confondues
@@ -74,14 +74,14 @@ class Cotation
     #[ORM\Column]
     private ?float $tauxretrocompartenaire = 0;
     private ?float $retroComPartenaire;
-    
+
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
 
     #[ORM\Column(nullable: true)]
-    
-    
+
+
     public function __construct()
     {
         $this->revenus = new ArrayCollection();
@@ -178,14 +178,14 @@ class Cotation
             $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . $strMonnaie . "";
         }
         $strNomAssureur = "";
-        if($this->assureur){
+        if ($this->assureur) {
             $strNomAssureur = $this->assureur->getNom();
         }
         $strNomProduit = "";
-        if($this->piste->getProduit()){
+        if ($this->piste->getProduit()) {
             $strNomProduit = $this->piste->getProduit()->getNom();
         }
-        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", "."). $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
+        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
     }
 
     public function getPiste(): ?Piste
@@ -392,10 +392,11 @@ class Cotation
         return $this;
     }
 
-    private function getCodeMonnaieAffichage(): string{
+    private function getCodeMonnaieAffichage(): string
+    {
         $strMonnaie = "";
         $monnaieAff = $this->getMonnaie_Affichage();
-        if($monnaieAff != null){
+        if ($monnaieAff != null) {
             $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
         }
         return $strMonnaie;
@@ -404,7 +405,7 @@ class Cotation
     private function getMonnaie_Affichage()
     {
         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($monnaie == null){
+        if ($monnaie == null) {
             $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
         return $monnaie;
@@ -414,7 +415,7 @@ class Cotation
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
-            if($monnaie->getFonction() == $fonction){
+            if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;
             }
         }
@@ -423,11 +424,11 @@ class Cotation
 
     /**
      * Get the value of taxes
-     */ 
+     */
     public function getTaxes()
     {
-        if($this->getEntreprise()){
-            if($this->getEntreprise()->getTaxes()){
+        if ($this->getEntreprise()) {
+            if ($this->getEntreprise()->getTaxes()) {
                 $this->taxes = $this->getEntreprise()->getTaxes();
             }
         }
@@ -438,7 +439,7 @@ class Cotation
      * Set the value of taxes
      *
      * @return  self
-     */ 
+     */
     public function setTaxes($taxes)
     {
         $this->taxes = $taxes;
@@ -448,11 +449,11 @@ class Cotation
 
     /**
      * Get the value of partenaire
-     */ 
+     */
     public function getPartenaire()
     {
-        if($this->getPiste()){
-            if($this->getPiste()->getPartenaire()){
+        if ($this->getPiste()) {
+            if ($this->getPiste()->getPartenaire()) {
                 $this->partenaire = $this->getPiste()->getPartenaire();
             }
         }
@@ -463,7 +464,7 @@ class Cotation
      * Set the value of partenaire
      *
      * @return  self
-     */ 
+     */
     public function setPartenaire($partenaire)
     {
         $this->partenaire = $partenaire;
@@ -473,14 +474,14 @@ class Cotation
 
     /**
      * Get the value of taxeCourtier
-     */ 
+     */
     public function getTaxeCourtier()
     {
-        if($this->getEntreprise()){
-            if($this->getEntreprise()->getTaxes()){
+        if ($this->getEntreprise()) {
+            if ($this->getEntreprise()->getTaxes()) {
                 /** @var Taxe */
                 foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                    if($taxe->isPayableparcourtier() == true){
+                    if ($taxe->isPayableparcourtier() == true) {
                         $this->taxeCourtier = $taxe;
                     }
                 }
@@ -491,13 +492,13 @@ class Cotation
 
     /**
      * Get the value of retroComPartenaire
-     */ 
+     */
     public function getRetroComPartenaire()
     {
         $taux = 0;
-        if($this->getTauxretrocompartenaire() == 0){
+        if ($this->getTauxretrocompartenaire() == 0) {
             $taux = $this->getPartenaire()->getPart();
-        }else{
+        } else {
             $taux = $this->getTauxretrocompartenaire();
         }
         $this->retroComPartenaire = $this->getRevenuNetTotalPartageable() * $taux;
@@ -506,19 +507,25 @@ class Cotation
 
     /**
      * Get the value of taxeCourtierTotale
-     */ 
+     */
     public function getTaxeCourtierTotale()
     {
         $tot = 0;
-        if($this->getRevenus()){
+        if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                if($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]){
-                    $tot = $tot + ($revenu->calc_getRevenuFinal() * ($this->getTaxeCourtier()->getTaux()));
+                if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                    $tauxTaxe = 0;
+                    if ($this->getPiste()->getProduit()->isIard()) {
+                        $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
+                    } else {
+                        $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+                    }
+                    $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
                 }
             }
         }
-        $this->taxeCourtierTotale = $tot * 100;
+        $this->taxeCourtierTotale = $tot * -100;
         return $this->taxeCourtierTotale;
     }
 
@@ -536,14 +543,14 @@ class Cotation
 
     /**
      * Get the value of revenuTotalHTPartageable
-     */ 
+     */
     public function getRevenuTotalHTPartageable()
     {
         $tot = 0;
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                if($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]){
+                if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
                     $tot = $tot + $revenu->calc_getRevenuFinal();
                 }
             }
@@ -554,7 +561,7 @@ class Cotation
 
     /**
      * Get the value of revenuNetTotal
-     */ 
+     */
     public function getRevenuNetTotal()
     {
         $this->revenuNetTotal = $this->getRevenuTotalHT() - $this->getTaxeCourtierTotale();
@@ -563,27 +570,33 @@ class Cotation
 
     /**
      * Get the value of taxeCourtierTotalePartageable
-     */ 
+     */
     public function getTaxeCourtierTotalePartageable()
     {
         $tot = 0;
-        if($this->getRevenus()){
+        if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                if($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]){
-                    if($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]){
-                        $tot = $tot + ($revenu->calc_getRevenuFinal() * ($this->getTaxeCourtier()->getTaux()));
+                if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                    if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
+                        $tauxTaxe = 0;
+                        if ($this->getPiste()->getProduit()->isIard()) {
+                            $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
+                        } else {
+                            $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+                        }
+                        $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
                     }
                 }
             }
         }
-        $this->taxeCourtierTotalePartageable = $tot * 100;
+        $this->taxeCourtierTotalePartageable = $tot * -100;
         return $this->taxeCourtierTotalePartageable;
     }
 
     /**
      * Get the value of revenuNetTotalPartageable
-     */ 
+     */
     public function getRevenuNetTotalPartageable()
     {
         $this->revenuNetTotalPartageable = $this->getRevenuTotalHTPartageable() - $this->getTaxeCourtierTotalePartageable();
@@ -592,14 +605,14 @@ class Cotation
 
     /**
      * Get the value of taxeAssureur
-     */ 
+     */
     public function getTaxeAssureur()
     {
-        if($this->getEntreprise()){
-            if($this->getEntreprise()->getTaxes()){
+        if ($this->getEntreprise()) {
+            if ($this->getEntreprise()->getTaxes()) {
                 /** @var Taxe */
                 foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                    if($taxe->isPayableparcourtier() == false){
+                    if ($taxe->isPayableparcourtier() == false) {
                         $this->taxeAssureur = $taxe;
                     }
                 }

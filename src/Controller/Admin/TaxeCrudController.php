@@ -87,7 +87,8 @@ class TaxeCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('taux')
+            ->add('tauxIARD')
+            ->add('tauxVIE')
             ->add(ChoiceFilter::new('payableparcourtier', 'Payable par le courtier?')->setChoices(self::TAB_TAXE_PAYABLE_PAR_COURTIER));
     }
 
@@ -119,7 +120,8 @@ class TaxeCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Taxe();
-        $objet->setTaux(0.16);
+        $objet->setTauxIARD(0.16);
+        $objet->setTauxVIE(0.16);
         $objet->setPayableparcourtier(true);
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));

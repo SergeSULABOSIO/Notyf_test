@@ -636,7 +636,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_TAXE_ID                       = "Id";
     public const PREF_FIN_TAXE_NOM                      = "Nom";
     public const PREF_FIN_TAXE_DESCRIPTION              = "Description";
-    public const PREF_FIN_TAXE_TAUX                     = "Taux";
+    public const PREF_FIN_TAXE_TAUX_IARD                = "Taux (IARD/Non Vie)";
+    public const PREF_FIN_TAXE_TAUX_VIE                 = "Taux (Vie)";
     public const PREF_FIN_TAXE_ORGANISATION             = "Organisation";
     public const PREF_FIN_TAXE_PAR_COURTIER             = "Par Courtier?";
     public const PREF_FIN_TAXE_UTILISATEUR              = "Utilisateur";
@@ -647,20 +648,21 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_FIN_TAXE_ID                                  => 0,
         self::PREF_FIN_TAXE_NOM                                 => 1,
         self::PREF_FIN_TAXE_DESCRIPTION                         => 2,
-        self::PREF_FIN_TAXE_TAUX                                => 3,
-        self::PREF_FIN_TAXE_ORGANISATION                        => 4,
-        self::PREF_FIN_TAXE_PAR_COURTIER                        => 5,
-        self::PREF_FIN_TAXE_UTILISATEUR                         => 6,
-        self::PREF_FIN_TAXE_ENTREPRISE                          => 7,
-        self::PREF_FIN_TAXE_DATE_DE_CREATION                    => 8,
-        self::PREF_FIN_TAXE_DERNIERE_MODIFICATION               => 9,
+        self::PREF_FIN_TAXE_TAUX_IARD                           => 3,
+        self::PREF_FIN_TAXE_TAUX_VIE                            => 4,
+        self::PREF_FIN_TAXE_ORGANISATION                        => 5,
+        self::PREF_FIN_TAXE_PAR_COURTIER                        => 6,
+        self::PREF_FIN_TAXE_UTILISATEUR                         => 7,
+        self::PREF_FIN_TAXE_ENTREPRISE                          => 8,
+        self::PREF_FIN_TAXE_DATE_DE_CREATION                    => 9,
+        self::PREF_FIN_TAXE_DERNIERE_MODIFICATION               => 10,
         //CHAMPS CALCULABLES AUTOMATIQUEMENT
-        self::PREF_calc_taxes_courtier                          => 10,
-        self::PREF_calc_taxes_courtier_payees                   => 11,
-        self::PREF_calc_taxes_courtier_solde                    => 12,
-        self::PREF_calc_taxes_assureurs                         => 13,
-        self::PREF_calc_taxes_assureurs_payees                  => 14,
-        self::PREF_calc_taxes_assureurs_solde                   => 15
+        self::PREF_calc_taxes_courtier                          => 11,
+        self::PREF_calc_taxes_courtier_payees                   => 12,
+        self::PREF_calc_taxes_courtier_solde                    => 13,
+        self::PREF_calc_taxes_assureurs                         => 14,
+        self::PREF_calc_taxes_assureurs_payees                  => 15,
+        self::PREF_calc_taxes_assureurs_solde                   => 16
 
     ];
 

@@ -28,15 +28,15 @@ class Taxe extends CalculableEntity
 
     #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $taux = null;
+    private ?string $tauxIARD = null;
+
+    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $tauxVIE = null;
 
     #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $organisation = null;
-
-    // #[ORM\ManyToOne]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?Entreprise $entreprise = null;
 
     #[ORM\Column]
     private ?bool $payableparcourtier = null;
@@ -87,18 +87,6 @@ class Taxe extends CalculableEntity
         return $this;
     }
 
-    public function getTaux(): ?string
-    {
-        return $this->taux;
-    }
-
-    public function setTaux(string $taux): self
-    {
-        $this->taux = $taux;
-
-        return $this;
-    }
-
     public function getOrganisation(): ?string
     {
         return $this->organisation;
@@ -125,7 +113,11 @@ class Taxe extends CalculableEntity
 
     public function __toString()
     {
-        return $this->nom . " (" . $this->taux * 100 . "%)" . " : " . $this->description;
+        $txt = " (" . $this->tauxIARD * 100 . "%@IARD & " . $this->tauxVIE * 100 . "%@VIE)";
+        if($this->tauxIARD == $this->tauxVIE){
+            $txt = " (" . $this->tauxIARD * 100 . "%)";
+        }
+        return $this->nom . $txt;
     }
 
     public function isPayableparcourtier(): ?bool
@@ -184,6 +176,46 @@ class Taxe extends CalculableEntity
     public function setEntreprise(?Entreprise $entreprise): self
     {
         $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of tauxIARD
+     */ 
+    public function getTauxIARD()
+    {
+        return $this->tauxIARD;
+    }
+
+    /**
+     * Set the value of tauxIARD
+     *
+     * @return  self
+     */ 
+    public function setTauxIARD($tauxIARD)
+    {
+        $this->tauxIARD = $tauxIARD;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of tauxVIE
+     */ 
+    public function getTauxVIE()
+    {
+        return $this->tauxVIE;
+    }
+
+    /**
+     * Set the value of tauxVIE
+     *
+     * @return  self
+     */ 
+    public function setTauxVIE($tauxVIE)
+    {
+        $this->tauxVIE = $tauxVIE;
 
         return $this;
     }

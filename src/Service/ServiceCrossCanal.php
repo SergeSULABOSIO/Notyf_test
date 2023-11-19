@@ -2165,7 +2165,7 @@ class ServiceCrossCanal
             $crud->setPageTitle(Crud::PAGE_DETAIL, "Détails sur " . $entite);
         }
         if ($entite) {
-            $crud->setPageTitle(Crud::PAGE_EDIT, "Modification de " . $entite);
+            $crud->setPageTitle(Crud::PAGE_EDIT, "Edition de " . $entite);
         }
         return $crud;
     }

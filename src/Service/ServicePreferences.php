@@ -2192,7 +2192,10 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
             ->onlyOnDetail();
-        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
+        $tabAttributs[] = PercentField::new('tauxIARD', PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD)
+            ->setNumDecimals(2)
+            ->onlyOnDetail();
+        $tabAttributs[] = PercentField::new('tauxVIE', PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE)
             ->setNumDecimals(2)
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
@@ -2224,8 +2227,13 @@ class ServicePreferences
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX])) {
-            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD])) {
+            $tabAttributs[] = PercentField::new('tauxIARD', PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD)
+                ->setNumDecimals(2)
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE])) {
+            $tabAttributs[] = PercentField::new('tauxVIE', PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE)
                 ->setNumDecimals(2)
                 ->onlyOnIndex();
         }
@@ -2529,20 +2537,24 @@ class ServicePreferences
     {
 
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
-            ->setColumns(2)
+            ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_TAXE_TAUX)
-            ->setColumns(2)
+        $tabAttributs[] = PercentField::new('tauxIARD', PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD)
+            ->setColumns(12)
             ->setNumDecimals(2)
             ->onlyOnForms();
-        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
-            ->setColumns(3)
+        $tabAttributs[] = PercentField::new('tauxVIE', PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE)
+            ->setColumns(12)
+            ->setNumDecimals(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
-            ->setColumns(4)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
-            ->setColumns(2)
+            ->setColumns(12)
             ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
             ->onlyOnForms();
 

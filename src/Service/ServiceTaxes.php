@@ -51,8 +51,9 @@ class ServiceTaxes
 
     public function getNomTaxeCourtier()
     {
+        /** @var Taxe */
         $taxe = $this->getTaxe(true);
-        $txt = $taxe != null ? strtolower($taxe->getNom()) . " (" . ($taxe->getTaux()*100) . "%)" : "Tx Courtier";
+        $txt = $taxe != null ? strtolower($taxe."") : "Tx Courtier";
         return $txt;
     }
 
@@ -60,7 +61,7 @@ class ServiceTaxes
     {
         /** @var Taxe */
         $taxe = $this->getTaxe(false);
-        $txt = $taxe != null ? strtolower($taxe->getNom()) . " (" . ($taxe->getTaux()*100) . "%)" : "Tx Assureur";
+        $txt = $taxe != null ? strtolower($taxe."") : "Tx Assureur";
         return $txt;
     }
 }

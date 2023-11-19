@@ -525,7 +525,7 @@ class Cotation
                 }
             }
         }
-        $this->taxeCourtierTotale = $tot * -100;
+        $this->taxeCourtierTotale = $tot * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -590,7 +590,7 @@ class Cotation
                 }
             }
         }
-        $this->taxeCourtierTotalePartageable = $tot * -100;
+        $this->taxeCourtierTotalePartageable = $tot * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 

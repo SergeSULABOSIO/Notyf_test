@@ -53,15 +53,26 @@ class ServiceTaxes
     {
         /** @var Taxe */
         $taxe = $this->getTaxe(true);
-        $txt = $taxe != null ? strtolower($taxe."") : "Tx Courtier";
+        $txt = $taxe != null ? strtolower($taxe->getNom()."") : "Tx Courtier";
         return $txt;
+    }
+
+    public function getTauxTaxeBranche(bool $isIard, bool $isForCourtier)
+    {
+        /** @var Taxe */
+        $taxe = $this->getTaxe($isForCourtier);
+        if($isIard == true){
+            return $taxe != null ? $taxe->getTauxIARD() : 0;
+        }else{
+            return $taxe != null ? $taxe->getTauxVIE() : 0;
+        }
     }
 
     public function getNomTaxeAssureur()
     {
         /** @var Taxe */
         $taxe = $this->getTaxe(false);
-        $txt = $taxe != null ? strtolower($taxe."") : "Tx Assureur";
+        $txt = $taxe != null ? strtolower($taxe->getNom()."") : "Tx Assureur";
         return $txt;
     }
 }

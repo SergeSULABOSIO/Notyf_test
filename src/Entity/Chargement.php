@@ -144,7 +144,7 @@ class Chargement
     {
         $strMonnaie = $this->getCodeMonnaieAffichage();
         $strType = "";
-        foreach (ChargementCrudController::TAB_TYPE as $key => $value) {
+        foreach (ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE as $key => $value) {
             if ($value == $this->type) {
                 $strType = $key;
             }

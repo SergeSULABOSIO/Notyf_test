@@ -316,8 +316,8 @@ class Revenu
         if ($this->getCotation()) {
             /** @var Cotation */
             $quote = $this->getCotation();
-            $prmNette = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
-            $fronting = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE[ChargementCrudController::TYPE_FRONTING]) / 100);
+            $prmNette = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
+            $fronting = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
         $montantFlat = ($this->montant / 100);
         $taux = $this->taux;

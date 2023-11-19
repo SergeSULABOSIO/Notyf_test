@@ -320,6 +320,8 @@ class ServicePreferences
         return false;
     }
 
+
+
     public function canShow_url($indice_attribut)
     {
         //dd($this->adminUrlGenerator->get("champsACacher"));
@@ -367,6 +369,7 @@ class ServicePreferences
                     ->setIcon('fas fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une cotation est tout simplement un dévis/une offre financière relative à un risque précis. Ce n'est pas une police d'assurance.")
             ];
+
             //$tabAttributs = $this->setCRM_Fields_Cotation_Index_Details($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Cotation_Index($preference->getCrmCotations(), PreferenceCrudController::TAB_CRM_COTATIONS, $tabAttributs);
             $tabAttributs = $this->setCRM_Fields_Cotation_Details($tabAttributs);
@@ -862,8 +865,9 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PROD_CHARGEMENT_ID)->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
-            ->onlyOnDetail()
-            ->setChoices(ChargementCrudController::TAB_TYPE);
+            ->setChoices($this->isExoneree() == true ? ChargementCrudController::TAB_TYPE_CHARGEMENT_EXONEREE : ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE)
+            //->setChoices(ChargementCrudController::TAB_TYPE)
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_CHARGEMENT_MONTANT)
@@ -1532,9 +1536,10 @@ class ServicePreferences
 
     public function setPROD_Fields_Chargement_form($tabAttributs)
     {
+        //dd($this->isExoneree());
         if ($this->canShow_url(PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
-                ->setChoices(ChargementCrudController::TAB_TYPE)
+                ->setChoices($this->isExoneree() == true ? ChargementCrudController::TAB_TYPE_CHARGEMENT_EXONEREE : ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE)
                 ->setColumns(12)
                 ->setRequired(true)
                 ->onlyOnForms();
@@ -1713,8 +1718,9 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE])) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
-                ->onlyOnIndex()
-                ->setChoices(ChargementCrudController::TAB_TYPE);
+                //->setChoices(ChargementCrudController::TAB_TYPE)
+                ->setChoices($this->isExoneree() == true ? ChargementCrudController::TAB_TYPE_CHARGEMENT_EXONEREE : ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE)
+                ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION])) {
             $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PROD_CHARGEMENT_DESCRIPTION)
@@ -4873,6 +4879,9 @@ class ServicePreferences
 
     public function setCRM_Fields_Cotation_form($tabAttributs, $adminUrlGenerator)
     {
+        $taux = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        //dd($this->isExoneree());
+
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM)) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)
                 ->onlyOnForms()
@@ -4959,7 +4968,7 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
@@ -4982,7 +4991,7 @@ class ServicePreferences
                 ->setDisabled(true)
                 ->setColumns(12);
 
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
@@ -5017,6 +5026,26 @@ class ServicePreferences
         // }
 
         return $tabAttributs;
+    }
+
+    private function isExoneree(): bool
+    {
+        //dd($this->adminUrlGenerator->get("isExoneree"));
+        $rep = false;
+        if ($this->adminUrlGenerator->get("isExoneree")) {
+            $rep = $this->adminUrlGenerator->get("isExoneree");
+        }
+        return $rep;
+    }
+
+    private function isIard(): bool
+    {
+        $rep = false;
+        if ($this->adminUrlGenerator->get("isIard")) {
+            $rep = $this->adminUrlGenerator->get("isIard");
+        }
+        //dd($rep);
+        return $rep;
     }
 
     public function setCRM_Fields_Cotation_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)

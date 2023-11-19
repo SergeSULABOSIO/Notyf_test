@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Piste;
 use App\Entity\Chargement;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -35,11 +36,19 @@ class ChargementCrudController extends AbstractCrudController
     public const TYPE_TVA = "Tva";
     public const TYPE_AUTRE = "Autre chargement";
 
-    public const TAB_TYPE = [
+    public const TAB_TYPE_CHARGEMENT_ORDINAIRE = [
         self::TYPE_PRIME_NETTE                  => 0,
         self::TYPE_ACCESSOIRES                  => 1,
         self::TYPE_FRONTING                     => 2,
         self::TYPE_TVA                          => 3,
+        self::TYPE_FRAIS_DE_SURVEILLANCE_ARCA   => 4,
+        self::TYPE_AUTRE                        => 5
+    ];
+
+    public const TAB_TYPE_CHARGEMENT_EXONEREE = [
+        self::TYPE_PRIME_NETTE                  => 0,
+        self::TYPE_ACCESSOIRES                  => 1,
+        self::TYPE_FRONTING                     => 2,
         self::TYPE_FRAIS_DE_SURVEILLANCE_ARCA   => 4,
         self::TYPE_AUTRE                        => 5
     ];
@@ -123,7 +132,7 @@ class ChargementCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Chargement();
-        $objet->setType(self::TAB_TYPE[self::TYPE_PRIME_NETTE]);
+        $objet->setType(self::TAB_TYPE_CHARGEMENT_ORDINAIRE[self::TYPE_PRIME_NETTE]);
         $objet->setDescription("...");
         $objet->setMontant(0);
         $objet->setCreatedAt($this->serviceDates->aujourdhui());
@@ -137,9 +146,18 @@ class ChargementCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->getContext()->getEntity()->getInstance();
         if($this->crud){
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
         }
+        if ($instance != null) {
+            if ($instance instanceof Piste) {
+                //On envoie ces paramètres à tous les formulaires
+                $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+            }
+        }
+        //dd($instance);
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         return $this->servicePreferences->getChamps(new Chargement(), $this->crud, $this->adminUrlGenerator);
     }

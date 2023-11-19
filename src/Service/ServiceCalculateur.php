@@ -540,7 +540,7 @@ class ServiceCalculateur
     public function updateDataTaxeCourtier(?CalculableEntity $calculableEntity, ?Taxe $taxe, ?Police $police)
     {
         $calculableEntity->calc_taxes_courtier_tab[] = $taxe;
-        $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
+        $calculableEntity->calc_taxes_courtier += ($calculableEntity->calc_revenu_ht * $taxe->getTauxIARD());
         /** @var Paiement */
         foreach ($this->paiements as $paiement) {
             if ($paiement->getFacture()) {
@@ -560,7 +560,7 @@ class ServiceCalculateur
     public function updateDataTaxeAssureur(?CalculableEntity $calculableEntity, ?Taxe $taxe, ?Police $police)
     {
         $calculableEntity->calc_taxes_assureurs_tab[] = $taxe;
-        $calculableEntity->calc_taxes_assureurs += ($calculableEntity->calc_revenu_ht * $taxe->getTaux());
+        $calculableEntity->calc_taxes_assureurs += ($calculableEntity->calc_revenu_ht * $taxe->getTauxIARD());
         /** @var Paiement */
         foreach ($this->paiements as $paiement) {
             if ($paiement->getFacture()) {

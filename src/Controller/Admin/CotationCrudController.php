@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Cotation;
+use App\Entity\Piste;
 use App\Service\ServiceAvenant;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
@@ -140,17 +141,25 @@ class CotationCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->getContext()->getEntity()->getInstance();
         if ($this->crud != null) {
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        } else {
-            $this->adminUrlGenerator->set("champsACacher", [
-                //PreferenceCrudController::PREF_CRM_COTATION_REVENUS,
-                //PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT,
-                //PreferenceCrudController::PREF_CRM_COTATION_MISSIONS,
-                //PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
-                //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
-                //PreferenceCrudController::PREF_CRM_MISSION_PISTE,
-            ]);
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
+        }
+        // $this->adminUrlGenerator->set("champsACacher", [
+        //PreferenceCrudController::PREF_CRM_COTATION_REVENUS,
+        //PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT,
+        //PreferenceCrudController::PREF_CRM_COTATION_MISSIONS,
+        //PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
+        //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
+        //PreferenceCrudController::PREF_CRM_MISSION_PISTE,
+        // ]);
+
+        if ($instance != null) {
+            if ($instance instanceof Piste) {
+                //On envoie ces paramètres à tous les formulaires
+                $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+            }
         }
         return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
     }

@@ -224,7 +224,22 @@ class Client extends CalculableEntity
 
     public function __toString()
     {
-        return "" . $this->nom;
+        $txtExoneree = "";
+        $tx = "taxe";
+        if($this->isExoneree()){
+            if($this->getEntreprise()){
+                if($this->getEntreprise()->getTaxes()){
+                    foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                        if($taxe->isPayableparcourtier() == false){
+                            $tx = "" . $taxe->getNom();
+                            break;
+                        }
+                    }
+                }
+            }
+            $txtExoneree = " (exoneré de la ". $tx .")";
+        }
+        return "" . $this->nom . "" . $txtExoneree;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

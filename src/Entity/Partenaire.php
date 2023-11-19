@@ -241,27 +241,27 @@ class Partenaire extends CalculableEntity
         return $this->police;
     }
 
-    public function addPolice(Police $police): self
-    {
-        if (!$this->police->contains($police)) {
-            $this->police->add($police);
-            $police->setPartenaire($this);
-        }
+    // public function addPolice(Police $police): self
+    // {
+    //     if (!$this->police->contains($police)) {
+    //         $this->police->add($police);
+    //         $police->setPartenaire($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removePolice(Police $police): self
-    {
-        if ($this->police->removeElement($police)) {
-            // set the owning side to null (unless already changed)
-            if ($police->getPartenaire() === $this) {
-                $police->setPartenaire(null);
-            }
-        }
+    // public function removePolice(Police $police): self
+    // {
+    //     if ($this->police->removeElement($police)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($police->getPartenaire() === $this) {
+    //             $police->setPartenaire(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Facture>

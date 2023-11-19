@@ -286,36 +286,6 @@ class Client extends CalculableEntity
         return $this->police;
     }
 
-    public function addPolice(Police $police): self
-    {
-        if (!$this->police->contains($police)) {
-            $this->police->add($police);
-            $police->setClient($this);
-        }
-
-        return $this;
-    }
-
-    public function removePolice(Police $police): self
-    {
-        if ($this->police->removeElement($police)) {
-            // set the owning side to null (unless already changed)
-            if ($police->getClient() === $this) {
-                $police->setClient(null);
-            }
-        }
-
-        return $this;
-    }
-
-    // /**
-    //  * @return Collection<int, Cotation>
-    //  */
-    // public function getCotations(): Collection
-    // {
-    //     return $this->cotations;
-    // }
-
     /**
      * @return Collection<int, Piste>
      */

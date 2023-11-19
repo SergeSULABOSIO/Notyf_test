@@ -248,27 +248,27 @@ class Produit extends CalculableEntity
         return $this->police;
     }
 
-    public function addPolice(Police $police): self
-    {
-        if (!$this->police->contains($police)) {
-            $this->police->add($police);
-            $police->setProduit($this);
-        }
+    // public function addPolice(Police $police): self
+    // {
+    //     if (!$this->police->contains($police)) {
+    //         $this->police->add($police);
+    //         $police->setProduit($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removePolice(Police $police): self
-    {
-        if ($this->police->removeElement($police)) {
-            // set the owning side to null (unless already changed)
-            if ($police->getProduit() === $this) {
-                $police->setProduit(null);
-            }
-        }
+    // public function removePolice(Police $police): self
+    // {
+    //     if ($this->police->removeElement($police)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($police->getProduit() === $this) {
+    //             $police->setProduit(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Piste>

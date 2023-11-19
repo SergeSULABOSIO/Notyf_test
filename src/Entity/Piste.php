@@ -74,6 +74,12 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Partenaire::class)]
     private Collection $newpartenaire;
 
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Utilisateur $gestionnaire = null;
+
+    #[ORM\ManyToOne(inversedBy: 'pistes')]
+    private ?Utilisateur $assistant = null;
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
@@ -406,6 +412,30 @@ class Piste
                 $newpartenaire->setPiste(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGestionnaire(): ?Utilisateur
+    {
+        return $this->gestionnaire;
+    }
+
+    public function setGestionnaire(?Utilisateur $gestionnaire): self
+    {
+        $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    public function getAssistant(): ?Utilisateur
+    {
+        return $this->assistant;
+    }
+
+    public function setAssistant(?Utilisateur $assistant): self
+    {
+        $this->assistant = $assistant;
 
         return $this;
     }

@@ -675,156 +675,19 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
-        //$tabAttributs[] = ArrayField::new('factures', PreferenceCrudController::PREF_PRO_POLICE_FACTURES)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)->onlyOnDetail();
         $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
             ->onlyOnDetail()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('actionCRMs', PreferenceCrudController::PREF_PRO_POLICE_ACTIONS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('pistes', PreferenceCrudController::PREF_PRO_POLICE_PISTES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)->onlyOnDetail();
-        $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)->onlyOnDetail();
-
-        //Onglet Prime & Capitaux
-        $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
-            ->setIcon('fas fa-bag-shopping')
-            ->setHelp("Le contrat d'assurance en place.")
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-            ->onlyOnDetail()
-            ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
-        $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimenette());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getArca());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTva());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisadmin());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getDiscount());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimetotale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-
-        //Onglet Structure des revenus
-        $tabAttributs[] = FormField::addTab(' Structure des revenus')->setIcon('fas fa-sack-dollar')->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)->onlyOnDetail();
-        $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)->onlyOnDetail();
-        $tabAttributs[] = FormField::addPanel('Commission de réassurance')->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('ricom', PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRicom());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-            ->onlyOnDetail()
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
-        $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-            ->onlyOnDetail();
-        $tabAttributs[] = FormField::addPanel("Commission locale")->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('localcom', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getLocalcom());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON)
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('localcompayableby', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-            ->onlyOnDetail();
-        $tabAttributs[] = FormField::addPanel("Commission sur Fronting")->hideOnForm();
-        $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
-            ->formatValue(function ($value, Police $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFrontingcom());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON)
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('frontingcompayableby', PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-            ->onlyOnDetail();
-
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_details(true, $tabAttributs);
-
-        //TRAVAUX SUR LE REPORTING
-        $tabAttributs[] = MoneyField::new('unpaidcommission')
-            ->formatValue(function ($value, Police $police) {
-                $this->setTitreReporting($police);
-                return $value;
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
 
         return $tabAttributs;
     }
@@ -961,53 +824,8 @@ class ServicePreferences
                     PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info', //info
                 ]);
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CLIENT])) {
-            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRODUIT])) {
-            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-                ->onlyOnIndex();
-        }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_COTATION])) {
             $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS])) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ACTIONS])) {
-            $tabAttributs[] = AssociationField::new('actionCRMs', PreferenceCrudController::PREF_PRO_POLICE_ACTIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PISTES])) {
-            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_POLICE_PISTES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_SINISTRES])) {
-            $tabAttributs[] = AssociationField::new('sinistres', PreferenceCrudController::PREF_PRO_POLICE_SINISTRES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES])) {
-            $tabAttributs[] = AssociationField::new('automobiles', PreferenceCrudController::PREF_PRO_POLICE_AUTOMOBILES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PIECES])) {
-            $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_PRO_POLICE_PIECES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS])) {
-            $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
-                ->onlyOnIndex();
-        }
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REMARQUE])) {
-            $tabAttributs[] = TextareaField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
@@ -1027,162 +845,6 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CAPITAL])) {
-            $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCapital());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT])) {
-            $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-                ->onlyOnIndex()
-                ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE])) {
-            $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimenette());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTING])) {
-            $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ARCA])) {
-            $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getArca());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_TVA])) {
-            $tabAttributs[] = MoneyField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTva());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN])) {
-            $tabAttributs[] = MoneyField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisadmin());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT])) {
-            $tabAttributs[] = MoneyField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getDiscount());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE])) {
-            $tabAttributs[] = MoneyField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimetotale());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE])) {
-            $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_RI_COM])) {
-            $tabAttributs[] = MoneyField::new('ricom', PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRicom());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM])) {
-            $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-                ->onlyOnIndex()
-                ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY])) {
-            $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-                ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM])) {
-            $tabAttributs[] = MoneyField::new('localcom', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getLocalcom());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM])) {
-            $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
-                ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY])) {
-            $tabAttributs[] = ChoiceField::new('localcompayableby', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
-                ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM])) {
-            $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
-                ->formatValue(function ($value, Police $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFrontingcom());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM])) {
-            $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
-                ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY])) {
-            $tabAttributs[] = ChoiceField::new('frontingcompayableby', PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
-                ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR)
-                ->onlyOnIndex();
-        }
-
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_Index(true, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
-
-        //TRAVAUX SUR LE REPORTING
-        $tabAttributs[] = MoneyField::new('unpaidcommission')
-            ->formatValue(function ($value, Police $police) {
-                $this->setTitreReporting($police);
-                return $value;
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnIndex();
-
         return $tabAttributs;
     }
 
@@ -2287,61 +1949,8 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
             ->onlyOnForms()
             ->setColumns(6);
-        $tabAttributs[] = FormField::addPanel('')
-            ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_CLIENT)) {
-            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_PRO_POLICE_CLIENT)
-                ->onlyOnForms()
-                ->setRequired(false)
-                ->setColumns(6)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)) {
-            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
-                ->onlyOnForms()
-                ->setRequired(false)
-                ->setColumns(6)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_PRO_POLICE_ASSUREURS)
-                ->onlyOnForms()
-                ->setRequired(false)
-                ->setColumns(6)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        $tabAttributs[] = TextField::new('reassureurs', PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
-            ->onlyOnForms()
-            ->setColumns(6);
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION)) {
             $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-                ->onlyOnForms()
-                ->setColumns(6)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_PISTES)) {
-            $tabAttributs[] = AssociationField::new('pistes', PreferenceCrudController::PREF_PRO_POLICE_PISTES)
                 ->onlyOnForms()
                 ->setColumns(6)
                 ->setRequired(false)
@@ -2364,7 +1973,18 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
+            $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                ->onlyOnForms()
+                ->setColumns(6)
+                ->setRequired(false)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+        }
         $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
             ->onlyOnForms()
             ->setColumns(2);
@@ -2377,123 +1997,6 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
             ->onlyOnForms()
             ->setColumns(2);
-
-        $tabAttributs[] = FormField::addTab(' Prime & Capitaux')
-            ->setIcon('fas fa-bag-shopping')
-            ->setHelp("Le contrat d'assurance en place.")
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('capital', PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('modepaiement', PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-            ->setColumns(2)
-            ->onlyOnForms()
-            ->setChoices(PoliceCrudController::TAB_POLICE_MODE_PAIEMENT);
-        $tabAttributs[] = FormField::addPanel('Facture client')->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('primenette', PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('arca', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_COURTIER, PreferenceCrudController::PREF_PRO_POLICE_ARCA))
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('tva', $this->getTitreAttributTaxe_Simple(self::INDICE_TAXE_ASSUREUR, PreferenceCrudController::PREF_PRO_POLICE_TVA))
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('fraisadmin', PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('discount', PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = MoneyField::new('primetotale', PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = FormField::addTab(' Structure des revenus')
-            ->setIcon('fas fa-sack-dollar')
-            ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-                ->onlyOnForms()
-                ->setRequired(false)
-                ->setColumns(4)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        $tabAttributs[] = PercentField::new('partExceptionnellePartenaire', PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
-            ->onlyOnForms()
-            ->setNumDecimals(2)
-            ->setColumns(3)
-            ->setHelp("Précisez le taux exceptionnel si, pour ce compte spécifique, le taux est différent du standard.");
-        $tabAttributs[] = FormField::addPanel('Commission de réassurance hors taxe')
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('ricom', PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('cansharericom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-            ->onlyOnForms()
-            ->setColumns(2)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
-        $tabAttributs[] = ChoiceField::new('ricompayableby', PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = FormField::addPanel("Commission locale hors taxe")->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('localcom', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('cansharelocalcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
-            ->onlyOnForms()
-            ->setColumns(2)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
-        $tabAttributs[] = ChoiceField::new('localcompayableby', PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = FormField::addPanel("Commission hors taxe sur Fronting")
-            ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('frontingcom', PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM) //"Montant ht"
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = ChoiceField::new('cansharefrontingcom', PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
-            ->onlyOnForms()
-            ->setColumns(2)
-            ->setChoices(PoliceCrudController::TAB_POLICE_REPONSES_OUI_NON);
-        $tabAttributs[] = ChoiceField::new('frontingcompayableby', PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
-            ->onlyOnForms()
-            ->setColumns(3)
-            ->setChoices(PoliceCrudController::TAB_POLICE_DEBITEUR);
-        $tabAttributs[] = TextEditorField::new('remarques', PreferenceCrudController::PREF_PRO_POLICE_REMARQUE)
-            ->onlyOnForms()
-            ->setColumns(12);
 
         //On désactive les champs non éditables
         $this->appliquerCanDesable($tabAttributs);
@@ -5580,7 +5083,6 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
 
-
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
             $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
                 ->renderAsHtml()
@@ -5617,6 +5119,16 @@ class ServicePreferences
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE])) {
+            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->onlyOnIndex();
+        }
+        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT])) {
+            $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
                 ->onlyOnIndex();
         }
@@ -5664,6 +5176,12 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)->onlyOnDetail();
@@ -5804,6 +5322,27 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
 
+        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setRequired(true)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+        $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setRequired(true)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                return $entityRepository
+                    ->createQueryBuilder('e')
+                    ->Where('e.entreprise = :ese')
+                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+            });
+
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->onlyOnForms()
             ->setColumns(12);
@@ -5906,6 +5445,20 @@ class ServicePreferences
             ->setColumns(7)
             ->onlyOnForms();
 
+        //Onglet Polices
+        $tabAttributs[] = FormField::addTab(' Polices')
+            ->setIcon('fas fa-file-shield')
+            ->setHelp("Polices d'assurance et/ou avenant mis en place.")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(CotationCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(7)
+            ->onlyOnForms();
 
         //dd($tabAttributs);
         return $tabAttributs;
@@ -5999,7 +5552,7 @@ class ServicePreferences
             if ($this->adminUrlGenerator->get("codeReporting") != null) {
                 //COMMISSION
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_COM) {
-                    $this->total_unpaidcommission += $police->getUnpaidcommission();
+                    // $this->total_unpaidcommission += $police->getUnpaidcommission();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
@@ -6008,7 +5561,7 @@ class ServicePreferences
                 }
                 //RETRO-COMMISSION
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_RETROCOM) {
-                    $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
+                    // $this->total_unpaidretrocommission += $police->getUnpaidretrocommission();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
@@ -6017,39 +5570,39 @@ class ServicePreferences
                 }
                 //TAXES
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE) {
-                    $this->total_unpaidtaxe += $police->getUnpaidtaxe();
+                    // $this->total_unpaidtaxe += $police->getUnpaidtaxe();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxe) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE) {
-                    $this->total_paidtaxe += $police->getPaidtaxe();
+                    // $this->total_paidtaxe += $police->getPaidtaxe();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxe) . "]");
                 }
                 //TAXES COURTIERS
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_COURTIER) {
-                    $this->total_unpaidtaxecourtier += $police->getUnpaidtaxecourtier();
+                    // $this->total_unpaidtaxecourtier += $police->getUnpaidtaxecourtier();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxecourtier) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_COURTIER) {
-                    $this->total_paidtaxecourtier += $police->getPaidtaxecourtier();
+                    // $this->total_paidtaxecourtier += $police->getPaidtaxecourtier();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxecourtier) . "]");
                 }
                 //TAXES ASSUREUR
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_UNPAID_TAXE_ASSUREUR) {
-                    $this->total_unpaidtaxeassureur += $police->getUnpaidtaxeassureur();
+                    // $this->total_unpaidtaxeassureur += $police->getUnpaidtaxeassureur();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidtaxeassureur) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_TAXE_ASSUREUR) {
-                    $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
+                    // $this->total_paidtaxeassureur += $police->getPaidtaxeassureur();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidtaxeassureur) . "]");
                 }
                 //PRODUCTION GLOBALE
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PRODUCTION_TOUS) {
-                    $this->total_prime_nette += $police->getPrimenette();
-                    $this->total_prime_fronting += $police->getFronting();
-                    $this->total_prime_accessoire += $police->getFraisadmin();
-                    $this->total_prime_arca += $police->getArca();
-                    $this->total_prime_tva += $police->getTva();
-                    $this->total_prime_ttc += $police->getPrimetotale();
+                    // $this->total_prime_nette += $police->getPrimenette();
+                    // $this->total_prime_fronting += $police->getFronting();
+                    // $this->total_prime_accessoire += $police->getFraisadmin();
+                    // $this->total_prime_arca += $police->getArca();
+                    // $this->total_prime_tva += $police->getTva();
+                    // $this->total_prime_ttc += $police->getPrimetotale();
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " \n
                     [
                         Prime totale: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_prime_ttc) . ", 

@@ -61,6 +61,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: CompteBancaire::class)]
     private Collection $compteBancaires;
 
+    #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Piste::class)]
+    private Collection $pistes;
+
 /* 
     #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
@@ -71,6 +74,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         //$this->actionCRMs = new ArrayCollection();
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
+        $this->pistes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -316,6 +320,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($compteBancaire->getUtilisateur() === $this) {
                 $compteBancaire->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Piste>
+     */
+    public function getPistes(): Collection
+    {
+        return $this->pistes;
+    }
+
+    public function addPiste(Piste $piste): self
+    {
+        if (!$this->pistes->contains($piste)) {
+            $this->pistes->add($piste);
+            $piste->setGestionnaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removePiste(Piste $piste): self
+    {
+        if ($this->pistes->removeElement($piste)) {
+            // set the owning side to null (unless already changed)
+            if ($piste->getGestionnaire() === $this) {
+                $piste->setGestionnaire(null);
             }
         }
 

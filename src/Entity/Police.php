@@ -49,10 +49,6 @@ class Police
     
     private ?Utilisateur $assistant = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Cotation $cotation = null;
-
-
     public function __construct()
     {
     }
@@ -194,17 +190,5 @@ class Police
     public function getAssistant()
     {
         return $this->assistant;
-    }
-
-    public function getCotation(): ?Cotation
-    {
-        return $this->cotation;
-    }
-
-    public function setCotation(?Cotation $cotation): self
-    {
-        $this->cotation = $cotation;
-
-        return $this;
     }
 }

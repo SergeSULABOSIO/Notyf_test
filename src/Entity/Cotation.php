@@ -79,9 +79,6 @@ class Cotation
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
 
-    #[ORM\Column(nullable: true)]
-
-
     public function __construct()
     {
         $this->revenus = new ArrayCollection();

@@ -1918,7 +1918,19 @@ class ServicePreferences
     }
 
     public function setCRM_Fields_Polices_form($tabAttributs)
-    {ici
+    {
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION)) {
+            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                });
+        }
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)) {
             $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
                 ->onlyOnForms()

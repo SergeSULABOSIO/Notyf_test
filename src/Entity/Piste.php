@@ -80,6 +80,9 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Utilisateur $assistant = null;
 
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class)]
+    private Collection $polices;
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
@@ -87,6 +90,7 @@ class Piste
         $this->actionsCRMs = new ArrayCollection();
         $this->prospect = new ArrayCollection();
         $this->newpartenaire = new ArrayCollection();
+        $this->polices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -436,6 +440,36 @@ class Piste
     public function setAssistant(?Utilisateur $assistant): self
     {
         $this->assistant = $assistant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolices(): Collection
+    {
+        return $this->polices;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->polices->contains($police)) {
+            $this->polices->add($police);
+            $police->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->polices->removeElement($police)) {
+            // set the owning side to null (unless already changed)
+            if ($police->getPiste() === $this) {
+                $police->setPiste(null);
+            }
+        }
 
         return $this;
     }

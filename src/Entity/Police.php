@@ -49,7 +49,10 @@ class Police
     
     private ?Utilisateur $assistant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'polices', cascade: ['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'polices')]
+    private ?Piste $piste = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Cotation $cotation = null;
 
     public function __construct()
@@ -193,6 +196,18 @@ class Police
     public function getAssistant()
     {
         return $this->assistant;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
+
+        return $this;
     }
 
     public function getCotation(): ?Cotation

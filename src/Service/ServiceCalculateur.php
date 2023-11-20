@@ -377,21 +377,21 @@ class ServiceCalculateur
 
     private function calculerRevenuHT(?CalculableEntity $obj)
     {
-        foreach ($this->polices as $police) {
-            $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
-        }
+        // foreach ($this->polices as $police) {
+        //     $obj->calc_revenu_ht += $police->getLocalcom() + $police->getFrontingcom() + $police->getRicom();
+        // }
     }
 
     private function calculerPrimes(?CalculableEntity $obj)
     {
-        foreach ($this->polices as $police) {
-            //Meta - police
-            $obj->calc_polices_accessoire += $police->getFraisAdmin();
-            $obj->calc_polices_tva += $police->getTva();
-            $obj->calc_polices_primes_nette += $police->getPrimenette();
-            $obj->calc_polices_primes_totale += $police->getPrimetotale();
-            $obj->calc_polices_fronting += $police->getFronting();
-        }
+        // foreach ($this->polices as $police) {
+        //     //Meta - police
+        //     $obj->calc_polices_accessoire += $police->getFraisAdmin();
+        //     $obj->calc_polices_tva += $police->getTva();
+        //     $obj->calc_polices_primes_nette += $police->getPrimenette();
+        //     $obj->calc_polices_primes_totale += $police->getPrimetotale();
+        //     $obj->calc_polices_fronting += $police->getFronting();
+        // }
     }
 
     private function calculerRevenusTTC(?CalculableEntity $obj)
@@ -453,50 +453,50 @@ class ServiceCalculateur
 
     private function calculerRetrocommissions(?CalculableEntity $obj)
     {
-        foreach ($this->polices as $police) {
-            $retrocom_ri = 0;
-            $retrocom_local = 0;
-            $retrocom_fronting = 0;
+        // foreach ($this->polices as $police) {
+        //     $retrocom_ri = 0;
+        //     $retrocom_local = 0;
+        //     $retrocom_fronting = 0;
 
-            $partenaire = $police->getPartenaire();
-            //dd($partenaire->getNom());
-            if ($partenaire != null) {
-                if ($police->getPartExceptionnellePartenaire() != 0) {
-                    $part = $police->getPartExceptionnellePartenaire() * 100;
-                } else {
-                    $part = $partenaire->getPart();
-                }
+        //     $partenaire = $police->getPartenaire();
+        //     //dd($partenaire->getNom());
+        //     if ($partenaire != null) {
+        //         if ($police->getPartExceptionnellePartenaire() != 0) {
+        //             $part = $police->getPartExceptionnellePartenaire() * 100;
+        //         } else {
+        //             $part = $partenaire->getPart();
+        //         }
 
-                if ($police->isCansharericom() == true) {
-                    $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part);
-                }
-                if ($police->isCansharelocalcom() == true) {
-                    //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
-                    $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part);
-                }
-                if ($police->isCansharefrontingcom() == true) {
-                    $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part);
-                }
-                $obj->calc_retrocom += $retrocom_ri + $retrocom_local + $retrocom_fronting;
-            }
-            //dd($obj->calc_retrocom);
+        //         if ($police->isCansharericom() == true) {
+        //             $retrocom_ri = ($this->removeBrokerTaxe($police->getRicom()) * $part);
+        //         }
+        //         if ($police->isCansharelocalcom() == true) {
+        //             //dd($this->removeBrokerTaxe($police->getRicom()) . " -- " . $police->getRicom());
+        //             $retrocom_local = ($this->removeBrokerTaxe($police->getLocalcom()) * $part);
+        //         }
+        //         if ($police->isCansharefrontingcom() == true) {
+        //             $retrocom_fronting = ($this->removeBrokerTaxe($police->getFrontingcom()) * $part);
+        //         }
+        //         $obj->calc_retrocom += $retrocom_ri + $retrocom_local + $retrocom_fronting;
+        //     }
+        //     //dd($obj->calc_retrocom);
 
-            /** @var Paiement */
-            foreach ($this->paiements as $paiement) {
-                if ($paiement->getFacture()) {
-                    foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
-                        if ($police === $elementFacture->getPolice()) {
-                            $totDue = $paiement->getFacture()->getTotalDu() / 100;
-                            $totPaid = $paiement->getMontant() / 100;
-                            $proportionPaid = ($totPaid / $totDue);
-                            $obj->calc_retrocom_payees += $proportionPaid * $obj->calc_retrocom_solde;
-                        }
-                    }
-                }
-            }
-            $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
-            //dd($obj->calc_retrocom_solde);
-        }
+        //     /** @var Paiement */
+        //     foreach ($this->paiements as $paiement) {
+        //         if ($paiement->getFacture()) {
+        //             foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
+        //                 if ($police === $elementFacture->getPolice()) {
+        //                     $totDue = $paiement->getFacture()->getTotalDu() / 100;
+        //                     $totPaid = $paiement->getMontant() / 100;
+        //                     $proportionPaid = ($totPaid / $totDue);
+        //                     $obj->calc_retrocom_payees += $proportionPaid * $obj->calc_retrocom_solde;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
+        //     //dd($obj->calc_retrocom_solde);
+        // }
     }
 
     private function removeBrokerTaxe($netCommission)

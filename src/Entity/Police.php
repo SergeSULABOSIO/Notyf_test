@@ -2,18 +2,14 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\PoliceRepository;
-use App\Service\ServiceCalculateur;
-use App\Service\ServiceMonnaie;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Utilisateur;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PoliceRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
-class Police extends CalculableEntity
+class Police
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,31 +29,29 @@ class Police extends CalculableEntity
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateeffet = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    //#[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateexpiration = null;
-
-    #[Assert\NotBlank(message:"Veuillez préciser l'ID de cet avenant.")]
-    #[ORM\Column]
-    private ?int $idavenant = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $typeavenant = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
     
-    #[ORM\ManyToOne]
-    private ?Utilisateur $utilisateur = null;
-    
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
-
+    
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-
+    
     #[ORM\ManyToOne]
+    private ?Utilisateur $utilisateur = null;
+
     private ?Utilisateur $gestionnaire = null;
+    
+    private ?Utilisateur $assistant = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Cotation $cotation = null;
+
 
     public function __construct()
     {
@@ -128,30 +122,6 @@ class Police extends CalculableEntity
         return $this;
     }
 
-    public function getIdavenant(): ?int
-    {
-        return $this->idavenant;
-    }
-
-    public function setIdavenant(int $idavenant): self
-    {
-        $this->idavenant = $idavenant;
-
-        return $this;
-    }
-
-    public function getTypeavenant(): ?string
-    {
-        return $this->typeavenant;
-    }
-
-    public function setTypeavenant(string $typeavenant): self
-    {
-        $this->typeavenant = $typeavenant;
-
-        return $this;
-    }
-
     public function getEntreprise(): ?Entreprise
     {
         return $this->entreprise;
@@ -215,6 +185,26 @@ class Police extends CalculableEntity
 
     public function __toString()
     {
-        return "Réf.: " . $this->getReference() . " / Avenant: " . $this->getIdavenant();// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+        return "Réf.: " . $this->getReference();// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+    }
+
+    /**
+     * Get the value of assistant
+     */ 
+    public function getAssistant()
+    {
+        return $this->assistant;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
+
+        return $this;
     }
 }

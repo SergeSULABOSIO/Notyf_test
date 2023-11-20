@@ -261,51 +261,51 @@ class PoliceCrudController extends AbstractCrudController
 
         $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
         $txtTaxeAssureur = $this->serviceTaxes->getTaxe(false) != null ? $this->serviceTaxes->getNomTaxeAssureur() : "";
-        $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_courtier_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_ajouterPOPTaxeCourtier');
+        // $paiementTaxeCourtier_ajouter = Action::new("Payer " . $txtTaxeCourtier)
+        //     ->displayIf(static function (?Police $entity) {
+        //         return ($entity->calc_taxes_courtier_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
+        //     })
+        //     ->setIcon('fas fa-person-chalkboard')
+        //     ->linkToCrudAction('cross_canal_ajouterPOPTaxeCourtier');
 
-        $paiementTaxeAssureur_ajouter = Action::new("Payer " . $txtTaxeAssureur)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_assureurs_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_ajouterPOPTaxeAssureur');
+        // $paiementTaxeAssureur_ajouter = Action::new("Payer " . $txtTaxeAssureur)
+        //     ->displayIf(static function (?Police $entity) {
+        //         return ($entity->calc_taxes_assureurs_solde != 0 && $entity->calc_revenu_ttc_encaisse != 0);
+        //     })
+        //     ->setIcon('fas fa-person-chalkboard')
+        //     ->linkToCrudAction('cross_canal_ajouterPOPTaxeAssureur');
 
-        $paiementTaxeCourtier_lister = Action::new("Voir les Pdp " . $txtTaxeCourtier)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_courtier_payees != 0);
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_listerPOPTaxeCourtier');
+        // $paiementTaxeCourtier_lister = Action::new("Voir les Pdp " . $txtTaxeCourtier)
+        //     ->displayIf(static function (?Police $entity) {
+        //         return ($entity->calc_taxes_courtier_payees != 0);
+        //     })
+        //     ->setIcon('fas fa-person-chalkboard')
+        //     ->linkToCrudAction('cross_canal_listerPOPTaxeCourtier');
 
-        $paiementTaxeAssureur_lister = Action::new("Voir les Pdp " . $txtTaxeAssureur)
-            ->displayIf(static function (?Police $entity) {
-                return ($entity->calc_taxes_assureurs_payees != 0);
-            })
-            ->setIcon('fas fa-person-chalkboard')
-            ->linkToCrudAction('cross_canal_listerPOPTaxeAssureur');
+        // $paiementTaxeAssureur_lister = Action::new("Voir les Pdp " . $txtTaxeAssureur)
+        //     ->displayIf(static function (?Police $entity) {
+        //         return ($entity->calc_taxes_assureurs_payees != 0);
+        //     })
+        //     ->setIcon('fas fa-person-chalkboard')
+        //     ->linkToCrudAction('cross_canal_listerPOPTaxeAssureur');
 
-        if ($this->serviceTaxes->getTaxe(true) != null) {
-            $actions
-                ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_ajouter)
-                ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_ajouter)
+        // if ($this->serviceTaxes->getTaxe(true) != null) {
+        //     $actions
+        //         ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_ajouter)
+        //         ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_ajouter)
 
-                ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
-                ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister);
-        }
+        //         ->add(Crud::PAGE_DETAIL, $paiementTaxeCourtier_lister)
+        //         ->add(Crud::PAGE_INDEX, $paiementTaxeCourtier_lister);
+        // }
 
-        if ($this->serviceTaxes->getTaxe(false) != null) {
-            $actions
-                ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_ajouter)
-                ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_ajouter)
+        // if ($this->serviceTaxes->getTaxe(false) != null) {
+        //     $actions
+        //         ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_ajouter)
+        //         ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_ajouter)
 
-                ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_lister)
-                ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_lister);
-        }
+        //         ->add(Crud::PAGE_DETAIL, $paiementTaxeAssureur_lister)
+        //         ->add(Crud::PAGE_INDEX, $paiementTaxeAssureur_lister);
+        // }
 
         //Sinistres
         $sinistre_ajouter = Action::new(ServiceCrossCanal::OPTION_SINISTRE_AJOUTER)

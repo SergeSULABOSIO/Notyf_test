@@ -1201,7 +1201,7 @@ class ServicePreferences
         //dd($this->isExoneree());
         if ($this->canShow_url(PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)) {
             $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_PROD_CHARGEMENT_TYPE)
-                ->setChoices($this->isExoneree() == true ? ChargementCrudController::TAB_TYPE_CHARGEMENT_EXONEREE : ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE)
+                ->setChoices(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE)
                 ->setColumns(12)
                 ->setRequired(true)
                 ->onlyOnForms();
@@ -5446,7 +5446,7 @@ class ServicePreferences
             ->onlyOnForms();
 
         //Onglet Polices
-        $tabAttributs[] = FormField::addTab(' Polices')
+        $tabAttributs[] = FormField::addTab(' Couverture en place')
             ->setIcon('fas fa-file-shield')
             ->setHelp("Polices d'assurance et/ou avenant mis en place.")
             ->onlyOnForms();
@@ -5547,7 +5547,7 @@ class ServicePreferences
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidcommission) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_COM) {
-                    $this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
+                    //$this->total_paidcommission += $police->calc_revenu_ttc_encaisse;
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total encaissé: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidcommission) . "]");
                 }
                 //RETRO-COMMISSION
@@ -5556,7 +5556,7 @@ class ServicePreferences
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total dûe: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_unpaidretrocommission) . "]");
                 }
                 if ($this->adminUrlGenerator->get("codeReporting") == ServiceCrossCanal::REPORTING_CODE_PAID_RETROCOM) {
-                    $this->total_paidretrocommission += $police->calc_retrocom_payees;
+                    //$this->total_paidretrocommission += $police->calc_retrocom_payees;
                     $this->crud->setPageTitle(Crud::PAGE_INDEX, $this->adminUrlGenerator->get("titre") . " - [Total payée: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($this->total_paidretrocommission) . "]");
                 }
                 //TAXES

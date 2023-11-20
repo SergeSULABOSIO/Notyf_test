@@ -668,7 +668,7 @@ class ServicePreferences
     }
 
     public function setCRM_Fields_Polices_Details($tabAttributs)
-    {ici
+    {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)->onlyOnDetail();
@@ -677,10 +677,6 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)->onlyOnDetail();
-        $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
-            ->onlyOnDetail()
-            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
@@ -1922,33 +1918,37 @@ class ServicePreferences
     }
 
     public function setCRM_Fields_Polices_form($tabAttributs)
-    {
-        $tabAttributs[] = NumberField::new('idavenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
-            ->setColumns(2)
-            ->onlyOnForms();
-        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
-            ->setColumns(4)
-            ->onlyOnForms()
-            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
-            ->onlyOnForms()
-            ->setColumns(6);
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION)) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+    {ici
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)) {
+            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
                 ->onlyOnForms()
-                ->setColumns(6)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
+                ->setColumns(12);
+        }
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)) {
+            $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
+                ->onlyOnForms()
+                ->setColumns(12);
+        }
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)) {
+            $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
+                ->onlyOnForms()
+                ->setColumns(12);
+        }
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)) {
+            $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+                ->onlyOnForms()
+                ->setColumns(12);
+        }
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
+            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
         }
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
             $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
                 ->onlyOnForms()
-                ->setColumns(6)
+                ->setColumns(12)
                 ->setRequired(false)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -1960,7 +1960,7 @@ class ServicePreferences
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
             $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
                 ->onlyOnForms()
-                ->setColumns(6)
+                ->setColumns(12)
                 ->setRequired(false)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
@@ -1969,19 +1969,6 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-        $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
-            ->onlyOnForms()
-            ->setColumns(2);
-        $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-            ->onlyOnForms()
-            ->setColumns(2);
-
         //On désactive les champs non éditables
         $this->appliquerCanDesable($tabAttributs);
 

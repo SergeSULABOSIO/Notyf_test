@@ -188,7 +188,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_DATE_DE_CREATION            = "Date de création";
     public const PREF_CRM_PISTE_DATE_DE_MODIFICATION        = "Dernière modification";
     public const PREF_CRM_PISTE_TYPE_AVENANT                = "Avenant";
-    public const PREF_CRM_PISTE_POLICE                      = "Police source";
+    public const PREF_CRM_PISTE_POLICE                      = "Police/Avenant en place";
     public const PREF_CRM_PISTE_CLIENT                      = "Client";
     public const PREF_CRM_PISTE_PARTENAIRE                  = "Partenaire";
     public const PREF_CRM_PISTE_NEW_PARTENAIRE              = "Nouveau partenaire";

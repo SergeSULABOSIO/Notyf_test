@@ -201,12 +201,9 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
             }
 
-
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
-
                 //$cotation->setNom("Offre #" . count($piste->getCotations())+1);
-
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
@@ -265,6 +262,16 @@ class AdminSubscriber implements EventSubscriberInterface
                 if ($cotation->getNom() == null) {
                     $cotation->setNom("Offre #" . count($piste->getCotations()));
                 }
+            }
+
+            //Les chargements de la police
+            foreach ($piste->getPolices() as $police) {
+                if ($isCreate || $police->getCreatedAt() == null) {
+                    $police->setCreatedAt(new \DateTimeImmutable());
+                }
+                $police->setUpdatedAt(new \DateTimeImmutable());
+                $police->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $police->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
 
             $this->cleanCotations();

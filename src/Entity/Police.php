@@ -49,7 +49,7 @@ class Police
     
     private ?Utilisateur $assistant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'polices')]
+    #[ORM\ManyToOne(inversedBy: 'polices', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -57,6 +57,7 @@ class Police
 
     public function __construct()
     {
+        
     }
 
     public function getId(): ?int
@@ -175,6 +176,10 @@ class Police
 
     public function getGestionnaire(): ?Utilisateur
     {
+        if($this->getPiste()){
+            $this->gestionnaire = $this->getPiste()->getUtilisateur();
+        }
+        //dd($this->gestionnaire);
         return $this->gestionnaire;
     }
 

@@ -467,16 +467,16 @@ class PreferenceCrudController extends AbstractCrudController
     ];
     //PRODUCTION - POLICE
     public const PREF_PRO_POLICE_ID                                         = "id";
-    public const PREF_PRO_POLICE_REFERENCE                                  = "Référence de la police";
+    public const PREF_PRO_POLICE_REFERENCE                                  = "Référence";
     public const PREF_PRO_POLICE_DATE_OPERATION                             = "Date d'opération";
     public const PREF_PRO_POLICE_DATE_EMISSION                              = "Date d'émission";
     public const PREF_PRO_POLICE_DATE_EFFET                                 = "Date d'effet";
     public const PREF_PRO_POLICE_DATE_EXPIRATION                            = "Date d'expiration";
     public const PREF_PRO_POLICE_ID_AVENANT                                 = "Id de l'avenant";
     public const PREF_PRO_POLICE_TYPE_AVENANT                               = "Type d'avenant";
-    public const PREF_PRO_POLICE_COTATION                                   = "Cotation de base";
+    public const PREF_PRO_POLICE_COTATION                                   = "Proposition";
     public const PREF_PRO_POLICE_GESTIONNAIRE                               = "Gestionnaire";
-    public const PREF_PRO_POLICE_ASSISTANT                                  = "Gestionnaire";
+    public const PREF_PRO_POLICE_ASSISTANT                                  = "Assistant";
     public const PREF_PRO_POLICE_UTILISATEUR                                = "Utilisateur";
     public const PREF_PRO_POLICE_ENTREPRISE                                 = "Entreprise";
     public const PREF_PRO_POLICE_DATE_DE_CREATION                           = "Date de création";
@@ -496,6 +496,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PRO_POLICE_ENTREPRISE                        => 10,
         self::PREF_PRO_POLICE_DATE_DE_CREATION                  => 11,
         self::PREF_PRO_POLICE_DATE_DE_MODIFICATION              => 12,
+        self::PREF_PRO_POLICE_COTATION                          => 13,
+        self::PREF_PRO_POLICE_ASSISTANT                         => 14,
     ];
     //PRODUCTION - PRODUIT
     public const PREF_PRO_PRODUIT_ID                        = "Id";

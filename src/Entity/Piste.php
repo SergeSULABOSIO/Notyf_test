@@ -80,7 +80,7 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Utilisateur $assistant = null;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class)]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $polices;
 
     public function __construct()

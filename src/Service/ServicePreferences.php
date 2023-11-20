@@ -675,8 +675,8 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
@@ -797,11 +797,11 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE])) {
-            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT])) {
-            $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_COTATION])) {
@@ -1951,38 +1951,27 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(12);
         }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
+        /* if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
             $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-        }
+        } */
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
-            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
                 ->onlyOnForms()
-                ->setColumns(12)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
+                ->setDisabled(true)
+                ->setColumns(12);
         }
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
-            $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
                 ->onlyOnForms()
                 ->setColumns(12)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
+                //->setRequired(false)
+                ->setDisabled(true);
         }
         //On désactive les champs non éditables
-        $this->appliquerCanDesable($tabAttributs);
+        //$this->appliquerCanDesable($tabAttributs);
 
         return $tabAttributs;
     }
@@ -5432,6 +5421,15 @@ class ServicePreferences
         $tabAttributs[] = FormField::addTab(' Couverture en place')
             ->setIcon('fas fa-file-shield')
             ->setHelp("Polices d'assurance et/ou avenant mis en place.")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(PoliceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //dd($tabAttributs);

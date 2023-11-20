@@ -68,10 +68,10 @@ class ServiceIngredients
                 "setNom" => "VIE ET EPARGNE / LIFE",
                 "setCode" => "VIE",
                 "setDescription" => "L'assurance vie est un contrat par lequel l'assureur s'engage, en contrepartie du paiement de primes, à verser une rente ou un capital à l'assuré ou à ses bénéficiaires.",
-                "setIsobligatoire" => false,
+                "setObligatoire" => false,
                 "setTauxarca" => 0.10,
-                "setIsabonnement" => false,
-                "setCategorie" => 1
+                "setAbonnement" => false,
+                "setIARD" => true
             ],
             [
                 "setNom" => "INCENDIE ET RISQUES DIVERS / ASSET / FAP",
@@ -174,7 +174,8 @@ class ServiceIngredients
             $taxe = new Taxe();
             $taxe->setNom($O_taxes['setNom']);
             $taxe->setDescription($O_taxes['setDescription']);
-            $taxe->setTaux($O_taxes['setTaux']);
+            $taxe->setTauxIARD($O_taxes['setTaux']);
+            $taxe->setTauxVIE($O_taxes['setTaux']);
             $taxe->setPayableparcourtier($O_taxes['setPayableparcourtier']);
             $taxe->setOrganisation($O_taxes['setOrganisation']);
 
@@ -205,10 +206,10 @@ class ServiceIngredients
             $produit->setNom($O_produit['setNom']);
             $produit->setCode($O_produit['setCode']);
             $produit->setDescription($O_produit['setDescription']);
-            $produit->setIsobligatoire($O_produit['setIsobligatoire']);
+            $produit->setObligatoire($O_produit['setObligatoire']);
             $produit->setTauxarca($O_produit['setTauxarca']);
-            $produit->setIsabonnement($O_produit['setIsabonnement']);
-            $produit->setCategorie($O_produit['setCategorie']);
+            $produit->setAbonnement($O_produit['setAbonnement']);
+            $produit->setIard($O_produit['setIARD']);
 
             $produit->setEntreprise($entreprise);
             $produit->setCreatedAt(new \DateTimeImmutable());

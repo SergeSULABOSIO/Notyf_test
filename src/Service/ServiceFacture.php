@@ -79,27 +79,27 @@ class ServiceFacture
             //il faut switcher ici : On agit différemment selon le type de facture
             switch ($typeFacture) {
                 case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
-                    $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
-                    if (!$tabTiers->contains($police->getAssureur())) {
-                        $tabTiers_str = $tabTiers_str  . $police->getAssureur()->getNom() . ", ";
-                    }
-                    $tabTiers->add($police->getAssureur());
+                    // $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
+                    // if (!$tabTiers->contains($police->getAssureur())) {
+                    //     $tabTiers_str = $tabTiers_str  . $police->getAssureur()->getNom() . ", ";
+                    // }
+                    // $tabTiers->add($police->getAssureur());
                     break;
                 case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                    $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
-                    if (!$tabTiers->contains($police->getClient())) {
-                        $tabTiers_str = $tabTiers_str  . $police->getClient()->getNom() . ", ";
-                    }
-                    $tabTiers->add($police->getClient());
+                    // $soldeComNull = ($police->calc_revenu_ttc_solde_restant_du == 0);
+                    // if (!$tabTiers->contains($police->getClient())) {
+                    //     $tabTiers_str = $tabTiers_str  . $police->getClient()->getNom() . ", ";
+                    // }
+                    // $tabTiers->add($police->getClient());
                     break;
                 case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                     $soldeComNull = ($police->calc_retrocom_solde == 0);
-                    if ($police->getPartenaire()) {
-                        if (!$tabTiers->contains($police->getPartenaire())) {
-                            $tabTiers_str = $tabTiers_str  . $police->getPartenaire()->getNom() . ", ";
-                        }
-                        $tabTiers->add($police->getPartenaire());
-                    }
+                    // if ($police->getPartenaire()) {
+                    //     if (!$tabTiers->contains($police->getPartenaire())) {
+                    //         $tabTiers_str = $tabTiers_str  . $police->getPartenaire()->getNom() . ", ";
+                    //     }
+                    //     $tabTiers->add($police->getPartenaire());
+                    // }
                     break;
                 case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                     $soldeComNull = ($police->calc_taxes_assureurs_solde == 0);
@@ -248,21 +248,21 @@ class ServiceFacture
                         $ef = new ElementFacture();
                         $ef->setPolice($oPolice);
                         $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
-                        $facture->setAssureur($oPolice->getAssureur());
+                        // $facture->setAssureur($oPolice->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setPolice($oPolice);
                         $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
-                        $facture->setAutreTiers($oPolice->getClient()->getNom());
+                        // $facture->setAutreTiers($oPolice->getClient()->getNom());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setPolice($oPolice);
                         $ef->setMontant($oPolice->calc_retrocom_solde);
-                        $facture->setPartenaire($oPolice->getPartenaire());
+                        // $facture->setPartenaire($oPolice->getPartenaire());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                         /** @var Taxe */

@@ -79,11 +79,15 @@ class Cotation
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Police::class, cascade: ['remove', 'persist', 'refresh'])]
+    private Collection $polices;
+
     public function __construct()
     {
         $this->revenus = new ArrayCollection();
         $this->chargements = new ArrayCollection();
         $this->tranches = new ArrayCollection();
+        $this->polices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -616,5 +620,35 @@ class Cotation
             }
         }
         return $this->taxeAssureur;
+    }
+
+    /**
+     * @return Collection<int, Police>
+     */
+    public function getPolices(): Collection
+    {
+        return $this->polices;
+    }
+
+    public function addPolice(Police $police): self
+    {
+        if (!$this->polices->contains($police)) {
+            $this->polices->add($police);
+            $police->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePolice(Police $police): self
+    {
+        if ($this->polices->removeElement($police)) {
+            // set the owning side to null (unless already changed)
+            if ($police->getCotation() === $this) {
+                $police->setCotation(null);
+            }
+        }
+
+        return $this;
     }
 }

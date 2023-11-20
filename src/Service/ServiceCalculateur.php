@@ -185,7 +185,7 @@ class ServiceCalculateur
         $this->calculerPolices(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'partenaire' => $obj
+                //'partenaire' => $obj
             ]
         );
         $this->calculer($obj);
@@ -207,7 +207,7 @@ class ServiceCalculateur
         $this->calculerPolices(
             [
                 'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                'client' => $obj
+                //'client' => $obj
             ]
         );
         $this->calculer($obj);

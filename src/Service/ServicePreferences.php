@@ -5450,15 +5450,6 @@ class ServicePreferences
             ->setIcon('fas fa-file-shield')
             ->setHelp("Polices d'assurance et/ou avenant mis en place.")
             ->onlyOnForms();
-        $tabAttributs[] = CollectionField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
-            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
-            ->useEntryCrudForm(CotationCrudController::class)
-            ->allowAdd(true)
-            ->allowDelete(true)
-            ->setEntryIsComplex()
-            ->setRequired(false)
-            ->setColumns(7)
-            ->onlyOnForms();
 
         //dd($tabAttributs);
         return $tabAttributs;

@@ -157,8 +157,13 @@ class CotationCrudController extends AbstractCrudController
         if ($instance != null) {
             if ($instance instanceof Piste) {
                 //On envoie ces paramètres à tous les formulaires
-                $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
-                $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                /** @var Piste */
+                if ($instance->getProduit()) {
+                    $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                }
+                if ($instance->getClient()) {
+                    $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                }
             }
         }
         return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);

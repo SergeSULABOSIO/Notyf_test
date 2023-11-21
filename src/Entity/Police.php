@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateInterval;
+use DateTimeImmutable;
 use App\Entity\Utilisateur;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
@@ -29,9 +33,6 @@ class Police
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateeffet = null;
 
-    //#[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateexpiration = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
@@ -45,16 +46,19 @@ class Police
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    private ?Utilisateur $gestionnaire = null;
-    
-    private ?Utilisateur $assistant = null;
-
     #[ORM\ManyToOne(inversedBy: 'polices', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\OneToOne] //(cascade: ['persist', 'remove'])
     private ?Cotation $cotation = null;
 
+    //Champs calculés sur base des données existantes dans la base
+    private ?Utilisateur $gestionnaire = null;
+    private ?Utilisateur $assistant = null;
+    private ?\DateTimeInterface $dateexpiration = null;
+    
+
+    
     public function __construct()
     {
         
@@ -101,9 +105,21 @@ class Police
         return $this;
     }
 
+    private function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime{
+        $txt = "P" . $nbJours . "D";
+        $copie = clone $dateInitiale;
+        return $copie->add(new DateInterval($txt));
+    }
+
     public function getDateexpiration(): ?\DateTimeInterface
     {
+        $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
+        $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
         return $this->dateexpiration;
+    }
+
+    public function convertDuree($duree):int{
+        return (($duree/12) * 365)-1;
     }
 
     public function setDateexpiration(\DateTimeInterface $dateexpiration): self

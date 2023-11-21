@@ -70,6 +70,7 @@ use App\Controller\Admin\TrancheCrudController;
 use App\Entity\Chargement;
 use App\Entity\Revenu;
 use App\Entity\Tranche;
+use Doctrine\ORM\Query\Expr\Func;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
@@ -116,6 +117,11 @@ class ServicePreferences
     public $total_sinistre_cout = 0;
     public $total_sinistre_indemnisation = 0;
     public $total_piste_caff_esperes = 0;
+
+    private ?string $pageName = null;
+    private $entityInstance = null;
+    private $isNewPiste = false;
+    private ?Piste $piste = null;
 
 
     public function __construct(
@@ -1925,10 +1931,32 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setRequired(false)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                    if ($this->entityInstance instanceof Piste) {
+                        /** @var Piste */
+                        $piste = $this->entityInstance;
+                        if ($this->isNewPiste == false) {
+                            return $entityRepository
+                                ->createQueryBuilder('e')
+                                ->Where('e.entreprise = :ese')
+                                ->andWhere('e.piste = :piste')
+                                ->setParameter('piste', $piste)
+                                ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                        } else {
+                            return $entityRepository
+                                ->createQueryBuilder('e')
+                                ->Where('e.entreprise = :ese')
+                                ->andWhere('e.validated = :val')
+                                ->andWhere('e.piste = :piste')
+                                ->setParameter('val', 0)
+                                ->setParameter('piste', null)
+                                ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                        }
+                    } else {
+                        return $entityRepository
+                            ->createQueryBuilder('e')
+                            ->Where('e.entreprise = :ese')
+                            ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                    }
                 });
         }
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)) {
@@ -1951,25 +1979,29 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(12);
         }
-        /* if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
-            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-        } */
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
-            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
+
+        if (count($this->piste->getPolices()) != 0) {
+            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
+                $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+            }
+            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
+                $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+            }
+            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
+                $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    //->setRequired(false)
+                    ->setDisabled(true);
+            }
         }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
-            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                ->onlyOnForms()
-                ->setColumns(12)
-                //->setRequired(false)
-                ->setDisabled(true);
-        }
+
         //On désactive les champs non éditables
         //$this->appliquerCanDesable($tabAttributs);
 
@@ -5443,6 +5475,22 @@ class ServicePreferences
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
 
         return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
+    }
+
+    public function setEntite(string $pageName, $entityInstance)
+    {
+        $this->pageName = $pageName;
+        $this->entityInstance = $entityInstance;
+        $this->isNewPiste = true;
+        if ($this->entityInstance instanceof Piste) {
+            $this->piste = $this->entityInstance;
+            if ($this->piste->getId()) {
+                $this->isNewPiste = false;
+            } else {
+                $this->isNewPiste = true;
+            }
+        }
+        //dd($this->entityInstance);
     }
 
     public function setDefaultData(Preference $preference)

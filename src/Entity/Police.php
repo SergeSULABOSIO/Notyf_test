@@ -52,7 +52,7 @@ class Police
     #[ORM\ManyToOne(inversedBy: 'polices', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne] //(cascade: ['persist', 'remove'])
     private ?Cotation $cotation = null;
 
     public function __construct()
@@ -177,7 +177,7 @@ class Police
     public function getGestionnaire(): ?Utilisateur
     {
         if($this->getPiste()){
-            $this->gestionnaire = $this->getPiste()->getUtilisateur();
+            $this->gestionnaire = $this->getPiste()->getGestionnaire();
         }
         //dd($this->gestionnaire);
         return $this->gestionnaire;
@@ -192,7 +192,11 @@ class Police
 
     public function __toString()
     {
-        return "Réf.: " . $this->getReference();// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+        $strAutreData = "";
+        if($this->getCotation()){
+            $strAutreData = $this->getCotation()->getAssureur()->getNom();
+        }
+        return "Réf.: " . $this->getReference() . " / " . $strAutreData;// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
     }
 
     /**
@@ -200,6 +204,9 @@ class Police
      */ 
     public function getAssistant()
     {
+        if($this->getPiste()){
+            $this->assistant = $this->getPiste()->getAssistant();
+        }
         return $this->assistant;
     }
 

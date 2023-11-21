@@ -265,16 +265,50 @@ class AdminSubscriber implements EventSubscriberInterface
             }
 
             //Les chargements de la police
-            foreach ($piste->getPolices() as $police) {
-                if ($isCreate || $police->getCreatedAt() == null) {
-                    $police->setCreatedAt(new \DateTimeImmutable());
+            if ($piste->getPolices()) {
+                if (count($piste->getPolices()) != 0) {
+                    /** @var Police */
+                    $policeRetenue = $piste->getPolices()[0];
+                    if ($isCreate || $policeRetenue->getCreatedAt() == null) {
+                        $policeRetenue->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $policeRetenue->setUpdatedAt(new \DateTimeImmutable());
+                    $policeRetenue->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $policeRetenue->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                    //On vide le tableau des polices temporaire
+                    $tabPolicesTempo = $piste->getPolices();
+                    foreach ($tabPolicesTempo as $ptempo) {
+                        if ($ptempo !== $policeRetenue) {
+                            $piste->removePolice($ptempo);
+                        }
+                    }
+                    //On marque la cotation retenue
+                    $this->setValidatedQuote($piste, $policeRetenue);
+                    //dd($cotationValidee);
                 }
-                $police->setUpdatedAt(new \DateTimeImmutable());
-                $police->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                $police->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
 
+
             $this->cleanCotations();
+            $this->cleanPolices();
+        }
+    }
+
+    
+    private function setValidatedQuote(?Piste $piste, ?Police $policeRetenue)
+    {
+        //On définit sa cotation comme étant validée
+        foreach ($piste->getCotations() as $quote) {
+            if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
+                $quote->setValidated(false);
+                $this->entityManager->persist($quote);
+                $this->entityManager->flush();
+            } else {
+                $quote->setValidated(true);
+                $this->entityManager->persist($quote);
+                $this->entityManager->flush();
+            }
         }
     }
 
@@ -474,5 +508,21 @@ class AdminSubscriber implements EventSubscriberInterface
         $this->cleanChargements();
         $this->cleanRevenus();
         //dd($cotations);
+    }
+
+    private function cleanPolices()
+    {
+        $polices = $this->entityManager->getRepository(Police::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var Police */
+        foreach ($polices as $pol) {
+            if ($pol->getPiste() == null) {
+                //On detruit enfin la cotation
+                $this->entityManager->remove($pol);
+                $this->entityManager->flush();
+            }
+        }
+        //dd($polices);
     }
 }

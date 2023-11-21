@@ -5423,13 +5423,13 @@ class ServicePreferences
             ->setHelp("Polices d'assurance et/ou avenant mis en place.")
             ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
-            ->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->setHelp("Vous ne pouvez ajouter qu'un seul avenant ou police. Si vous chargez plusieurs, seul le premier enregistrement sera pris en compte.")
             ->useEntryCrudForm(PoliceCrudController::class)
-            ->allowAdd(true)
+            //->allowAdd(true)
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(10)
+            ->setColumns(7)
             ->onlyOnForms();
 
         //dd($tabAttributs);

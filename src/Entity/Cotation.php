@@ -186,7 +186,9 @@ class Cotation
         if ($this->piste->getProduit()) {
             $strNomProduit = $this->piste->getProduit()->getNom();
         }
-        return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
+        $strValidation = ($this->isValidated() == true ? " (validée)" : "");        
+        //return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
+        return "" . $this->nom . $strValidation;
     }
 
     public function getPiste(): ?Piste

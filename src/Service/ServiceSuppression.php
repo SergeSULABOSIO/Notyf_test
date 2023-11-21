@@ -241,6 +241,17 @@ class ServiceSuppression
         }
     }
 
+    public function supprimerPolice($entityInstance)
+    {
+        try {
+            $this->entityManager->remove($entityInstance);
+            $this->entityManager->flush();
+        } catch (\Throwable $th) {
+            $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
+            $this->afficherFlashMessage("danger", $message);
+        }
+    }
+
 
     public function supprimerEntreprise($entityInstance)
     {

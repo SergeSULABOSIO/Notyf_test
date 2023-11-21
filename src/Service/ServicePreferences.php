@@ -4380,8 +4380,9 @@ class ServicePreferences
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)) {
             $tabAttributs[] = BooleanField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
                 ->setColumns(12)
-                ->renderAsSwitch(true) //il reste éditable
+                ->renderAsSwitch(false) //il reste éditable
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->onlyOnForms();
             //->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
         }
@@ -5425,7 +5426,7 @@ class ServicePreferences
         $tabAttributs[] = CollectionField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->setHelp("Vous ne pouvez ajouter qu'un seul avenant ou police. Si vous chargez plusieurs, seul le premier enregistrement sera pris en compte.")
             ->useEntryCrudForm(PoliceCrudController::class)
-            //->allowAdd(true)
+            ->allowAdd(true)
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)

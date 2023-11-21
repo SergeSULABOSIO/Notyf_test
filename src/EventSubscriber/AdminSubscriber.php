@@ -295,7 +295,7 @@ class AdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    
+
     private function setValidatedQuote(?Piste $piste, ?Police $policeRetenue)
     {
         //On définit sa cotation comme étant validée
@@ -502,6 +502,18 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
                 //On detruit enfin la cotation
                 $this->entityManager->remove($cotation);
+                $this->entityManager->flush();
+            } else {
+                //Toute cotation qui n'est pas liée à une police doit être définie "Validated = FALSE"
+                $tabPolicesDeLaPiste = $cotation->getPiste()->getPolices();
+                $isValidated = false;
+                foreach ($tabPolicesDeLaPiste as $pol) {
+                    if ($pol->getCotation() === $cotation) {
+                        $isValidated = true;
+                    }
+                }
+                $cotation->setValidated($isValidated);
+                $this->entityManager->persist($cotation);
                 $this->entityManager->flush();
             }
         }

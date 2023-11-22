@@ -11,6 +11,7 @@ use App\Entity\Utilisateur;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
+use Doctrine\Common\Collections\Collection;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -64,6 +65,7 @@ class Police
     private ?Utilisateur $gestionnaire = null;
     private ?Utilisateur $assistant = null;
     private ?string $typeavenant = null;
+    private ?Collection $chargements = null;
 
 
 
@@ -304,8 +306,15 @@ class Police
                     break;
                 }
             }
-            //$this->typeavenant = PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$this->getPiste()->getTypeavenant()];
         }
         return $this->typeavenant;
+    }
+
+    /**
+     * Get the value of chargements
+     */ 
+    public function getChargements()
+    {
+        return $this->chargements;
     }
 }

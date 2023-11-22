@@ -111,15 +111,18 @@ class Police
         return $copie->add(new DateInterval($txt));
     }
 
+    public function convertDuree($duree):int{
+        if($duree == 0){
+            $duree = 12;
+        }
+        return (($duree / 12) * 365)-2;
+    }
+
     public function getDateexpiration(): ?\DateTimeInterface
     {
         $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
         $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
         return $this->dateexpiration;
-    }
-
-    public function convertDuree($duree):int{
-        return (($duree/12) * 365)-1;
     }
 
     public function setDateexpiration(\DateTimeInterface $dateexpiration): self

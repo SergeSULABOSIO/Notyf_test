@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231113155006 extends AbstractMigration
+final class Version20231122084440 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20231113155006 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE preference ADD prod_chargement LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array)\'');
+        $this->addSql('ALTER TABLE police DROP dateexpiration');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE preference DROP prod_chargement');
+        $this->addSql('ALTER TABLE police ADD dateexpiration DATE NOT NULL');
     }
 }

@@ -33,8 +33,8 @@ class Police
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateeffet = null;
     
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    private ?\DateTimeInterface $dateexpiration = null;
+    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    // private ?\DateTimeInterface $dateexpiration = null;
     
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -58,6 +58,9 @@ class Police
     //Champs calculés sur base des données existantes dans la base
     private ?Utilisateur $gestionnaire = null;
     private ?Utilisateur $assistant = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateexpiration = null;
     
 
     
@@ -103,6 +106,7 @@ class Police
     public function setDateeffet(?\DateTimeInterface $dateeffet): self
     {
         $this->dateeffet = $dateeffet;
+
         return $this;
     }
 
@@ -119,21 +123,21 @@ class Police
         return (($duree / 12) * 365)-2;
     }
 
-    public function getDateexpiration(): ?\DateTimeInterface
-    {
-        if($this->dateexpiration == null){
-            $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
-            $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
-        }
-        return $this->dateexpiration;
-    }
+    // public function getDateexpiration(): ?\DateTimeInterface
+    // {
+    //     if($this->dateexpiration == null){
+    //         $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
+    //         $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
+    //     }
+    //     return $this->dateexpiration;
+    // }
 
-    public function setDateexpiration(\DateTimeInterface $dateexpiration): self
-    {
-        $this->dateexpiration = $dateexpiration;
+    // public function setDateexpiration(\DateTimeInterface $dateexpiration): self
+    // {
+    //     $this->dateexpiration = $dateexpiration;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getReference(): ?string
     {
@@ -252,6 +256,18 @@ class Police
     public function setCotation(?Cotation $cotation): self
     {
         $this->cotation = $cotation;
+
+        return $this;
+    }
+
+    public function getDateexpiration(): ?\DateTimeInterface
+    {
+        return $this->dateexpiration;
+    }
+
+    public function setDateexpiration(\DateTimeInterface $dateexpiration): self
+    {
+        $this->dateexpiration = $dateexpiration;
 
         return $this;
     }

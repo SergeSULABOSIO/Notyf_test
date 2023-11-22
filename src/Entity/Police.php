@@ -20,36 +20,36 @@ class Police
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"Veuillez fournir la référence de la police.")]
+    #[Assert\NotBlank(message: "Veuillez fournir la référence de la police.")]
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
-    
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateoperation = null;
-    
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateemission = null;
-    
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateeffet = null;
-    
-    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    // private ?\DateTimeInterface $dateexpiration = null;
-    
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $dateexpiration = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
-    
+
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
-    
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-    
+
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'polices', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'polices', cascade: ['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\OneToOne] //(cascade: ['persist', 'remove'])
@@ -59,14 +59,11 @@ class Police
     private ?Utilisateur $gestionnaire = null;
     private ?Utilisateur $assistant = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateexpiration = null;
     
 
-    
+
     public function __construct()
     {
-        
     }
 
     public function getId(): ?int
@@ -110,17 +107,19 @@ class Police
         return $this;
     }
 
-    private function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable{
+    private function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable
+    {
         $txt = "P" . $nbJours . "D";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
     }
 
-    public function convertDuree($duree):int{
-        if($duree == 0){
+    public function convertDuree($duree): int
+    {
+        if ($duree == 0) {
             $duree = 12;
         }
-        return (($duree / 12) * 365)-2;
+        return (($duree / 12) * 365) - 2;
     }
 
     // public function getDateexpiration(): ?\DateTimeInterface
@@ -202,7 +201,7 @@ class Police
 
     public function getGestionnaire(): ?Utilisateur
     {
-        if($this->getPiste()){
+        if ($this->getPiste()) {
             $this->gestionnaire = $this->getPiste()->getGestionnaire();
         }
         //dd($this->gestionnaire);
@@ -219,18 +218,18 @@ class Police
     public function __toString()
     {
         $strAutreData = "";
-        if($this->getCotation()){
+        if ($this->getCotation()) {
             $strAutreData = $this->getCotation()->getAssureur()->getNom();
         }
-        return "Réf.: " . $this->getReference() . " / " . $strAutreData;// . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+        return "Réf.: " . $this->getReference() . " / " . $strAutreData; // . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
     }
 
     /**
      * Get the value of assistant
-     */ 
+     */
     public function getAssistant()
     {
-        if($this->getPiste()){
+        if ($this->getPiste()) {
             $this->assistant = $this->getPiste()->getAssistant();
         }
         return $this->assistant;
@@ -262,6 +261,10 @@ class Police
 
     public function getDateexpiration(): ?\DateTimeInterface
     {
+        // if ($this->dateexpiration == null) {
+        //     $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
+        //     $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
+        // }
         return $this->dateexpiration;
     }
 

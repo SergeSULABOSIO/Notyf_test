@@ -1979,14 +1979,14 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(12);
         }
-
+        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
+            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                ->onlyOnForms()
+                //->setDisabled(true)
+                ->setColumns(12);
+        }
         if (count($this->piste->getPolices()) != 0) {
-            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
-                $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-                    ->onlyOnForms()
-                    //->setDisabled(true)
-                    ->setColumns(12);
-            }
+
             if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
                 $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
                     ->onlyOnForms()

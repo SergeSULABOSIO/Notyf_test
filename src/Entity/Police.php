@@ -26,13 +26,16 @@ class Police
     
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateoperation = null;
-
+    
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateemission = null;
-
+    
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private ?\DateTimeInterface $dateeffet = null;
-
+    
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    private ?\DateTimeInterface $dateexpiration = null;
+    
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
@@ -55,7 +58,6 @@ class Police
     //Champs calculés sur base des données existantes dans la base
     private ?Utilisateur $gestionnaire = null;
     private ?Utilisateur $assistant = null;
-    private ?\DateTimeInterface $dateexpiration = null;
     
 
     
@@ -101,11 +103,10 @@ class Police
     public function setDateeffet(?\DateTimeInterface $dateeffet): self
     {
         $this->dateeffet = $dateeffet;
-
         return $this;
     }
 
-    private function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime{
+    private function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable{
         $txt = "P" . $nbJours . "D";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
@@ -120,8 +121,10 @@ class Police
 
     public function getDateexpiration(): ?\DateTimeInterface
     {
-        $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
-        $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
+        if($this->dateexpiration == null){
+            $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
+            $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
+        }
         return $this->dateexpiration;
     }
 

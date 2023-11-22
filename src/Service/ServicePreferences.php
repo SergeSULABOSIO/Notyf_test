@@ -1984,7 +1984,7 @@ class ServicePreferences
             if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
                 $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
                     ->onlyOnForms()
-                    ->setDisabled(true)
+                    //->setDisabled(true)
                     ->setColumns(12);
             }
             if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {

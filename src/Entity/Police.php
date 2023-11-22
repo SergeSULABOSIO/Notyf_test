@@ -69,7 +69,8 @@ class Police
     private ?Collection $chargements = null;
     private ?float $primeTotale;
     private ?Collection $tranches = null;
-    private ?float $commissionTotale;
+    private ?Collection $revenus = null;
+    private ?float $commissionTotaleHT;
 
 
 
@@ -338,5 +339,45 @@ class Police
             $this->primeTotale = $this->getCotation()->getPrimeTotale();
         }
         return $this->primeTotale;
+    }
+
+    /**
+     * Get the value of tranches
+     */ 
+    public function getTranches()
+    {
+        if ($this->getCotation()) {
+            if ($this->getCotation()->isValidated()) {
+                $this->tranches = $this->getCotation()->getTranches();
+            }
+        }
+        return $this->tranches;
+    }
+
+
+    /**
+     * Get the value of commissionTotaleHT
+     */ 
+    public function getCommissionTotaleHT()
+    {
+        if ($this->getCotation()) {
+            if ($this->getCotation()->isValidated()) {
+                $this->commissionTotaleHT = $this->getCotation()->getRevenuNetTotal();
+            }
+        }
+        return $this->commissionTotaleHT;
+    }
+
+    /**
+     * Get the value of revenus
+     */ 
+    public function getRevenus()
+    {
+        if ($this->getCotation()) {
+            if ($this->getCotation()->isValidated()) {
+                $this->revenus = $this->getCotation()->getRevenus();
+            }
+        }
+        return $this->revenus;
     }
 }

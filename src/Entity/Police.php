@@ -12,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -66,6 +67,8 @@ class Police
     private ?Utilisateur $assistant = null;
     private ?string $typeavenant = null;
     private ?Collection $chargements = null;
+    private ?float $primeTotale;
+
 
 
 
@@ -296,12 +299,12 @@ class Police
 
     /**
      * Get the value of typeavenant
-     */ 
+     */
     public function getTypeavenant()
     {
-        if($this->getPiste()){
+        if ($this->getPiste()) {
             foreach (PoliceCrudController::TAB_POLICE_TYPE_AVENANT as $key => $value) {
-                if($value == $this->typeavenant){
+                if ($value == $this->typeavenant) {
                     $this->typeavenant = $key;
                     break;
                 }
@@ -312,9 +315,26 @@ class Police
 
     /**
      * Get the value of chargements
-     */ 
+     */
     public function getChargements()
     {
+        if ($this->getCotation()) {
+            if ($this->getCotation()->isValidated()) {
+                $this->chargements = $this->getCotation()->getChargements();
+            }
+        }
+        //dd($quote->isValidated());
         return $this->chargements;
+    }
+
+    /**
+     * Get the value of primeTotale
+     */ 
+    public function getPrimeTotale()
+    {
+        if ($this->getCotation()) {
+            $this->primeTotale = $this->getCotation()->getPrimeTotale();
+        }
+        return $this->primeTotale;
     }
 }

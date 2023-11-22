@@ -1986,33 +1986,32 @@ class ServicePreferences
                 ->setColumns(12);
         }
         if (count($this->piste->getPolices()) != 0) {
-            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)) {
-                $tabAttributs[] = TextField::new('idAvenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
-                    ->onlyOnForms()
-                    ->setDisabled(true)
-                    ->setColumns(12);
-            }
-            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)) {
-                $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
-                    ->onlyOnForms()
-                    ->setDisabled(true)
-                    ->setColumns(12);
-            }
-
-
-            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
-                $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-                    ->onlyOnForms()
-                    ->setDisabled(true)
-                    ->setColumns(12);
-            }
-            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)) {
-                $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                    ->onlyOnForms()
-                    ->setColumns(12)
-                    //->setRequired(false)
-                    ->setDisabled(true);
-            }
+            $tabAttributs[] = TextField::new('idAvenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setDisabled(true);
+            $tabAttributs[] = CollectionField::new('chargements', "Structure de la prime d'assurance")
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setDisabled(true);
+            $tabAttributs[] = MoneyField::new('primeTotale', "Prime totale")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
         }
 
         //On désactive les champs non éditables

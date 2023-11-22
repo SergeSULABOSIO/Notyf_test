@@ -1986,6 +1986,19 @@ class ServicePreferences
                 ->setColumns(12);
         }
         if (count($this->piste->getPolices()) != 0) {
+            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)) {
+                $tabAttributs[] = TextField::new('idAvenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+            }
+            if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)) {
+                $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+            }
+
 
             if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)) {
                 $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
@@ -5084,7 +5097,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+            $tabAttributs[] = AssociationField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
                 ->onlyOnIndex();
         }
 
@@ -5169,7 +5182,7 @@ class ServicePreferences
         $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->renderAsHtml()
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+        $tabAttributs[] = ArrayField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->formatValue(function ($value, Piste $entity) {

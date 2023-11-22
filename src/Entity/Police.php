@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\PoliceCrudController;
 use DateTime;
 use DateInterval;
 use DateTimeImmutable;
@@ -55,11 +57,14 @@ class Police
     #[ORM\OneToOne] //(cascade: ['persist', 'remove'])
     private ?Cotation $cotation = null;
 
+    #[ORM\Column]
+    private ?int $idAvenant = null;
+
     //Champs calculés sur base des données existantes dans la base
     private ?Utilisateur $gestionnaire = null;
     private ?Utilisateur $assistant = null;
+    private ?string $typeavenant = null;
 
-    
 
 
     public function __construct()
@@ -273,5 +278,34 @@ class Police
         $this->dateexpiration = $dateexpiration;
 
         return $this;
+    }
+
+    public function getIdAvenant(): ?int
+    {
+        return $this->idAvenant;
+    }
+
+    public function setIdAvenant(int $idAvenant): self
+    {
+        $this->idAvenant = $idAvenant;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of typeavenant
+     */ 
+    public function getTypeavenant()
+    {
+        if($this->getPiste()){
+            foreach (PoliceCrudController::TAB_POLICE_TYPE_AVENANT as $key => $value) {
+                if($value == $this->typeavenant){
+                    $this->typeavenant = $key;
+                    break;
+                }
+            }
+            //$this->typeavenant = PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$this->getPiste()->getTypeavenant()];
+        }
+        return $this->typeavenant;
     }
 }

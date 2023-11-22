@@ -270,6 +270,7 @@ class AdminSubscriber implements EventSubscriberInterface
                     /** @var Police */
                     $policeRetenue = $piste->getPolices()[0];
                     if ($isCreate || $policeRetenue->getCreatedAt() == null) {
+                        $policeRetenue->setIdAvenant($this->serviceAvenant->generateIdAvenant($policeRetenue));
                         $policeRetenue->setCreatedAt(new \DateTimeImmutable());
                     }
                     $policeRetenue->setUpdatedAt(new \DateTimeImmutable());

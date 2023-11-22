@@ -35,7 +35,7 @@ class ServiceAvenant
         foreach ($policesConcernees as $police) {
             /** @var Police */
             $pol = $police;
-            if ($pol->getTypeavenant() == PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]) {
+            if ($pol->getCotation()[0]->getPiste()->getTypeavenant() == PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]) {
                 return $pol;
             }
         }
@@ -171,7 +171,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant(count($policesConcernees));
-            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
             $entite->setDateemission($this->serviceDates->aujourdhui());
@@ -268,7 +268,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
-            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
             $entite->setDateemission($this->serviceDates->aujourdhui());
@@ -350,7 +350,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
-            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
             $entite->setDateemission($this->serviceDates->aujourdhui());
@@ -431,7 +431,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
-            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
             $entite->setDateemission($this->serviceDates->aujourdhui());
@@ -505,7 +505,7 @@ class ServiceAvenant
             $policeDeBase = $this->getPoliceSouscription($policesConcernees);
 
             $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
-            $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+            //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
             $entite->setReference($policeDeBase->getReference());
             $entite->setDateoperation($this->serviceDates->aujourdhui());
             $entite->setDateemission($this->serviceDates->aujourdhui());
@@ -589,7 +589,7 @@ class ServiceAvenant
 
             $entite
                 ->setIdavenant($this->generateIdAvenant($policeDeBase))
-                ->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']])
+                //->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']])
                 ->setReference($policeDeBase->getReference())
                 ->setDateoperation($this->serviceDates->aujourdhui())
                 ->setDateemission($this->serviceDates->aujourdhui())
@@ -649,7 +649,7 @@ class ServiceAvenant
             );
             if ($entite instanceof Police) {
                 $entite->setIdavenant($this->generateIdAvenant($policeDeBase));
-                $entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
+                //$entite->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[$avenant_data['type']]);
                 $entite->setReference($policeDeBase->getReference());
                 $entite->setDateoperation($this->serviceDates->aujourdhui());
                 $entite->setDateemission($this->serviceDates->aujourdhui());

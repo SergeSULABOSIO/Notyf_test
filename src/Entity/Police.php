@@ -68,6 +68,8 @@ class Police
     private ?string $typeavenant = null;
     private ?Collection $chargements = null;
     private ?float $primeTotale;
+    private ?Collection $tranches = null;
+    private ?float $commissionTotale;
 
 
 

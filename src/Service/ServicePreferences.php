@@ -1994,15 +1994,11 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
-            $tabAttributs[] = CollectionField::new('chargements', "Structure de la prime d'assurance")
+
+            $tabAttributs[] = FormField::addPanel("Prime d'assurance")
+                ->setHelp("Prime d'assurance résulatnt de la mise en place de l'avenant.")
+                ->onlyOnForms();
+            $tabAttributs[] = CollectionField::new('chargements', "Structure")
                 ->onlyOnForms()
                 ->setColumns(12)
                 ->setDisabled(true);
@@ -2012,6 +2008,17 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
+            $tabAttributs[] = FormField::addPanel("Termes de paiement de la prime")
+                ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
+                ->onlyOnForms();
+            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setDisabled(true);
         }
 
         //On désactive les champs non éditables

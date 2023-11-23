@@ -169,12 +169,12 @@ class ClientCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $police_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
-            ->displayIf(static function (?Client $entity) {
-                return count($entity->getPolice()) != 0;
-            })
-            ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_listerPolice');
+        // $police_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
+        //     ->displayIf(static function (?Client $entity) {
+        //         return count($entity->getPolice()) != 0;
+        //     })
+        //     ->setIcon('fas fa-file-shield')
+        //     ->linkToCrudAction('cross_canal_listerPolice');
 
         // $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
         //     ->displayIf(static function (?Client $entity) {
@@ -241,8 +241,8 @@ class ClientCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $duplicate)
             ->add(Crud::PAGE_INDEX, $duplicate)
 
-            ->add(Crud::PAGE_DETAIL, $police_lister)
-            ->add(Crud::PAGE_INDEX, $police_lister)
+            // ->add(Crud::PAGE_DETAIL, $police_lister)
+            // ->add(Crud::PAGE_INDEX, $police_lister)
 
             // ->add(Crud::PAGE_DETAIL, $cotation_lister)
             // ->add(Crud::PAGE_INDEX, $cotation_lister)

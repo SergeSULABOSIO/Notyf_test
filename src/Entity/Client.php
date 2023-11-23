@@ -61,8 +61,8 @@ class Client extends CalculableEntity
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Police::class)]
-    private Collection $police;
+    // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Police::class)]
+    // private Collection $police;
 
     // #[ORM\OneToMany(mappedBy: 'client', targetEntity: Cotation::class)]
     // private Collection $cotations;
@@ -80,7 +80,7 @@ class Client extends CalculableEntity
 
     public function __construct()
     {
-        $this->police = new ArrayCollection();
+        //$this->police = new ArrayCollection();
         //$this->cotations = new ArrayCollection();
         $this->pistes = new ArrayCollection();
     }
@@ -276,14 +276,6 @@ class Client extends CalculableEntity
         $this->utilisateur = $utilisateur;
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, Police>
-     */
-    public function getPolice(): Collection
-    {
-        return $this->police;
     }
 
     /**

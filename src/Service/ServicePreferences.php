@@ -1997,6 +1997,18 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
+            $tabAttributs[] = TextField::new('produit', "Couverture")
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('client', "Client")
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
 
             $tabAttributs[] = FormField::addPanel("Prime d'assurance")
                 ->setHelp("Prime d'assurance résultant de la mise en place de l'avenant.")
@@ -2035,7 +2047,7 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($tauxCourtier * 100) . "%)"))
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->setColumns(12)
@@ -2047,7 +2059,7 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($tauxAssureur * 100) . "%)"))
+            $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->setColumns(12)
@@ -3424,10 +3436,10 @@ class ServicePreferences
                 ])
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
-                ->onlyOnIndex();
-        }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_POLICES])) {
+        //     $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_CLIENT_POLICES)
+        //         ->onlyOnIndex();
+        // }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE])) {
             $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_CLIENT_ADRESSE)
                 ->onlyOnIndex();

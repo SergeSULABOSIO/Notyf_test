@@ -75,8 +75,10 @@ class Police
     private ?float $commissionTotaleTTC;
     private ?float $revenuNetTotal;
     private ?float $taxeCourtierTotale;
-    
-
+    private ?Produit $produit = null;
+    private ?Client $client = null;
+    private ?Partenaire $partenaire = null;
+    private ?Assureur $assureur = null;
 
 
 
@@ -394,13 +396,17 @@ class Police
         if ($this->getEntreprise()) {
             foreach ($this->getEntreprise()->getTaxes() as $taxe) {
                 if ($taxe->isPayableparcourtier() == false) {
-                    if ($this->getPiste()->getProduit()->isIard()) {
-                        $this->taxeAssureur = ($taxe->getTauxIARD() * $this->getCommissionTotaleHT()) / 100;
-                        //dd($this->taxeAssureur);
+                    if ($this->getPiste()->getClient()->isExoneree()) {
+                        $this->taxeAssureur = (0 * $this->getCommissionTotaleHT()) / 100;
                         break;
                     } else {
-                        $this->taxeAssureur = ($taxe->getTauxVIE() * $this->getCommissionTotaleHT()) / 100;
-                        break;
+                        if ($this->getPiste()->getProduit()->isIard()) {
+                            $this->taxeAssureur = ($taxe->getTauxIARD() * $this->getCommissionTotaleHT()) / 100;
+                            break;
+                        } else {
+                            $this->taxeAssureur = ($taxe->getTauxVIE() * $this->getCommissionTotaleHT()) / 100;
+                            break;
+                        }
                     }
                 }
             }
@@ -410,7 +416,7 @@ class Police
 
     /**
      * Get the value of commissionTotaleTTC
-     */ 
+     */
     public function getCommissionTotaleTTC()
     {
         $this->commissionTotaleTTC = $this->getTaxeAssureur() + $this->getCommissionTotaleHT();
@@ -419,10 +425,10 @@ class Police
 
     /**
      * Get the value of revenuNetTotal
-     */ 
+     */
     public function getRevenuNetTotal()
     {
-        if($this->getCotation()){
+        if ($this->getCotation()) {
             $this->revenuNetTotal = $this->getCotation()->getRevenuNetTotal();
         }
         return $this->revenuNetTotal;
@@ -430,12 +436,56 @@ class Police
 
     /**
      * Get the value of taxeCourtierTotale
-     */ 
+     */
     public function getTaxeCourtierTotale()
     {
-        if($this->getCotation()){
+        if ($this->getCotation()) {
             $this->taxeCourtierTotale = $this->getCotation()->getTaxeCourtierTotale();
         }
         return $this->taxeCourtierTotale;
+    }
+
+    /**
+     * Get the value of produit
+     */
+    public function getProduit()
+    {
+        if ($this->getPiste()) {
+            $this->produit = $this->getPiste()->getProduit();
+        }
+        return $this->produit;
+    }
+
+    /**
+     * Get the value of client
+     */
+    public function getClient()
+    {
+        if ($this->getPiste()) {
+            $this->client = $this->getPiste()->getClient();
+        }
+        return $this->client;
+    }
+
+    /**
+     * Get the value of partenaire
+     */
+    public function getPartenaire()
+    {
+        if ($this->getPiste()) {
+            $this->partenaire = $this->getPiste()->getPartenaire();
+        }
+        return $this->partenaire;
+    }
+
+    /**
+     * Get the value of assureur
+     */
+    public function getAssureur()
+    {
+        if ($this->getCotation()) {
+            $this->assureur = $this->getCotation()->getAssureur();
+        }
+        return $this->assureur;
     }
 }

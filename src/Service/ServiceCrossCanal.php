@@ -2032,9 +2032,9 @@ class ServiceCrossCanal
             $paiementTaxe->setTaxe($taxe);
             $paiementTaxe->setExercice(Date("Y"));
             if ($taxe->isPayableparcourtier() == true) {
-                $paiementTaxe->setMontant($police->calc_taxes_courtier_solde);
+                //$paiementTaxe->setMontant($police->calc_taxes_courtier_solde);
             } else {
-                $paiementTaxe->setMontant($police->calc_taxes_assureurs_solde);
+                //$paiementTaxe->setMontant($police->calc_taxes_assureurs_solde);
             }
         }
         return $paiementTaxe;

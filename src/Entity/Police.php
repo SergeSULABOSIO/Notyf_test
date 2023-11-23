@@ -71,6 +71,11 @@ class Police
     private ?Collection $tranches = null;
     private ?Collection $revenus = null;
     private ?float $commissionTotaleHT;
+    private ?float $taxeAssureur;
+    private ?float $commissionTotaleTTC;
+    private ?float $revenuNetTotal;
+    private ?float $taxeCourtierTotale;
+    
 
 
 
@@ -332,7 +337,7 @@ class Police
 
     /**
      * Get the value of primeTotale
-     */ 
+     */
     public function getPrimeTotale()
     {
         if ($this->getCotation()) {
@@ -343,7 +348,7 @@ class Police
 
     /**
      * Get the value of tranches
-     */ 
+     */
     public function getTranches()
     {
         if ($this->getCotation()) {
@@ -357,12 +362,12 @@ class Police
 
     /**
      * Get the value of commissionTotaleHT
-     */ 
+     */
     public function getCommissionTotaleHT()
     {
         if ($this->getCotation()) {
             if ($this->getCotation()->isValidated()) {
-                $this->commissionTotaleHT = $this->getCotation()->getRevenuNetTotal();
+                $this->commissionTotaleHT = $this->getCotation()->getRevenuTotalHT();
             }
         }
         return $this->commissionTotaleHT;
@@ -370,7 +375,7 @@ class Police
 
     /**
      * Get the value of revenus
-     */ 
+     */
     public function getRevenus()
     {
         if ($this->getCotation()) {
@@ -379,5 +384,58 @@ class Police
             }
         }
         return $this->revenus;
+    }
+
+    /**
+     * Get the value of taxeAssureur
+     */
+    public function getTaxeAssureur()
+    {
+        if ($this->getEntreprise()) {
+            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                if ($taxe->isPayableparcourtier() == false) {
+                    if ($this->getPiste()->getProduit()->isIard()) {
+                        $this->taxeAssureur = ($taxe->getTauxIARD() * $this->getCommissionTotaleHT()) / 100;
+                        //dd($this->taxeAssureur);
+                        break;
+                    } else {
+                        $this->taxeAssureur = ($taxe->getTauxVIE() * $this->getCommissionTotaleHT()) / 100;
+                        break;
+                    }
+                }
+            }
+        }
+        return $this->taxeAssureur * 100;
+    }
+
+    /**
+     * Get the value of commissionTotaleTTC
+     */ 
+    public function getCommissionTotaleTTC()
+    {
+        $this->commissionTotaleTTC = $this->getTaxeAssureur() + $this->getCommissionTotaleHT();
+        return $this->commissionTotaleTTC;
+    }
+
+    /**
+     * Get the value of revenuNetTotal
+     */ 
+    public function getRevenuNetTotal()
+    {
+        if($this->getCotation()){
+            $this->revenuNetTotal = $this->getCotation()->getRevenuNetTotal();
+        }
+        return $this->revenuNetTotal;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotale
+     */ 
+    public function getTaxeCourtierTotale()
+    {
+        if($this->getCotation()){
+            $this->taxeCourtierTotale = $this->getCotation()->getTaxeCourtierTotale();
+        }
+        return $this->taxeCourtierTotale;
     }
 }

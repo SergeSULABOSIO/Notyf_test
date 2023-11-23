@@ -2,17 +2,19 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Piste;
 use App\Entity\Police;
-use App\Service\ServiceAvenant;
 use DateTimeImmutable;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceFacture;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
-use App\Service\ServiceFacture;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -29,7 +31,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use PhpParser\Node\Expr\Cast\Array_;
 
 class PoliceCrudController extends AbstractCrudController
 {
@@ -119,7 +120,6 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureCrud(Crud $crud): Crud
     {
-        
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
         $this->crud = $crud
@@ -192,6 +192,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->getContext()->getEntity()->getInstance();
         //dd($this->getContext()->getEntity()->getInstance());
         if($this->crud){
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
@@ -199,6 +200,18 @@ class PoliceCrudController extends AbstractCrudController
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
         $this->servicePreferences->setEntite($pageName, $this->getContext()->getEntity()->getInstance());
+        if ($instance != null) {
+            if ($instance instanceof Piste) {
+                //On envoie ces paramètres à tous les formulaires
+                /** @var Piste */
+                if ($instance->getProduit()) {
+                    $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                }
+                if ($instance->getClient()) {
+                    $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                }
+            }
+        }
         return $this->servicePreferences->getChamps(new Police(), $this->crud, $this->adminUrlGenerator);
     }
 

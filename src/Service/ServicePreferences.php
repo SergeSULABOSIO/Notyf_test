@@ -1925,6 +1925,9 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_form($tabAttributs)
     {
+        $tauxAssureur = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), false);
+        $tauxCourtier = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        //dd($taux);
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION)) {
             $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
                 ->onlyOnForms()
@@ -1996,7 +1999,7 @@ class ServicePreferences
                 ->setColumns(12);
 
             $tabAttributs[] = FormField::addPanel("Prime d'assurance")
-                ->setHelp("Prime d'assurance résulatnt de la mise en place de l'avenant.")
+                ->setHelp("Prime d'assurance résultant de la mise en place de l'avenant.")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('chargements', "Structure")
                 ->onlyOnForms()
@@ -2026,6 +2029,36 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(12)
                 ->setDisabled(true);
+            $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu pure")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($tauxCourtier * 100) . "%)"))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('commissionTotaleHT', "Revenu hors taxe")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($tauxAssureur * 100) . "%)"))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('commissionTotaleTTC', "Revenu totale")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
 
 
             $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
@@ -4588,6 +4621,7 @@ class ServicePreferences
         if ($this->adminUrlGenerator->get("isIard")) {
             $rep = $this->adminUrlGenerator->get("isIard");
         }
+        //dd($this->adminUrlGenerator);
         //dd($rep);
         return $rep;
     }

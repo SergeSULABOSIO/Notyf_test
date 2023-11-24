@@ -199,7 +199,7 @@ class Revenu
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
-            if($monnaie->getFonction() == $fonction){
+            if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;
             }
         }
@@ -209,16 +209,17 @@ class Revenu
     private function getMonnaie_Affichage()
     {
         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($monnaie == null){
+        if ($monnaie == null) {
             $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
         return $monnaie;
     }
 
-    private function getCodeMonnaieAffichage(): string{
+    private function getCodeMonnaieAffichage(): string
+    {
         $strMonnaie = "";
         $monnaieAff = $this->getMonnaie_Affichage();
-        if($monnaieAff != null){
+        if ($monnaieAff != null) {
             $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
         }
         return $strMonnaie;
@@ -245,20 +246,20 @@ class Revenu
 
 
         $strRedevablePar = "";
-        if($this->isIspartclient() == true){
+        if ($this->isIspartclient() == true) {
             $strRedevablePar = "par le client";
-            if($this->getCotation()){
-                if($this->getCotation()->getPiste()){
-                    if($this->getCotation()->getPiste()->getClient()){
+            if ($this->getCotation()) {
+                if ($this->getCotation()->getPiste()) {
+                    if ($this->getCotation()->getPiste()->getClient()) {
                         $strRedevablePar = "par " . $this->getCotation()->getPiste()->getClient()->getNom();
                     }
                 }
             }
-        }else{
+        } else {
             $strRedevablePar = "par l'assureur";
-            if($this->getCotation()){
-                if($this->getCotation()){
-                    if($this->getCotation()->getAssureur()){
+            if ($this->getCotation()) {
+                if ($this->getCotation()) {
+                    if ($this->getCotation()->getAssureur()) {
                         $strRedevablePar = "par " . $this->getCotation()->getAssureur()->getNom();
                     }
                 }
@@ -290,9 +291,12 @@ class Revenu
             }
         }
 
+        $strPartageable = " Non partageable.";
+        if ($this->getPartageable() == 1) {
+            $strPartageable = " Partageable avec " . $this->getCotation()->getPiste()->getPartenaire();
+        }
 
-
-        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches;
+        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
     }
 
     public function calc_getRevenuFinal()

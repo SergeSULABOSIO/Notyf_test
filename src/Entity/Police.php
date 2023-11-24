@@ -79,6 +79,14 @@ class Police
     private ?Client $client = null;
     private ?Partenaire $partenaire = null;
     private ?Assureur $assureur = null;
+    private Collection $contacts;
+    private ?float $tauxretrocompartenaire = 0;
+
+    //partie partageable / retrocom
+    private ?float $revenuTotalHTPartageable;
+    private ?float $taxeCourtierTotalePartageable;
+    private ?float $revenuNetTotalPartageable;
+    private ?float $retroComPartenaire;
 
 
 
@@ -487,5 +495,71 @@ class Police
             $this->assureur = $this->getCotation()->getAssureur();
         }
         return $this->assureur;
+    }
+
+    /**
+     * Get the value of contacts
+     */ 
+    public function getContacts()
+    {
+        if ($this->getPiste()) {
+            $this->contacts = $this->getPiste()->getContacts();
+        }
+        return $this->contacts;
+    }
+
+    /**
+     * Get the value of tauxretrocompartenaire
+     */ 
+    public function getTauxretrocompartenaire()
+    {
+        if ($this->getCotation()) {
+            $this->tauxretrocompartenaire = $this->getCotation()->getTauxretrocompartenaire();
+        }
+        return $this->tauxretrocompartenaire;
+    }
+
+    /**
+     * Get the value of revenuTotalHTPartageable
+     */ 
+    public function getRevenuTotalHTPartageable()
+    {
+        if ($this->getCotation()) {
+            $this->revenuTotalHTPartageable = $this->getCotation()->getRevenuTotalHTPartageable();
+        }
+        return $this->revenuTotalHTPartageable;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotalePartageable
+     */ 
+    public function getTaxeCourtierTotalePartageable()
+    {
+        if ($this->getCotation()) {
+            $this->taxeCourtierTotalePartageable = $this->getCotation()->getTaxeCourtierTotalePartageable();
+        }
+        return $this->taxeCourtierTotalePartageable * -1;
+    }
+
+    /**
+     * Get the value of revenuNetTotalPartageable
+     */ 
+    public function getRevenuNetTotalPartageable()
+    {
+        if ($this->getCotation()) {
+            $this->revenuNetTotalPartageable = $this->getCotation()->getRevenuNetTotalPartageable();
+        }
+        return $this->revenuNetTotalPartageable;
+    }
+
+    /**
+     * Get the value of retroComPartenaire
+     */ 
+    public function getRetroComPartenaire()
+    {
+        if ($this->getCotation()) {
+            $this->retroComPartenaire = $this->getCotation()->getRetroComPartenaire();
+        }
+        return $this->retroComPartenaire;
     }
 }

@@ -181,7 +181,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_PISTE_MONTANT                     = "CAFF potentiels";
     public const PREF_CRM_PISTE_ETAPE                       = "Etape";
     public const PREF_CRM_PISTE_DATE_EXPIRATION             = "Echéance";
-    public const PREF_CRM_PISTE_ACTIONS                     = "Missions";
+    public const PREF_CRM_PISTE_ACTIONS                     = "Tâches";
     public const PREF_CRM_PISTE_COTATION                    = "Proposition";
     public const PREF_CRM_PISTE_UTILISATEUR                 = "Utilisateur";
     public const PREF_CRM_PISTE_ENTREPRISE                  = "Entreprise";

@@ -2005,7 +2005,19 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                ->onlyOnForms()
+                ->setColumns(12)
+                ->setDisabled(true);
+
+            $tabAttributs[] = FormField::addPanel("Contacts")
+                ->setHelp("Personnes impliquées dans les échanges.")
+                ->onlyOnForms();
+            $tabAttributs[] = CollectionField::new('contacts', "Contacts")
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
@@ -2071,16 +2083,44 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
-
-
-            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            $tabAttributs[] = FormField::addPanel("Retrocommission")
+                ->setHelp("Détails sur la commission à rétrocéder au partenaire.")
+                ->onlyOnForms();
+            $tabAttributs[] = TextField::new('partenaire', "Partenaire")
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                ->onlyOnForms()
+            $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
                 ->setColumns(12)
-                ->setDisabled(true);
+                ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
+                ->setDisabled(true)
+                ->setNumDecimals(2)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu HT (partageable)")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->setHelp("Revenu hors taxe faisant l'objet du partage.")
+                ->setColumns(12)
+                ->setDisabled(true)
+                ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net (partageable)")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Retrocommission")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
         }
 
         //On désactive les champs non éditables
@@ -5504,7 +5544,7 @@ class ServicePreferences
             ->onlyOnForms();
 
         //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Missions')
+        $tabAttributs[] = FormField::addTab(' Tâches')
             ->setIcon('fas fa-paper-plane')
             ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
             ->onlyOnForms();

@@ -101,7 +101,6 @@ class Police
     private ?\DateTimeImmutable $dateexpiration = null;
 
 
-
     public function __construct()
     {
     }
@@ -110,73 +109,6 @@ class Police
     {
         return $this->id;
     }
-
-    // public function getDateoperation(): ?\DateTimeInterface
-    // {
-    //     return $this->dateoperation;
-    // }
-
-    // public function setDateoperation(\DateTimeInterface $dateoperation): self
-    // {
-    //     $this->dateoperation = $dateoperation;
-
-    //     return $this;
-    // }
-
-    // public function getDateemission(): ?\DateTimeInterface
-    // {
-    //     return $this->dateemission;
-    // }
-
-    // public function setDateemission(?\DateTimeInterface $dateemission): self
-    // {
-    //     $this->dateemission = $dateemission;
-
-    //     return $this;
-    // }
-
-    // public function getDateeffet(): ?\DateTimeInterface
-    // {
-    //     return $this->dateeffet;
-    // }
-
-    // public function setDateeffet(?\DateTimeInterface $dateeffet): self
-    // {
-    //     $this->dateeffet = $dateeffet;
-
-    //     return $this;
-    // }
-
-    private function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable
-    {
-        $txt = "P" . $nbJours . "D";
-        $copie = clone $dateInitiale;
-        return $copie->add(new DateInterval($txt));
-    }
-
-    public function convertDuree($duree): int
-    {
-        if ($duree == 0) {
-            $duree = 12;
-        }
-        return (($duree / 12) * 365) - 2;
-    }
-
-    // public function getDateexpiration(): ?\DateTimeInterface
-    // {
-    //     if($this->dateexpiration == null){
-    //         $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
-    //         $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
-    //     }
-    //     return $this->dateexpiration;
-    // }
-
-    // public function setDateexpiration(\DateTimeInterface $dateexpiration): self
-    // {
-    //     $this->dateexpiration = $dateexpiration;
-
-    //     return $this;
-    // }
 
     public function getReference(): ?string
     {

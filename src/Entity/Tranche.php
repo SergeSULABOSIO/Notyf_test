@@ -94,12 +94,6 @@ class Tranche
 
     public function getEndedAt(): ?\DateTimeInterface
     {
-        // /** @var Police */
-        // $police = $this->getPolice();
-        // if($police != null){
-        //     $this->endedAt = $police->getDateexpiration();
-        // }
-        //dd($this->endedAt);
         return $this->endedAt;
     }
 

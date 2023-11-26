@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
 use App\Controller\Admin\MonnaieCrudController;
+use DateInterval;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche
@@ -64,24 +65,67 @@ class Tranche
         return $this;
     }
 
-    public function getStartedAt(): ?\DateTimeImmutable
+    public function getTotalDureeTranchesPrecedantes($indiceCourant){
+        $totalDureesCumulees = 0;
+        /** @var Tranche */
+        foreach ($this->getPolice()->getTranches() as $tranche) {
+            if($this->getPolice()->getTranches()->indexOf($tranche) < $indiceCourant){
+                $totalDureesCumulees = $totalDureesCumulees + $tranche->getDuree();
+            }
+        }
+        return $totalDureesCumulees;
+    }
+
+    public function getStartedAt(): ?\DateTimeInterface
     {
+        /** @var Police */
+        $police = $this->getPolice();
+        //dd($indice);
+        if($police != null){
+            $indiceCourant = ($police->getTranches()->indexOf($this));
+            $dureesPrecedantes = $this->getTotalDureeTranchesPrecedantes($indiceCourant);
+            $this->startedAt = $police->getDateeffet()->add(new DateInterval("P". ($dureesPrecedantes) ."M"));
+            $this->endedAt = $this->startedAt->add(new DateInterval("P". ($this->getDuree()) ."M"));
+            $this->endedAt = $this->endedAt->modify("-1 day");
+        }
+        //dd($this->startedAt);
         return $this->startedAt;
     }
 
-    public function setStartedAt(\DateTimeImmutable $startedAt): self
+    public function getEndedAt(): ?\DateTimeInterface
+    {
+        // /** @var Police */
+        // $police = $this->getPolice();
+        // if($police != null){
+        //     $this->endedAt = $police->getDateexpiration();
+        // }
+        //dd($this->endedAt);
+        return $this->endedAt;
+    }
+
+    private function getPolice(){
+        /** @var Police */
+        $police = null;
+        if($this->getCotation()){
+            if($this->getCotation()->isValidated()){
+                if(count($this->getCotation()->getPolices()) != 0){
+                    $police = $this->getCotation()->getPolices()[0];
+                }
+            }
+        }
+        return $police;
+    }
+
+    public function setStartedAt(\DateTimeInterface $startedAt): self
     {
         $this->startedAt = $startedAt;
 
         return $this;
     }
 
-    public function getEndedAt(): ?\DateTimeImmutable
-    {
-        return $this->endedAt;
-    }
+    
 
-    public function setEndedAt(\DateTimeImmutable $endedAt): self
+    public function setEndedAt(\DateTimeInterface $endedAt): self
     {
         $this->endedAt = $endedAt;
 
@@ -187,10 +231,13 @@ class Tranche
 
     public function __toString()
     {
+
+
         $strMonnaie = $this->getCodeMonnaieAffichage();
-        $strPeriode = " pour durée de " . $this->getDuree() . " mois.";
-        if($this->getStartedAt() && $this->getEndedAt()){
-            $strPeriode = " entre le " . (($this->startedAt)->format('d-m-Y')) . " et le " . (($this->endedAt)->format('d-m-Y')) . ".";
+        $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
+        //dd($this->getStartedAt());
+        if($this->getStartedAt() != null & $this->getEndedAt() != null){
+            $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . " (les deux dates comprises).";
         }
         $strMont = "la prime de cette tranche est de " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
         return $this->getNom() . ": " . $strMont;

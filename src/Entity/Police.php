@@ -28,17 +28,17 @@ class Police
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    private ?\DateTimeInterface $dateoperation = null;
+    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    // private ?\DateTimeInterface $dateoperation = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    private ?\DateTimeInterface $dateemission = null;
+    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    // private ?\DateTimeInterface $dateemission = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    private ?\DateTimeInterface $dateeffet = null;
+    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    // private ?\DateTimeInterface $dateeffet = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateexpiration = null;
+    // #[ORM\Column(type: Types::DATE_MUTABLE)]
+    // private ?\DateTimeInterface $dateexpiration = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -88,6 +88,18 @@ class Police
     private ?float $revenuNetTotalPartageable;
     private ?float $retroComPartenaire;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateoperation = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateemission = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateeffet = null;
+
+    //#[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateexpiration = null;
+
 
 
     public function __construct()
@@ -99,41 +111,41 @@ class Police
         return $this->id;
     }
 
-    public function getDateoperation(): ?\DateTimeInterface
-    {
-        return $this->dateoperation;
-    }
+    // public function getDateoperation(): ?\DateTimeInterface
+    // {
+    //     return $this->dateoperation;
+    // }
 
-    public function setDateoperation(\DateTimeInterface $dateoperation): self
-    {
-        $this->dateoperation = $dateoperation;
+    // public function setDateoperation(\DateTimeInterface $dateoperation): self
+    // {
+    //     $this->dateoperation = $dateoperation;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function getDateemission(): ?\DateTimeInterface
-    {
-        return $this->dateemission;
-    }
+    // public function getDateemission(): ?\DateTimeInterface
+    // {
+    //     return $this->dateemission;
+    // }
 
-    public function setDateemission(?\DateTimeInterface $dateemission): self
-    {
-        $this->dateemission = $dateemission;
+    // public function setDateemission(?\DateTimeInterface $dateemission): self
+    // {
+    //     $this->dateemission = $dateemission;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function getDateeffet(): ?\DateTimeInterface
-    {
-        return $this->dateeffet;
-    }
+    // public function getDateeffet(): ?\DateTimeInterface
+    // {
+    //     return $this->dateeffet;
+    // }
 
-    public function setDateeffet(?\DateTimeInterface $dateeffet): self
-    {
-        $this->dateeffet = $dateeffet;
+    // public function setDateeffet(?\DateTimeInterface $dateeffet): self
+    // {
+    //     $this->dateeffet = $dateeffet;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     private function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable
     {
@@ -293,6 +305,8 @@ class Police
         //     $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
         //     $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
         // }
+        $this->dateexpiration = $this->getDateeffet()->add(new DateInterval("P". ($this->getCotation()->getDureeCouverture()) ."M"));
+        $this->dateexpiration = $this->dateexpiration->modify("-1 day");
         return $this->dateexpiration;
     }
 
@@ -561,5 +575,41 @@ class Police
             $this->retroComPartenaire = $this->getCotation()->getRetroComPartenaire();
         }
         return $this->retroComPartenaire;
+    }
+
+    public function getDateoperation(): ?\DateTimeImmutable
+    {
+        return $this->dateoperation;
+    }
+
+    public function setDateoperation(?\DateTimeImmutable $dateoperation): self
+    {
+        $this->dateoperation = $dateoperation;
+
+        return $this;
+    }
+
+    public function getDateemission(): ?\DateTimeImmutable
+    {
+        return $this->dateemission;
+    }
+
+    public function setDateemission(?\DateTimeImmutable $dateemission): self
+    {
+        $this->dateemission = $dateemission;
+
+        return $this;
+    }
+
+    public function getDateeffet(): ?\DateTimeImmutable
+    {
+        return $this->dateeffet;
+    }
+
+    public function setDateeffet(?\DateTimeImmutable $dateeffet): self
+    {
+        $this->dateeffet = $dateeffet;
+
+        return $this;
     }
 }

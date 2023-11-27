@@ -179,7 +179,7 @@ class DocPiece
             $txt = $txt . " par " . $this->getUtilisateur()->getNom();
 
         }
-        return $txt;
+        return $txt . " | " . $this->getNomfichier();
     }
 
     public function getType(): ?int

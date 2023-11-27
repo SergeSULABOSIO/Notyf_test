@@ -36,29 +36,16 @@ class DocPiece
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?Cotation $cotation = null;
-
-    #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?Police $police = null;
-
-    #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?Sinistre $sinistre = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fichier = null;
 
-    #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?DocCategorie $categorie = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'docPieces')]
-    private ?DocClasseur $classeur = null;
-
-    #[ORM\ManyToOne(inversedBy: 'pieces')]
-    private ?Paiement $paiement = null;
 
     public function __construct()
     {
+        
     }
 
     public function getId(): ?int
@@ -143,42 +130,6 @@ class DocPiece
         return $this->nom;
     }
 
-    public function getCotation(): ?Cotation
-    {
-        return $this->cotation;
-    }
-
-    public function setCotation(?Cotation $cotation): self
-    {
-        $this->cotation = $cotation;
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
-    }
-
-    public function getSinistre(): ?Sinistre
-    {
-        return $this->sinistre;
-    }
-
-    public function setSinistre(?Sinistre $sinistre): self
-    {
-        $this->sinistre = $sinistre;
-
-        return $this;
-    }
-
     public function getFichier(): ?string
     {
         return $this->fichier;
@@ -191,38 +142,14 @@ class DocPiece
         return $this;
     }
 
-    public function getCategorie(): ?DocCategorie
+    public function getType(): ?int
     {
-        return $this->categorie;
+        return $this->type;
     }
 
-    public function setCategorie(?DocCategorie $categorie): self
+    public function setType(?int $type): self
     {
-        $this->categorie = $categorie;
-
-        return $this;
-    }
-
-    public function getClasseur(): ?DocClasseur
-    {
-        return $this->classeur;
-    }
-
-    public function setClasseur(?DocClasseur $classeur): self
-    {
-        $this->classeur = $classeur;
-
-        return $this;
-    }
-
-    public function getPaiement(): ?Paiement
-    {
-        return $this->paiement;
-    }
-
-    public function setPaiement(?Paiement $paiement): self
-    {
-        $this->paiement = $paiement;
+        $this->type = $type;
 
         return $this;
     }

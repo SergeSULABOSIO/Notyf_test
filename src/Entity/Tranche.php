@@ -225,8 +225,6 @@ class Tranche
 
     public function __toString()
     {
-
-
         $strMonnaie = $this->getCodeMonnaieAffichage();
         $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
         //dd($this->getStartedAt());

@@ -42,6 +42,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class DocPieceCrudController extends AbstractCrudController
 {
+    public const TYPE_INFO_SUR_RISQUE   = "Infos sur le risque";
+    public const TYPE_PROPOSITION       = "Proposition";
+    public const TYPE_CERTIFICAT        = "Certificat";
+    public const TYPE_POLICE            = "Police";
+    public const TYPE_MANDAT_COURTAGE   = "Mandat de courtage";
+
+    public const TAB_TYPES = [
+        self::TYPE_INFO_SUR_RISQUE => 0,
+        self::TYPE_PROPOSITION => 1,
+        self::TYPE_CERTIFICAT => 2,
+        self::TYPE_POLICE => 3,
+        self::TYPE_MANDAT_COURTAGE => 3,
+    ];
+
     public const ARTICLE_BASE_PATH = 'uploads/documents';
     public const ARTICLE_UPLOAD_DIR = 'public/uploads/documents';
     public ?Crud $crud = null;

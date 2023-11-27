@@ -2419,87 +2419,22 @@ class ServicePreferences
     {
         //dd($this->adminUrlGenerator);
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
-            //->setColumns(6)
             ->setColumns(12)
             ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)) {
-            $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                //->setColumns(3)
-                ->setColumns(12)
-                ->setRequired(false)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)) {
-            $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                //->setColumns(3)
-                ->setColumns(12)
-                ->setRequired(false)
-                ->onlyOnForms();
-        }
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_BIB_DOCUMENT_TYPE)
+            ->setChoices(DocPieceCrudController::TAB_TYPES)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+            ->setColumns(12)
+            ->onlyOnForms();
         $tabAttributs[] = ImageField::new('fichier', 'Fichier')
             ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
             ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
             ->setSortable(false)
-            //->setColumns(12)
             ->setColumns(12)
             ->onlyOnForms();
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                })
-                ->setRequired(false)
-                //->setColumns(12)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
+
         return $tabAttributs;
     }
 

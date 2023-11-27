@@ -913,12 +913,8 @@ class PreferenceCrudController extends AbstractCrudController
     //BIBLIOTHEQUE - DOCUMENT
     public const PREF_BIB_DOCUMENT_ID                   = "Id";
     public const PREF_BIB_DOCUMENT_NOM                  = "Intitulé";
-    public const PREF_BIB_DOCUMENT_CATEGORIE            = "Catégorie";
-    public const PREF_BIB_DOCUMENT_CLASSEUR             = "Classeur";
+    public const PREF_BIB_DOCUMENT_TYPE                 = "Type";
     public const PREF_BIB_DOCUMENT_DESCRIPTION          = "Description";
-    public const PREF_BIB_DOCUMENT_COTATION             = "Cotation";
-    public const PREF_BIB_DOCUMENT_POLICE               = "Police";
-    public const PREF_BIB_DOCUMENT_SINISTRE             = "Sinistre";
     public const PREF_BIB_DOCUMENT_UTILISATEUR          = "Utilisateur";
     public const PREF_BIB_DOCUMENT_ENTREPRISE           = "Entreprise";
     public const PREF_BIB_DOCUMENT_DATE_DE_CREATION     = "Date de création";
@@ -926,16 +922,12 @@ class PreferenceCrudController extends AbstractCrudController
     public const TAB_BIB_DOCUMENTS = [
         self::PREF_BIB_DOCUMENT_ID                      => 0,
         self::PREF_BIB_DOCUMENT_NOM                     => 1,
-        self::PREF_BIB_DOCUMENT_CATEGORIE               => 2,
-        self::PREF_BIB_DOCUMENT_CLASSEUR                => 3,
-        self::PREF_BIB_DOCUMENT_DESCRIPTION             => 4,
-        self::PREF_BIB_DOCUMENT_UTILISATEUR             => 5,
-        self::PREF_BIB_DOCUMENT_ENTREPRISE              => 6,
-        self::PREF_BIB_DOCUMENT_DATE_DE_CREATION        => 7,
-        self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 8,
-        self::PREF_BIB_DOCUMENT_COTATION                => 9,
-        self::PREF_BIB_DOCUMENT_POLICE                  => 10,
-        self::PREF_BIB_DOCUMENT_SINISTRE                => 11
+        self::PREF_BIB_DOCUMENT_TYPE                    => 2,
+        self::PREF_BIB_DOCUMENT_DESCRIPTION             => 3,
+        self::PREF_BIB_DOCUMENT_UTILISATEUR             => 4,
+        self::PREF_BIB_DOCUMENT_ENTREPRISE              => 5,
+        self::PREF_BIB_DOCUMENT_DATE_DE_CREATION        => 6,
+        self::PREF_BIB_DOCUMENT_DERNIRE_MODIFICATION    => 7,
     ];
     //PARAMETRES - UTILISATEUR
     public const PREF_PAR_UTILISATEUR_ID                    = "Id";

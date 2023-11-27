@@ -1,8 +1,13 @@
 vich_uploader:
     db_driver: orm
 
-    #mappings:
-    #    products:
-    #        uri_prefix: /images/products
-    #        upload_destination: '%kernel.project_dir%/public/images/products'
-    #        namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+metadata:
+        type: attribute
+
+    mappings:
+        DocPieces:
+            uri_prefix: /DocPieces/documents
+            upload_destination: '%kernel.project_dir%/public/DocPieces/documents'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+            delete_on_update: true
+            delete_on_remove: true

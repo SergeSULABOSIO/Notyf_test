@@ -487,13 +487,18 @@ class AdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function cleanDocuments(){
+    private function cleanDocuments()
+    {
         $documents = $this->entityManager->getRepository(DocPiece::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         );
         /** @var DocPiece */
         foreach ($documents as $doc) {
-            ici
+            if ($doc->getCotation() == null) {
+                //On detruit enfin le document
+                $this->entityManager->remove($doc);
+                $this->entityManager->flush();
+            }
         }
     }
 

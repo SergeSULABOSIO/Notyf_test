@@ -54,7 +54,6 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Cotation $cotation = null;
 
-
     public function __construct()
     {
         
@@ -85,6 +84,7 @@ class DocPiece
     {
         return $this->nomfichier;
     }
+
 
     public function setTaillefichier(?int $taillefichier): void
     {
@@ -181,18 +181,6 @@ class DocPiece
         }
         return $txt;
     }
-
-    // public function getFichier(): ?string
-    // {
-    //     return $this->fichier;
-    // }
-
-    // public function setFichier(?string $fichier): self
-    // {
-    //     $this->fichier = $fichier;
-
-    //     return $this;
-    // }
 
     public function getType(): ?int
     {

@@ -43,11 +43,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 class AdminSubscriber implements EventSubscriberInterface
 {
 
     public function __construct(
+        private UploaderHelper $serviceHelper,
         private ServiceFacture $serviceFacture,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,

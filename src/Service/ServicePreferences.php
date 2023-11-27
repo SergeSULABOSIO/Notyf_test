@@ -5345,12 +5345,12 @@ class ServicePreferences
     public function setCRM_Fields_Pistes_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
-            ->onlyOnForms()
-            ->setColumns(4);
+            //->setColumns(4)
+            ->onlyOnForms();
 
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
             ->onlyOnForms()
-            ->setColumns(4)
+            //->setColumns(4)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5362,17 +5362,17 @@ class ServicePreferences
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
-            ->onlyOnForms()
-            ->setColumns(4);
+            //->setColumns(4)
+            ->onlyOnForms();
 
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
-            ->setColumns(4)
+            //->setColumns(4)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
 
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
-            ->setColumns(4)
+            //->setColumns(4)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -5381,16 +5381,16 @@ class ServicePreferences
             });
 
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
-            ->onlyOnForms()
-            ->setColumns(4);
+            //->setColumns(4)
+            ->onlyOnForms();
 
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            ->onlyOnForms()
-            ->setColumns(12);
+            //->setColumns(12)
+            ->onlyOnForms();
 
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
-            ->setColumns(12)
+            //->setColumns(12)
             ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5401,7 +5401,7 @@ class ServicePreferences
 
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->onlyOnForms()
-            ->setColumns(6)
+            //->setColumns(6)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5411,7 +5411,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->onlyOnForms()
-            ->setColumns(6)
+            //->setColumns(6)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository

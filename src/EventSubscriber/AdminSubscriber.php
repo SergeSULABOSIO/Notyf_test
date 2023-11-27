@@ -338,6 +338,7 @@ class AdminSubscriber implements EventSubscriberInterface
         //On équilibre les données par défaut s'il y a les chargement
         if (count($cotation->getChargements()) != 0) {
             $dureeGlobale = $cotation->getDureeCouverture(); //En mois
+            
             $dureeTrancheTotale = 0;
             $tauxTranchesTotale = 0;
             if ($cotation->getTranches()) {

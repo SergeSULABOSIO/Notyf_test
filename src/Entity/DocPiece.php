@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[ORM\Entity(repositoryClass: DocPieceRepository::class)]
 #[Vich\Uploadable]
@@ -36,9 +37,6 @@ class DocPiece
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichier = null;
 
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
     #[Vich\UploadableField(mapping: 'DocPieces', fileNameProperty: 'nomfichier', size: 'taillefichier')]
@@ -175,7 +173,7 @@ class DocPiece
             }
         }
         if($this->getCreatedAt()){
-            $txt = $txt . " " . $this->nom . ", chargé le " . $this->getCreatedAt()->format("d-m-Y");
+            $txt = $txt . "[" . $this->nom . "], chargé le " . $this->getCreatedAt()->format("d-m-Y");
         }
         if($this->getUtilisateur()){
             $txt = $txt . " par " . $this->getUtilisateur()->getNom();
@@ -184,17 +182,17 @@ class DocPiece
         return $txt;
     }
 
-    public function getFichier(): ?string
-    {
-        return $this->fichier;
-    }
+    // public function getFichier(): ?string
+    // {
+    //     return $this->fichier;
+    // }
 
-    public function setFichier(?string $fichier): self
-    {
-        $this->fichier = $fichier;
+    // public function setFichier(?string $fichier): self
+    // {
+    //     $this->fichier = $fichier;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getType(): ?int
     {

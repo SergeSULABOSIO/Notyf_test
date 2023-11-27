@@ -84,6 +84,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use SebastianBergmann\CodeCoverage\Util\Percentage;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ServicePreferences
 {
@@ -2425,10 +2427,8 @@ class ServicePreferences
             ->setChoices(DocPieceCrudController::TAB_TYPES)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = ImageField::new('fichier', 'Fichier')
-            ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
-            ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
-            ->setSortable(false)
+        $tabAttributs[] = TextField::new('document', "Pièce jointe")
+            ->setFormType(VichFileType::class)
             ->setColumns(12)
             ->onlyOnForms();
 

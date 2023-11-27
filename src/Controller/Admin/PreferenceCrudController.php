@@ -125,6 +125,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_NOM                  = "Intitulé de l'offre";
     public const PREF_CRM_COTATION_DUREE                = "Durée (en mois)";
     public const PREF_CRM_COTATION_ASSUREUR             = "Assureur";
+    public const PREF_CRM_COTATION_DOCUMENTS            = "Documents";
     public const PREF_CRM_COTATION_PRODUIT              = "Couverture d'assurance";
     public const PREF_CRM_COTATION_REVENUS              = "Revenus";
     public const PREF_CRM_COTATION_TAUX_RETROCOM        = "Taux (retrocom)";
@@ -154,7 +155,8 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_CRM_COTATION_REVENU_TOTAL_HT                                 => 13,
         self::PREF_CRM_COTATION_TRANCHES                                        => 14,
         self::PREF_CRM_COTATION_DUREE                                           => 15,
-        self::PREF_CRM_COTATION_TAUX_RETROCOM                                   => 16
+        self::PREF_CRM_COTATION_TAUX_RETROCOM                                   => 16,
+        self::PREF_CRM_COTATION_DOCUMENTS                                       => 17
     ];
     //CRM - ETAPES
     public const PREF_CRM_ETAPES_ID                 = "Id";

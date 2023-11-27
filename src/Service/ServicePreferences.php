@@ -2425,9 +2425,9 @@ class ServicePreferences
             ->setChoices(DocPieceCrudController::TAB_TYPES)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-            ->setColumns(12)
-            ->onlyOnForms();
+        // $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+        //     ->setColumns(12)
+        //     ->onlyOnForms();
         $tabAttributs[] = ImageField::new('fichier', 'Fichier')
             ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
             ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)
@@ -3057,16 +3057,16 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->onlyOnDetail();
+        // $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+        //     ->onlyOnDetail();
+        // $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+        //     ->onlyOnDetail();
         //Les fichiers
         $tabAttributs[] = TextField::new('fichierA', 'Fichier A')->onlyOnDetail();
         $tabAttributs[] = TextField::new('fichierB', 'Fichier B')->onlyOnDetail();
@@ -3100,26 +3100,26 @@ class ServicePreferences
             $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
                 ->onlyOnIndex();
         }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE])) {
-            $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
-            $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-                ->onlyOnIndex();
-        }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE])) {
+        //     $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
+        //     $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
+        //     $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
+        //     $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
+        //     $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+        //         ->onlyOnIndex();
+        // }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
             $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
                 ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
@@ -4484,6 +4484,18 @@ class ServicePreferences
                 ->onlyOnForms();
             //->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
         }
+        $tabAttributs[] = FormField::addPanel("Documents ou pièces jointes")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+            //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la prime d'assurance")
                 ->onlyOnForms();

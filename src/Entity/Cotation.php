@@ -82,12 +82,16 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Police::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $polices;
 
+    #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->revenus = new ArrayCollection();
         $this->chargements = new ArrayCollection();
         $this->tranches = new ArrayCollection();
         $this->polices = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -648,6 +652,36 @@ class Cotation
             // set the owning side to null (unless already changed)
             if ($police->getCotation() === $this) {
                 $police->setCotation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(DocPiece $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setCotation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(DocPiece $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getCotation() === $this) {
+                $document->setCotation(null);
             }
         }
 

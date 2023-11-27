@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\DocPieceCrudController;
 use App\Repository\DocPieceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,8 +20,8 @@ class DocPiece
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    // #[ORM\Column(type: Types::TEXT, nullable: true)]
+    // private ?string $description = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -41,6 +42,9 @@ class DocPiece
 
     #[ORM\Column(nullable: true)]
     private ?int $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Cotation $cotation = null;
 
 
     public function __construct()
@@ -65,17 +69,17 @@ class DocPiece
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+    // public function getDescription(): ?string
+    // {
+    //     return $this->description;
+    // }
 
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
+    // public function setDescription(?string $description): self
+    // {
+    //     $this->description = $description;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getUtilisateur(): ?Utilisateur
     {
@@ -127,7 +131,23 @@ class DocPiece
 
     public function __toString()
     {
-        return $this->nom;
+        $txt = "";
+        if($this->getType()){
+            foreach (DocPieceCrudController::TAB_TYPES as $key => $value) {
+                if($value == $this->getType()){
+                    $txt = $key . ": ";
+                    break;
+                }
+            }
+        }
+        if($this->getCreatedAt()){
+            $txt = $txt . " " . $this->nom . ", chargé le " . $this->getCreatedAt()->format("d-m-Y");
+        }
+        if($this->getUtilisateur()){
+            $txt = $txt . " par " . $this->getUtilisateur()->getNom();
+
+        }
+        return $txt;
     }
 
     public function getFichier(): ?string
@@ -150,6 +170,18 @@ class DocPiece
     public function setType(?int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCotation(): ?Cotation
+    {
+        return $this->cotation;
+    }
+
+    public function setCotation(?Cotation $cotation): self
+    {
+        $this->cotation = $cotation;
 
         return $this;
     }

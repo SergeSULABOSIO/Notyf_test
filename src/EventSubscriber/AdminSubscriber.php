@@ -203,7 +203,6 @@ class AdminSubscriber implements EventSubscriberInterface
 
             //Collection pour Cotation
             foreach ($piste->getCotations() as $cotation) {
-                //$cotation->setNom("Offre #" . count($piste->getCotations())+1);
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                 }
@@ -240,6 +239,17 @@ class AdminSubscriber implements EventSubscriberInterface
                     if ($chargement->getMontant() == null) {
                         $chargement->setMontant(0);
                     }
+                }
+
+                //Les documents de la cotation
+                foreach ($cotation->getDocuments() as $document) {
+                    if ($isCreate || $document->getCreatedAt() == null) {
+                        $document->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $document->setCotation($cotation);
+                    $document->setUpdatedAt(new \DateTimeImmutable());
+                    $document->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $document->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
 
                 //Les tranches de la cotation

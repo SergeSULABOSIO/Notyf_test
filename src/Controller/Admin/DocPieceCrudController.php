@@ -42,18 +42,46 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class DocPieceCrudController extends AbstractCrudController
 {
-    public const TYPE_INFO_SUR_RISQUE   = "Infos sur le risque";
-    public const TYPE_PROPOSITION       = "Proposition";
-    public const TYPE_CERTIFICAT        = "Certificat";
-    public const TYPE_POLICE            = "Police";
-    public const TYPE_MANDAT_COURTAGE   = "Mandat de courtage";
+    public const TYPE_INFO_SUR_RISQUE               = "Infos sur le risque";
+    public const TYPE_PROPOSITION                   = "Proposition / Cotation / Dévis";
+    public const TYPE_CERTIFICAT                    = "Certificat d'assurance";
+    public const TYPE_POLICE                        = "Police d'assurance";
+    public const TYPE_VIGNETTE                      = "Vignette";
+    public const TYPE_REVELE_DE_COMPTE              = "Révelé de Compte (SOA)";
+    public const TYPE_CARTE_ROSE                    = "Carte Rose";
+    public const TYPE_VOLET_JAUNE                   = "Volet Jaune";
+    public const TYPE_BORDEREAU_DE_REASSURANCE      = "Bordereau de Réassurance";
+    public const TYPE_FACTURE_DE_REASSURANCE        = "Note de débit de Réassurance";
+    public const TYPE_CONDITIONS_PARTICULIERES      = "Conditions Particulières";
+    public const TYPE_CONDITIONS_GENERALES          = "Conditions Générales";
+    public const TYPE_MANDAT_COURTAGE               = "Mandat de courtage";
+    public const TYPE_PREUVE_DE_PAIEMENT            = "Preuve de Paiement (POP)";
+    public const TYPE_COPIE_DU_SWIFT                = "Preuve de Paiement (Swift)";
+    public const TYPE_FORMULAIRE_DE_PROPOSITION     = "Formulaire de proposition";
+    public const TYPE_FACTURE                       = "Facture / Note de débit";
+    public const TYPE_NOTE_DE_CREDIT                = "Avoire / Note de crédit";
+    public const TYPE_AUTRES                        = "Autre (à préciser)";
 
     public const TAB_TYPES = [
-        self::TYPE_INFO_SUR_RISQUE => 0,
-        self::TYPE_PROPOSITION => 1,
-        self::TYPE_CERTIFICAT => 2,
-        self::TYPE_POLICE => 3,
-        self::TYPE_MANDAT_COURTAGE => 3,
+        self::TYPE_INFO_SUR_RISQUE => 1,
+        self::TYPE_PROPOSITION => 2,
+        self::TYPE_CERTIFICAT => 3,
+        self::TYPE_POLICE => 4,
+        self::TYPE_VIGNETTE => 5,
+        self::TYPE_REVELE_DE_COMPTE => 6,
+        self::TYPE_CARTE_ROSE => 7,
+        self::TYPE_VOLET_JAUNE => 8,
+        self::TYPE_BORDEREAU_DE_REASSURANCE => 9,
+        self::TYPE_FACTURE_DE_REASSURANCE => 10,
+        self::TYPE_CONDITIONS_PARTICULIERES => 11,
+        self::TYPE_CONDITIONS_GENERALES => 12,
+        self::TYPE_MANDAT_COURTAGE => 13,
+        self::TYPE_PREUVE_DE_PAIEMENT => 14,
+        self::TYPE_COPIE_DU_SWIFT => 15,
+        self::TYPE_FORMULAIRE_DE_PROPOSITION => 16,
+        self::TYPE_FACTURE => 17,
+        self::TYPE_NOTE_DE_CREDIT => 18,
+        self::TYPE_AUTRES => 19,
     ];
 
     public const ARTICLE_BASE_PATH = 'uploads/documents';

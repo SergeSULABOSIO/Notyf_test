@@ -8,8 +8,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DocPieceRepository::class)]
+#[Vich\Uploadable]
 class DocPiece
 {
     #[ORM\Id]
@@ -19,9 +22,6 @@ class DocPiece
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
-    // #[ORM\Column(type: Types::TEXT, nullable: true)]
-    // private ?string $description = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -40,6 +40,16 @@ class DocPiece
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fichier = null;
 
+    // NOTE: This is not a mapped field of entity metadata, just a simple property.
+    #[Vich\UploadableField(mapping: 'DocPieces', fileNameProperty: 'nomfichier', size: 'taillefichier')]
+    private ?File $document = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nomfichier = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $taillefichier = null;
+
     #[ORM\Column(nullable: true)]
     private ?int $type = null;
 
@@ -50,6 +60,42 @@ class DocPiece
     public function __construct()
     {
         
+    }
+
+    public function setDocument(?File $document = null): void
+    {
+        $this->document = $document;
+
+        if (null !== $document) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+    }
+
+    public function getDocument(): ?File
+    {
+        return $this->document;
+    }
+
+    public function setNomfichier(?string $nomfichier): void
+    {
+        $this->nomfichier = $nomfichier;
+    }
+
+    public function getNomfichier(): ?string
+    {
+        return $this->nomfichier;
+    }
+
+    public function setTaillefichier(?int $taillefichier): void
+    {
+        $this->taillefichier = $taillefichier;
+    }
+
+    public function getTaillefichier(): ?int
+    {
+        return $this->taillefichier;
     }
 
     public function getId(): ?int

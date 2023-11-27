@@ -2425,9 +2425,6 @@ class ServicePreferences
             ->setChoices(DocPieceCrudController::TAB_TYPES)
             ->setColumns(12)
             ->onlyOnForms();
-        // $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-        //     ->setColumns(12)
-        //     ->onlyOnForms();
         $tabAttributs[] = ImageField::new('fichier', 'Fichier')
             ->setBasePath(DocPieceCrudController::ARTICLE_BASE_PATH)
             ->setUploadDir(DocPieceCrudController::ARTICLE_UPLOAD_DIR)

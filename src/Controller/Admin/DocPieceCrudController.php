@@ -61,7 +61,7 @@ class DocPieceCrudController extends AbstractCrudController
     public const TYPE_FACTURE                       = "Facture / Note de débit";
     public const TYPE_NOTE_DE_CREDIT                = "Avoire / Note de crédit";
     public const TYPE_AUTRES                        = "Autre (à préciser)";
-
+    
     public const TAB_TYPES = [
         self::TYPE_INFO_SUR_RISQUE => 1,
         self::TYPE_PROPOSITION => 2,

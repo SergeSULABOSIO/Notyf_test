@@ -32,6 +32,7 @@ use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
 use App\Entity\Client;
 use App\Entity\Contact;
+use App\Entity\DocPiece;
 use App\Entity\Partenaire;
 use App\Entity\Revenu;
 use App\Entity\Tranche;
@@ -303,6 +304,7 @@ class AdminSubscriber implements EventSubscriberInterface
 
             $this->cleanCotations();
             $this->cleanPolices();
+            $this->cleanDocuments();
         }
     }
 
@@ -485,6 +487,16 @@ class AdminSubscriber implements EventSubscriberInterface
         }
     }
 
+    private function cleanDocuments(){
+        $documents = $this->entityManager->getRepository(DocPiece::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var DocPiece */
+        foreach ($documents as $doc) {
+            ici
+        }
+    }
+
     private function cleanCotations()
     {
         $cotations = $this->entityManager->getRepository(Cotation::class)->findBy(
@@ -511,6 +523,14 @@ class AdminSubscriber implements EventSubscriberInterface
                     $this->entityManager->remove($tranche);
                     $this->entityManager->flush();
                 }
+
+                //On doit aussi supprimer les éventuels documents / pièces justificatives
+                /** @var DocPiece */
+                foreach ($cotation->getDocuments() as $document) {
+                    $this->entityManager->remove($document);
+                    $this->entityManager->flush();
+                }
+
                 //On detruit enfin la cotation
                 $this->entityManager->remove($cotation);
                 $this->entityManager->flush();

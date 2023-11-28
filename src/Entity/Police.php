@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\PisteCrudController;
-use App\Controller\Admin\PoliceCrudController;
 use DateTime;
 use DateInterval;
 use DateTimeImmutable;
@@ -12,8 +10,12 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 use phpDocumentor\Reflection\Types\Integer;
+use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\PoliceCrudController;
+use App\Controller\Admin\MonnaieCrudController;
+use phpDocumentor\Reflection\PseudoTypes\True_;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
@@ -100,9 +102,13 @@ class Police
     //#[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateexpiration = null;
 
+    #[ORM\OneToMany(mappedBy: 'police', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
+    private Collection $documents;
+
 
     public function __construct()
     {
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,7 +199,40 @@ class Police
         if ($this->getCotation()) {
             $strAutreData = $this->getCotation()->getAssureur()->getNom();
         }
-        return "Réf.: " . $this->getReference() . " / " . $strAutreData; // . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+        $txtPrime = "";
+        if($this->getMonnaie_Affichage()){
+            $txtPrime = " | Prime totale: ". ($this->getPrimeTotale()/100) . " " . $this->getCodeMonnaieAffichage();
+        }
+        return "Réf.: " . $this->getReference() . " / " . $strAutreData . $txtPrime; // . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
+    }
+
+    private function getCodeMonnaieAffichage(): string{
+        $strMonnaie = "";
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if($monnaieAff != null){
+            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $strMonnaie;
+    }
+
+    private function getMonnaie_Affichage()
+    {
+        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($monnaie == null){
+            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $monnaie;
+    }
+
+    private function getMonnaie($fonction)
+    {
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
     }
 
     /**
@@ -541,6 +580,36 @@ class Police
     public function setDateeffet(?\DateTimeImmutable $dateeffet): self
     {
         $this->dateeffet = $dateeffet;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(DocPiece $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setPolice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(DocPiece $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getPolice() === $this) {
+                $document->setPolice(null);
+            }
+        }
 
         return $this;
     }

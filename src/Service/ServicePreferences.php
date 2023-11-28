@@ -2020,7 +2020,23 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true);
 
+            //Section - Documents
+            $tabAttributs[] = FormField::addPanel("Documents ou pièces jointes")
+                ->setIcon("fa-solid fa-paperclip")
+                ->onlyOnForms(); //fa-solid fa-paperclip
+            $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+                //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+                ->useEntryCrudForm(DocPieceCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex()
+                ->setRequired(false)
+                ->setColumns(12)
+                ->onlyOnForms();
+
+            //Section - Contacts
             $tabAttributs[] = FormField::addPanel("Contacts")
+                ->setIcon("fas fa-address-book")
                 ->setHelp("Personnes impliquées dans les échanges.")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('contacts', "Contacts")
@@ -2028,7 +2044,9 @@ class ServicePreferences
                 ->setDisabled(true)
                 ->setColumns(12);
 
+            //Section - Primes d'assurance
             $tabAttributs[] = FormField::addPanel("Prime d'assurance")
+                ->setIcon("fa-solid fa-cash-register")
                 ->setHelp("Prime d'assurance résultant de la mise en place de l'avenant.")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('chargements', "Structure")
@@ -2041,7 +2059,10 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
+
+            //Section - Termes de paiement
             $tabAttributs[] = FormField::addPanel("Termes de paiement de la prime")
+                ->setIcon("fa-solid fa-cash-register")
                 ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('tranches', "Structure")
@@ -2052,7 +2073,10 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setColumns(12)
                 ->setDisabled(true);
+
+            //Section - Commissiob de courtage
             $tabAttributs[] = FormField::addPanel("Commission de courtage")
+                ->setIcon("fa-solid fa-cash-register")
                 ->setHelp("Les différents revenus du courtier d'assurance.")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('revenus', "Structure")
@@ -2089,7 +2113,10 @@ class ServicePreferences
                 ->setColumns(12)
                 ->setDisabled(true)
                 ->onlyOnForms();
+
+            //Section - Partenaire
             $tabAttributs[] = FormField::addPanel("Retrocommission")
+                ->setIcon("fas fa-handshake")
                 ->setHelp("Détails sur la commission à rétrocéder au partenaire.")
                 ->onlyOnForms();
             $tabAttributs[] = TextField::new('partenaire', "Partenaire")
@@ -4482,7 +4509,9 @@ class ServicePreferences
                 ->onlyOnForms();
             //->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
         }
+        //Section - Documents
         $tabAttributs[] = FormField::addPanel("Documents ou pièces jointes")
+            ->setIcon("fa-solid fa-paperclip")
             ->onlyOnForms();
         $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
             //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
@@ -4496,6 +4525,7 @@ class ServicePreferences
 
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la prime d'assurance")
+                ->setIcon("fa-solid fa-cash-register")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)
                 ->setHelp("Vous avez la possibilité d'ajouter des données à volonté.")
@@ -4516,6 +4546,7 @@ class ServicePreferences
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)) {
             $tabAttributs[] = FormField::addPanel("Détails relatifs aux termes de paiement.")
+                ->setIcon("fa-solid fa-cash-register")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)
                 ->setHelp("Vous avez la possibilité d'ajouter des données à volonté.")
@@ -4529,6 +4560,7 @@ class ServicePreferences
         }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENUS)) {
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la commission de courtage")
+                ->setIcon("fa-solid fa-cash-register")
                 ->onlyOnForms();
             $tabAttributs[] = CollectionField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)
                 ->setHelp("Vous avez la possibilité d'ajouter des données à volonté.")
@@ -4560,6 +4592,7 @@ class ServicePreferences
                 ->setColumns(12);
 
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la retrocommission dûe au partenaire")
+                ->setIcon("fas fa-handshake")
                 ->onlyOnForms();
             $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())

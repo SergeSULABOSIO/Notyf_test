@@ -290,6 +290,18 @@ class AdminSubscriber implements EventSubscriberInterface
                     $policeRetenue->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $policeRetenue->setEntreprise($this->serviceEntreprise->getEntreprise());
 
+                    //Les documents de la cotation
+                    foreach ($policeRetenue->getDocuments() as $document) {
+                        if ($isCreate || $document->getCreatedAt() == null) {
+                            $document->setCreatedAt(new \DateTimeImmutable());
+                        }
+                        $document->setPolice($policeRetenue);
+                        $document->setUpdatedAt(new \DateTimeImmutable());
+                        $document->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                        $document->setEntreprise($this->serviceEntreprise->getEntreprise());
+                    }
+
+
                     //On vide le tableau des polices temporaire
                     $tabPolicesTempo = $piste->getPolices();
                     foreach ($tabPolicesTempo as $ptempo) {
@@ -300,6 +312,7 @@ class AdminSubscriber implements EventSubscriberInterface
                     //On marque la cotation retenue
                     $this->setValidatedQuote($piste, $policeRetenue);
                     //dd($cotationValidee);
+                    //dd($policeRetenue);
                 }
             }
 
@@ -307,17 +320,6 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->cleanCotations();
             $this->cleanPolices();
             $this->cleanDocuments();
-
-            // /** @var Police */
-            // $polEnPlace = $piste->getPolices()[0];
-            
-            // /** @var Cotation */
-            // $cotationValidee = $polEnPlace->getCotation();
-            
-            // /** @var DocPiece */
-            // $documentsQuote = $cotationValidee->getDocuments();
-
-            // dd($documentsQuote);
         }
     }
 
@@ -351,7 +353,7 @@ class AdminSubscriber implements EventSubscriberInterface
         //On équilibre les données par défaut s'il y a les chargement
         if (count($cotation->getChargements()) != 0) {
             $dureeGlobale = $cotation->getDureeCouverture(); //En mois
-            
+
             $dureeTrancheTotale = 0;
             $tauxTranchesTotale = 0;
             if ($cotation->getTranches()) {
@@ -508,7 +510,7 @@ class AdminSubscriber implements EventSubscriberInterface
         );
         /** @var DocPiece */
         foreach ($documents as $doc) {
-            if ($doc->getCotation() == null) {
+            if ($doc->getCotation() == null && $doc->getPolice() == null) {
                 //On detruit enfin le document
                 $this->entityManager->remove($doc);
                 $this->entityManager->flush();

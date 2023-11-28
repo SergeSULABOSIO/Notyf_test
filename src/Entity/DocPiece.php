@@ -54,6 +54,9 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Cotation $cotation = null;
 
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Police $police = null;
+
     public function __construct()
     {
         
@@ -206,6 +209,18 @@ class DocPiece
     public function setCotation(?Cotation $cotation): self
     {
         $this->cotation = $cotation;
+
+        return $this;
+    }
+
+    public function getPolice(): ?Police
+    {
+        return $this->police;
+    }
+
+    public function setPolice(?Police $police): self
+    {
+        $this->police = $police;
 
         return $this;
     }

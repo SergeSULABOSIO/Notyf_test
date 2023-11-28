@@ -2428,6 +2428,8 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('document', "Pièce jointe")
             ->setFormType(VichFileType::class)
+            ->setFormTypeOption("download_label", "Télécharger")
+            ->setFormTypeOption("delete_label", "Supprimer")
             ->setColumns(12)
             ->onlyOnForms();
 

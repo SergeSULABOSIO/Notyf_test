@@ -307,6 +307,17 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->cleanCotations();
             $this->cleanPolices();
             $this->cleanDocuments();
+
+            // /** @var Police */
+            // $polEnPlace = $piste->getPolices()[0];
+            
+            // /** @var Cotation */
+            // $cotationValidee = $polEnPlace->getCotation();
+            
+            // /** @var DocPiece */
+            // $documentsQuote = $cotationValidee->getDocuments();
+
+            // dd($documentsQuote);
         }
     }
 

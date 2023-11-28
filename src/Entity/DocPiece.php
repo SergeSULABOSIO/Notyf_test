@@ -177,9 +177,13 @@ class DocPiece
         }
         if($this->getUtilisateur()){
             $txt = $txt . " par " . $this->getUtilisateur()->getNom();
-
         }
-        return $txt . " | " . $this->getNomfichier() . ", taille: " . ($this->getTaillefichier()). " Ko";
+        $txtFichier = "Fichier: \"" . $this->getNomfichier() . "\", taille: " . $this->convertirTailleFichier($this->getTaillefichier()) . " Kb | ";
+        return $txtFichier . $txt;
+    }
+
+    private function convertirTailleFichier($tailleOctets):int{
+        return ($tailleOctets / 1024);
     }
 
     public function getType(): ?int

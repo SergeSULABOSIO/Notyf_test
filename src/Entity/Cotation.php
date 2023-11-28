@@ -684,7 +684,6 @@ class Cotation
                 $document->setCotation(null);
             }
         }
-
         return $this;
     }
 }

@@ -2413,7 +2413,6 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_CLASSEUR_NOM)
             ->setColumns(6)
             ->onlyOnForms();
-
         return $tabAttributs;
     }
 

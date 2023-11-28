@@ -6,6 +6,7 @@ use App\Repository\PisteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Sabberworm\CSS\CSSList\Document;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 class Piste
@@ -82,6 +83,7 @@ class Piste
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $polices;
+
 
     public function __construct()
     {

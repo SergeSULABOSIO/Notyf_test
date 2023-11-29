@@ -84,7 +84,7 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $polices;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class)]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
 

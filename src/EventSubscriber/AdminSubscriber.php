@@ -139,6 +139,7 @@ class AdminSubscriber implements EventSubscriberInterface
         if ($entityInstance instanceof Piste) {
             /** @var Piste */
             $piste = $entityInstance;
+
             //Collection pour Contact
             foreach ($piste->getContacts() as $contact) {
                 if ($isCreate || $contact->getCreatedAt() == null) {
@@ -147,6 +148,17 @@ class AdminSubscriber implements EventSubscriberInterface
                 $contact->setUpdatedAt(new \DateTimeImmutable());
                 $contact->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
+            }
+
+            //Les documents de la cotation
+            foreach ($piste->getDocuments() as $document) {
+                if ($isCreate || $document->getCreatedAt() == null) {
+                    $document->setCreatedAt(new \DateTimeImmutable());
+                }
+                $document->setPiste($piste);
+                $document->setUpdatedAt(new \DateTimeImmutable());
+                $document->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                $document->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
 
             //Collection pour Action
@@ -158,6 +170,17 @@ class AdminSubscriber implements EventSubscriberInterface
                 $action->setUpdatedAt(new \DateTimeImmutable());
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $action->setEntreprise($this->serviceEntreprise->getEntreprise());
+
+                //Les documents de la cotation
+                foreach ($action->getDocuments() as $document) {
+                    if ($isCreate || $document->getCreatedAt() == null) {
+                        $document->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $document->setActionCRM($action);
+                    $document->setUpdatedAt(new \DateTimeImmutable());
+                    $document->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $document->setEntreprise($this->serviceEntreprise->getEntreprise());
+                }
             }
 
             //Collection pour Prospect
@@ -369,7 +392,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $dureeDifference = $dureeMax - $dureeCourante;
         $portionDifference = $portionMax - $portionCourante;
         //dd("Durée: " . $dureeDifference . " & Portion: " . $portionDifference . "%");
-        if($dureeDifference != 0 || $portionDifference != 0){
+        if ($dureeDifference != 0 || $portionDifference != 0) {
             $gamma = [
                 "dureeDifference" => $dureeDifference,
                 "portionDifference" => $portionDifference,
@@ -381,7 +404,7 @@ class AdminSubscriber implements EventSubscriberInterface
             $newTranche = new Tranche();
             $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
             $newTranche->setDuree($gamma["dureeDifference"]);
-            $newTranche->setTaux($gamma["portionDifference"]/100);
+            $newTranche->setTaux($gamma["portionDifference"] / 100);
             $newTranche->setCotation($cotation);
             $newTranche->setCreatedAt(new DateTimeImmutable());
             $newTranche->setUpdatedAt(new DateTimeImmutable());
@@ -523,7 +546,7 @@ class AdminSubscriber implements EventSubscriberInterface
         );
         /** @var DocPiece */
         foreach ($documents as $doc) {
-            if ($doc->getCotation() == null && $doc->getPolice() == null) {
+            if ($doc->getCotation() == null && $doc->getPolice() == null && $doc->getPiste() == null && $doc->getActionCRM() == null) {
                 //On detruit enfin le document
                 $this->entityManager->remove($doc);
                 $this->entityManager->flush();

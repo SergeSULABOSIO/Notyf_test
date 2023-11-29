@@ -66,10 +66,10 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionsCRMs', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
-    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: DocPiece::class)]
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class)]
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $feedbacks;
 
     

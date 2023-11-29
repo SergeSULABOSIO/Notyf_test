@@ -5065,6 +5065,25 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
+            ->onlyOnForms()
+            ->setColumns(12);
+        //Section - Documents
+        $tabAttributs[] = FormField::addPanel("Pièces jointes et objectif")
+            ->setIcon("fa-solid fa-paperclip")
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+            //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
             //->setFormType(CKEditorType::class)
             ->onlyOnForms()
@@ -5088,12 +5107,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
-            ->onlyOnForms()
-            ->setColumns(12);
-        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)
-            ->onlyOnForms()
-            ->setColumns(12);
+        
         return $tabAttributs;
     }
 
@@ -5378,10 +5392,13 @@ class ServicePreferences
 
     public function setCRM_Fields_Pistes_form($tabAttributs)
     {
+        $tabAttributs[] = FormField::addPanel("Section principale")
+            ->setIcon("fas fa-location-crosshairs")
+            ->setColumns(6)
+            ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             //->setColumns(4)
             ->onlyOnForms();
-
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
             ->onlyOnForms()
             //->setColumns(4)
@@ -5392,18 +5409,15 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             //->setColumns(4)
             ->onlyOnForms();
-
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             //->setColumns(4)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
             //->setColumns(4)
@@ -5413,15 +5427,9 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
             //->setColumns(4)
             ->onlyOnForms();
-
-        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            //->setColumns(12)
-            ->onlyOnForms();
-
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
             //->setColumns(12)
@@ -5432,7 +5440,6 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->onlyOnForms()
             //->setColumns(6)
@@ -5453,6 +5460,26 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
+
+
+        //Section - Documents
+        $tabAttributs[] = FormField::addPanel("Objectif à atteindre et pièces jointes éventuelles")
+            ->setIcon("fa-solid fa-paperclip")
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+            //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            //->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
+            //->setColumns(12)
+            ->onlyOnForms();
+
+
 
 
         //Onglet Partenaire

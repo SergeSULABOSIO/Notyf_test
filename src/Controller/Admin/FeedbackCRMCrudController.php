@@ -79,15 +79,17 @@ class FeedbackCRMCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('action')
-            ->add('startedAt');
+            //->add('actionCRM')
+            //->add('startedAt')
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new FeedbackCRM(), $crud);
-        $crud
+
+        $this->crud = $crud
             ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -99,7 +101,6 @@ class FeedbackCRMCrudController extends AbstractCrudController
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL])
             // ...
         ;
-        $this->crud = $crud;
         return $crud;
     }
 

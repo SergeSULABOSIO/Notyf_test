@@ -39,7 +39,10 @@ class FeedbackCRM
     #[ORM\ManyToOne(inversedBy: 'feedbacks')]
     private ?ActionCRM $actionCRM = null;
 
-
+    public function __construct()
+    {
+        
+    }
     
     public function getId(): ?int
     {

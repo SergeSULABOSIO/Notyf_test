@@ -5107,7 +5107,20 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-        
+        //Section - Feedback de l'action
+        $tabAttributs[] = FormField::addPanel("Feedbacks / Comptes Rendus")
+            ->setIcon("fas fa-comments")
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = CollectionField::new('feedbacks', "Feedbacks")
+            //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(FeedbackCRM::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+
         return $tabAttributs;
     }
 

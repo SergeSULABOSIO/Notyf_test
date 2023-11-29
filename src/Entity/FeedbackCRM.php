@@ -40,9 +40,6 @@ class FeedbackCRM
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
-    private ?ActionCRM $action = null;
-
     #[ORM\ManyToOne(inversedBy: 'feedbacks')]
     private ?ActionCRM $actionCRM = null;
 
@@ -138,18 +135,6 @@ class FeedbackCRM
     public function setStartedAt(?\DateTimeImmutable $startedAt): self
     {
         $this->startedAt = $startedAt;
-
-        return $this;
-    }
-
-    public function getAction(): ?ActionCRM
-    {
-        return $this->action;
-    }
-
-    public function setAction(?ActionCRM $action): self
-    {
-        $this->action = $action;
 
         return $this;
     }

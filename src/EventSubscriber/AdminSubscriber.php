@@ -171,7 +171,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                 $action->setEntreprise($this->serviceEntreprise->getEntreprise());
 
-                //Les documents de la cotation
+                //Les documents de l'action
                 foreach ($action->getDocuments() as $document) {
                     if ($isCreate || $document->getCreatedAt() == null) {
                         $document->setCreatedAt(new \DateTimeImmutable());
@@ -180,6 +180,17 @@ class AdminSubscriber implements EventSubscriberInterface
                     $document->setUpdatedAt(new \DateTimeImmutable());
                     $document->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $document->setEntreprise($this->serviceEntreprise->getEntreprise());
+                }
+
+                //Les feedbacks de l'action
+                foreach ($action->getFeedbacks() as $feedback) {
+                    if ($isCreate || $feedback->getCreatedAt() == null) {
+                        $feedback->setCreatedAt(new \DateTimeImmutable());
+                    }
+                    $feedback->setActionCRM($action);
+                    $feedback->setUpdatedAt(new \DateTimeImmutable());
+                    $feedback->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    $feedback->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
             }
 
@@ -344,6 +355,7 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->cleanCotations();
             $this->cleanPolices();
             $this->cleanDocuments();
+            $this->cleanFeedbacks();
         }
     }
 
@@ -520,6 +532,20 @@ class AdminSubscriber implements EventSubscriberInterface
         foreach ($chargements as $chargement) {
             if ($chargement->getCotation() == null) {
                 $this->entityManager->remove($chargement);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function cleanFeedbacks()
+    {
+        $feedbacks = $this->entityManager->getRepository(FeedbackCRM::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var FeedbackCRM */
+        foreach ($feedbacks as $feedback) {
+            if ($feedback->getActionCRM() == null) {
+                $this->entityManager->remove($feedback);
                 $this->entityManager->flush();
             }
         }

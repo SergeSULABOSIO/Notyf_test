@@ -39,6 +39,9 @@ class FeedbackCRM
     #[ORM\ManyToOne(inversedBy: 'feedbacks')]
     private ?ActionCRM $actionCRM = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $closed = null;
+
     public function __construct()
     {
         
@@ -87,7 +90,7 @@ class FeedbackCRM
 
     public function __toString():string
     {
-        return "[" . $this->message . "], ". $this->utilisateur->getNom() . " le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
+        return "[" . $this->getMessage() . "], ". $this->utilisateur->getNom() . " le " . ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -146,6 +149,18 @@ class FeedbackCRM
     public function setActionCRM(?ActionCRM $actionCRM): self
     {
         $this->actionCRM = $actionCRM;
+
+        return $this;
+    }
+
+    public function isClosed(): ?bool
+    {
+        return $this->closed;
+    }
+
+    public function setClosed(?bool $closed): self
+    {
+        $this->closed = $closed;
 
         return $this;
     }

@@ -2,19 +2,13 @@
 
 namespace App\Entity;
 
-use DateTime;
 use DateInterval;
-use DateTimeImmutable;
 use App\Entity\Utilisateur;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\Types\Integer;
-use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,18 +23,6 @@ class Police
     #[Assert\NotBlank(message: "Veuillez fournir la référence de la police.")]
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
-
-    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    // private ?\DateTimeInterface $dateoperation = null;
-
-    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    // private ?\DateTimeInterface $dateemission = null;
-
-    // #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
-    // private ?\DateTimeInterface $dateeffet = null;
-
-    // #[ORM\Column(type: Types::DATE_MUTABLE)]
-    // private ?\DateTimeInterface $dateexpiration = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]

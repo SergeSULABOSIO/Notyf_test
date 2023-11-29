@@ -2,15 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\ActionCRM;
+use App\Entity\Piste;
 use DateTimeImmutable;
+use App\Entity\ActionCRM;
 use App\Entity\FeedbackCRM;
-use App\Service\ServiceCrossCanal;
+use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -28,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -35,15 +38,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class FeedbackCRMCrudController extends AbstractCrudController
 {
 
-    private Crud $crud;
+    public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceDates $serviceDates,
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -115,16 +118,32 @@ class FeedbackCRMCrudController extends AbstractCrudController
     {
         $objet = new FeedbackCRM();
         $objet->setStartedAt(new DateTimeImmutable("now"));
-        $objet = $this->serviceCrossCanal->crossCanal_Action_setAction($objet, $this->adminUrlGenerator);
-        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
-        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        //$objet->setClos(0);
+        $objet->setCreatedAt($this->serviceDates->aujourdhui());
+        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
+        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
+        
         return $objet;
     }
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        $instance = $this->getContext()->getEntity()->getInstance();
+        if($this->crud){
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
+        }
+        if ($instance != null) {
+            if ($instance instanceof Piste) {
+                //On envoie ces paramètres à tous les formulaires
+                /** @var Piste */
+                if ($instance->getProduit()) {
+                    $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                }
+                if ($instance->getClient()) {
+                    $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                }
+            }
+        }
         return $this->servicePreferences->getChamps(new FeedbackCRM(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -219,15 +238,13 @@ class FeedbackCRMCrudController extends AbstractCrudController
             $user = $entityManager->find($className, $id);
             $user->approve();
         }
-
         $entityManager->flush();
-
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-
+        /** @var FeedbackCRM */
         $entite = $context->getEntity()->getInstance();
         $entiteDuplique = clone $entite;
         parent::persistEntity($em, $entiteDuplique);

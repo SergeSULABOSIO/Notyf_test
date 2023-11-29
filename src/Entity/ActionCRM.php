@@ -42,8 +42,7 @@ class ActionCRM
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
-    private ?bool $clos = null;
+    private ?bool $closed = null;
 
     /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Piste $piste = null; */
@@ -182,21 +181,9 @@ class ActionCRM
         return $this;
     }
 
-    public function isClos(): ?bool
-    {
-        return $this->clos;
-    }
-
-    public function setClos(bool $clos): self
-    {
-        $this->clos = $clos;
-
-        return $this;
-    }
-
     public function __toString()
     {
-        return "La mission \"" . $this->mission . "(...)\" | status : " . ($this->clos == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
+        return "La mission \"" . $this->mission . "(...)\" | status : " . ($this->getClosed() == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
     }
 
 
@@ -346,6 +333,33 @@ class ActionCRM
                 $feedback->setActionCRM(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of closed
+     */ 
+    public function getClosed()
+    {
+        $reponse = false;
+        foreach ($this->getFeedbacks() as $feedback) {
+            if($feedback->isClosed() == true){
+                $this->closed = true;
+                break;
+            }
+        }
+        return $this->closed;
+    }
+
+    /**
+     * Set the value of closed
+     *
+     * @return  self
+     */ 
+    public function setClosed($closed)
+    {
+        $this->closed = $closed;
 
         return $this;
     }

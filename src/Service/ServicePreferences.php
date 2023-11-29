@@ -64,6 +64,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Admin\ElementFactureCrudController;
+use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PartenaireCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\TrancheCrudController;
@@ -4880,20 +4881,13 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_form($tabAttributs)
     {
-        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)->onlyOnForms()->setColumns(12);
-        $tabAttributs[] = TextEditorField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)->onlyOnForms()->setColumns(12);
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)) {
-            $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)->onlyOnForms()->setColumns(12);
+        $tabAttributs[] = BooleanField::new('closed', "La tâche est exécutée avec succès.")
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+            ->setColumns(12)
+            ->onlyOnForms();
+
         return $tabAttributs;
     }
 
@@ -5088,13 +5082,6 @@ class ServicePreferences
             //->setFormType(CKEditorType::class)
             ->onlyOnForms()
             ->setColumns(12);
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_STATUS)) {
-            $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
-                ->setChoices(ActionCRMCrudController::STATUS_MISSION);
-        }
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_PISTE)) {
             $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
                 ->setRequired(false)
@@ -5113,7 +5100,7 @@ class ServicePreferences
             ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = CollectionField::new('feedbacks', "Feedbacks")
             //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
-            ->useEntryCrudForm(FeedbackCRM::class)
+            ->useEntryCrudForm(FeedbackCRMCrudController::class)
             ->allowAdd(true)
             ->allowDelete(true)
             ->setEntryIsComplex()

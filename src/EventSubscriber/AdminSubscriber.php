@@ -266,7 +266,7 @@ class AdminSubscriber implements EventSubscriberInterface
                     $tranche->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
 
-                ici - il faut revoir et perfectionner la fonction
+                //ici - il faut revoir et perfectionner la fonction
                 //On équilibre les tranches
                 $this->equilibrerTranches($cotation);
 
@@ -351,37 +351,49 @@ class AdminSubscriber implements EventSubscriberInterface
      */
     public function equilibrerTranches(?Cotation $cotation)
     {
-        //On équilibre les données par défaut s'il y a les chargement
-        if (count($cotation->getChargements()) != 0) {
-            $dureeGlobale = $cotation->getDureeCouverture(); //En mois
-
-            $dureeTrancheTotale = 0;
-            $tauxTranchesTotale = 0;
-            if ($cotation->getTranches()) {
-                foreach ($cotation->getTranches() as $tranche) {
-                    $dureeTrancheTotale = $dureeTrancheTotale + $tranche->getDuree();
-                    $tauxTranchesTotale = $tauxTranchesTotale + $tranche->getTaux();
-                }
-            }
-            $diffDuree = $dureeGlobale - $dureeTrancheTotale;
-            $diffTaux = 1 - $tauxTranchesTotale;
-            //dd($diffTaux);
-            if ($diffDuree != 0 && $diffTaux != 0) {
-                $newTranche = new Tranche();
-                $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
-                $newTranche->setDuree($diffDuree);
-                $newTranche->setTaux($diffTaux);
-                $newTranche->setCotation($cotation);
-                $newTranche->setCreatedAt(new DateTimeImmutable());
-                $newTranche->setUpdatedAt(new DateTimeImmutable());
-                $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
-                $cotation->addTranch($newTranche);
-            }
+        //Durées
+        $dureeMax = $cotation->getDureeCouverture();
+        $dureeCourante = 0;
+        $dureeDifference = 0;
+        //Portion (en pourcentage)
+        $portionMax = 100;
+        $portionCourante = 0;
+        $portionDifference = 0;
+        $gamma = [];
+        foreach ($cotation->getTranches() as $tranche) {
+            $dureeCourante = $dureeCourante + $tranche->getDuree();
+            $portionCourante = $portionCourante + ($tranche->getTaux() * 100);
+        }
+        //dd($dureeMax . " " . $portionMax);
+        //dd($dureeCourante . " " . $portionCourante);
+        $dureeDifference = $dureeMax - $dureeCourante;
+        $portionDifference = $portionMax - $portionCourante;
+        //dd("Durée: " . $dureeDifference . " & Portion: " . $portionDifference . "%");
+        if($dureeDifference != 0 || $portionDifference != 0){
+            $gamma = [
+                "dureeDifference" => $dureeDifference,
+                "portionDifference" => $portionDifference,
+            ];
+        }
+        //dd($gamma); 
+        //dd(count($gamma));
+        if (count($gamma) != 0) {
+            $newTranche = new Tranche();
+            $newTranche->setNom("Tranche #" . (count($cotation->getTranches()) + 1));
+            $newTranche->setDuree($gamma["dureeDifference"]);
+            $newTranche->setTaux($gamma["portionDifference"]/100);
+            $newTranche->setCotation($cotation);
+            $newTranche->setCreatedAt(new DateTimeImmutable());
+            $newTranche->setUpdatedAt(new DateTimeImmutable());
+            $newTranche->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+            $newTranche->setEntreprise($this->serviceEntreprise->getEntreprise());
+            //dd($newTranche);
+            $cotation->addTranch($newTranche);
         }
     }
 
     /**
+     * S'il y a chargement et que le USER ne défnisse pas de revenu,
      * Cette fonction charge le revenu par défaut selon le type de produit défini.
      *
      * @param Cotation|null $cotation

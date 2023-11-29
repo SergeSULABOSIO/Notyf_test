@@ -84,6 +84,9 @@ class Piste
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $polices;
 
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class)]
+    private Collection $documents;
+
 
     public function __construct()
     {
@@ -93,6 +96,7 @@ class Piste
         $this->prospect = new ArrayCollection();
         $this->newpartenaire = new ArrayCollection();
         $this->polices = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -470,6 +474,36 @@ class Piste
             // set the owning side to null (unless already changed)
             if ($police->getPiste() === $this) {
                 $police->setPiste(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(DocPiece $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setPiste($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(DocPiece $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getPiste() === $this) {
+                $document->setPiste(null);
             }
         }
 

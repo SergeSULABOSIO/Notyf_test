@@ -48,8 +48,8 @@ class ActionCRM
     /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Piste $piste = null; */
 
-    #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
-    private Collection $feedbackCRMs;
+    // #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
+    // private Collection $feedbackCRMs;
 
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
@@ -66,10 +66,18 @@ class ActionCRM
     #[ORM\ManyToOne(inversedBy: 'actionsCRMs', cascade:['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: DocPiece::class)]
+    private Collection $documents;
+
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class)]
+    private Collection $feedbacks;
+
     
     public function __construct()
     {
-        $this->feedbackCRMs = new ArrayCollection();
+        //$this->feedbackCRMs = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,35 +200,35 @@ class ActionCRM
     }
 
 
-    /**
-     * @return Collection<int, FeedbackCRM>
-     */
-    public function getFeedbackCRMs(): Collection
-    {
-        return $this->feedbackCRMs;
-    }
+    // /**
+    //  * @return Collection<int, FeedbackCRM>
+    //  */
+    // public function getFeedbackCRMs(): Collection
+    // {
+    //     return $this->feedbackCRMs;
+    // }
 
-    public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if (!$this->feedbackCRMs->contains($feedbackCRM)) {
-            $this->feedbackCRMs->add($feedbackCRM);
-            $feedbackCRM->setAction($this);
-        }
+    // public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    // {
+    //     if (!$this->feedbackCRMs->contains($feedbackCRM)) {
+    //         $this->feedbackCRMs->add($feedbackCRM);
+    //         $feedbackCRM->setAction($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    {
-        if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
-            // set the owning side to null (unless already changed)
-            if ($feedbackCRM->getAction() === $this) {
-                $feedbackCRM->setAction(null);
-            }
-        }
+    // public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
+    // {
+    //     if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($feedbackCRM->getAction() === $this) {
+    //             $feedbackCRM->setAction(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getAttributedTo(): ?Utilisateur
     {
@@ -278,6 +286,66 @@ class ActionCRM
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(DocPiece $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setActionCRM($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(DocPiece $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getActionCRM() === $this) {
+                $document->setActionCRM(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackCRM>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(FeedbackCRM $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setActionCRM($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(FeedbackCRM $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getActionCRM() === $this) {
+                $feedback->setActionCRM(null);
+            }
+        }
 
         return $this;
     }

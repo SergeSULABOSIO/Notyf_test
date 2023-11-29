@@ -43,6 +43,9 @@ class FeedbackCRM
     #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     private ?ActionCRM $action = null;
 
+    #[ORM\ManyToOne(inversedBy: 'feedbacks')]
+    private ?ActionCRM $actionCRM = null;
+
 
     
     public function getId(): ?int
@@ -147,6 +150,18 @@ class FeedbackCRM
     public function setAction(?ActionCRM $action): self
     {
         $this->action = $action;
+
+        return $this;
+    }
+
+    public function getActionCRM(): ?ActionCRM
+    {
+        return $this->actionCRM;
+    }
+
+    public function setActionCRM(?ActionCRM $actionCRM): self
+    {
+        $this->actionCRM = $actionCRM;
 
         return $this;
     }

@@ -57,6 +57,12 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Police $police = null;
 
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Piste $piste = null;
+
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?ActionCRM $actionCRM = null;
+
     public function __construct()
     {
         
@@ -221,6 +227,30 @@ class DocPiece
     public function setPolice(?Police $police): self
     {
         $this->police = $police;
+
+        return $this;
+    }
+
+    public function getPiste(): ?Piste
+    {
+        return $this->piste;
+    }
+
+    public function setPiste(?Piste $piste): self
+    {
+        $this->piste = $piste;
+
+        return $this;
+    }
+
+    public function getActionCRM(): ?ActionCRM
+    {
+        return $this->actionCRM;
+    }
+
+    public function setActionCRM(?ActionCRM $actionCRM): self
+    {
+        $this->actionCRM = $actionCRM;
 
         return $this;
     }

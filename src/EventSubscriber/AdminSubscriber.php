@@ -266,6 +266,7 @@ class AdminSubscriber implements EventSubscriberInterface
                     $tranche->setEntreprise($this->serviceEntreprise->getEntreprise());
                 }
 
+                ici - il faut revoir et perfectionner la fonction
                 //On équilibre les tranches
                 $this->equilibrerTranches($cotation);
 

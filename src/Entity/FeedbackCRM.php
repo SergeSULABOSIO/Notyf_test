@@ -22,10 +22,6 @@ class FeedbackCRM
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    /* #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ActionCRM $action = null; */
-
     #[ORM\ManyToOne(inversedBy: 'feedbackCRMs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;

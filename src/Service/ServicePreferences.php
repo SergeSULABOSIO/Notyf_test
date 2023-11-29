@@ -4880,12 +4880,12 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_form($tabAttributs)
     {
-        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)->onlyOnForms()->setColumns(6);
-        $tabAttributs[] = TextEditorField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)->onlyOnForms()->setColumns(6);
+        $tabAttributs[] = TextEditorField::new('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)->onlyOnForms()->setColumns(12);
+        $tabAttributs[] = TextEditorField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)->onlyOnForms()->setColumns(12);
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)) {
             $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
                 ->onlyOnForms()
-                ->setColumns(6)
+                ->setColumns(12)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
                         ->createQueryBuilder('e')
@@ -4893,7 +4893,7 @@ class ServicePreferences
                         ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                 });
         }
-        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)->onlyOnForms()->setColumns(6);
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)->onlyOnForms()->setColumns(12);
         return $tabAttributs;
     }
 

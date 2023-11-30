@@ -5010,6 +5010,11 @@ class ServicePreferences
 
     public function setCRM_Fields_Action_form($tabAttributs, $adminUrlGenerator)
     {
+        $tabAttributs[] = BooleanField::new('closed', "La tâche est cloturée avec succès.")
+            ->onlyOnForms()
+            ->setFormTypeOption('disabled','disabled')
+            ->renderAsSwitch(false)
+            ->setColumns(12);
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
             ->onlyOnForms()
             ->setColumns(12);
@@ -5394,14 +5399,14 @@ class ServicePreferences
     {
         $tabAttributs[] = FormField::addPanel("Section principale")
             ->setIcon("fas fa-location-crosshairs")
-            ->setColumns(6)
+            ->setColumns(10)
             ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
-            //->setColumns(4)
+            ->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
             ->onlyOnForms()
-            //->setColumns(4)
+            ->setColumns(10)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5412,15 +5417,15 @@ class ServicePreferences
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
-            //->setColumns(4)
+            ->setColumns(3)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
-            //->setColumns(4)
+            ->setColumns(10)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->onlyOnForms()
-            //->setColumns(4)
+            ->setColumns(10)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
                     ->createQueryBuilder('e')
@@ -5428,11 +5433,11 @@ class ServicePreferences
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
-            //->setColumns(4)
+            //->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
             ->onlyOnForms()
-            //->setColumns(12)
+            ->setColumns(10)
             ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5442,7 +5447,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->onlyOnForms()
-            //->setColumns(6)
+            ->setColumns(10)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5452,7 +5457,7 @@ class ServicePreferences
             });
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->onlyOnForms()
-            //->setColumns(6)
+            ->setColumns(10)
             ->setRequired(true)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5473,10 +5478,10 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            //->setColumns(12)
+            ->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-            //->setColumns(12)
+            ->setColumns(10)
             ->onlyOnForms();
 
 
@@ -5490,7 +5495,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
             ->setHelp("Si le partenaire n'existe pas encore sur cette liste, vous pouvez l'ajouter. Pour cela, il faut allez sur le champ d'ajout du partenaire.")
             ->onlyOnForms()
-            ->setColumns(5)
+            ->setColumns(10)
             ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5505,7 +5510,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //Onglet Client ou Prospect
@@ -5516,7 +5521,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->setHelp("Si le client n'existe pas encore sur cette liste, vous pouvez l'ajouter comme prospect. Pour cela, il faut allez sur le champ d'ajout de prospect.")
             ->onlyOnForms()
-            ->setColumns(5)
+            ->setColumns(10)
             ->setRequired(false)
             ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                 return $entityRepository
@@ -5532,7 +5537,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //Onglet Contacts
@@ -5547,7 +5552,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //Onglet Cotations
@@ -5562,7 +5567,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //Onglet Cotations
@@ -5577,7 +5582,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //Onglet Polices
@@ -5592,7 +5597,7 @@ class ServicePreferences
             ->allowDelete(true)
             ->setEntryIsComplex()
             ->setRequired(false)
-            ->setColumns(7)
+            ->setColumns(10)
             ->onlyOnForms();
 
         //dd($tabAttributs);

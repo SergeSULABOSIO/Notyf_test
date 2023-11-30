@@ -342,7 +342,7 @@ class ActionCRM
      */ 
     public function getClosed()
     {
-        $reponse = false;
+        $this->closed = false;
         foreach ($this->getFeedbacks() as $feedback) {
             if($feedback->isClosed() == true){
                 $this->closed = true;

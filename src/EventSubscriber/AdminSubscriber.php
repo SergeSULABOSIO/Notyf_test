@@ -28,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
 use App\Entity\Client;
@@ -242,6 +243,10 @@ class AdminSubscriber implements EventSubscriberInterface
             foreach ($piste->getCotations() as $cotation) {
                 if ($isCreate || $cotation->getCreatedAt() == null) {
                     $cotation->setCreatedAt(new \DateTimeImmutable());
+                    $cotation->setValidated(false);
+                    $cotation->setTauxretrocompartenaire(0);
+                    //On doit aussi ajouter les chargement habituels automatiquement
+                    ici
                 }
                 $cotation->setPiste($cotation->getPiste());
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
@@ -356,6 +361,23 @@ class AdminSubscriber implements EventSubscriberInterface
             $this->cleanPolices();
             $this->cleanDocuments();
             $this->cleanFeedbacks();
+            $this->updateEtapePiste($piste);
+        }
+    }
+
+    private function updateEtapePiste(?Piste $piste){
+        if(count($piste->getPolices()) != 0){
+            $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CONCLUSION]);
+        }else{
+            if(count($piste->getCotations()) != 0){
+                $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_PRODUCTION_DES_DEVIS]);
+            }else{
+                if(count($piste->getActionsCRMs()) != 0 || count($piste->getContacts()) != 0){
+                    $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_COLLECTE_DE_DONNEES]);
+                }else{
+                    $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
+                }
+            }
         }
     }
 

@@ -43,6 +43,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PisteCrudController extends AbstractCrudController
 {
+    public const ETAPE_CREATION             = "Creation";
+    public const ETAPE_COLLECTE_DE_DONNEES  = "Collecte des données";
+    public const ETAPE_PRODUCTION_DES_DEVIS = "Production des cotations";
+    public const ETAPE_CONCLUSION           = "Conclusion et émission de l'avenant";
+    
+    public const TAB_ETAPES = [
+        self::ETAPE_CREATION => 1,
+        self::ETAPE_COLLECTE_DE_DONNEES => 2,
+        self::ETAPE_PRODUCTION_DES_DEVIS => 3,
+        self::ETAPE_CONCLUSION => 4,
+    ];
+
     public ?Crud $crud = null;
 
     public function __construct(

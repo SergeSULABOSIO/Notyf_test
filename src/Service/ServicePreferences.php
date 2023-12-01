@@ -66,6 +66,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use App\Controller\Admin\ElementFactureCrudController;
 use App\Controller\Admin\FeedbackCRMCrudController;
 use App\Controller\Admin\PartenaireCrudController;
+use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\TrancheCrudController;
 use App\Entity\Chargement;
@@ -2456,7 +2457,7 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('document', "Pièce jointe")
             ->setFormType(VichFileType::class)
-            ->setFormTypeOption("download_label", "Télécharger")
+            ->setFormTypeOption("download_label", "Ouvrir le fichier")
             ->setFormTypeOption("delete_label", "Supprimer")
             ->setColumns(12)
             ->onlyOnForms();
@@ -5012,7 +5013,7 @@ class ServicePreferences
     {
         $tabAttributs[] = BooleanField::new('closed', "La tâche est cloturée avec succès.")
             ->onlyOnForms()
-            ->setFormTypeOption('disabled','disabled')
+            ->setFormTypeOption('disabled', 'disabled')
             ->renderAsSwitch(false)
             ->setColumns(12);
         $tabAttributs[] = TextField::new('mission', PreferenceCrudController::PREF_CRM_MISSION_NOM)
@@ -5175,7 +5176,10 @@ class ServicePreferences
                 $this->setTitreReportingCRM($piste);
                 return $value;
             })
-            ->onlyOnIndex(); //->setColumns(6);
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+            ->setChoices(PisteCrudController::TAB_ETAPES)
+            ->onlyOnIndex();
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT])) {
             $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
                 ->onlyOnIndex()
@@ -5236,8 +5240,11 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
-            $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
-                ->onlyOnIndex();
+
+            // $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+            //     ->onlyOnForms()
+            //     ->setColumns(10)
+            //     ->setDisabled(true);
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])) {
             $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
@@ -5401,6 +5408,12 @@ class ServicePreferences
             ->setIcon("fas fa-location-crosshairs")
             ->setColumns(10)
             ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+            ->setChoices(PisteCrudController::TAB_ETAPES)
+            ->onlyOnForms()
+            ->setColumns(10)
+            ->setDisabled(true);
+
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->setColumns(10)
             ->onlyOnForms();
@@ -5423,15 +5436,7 @@ class ServicePreferences
             ->setColumns(10)
             ->onlyOnForms()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
-        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
-            ->onlyOnForms()
-            ->setColumns(10)
-            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                return $entityRepository
-                    ->createQueryBuilder('e')
-                    ->Where('e.entreprise = :ese')
-                    ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-            });
+
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
             //->setColumns(10)
             ->onlyOnForms();

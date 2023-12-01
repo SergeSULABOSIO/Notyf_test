@@ -42,8 +42,8 @@ class Piste
     #[ORM\Column]
     private ?\DateTimeImmutable $expiredAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pistes')]
-    private ?EtapeCrm $etape = null;
+    // #[ORM\ManyToOne(inversedBy: 'pistes')]
+    // private ?EtapeCrm $etape = null;
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $contacts;
@@ -86,6 +86,11 @@ class Piste
 
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
     private Collection $documents;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $etape = null;
+
+    
 
 
     public function __construct()
@@ -205,16 +210,16 @@ class Piste
         return "la piste " . $this->nom;// . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
-    public function getEtape(): ?EtapeCrm
-    {
-        return $this->etape;
-    }
+    // public function getEtape(): ?EtapeCrm
+    // {
+    //     return $this->etape;
+    // }
 
-    public function setEtape(?EtapeCrm $etape): self
-    {
-        $this->etape = $etape;
-        return $this;
-    }
+    // public function setEtape(?EtapeCrm $etape): self
+    // {
+    //     $this->etape = $etape;
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Cotation>
@@ -506,6 +511,18 @@ class Piste
                 $document->setPiste(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEtape(): ?int
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(?int $etape): self
+    {
+        $this->etape = $etape;
 
         return $this;
     }

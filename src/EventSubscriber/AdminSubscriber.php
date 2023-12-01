@@ -28,6 +28,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
+use App\Controller\Admin\ChargementCrudController;
 use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
@@ -166,7 +167,7 @@ class AdminSubscriber implements EventSubscriberInterface
             foreach ($piste->getActionsCRMs() as $action) {
                 if ($isCreate || $action->getCreatedAt() == null) {
                     $action->setCreatedAt(new \DateTimeImmutable());
-                    $action->setClos(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
+                    $action->setClosed(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
                 }
                 $action->setUpdatedAt(new \DateTimeImmutable());
                 $action->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -245,8 +246,12 @@ class AdminSubscriber implements EventSubscriberInterface
                     $cotation->setCreatedAt(new \DateTimeImmutable());
                     $cotation->setValidated(false);
                     $cotation->setTauxretrocompartenaire(0);
-                    //On doit aussi ajouter les chargement habituels automatiquement
-                    ici
+
+                    /**
+                     * On doit aussi ajouter les chargement habituels automatiquement
+                     * En dehors de ce que le USER a déjà défini manuellement.
+                     */
+                    $this->definirChargementsParDefaut($cotation);
                 }
                 $cotation->setPiste($cotation->getPiste());
                 $cotation->setUpdatedAt(new \DateTimeImmutable());
@@ -365,16 +370,85 @@ class AdminSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function updateEtapePiste(?Piste $piste){
-        if(count($piste->getPolices()) != 0){
+
+    /**
+     * Cette fonction charge les frais habituels à facturer au client
+     * Càd, les élements constitutifs de la prime d'assurance totale.
+     * Comme par exemple la prime net, la Tva, les frais accéssoires ou administratifs, les frais de surveillance, le fronting.
+     * 
+     * Après, le USER a toujours la possibilité de modifier à volonté ces chargement ou même les supprimer.
+     *
+     * @param Cotation|null $cotation
+     * @return void
+     */
+    private function definirChargementsParDefaut(?Cotation $cotation)
+    {
+        /**
+         * On identifie d'abord les chargements que le USER aura déjà saisie manuellement
+         * Ces chargements doivent plus être concidérées (pas de doublon, pas de TVA deux fois par example)
+         * 
+         */
+        $tab_int_types_chargement_a_ignorer = [];
+        if (count($cotation->getChargements()) != 0) {
+            /** @var Chargement */
+            foreach ($cotation->getChargements() as $ancienChargement) {
+                $tab_int_types_chargement_a_ignorer[] = $ancienChargement->getType();
+            }
+        }
+
+        /**
+         * On récupère le table globale des chargements 
+         * selon que l'on est devant un client exonéré à la TVA ou pas
+         */
+        $tab_asoc_types_chargement = [];
+        if ($cotation->getPiste()->getClient()->isExoneree() == true) {
+            $tab_asoc_types_chargement = ChargementCrudController::TAB_TYPE_CHARGEMENT_EXONEREE;
+        } else {
+            $tab_asoc_types_chargement = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE;
+        }
+
+        /**
+         * Enfin, on crée automatiquement les chargement qui n'ont pas été saisis 
+         * par le client avec comme montant "Zéro".
+         * Pour ne pas influer la prime totale
+         */
+        foreach ($tab_asoc_types_chargement as $nom_type_chargement => $code_type_chargement) {
+            if($this->canIgnore($code_type_chargement, $tab_int_types_chargement_a_ignorer) == false){
+                $newChargement = new Chargement();
+                $newChargement->setType($code_type_chargement);
+                $newChargement->setDescription($nom_type_chargement);
+                $newChargement->setMontant(0);
+                $newChargement->setUtilisateur($cotation->getUtilisateur());
+                $newChargement->setEntreprise($cotation->getEntreprise());
+                $newChargement->setCreatedAt($this->serviceDates->aujourdhui());
+                $newChargement->setUpdatedAt($this->serviceDates->aujourdhui());
+                $newChargement->setCotation($cotation);
+                $cotation->addChargement($newChargement);
+            }
+        }
+        //dd($tab_asoc_types_chargement);
+    }
+
+    private function canIgnore(?int $type_chargement, $tab_int_types_chargement_a_ignorer): bool{
+        foreach ($tab_int_types_chargement_a_ignorer as $int_type_chargement_a_ignorer) {
+            if($int_type_chargement_a_ignorer == $type_chargement){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function updateEtapePiste(?Piste $piste)
+    {
+        if (count($piste->getPolices()) != 0) {
             $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CONCLUSION]);
-        }else{
-            if(count($piste->getCotations()) != 0){
+        } else {
+            if (count($piste->getCotations()) != 0) {
                 $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_PRODUCTION_DES_DEVIS]);
-            }else{
-                if(count($piste->getActionsCRMs()) != 0 || count($piste->getContacts()) != 0){
+            } else {
+                if (count($piste->getActionsCRMs()) != 0 || count($piste->getContacts()) != 0) {
                     $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_COLLECTE_DE_DONNEES]);
-                }else{
+                } else {
                     $piste->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
                 }
             }

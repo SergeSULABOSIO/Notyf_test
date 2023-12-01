@@ -278,12 +278,14 @@ class Revenu
                     foreach ($tabTranches as $tranche) {
                         $i = $i + 1;
                         $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
-                        if ($i == count($tabTranches)) {
-                            $portions = $portions . " et " . $comTranche . $strMonnaie;
-                        } else if ($i == 1) {
+                        if ($i == 1) {
                             $portions = $comTranche . $strMonnaie;
-                        } else {
-                            $portions = $portions . ", " . $comTranche . $strMonnaie;
+                        }else{
+                            if($i == count($tabTranches)){
+                                $portions = $portions . " et " . $comTranche . $strMonnaie;
+                            }else{
+                                $portions = $portions . ", " . $comTranche . $strMonnaie;
+                            }
                         }
                     }
                     $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";

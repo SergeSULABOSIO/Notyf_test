@@ -78,7 +78,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_MISSION_UTILISATEUR       = "Utilisateur";
     public const PREF_CRM_MISSION_ENTREPRISE        = "Entreprise";
     public const PREF_CRM_MISSION_CREATED_AT        = "Date de création";
-    public const PREF_CRM_MISSION_UPDATED_AT        = "Dernière modification";
+    public const PREF_CRM_MISSION_UPDATED_AT        = "D. modification";
     public const TAB_CRM_MISSIONS = [
         self::PREF_CRM_MISSION_ID           => 0,
         self::PREF_CRM_MISSION_NOM          => 1,

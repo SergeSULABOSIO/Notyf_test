@@ -90,14 +90,15 @@ class ActionCRMCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add('startedAt')
-            ->add('endedAt')
-            ->add('piste')
-            ->add('police')
-            ->add('cotation')
-            ->add('sinistre')
-            ->add('clos')
-            ->add('attributedTo');
+            //->add('startedAt')
+            //->add('endedAt')
+            //->add('piste')
+            //->add('police')
+            //->add('cotation')
+            //->add('sinistre')
+            //->add('clos')
+            //->add('attributedTo')
+            ;
     }
 
     public function configureCrud(Crud $crud): Crud

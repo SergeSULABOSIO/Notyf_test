@@ -117,7 +117,6 @@ class FeedbackCRMCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new FeedbackCRM();
-        $objet->setStartedAt(new DateTimeImmutable("now"));
         $objet->setCreatedAt($this->serviceDates->aujourdhui());
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());

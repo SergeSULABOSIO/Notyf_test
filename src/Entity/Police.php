@@ -182,16 +182,17 @@ class Police
             $strAutreData = $this->getCotation()->getAssureur()->getNom();
         }
         $txtPrime = "";
-        if($this->getMonnaie_Affichage()){
-            $txtPrime = " | Prime totale: ". ($this->getPrimeTotale()/100) . " " . $this->getCodeMonnaieAffichage();
+        if ($this->getMonnaie_Affichage()) {
+            $txtPrime = " | Prime totale: " . ($this->getPrimeTotale() / 100) . " " . $this->getCodeMonnaieAffichage();
         }
         return "Réf.: " . $this->getReference() . " / " . $strAutreData . $txtPrime; // . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
     }
 
-    private function getCodeMonnaieAffichage(): string{
+    private function getCodeMonnaieAffichage(): string
+    {
         $strMonnaie = "";
         $monnaieAff = $this->getMonnaie_Affichage();
-        if($monnaieAff != null){
+        if ($monnaieAff != null) {
             $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
         }
         return $strMonnaie;
@@ -200,7 +201,7 @@ class Police
     private function getMonnaie_Affichage()
     {
         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($monnaie == null){
+        if ($monnaie == null) {
             $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
         return $monnaie;
@@ -210,7 +211,7 @@ class Police
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
-            if($monnaie->getFonction() == $fonction){
+            if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;
             }
         }
@@ -258,8 +259,10 @@ class Police
         //     $duree = $this->convertDuree($this->getCotation()->getDureeCouverture());
         //     $this->dateexpiration = $this->ajouterJours($this->getDateeffet(), $duree);
         // }
-        $this->dateexpiration = $this->getDateeffet()->add(new DateInterval("P". ($this->getCotation()->getDureeCouverture()) ."M"));
-        $this->dateexpiration = $this->dateexpiration->modify("-1 day");
+        if ($this->getCotation()) {
+            $this->dateexpiration = $this->getDateeffet()->add(new DateInterval("P" . ($this->getCotation()->getDureeCouverture()) . "M"));
+            $this->dateexpiration = $this->dateexpiration->modify("-1 day");
+        }
         return $this->dateexpiration;
     }
 
@@ -319,6 +322,8 @@ class Police
     {
         if ($this->getCotation()) {
             $this->primeTotale = $this->getCotation()->getPrimeTotale();
+        } else {
+            $this->primeTotale = 0;
         }
         return $this->primeTotale;
     }
@@ -466,7 +471,7 @@ class Police
 
     /**
      * Get the value of contacts
-     */ 
+     */
     public function getContacts()
     {
         if ($this->getPiste()) {
@@ -477,7 +482,7 @@ class Police
 
     /**
      * Get the value of tauxretrocompartenaire
-     */ 
+     */
     public function getTauxretrocompartenaire()
     {
         if ($this->getCotation()) {
@@ -488,7 +493,7 @@ class Police
 
     /**
      * Get the value of revenuTotalHTPartageable
-     */ 
+     */
     public function getRevenuTotalHTPartageable()
     {
         if ($this->getCotation()) {
@@ -499,7 +504,7 @@ class Police
 
     /**
      * Get the value of taxeCourtierTotalePartageable
-     */ 
+     */
     public function getTaxeCourtierTotalePartageable()
     {
         if ($this->getCotation()) {
@@ -510,7 +515,7 @@ class Police
 
     /**
      * Get the value of revenuNetTotalPartageable
-     */ 
+     */
     public function getRevenuNetTotalPartageable()
     {
         if ($this->getCotation()) {
@@ -521,7 +526,7 @@ class Police
 
     /**
      * Get the value of retroComPartenaire
-     */ 
+     */
     public function getRetroComPartenaire()
     {
         if ($this->getCotation()) {

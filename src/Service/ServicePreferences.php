@@ -4683,16 +4683,37 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnIndex();
-        
+
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Cotation_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_COTATION_ID)->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('validated', "Status")
+            ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT)
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('polices', "Polices")->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('dureeCouverture', PreferenceCrudController::PREF_CRM_COTATION_DUREE)
+            ->formatValue(function ($value, Cotation $entity) {
+                return $value . " mois.";
+            })
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
+            ->formatValue(function ($value, Cotation $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnDetail();
 
         // $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
         //     ->formatValue(function ($value, Cotation $entity) {
@@ -4736,12 +4757,9 @@ class ServicePreferences
         //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
         //     ->setStoredAsCents()
         //     ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('validated', PreferenceCrudController::PREF_CRM_COTATION_RESULTAT)
-            ->onlyOnDetail()
-            ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT);
+
         //$tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
+
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -4756,57 +4774,24 @@ class ServicePreferences
 
     public function setCRM_Fields_Feedback_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_FEEDBACK_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE])) {
-            $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE])) {
-            $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION])) {
-            $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET])) {
-            $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR)
-                ->onlyOnIndex()
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_FEEDBACK_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+            ->renderAsHtml()
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('actionCRM', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_CREATION)
+            ->onlyOnIndex();
+
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Feedback_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_FEEDBACK_ID)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('prochaineTache', PreferenceCrudController::PREF_CRM_FEEDBACK_PROCHAINE_ETAPE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('action', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_FEEDBACK_DATE_EFFET)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+            ->renderAsHtml()
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('actionCRM', PreferenceCrudController::PREF_CRM_FEEDBACK_ACTION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_FEEDBACK_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();

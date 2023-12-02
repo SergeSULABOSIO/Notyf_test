@@ -192,7 +192,7 @@ class Cotation
         }
         $strValidation = ($this->isValidated() == true ? " (offre validée)" : "");        
         //return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
-        return "" . $this->nom . $strValidation;
+        return  "" . $this->nom . $strValidation;
     }
 
     public function getPiste(): ?Piste

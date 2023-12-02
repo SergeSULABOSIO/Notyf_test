@@ -30,12 +30,6 @@ class FeedbackCRM
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $prochaineTache = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $startedAt = null;
-
     #[ORM\ManyToOne(inversedBy: 'feedbacks')]
     private ?ActionCRM $actionCRM = null;
 
@@ -113,30 +107,6 @@ class FeedbackCRM
     public function setEntreprise(?Entreprise $entreprise): self
     {
         $this->entreprise = $entreprise;
-
-        return $this;
-    }
-
-    public function getProchaineTache(): ?string
-    {
-        return $this->prochaineTache;
-    }
-
-    public function setProchaineTache(?string $prochaineTache): self
-    {
-        $this->prochaineTache = $prochaineTache;
-
-        return $this;
-    }
-
-    public function getStartedAt(): ?\DateTimeImmutable
-    {
-        return $this->startedAt;
-    }
-
-    public function setStartedAt(?\DateTimeImmutable $startedAt): self
-    {
-        $this->startedAt = $startedAt;
 
         return $this;
     }

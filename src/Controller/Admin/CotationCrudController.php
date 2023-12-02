@@ -49,8 +49,8 @@ class CotationCrudController extends AbstractCrudController
     public const TYPE_RESULTAT_VALIDE = "Validée";
     public const TYPE_RESULTAT_NON_VALIDEE = "Non Validée";
     public const TAB_TYPE_RESULTAT = [
-        self::TYPE_RESULTAT_VALIDE => 0,
-        self::TYPE_RESULTAT_NON_VALIDEE => 1,
+        self::TYPE_RESULTAT_NON_VALIDEE => 0,
+        self::TYPE_RESULTAT_VALIDE => 1,
     ];
 
 

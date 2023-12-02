@@ -413,7 +413,7 @@ class AdminSubscriber implements EventSubscriberInterface
          * Pour ne pas influer la prime totale
          */
         foreach ($tab_asoc_types_chargement as $nom_type_chargement => $code_type_chargement) {
-            if($this->canIgnore($code_type_chargement, $tab_int_types_chargement_a_ignorer) == false){
+            if ($this->canIgnore($code_type_chargement, $tab_int_types_chargement_a_ignorer) == false) {
                 $newChargement = new Chargement();
                 $newChargement->setType($code_type_chargement);
                 $newChargement->setDescription($nom_type_chargement);
@@ -429,9 +429,10 @@ class AdminSubscriber implements EventSubscriberInterface
         //dd($tab_asoc_types_chargement);
     }
 
-    private function canIgnore(?int $type_chargement, $tab_int_types_chargement_a_ignorer): bool{
+    private function canIgnore(?int $type_chargement, $tab_int_types_chargement_a_ignorer): bool
+    {
         foreach ($tab_int_types_chargement_a_ignorer as $int_type_chargement_a_ignorer) {
-            if($int_type_chargement_a_ignorer == $type_chargement){
+            if ($int_type_chargement_a_ignorer == $type_chargement) {
                 return true;
             }
         }
@@ -460,14 +461,16 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         //On définit sa cotation comme étant validée
         foreach ($piste->getCotations() as $quote) {
-            if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
-                $quote->setValidated(false);
-                $this->entityManager->persist($quote);
-                $this->entityManager->flush();
-            } else {
-                $quote->setValidated(true);
-                $this->entityManager->persist($quote);
-                $this->entityManager->flush();
+            if ($policeRetenue->getCotation()) {
+                if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
+                    $quote->setValidated(false);
+                    $this->entityManager->persist($quote);
+                    $this->entityManager->flush();
+                } else {
+                    $quote->setValidated(true);
+                    $this->entityManager->persist($quote);
+                    $this->entityManager->flush();
+                }
             }
         }
     }

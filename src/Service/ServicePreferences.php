@@ -4830,9 +4830,8 @@ class ServicePreferences
         $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
             ->renderAsHtml()
             ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('clos', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
+        $tabAttributs[] = ChoiceField::new('closed', PreferenceCrudController::PREF_CRM_MISSION_STATUS)
             ->onlyOnDetail()
-            ->setHelp("Précisez si cette mission/action est encore en vigueur ou pas.")
             ->setChoices(ActionCRMCrudController::STATUS_MISSION)
             ->renderAsBadges([
                 ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ACHEVEE] => 'success', //info
@@ -4842,7 +4841,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('feedbackCRMs', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('feedbacks', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)->onlyOnDetail();

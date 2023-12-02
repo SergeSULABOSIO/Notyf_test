@@ -69,7 +69,7 @@ class PartenaireCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Partenaire(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // à HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
@@ -127,12 +127,12 @@ class PartenaireCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
-            ->displayIf(static function (?Partenaire $entity) {
-                return count($entity->getPolice()) != 0;
-            })
-            ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_listerPolice');
+        // $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
+        //     ->displayIf(static function (?Partenaire $entity) {
+        //         return count($entity->getPolice()) != 0;
+        //     })
+        //     ->setIcon('fas fa-file-shield')
+        //     ->linkToCrudAction('cross_canal_listerPolice');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -193,8 +193,8 @@ class PartenaireCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $duplicate)
 
             //cross canal
-            ->add(Crud::PAGE_DETAIL, $polices_lister)
-            ->add(Crud::PAGE_INDEX, $polices_lister)
+            // ->add(Crud::PAGE_DETAIL, $polices_lister)
+            // ->add(Crud::PAGE_INDEX, $polices_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])

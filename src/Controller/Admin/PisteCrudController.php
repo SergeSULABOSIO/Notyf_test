@@ -47,7 +47,7 @@ class PisteCrudController extends AbstractCrudController
     public const ETAPE_COLLECTE_DE_DONNEES  = "Collecte des données";
     public const ETAPE_PRODUCTION_DES_DEVIS = "Production des cotations";
     public const ETAPE_CONCLUSION           = "Conclusion et émission de l'avenant";
-    
+
     public const TAB_ETAPES = [
         self::ETAPE_CREATION => 1,
         self::ETAPE_COLLECTE_DE_DONNEES => 2,
@@ -97,9 +97,9 @@ class PisteCrudController extends AbstractCrudController
 
         return $filters
             //->add('contacts')
-            ->add('expiredAt')
-            ->add('etape')
-            ->add('police')
+            //->add('expiredAt')
+            //->add('etape')
+            //->add('police')
             //->add('utilisateur')
             //->add('actionCRMs')
         ;
@@ -111,7 +111,7 @@ class PisteCrudController extends AbstractCrudController
         $this->servicePreferences->appliquerPreferenceTaille(new Piste(), $crud);
 
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
@@ -135,6 +135,7 @@ class PisteCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $objet = new Piste();
+        $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
@@ -156,6 +157,7 @@ class PisteCrudController extends AbstractCrudController
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);
+        $this->servicePreferences->setEntite($pageName, $piste);
         return $this->servicePreferences->getChamps(new Piste(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -163,35 +165,35 @@ class PisteCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //Cross Canal
-        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
-            ->setIcon('fas fa-comments')
-            ->linkToCrudAction('cross_canal_ajouterMission');
-        $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
-            ->displayIf(static function (?Piste $entity) {
-                return count($entity->getActionsCRMs()) != 0;
-            })
-            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
-            ->linkToCrudAction('cross_canal_listerMission');
+        // $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
+        //     ->setIcon('fas fa-comments')
+        //     ->linkToCrudAction('cross_canal_ajouterMission');
+        // $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
+        //     ->displayIf(static function (?Piste $entity) {
+        //         return count($entity->getActionsCRMs()) != 0;
+        //     })
+        //     ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
+        //     ->linkToCrudAction('cross_canal_listerMission');
 
-        $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
-            ->setIcon('fas fa-address-book')
-            ->linkToCrudAction('cross_canal_ajouterContact');
-        $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
-            ->displayIf(static function (?Piste $entity) {
-                return count($entity->getContacts()) != 0;
-            })
-            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
-            ->linkToCrudAction('cross_canal_listerContact');
+        // $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
+        //     ->setIcon('fas fa-address-book')
+        //     ->linkToCrudAction('cross_canal_ajouterContact');
+        // $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
+        //     ->displayIf(static function (?Piste $entity) {
+        //         return count($entity->getContacts()) != 0;
+        //     })
+        //     ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
+        //     ->linkToCrudAction('cross_canal_listerContact');
 
-        $cotation_ajouter = Action::new(ServiceCrossCanal::OPTION_COTATION_AJOUTER)
-            ->setIcon('fas fa-cash-register')
-            ->linkToCrudAction('cross_canal_ajouterCotation');
-        $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
-            ->displayIf(static function (?Piste $entity) {
-                return count($entity->getCotations()) != 0;
-            })
-            ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
-            ->linkToCrudAction('cross_canal_listerCotation');
+        // $cotation_ajouter = Action::new(ServiceCrossCanal::OPTION_COTATION_AJOUTER)
+        //     ->setIcon('fas fa-cash-register')
+        //     ->linkToCrudAction('cross_canal_ajouterCotation');
+        // $cotation_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
+        //     ->displayIf(static function (?Piste $entity) {
+        //         return count($entity->getCotations()) != 0;
+        //     })
+        //     ->setIcon('fa-solid fa-rectangle-list') //<i class="fa-solid fa-rectangle-list"></i>
+        //     ->linkToCrudAction('cross_canal_listerCotation');
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -233,16 +235,16 @@ class PisteCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-pen-to-square')->setLabel(DashboardController::ACTION_MODIFIER);
             })
             //Updates Sur la page Edit
-            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
-            })
+            // ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+            //     return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
+            // })
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
             })
             //Updates Sur la page NEW
-            ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
-                return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
-            })
+            // ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+            //     return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
+            // })
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
@@ -256,29 +258,31 @@ class PisteCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $duplicate)
 
             //Cross Canal
-            ->add(Crud::PAGE_DETAIL, $mission_ajouter)
-            ->add(Crud::PAGE_INDEX, $mission_ajouter)
+            // ->add(Crud::PAGE_DETAIL, $mission_ajouter)
+            // ->add(Crud::PAGE_INDEX, $mission_ajouter)
 
-            ->add(Crud::PAGE_DETAIL, $contact_ajouter)
-            ->add(Crud::PAGE_INDEX, $contact_ajouter)
+            // ->add(Crud::PAGE_DETAIL, $contact_ajouter)
+            // ->add(Crud::PAGE_INDEX, $contact_ajouter)
 
-            ->add(Crud::PAGE_DETAIL, $cotation_ajouter)
-            ->add(Crud::PAGE_INDEX, $cotation_ajouter)
+            // ->add(Crud::PAGE_DETAIL, $cotation_ajouter)
+            // ->add(Crud::PAGE_INDEX, $cotation_ajouter)
 
-            ->add(Crud::PAGE_DETAIL, $mission_lister)
-            ->add(Crud::PAGE_INDEX, $mission_lister)
+            // ->add(Crud::PAGE_DETAIL, $mission_lister)
+            // ->add(Crud::PAGE_INDEX, $mission_lister)
 
-            ->add(Crud::PAGE_DETAIL, $contact_lister)
-            ->add(Crud::PAGE_INDEX, $contact_lister)
+            // ->add(Crud::PAGE_DETAIL, $contact_lister)
+            // ->add(Crud::PAGE_INDEX, $contact_lister)
 
-            ->add(Crud::PAGE_DETAIL, $cotation_lister)
-            ->add(Crud::PAGE_INDEX, $cotation_lister)
+            // ->add(Crud::PAGE_DETAIL, $cotation_lister)
+            // ->add(Crud::PAGE_INDEX, $cotation_lister)
 
             //Reorganisation des boutons
             ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
 
-            //->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
+            ->remove(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)
+            ->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
+            ->remove(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -371,16 +375,16 @@ class PisteCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
-    {
-        /** @var Piste */
-        $piste = $context->getEntity()->getInstance();
-        $url = $this->adminUrlGenerator
-            ->setController(PisteCrudController::class)
-            ->setAction(Action::EDIT)
-            ->setEntityId($piste->getId())
-            ->generateUrl();
-        $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La piste " . $piste->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
-        return $this->redirect($url);
-    }
+    // protected function getRedirectResponseAfterSave(AdminContext $context, string $action): RedirectResponse
+    // {
+    //     /** @var Piste */
+    //     $piste = $context->getEntity()->getInstance();
+    //     $url = $this->adminUrlGenerator
+    //         ->setController(PisteCrudController::class)
+    //         ->setAction(Action::EDIT)
+    //         ->setEntityId($piste->getId())
+    //         ->generateUrl();
+    //     $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La piste " . $piste->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
+    //     return $this->redirect($url);
+    // }
 }

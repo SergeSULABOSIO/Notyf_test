@@ -5167,10 +5167,6 @@ class ServicePreferences
 
     public function setCRM_Fields_Pistes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)
-                ->onlyOnIndex();
-        }
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->formatValue(function ($value, Piste $piste) {
                 $this->setTitreReportingCRM($piste);
@@ -5180,125 +5176,77 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->setChoices(PisteCrudController::TAB_ETAPES)
             ->onlyOnIndex();
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT])) {
-            $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
-                ->onlyOnIndex()
-                ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
-                ->renderAsBadges([
-                    // $value => $badgeStyleName
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success',
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning',
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger',
-                    PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info'
-                ]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CLIENT])) {
-            $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_PRODUIT])) {
-            $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_POLICE])) {
-            $tabAttributs[] = AssociationField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
-                ->onlyOnIndex();
-        }
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF])) {
-            $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
-                ->renderAsHtml()
-                ->onlyOnIndex(); //->setColumns(6);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_MONTANT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
-                ->formatValue(function ($value, Piste $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_CONTACT])) {
-            $tabAttributs[] = AssociationField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ACTIONS])) {
-            $tabAttributs[] = AssociationField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_COTATION])) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ETAPE])) {
-
-            // $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
-            //     ->onlyOnForms()
-            //     ->setColumns(10)
-            //     ->setDisabled(true);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION])) {
-            $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE])) {
-            $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT])) {
-            $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
+            ->onlyOnIndex()
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+            ->renderAsBadges([
+                // $value => $badgeStyleName
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_ANNULATION] => 'dark', //info
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION] => 'success', //info
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_INCORPORATION] => 'info', //info
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_PROROGATION] => 'success', //info
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RENOUVELLEMENT] => 'success',
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RESILIATION] => 'warning',
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger',
+                PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info'
+            ]);
+        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('assureur', PreferenceCrudController::PREF_CRM_PISTE_ASSUREUR)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
+            ->formatValue(function ($value, Piste $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('realisation', PreferenceCrudController::PREF_CRM_PISTE_PRIME_TOTALE)
+            ->formatValue(function ($value, Piste $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRealisation());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Pistes_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_CRM_PISTE_ID)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
-            ->formatValue(function ($value, Piste $piste) {
-                $this->setTitreReportingCRM($piste);
-                return $value;
-            })
-            ->onlyOnDetail(); //->setColumns(6);
-        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
+        $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+            ->setChoices(PisteCrudController::TAB_ETAPES)
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
-            ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
-            ->onlyOnDetail();
-        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
-            ->onlyOnDetail()
-            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT);
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)->onlyOnDetail();
         $tabAttributs[] = TextareaField::new('objectif', PreferenceCrudController::PREF_CRM_PISTE_OBJECTIF)
             ->renderAsHtml()
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('polices', PreferenceCrudController::PREF_CRM_PISTE_POLICE)
+        $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
+
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
             ->onlyOnDetail();
+        $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
+            ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('police', "Police source")
+            ->onlyOnDetail();
+
+        $tabAttributs[] = ArrayField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
+            ->onlyOnDetail();
+
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_CRM_PISTE_MONTANT)
             ->formatValue(function ($value, Piste $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
@@ -5306,10 +5254,8 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_CRM_PISTE_PARTENAIRE)
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
@@ -5317,40 +5263,56 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_PISTE_UTILISATEUR)
+            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+            ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_DE_MODIFICATION)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_PISTE_ENTREPRISE)->onlyOnDetail();
+
+
 
         //Onglet Contacts
         $tabAttributs[] = FormField::addTab(' Contacts')
             ->setIcon('fas fa-address-book')
             ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)->onlyOnDetail();
-
-        //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Missions')
-            ->setIcon('fas fa-paper-plane')
-            ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
+        $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)->onlyOnDetail();
 
 
 
-        //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Propositions')
-            ->setIcon('fas fa-cash-register')
-            ->setHelp("Les propositions ou cotations produites dans le cadre de cette piste.")
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)->onlyOnDetail();
-
-        //Onglet Cotations
-        $tabAttributs[] = FormField::addTab(' Polices')
+        //Onglet Polices
+        $tabAttributs[] = FormField::addTab(' Couverture en place')
             ->setIcon('fas fa-file-shield')
-            ->setHelp("Les polices produites et placées à partir de cette piste.")
+            ->setHelp("Polices d'assurance et/ou avenant mis en place.")
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_PISTE_POLICE)->onlyOnDetail();
-
-
+        $tabAttributs[] = ArrayField::new('polices', "Police en place")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('assureur', PreferenceCrudController::PREF_CRM_PISTE_ASSUREUR)
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateEffet', "Date d'effet")->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateExpiration', "Date d'expiration")->onlyOnDetail();
+        $tabAttributs[] = NumberField::new('duree', "Durée")
+            ->formatValue(function ($value, Piste $entity) {
+                return $value . " mois.";
+            })
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('revenus', "Structure du revenu")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('chargements', "Structure de la prime")
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('realisation', PreferenceCrudController::PREF_CRM_PISTE_PRIME_TOTALE)
+            ->formatValue(function ($value, Piste $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRealisation());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('tranches', "Termes de paiement")
+            ->onlyOnDetail();
         return $tabAttributs;
     }
 
@@ -5404,13 +5366,14 @@ class ServicePreferences
 
     public function setCRM_Fields_Pistes_form($tabAttributs)
     {
+        //dd($this->piste);
         $tabAttributs[] = FormField::addPanel("Section principale")
             ->setIcon("fas fa-location-crosshairs")
             ->setColumns(10)
             ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->setChoices(PisteCrudController::TAB_ETAPES)
-            ->onlyOnForms()
+            ->onlyOnForms()//
             ->setColumns(10)
             ->setDisabled(true);
 

@@ -155,7 +155,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Missions', 'fas fa-paper-plane', ActionCRM::class), //<i class="fa-solid fa-paper-plane"></i>
             MenuItem::linkToCrud('Feedbacks', 'fas fa-comments', FeedbackCRM::class),
             MenuItem::linkToCrud('Cotations', 'fas fa-cash-register', Cotation::class), //<i class="fa-solid fa-cash-register"></i>
-            MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class), //<i class="fa-solid fa-list-check"></i>
+            //MenuItem::linkToCrud('Etapes', 'fas fa-list-check', EtapeCrm::class), //<i class="fa-solid fa-list-check"></i>
             MenuItem::linkToCrud('Pistes', 'fas fa-location-crosshairs', Piste::class) //<i class="fa-solid fa-location-crosshairs"></i>
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_COMMERCIAL]);
@@ -188,9 +188,9 @@ class DashboardController extends AbstractDashboardController
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_SINISTRES]);
 
         yield MenuItem::subMenu('BIBLIOTHEQUE', 'fas fa-book')->setSubItems([ //<i class="fa-solid fa-books"></i>
-            MenuItem::linkToCrud('Catégories', 'fas fa-tags', DocCategorie::class), //<i class="fa-regular fa-tags"></i>
-            MenuItem::linkToCrud('Classeurs', 'fas fa-folder-open', DocClasseur::class), //<i class="fa-solid fa-folder-open"></i>
-            MenuItem::linkToCrud('Pièces', 'fa-solid fa-paperclip', DocPiece::class) //<i class="fa-solid fa-paperclip"></i>
+            //MenuItem::linkToCrud('Catégories', 'fas fa-tags', DocCategorie::class), //<i class="fa-regular fa-tags"></i>
+            //MenuItem::linkToCrud('Classeurs', 'fas fa-folder-open', DocClasseur::class), //<i class="fa-solid fa-folder-open"></i>
+            MenuItem::linkToCrud('Documents', 'fa-solid fa-paperclip', DocPiece::class) //<i class="fa-solid fa-paperclip"></i>
         ])
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_BIBLIOTHE]);
 

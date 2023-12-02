@@ -23,49 +23,29 @@ class Piste
     private ?string $objectif = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Entreprise $entreprise = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $montant = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $expiredAt = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'pistes')]
-    // private ?EtapeCrm $etape = null;
-
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Contact::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $contacts;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Cotation::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $cotations;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Police $police = null;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: ActionCRM::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $actionsCRMs;
 
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Client $client = null;
-    
+
     #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Client::class)]
     private Collection $prospect;
-    
+
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Produit $produit = null;
 
@@ -81,16 +61,43 @@ class Piste
     #[ORM\ManyToOne(inversedBy: 'pistes')]
     private ?Utilisateur $assistant = null;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: Police::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $polices;
 
-    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'piste', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
     #[ORM\Column(nullable: true)]
     private ?int $etape = null;
 
-    
+    #[ORM\Column(nullable: true)]
+    private ?float $montant = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+    //Champs calculés
+    private ?Assureur $assureur = null;
+    private ?float $realisation = null;
+    private Collection $chargements;
+    private Collection $tranches;
+    private Collection $revenus;
+    private ?\DateTimeImmutable $dateEffet = null;
+    private ?\DateTimeImmutable $dateExpiration = null;
+    private ?float $duree = null;
+
+
 
 
     public function __construct()
@@ -207,7 +214,7 @@ class Piste
 
     public function __toString()
     {
-        return "la piste " . $this->nom;// . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
+        return "la piste " . $this->nom; // . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
     // public function getEtape(): ?EtapeCrm
@@ -525,5 +532,109 @@ class Piste
         $this->etape = $etape;
 
         return $this;
+    }
+
+    /**
+     * Get the value of realisation
+     */
+    public function getRealisation()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->realisation = $this->getPolices()[0]->getPrimeTotale();
+            }
+        }
+        return $this->realisation;
+    }
+
+    /**
+     * Get the value of assureur
+     */
+    public function getAssureur()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->assureur = $this->getPolices()[0]->getAssureur();
+            }
+        }
+        return $this->assureur;
+    }
+
+    /**
+     * Get the value of chargements
+     */
+    public function getChargements()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->chargements = $this->getPolices()[0]->getChargements();
+            }
+        }
+        return $this->chargements;
+    }
+
+    /**
+     * Get the value of tranches
+     */
+    public function getTranches()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->tranches = $this->getPolices()[0]->getTranches();
+            }
+        }
+        return $this->tranches;
+    }
+
+    /**
+     * Get the value of revenus
+     */
+    public function getRevenus()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->revenus = $this->getPolices()[0]->getRevenus();
+            }
+        }
+        return $this->revenus;
+    }
+
+    /**
+     * Get the value of dateEffet
+     */ 
+    public function getDateEffet()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->dateEffet = $this->getPolices()[0]->getDateEffet();
+            }
+        }
+        return $this->dateEffet;
+    }
+
+    /**
+     * Get the value of dateExpiration
+     */ 
+    public function getDateExpiration()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->dateExpiration = $this->getPolices()[0]->getDateExpiration();
+            }
+        }
+        return $this->dateExpiration;
+    }
+
+    /**
+     * Get the value of duree
+     */ 
+    public function getDuree()
+    {
+        if ($this->getPolices()) {
+            if ($this->getPolices()[0]) {
+                $this->duree = $this->getPolices()[0]->getCotation()->getDureeCouverture();
+            }
+        }
+        return $this->duree;
     }
 }

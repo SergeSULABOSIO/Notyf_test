@@ -3301,8 +3301,6 @@ class ServicePreferences
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_PARTENAIRE_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM)->onlyOnDetail();
         $tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)->setNumDecimals(2)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_PARTENAIRE_POP_PARTENAIRE)->onlyOnDetail();
         $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)->onlyOnDetail();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL)->onlyOnDetail();
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)->onlyOnDetail();
@@ -3316,82 +3314,24 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION)->onlyOnDetail();
 
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
-
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Partenaires_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-$tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM)
-                ->onlyOnIndex();
-$tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-
-
-
-
-
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM])) {
-            
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_PART])) {
-            
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_PARTENAIRE_POLICES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_POP_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('paiementPartenaires', PreferenceCrudController::PREF_PRO_PARTENAIRE_POP_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE])) {
-            $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL])) {
-            $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB])) {
-            $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM])) {
-            $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT])) {
-            $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT])) {
-            $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PARTENAIRE_UTILISATEUR)
-                ->onlyOnIndex()
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_PARTENAIRE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PARTENAIRE_NOM)
+            ->onlyOnIndex();
+        $tabAttributs[] = PercentField::new('part', PreferenceCrudController::PREF_PRO_PARTENAIRE_PART)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_PARTENAIRE_ADRESSE)
+            ->onlyOnIndex();
+        $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_PARTENAIRE_EMAIL)
+            ->onlyOnIndex();
+        $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
 
         return $tabAttributs;
     }

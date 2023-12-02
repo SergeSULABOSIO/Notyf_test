@@ -427,7 +427,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_PARTENAIRE_UTILISATEUR                = "Utilisateur";
     public const PREF_PRO_PARTENAIRE_ENTREPRISE                 = "Entreprise";
     public const PREF_PRO_PARTENAIRE_DATE_DE_CREATION           = "Date de création";
-    public const PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION       = "Dernière modification";
+    public const PREF_PRO_PARTENAIRE_DATE_DE_MODIFICATION       = "D. modification";
     public const TAB_PRO_PARTENAIRES = [
         self::PREF_PRO_PARTENAIRE_ID                            => 0,
         self::PREF_PRO_PARTENAIRE_NOM                           => 1,

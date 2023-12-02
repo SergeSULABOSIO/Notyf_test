@@ -40,9 +40,6 @@ class Cotation
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
-    // #[ORM\Column(nullable: true)]
-    // private ?int $validated = null;
-
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Revenu::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $revenus;
 
@@ -84,6 +81,8 @@ class Cotation
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
+
+    private ?string $client;
 
     public function __construct()
     {
@@ -685,5 +684,16 @@ class Cotation
             }
         }
         return $this;
+    }
+
+    /**
+     * Get the value of client
+     */ 
+    public function getClient()
+    {
+        if($this->getPiste()){
+            $this->client = $this->getPiste()->getClient();
+        }
+        return $this->client;
     }
 }

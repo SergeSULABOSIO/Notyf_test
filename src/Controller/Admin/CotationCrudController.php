@@ -104,7 +104,7 @@ class CotationCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Cotation(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') //HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()

@@ -134,8 +134,8 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_CRM_COTATION_PRIME_TTC            = "Prime totale";
     public const PREF_CRM_COTATION_REVENU_TOTAL_HT      = "Revenu total ht";
     public const PREF_CRM_COTATION_PISTE                = "Piste concernée";
-    public const PREF_CRM_COTATION_DATE_CREATION        = "Date de création";
-    public const PREF_CRM_COTATION_DATE_MODIFICATION    = "Dernière modification";
+    public const PREF_CRM_COTATION_DATE_CREATION        = "D. création";
+    public const PREF_CRM_COTATION_DATE_MODIFICATION    = "D. modification";
     public const PREF_CRM_COTATION_UTILISATEUR          = "Utilisateur";
     public const PREF_CRM_COTATION_ENTREPRISE           = "Entreprise";
     public const TAB_CRM_COTATIONS = [

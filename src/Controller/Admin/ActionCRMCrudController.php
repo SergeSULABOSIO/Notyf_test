@@ -131,7 +131,7 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet = new ActionCRM();
         $objet->setStartedAt(new DateTimeImmutable("+1 day"));
         $objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        $objet->setClos(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
+        $objet->setClosed(ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS]);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPiste($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setCotation($objet, $this->adminUrlGenerator);

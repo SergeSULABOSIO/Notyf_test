@@ -243,7 +243,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_ASSUREUR_UTILISATEUR              = "Utilisateur";
     public const PREF_PRO_ASSUREUR_ENTREPRISE               = "Entreprise";
     public const PREF_PRO_ASSUREUR_DATE_DE_CREATION         = "Date de création";
-    public const PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION     = "Dernière modification";
+    public const PREF_PRO_ASSUREUR_DATE_DE_MODIFICATION     = "D. modification";
     public const TAB_PRO_ASSUREURS = [
         self::PREF_PRO_ASSUREUR_ID                              => 0,
         self::PREF_PRO_ASSUREUR_NOM                             => 1,
@@ -334,7 +334,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_CONTACT_UTILISATEUR               = "Utilisateur";
     public const PREF_PRO_CONTACT_ENTREPRISE                = "Entreprise";
     public const PREF_PRO_CONTACT_DATE_DE_CREATION          = "Date de création";
-    public const PREF_PRO_CONTACT_DATE_DE_MODIFICATION      = "Dernière modification";
+    public const PREF_PRO_CONTACT_DATE_DE_MODIFICATION      = "D. modification";
     public const TAB_PRO_CONTACTS = [
         self::PREF_PRO_CONTACT_ID                       => 0,
         self::PREF_PRO_CONTACT_NOM                      => 1,
@@ -365,7 +365,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_CLIENT_UTILISATEUR                = "Utilisateur";
     public const PREF_PRO_CLIENT_ENTREPRISE                 = "Entreprise";
     public const PREF_PRO_CLIENT_DATE_DE_CREATION           = "Date de création";
-    public const PREF_PRO_CLIENT_DATE_DE_MODIFICATION       = "Dernière modification";
+    public const PREF_PRO_CLIENT_DATE_DE_MODIFICATION       = "D. modification";
     public const TAB_PRO_CLIENTS = [
         self::PREF_PRO_CLIENT_ID                                => 0,
         self::PREF_PRO_CLIENT_NOM                               => 1,

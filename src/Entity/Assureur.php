@@ -47,9 +47,6 @@ class Assureur extends CalculableEntity
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numimpot = null;
 
-    #[ORM\Column]
-    private ?bool $isreassureur = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
@@ -66,16 +63,12 @@ class Assureur extends CalculableEntity
     #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Cotation::class)]
     private Collection $cotations;
 
-    #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Police::class)]
-    private Collection $police;
-
     #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Facture::class)]
     private Collection $factures;
 
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
-        $this->police = new ArrayCollection();
         $this->factures = new ArrayCollection();
     }
 
@@ -192,18 +185,6 @@ class Assureur extends CalculableEntity
         return $this;
     }
 
-    public function isIsreassureur(): ?bool
-    {
-        return $this->isreassureur;
-    }
-
-    public function setIsreassureur(bool $isreassureur): self
-    {
-        $this->isreassureur = $isreassureur;
-
-        return $this;
-    }
-
     public function getEntreprise(): ?Entreprise
     {
         return $this->entreprise;
@@ -281,36 +262,6 @@ class Assureur extends CalculableEntity
             // set the owning side to null (unless already changed)
             if ($cotation->getAssureur() === $this) {
                 $cotation->setAssureur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Police>
-     */
-    public function getPolice(): Collection
-    {
-        return $this->police;
-    }
-
-    public function addPolice(Police $police): self
-    {
-        if (!$this->police->contains($police)) {
-            $this->police->add($police);
-            $police->setAssureur($this);
-        }
-
-        return $this;
-    }
-
-    public function removePolice(Police $police): self
-    {
-        if ($this->police->removeElement($police)) {
-            // set the owning side to null (unless already changed)
-            if ($police->getAssureur() === $this) {
-                $police->setAssureur(null);
             }
         }
 

@@ -148,14 +148,14 @@ class PoliceCrudController extends AbstractCrudController
             // ->add('gestionnaire')
             // ->add('gestionnaire')
             //->add('isCommissionUnpaid')
-            ->add('dateeffet')
-            ->add('dateexpiration')
+            //->add('dateeffet')
+            //->add('dateexpiration')
             // ->add('client')
             // ->add('produit')
             // ->add('assureur')
             // // ->add('partenaire')
             // ->add('docPieces')
-            ->add('idavenant');
+            //->add('idavenant');
             // ->add('capital')
             // ->add('primenette')
             // ->add('fronting')
@@ -173,6 +173,7 @@ class PoliceCrudController extends AbstractCrudController
             // ->add('unpaidtaxeassureur')
             // ->add('paidtaxe')
             // ->add('unpaidtaxe');
+            ;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void

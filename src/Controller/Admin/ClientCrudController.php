@@ -108,7 +108,7 @@ class ClientCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Client(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // à HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()

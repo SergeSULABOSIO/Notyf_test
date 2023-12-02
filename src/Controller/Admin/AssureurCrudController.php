@@ -94,7 +94,7 @@ class AssureurCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Assureur(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
@@ -135,19 +135,19 @@ class AssureurCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
-            ->displayIf(static function (?Assureur $entity) {
-                return count($entity->getPolice()) != 0;
-            })
-            ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_listerPolice');
+        // $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
+        //     ->displayIf(static function (?Assureur $entity) {
+        //         return count($entity->getPolice()) != 0;
+        //     })
+        //     ->setIcon('fas fa-file-shield')
+        //     ->linkToCrudAction('cross_canal_listerPolice');
 
-        $cotations_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
-            ->displayIf(static function (?Assureur $entity) {
-                return count($entity->getCotations()) != 0;
-            })
-            ->setIcon('fas fa-cash-register')
-            ->linkToCrudAction('cross_canal_listerCotation');
+        // $cotations_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
+        //     ->displayIf(static function (?Assureur $entity) {
+        //         return count($entity->getCotations()) != 0;
+        //     })
+        //     ->setIcon('fas fa-cash-register')
+        //     ->linkToCrudAction('cross_canal_listerCotation');
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
             ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
@@ -208,11 +208,11 @@ class AssureurCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $duplicate)
 
             //cross canal
-            ->add(Crud::PAGE_DETAIL, $polices_lister)
-            ->add(Crud::PAGE_INDEX, $polices_lister)
+            // ->add(Crud::PAGE_DETAIL, $polices_lister)
+            // ->add(Crud::PAGE_INDEX, $polices_lister)
 
-            ->add(Crud::PAGE_DETAIL, $cotations_lister)
-            ->add(Crud::PAGE_INDEX, $cotations_lister)
+            // ->add(Crud::PAGE_DETAIL, $cotations_lister)
+            // ->add(Crud::PAGE_INDEX, $cotations_lister)
 
 
             //Reorganisation des boutons

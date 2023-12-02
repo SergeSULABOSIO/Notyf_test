@@ -102,7 +102,7 @@ class ProduitCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Produit(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // à HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
@@ -146,12 +146,12 @@ class ProduitCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         //cross canal
-        $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
-            ->displayIf(static function (?Produit $entity) {
-                return count($entity->getPolice()) != 0;
-            })
-            ->setIcon('fas fa-file-shield')
-            ->linkToCrudAction('cross_canal_listerPolice');
+        // $polices_lister = Action::new(ServiceCrossCanal::OPTION_POLICE_LISTER)
+        //     ->displayIf(static function (?Produit $entity) {
+        //         return count($entity->getPolice()) != 0;
+        //     })
+        //     ->setIcon('fas fa-file-shield')
+        //     ->linkToCrudAction('cross_canal_listerPolice');
         // $cotations_lister = Action::new(ServiceCrossCanal::OPTION_COTATION_LISTER)
         //     ->displayIf(static function (?Produit $entity) {
         //         return count($entity->getCotations()) != 0;
@@ -219,8 +219,8 @@ class ProduitCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $duplicate)
 
             //cross canal
-            ->add(Crud::PAGE_DETAIL, $polices_lister)
-            ->add(Crud::PAGE_INDEX, $polices_lister)
+            // ->add(Crud::PAGE_DETAIL, $polices_lister)
+            // ->add(Crud::PAGE_INDEX, $polices_lister)
 
             // ->add(Crud::PAGE_DETAIL, $cotations_lister)
             // ->add(Crud::PAGE_INDEX, $cotations_lister)

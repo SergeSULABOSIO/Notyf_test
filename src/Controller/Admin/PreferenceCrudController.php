@@ -477,7 +477,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_DATE_OPERATION                             = "Date d'opération";
     public const PREF_PRO_POLICE_DATE_EMISSION                              = "Date d'émission";
     public const PREF_PRO_POLICE_DATE_EFFET                                 = "Date d'effet";
-    public const PREF_PRO_POLICE_DATE_EXPIRATION                            = "Date d'expiration";
+    public const PREF_PRO_POLICE_DATE_EXPIRATION                            = "Echéance";
     public const PREF_PRO_POLICE_ID_AVENANT                                 = "Id de l'avenant";
     public const PREF_PRO_POLICE_TYPE_AVENANT                               = "Type d'avenant";
     public const PREF_PRO_POLICE_COTATION                                   = "Proposition";
@@ -486,7 +486,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_POLICE_UTILISATEUR                                = "Utilisateur";
     public const PREF_PRO_POLICE_ENTREPRISE                                 = "Entreprise";
     public const PREF_PRO_POLICE_DATE_DE_CREATION                           = "Date de création";
-    public const PREF_PRO_POLICE_DATE_DE_MODIFICATION                       = "Dernière modification";
+    public const PREF_PRO_POLICE_DATE_DE_MODIFICATION                       = "D. modification";
 
     public const TAB_PRO_POLICES = [
         self::PREF_PRO_POLICE_ID                                => 0,
@@ -519,7 +519,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PRO_PRODUIT_UTILISATEUR               = "Utilisateur";
     public const PREF_PRO_PRODUIT_ENTREPRISE                = "Entreprise";
     public const PREF_PRO_PRODUIT_DATE_DE_CREATION          = "Date de création";
-    public const PREF_PRO_PRODUIT_DATE_DE_MODIFICATION      = "Dernière modification";
+    public const PREF_PRO_PRODUIT_DATE_DE_MODIFICATION      = "D. modification";
     public const TAB_PRO_PRODUITS = [
         self::PREF_PRO_PRODUIT_ID                               => 0,
         self::PREF_PRO_PRODUIT_CODE                             => 1,

@@ -123,7 +123,7 @@ class PoliceCrudController extends AbstractCrudController
         //Application de la préférence sur la taille de la liste
         $this->servicePreferences->appliquerPreferenceTaille(new Police(), $crud);
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy à HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // à HH:mm:ss
             //->setDateTimeFormat('dd/MM/yyyy')
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
@@ -200,7 +200,7 @@ class PoliceCrudController extends AbstractCrudController
         }
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_POLICE);
-        $this->servicePreferences->setEntite($pageName, $this->getContext()->getEntity()->getInstance());
+        //$this->servicePreferences->setEntite($pageName, $this->getContext()->getEntity()->getInstance());
         if ($instance != null) {
             if ($instance instanceof Piste) {
                 //On envoie ces paramètres à tous les formulaires
@@ -213,6 +213,7 @@ class PoliceCrudController extends AbstractCrudController
                 }
             }
         }
+        $this->servicePreferences->setEntite($pageName, $instance);
         return $this->servicePreferences->getChamps(new Police(), $this->crud, $this->adminUrlGenerator);
     }
 

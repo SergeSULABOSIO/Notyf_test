@@ -782,59 +782,36 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_REFERENCE])) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION])) {
-            $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION])) {
-            $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET])) {
-            $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION])) {
-            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE])) {
-            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT])) {
-            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_COTATION])) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = TextField::new('typeavenant', "Avenant")
+            ->onlyOnIndex();
+        $tabAttributs[] = NumberField::new('idAvenant', "Id. Avenant")
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('assureur', "Assureur")
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('client', "Client")
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('produit', "Produit")
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('primeTotale', "Prime totale")
+            ->formatValue(function ($value, Police $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
+
         return $tabAttributs;
     }
 
@@ -1740,7 +1717,8 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
             ->onlyOnDetail();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+            ->renderAsHtml()
             ->onlyOnDetail();
         $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
             ->setNumDecimals(2)
@@ -1754,10 +1732,6 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
             ->setChoices(["IARD (Non Vie)" => 1, "VIE" => 0])
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
-            ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -1768,78 +1742,32 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
             ->onlyOnDetail();
 
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
-
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Produits_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_PRODUIT_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_CODE])) {
-            $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_IARD])) {
-            $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_IARD)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE])) {
-            $tabAttributs[] = ChoiceField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT])) {
-            $tabAttributs[] = ChoiceField::new('abonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
-                ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION])) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION])) {
-            $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS])) {
-            $tabAttributs[] = AssociationField::new('cotations', PreferenceCrudController::PREF_PRO_PRODUIT_COTATIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_POLICES])) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_PRO_PRODUIT_POLICES)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_PRODUIT_ENTREPRISE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-
-        //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_IARD)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('abonnement', PreferenceCrudController::PREF_PRO_PRODUIT_ABONNEMENT)
+            ->setChoices(ProduitCrudController::TAB_PRODUIT_OUI_NON)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+            ->renderAsHtml()
+            ->onlyOnIndex();
+        $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
 
         return $tabAttributs;
     }
@@ -1992,174 +1920,175 @@ class ServicePreferences
         //         //->setDisabled(true)
         //         ->setColumns(12);
         // }
-        if (count($this->piste->getPolices()) != 0) {
-            $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('idAvenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('produit', "Couverture")
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('client', "Client")
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
 
-            //Section - Documents
-            $tabAttributs[] = FormField::addPanel("Documents ou pièces jointes")
-                ->setIcon("fa-solid fa-paperclip")
-                ->onlyOnForms(); //fa-solid fa-paperclip
-            $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
-                //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
-                ->useEntryCrudForm(DocPieceCrudController::class)
-                ->allowAdd(true)
-                ->allowDelete(true)
-                ->setEntryIsComplex()
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms();
 
-            //Section - Contacts
-            $tabAttributs[] = FormField::addPanel("Contacts")
-                ->setIcon("fas fa-address-book")
-                ->setHelp("Personnes impliquées dans les échanges.")
-                ->onlyOnForms();
-            $tabAttributs[] = CollectionField::new('contacts', "Contacts")
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
+        if ($this->piste != null) {
+            if (count($this->piste->getPolices()) != 0) {
+                $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('idAvenant', PreferenceCrudController::PREF_PRO_POLICE_ID_AVENANT)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('produit', "Couverture")
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('client', "Client")
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    ->setDisabled(true);
 
-            //Section - Primes d'assurance
-            $tabAttributs[] = FormField::addPanel("Prime d'assurance")
-                ->setIcon("fa-solid fa-cash-register")
-                ->setHelp("Prime d'assurance résultant de la mise en place de l'avenant.")
-                ->onlyOnForms();
-            $tabAttributs[] = CollectionField::new('chargements', "Structure")
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
-            $tabAttributs[] = MoneyField::new('primeTotale', "Prime totale")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
+                //Section - Documents
+                $tabAttributs[] = FormField::addPanel("Documents ou pièces jointes")
+                    ->setIcon("fa-solid fa-paperclip")
+                    ->onlyOnForms(); //fa-solid fa-paperclip
+                $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+                    //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+                    ->useEntryCrudForm(DocPieceCrudController::class)
+                    ->allowAdd(true)
+                    ->allowDelete(true)
+                    ->setEntryIsComplex()
+                    ->setRequired(false)
+                    ->setColumns(12)
+                    ->onlyOnForms();
 
-            //Section - Termes de paiement
-            $tabAttributs[] = FormField::addPanel("Termes de paiement de la prime")
-                ->setIcon("fa-solid fa-cash-register")
-                ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
-                ->onlyOnForms();
-            $tabAttributs[] = CollectionField::new('tranches', "Structure")
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
-            $tabAttributs[] = CollectionField::new('tranches', "Structure")
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
+                //Section - Contacts
+                $tabAttributs[] = FormField::addPanel("Contacts")
+                    ->setIcon("fas fa-address-book")
+                    ->setHelp("Personnes impliquées dans les échanges.")
+                    ->onlyOnForms();
+                $tabAttributs[] = CollectionField::new('contacts', "Contacts")
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
 
-            //Section - Commissiob de courtage
-            $tabAttributs[] = FormField::addPanel("Commission de courtage")
-                ->setIcon("fa-solid fa-cash-register")
-                ->setHelp("Les différents revenus du courtier d'assurance.")
-                ->onlyOnForms();
-            $tabAttributs[] = CollectionField::new('revenus', "Structure")
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setDisabled(true);
-            $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu pure")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('commissionTotaleHT', "Revenu hors taxe")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('commissionTotaleTTC', "Revenu totale")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
+                //Section - Primes d'assurance
+                $tabAttributs[] = FormField::addPanel("Prime d'assurance")
+                    ->setIcon("fa-solid fa-cash-register")
+                    ->setHelp("Prime d'assurance résultant de la mise en place de l'avenant.")
+                    ->onlyOnForms();
+                $tabAttributs[] = CollectionField::new('chargements', "Structure")
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    ->setDisabled(true);
+                $tabAttributs[] = MoneyField::new('primeTotale', "Prime totale")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
 
-            //Section - Partenaire
-            $tabAttributs[] = FormField::addPanel("Retrocommission")
-                ->setIcon("fas fa-handshake")
-                ->setHelp("Détails sur la commission à rétrocéder au partenaire.")
-                ->onlyOnForms();
-            $tabAttributs[] = TextField::new('partenaire', "Partenaire")
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
-                ->setColumns(12)
-                ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
-                ->setDisabled(true)
-                ->setNumDecimals(2)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu HT (partageable)")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->setHelp("Revenu hors taxe faisant l'objet du partage.")
-                ->setColumns(12)
-                ->setDisabled(true)
-                ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net (partageable)")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Retrocommission")
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                ->setDisabled(true)
-                ->setColumns(12);
+                //Section - Termes de paiement
+                $tabAttributs[] = FormField::addPanel("Termes de paiement de la prime")
+                    ->setIcon("fa-solid fa-cash-register")
+                    ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
+                    ->onlyOnForms();
+                $tabAttributs[] = CollectionField::new('tranches', "Structure")
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    ->setDisabled(true);
+                $tabAttributs[] = CollectionField::new('tranches', "Structure")
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    ->setDisabled(true);
+
+                //Section - Commissiob de courtage
+                $tabAttributs[] = FormField::addPanel("Commission de courtage")
+                    ->setIcon("fa-solid fa-cash-register")
+                    ->setHelp("Les différents revenus du courtier d'assurance.")
+                    ->onlyOnForms();
+                $tabAttributs[] = CollectionField::new('revenus', "Structure")
+                    ->onlyOnForms()
+                    ->setColumns(12)
+                    ->setDisabled(true);
+                $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu pure")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('commissionTotaleHT', "Revenu hors taxe")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('commissionTotaleTTC', "Revenu totale")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+
+                //Section - Partenaire
+                $tabAttributs[] = FormField::addPanel("Retrocommission")
+                    ->setIcon("fas fa-handshake")
+                    ->setHelp("Détails sur la commission à rétrocéder au partenaire.")
+                    ->onlyOnForms();
+                $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
+                    ->setColumns(12)
+                    ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
+                    ->setDisabled(true)
+                    ->setNumDecimals(2)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu HT (partageable)")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->setHelp("Revenu hors taxe faisant l'objet du partage.")
+                    ->setColumns(12)
+                    ->setDisabled(true)
+                    ->onlyOnForms();
+                $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net (partageable)")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+                $tabAttributs[] = MoneyField::new('retroComPartenaire', "Retrocommission")
+                    ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                    ->setStoredAsCents()
+                    ->onlyOnForms()
+                    ->setDisabled(true)
+                    ->setColumns(12);
+            }
         }
-
-        //On désactive les champs non éditables
-        //$this->appliquerCanDesable($tabAttributs);
 
         return $tabAttributs;
     }
@@ -2174,14 +2103,14 @@ class ServicePreferences
     public function setCRM_Fields_Produits_form($tabAttributs)
     {
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_PRODUIT_NOM)
-            ->setColumns(6)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_PRO_PRODUIT_CODE)
-            ->setColumns(1)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = PercentField::new('tauxarca', PreferenceCrudController::PREF_PRO_PRODUIT_TAUX_COMMISSION)
             ->setNumDecimals(2)
-            ->setColumns(2)
+            ->setColumns(12)
             ->onlyOnForms();
         $tabAttributs[] = BooleanField::new('obligatoire', PreferenceCrudController::PREF_PRO_PRODUIT_OBJIGATOIRE)
             ->setColumns(12)

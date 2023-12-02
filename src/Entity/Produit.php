@@ -46,9 +46,6 @@ class Produit extends CalculableEntity
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Police::class)]
-    private Collection $police;
-
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: Piste::class)]
     private Collection $pistes;
 
@@ -63,8 +60,6 @@ class Produit extends CalculableEntity
 
     public function __construct()
     {
-        //$this->cotations = new ArrayCollection();
-        $this->police = new ArrayCollection();
         $this->pistes = new ArrayCollection();
     }
 
@@ -109,30 +104,6 @@ class Produit extends CalculableEntity
         return $this;
     }
 
-    // public function isIsobligatoire(): ?bool
-    // {
-    //     return $this->isobligatoire;
-    // }
-
-    // public function setIsobligatoire(bool $isobligatoire): self
-    // {
-    //     $this->isobligatoire = $isobligatoire;
-
-    //     return $this;
-    // }
-
-    // public function isIsabonnement(): ?bool
-    // {
-    //     return $this->isabonnement;
-    // }
-
-    // public function setIsabonnement(bool $isabonnement): self
-    // {
-    //     $this->isabonnement = $isabonnement;
-
-    //     return $this;
-    // }
-
     public function getEntreprise(): ?Entreprise
     {
         return $this->entreprise;
@@ -149,18 +120,6 @@ class Produit extends CalculableEntity
     {
         return  "[" . ($this->tauxarca * 100). "%] " . $this->nom;
     }
-
-    // public function getCategorie(): ?int
-    // {
-    //     return $this->categorie;
-    // }
-
-    // public function setCategorie(int $categorie): self
-    // {
-    //     $this->categorie = $categorie;
-
-    //     return $this;
-    // }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -209,66 +168,6 @@ class Produit extends CalculableEntity
 
         return $this;
     }
-
-    // /**
-    //  * @return Collection<int, Cotation>
-    //  */
-    // public function getCotations(): Collection
-    // {
-    //     return $this->cotations;
-    // }
-
-    // public function addCotation(Cotation $cotation): self
-    // {
-    //     if (!$this->cotations->contains($cotation)) {
-    //         $this->cotations->add($cotation);
-    //         $cotation->setProduit($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeCotation(Cotation $cotation): self
-    // {
-    //     if ($this->cotations->removeElement($cotation)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($cotation->getProduit() === $this) {
-    //             $cotation->setProduit(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
-    /**
-     * @return Collection<int, Police>
-     */
-    public function getPolice(): Collection
-    {
-        return $this->police;
-    }
-
-    // public function addPolice(Police $police): self
-    // {
-    //     if (!$this->police->contains($police)) {
-    //         $this->police->add($police);
-    //         $police->setProduit($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removePolice(Police $police): self
-    // {
-    //     if ($this->police->removeElement($police)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($police->getProduit() === $this) {
-    //             $police->setProduit(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     /**
      * @return Collection<int, Piste>

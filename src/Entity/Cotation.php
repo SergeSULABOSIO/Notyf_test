@@ -83,6 +83,7 @@ class Cotation
     private Collection $documents;
 
     private ?string $client;
+    private ?string $gestionnaire;
 
     public function __construct()
     {
@@ -695,5 +696,16 @@ class Cotation
             $this->client = $this->getPiste()->getClient();
         }
         return $this->client;
+    }
+
+    /**
+     * Get the value of gestionnaire
+     */ 
+    public function getGestionnaire()
+    {
+        if($this->getPiste()){
+            $this->gestionnaire = $this->getPiste()->getGestionnaire();
+        }
+        return $this->gestionnaire;
     }
 }

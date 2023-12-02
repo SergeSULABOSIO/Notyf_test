@@ -4680,54 +4680,9 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnIndex();
         $tabAttributs[] = TextField::new('client', "Client")->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnIndex();
-        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
-            ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnIndex();
-        
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE])) {
-        //     
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES])) {
-        //     $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
-        //         ->formatValue(function ($value, Cotation $entity) {
-        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
-        //         })
-        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //         ->setStoredAsCents()
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_TAXE])) {
-        //     $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
-        //         ->formatValue(function ($value, Cotation $entity) {
-        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
-        //         })
-        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //         ->setStoredAsCents()
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_ARCA])) {
-        //     $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
-        //         ->formatValue(function ($value, Cotation $entity) {
-        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
-        //         })
-        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //         ->setStoredAsCents()
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE])) {
-        //     $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-        //         ->formatValue(function ($value, Cotation $entity) {
-        //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
-        //         })
-        //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //         ->setStoredAsCents()
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_CRM_COTATION_PRODUIT])) {
-        //     $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnIndex();
-        // }
         
         return $tabAttributs;
     }

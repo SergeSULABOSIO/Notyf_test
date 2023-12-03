@@ -698,13 +698,20 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)->onlyOnDetail();
 
-        //Onglet 
+        //Onglet Documents
         $tabAttributs[] = FormField::addTab(" Documents")
             ->setIcon("fa-solid fa-paperclip")
-            ->setColumns(10)
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('documents', "Documents")
             ->setTemplatePath('admin/segment/view_documents.html.twig')
+            ->onlyOnDetail();
+
+        //Onglet Contacts
+        $tabAttributs[] = FormField::addTab(" Contacts")
+            ->setIcon("fas fa-address-book")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('contacts', "Contacts")
+            ->setTemplatePath('admin/segment/view_contacts.html.twig')
             ->onlyOnDetail();
 
 

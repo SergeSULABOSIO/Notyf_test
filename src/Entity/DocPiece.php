@@ -63,9 +63,10 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?ActionCRM $actionCRM = null;
 
+    private ?string $nomType;
+
     public function __construct()
     {
-        
     }
 
     public function setDocument(?File $document = null): void
@@ -173,25 +174,26 @@ class DocPiece
     public function __toString()
     {
         $txt = "";
-        if($this->getType()){
+        if ($this->getType()) {
             foreach (DocPieceCrudController::TAB_TYPES as $key => $value) {
-                if($value == $this->getType()){
+                if ($value == $this->getType()) {
                     $txt = $key . ": ";
                     break;
                 }
             }
         }
-        if($this->getCreatedAt()){
+        if ($this->getCreatedAt()) {
             $txt = $txt . "[" . $this->nom . "], chargé le " . $this->getCreatedAt()->format("d-m-Y");
         }
-        if($this->getUtilisateur()){
+        if ($this->getUtilisateur()) {
             $txt = $txt . " par " . $this->getUtilisateur()->getNom();
         }
         $txtFichier = "Fichier: \"" . $this->getNomfichier() . "\", taille: " . $this->convertirTailleFichier($this->getTaillefichier()) . " Kb | ";
         return $txtFichier . $txt;
     }
 
-    private function convertirTailleFichier($tailleOctets):int{
+    private function convertirTailleFichier($tailleOctets): int
+    {
         return ($tailleOctets / 1024);
     }
 
@@ -253,5 +255,18 @@ class DocPiece
         $this->actionCRM = $actionCRM;
 
         return $this;
+    }
+
+    /**
+     * Get the value of nomType
+     */
+    public function getNomType()
+    {
+        foreach (DocPieceCrudController::TAB_TYPES as $nom => $code) {
+            if($code == $this->getType()){
+                $this->nomType = $nom;
+            }
+        }
+        return $this->nomType;
     }
 }

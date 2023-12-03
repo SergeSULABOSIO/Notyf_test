@@ -118,7 +118,7 @@ class Produit extends CalculableEntity
 
     public function __toString()
     {
-        return  "[" . ($this->tauxarca * 100). "%] " . $this->nom;
+        return  "[" . ($this->tauxarca * 100). "%] " . " - " . $this->getCode() . " - " . $this->nom;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

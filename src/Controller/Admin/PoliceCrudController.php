@@ -222,9 +222,9 @@ class PoliceCrudController extends AbstractCrudController
     {
         //dd($this->adminUrlGenerator->get("codeReporting"));
         //cross canal
-        $automobile_ajouter = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_AJOUTER)
-            ->setIcon('fas fa-car')
-            ->linkToCrudAction('cross_canal_ajouterAutomobile');
+        // $automobile_ajouter = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_AJOUTER)
+        //     ->setIcon('fas fa-car')
+        //     ->linkToCrudAction('cross_canal_ajouterAutomobile');
         // $automobile_lister = Action::new(ServiceCrossCanal::OPTION_AUTOMOBILE_LISTER)
         //     ->displayIf(static function (?Police $entity) {
         //         return count($entity->getAutomobiles()) != 0;
@@ -233,15 +233,17 @@ class PoliceCrudController extends AbstractCrudController
         //     ->linkToCrudAction('cross_canal_listerAutomobile');
 
         $actions
-            ->add(Crud::PAGE_DETAIL, $automobile_ajouter)
-            ->add(Crud::PAGE_INDEX, $automobile_ajouter);
+            // ->add(Crud::PAGE_DETAIL, $automobile_ajouter)
+            // ->add(Crud::PAGE_INDEX, $automobile_ajouter)
+            ;
             // ->add(Crud::PAGE_DETAIL, $automobile_lister)
             // ->add(Crud::PAGE_INDEX, $automobile_lister);
 
 
-        $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
-            ->setIcon('fas fa-address-book')
-            ->linkToCrudAction('cross_canal_ajouterContact');
+        // $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
+        //     ->setIcon('fas fa-address-book')
+        //     ->linkToCrudAction('cross_canal_ajouterContact')
+            ;
         // $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
         //     ->displayIf(static function (?Police $entity) {
         //         $isEmpty = false;
@@ -256,15 +258,17 @@ class PoliceCrudController extends AbstractCrudController
         //     ->linkToCrudAction('cross_canal_listerContact');
 
         $actions
-            ->add(Crud::PAGE_DETAIL, $contact_ajouter)
-            ->add(Crud::PAGE_INDEX, $contact_ajouter);
+            // ->add(Crud::PAGE_DETAIL, $contact_ajouter)
+            // ->add(Crud::PAGE_INDEX, $contact_ajouter)
+            ;
             // ->add(Crud::PAGE_DETAIL, $contact_lister)
             // ->add(Crud::PAGE_INDEX, $contact_lister);
 
 
-        $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
-            ->setIcon('fa-solid fa-paperclip')
-            ->linkToCrudAction('cross_canal_ajouterPiece');
+        // $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
+        //     ->setIcon('fa-solid fa-paperclip')
+        //     ->linkToCrudAction('cross_canal_ajouterPiece')
+            ;
         // $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
         //     ->displayIf(static function (?Police $entity) {
         //         return count($entity->getDocPieces()) != 0;
@@ -272,9 +276,10 @@ class PoliceCrudController extends AbstractCrudController
         //     ->setIcon('fa-solid fa-paperclip')
         //     ->linkToCrudAction('cross_canal_listerPiece');
 
-        $actions
-            ->add(Crud::PAGE_DETAIL, $piece_ajouter)
-            ->add(Crud::PAGE_INDEX, $piece_ajouter);
+        // $actions
+        //     ->add(Crud::PAGE_DETAIL, $piece_ajouter)
+        //     ->add(Crud::PAGE_INDEX, $piece_ajouter)
+            ;
             // ->add(Crud::PAGE_DETAIL, $piece_lister)
             // ->add(Crud::PAGE_INDEX, $piece_lister);
 
@@ -327,9 +332,9 @@ class PoliceCrudController extends AbstractCrudController
         // }
 
         //Sinistres
-        $sinistre_ajouter = Action::new(ServiceCrossCanal::OPTION_SINISTRE_AJOUTER)
-            ->setIcon('fas fa-bell')
-            ->linkToCrudAction('cross_canal_ajouterSinistre');
+        // $sinistre_ajouter = Action::new(ServiceCrossCanal::OPTION_SINISTRE_AJOUTER)
+        //     ->setIcon('fas fa-bell')
+        //     ->linkToCrudAction('cross_canal_ajouterSinistre');
 
         // $sinistre_lister = Action::new(ServiceCrossCanal::OPTION_SINISTRE_LISTER)
         //     ->displayIf(static function (?Police $entity) {
@@ -341,12 +346,14 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             // ->add(Crud::PAGE_DETAIL, $sinistre_lister)
             // ->add(Crud::PAGE_INDEX, $sinistre_lister)
-            ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
-            ->add(Crud::PAGE_INDEX, $sinistre_ajouter);
+            // ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
+            // ->add(Crud::PAGE_INDEX, $sinistre_ajouter)
+            ;
 
-        $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
-            ->setIcon('fas fa-paper-plane')
-            ->linkToCrudAction('cross_canal_ajouterMission');
+        // $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
+        //     ->setIcon('fas fa-paper-plane')
+        //     ->linkToCrudAction('cross_canal_ajouterMission')
+            ;
 
         // $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
         //     ->displayIf(static function (?Police $entity) {
@@ -358,13 +365,15 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             // ->add(Crud::PAGE_DETAIL, $mission_lister)
             // ->add(Crud::PAGE_INDEX, $mission_lister)
-            ->add(Crud::PAGE_DETAIL, $mission_ajouter)
-            ->add(Crud::PAGE_INDEX, $mission_ajouter);
+            // ->add(Crud::PAGE_DETAIL, $mission_ajouter)
+            // ->add(Crud::PAGE_INDEX, $mission_ajouter)
+            ;
 
 
-        $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
-            ->setIcon('fas fa-location-crosshairs')
-            ->linkToCrudAction('cross_canal_ajouterPiste');
+        // $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
+        //     ->setIcon('fas fa-location-crosshairs')
+        //     ->linkToCrudAction('cross_canal_ajouterPiste')
+            ;
 
         // $piste_lister = Action::new(ServiceCrossCanal::OPTION_PISTE_LISTER)
         //     ->displayIf(static function (?Police $entity) {
@@ -376,8 +385,9 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             // ->add(Crud::PAGE_DETAIL, $piste_lister)
             // ->add(Crud::PAGE_INDEX, $piste_lister)
-            ->add(Crud::PAGE_DETAIL, $piste_ajouter)
-            ->add(Crud::PAGE_INDEX, $piste_ajouter);
+            // ->add(Crud::PAGE_DETAIL, $piste_ajouter)
+            // ->add(Crud::PAGE_INDEX, $piste_ajouter)
+            ;
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -493,66 +503,67 @@ class PoliceCrudController extends AbstractCrudController
 
 
         //Opérations ARCA
-        $avenant_annulation = Action::new("Avenant d'annulation")
-            ->setIcon('fa-regular fa-trash-can') //<i class="fa-regular fa-trash-can"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_annulation');
+        // $avenant_annulation = Action::new("Avenant d'annulation")
+        //     ->setIcon('fa-regular fa-trash-can') //<i class="fa-regular fa-trash-can"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_annulation')
+        //     ;
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_annulation)
+            // ->add(Crud::PAGE_DETAIL, $avenant_annulation)
             //->add(Crud::PAGE_INDEX, $operation_annulation)
         ;
 
-        $avenant_renouvellement = Action::new("Avenant de renouvellement")
-            ->setIcon('fa-solid fa-champagne-glasses') //<i class="fa-solid fa-champagne-glasses"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_renouvellement');
+        // $avenant_renouvellement = Action::new("Avenant de renouvellement")
+        //     ->setIcon('fa-solid fa-champagne-glasses') //<i class="fa-solid fa-champagne-glasses"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_renouvellement');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_renouvellement)
+            // ->add(Crud::PAGE_DETAIL, $avenant_renouvellement)
             //->add(Crud::PAGE_INDEX, $operation_renouvellement)
         ;
 
-        $avenant_prorogation = Action::new("Avenant de prorogation")
-            ->setIcon('fa-solid fa-bridge') //<i class="fa-solid fa-bridge"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_prorogation');
+        // $avenant_prorogation = Action::new("Avenant de prorogation")
+        //     ->setIcon('fa-solid fa-bridge') //<i class="fa-solid fa-bridge"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_prorogation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_prorogation)
+            // ->add(Crud::PAGE_DETAIL, $avenant_prorogation)
             //->add(Crud::PAGE_INDEX, $operation_prorogation)
         ;
 
-        $avenant_incorporation = Action::new("Avenant d'incorporation")
-            ->setIcon('fa-solid fa-plus') //<i class="fa-solid fa-plus"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_incorporation');
+        // $avenant_incorporation = Action::new("Avenant d'incorporation")
+        //     ->setIcon('fa-solid fa-plus') //<i class="fa-solid fa-plus"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_incorporation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_incorporation)
+            // ->add(Crud::PAGE_DETAIL, $avenant_incorporation)
             //->add(Crud::PAGE_INDEX, $operation_incorporation)
         ;
 
-        $avenant_ristourne = Action::new("Avenant de ristourne")
-            ->setIcon('fa-solid fa-person-walking-arrow-loop-left') //<i class="fa-solid fa-person-walking-arrow-loop-left"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_ristourne');
+        // $avenant_ristourne = Action::new("Avenant de ristourne")
+        //     ->setIcon('fa-solid fa-person-walking-arrow-loop-left') //<i class="fa-solid fa-person-walking-arrow-loop-left"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_ristourne');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_ristourne)
+            // ->add(Crud::PAGE_DETAIL, $avenant_ristourne)
             //->add(Crud::PAGE_INDEX, $operation_ristourne)
         ;
 
-        $avenant_resiliation = Action::new("Avenant de résiliation")
-            ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_resiliation');
+        // $avenant_resiliation = Action::new("Avenant de résiliation")
+        //     ->setIcon('fa-solid fa-ban') //<i class="fa-solid fa-ban"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_resiliation');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
+            // ->add(Crud::PAGE_DETAIL, $avenant_resiliation)
             //->add(Crud::PAGE_INDEX, $operation_resiliation)
         ;
 
-        $avenant_autre_modifications = Action::new("Avenant pour autres modifications")
-            ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
-            ->addCssClass("btn btn-primary")
-            ->linkToCrudAction('avenant_autres_modifications');
+        // $avenant_autre_modifications = Action::new("Avenant pour autres modifications")
+        //     ->setIcon('fa-solid fa-pen') //<i class="fa-solid fa-pen"></i>
+        //     ->addCssClass("btn btn-primary")
+        //     ->linkToCrudAction('avenant_autres_modifications');
         $actions
-            ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
+            // ->add(Crud::PAGE_DETAIL, $avenant_autre_modifications)
             //->add(Crud::PAGE_INDEX, $operation_autre_modifications)
         ;
         return $actions;

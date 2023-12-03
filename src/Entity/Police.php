@@ -298,7 +298,7 @@ class Police
                 }
             }
         }
-        return $this->typeavenant;
+        return $this->typeavenant . " (" . $this->getIdAvenant() . ")";
     }
 
     /**

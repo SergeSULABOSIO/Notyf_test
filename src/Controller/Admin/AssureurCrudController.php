@@ -80,13 +80,14 @@ class AssureurCrudController extends AbstractCrudController
         }
         return $filters
             //->add('utilisateur')
-            ->add(
-                ChoiceFilter::new('isreassureur', "Catégorie")
-                    ->setChoices([
-                        'Réassureur' => 1,
-                        'Assureur' => 0
-                    ])
-            );
+            // ->add(
+            //     ChoiceFilter::new('isreassureur', "Catégorie")
+            //         ->setChoices([
+            //             'Réassureur' => 1,
+            //             'Assureur' => 0
+            //         ])
+            // )
+            ;
     }
 
     public function configureCrud(Crud $crud): Crud

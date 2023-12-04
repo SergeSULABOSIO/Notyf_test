@@ -65,7 +65,8 @@ class DocPiece
 
     private ?string $nomType;
 
-    private ?int $formatFichier;
+    private ?int $codeFormatFichier;
+    private ?string $logoFormatFichier;
 
     public function __construct()
     {
@@ -273,11 +274,18 @@ class DocPiece
     }
 
     /**
-     * Get the value of formatFichier
+     * Get the value of codeFormatFichier
      */ 
-    public function getFormatFichier()
+    public function getCodeFormatFichier()
     {
-        
-        return $this->formatFichier;
+        return $this->codeFormatFichier;
+    }
+
+    /**
+     * Get the value of logoFormatFichier
+     */ 
+    public function getLogoFormatFichier()
+    {
+        return $this->logoFormatFichier;
     }
 }

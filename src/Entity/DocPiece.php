@@ -65,6 +65,8 @@ class DocPiece
 
     private ?string $nomType;
 
+    private ?int $formatFichier;
+
     public function __construct()
     {
     }
@@ -268,5 +270,14 @@ class DocPiece
             }
         }
         return $this->nomType;
+    }
+
+    /**
+     * Get the value of formatFichier
+     */ 
+    public function getFormatFichier()
+    {
+        
+        return $this->formatFichier;
     }
 }

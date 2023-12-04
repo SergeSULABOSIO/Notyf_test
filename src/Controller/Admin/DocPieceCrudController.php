@@ -84,6 +84,24 @@ class DocPieceCrudController extends AbstractCrudController
         self::TYPE_AUTRES => 19,
     ];
 
+    public const FORMAT_MS_WORD = "MS Word";
+    public const FORMAT_MS_EXCEL = "MS Excel";
+    public const FORMAT_MS_PP = "MS Power Point";
+    public const FORMAT_PDF = "PDF";
+    public const FORMAT_IMG = "Image";
+    public const FORMAT_VIDEO = "Vidéo";
+    public const FORMAT_AUTRE = "Autre";
+
+    public const TAB_FORMAT = [
+        self::FORMAT_AUTRE      => 0,
+        self::FORMAT_MS_WORD    => 1,
+        self::FORMAT_MS_EXCEL   => 2,
+        self::FORMAT_MS_PP      => 3,
+        self::FORMAT_PDF        => 4,
+        self::FORMAT_IMG        => 5,
+        self::FORMAT_VIDEO      => 6,
+    ];
+
     public const ARTICLE_BASE_PATH = 'uploads/documents';
     public const ARTICLE_UPLOAD_DIR = 'public/uploads/documents';
     public ?Crud $crud = null;

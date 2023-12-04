@@ -46,7 +46,7 @@ class Revenu
     #[ORM\Column]
     private ?float $taux = null;
 
-    #[ORM\Column]
+    //#[ORM\Column]
     private ?float $montant = null;
 
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
@@ -57,6 +57,9 @@ class Revenu
 
     #[ORM\Column(nullable: true)]
     private ?bool $ispartclient = null;
+
+    private ?string $description;
+    private ?Monnaie $monnaie_Affichage;
 
     public function getId(): ?int
     {
@@ -173,6 +176,9 @@ class Revenu
 
     public function getMontant(): ?float
     {
+        //On calcul le revennu total
+        $data = $this->getComNette();
+        $this->montant = $data['revenufinal'];
         return $this->montant;
     }
 
@@ -206,13 +212,25 @@ class Revenu
         return null;
     }
 
-    private function getMonnaie_Affichage()
+    // private function getMonnaie_Affichage()
+    // {
+    //     $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+    //     if ($monnaie == null) {
+    //         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+    //     }
+    //     return $monnaie;
+    // }
+
+    /**
+     * Get the value of monnaie_Affichage
+     */ 
+    public function getMonnaie_Affichage()
     {
-        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($monnaie == null) {
-            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if ($this->monnaie_Affichage == null) {
+            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
-        return $monnaie;
+        return $this->monnaie_Affichage;
     }
 
     private function getCodeMonnaieAffichage(): string
@@ -227,78 +245,7 @@ class Revenu
 
     public function __toString()
     {
-        $strMonnaie = $this->getCodeMonnaieAffichage();
-        $strType = "";
-        foreach (RevenuCrudController::TAB_TYPE as $key => $value) {
-            if ($value == $this->type) {
-                $strType = $key;
-            }
-        }
-
-        $strBase = "";
-        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
-            if ($value == $this->base) {
-                $strBase = $key;
-            }
-        }
-        //On calcul le revennu total
-        $data = $this->getComNette($strBase);
-
-
-        $strRedevablePar = "";
-        if ($this->isIspartclient() == true) {
-            $strRedevablePar = "par le client";
-            if ($this->getCotation()) {
-                if ($this->getCotation()->getPiste()) {
-                    if ($this->getCotation()->getPiste()->getClient()) {
-                        $strRedevablePar = "par " . $this->getCotation()->getPiste()->getClient()->getNom();
-                    }
-                }
-            }
-        } else {
-            $strRedevablePar = "par l'assureur";
-            if ($this->getCotation()) {
-                if ($this->getCotation()) {
-                    if ($this->getCotation()->getAssureur()) {
-                        $strRedevablePar = "par " . $this->getCotation()->getAssureur()->getNom();
-                    }
-                }
-            }
-        }
-
-        //Décomposition en tranches
-        $strTranches = ", commission payable " . $strRedevablePar . " en une tranche sans délai.";
-        if ($this->isIsparttranche() == true) {
-            if ($this->getCotation()) {
-                if ($this->getCotation()->getTranches()) {
-                    $tabTranches = $this->getCotation()->getTranches();
-                    $portions = " ";
-                    /** @var Tranche */
-                    $i = 0;
-                    foreach ($tabTranches as $tranche) {
-                        $i = $i + 1;
-                        $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
-                        if ($i == 1) {
-                            $portions = $comTranche . $strMonnaie;
-                        }else{
-                            if($i == count($tabTranches)){
-                                $portions = $portions . " et " . $comTranche . $strMonnaie;
-                            }else{
-                                $portions = $portions . ", " . $comTranche . $strMonnaie;
-                            }
-                        }
-                    }
-                    $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
-                }
-            }
-        }
-
-        $strPartageable = " Non partageable.";
-        if ($this->getPartageable() == 1) {
-            $strPartageable = " Partageable avec " . $this->getCotation()->getPiste()->getPartenaire();
-        }
-
-        return $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
+        return $this->getDescription();
     }
 
     public function calc_getRevenuFinal()
@@ -313,8 +260,15 @@ class Revenu
         return $this->getComNette($strBase)['revenufinal'];
     }
 
-    private function getComNette($strBase)
+    private function getComNette()
     {
+        $strBase = "";
+        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
+            if ($value == $this->base) {
+                $strBase = $key;
+            }
+        }
+
         $strMonnaie = $this->getCodeMonnaieAffichage();
         $data = [];
         $prmNette = 0;
@@ -372,5 +326,78 @@ class Revenu
         $this->ispartclient = $ispartclient;
 
         return $this;
+    }
+
+    /**
+     * Get the value of description
+     */ 
+    public function getDescription()
+    {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
+        $strType = "";
+        foreach (RevenuCrudController::TAB_TYPE as $key => $value) {
+            if ($value == $this->type) {
+                $strType = $key;
+            }
+        }
+
+        
+        //On calcul le revennu total
+        $data = $this->getComNette();
+
+        $strRedevablePar = "";
+        if ($this->isIspartclient() == true) {
+            $strRedevablePar = "par le client";
+            if ($this->getCotation()) {
+                if ($this->getCotation()->getPiste()) {
+                    if ($this->getCotation()->getPiste()->getClient()) {
+                        $strRedevablePar = "par " . $this->getCotation()->getPiste()->getClient()->getNom();
+                    }
+                }
+            }
+        } else {
+            $strRedevablePar = "par l'assureur";
+            if ($this->getCotation()) {
+                if ($this->getCotation()) {
+                    if ($this->getCotation()->getAssureur()) {
+                        $strRedevablePar = "par " . $this->getCotation()->getAssureur()->getNom();
+                    }
+                }
+            }
+        }
+
+        //Décomposition en tranches
+        $strTranches = ", commission payable " . $strRedevablePar . " en une tranche sans délai.";
+        if ($this->isIsparttranche() == true) {
+            if ($this->getCotation()) {
+                if ($this->getCotation()->getTranches()) {
+                    $tabTranches = $this->getCotation()->getTranches();
+                    $portions = " ";
+                    /** @var Tranche */
+                    $i = 0;
+                    foreach ($tabTranches as $tranche) {
+                        $i = $i + 1;
+                        $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
+                        if ($i == 1) {
+                            $portions = $comTranche . $strMonnaie;
+                        }else{
+                            if($i == count($tabTranches)){
+                                $portions = $portions . " et " . $comTranche . $strMonnaie;
+                            }else{
+                                $portions = $portions . ", " . $comTranche . $strMonnaie;
+                            }
+                        }
+                    }
+                    $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
+                }
+            }
+        }
+
+        $strPartageable = " Non partageable.";
+        if ($this->getPartageable() == 1) {
+            $strPartageable = " Partageable avec " . $this->getCotation()->getPiste()->getPartenaire();
+        }
+        $this->description = $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
+        return $this->description;
     }
 }

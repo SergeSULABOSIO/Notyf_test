@@ -35,7 +35,7 @@ class Tranche
 
     private ?float $montant = 0;
 
-    #[ORM\ManyToOne(inversedBy: 'tranches', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'tranches', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
 
     //#[ORM\Column]
@@ -47,6 +47,9 @@ class Tranche
     #[ORM\Column]
     private ?int $duree = null;
 
+    private ?string $description;
+    private ?string $codeMonnaieAffichage;
+    private ?Monnaie $monnaie_Affichage;
 
     public function getId(): ?int
     {
@@ -65,11 +68,12 @@ class Tranche
         return $this;
     }
 
-    public function getTotalDureeTranchesPrecedantes($indiceCourant){
+    public function getTotalDureeTranchesPrecedantes($indiceCourant)
+    {
         $totalDureesCumulees = 0;
         /** @var Tranche */
         foreach ($this->getPolice()->getTranches() as $tranche) {
-            if($this->getPolice()->getTranches()->indexOf($tranche) < $indiceCourant){
+            if ($this->getPolice()->getTranches()->indexOf($tranche) < $indiceCourant) {
                 $totalDureesCumulees = $totalDureesCumulees + $tranche->getDuree();
             }
         }
@@ -81,11 +85,11 @@ class Tranche
         /** @var Police */
         $police = $this->getPolice();
         //dd($indice);
-        if($police != null){
+        if ($police != null) {
             $indiceCourant = ($police->getTranches()->indexOf($this));
             $dureesPrecedantes = $this->getTotalDureeTranchesPrecedantes($indiceCourant);
-            $this->startedAt = $police->getDateeffet()->add(new DateInterval("P". ($dureesPrecedantes) ."M"));
-            $this->endedAt = $this->startedAt->add(new DateInterval("P". ($this->getDuree()) ."M"));
+            $this->startedAt = $police->getDateeffet()->add(new DateInterval("P" . ($dureesPrecedantes) . "M"));
+            $this->endedAt = $this->startedAt->add(new DateInterval("P" . ($this->getDuree()) . "M"));
             $this->endedAt = $this->endedAt->modify("-1 day");
         }
         //dd($this->startedAt);
@@ -97,12 +101,13 @@ class Tranche
         return $this->endedAt;
     }
 
-    private function getPolice(){
+    private function getPolice()
+    {
         /** @var Police */
         $police = null;
-        if($this->getCotation()){
-            if($this->getCotation()->isValidated()){
-                if(count($this->getCotation()->getPolices()) != 0){
+        if ($this->getCotation()) {
+            if ($this->getCotation()->isValidated()) {
+                if (count($this->getCotation()->getPolices()) != 0) {
                     $police = $this->getCotation()->getPolices()[0];
                 }
             }
@@ -117,7 +122,7 @@ class Tranche
         return $this;
     }
 
-    
+
 
     public function setEndedAt(\DateTimeInterface $endedAt): self
     {
@@ -188,11 +193,11 @@ class Tranche
 
     /**
      * Get the value of montant
-     */ 
+     */
     public function getMontant()
     {
         $mont = 0;
-        if($this->getCotation() != null){
+        if ($this->getCotation() != null) {
             $mont = (($this->getCotation()->getPrimeTotale() / 100) * $this->getTaux());
         }
         $this->montant = $mont;
@@ -203,7 +208,7 @@ class Tranche
      * Set the value of montant
      *
      * @return  self
-     */ 
+     */
     public function setMontant($montant)
     {
         $this->montant = $montant;
@@ -225,14 +230,8 @@ class Tranche
 
     public function __toString()
     {
-        $strMonnaie = $this->getCodeMonnaieAffichage();
-        $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
-        //dd($this->getStartedAt());
-        if($this->getStartedAt() != null & $this->getEndedAt() != null){
-            $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . " (les deux dates comprises).";
-        }
-        $strMont = " " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
-        return $this->getNom() . ": " . $strMont;
+        $texte = $this->generateDescription();
+        return $texte;
     }
 
     public function getDuree(): ?int
@@ -247,32 +246,79 @@ class Tranche
         return $this;
     }
 
-    private function getCodeMonnaieAffichage(): string{
-        $strMonnaie = "";
-        $monnaieAff = $this->getMonnaie_Affichage();
-        if($monnaieAff != null){
-            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
-        }
-        return $strMonnaie;
-    }
+    // private function getCodeMonnaieAffichage(): string
+    // {
+    //     $strMonnaie = "";
+    //     $monnaieAff = $this->getMonnaie_Affichage();
+    //     if ($monnaieAff != null) {
+    //         $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
+    //     }
+    //     return $strMonnaie;
+    // }
 
-    private function getMonnaie_Affichage()
-    {
-        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($monnaie == null){
-            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        return $monnaie;
-    }
+    // private function getMonnaie_Affichage()
+    // {
+    //     $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+    //     if ($monnaie == null) {
+    //         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+    //     }
+    //     return $monnaie;
+    // }
 
     private function getMonnaie($fonction)
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
-            if($monnaie->getFonction() == $fonction){
+            if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;
             }
         }
         return null;
+    }
+
+    /**
+     * Get the value of description
+     */
+    public function getDescription()
+    {
+        $this->description = $this->generateDescription();
+        return $this->description;
+    }
+
+    private function generateDescription()
+    {
+        $strMonnaie = $this->getCodeMonnaieAffichage();
+        $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
+        //dd($this->getStartedAt());
+        if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
+            $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
+        }
+        $strMont = " " . number_format($this->getMontant(), 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
+        return $this->getNom() . ": " . $strMont;
+    }
+
+    /**
+     * Get the value of codeMonnaieAffichage
+     */ 
+    public function getCodeMonnaieAffichage()
+    {
+        $this->codeMonnaieAffichage = "";
+        $monnaieAff = $this->getMonnaie_Affichage();
+        if ($monnaieAff != null) {
+            $this->codeMonnaieAffichage = " " . $this->getMonnaie_Affichage()->getCode();
+        }
+        return $this->codeMonnaieAffichage;
+    }
+
+    /**
+     * Get the value of monnaie_Affichage
+     */ 
+    public function getMonnaie_Affichage()
+    {
+        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if ($this->monnaie_Affichage == null) {
+            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $this->monnaie_Affichage;
     }
 }

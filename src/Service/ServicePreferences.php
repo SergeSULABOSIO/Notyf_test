@@ -730,6 +730,22 @@ class ServicePreferences
             ->setDisabled(true)
             ->onlyOnDetail();
 
+        //Onglet Termes de paiements
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs aux termes de paiement")
+            ->setIcon("fa-solid fa-cash-register")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('tranches', "Détails")
+            ->setTemplatePath('admin/segment/view_tranches.html.twig')
+            ->onlyOnDetail();
+
+        //Onglet Revenu de courtage
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs à la commission de courtage")
+            ->setIcon("fa-solid fa-cash-register")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('revenus', "Détails")
+            ->setTemplatePath('admin/segment/view_revenus.html.twig')
+            ->onlyOnDetail();
+
         return $tabAttributs;
     }
 

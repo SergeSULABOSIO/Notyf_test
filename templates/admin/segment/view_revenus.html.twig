@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">N°</th>
+                <th scope="col">Description</th>
+                <th scope="col">Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set i = 1 %}
+                {% for revenu in field.value %}
+                    <tr>
+                        <td scope="row">{{ i }}</td>
+                        <td>{{revenu.description}}</td>
+                        <td>{{(revenu.montant)|format_currency(revenu.monnaie_Affichage.code)}}</td>
+                    </tr>
+                    {% set i = i + 1 %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -679,6 +679,8 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_Details($tabAttributs)
     {
+        $taux = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        //dd($taux);
         //$tabAttributs = [];
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)->onlyOnDetail();
@@ -687,6 +689,7 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('assureur', "Assureur")->onlyOnDetail();
         $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)->onlyOnDetail();
         $tabAttributs[] = TextField::new('produit', "Couverture")
             ->setTemplatePath('admin/segment/view_produit.html.twig')
@@ -745,6 +748,53 @@ class ServicePreferences
         $tabAttributs[] = ArrayField::new('revenus', "Détails")
             ->setTemplatePath('admin/segment/view_revenus.html.twig')
             ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('commissionTotaleHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu net total")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+
+        //Onglet Rétrocommission
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs à la rétrocommission dûe au partenaire")
+            ->setIcon("fas fa-handshake")
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net partageable")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+            ->setDisabled(true)
+            ->onlyOnDetail();
+        $tabAttributs[] = PercentField::new('tauxretrocompartenaire', "Taux exceptionnel")
+            ->setNumDecimals(2)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('retroComPartenaire', "Rétrocommission")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
+
 
         return $tabAttributs;
     }
@@ -4365,7 +4415,7 @@ class ServicePreferences
                 ->setDisabled(true)
                 ->setColumns(12);
 
-            $tabAttributs[] = FormField::addPanel("Détails relatifs à la retrocommission dûe au partenaire")
+            $tabAttributs[] = FormField::addPanel("Détails relatifs à la rétrocommission dûe au partenaire")
                 ->setIcon("fas fa-handshake")
                 ->onlyOnForms();
             $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
@@ -4399,7 +4449,7 @@ class ServicePreferences
                 ->setHelp("Ne définissez rien si vous voullez appliquer le taux par défaut.")
                 ->setNumDecimals(2)
                 ->onlyOnForms();
-            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Retrocommission")
+            $tabAttributs[] = MoneyField::new('retroComPartenaire', "Rétrocommission")
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setHelp("Le montant total dû au partenaire.")
                 ->setStoredAsCents()

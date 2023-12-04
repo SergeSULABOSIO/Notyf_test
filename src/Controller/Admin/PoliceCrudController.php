@@ -173,7 +173,7 @@ class PoliceCrudController extends AbstractCrudController
             // ->add('unpaidtaxeassureur')
             // ->add('paidtaxe')
             // ->add('unpaidtaxe');
-            ;
+        ;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -195,7 +195,7 @@ class PoliceCrudController extends AbstractCrudController
     {
         $instance = $this->getContext()->getEntity()->getInstance();
         //dd($this->getContext()->getEntity()->getInstance());
-        if($this->crud){
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
@@ -211,8 +211,18 @@ class PoliceCrudController extends AbstractCrudController
                 if ($instance->getClient()) {
                     $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
                 }
+            } else if ($instance instanceof Police) {
+                //On envoie ces paramètres à tous les formulaires
+                /** @var Piste */
+                if ($instance->getPiste()->getProduit()) {
+                    $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                }
+                if ($instance->getPiste()->getClient()) {
+                    $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                }
             }
         }
+        //dd($this->adminUrlGenerator->get("isIard"));
         $this->servicePreferences->setEntite($pageName, $instance);
         return $this->servicePreferences->getChamps(new Police(), $this->crud, $this->adminUrlGenerator);
     }
@@ -235,15 +245,15 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             // ->add(Crud::PAGE_DETAIL, $automobile_ajouter)
             // ->add(Crud::PAGE_INDEX, $automobile_ajouter)
-            ;
+        ;
             // ->add(Crud::PAGE_DETAIL, $automobile_lister)
             // ->add(Crud::PAGE_INDEX, $automobile_lister);
 
 
-        // $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
-        //     ->setIcon('fas fa-address-book')
-        //     ->linkToCrudAction('cross_canal_ajouterContact')
-            ;
+            // $contact_ajouter = Action::new(ServiceCrossCanal::OPTION_CONTACT_AJOUTER)
+            //     ->setIcon('fas fa-address-book')
+            //     ->linkToCrudAction('cross_canal_ajouterContact')
+        ;
         // $contact_lister = Action::new(ServiceCrossCanal::OPTION_CONTACT_LISTER)
         //     ->displayIf(static function (?Police $entity) {
         //         $isEmpty = false;
@@ -260,28 +270,28 @@ class PoliceCrudController extends AbstractCrudController
         $actions
             // ->add(Crud::PAGE_DETAIL, $contact_ajouter)
             // ->add(Crud::PAGE_INDEX, $contact_ajouter)
-            ;
+        ;
             // ->add(Crud::PAGE_DETAIL, $contact_lister)
             // ->add(Crud::PAGE_INDEX, $contact_lister);
 
 
-        // $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
-        //     ->setIcon('fa-solid fa-paperclip')
-        //     ->linkToCrudAction('cross_canal_ajouterPiece')
-            ;
-        // $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
-        //     ->displayIf(static function (?Police $entity) {
-        //         return count($entity->getDocPieces()) != 0;
-        //     })
-        //     ->setIcon('fa-solid fa-paperclip')
-        //     ->linkToCrudAction('cross_canal_listerPiece');
+            // $piece_ajouter = Action::new(ServiceCrossCanal::OPTION_PIECE_AJOUTER)
+            //     ->setIcon('fa-solid fa-paperclip')
+            //     ->linkToCrudAction('cross_canal_ajouterPiece')
+        ;
+            // $piece_lister = Action::new(ServiceCrossCanal::OPTION_PIECE_LISTER)
+            //     ->displayIf(static function (?Police $entity) {
+            //         return count($entity->getDocPieces()) != 0;
+            //     })
+            //     ->setIcon('fa-solid fa-paperclip')
+            //     ->linkToCrudAction('cross_canal_listerPiece');
 
-        // $actions
-        //     ->add(Crud::PAGE_DETAIL, $piece_ajouter)
-        //     ->add(Crud::PAGE_INDEX, $piece_ajouter)
-            ;
-            // ->add(Crud::PAGE_DETAIL, $piece_lister)
-            // ->add(Crud::PAGE_INDEX, $piece_lister);
+            // $actions
+            //     ->add(Crud::PAGE_DETAIL, $piece_ajouter)
+            //     ->add(Crud::PAGE_INDEX, $piece_ajouter)
+        ;
+        // ->add(Crud::PAGE_DETAIL, $piece_lister)
+        // ->add(Crud::PAGE_INDEX, $piece_lister);
 
         $txtTaxeCourtier = $this->serviceTaxes->getTaxe(true) != null ? $this->serviceTaxes->getNomTaxeCourtier() : "";
         $txtTaxeAssureur = $this->serviceTaxes->getTaxe(false) != null ? $this->serviceTaxes->getNomTaxeAssureur() : "";
@@ -348,12 +358,12 @@ class PoliceCrudController extends AbstractCrudController
             // ->add(Crud::PAGE_INDEX, $sinistre_lister)
             // ->add(Crud::PAGE_DETAIL, $sinistre_ajouter)
             // ->add(Crud::PAGE_INDEX, $sinistre_ajouter)
-            ;
+        ;
 
-        // $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
-        //     ->setIcon('fas fa-paper-plane')
-        //     ->linkToCrudAction('cross_canal_ajouterMission')
-            ;
+            // $mission_ajouter = Action::new(ServiceCrossCanal::OPTION_MISSION_AJOUTER)
+            //     ->setIcon('fas fa-paper-plane')
+            //     ->linkToCrudAction('cross_canal_ajouterMission')
+        ;
 
         // $mission_lister = Action::new(ServiceCrossCanal::OPTION_MISSION_LISTER)
         //     ->displayIf(static function (?Police $entity) {
@@ -367,13 +377,13 @@ class PoliceCrudController extends AbstractCrudController
             // ->add(Crud::PAGE_INDEX, $mission_lister)
             // ->add(Crud::PAGE_DETAIL, $mission_ajouter)
             // ->add(Crud::PAGE_INDEX, $mission_ajouter)
-            ;
+        ;
 
 
-        // $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
-        //     ->setIcon('fas fa-location-crosshairs')
-        //     ->linkToCrudAction('cross_canal_ajouterPiste')
-            ;
+            // $piste_ajouter = Action::new(ServiceCrossCanal::OPTION_PISTE_AJOUTER)
+            //     ->setIcon('fas fa-location-crosshairs')
+            //     ->linkToCrudAction('cross_canal_ajouterPiste')
+        ;
 
         // $piste_lister = Action::new(ServiceCrossCanal::OPTION_PISTE_LISTER)
         //     ->displayIf(static function (?Police $entity) {
@@ -387,7 +397,7 @@ class PoliceCrudController extends AbstractCrudController
             // ->add(Crud::PAGE_INDEX, $piste_lister)
             // ->add(Crud::PAGE_DETAIL, $piste_ajouter)
             // ->add(Crud::PAGE_INDEX, $piste_ajouter)
-            ;
+        ;
 
 
         $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
@@ -408,7 +418,7 @@ class PoliceCrudController extends AbstractCrudController
             ->linkToCrudAction('facture_retrocommissions')
             ->setIcon('fa-solid fa-receipt');
         $nomTaxe = $this->serviceTaxes->getTaxe(false) ? $this->serviceTaxes->getTaxe(false)->getNom() : "TVA";
-        
+
         // $batch_creer_facture_tva = Action::new("facture_tva", "Note de perception pour " . $nomTaxe)
         //     ->displayIf(static function (?Police $entity) {
         //         return count($entity->getPistes()) != 0;

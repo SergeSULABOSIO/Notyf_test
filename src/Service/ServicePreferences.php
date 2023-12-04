@@ -699,25 +699,23 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)->onlyOnDetail();
 
 
-        $tabAttributs[] = ArrayField::new('contacts', "Contacts")
+        //Onglet Contacts
+        $tabAttributs[] = FormField::addPanel(" Contacts")
+            ->setIcon("fas fa-address-book")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('contacts', "Détails")
             ->setTemplatePath('admin/segment/view_contacts.html.twig')
             ->onlyOnDetail();
 
-        $tabAttributs[] = ArrayField::new('documents', "Documents")
+        //Onglet Documents
+        $tabAttributs[] = FormField::addPanel(" Documents")
+            ->setIcon("fa-solid fa-paperclip")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('documents', "Détails")
             ->setTemplatePath('admin/segment/view_documents.html.twig')
             ->onlyOnDetail();
 
 
-
-        //Onglet Documents
-        $tabAttributs[] = FormField::addTab(" Documents")
-            ->setIcon("fa-solid fa-paperclip")
-            ->onlyOnDetail();
-
-        //Onglet Contacts
-        $tabAttributs[] = FormField::addTab(" Contacts")
-            ->setIcon("fas fa-address-book")
-            ->onlyOnDetail();
 
 
         return $tabAttributs;

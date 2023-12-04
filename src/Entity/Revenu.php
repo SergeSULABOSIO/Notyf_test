@@ -277,7 +277,7 @@ class Revenu
             $prmNette = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
             $fronting = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
-        $montantFlat = ($this->montant / 100);
+        $montantFlat = ($this->getMontantFlat() / 100);
         $taux = $this->taux;
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
@@ -365,7 +365,7 @@ class Revenu
         }
 
         //Décomposition en tranches
-        $strTranches = ", commission payable " . $strRedevablePar . " en une tranche sans délai.";
+        $strTranches = ", payable " . $strRedevablePar . " en une tranche sans délai.";
         if ($this->isIsparttranche() == true) {
             if ($this->getCotation()) {
                 if ($this->getCotation()->getTranches()) {
@@ -386,7 +386,7 @@ class Revenu
                             }
                         }
                     }
-                    $strTranches = ", commission payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
+                    $strTranches = ", payable " . $strRedevablePar . " en " . count($tabTranches) . " tranche(s) de " . $portions . " hors taxes.";
                 }
             }
         }

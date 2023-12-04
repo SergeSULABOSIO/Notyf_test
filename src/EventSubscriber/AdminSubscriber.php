@@ -267,8 +267,8 @@ class AdminSubscriber implements EventSubscriberInterface
                     $revenu->setUpdatedAt(new \DateTimeImmutable());
                     $revenu->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $revenu->setEntreprise($this->serviceEntreprise->getEntreprise());
-                    if ($revenu->getMontant() == null) {
-                        $revenu->setMontant(0);
+                    if ($revenu->getMontantFlat() == null) {
+                        $revenu->setMontantFlat(0);
                     }
                     if ($revenu->getTaux() == null) {
                         $revenu->setTaux(0);
@@ -544,7 +544,7 @@ class AdminSubscriber implements EventSubscriberInterface
                         if ($cotation->getPiste()->getProduit()) {
                             $stanRevenu = new Revenu();
                             $stanRevenu->setCotation($cotation);
-                            $stanRevenu->setMontant(0);
+                            $stanRevenu->setMontantFlat(0);
                             $stanRevenu->setTaux($cotation->getPiste()->getProduit()->getTauxarca());
                             $stanRevenu->setType(RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]);
                             $stanRevenu->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);

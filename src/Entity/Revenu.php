@@ -46,7 +46,9 @@ class Revenu
     #[ORM\Column]
     private ?float $taux = null;
 
-    //#[ORM\Column]
+    #[ORM\Column]
+    private ?float $montantFlat = null;
+    
     private ?float $montant = null;
 
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
@@ -182,13 +184,6 @@ class Revenu
         return $this->montant;
     }
 
-    public function setMontant(float $montant): self
-    {
-        $this->montant = $montant;
-
-        return $this;
-    }
-
     public function getCotation(): ?Cotation
     {
         return $this->cotation;
@@ -203,10 +198,15 @@ class Revenu
 
     private function getMonnaie($fonction)
     {
-        $tabMonnaies = $this->getEntreprise()->getMonnaies();
-        foreach ($tabMonnaies as $monnaie) {
-            if ($monnaie->getFonction() == $fonction) {
-                return $monnaie;
+        //dd($this->getEntreprise());
+        if($this->getEntreprise()){
+            $tabMonnaies = $this->getEntreprise()->getMonnaies();
+            //dd($tabMonnaies);
+            //dd($fonction);
+            foreach ($tabMonnaies as $monnaie) {
+                if ($monnaie->getFonction() == $fonction) {
+                    return $monnaie;
+                }
             }
         }
         return null;
@@ -230,6 +230,7 @@ class Revenu
         if ($this->monnaie_Affichage == null) {
             $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
+        //dd($this->monnaie_Affichage);
         return $this->monnaie_Affichage;
     }
 
@@ -399,5 +400,25 @@ class Revenu
         }
         $this->description = $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
         return $this->description;
+    }
+
+    /**
+     * Get the value of montantFlat
+     */ 
+    public function getMontantFlat()
+    {
+        return $this->montantFlat;
+    }
+
+    /**
+     * Set the value of montantFlat
+     *
+     * @return  self
+     */ 
+    public function setMontantFlat($montantFlat)
+    {
+        $this->montantFlat = $montantFlat;
+
+        return $this;
     }
 }

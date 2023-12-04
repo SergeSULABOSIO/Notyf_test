@@ -765,7 +765,7 @@ class ServicePreferences
             ->onlyOnDetail()
             ->setChoices(RevenuCrudController::TAB_BASE);
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+        $tabAttributs[] = MoneyField::new('montantFlat', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
             ->formatValue(function ($value, Revenu $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
             })
@@ -1204,7 +1204,7 @@ class ServicePreferences
                 ->onlyOnForms();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+            $tabAttributs[] = MoneyField::new('montantFlat', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->setColumns(12)
@@ -1363,7 +1363,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
+            $tabAttributs[] = MoneyField::new('montantFlat', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
                 ->formatValue(function ($value, Revenu $entity) {
                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
                 })

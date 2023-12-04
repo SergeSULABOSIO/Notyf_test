@@ -465,7 +465,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Police) {
             $tabAttributs = [
-                FormField::addTab(' Informations de base')
+                FormField::addPanel(' Informations de base')
                     ->setIcon('fas fa-file-shield') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le contrat d'assurance en place.")
             ];
@@ -679,6 +679,7 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_Details($tabAttributs)
     {
+        //$tabAttributs = [];
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_POLICE_ID)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)->onlyOnDetail();
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)->onlyOnDetail();
@@ -687,7 +688,9 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)->onlyOnDetail();
         $tabAttributs[] = TextField::new('typeavenant', PreferenceCrudController::PREF_PRO_POLICE_TYPE_AVENANT)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('produit', "Couverture")->onlyOnDetail();
+        $tabAttributs[] = TextField::new('produit', "Couverture")
+            ->setTemplatePath('admin/segment/view_produit.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('client', "Assuré (client)")->onlyOnDetail();
         $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)->onlyOnDetail();
         $tabAttributs[] = TextField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)->onlyOnDetail();
@@ -697,7 +700,6 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)->onlyOnDetail();
-
 
         //Onglet Contacts
         $tabAttributs[] = FormField::addPanel(" Contacts")
@@ -805,6 +807,7 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        //$tabAttributs = [];
         $tabAttributs[] = TextField::new('typeavenant', "Type d'avenant")
             ->onlyOnIndex();
         // $tabAttributs[] = NumberField::new('idAvenant', "Id. Avenant")

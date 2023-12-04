@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        <div class="card">
+        <h6 class="card-header">{{field.value.code}} - {{field.value.nom}} </h6>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Commission de courtage: <span class="badge text-light text-bg-success">{{field.value.tauxarca * 100}}%</span> | {{field.value.iardTxt}} | {{field.value.obligatoireTxt}} </li>
+        </ul>    
+        <div class="card-body">
+            {{field.value.description|raw}}
+        </div>
+        </div>
+    </body>
+</html>

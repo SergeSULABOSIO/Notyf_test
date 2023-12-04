@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-
+use App\Controller\Admin\ProduitCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -54,9 +54,12 @@ class Produit extends CalculableEntity
 
     #[ORM\Column]
     private ?bool $obligatoire = null;
+    private ?string $obligatoireTxt;
 
     #[ORM\Column]
     private ?bool $iard = null;
+    private ?string $iardTxt;
+
 
     public function __construct()
     {
@@ -233,5 +236,31 @@ class Produit extends CalculableEntity
         $this->iard = $iard;
 
         return $this;
+    }
+
+    /**
+     * Get the value of iardTxt
+     */ 
+    public function getIardTxt()
+    {
+        if($this->isIard() == true){
+            $this->iardTxt = "Branche: IARD";
+        }else{
+            $this->iardTxt = "Branche: VIE";
+        }
+        return $this->iardTxt;
+    }
+
+    /**
+     * Get the value of obligatoireTxt
+     */ 
+    public function getObligatoireTxt()
+    {
+        if($this->isObligatoire() == true){
+            $this->obligatoireTxt = "Couverture Obligatoire";
+        }else{
+            $this->obligatoireTxt = "Couverture Non Obligatoire";
+        }
+        return $this->obligatoireTxt;
     }
 }

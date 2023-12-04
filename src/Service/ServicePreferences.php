@@ -702,7 +702,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_POLICE_ENTREPRISE)->onlyOnDetail();
 
         //Onglet Contacts
-        $tabAttributs[] = FormField::addPanel(" Contacts")
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs aux Contacts")
             ->setIcon("fas fa-address-book")
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('contacts', "Détails")
@@ -717,8 +717,18 @@ class ServicePreferences
             ->setTemplatePath('admin/segment/view_documents.html.twig')
             ->onlyOnDetail();
 
-
-
+        //Onglet Structure de la prime
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs à la prime d'assurance")
+            ->setIcon("fa-solid fa-cash-register")
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('chargements', "Détails")
+            ->setTemplatePath('admin/segment/view_chargements.html.twig')
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnDetail();
 
         return $tabAttributs;
     }

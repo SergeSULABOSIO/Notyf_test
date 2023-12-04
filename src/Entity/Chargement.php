@@ -17,6 +17,7 @@ class Chargement
 
     #[ORM\Column]
     private ?int $type = null;
+    private ?string $typeText = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
@@ -38,6 +39,8 @@ class Chargement
 
     #[ORM\ManyToOne(inversedBy: 'chargements', cascade:['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
+
+    private ?Monnaie $monnaie_Affichage;
 
     public function getId(): ?int
     {
@@ -162,14 +165,14 @@ class Chargement
         return $strMonnaie;
     }
 
-    private function getMonnaie_Affichage()
-    {
-        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($monnaie == null){
-            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        return $monnaie;
-    }
+    // private function getMonnaie_Affichage()
+    // {
+    //     $monnaieAffichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+    //     if($monnaieAffichage == null){
+    //         $monnaieAffichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+    //     }
+    //     return $monnaieAffichage;
+    // }
 
     private function getMonnaie($fonction)
     {
@@ -180,5 +183,30 @@ class Chargement
             }
         }
         return null;
+    }
+
+    /**
+     * Get the value of typeText
+     */ 
+    public function getTypeText()
+    {
+        foreach (ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE as $nom => $code) {
+            if($code == $this->getType()){
+                $this->typeText = $nom;
+            }
+        }
+        return $this->typeText;
+    }
+
+    /**
+     * Get the value of monnaie_Affichage
+     */ 
+    public function getMonnaie_Affichage()
+    {
+        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($this->monnaie_Affichage == null){
+            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $this->monnaie_Affichage;
     }
 }

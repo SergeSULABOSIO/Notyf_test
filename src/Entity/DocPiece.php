@@ -278,6 +278,7 @@ class DocPiece
      */ 
     public function getCodeFormatFichier()
     {
+
         return $this->codeFormatFichier;
     }
 
@@ -286,6 +287,7 @@ class DocPiece
      */ 
     public function getLogoFormatFichier()
     {
+        //<i class="fa-regular fa-file-pdf"></i>
         return $this->logoFormatFichier;
     }
 }

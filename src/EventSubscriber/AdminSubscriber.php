@@ -361,11 +361,12 @@ class AdminSubscriber implements EventSubscriberInterface
                 }
             }
 
-
             $this->cleanCotations();
             $this->cleanPolices();
             $this->cleanDocuments();
             $this->cleanFeedbacks();
+            $this->cleanActions();
+            $this->cleanContacts();
             $this->updateEtapePiste($piste);
         }
     }
@@ -645,6 +646,34 @@ class AdminSubscriber implements EventSubscriberInterface
         foreach ($feedbacks as $feedback) {
             if ($feedback->getActionCRM() == null) {
                 $this->entityManager->remove($feedback);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function cleanActions()
+    {
+        $actions = $this->entityManager->getRepository(ActionCRM::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var ActionCRM */
+        foreach ($actions as $action) {
+            if ($action->getPiste() == null) {
+                $this->entityManager->remove($action);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function cleanContacts()
+    {
+        $contacts = $this->entityManager->getRepository(Contact::class)->findBy(
+            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        );
+        /** @var ActionCRM */
+        foreach ($contacts as $contact) {
+            if ($contact->getPiste() == null) {
+                $this->entityManager->remove($contact);
                 $this->entityManager->flush();
             }
         }

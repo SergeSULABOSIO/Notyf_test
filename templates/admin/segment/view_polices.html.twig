@@ -8,22 +8,26 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                    <th scope="col">N°</th>
-                    <th scope="col">Référence</th>
-                    <th scope="col">Client</th>
-                    <th scope="col">Assureur</th>
-                    <th scope="col">Couverture</th>
-                    <th scope="col">Période</th>
-                    <th scope="col">Prime totale</th>
+                        <th scope="col">N°</th>
+                        <th scope="col">Référence</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Assureur</th>
+                        <th scope="col">Couverture</th>
+                        <th scope="col">Période</th>
+                        <th scope="col">Prime totale</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% set i = 1 %}
-                    {% for revenu in field.value %}
+                    {% for police in field.value %}
                         <tr>
                             <td scope="row">{{ i }}</td>
-                            <td>{{revenu.description}}</td>
-                            <td>{{(revenu.montant)|format_currency(revenu.monnaie_Affichage.code)}}</td>
+                            <th>{{police.reference}}</th>
+                            <td>{{police.client.nom}}</td>
+                            <td>{{police.assureur.nom}}</td>
+                            <td>{{police.produit.nom}}</td>
+                            <td>{{police.dateeffet|date("d/m/Y")}} au {{police.dateexpiration|date("d/m/Y")}}</td>
+                            <td>{{(police.primeTotale / 100)|format_currency(police.monnaie_Affichage.code)}}</td>
                         </tr>
                         {% set i = i + 1 %}
                     {% endfor %}

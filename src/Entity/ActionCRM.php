@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\ActionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Police;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ActionRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
 class ActionCRM
@@ -44,34 +45,28 @@ class ActionCRM
 
     private ?bool $closed = null;
 
-    /* #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
-    private ?Piste $piste = null; */
-
-    // #[ORM\OneToMany(mappedBy: 'action', targetEntity: FeedbackCRM::class)]
-    // private Collection $feedbackCRMs;
-
     #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Utilisateur $attributedTo = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    // #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Police $police = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    // #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
     private ?Cotation $cotation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
-    private ?Sinistre $sinistre = null;
+    // #[ORM\ManyToOne(inversedBy: 'actionCRMs')]
+    // private ?Sinistre $sinistre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'actionsCRMs', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'actionsCRMs', cascade: ['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
-    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class, cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $feedbacks;
 
-    
+
     public function __construct()
     {
         //$this->feedbackCRMs = new ArrayCollection();
@@ -132,7 +127,7 @@ class ActionCRM
         return $this;
     }
 
-    
+
     public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
@@ -186,37 +181,6 @@ class ActionCRM
         return "La mission \"" . $this->mission . "(...)\" | status : " . ($this->getClosed() == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
     }
 
-
-    // /**
-    //  * @return Collection<int, FeedbackCRM>
-    //  */
-    // public function getFeedbackCRMs(): Collection
-    // {
-    //     return $this->feedbackCRMs;
-    // }
-
-    // public function addFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    // {
-    //     if (!$this->feedbackCRMs->contains($feedbackCRM)) {
-    //         $this->feedbackCRMs->add($feedbackCRM);
-    //         $feedbackCRM->setAction($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeFeedbackCRM(FeedbackCRM $feedbackCRM): self
-    // {
-    //     if ($this->feedbackCRMs->removeElement($feedbackCRM)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($feedbackCRM->getAction() === $this) {
-    //             $feedbackCRM->setAction(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
     public function getAttributedTo(): ?Utilisateur
     {
         return $this->attributedTo;
@@ -225,42 +189,6 @@ class ActionCRM
     public function setAttributedTo(?Utilisateur $attributedTo): self
     {
         $this->attributedTo = $attributedTo;
-
-        return $this;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
-    }
-
-    public function getCotation(): ?Cotation
-    {
-        return $this->cotation;
-    }
-
-    public function setCotation(?Cotation $cotation): self
-    {
-        $this->cotation = $cotation;
-
-        return $this;
-    }
-
-    public function getSinistre(): ?Sinistre
-    {
-        return $this->sinistre;
-    }
-
-    public function setSinistre(?Sinistre $sinistre): self
-    {
-        $this->sinistre = $sinistre;
 
         return $this;
     }
@@ -339,12 +267,12 @@ class ActionCRM
 
     /**
      * Get the value of closed
-     */ 
+     */
     public function getClosed()
     {
         $this->closed = false;
         foreach ($this->getFeedbacks() as $feedback) {
-            if($feedback->isClosed() == true){
+            if ($feedback->isClosed() == true) {
                 $this->closed = true;
                 break;
             }
@@ -356,7 +284,7 @@ class ActionCRM
      * Set the value of closed
      *
      * @return  self
-     */ 
+     */
     public function setClosed($closed)
     {
         $this->closed = $closed;

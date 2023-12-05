@@ -398,7 +398,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Piste) {
             $tabAttributs = [
-                FormField::addPanel(' Informations générales')
+                FormField::addTab(' Informations générales')
                     ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
             ];
@@ -5030,7 +5030,6 @@ class ServicePreferences
 
     public function setCRM_Fields_Pistes_form($tabAttributs)
     {
-        //dd($this->piste);
         $tabAttributs[] = FormField::addPanel("Section principale")
             ->setIcon("fas fa-location-crosshairs")
             ->setColumns(10)

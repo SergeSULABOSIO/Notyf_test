@@ -4515,7 +4515,9 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('validated', "Status")
             ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT)
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('polices', "Polices")->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('polices', "Polices")
+            ->setTemplatePath('admin/segment/view_polices.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_COTATION_NOM)->onlyOnDetail();
         $tabAttributs[] = NumberField::new('dureeCouverture', PreferenceCrudController::PREF_CRM_COTATION_DUREE)
             ->formatValue(function ($value, Cotation $entity) {

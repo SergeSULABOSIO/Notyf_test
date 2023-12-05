@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Police;
+use App\Entity\Cotation;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ActionRepository;
@@ -290,5 +291,31 @@ class ActionCRM
         $this->closed = $closed;
 
         return $this;
+    }
+
+    /**
+     * Get the value of police
+     */ 
+    public function getPolice()
+    {
+        if($this->getPiste()){
+            if($this->getPiste()->getPolices()[0]){
+                $this->police = $this->getPiste()->getPolices()[0];
+            }
+        }
+        return $this->police;
+    }
+
+    /**
+     * Get the value of cotation
+     */ 
+    public function getCotation()
+    {
+        if($this->getPiste()){
+            if($this->getPiste()->getPolices()[0]){
+                $this->cotation = $this->getPiste()->getPolices()[0]->getCotation();
+            }
+        }
+        return $this->cotation;
     }
 }

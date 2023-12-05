@@ -4626,7 +4626,6 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('feedbacks', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)->onlyOnDetail();

@@ -398,7 +398,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Piste) {
             $tabAttributs = [
-                FormField::addTab(' Informations générales')
+                FormField::addPanel(' Informations générales')
                     ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client."),
             ];
@@ -410,7 +410,7 @@ class ServicePreferences
         //GROUPE PRODUCTION
         if ($objetInstance instanceof Assureur) {
             $tabAttributs = [
-                FormField::addTab(' Informations générales')
+                FormField::addPanel(' Informations générales')
                     ->setIcon('fas fa-umbrella') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le preneur des risques en contre partie du versement d'une prime d'assurance et selon les condtions bien spécifiées dans la police.")
             ];
@@ -443,7 +443,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Client) {
             $tabAttributs = [
-                FormField::addTab(' Informations générales')
+                FormField::addPanel(' Informations générales')
                     ->setIcon('fas fa-person-shelter') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le client c'est l'assuré ou le bénéficiaire de la couverture d'assurance.")
             ];
@@ -454,7 +454,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Partenaire) {
             $tabAttributs = [
-                FormField::addTab(' Informations générales')
+                FormField::addPanel(' Informations générales')
                     ->setIcon('fas fa-handshake') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Le partenaire ou intermédiaire à travers lequel un client peut être acquis.")
             ];
@@ -476,7 +476,7 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Produit) {
             $tabAttributs = [
-                FormField::addTab(' Informations générales')
+                FormField::addPanel(' Informations générales')
                     ->setIcon('fas fa-gifts') //<i class="fa-sharp fa-solid fa-address-book"></i>
                     ->setHelp("Une couverture d'assurance.")
             ];
@@ -4524,8 +4524,12 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)
+            ->setTemplatePath('admin/segment/view_revenus.html.twig')
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)
+            ->setTemplatePath('admin/segment/view_chargements.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
             ->formatValue(function ($value, Cotation $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
@@ -4533,55 +4537,13 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)
+            ->setTemplatePath('admin/segment/view_tranches.html.twig')
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+            ->setTemplatePath('admin/segment/view_documents.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnDetail();
-
-        // $tabAttributs[] = MoneyField::new('primeNette', PreferenceCrudController::PREF_CRM_COTATION_PRIME_NETTE)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeNette());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('accessoires', PreferenceCrudController::PREF_CRM_COTATION_ACCESSOIRES)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getAccessoires());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('fronting', PreferenceCrudController::PREF_CRM_COTATION_FRONTING)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFronting());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('fraisArca', PreferenceCrudController::PREF_CRM_COTATION_ARCA)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisArca());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('taxes', PreferenceCrudController::PREF_CRM_COTATION_TAXE)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxes());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TOTALE)
-        //     ->formatValue(function ($value, Cotation $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-
-        //$tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_COTATION_PRODUIT)->onlyOnDetail();
-
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -4969,19 +4931,17 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_PISTE_ENTREPRISE)->onlyOnDetail();
 
 
-
         //Onglet Contacts
-        $tabAttributs[] = FormField::addTab(' Contacts')
-            ->setIcon('fas fa-address-book')
-            ->setHelp("Les contacts impliqués dans les échanges pour cette piste.")
+        $tabAttributs[] = FormField::addPanel(" Détails relatifs aux Contacts")
+            ->setIcon("fas fa-address-book")
             ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('contacts', PreferenceCrudController::PREF_CRM_PISTE_CONTACT)
+        $tabAttributs[] = ArrayField::new('contacts', "Détails")
+            ->setTemplatePath('admin/segment/view_contacts.html.twig')
             ->onlyOnDetail();
-
 
 
         //Onglet Polices
-        $tabAttributs[] = FormField::addTab(' Couverture en place')
+        $tabAttributs[] = FormField::addPanel(' Couverture en place')
             ->setIcon('fas fa-file-shield')
             ->setHelp("Polices d'assurance et/ou avenant mis en place.")
             ->onlyOnDetail();
@@ -4999,8 +4959,10 @@ class ServicePreferences
             })
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('revenus', "Structure du revenu")
+            ->setTemplatePath('admin/segment/view_revenus.html.twig')
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('chargements', "Structure de la prime")
+            ->setTemplatePath('admin/segment/view_chargements.html.twig')
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('realisation', PreferenceCrudController::PREF_CRM_PISTE_PRIME_TOTALE)
             ->formatValue(function ($value, Piste $entity) {
@@ -5010,7 +4972,9 @@ class ServicePreferences
             ->setStoredAsCents()
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('tranches', "Termes de paiement")
+            ->setTemplatePath('admin/segment/view_tranches.html.twig')
             ->onlyOnDetail();
+
         return $tabAttributs;
     }
 

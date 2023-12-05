@@ -4,33 +4,37 @@
         <title>My Webpage</title>
     </head>
     <body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">N°</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Type</th>
-                <th scope="col">Taille</th>
-                <th scope="col">Date</th>
-                <th scope="col">Utilisateur</th>
-                <th scope="col">Fichier</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% set i = 1 %}
-                {% for document in field.value %}
+        {% if field.value is not empty %}
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td scope="row">{{ i }}</td>
-                        <th>{{document.nom}}</td>
-                        <td>{{document.nomType}}</td>
-                        <td>{{(document.taillefichier / 1024)|number_format(2, ',', '.')}} Kb</td>
-                        <td>{{ document.createdAt|date("m/d/Y") }}</td>
-                        <td>{{ document.utilisateur}}</td>
-                        <td><a href="http://localhost:8000/DocPieces/documents/{{document.nomfichier}}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Accéder au fichier</a></td>
+                    <th scope="col">N°</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Taille</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Utilisateur</th>
+                    <th scope="col">Fichier</th>
                     </tr>
-                    {% set i = i + 1 %}
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% set i = 1 %}
+                    {% for document in field.value %}
+                        <tr>
+                            <td scope="row">{{ i }}</td>
+                            <th>{{document.nom}}</td>
+                            <td>{{document.nomType}}</td>
+                            <td>{{(document.taillefichier / 1024)|number_format(2, ',', '.')}} Kb</td>
+                            <td>{{ document.createdAt|date("m/d/Y") }}</td>
+                            <td>{{ document.utilisateur}}</td>
+                            <td><a href="http://localhost:8000/DocPieces/documents/{{document.nomfichier}}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Accéder au fichier</a></td>
+                        </tr>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i class="fa-solid fa-face-frown-open"></i> Aucun document disponible.
+        {% endif %}
     </body>
 </html>

@@ -4,27 +4,31 @@
         <title>My Webpage</title>
     </head>
     <body>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">N°</th>
-                <th scope="col">Tranches</th>
-                <th scope="col">Description</th>
-                <th scope="col">Montant</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% set i = 1 %}
-                {% for tranche in field.value %}
+        {% if field.value is not empty %}
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td scope="row">{{ i }}</td>
-                        <th>{{tranche.nom}}</td>
-                        <td>{{tranche.description}}</td>
-                        <td>{{(tranche.montant)|format_currency(tranche.monnaie_Affichage.code)}}</td>
+                    <th scope="col">N°</th>
+                    <th scope="col">Tranches</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Montant</th>
                     </tr>
-                    {% set i = i + 1 %}
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% set i = 1 %}
+                    {% for tranche in field.value %}
+                        <tr>
+                            <td scope="row">{{ i }}</td>
+                            <th>{{tranche.nom}}</td>
+                            <td>{{tranche.description}}</td>
+                            <td>{{(tranche.montant)|format_currency(tranche.monnaie_Affichage.code)}}</td>
+                        </tr>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i class="fa-solid fa-face-frown-open"></i> Aucune tranche n'est disponible pour l'instant.
+        {% endif %}
     </body>
 </html>

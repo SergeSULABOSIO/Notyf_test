@@ -214,6 +214,9 @@ class Piste
 
     public function __toString()
     {
+        if($this->nom == null){
+            $this->nom = "";
+        }
         return $this->nom; // . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 

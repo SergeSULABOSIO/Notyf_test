@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        {% if field.value is not empty %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">N°</th>
+                        <th scope="col">Référence</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Assureur</th>
+                        <th scope="col">Couverture</th>
+                        <th scope="col">Période</th>
+                        <th scope="col">Prime totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set i = 1 %}
+                    {% for feedback in field.value %}
+                        <tr>
+                            <td scope="row">{{ i }}</td>
+                            <th>{{feedback.message|raw}}</th>
+                            <td>{{feedback.message}}</td>
+                            <td>{{feedback.message}}</td>
+                            <td>{{feedback.message}}</td>
+                            <td>{{feedback.createdAt|date("d/m/Y")}}</td>
+                            <td>{{feedback.message}}</td>
+                        </tr>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i class="fa-solid fa-face-frown-open"></i> Aucune police n'est disponible pour l'instant.
+        {% endif %}
+    </body>
+</html>

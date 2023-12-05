@@ -4623,10 +4623,12 @@ class ServicePreferences
                 ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ACHEVEE] => 'success', //info
                 ActionCRMCrudController::STATUS_MISSION[ActionCRMCrudController::MISSION_ENCOURS] => 'warning',
             ]);
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)->onlyOnDetail();
+        $tabAttributs[] = TextField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('feedbacks', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('feedbacks', PreferenceCrudController::PREF_CRM_MISSION_FEEDBACKS)
+            ->setTemplatePath('admin/segment/view_feedbacks.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_CRM_MISSION_ENDED_AT)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)->onlyOnDetail();
@@ -4690,42 +4692,7 @@ class ServicePreferences
                     ->Where('e.entreprise = :ese')
                     ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
             });
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_POLICE)) {
-            $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_CRM_MISSION_POLICE)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_COTATION)) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_CRM_MISSION_COTATION)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)) {
-            $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_CRM_MISSION_SINISTRE)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
+
         $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_CRM_MISSION_STARTED_AT)
             ->onlyOnForms()
             ->setColumns(12);
@@ -4749,18 +4716,7 @@ class ServicePreferences
             //->setFormType(CKEditorType::class)
             ->onlyOnForms()
             ->setColumns(12);
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_MISSION_PISTE)) {
-            $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_MISSION_PISTE)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms()
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    return $entityRepository
-                        ->createQueryBuilder('e')
-                        ->Where('e.entreprise = :ese')
-                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                });
-        }
+
         //Section - Feedback de l'action
         $tabAttributs[] = FormField::addPanel("Feedbacks / Comptes Rendus")
             ->setIcon("fas fa-comments")

@@ -346,7 +346,6 @@ class AdminSubscriber implements EventSubscriberInterface
                         $document->setEntreprise($this->serviceEntreprise->getEntreprise());
                     }
 
-
                     //On vide le tableau des polices temporaire
                     $tabPolicesTempo = $piste->getPolices();
                     foreach ($tabPolicesTempo as $ptempo) {

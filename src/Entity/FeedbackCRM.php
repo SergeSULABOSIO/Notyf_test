@@ -36,6 +36,8 @@ class FeedbackCRM
     #[ORM\Column(nullable: true)]
     private ?bool $closed = null;
 
+    private ?string $status = null;
+
     public function __construct()
     {
         
@@ -133,5 +135,18 @@ class FeedbackCRM
         $this->closed = $closed;
 
         return $this;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        if($this->isClosed()){
+            $this->status = "Achevé.";
+        }else{
+            $this->status = "Encours.";
+        }
+        return $this->status;
     }
 }

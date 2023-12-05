@@ -9,12 +9,11 @@
                 <thead>
                     <tr>
                         <th scope="col">N°</th>
-                        <th scope="col">Référence</th>
-                        <th scope="col">Client</th>
-                        <th scope="col">Assureur</th>
-                        <th scope="col">Couverture</th>
-                        <th scope="col">Période</th>
-                        <th scope="col">Prime totale</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Tâche</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Utilisateur</th>
+                        <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,11 +22,10 @@
                         <tr>
                             <td scope="row">{{ i }}</td>
                             <th>{{feedback.message|raw}}</th>
-                            <td>{{feedback.message}}</td>
-                            <td>{{feedback.message}}</td>
-                            <td>{{feedback.message}}</td>
+                            <td>{{feedback.actionCRM}}</td>
+                            <td>{{feedback.status}}</td>
+                            <td>{{feedback.utilisateur}}</td>
                             <td>{{feedback.createdAt|date("d/m/Y")}}</td>
-                            <td>{{feedback.message}}</td>
                         </tr>
                         {% set i = i + 1 %}
                     {% endfor %}

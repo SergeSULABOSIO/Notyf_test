@@ -179,7 +179,7 @@ class ActionCRM
 
     public function __toString()
     {
-        return "La mission \"" . $this->mission . "(...)\" | status : " . ($this->getClosed() == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
+        return $this->mission . "(...)\" | status : " . ($this->getClosed() == true ? "clôturée." : "encours.") . " | Attribuée à " . $this->attributedTo . " | Echéance: " . $this->endedAt->format('d-m-Y');
     }
 
     public function getAttributedTo(): ?Utilisateur

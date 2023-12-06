@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PisteRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PisteRepository;
 use Sabberworm\CSS\CSSList\Document;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\MonnaieCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 class Piste
@@ -69,6 +71,8 @@ class Piste
 
     #[ORM\Column(nullable: true)]
     private ?int $etape = null;
+    private ?string $nomEtape = null;
+
 
     #[ORM\Column(nullable: true)]
     private ?float $montant = null;
@@ -96,6 +100,7 @@ class Piste
     private ?\DateTimeImmutable $dateEffet = null;
     private ?\DateTimeImmutable $dateExpiration = null;
     private ?float $duree = null;
+    private ?Monnaie $monnaie_Affichage;
 
 
 
@@ -628,5 +633,43 @@ class Piste
             }
         }
         return $this->duree;
+    }
+
+    /**
+     * Get the value of nomEtape
+     */ 
+    public function getNomEtape()
+    {
+        $this->nomEtape = "Inconnu";
+        foreach (PisteCrudController::TAB_ETAPES as $nomEtape => $codeEtape) {
+            if($this->getEtape() == $codeEtape){
+                $this->nomEtape = $nomEtape;
+            }
+        }
+        return $this->nomEtape;
+    }
+
+
+    private function getMonnaie($fonction)
+    {
+        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        foreach ($tabMonnaies as $monnaie) {
+            if($monnaie->getFonction() == $fonction){
+                return $monnaie;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the value of monnaie_Affichage
+     */ 
+    public function getMonnaie_Affichage()
+    {
+        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if($this->monnaie_Affichage == null){
+            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $this->monnaie_Affichage;
     }
 }

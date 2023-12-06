@@ -3769,7 +3769,9 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
+            ->setTemplatePath('admin/segment/view_cotations.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('adresse', PreferenceCrudController::PREF_PRO_ASSUREUR_ADRESSE)->onlyOnDetail();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_PRO_ASSUREUR_TELEPHONE)->onlyOnDetail();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)->onlyOnDetail();
@@ -4852,6 +4854,7 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
 
         $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
+            ->setTemplatePath('admin/segment/view_cotations.html.twig')
             ->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)

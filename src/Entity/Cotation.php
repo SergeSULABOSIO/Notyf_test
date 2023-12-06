@@ -55,6 +55,7 @@ class Cotation
 
     #[ORM\Column]
     private ?bool $validated = null;
+    private ?string $status;
 
     //Les champs calculables automatiquement sur base des données existantes
     private ?float $primeTotale;
@@ -84,6 +85,8 @@ class Cotation
 
     private ?string $client;
     private ?string $gestionnaire;
+
+    private ?Monnaie $monnaie_Affichage;
 
     public function __construct()
     {
@@ -409,15 +412,6 @@ class Cotation
         return $strMonnaie;
     }
 
-    private function getMonnaie_Affichage()
-    {
-        $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($monnaie == null) {
-            $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        return $monnaie;
-    }
-
     private function getMonnaie($fonction)
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
@@ -707,5 +701,30 @@ class Cotation
             $this->gestionnaire = $this->getPiste()->getGestionnaire();
         }
         return $this->gestionnaire;
+    }
+
+    /**
+     * Get the value of monnaie_Affichage
+     */ 
+    public function getMonnaie_Affichage()
+    {
+        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        if ($this->monnaie_Affichage == null) {
+            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        }
+        return $this->monnaie_Affichage;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        if($this->isValidated() == true){
+            $this->status = "(validée)";
+        }else{
+            $this->status = "";
+        }
+        return $this->status;
     }
 }

@@ -275,6 +275,15 @@ class Partenaire extends CalculableEntity
      */ 
     public function getPolices()
     {
+        $tab = new ArrayCollection();
+        if($this->getPistes()){
+            foreach ($this->getPistes() as $piste) {
+                foreach ($piste->getPolices() as $police) {
+                    $tab->add($police);
+                }
+            }
+        }
+        $this->polices = $tab;
         return $this->polices;
     }
 }

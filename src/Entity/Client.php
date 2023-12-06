@@ -73,6 +73,8 @@ class Client extends CalculableEntity
     #[ORM\ManyToOne(inversedBy: 'prospect')]
     private ?Piste $piste = null;
 
+    private ?Collection $cotations;
+
     #[ORM\Column(nullable: true)]
     private ?bool $exoneree = null;
 
@@ -81,7 +83,7 @@ class Client extends CalculableEntity
     public function __construct()
     {
         //$this->police = new ArrayCollection();
-        //$this->cotations = new ArrayCollection();
+        $this->cotations = new ArrayCollection();
         $this->pistes = new ArrayCollection();
     }
 
@@ -330,5 +332,16 @@ class Client extends CalculableEntity
         $this->exoneree = $exoneree;
 
         return $this;
+    }
+
+    /**
+     * Get the value of cotations
+     */ 
+    public function getCotations()
+    {
+        if($this->getPistes()){
+            ici
+        }
+        return $this->cotations;
     }
 }

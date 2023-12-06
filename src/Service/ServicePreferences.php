@@ -3417,8 +3417,6 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('ispersonnemorale', PreferenceCrudController::PREF_PRO_CLIENT_PERSONNE_MORALE)
             ->onlyOnIndex()
             ->setChoices(ClientCrudController::TAB_CLIENT_IS_PERSONNE_MORALE);
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION)
-            ->onlyOnIndex();
         $tabAttributs[] = ChoiceField::new('secteur', PreferenceCrudController::PREF_PRO_CLIENT_SECTEUR)
             ->onlyOnIndex()
             ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);

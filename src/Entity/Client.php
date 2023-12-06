@@ -339,6 +339,10 @@ class Client extends CalculableEntity
      */ 
     public function getCotations()
     {
+        /**
+         * On doit filtrer toutes les propositions
+         * produites pour le compte de ce client;
+         */
         if($this->getPistes()){
             ici
         }

@@ -377,7 +377,7 @@ class Revenu
                         $i = $i + 1;
                         $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
                         if ($i == 1) {
-                            $portions = $comTranche . $strMonnaie;
+                            $portions =  number_format($comTranche, 2, ",", ".") . $strMonnaie;
                         }else{
                             if($i == count($tabTranches)){
                                 $portions = $portions . " et " . $comTranche . $strMonnaie;

@@ -4784,15 +4784,6 @@ class ServicePreferences
 
     public function setCRM_Fields_Pistes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
-            ->formatValue(function ($value, Piste $piste) {
-                $this->setTitreReportingCRM($piste);
-                return $value;
-            })
-            ->onlyOnIndex();
-        $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
-            ->setChoices(PisteCrudController::TAB_ETAPES)
-            ->onlyOnIndex();
         $tabAttributs[] = ChoiceField::new('typeavenant', PreferenceCrudController::PREF_CRM_PISTE_TYPE_AVENANT)
             ->onlyOnIndex()
             ->setChoices(PoliceCrudController::TAB_POLICE_TYPE_AVENANT)
@@ -4807,6 +4798,15 @@ class ServicePreferences
                 PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_RISTOURNE] => 'danger',
                 PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION] => 'info'
             ]);
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
+            ->formatValue(function ($value, Piste $piste) {
+                $this->setTitreReportingCRM($piste);
+                return $value;
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
+            ->setChoices(PisteCrudController::TAB_ETAPES)
+            ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('produit', PreferenceCrudController::PREF_CRM_PISTE_PRODUIT)
@@ -4860,6 +4860,7 @@ class ServicePreferences
             ->onlyOnDetail();
 
         $tabAttributs[] = ArrayField::new('actionsCRMs', PreferenceCrudController::PREF_CRM_PISTE_ACTIONS)
+            ->setTemplatePath('admin/segment/view_taches.html.twig')
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('client', PreferenceCrudController::PREF_CRM_PISTE_CLIENT)
             ->onlyOnDetail();

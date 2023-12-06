@@ -67,6 +67,8 @@ class ActionCRM
     #[ORM\OneToMany(mappedBy: 'actionCRM', targetEntity: FeedbackCRM::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $feedbacks;
 
+    private ?string $status;
+
 
     public function __construct()
     {
@@ -317,5 +319,18 @@ class ActionCRM
             }
         }
         return $this->cotation;
+    }
+
+    /**
+     * Get the value of status
+     */ 
+    public function getStatus()
+    {
+        if($this->getClosed()){
+            $this->status = "Achevé.";
+        }else{
+            $this->status = "Encours.";
+        }
+        return $this->status;
     }
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        {% if field.value is not empty %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">N°</th>
+                        <th scope="col">Mission</th>
+                        <th scope="col">Objectif</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Début</th>
+                        <th scope="col">Echéance</th>
+                        <th scope="col">Utilisateur</th>
+                        <th scope="col">Pour</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set i = 1 %}
+                    {% for tache in field.value %}
+                        <tr>
+                            <td scope="row">{{ i }}</td>
+                            <th>{{tache.mission|raw}}</th>
+                            <td>{{tache.objectif|raw}}</td>
+                            <td>{{tache.status}}</td>
+                            <td>{{tache.startedAt|date("d/m/Y à H:m:s")}}</td>
+                            <td>{{tache.endedAt|date("d/m/Y à H:m:s")}}</td>
+                            <td>{{tache.utilisateur}}</td>
+                            <td>{{tache.attributedTo}}</td>
+                            <td>{{tache.createdAt|date("d/m/Y à H:m:s")}}</td>
+                        </tr>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i class="fa-solid fa-face-frown-open"></i> Aucune police n'est disponible pour l'instant.
+        {% endif %}
+    </body>
+</html>

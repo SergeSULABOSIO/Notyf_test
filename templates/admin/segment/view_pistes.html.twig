@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+    </head>
+    <body>
+        {% if field.value is not empty %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">N°</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Objectif</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Etape</th>
+                        <th scope="col">Couverture</th>
+                        <th scope="col">potentiel</th>
+                        <th scope="col">réalisation</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set i = 1 %}
+                    {% for piste in field.value %}
+                        <tr>
+                            <td scope="row">{{ i }}</td>
+                            <th>{{cotation.nom}} {{cotation.status}}</th>
+                            <td>{{cotation.assureur.nom}}</td>
+                            <td>{{cotation.piste.produit.nom}}</td>
+                            <td>{{cotation.piste.client.nom}}</td>
+                            <td>{{cotation.dureeCouverture}} mois</td>
+                            <td>{{(cotation.primeTotale / 100)|format_currency(cotation.monnaie_Affichage.code)}}</td>
+                            <td>{{cotation.piste}}</td>
+                            <td>{{cotation.createdAt|date("d/m/Y")}}</td>
+                        </tr>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i class="fa-solid fa-face-frown-open"></i> Aucune piste n'est disponible pour l'instant.
+        {% endif %}
+    </body>
+</html>

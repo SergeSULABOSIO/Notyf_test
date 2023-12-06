@@ -3339,6 +3339,12 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('rccm', PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM)->onlyOnDetail();
         $tabAttributs[] = TextField::new('idnat', PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT)->onlyOnDetail();
         $tabAttributs[] = TextField::new('numimpot', PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('pistes', "Pistes")
+            ->setTemplatePath('admin/segment/view_pistes.html.twig')
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('polices', "Polices")
+            ->setTemplatePath('admin/segment/view_polices.html.twig')
+            ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PARTENAIRE_UTILISATEUR)
             ->onlyOnDetail()
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);

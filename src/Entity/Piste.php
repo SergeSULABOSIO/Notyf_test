@@ -220,17 +220,6 @@ class Piste
         return $this->nom; // . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
     }
 
-    // public function getEtape(): ?EtapeCrm
-    // {
-    //     return $this->etape;
-    // }
-
-    // public function setEtape(?EtapeCrm $etape): self
-    // {
-    //     $this->etape = $etape;
-    //     return $this;
-    // }
-
     /**
      * @return Collection<int, Cotation>
      */

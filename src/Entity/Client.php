@@ -343,9 +343,20 @@ class Client extends CalculableEntity
          * On doit filtrer toutes les propositions
          * produites pour le compte de ce client;
          */
+        //dd(count($this->getPistes()[0]->getCotations()));
+        $tab = new ArrayCollection();
         if($this->getPistes()){
-            ici
+            foreach ($this->getPistes() as $piste) {
+                foreach ($piste->getCotations() as $cotation) {
+                    $tab->add($cotation);
+                    //dd("ici = " . count($tab));
+                    //$this->cotations->add($cotation);
+                }
+            }
         }
+        //$this->cotations->add()
+        //dd($tab);
+        $this->cotations = $tab;
         return $this->cotations;
     }
 }

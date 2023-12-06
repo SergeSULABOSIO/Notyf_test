@@ -60,6 +60,8 @@ class Partenaire extends CalculableEntity
 
     #[ORM\OneToMany(mappedBy: 'partenaire', targetEntity: Piste::class)]
     private Collection $pistes;
+    
+    private Collection $polices;
 
     #[ORM\ManyToOne(inversedBy: 'newpartenaire')]
     private ?Piste $piste = null;
@@ -266,5 +268,13 @@ class Partenaire extends CalculableEntity
         $this->piste = $piste;
 
         return $this;
+    }
+
+    /**
+     * Get the value of polices
+     */ 
+    public function getPolices()
+    {
+        return $this->polices;
     }
 }

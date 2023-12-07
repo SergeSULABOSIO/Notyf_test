@@ -287,6 +287,13 @@ class DocPiece
      */ 
     public function getLogoFormatFichier()
     {
+        if (str_ends_with($this->nomfichier, ".pdf")) {
+            $this->logoFormatFichier = "<h5><i class=\"fa-solid fa-file-pdf\"></i></h5>";
+        }else if (str_ends_with($this->nomfichier, ".docx")) {
+            $this->logoFormatFichier = "<h5><i class=\"fa-solid fa-file-word\"></i></h5>";
+        } else{
+            $this->logoFormatFichier = "<h5><i class=\"fa-regular fa-file\"></i></i></h5>";
+        }
         //<i class="fa-regular fa-file-pdf"></i>
         return $this->logoFormatFichier;
     }

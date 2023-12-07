@@ -1328,47 +1328,28 @@ class ServicePreferences
 
     public function setFIN_Fields_CompteBancaire_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE])) {
-            $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO])) {
-            $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE])) {
-            $tabAttributs[] = TextField::new('banque', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT])) {
-            $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE])) {
-            $tabAttributs[] = TextField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ID)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('intitule', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_INTITULE)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('numero', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_NUMERO)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('banque', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_BANQUE)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('codeSwift', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_CODESWIFT)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('codeMonnaie', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_MONNAIE)
+            ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_CREATION)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_DATE_MODIFICATION)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_UTILISATEUR)
+        //     ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_COMPTE_BANCAIRE_ENTREPRISE)
+        //     ->onlyOnIndex();
+
         return $tabAttributs;
     }
 
@@ -1902,59 +1883,40 @@ class ServicePreferences
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
             ->onlyOnDetail();
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_CalculablesTaxes_Details($tabAttributs);
+        //$tabAttributs = $this->setAttributs_CalculablesTaxes_Details($tabAttributs);
         return $tabAttributs;
     }
 
     public function setCRM_Fields_Taxes_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_TAXE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD])) {
-            $tabAttributs[] = PercentField::new('tauxIARD', PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE])) {
-            $tabAttributs[] = PercentField::new('tauxVIE', PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION])) {
-            $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION])) {
-            $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER])) {
-            $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
-                ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_TAXE_ID)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_TAXE_NOM)
+            ->onlyOnIndex();
+        $tabAttributs[] = PercentField::new('tauxIARD', PreferenceCrudController::PREF_FIN_TAXE_TAUX_IARD)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = PercentField::new('tauxVIE', PreferenceCrudController::PREF_FIN_TAXE_TAUX_VIE)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('description', PreferenceCrudController::PREF_FIN_TAXE_DESCRIPTION)
+            ->renderAsHtml()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('organisation', PreferenceCrudController::PREF_FIN_TAXE_ORGANISATION)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('payableparcourtier', PreferenceCrudController::PREF_FIN_TAXE_PAR_COURTIER)
+            ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_TAXE_UTILISATEUR)
+        //     ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_TAXE_DATE_DE_CREATION)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_TAXE_DERNIERE_MODIFICATION)
+            ->onlyOnIndex();
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_CalculablesTaxes_Index($tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        //$tabAttributs = $this->setAttributs_CalculablesTaxes_Index($tabAttributs, $tabPreferences, $tabDefaultAttributs);
         return $tabAttributs;
     }
 
@@ -3147,55 +3109,21 @@ class ServicePreferences
 
     public function setCRM_Fields_BibliothequePieces_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION])) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
-                ->onlyOnIndex();
-        }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE])) {
-        //     $tabAttributs[] = ArrayField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR])) {
-        //     $tabAttributs[] = ArrayField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION])) {
-        //     $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE])) {
-        //     $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-        //         ->onlyOnIndex();
-        // }
-        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE])) {
-        //     $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-        //         ->onlyOnIndex();
-        // }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = TextField::new('logoFormatFichier', "Format")
+            ->renderAsHtml()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nomfichier', "Fichier")
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nomType', "Type")
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('cotation', "Cotation")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('police', "Police")
+        //     ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
+            ->onlyOnIndex();
 
         return $tabAttributs;
     }

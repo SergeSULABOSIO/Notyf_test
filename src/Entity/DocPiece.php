@@ -214,6 +214,11 @@ class DocPiece
 
     public function getCotation(): ?Cotation
     {
+        if($this->cotation == null){
+            if($this->getPolice()){
+                $this->cotation = $this->getPolice()->getCotation();
+            }
+        }
         return $this->cotation;
     }
 
@@ -238,6 +243,13 @@ class DocPiece
 
     public function getPiste(): ?Piste
     {
+        if($this->piste == null){
+            if($this->getPolice()){
+                $this->piste = $this->getPolice()->getPiste();
+            }else if($this->getCotation()){
+                $this->piste = $this->getCotation()->getPiste();
+            }
+        }
         return $this->piste;
     }
 

@@ -3076,24 +3076,14 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
             ->onlyOnDetail();
-        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_BIB_DOCUMENT_DESCRIPTION)
+        $tabAttributs[] = TextField::new('nomType', PreferenceCrudController::PREF_BIB_DOCUMENT_TYPE)
             ->onlyOnDetail();
-        // $tabAttributs[] = AssociationField::new('categorie', PreferenceCrudController::PREF_BIB_DOCUMENT_CATEGORIE)
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = AssociationField::new('classeur', PreferenceCrudController::PREF_BIB_DOCUMENT_CLASSEUR)
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-        //     ->onlyOnDetail();
-        //Les fichiers
-        $tabAttributs[] = TextField::new('fichierA', 'Fichier A')->onlyOnDetail();
-        $tabAttributs[] = TextField::new('fichierB', 'Fichier B')->onlyOnDetail();
-        $tabAttributs[] = TextField::new('fichierC', 'Fichier C')->onlyOnDetail();
-        $tabAttributs[] = TextField::new('fichierD', 'Fichier D')->onlyOnDetail();
-        //Fin  - les fichiers
+        $tabAttributs[] = AssociationField::new('cotation', "Proposition")
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('police', "Police")
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('piste', "Piste")
+            ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -3112,11 +3102,11 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('logoFormatFichier', "Format")
             ->renderAsHtml()
             ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('nomfichier', "Fichier")
-        //     ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nomType', "Type")
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('piste', "Piste")
             ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('cotation', "Cotation")
             ->onlyOnIndex();

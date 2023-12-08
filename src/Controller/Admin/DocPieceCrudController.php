@@ -288,22 +288,6 @@ class DocPieceCrudController extends AbstractCrudController
         ;
     }
 
-    // public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-
-    //     $entite = $context->getEntity()->getInstance();
-    //     $entiteDuplique = clone $entite;
-    //     parent::persistEntity($em, $entiteDuplique);
-
-    //     $url = $adminUrlGenerator
-    //         ->setController(self::class)
-    //         ->setAction(Action::DETAIL)
-    //         ->setEntityId($entiteDuplique->getId())
-    //         ->generateUrl();
-
-    //     return $this->redirect($url);
-    // }
-
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /**@var Assureur $assureur */
@@ -324,36 +308,4 @@ class DocPieceCrudController extends AbstractCrudController
         $piece = $context->getEntity()->getInstance();
         return $downloadHandler->downloadObject($piece, $fileField = 'document', $objectClass = null, $fileName = null, $forceDownload = true);
     }
-
-    // public function exporterMSExcels(BatchActionDto $batchActionDto)
-    // {
-    //     $className = $batchActionDto->getEntityFqcn();
-    //     $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
-    //     dd($batchActionDto->getEntityIds());
-
-    //     foreach ($batchActionDto->getEntityIds() as $id) {
-    //         $user = $entityManager->find($className, $id);
-    //         $user->approve();
-    //     }
-
-    //     $entityManager->flush();
-
-    //     return $this->redirect($batchActionDto->getReferrerUrl());
-    // }
-
-    // public function cross_canal_listerPaiementCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPComm($context, $adminUrlGenerator));
-    // }
-
-    // public function cross_canal_listerPaiementPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPPartenaire($context, $adminUrlGenerator));
-    // }
-
-    // public function cross_canal_listerPaiementTaxe(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect($this->serviceCrossCanal->crossCanal_Piece_listerPOPTaxe($context, $adminUrlGenerator));
-    // }
 }

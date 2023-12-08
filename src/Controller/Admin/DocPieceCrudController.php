@@ -3,14 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\DocPiece;
-use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use Vich\UploaderBundle\Handler\DownloadHandler;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -61,7 +62,7 @@ class DocPieceCrudController extends AbstractCrudController
     public const TYPE_FACTURE                       = "Facture / Note de débit";
     public const TYPE_NOTE_DE_CREDIT                = "Avoire / Note de crédit";
     public const TYPE_AUTRES                        = "Autre (à préciser)";
-    
+
     public const TAB_TYPES = [
         self::TYPE_INFO_SUR_RISQUE => 1,
         self::TYPE_PROPOSITION => 2,
@@ -163,12 +164,12 @@ class DocPieceCrudController extends AbstractCrudController
         return $filters
             // ->add('categorie')
             // ->add('classeur')
-             ->add('cotation')
-             ->add('piste')
-             ->add('actionCRM')
-             ->add('police')
+            ->add('cotation')
+            ->add('piste')
+            ->add('actionCRM')
+            ->add('police')
             // ->add('sinistre')
-            ;
+        ;
     }
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -194,7 +195,7 @@ class DocPieceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if($this->crud){
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
         return $this->servicePreferences->getChamps(new DocPiece(), $this->crud, $this->adminUrlGenerator);
@@ -203,13 +204,17 @@ class DocPieceCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)->setIcon('fa-solid fa-copy')
-            // ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
+        // ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
+
+        $telechargerDoc = Action::new("Télécharger")
+            ->setIcon('fa-solid fa-download')->linkToCrudAction('telechargerDocument'); //<i class="fa-solid fa-download"></i>
+
         // $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
-            // ->linkToCrudAction('exporterMSExcels')
-            // ->addCssClass('btn btn-primary')
-            // ->setIcon('fa-solid fa-file-excel');
+        // ->linkToCrudAction('exporterMSExcels')
+        // ->addCssClass('btn btn-primary')
+        // ->setIcon('fa-solid fa-file-excel');
 
         return $actions
             //Sur la page Index - Selection
@@ -257,6 +262,10 @@ class DocPieceCrudController extends AbstractCrudController
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
+
+            ->add(Crud::PAGE_INDEX, $telechargerDoc)
+            ->add(Crud::PAGE_DETAIL, $telechargerDoc)
+            ->add(Crud::PAGE_EDIT, $telechargerDoc)
             //action dupliquer Assureur
             // ->add(Crud::PAGE_DETAIL, $duplicate)
             // ->add(Crud::PAGE_EDIT, $duplicate)
@@ -307,6 +316,13 @@ class DocPieceCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function telechargerDocument(DownloadHandler $downloadHandler, AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    {
+        /** @var DocPiece */
+        $piece = $context->getEntity()->getInstance();
+        return $downloadHandler->downloadObject($piece, $fileField = 'document', $objectClass = null, $fileName = null, $forceDownload = true);
     }
 
     // public function exporterMSExcels(BatchActionDto $batchActionDto)

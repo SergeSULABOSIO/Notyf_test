@@ -3112,17 +3112,19 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('logoFormatFichier', "Format")
             ->renderAsHtml()
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('nomfichier', "Fichier")
+        // $tabAttributs[] = TextField::new('nomfichier', "Fichier")
+        //     ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nomType', "Type")
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
+        $tabAttributs[] = AssociationField::new('cotation', "Cotation")
             ->onlyOnIndex();
-        // $tabAttributs[] = AssociationField::new('cotation', "Cotation")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = AssociationField::new('police', "Police")
-        //     ->onlyOnIndex();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
+        $tabAttributs[] = AssociationField::new('police', "Police")
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_DOCUMENT_UTILISATEUR)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_DOCUMENT_DATE_DE_CREATION)
             ->onlyOnIndex();
 
         return $tabAttributs;

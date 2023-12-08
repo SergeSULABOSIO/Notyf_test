@@ -287,14 +287,32 @@ class DocPiece
      */ 
     public function getLogoFormatFichier()
     {
+        $marque = "LOGOIMAGE";
+        $htmlLogo = "<h3 class='text-secondary'><i class=\"". $marque ."\"></i></h3>";
         if (str_ends_with($this->nomfichier, ".pdf")) {
-            $this->logoFormatFichier = "<h5><i class=\"fa-solid fa-file-pdf\"></i></h5>";
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-pdf", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".docx")) {
-            $this->logoFormatFichier = "<h5><i class=\"fa-solid fa-file-word\"></i></h5>";
-        } else{
-            $this->logoFormatFichier = "<h5><i class=\"fa-regular fa-file\"></i></i></h5>";
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".doc")) {
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".xls")) {
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".xlsx")) {
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".zip")) {
+            $htmlLogo = str_replace($marque, "fa-solid fa-file-zipper", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".eml")) {
+            $htmlLogo = str_replace($marque, "fa-solid fa-envelope-open-text", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".jpg")) {
+            $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".png")) {
+            $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+        }else if (str_ends_with($this->nomfichier, ".gif")) {
+            $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+        }else{
+            $htmlLogo = str_replace($marque, "fa-solid fa-file", $htmlLogo);
         }
-        //<i class="fa-regular fa-file-pdf"></i>
+        $this->logoFormatFichier = $htmlLogo;
         return $this->logoFormatFichier;
     }
 }

@@ -318,7 +318,7 @@ class DocPieceCrudController extends AbstractCrudController
         return $this->redirect($url);
     }
 
-    public function telechargerDocument(DownloadHandler $downloadHandler, AdminContext $context, AdminUrlGenerator $adminUrlGenerator)
+    public function telechargerDocument(DownloadHandler $downloadHandler, AdminContext $context)
     {
         /** @var DocPiece */
         $piece = $context->getEntity()->getInstance();

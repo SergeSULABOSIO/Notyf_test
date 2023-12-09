@@ -231,6 +231,13 @@ class DocPiece
 
     public function getPolice(): ?Police
     {
+        // if($this->police == null){
+        //     if($this->getCotation() != null){
+        //         if($this->getCotation()->isValidated() == true){
+        //             $this->police = $this->getCotation()->getPolices()[0];
+        //         }
+        //     }
+        // }
         return $this->police;
     }
 
@@ -300,29 +307,41 @@ class DocPiece
     public function getLogoFormatFichier()
     {
         $marque = "LOGOIMAGE";
-        $htmlLogo = "<h3 class='text-secondary'><i class=\"". $marque ."\"></i></h3>";
+        $couleur = "LOGOCOULEUR";
+        $htmlLogo = "<h3 class=\"". $couleur ."\"><i class=\"". $marque ."\"></i></h3>";
         if (str_ends_with($this->nomfichier, ".pdf")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-pdf", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-danger", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".docx")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-info", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".doc")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-info", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".xls")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-success", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".xlsx")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-success", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".zip")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-zipper", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-warning", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".eml")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-envelope-open-text", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-secondary", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".jpg")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".png")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
         }else if (str_ends_with($this->nomfichier, ".gif")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
         }else{
             $htmlLogo = str_replace($marque, "fa-solid fa-file", $htmlLogo);
+            $htmlLogo = str_replace($couleur, "text-secondary", $htmlLogo);
         }
         $this->logoFormatFichier = $htmlLogo;
         return $this->logoFormatFichier;

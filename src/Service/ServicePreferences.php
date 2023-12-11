@@ -920,112 +920,99 @@ class ServicePreferences
 
     public function setFIN_Fields_Facture_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_STATUS])) {
-            $tabAttributs[] = ChoiceField::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)
-                ->onlyOnIndex()
-                ->setChoices(FactureCrudController::TAB_STATUS_FACTURE)
-                ->renderAsBadges([
-                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE] => 'success', //info
-                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE] => 'danger', //info
-                    FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS] => 'info', //info
-                ]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE])) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TYPE])) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                ->onlyOnIndex()
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS])) {
-            $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
-                ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
-                })
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU])) {
-            $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
-                ->formatValue(function ($value, Facture $facture) {
-                    $this->setTotauxFacture($facture);
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalDu());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU])) {
-            $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE])) {
-            $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE])) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR])) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS])) {
-            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY])) {
-            $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY])) {
-            $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES])) {
-            $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
-                ->formatValue(function ($value, Facture $entity) {
-                    return count($entity->getCompteBancaires()) == 0 ? "Aucun Compte Bancaire" : count($entity->getCompteBancaires()) . " compte(s) bancaire(s).";
-                })
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = ChoiceField::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)
+            ->onlyOnIndex()
+            ->setChoices(FactureCrudController::TAB_STATUS_FACTURE)
+            ->renderAsBadges([
+                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE] => 'success', //info
+                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE] => 'danger', //info
+                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS] => 'info', //info
+            ]);
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+            ->onlyOnIndex()
+            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE);
+        $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+            ->formatValue(function ($value, Facture $entity) {
+                return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
+            ->formatValue(function ($value, Facture $facture) {
+                $this->setTotauxFacture($facture);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($facture->getTotalDu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
+            ->onlyOnIndex();
+
+
+
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE])) {
+        //     $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR])) {
+        //     $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS])) {
+        //     $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY])) {
+        //     $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY])) {
+        //     $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES])) {
+        //     $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+        //         ->formatValue(function ($value, Facture $entity) {
+        //             return count($entity->getCompteBancaires()) == 0 ? "Aucun Compte Bancaire" : count($entity->getCompteBancaires()) . " compte(s) bancaire(s).";
+        //         })
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_PIECE])) {
+        //     $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION])) {
+        //     $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_CREATION)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION])) {
+        //     $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_POLICE_DATE_DE_MODIFICATION)
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR])) {
+        //     $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_POLICE_UTILISATEUR)
+        //         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+        //         ->onlyOnIndex();
+        // }
+        // if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE])) {
+        //     $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)
+        //         ->onlyOnIndex();
+        // }
         return $tabAttributs;
     }
 
@@ -1633,87 +1620,74 @@ class ServicePreferences
     public function setFIN_Fields_Facture_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TYPE)) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)) {
-            $tabAttributs[] = ArrayField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)) {
-            $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)) {
-            $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)) {
-            $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
-                ->formatValue(function ($value, Facture $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PAIEMENTS)) {
-            $tabAttributs[] = ArrayField::new('paiements', PreferenceCrudController::PREF_FIN_FACTURE_PAIEMENTS)
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
-            $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
-                ->renderAsHtml()
-                ->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
-            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
-            $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])->onlyOnDetail();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
-        }
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('totalDu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_DU)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalDu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('totalRecu', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_RECU)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalRecu());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('totalSolde', PreferenceCrudController::PREF_FIN_FACTURE_TOTAL_SOLDE)
+            ->formatValue(function ($value, Facture $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTotalSolde());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = ArrayField::new('paiements', PreferenceCrudController::PREF_FIN_FACTURE_PAIEMENTS)
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
+
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
+        //     $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+        //         ->renderAsHtml()
+        //         ->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)) {
+        //     $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)) {
+        //     $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
+        //     $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
+        //     $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
+        //     $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
+        //     $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
+        //     $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)) {
+        //     $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)) {
+        //     $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
+        //         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])->onlyOnDetail();
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)) {
+        //     $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
+        // }
         return $tabAttributs;
     }
 
@@ -2522,52 +2496,23 @@ class ServicePreferences
 
     public function setCRM_Fields_Monnaies_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_MONNAIE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_CODE])) {
-            $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION])) {
-            $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
-                ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD])) {
-            $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
-                ->setCurrency("USD")
-                ->setStoredAsCents()
-                ->setNumDecimals(4)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE])) {
-            $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
-                ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_UTILISATEUR])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_MONNAIE_DATE_DE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_MONNAIE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_MONNAIE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_FIN_MONNAIE_NOM)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('code', PreferenceCrudController::PREF_FIN_MONNAIE_CODE)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('fonction', PreferenceCrudController::PREF_FIN_MONNAIE_FONCTION)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('tauxusd', PreferenceCrudController::PREF_FIN_MONNAIE_TAUX_USD)
+            ->setCurrency("USD")
+            ->setStoredAsCents()
+            ->setNumDecimals(4)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('islocale', PreferenceCrudController::PREF_FIN_MONNAIE_IS_LOCALE)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_MONNAIE_DERNIRE_MODIFICATION)
+            ->onlyOnIndex();
         return $tabAttributs;
     }
 

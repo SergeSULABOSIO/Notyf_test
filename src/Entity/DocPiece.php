@@ -214,8 +214,8 @@ class DocPiece
 
     public function getCotation(): ?Cotation
     {
-        if($this->cotation == null){
-            if($this->getPolice()){
+        if ($this->cotation == null) {
+            if ($this->getPolice()) {
                 $this->cotation = $this->getPolice()->getCotation();
             }
         }
@@ -231,13 +231,20 @@ class DocPiece
 
     public function getPolice(): ?Police
     {
-        // if($this->police == null){
-        //     if($this->getCotation() != null){
-        //         if($this->getCotation()->isValidated() == true){
-        //             $this->police = $this->getCotation()->getPolices()[0];
-        //         }
-        //     }
-        // }
+        if ($this->police == null) {
+            if ($this->piste != null) {
+                foreach ($this->piste->getCotations() as $cotation) {
+                    if ($cotation->isValidated()) {
+                        $this->police = $cotation->getPolices()[0];
+                        //dd($this->police);
+                    }
+                }
+            } else if ($this->cotation != null) {
+                if($this->cotation->isValidated()){
+                    $this->police = $this->cotation->getPolices()[0];
+                }
+            }
+        }
         return $this->police;
     }
 
@@ -250,10 +257,10 @@ class DocPiece
 
     public function getPiste(): ?Piste
     {
-        if($this->piste == null){
-            if($this->getPolice()){
+        if ($this->piste == null) {
+            if ($this->getPolice()) {
                 $this->piste = $this->getPolice()->getPiste();
-            }else if($this->getCotation()){
+            } else if ($this->getCotation()) {
                 $this->piste = $this->getCotation()->getPiste();
             }
         }
@@ -285,7 +292,7 @@ class DocPiece
     public function getNomType()
     {
         foreach (DocPieceCrudController::TAB_TYPES as $nom => $code) {
-            if($code == $this->getType()){
+            if ($code == $this->getType()) {
                 $this->nomType = $nom;
             }
         }
@@ -294,7 +301,7 @@ class DocPiece
 
     /**
      * Get the value of codeFormatFichier
-     */ 
+     */
     public function getCodeFormatFichier()
     {
 
@@ -303,43 +310,43 @@ class DocPiece
 
     /**
      * Get the value of logoFormatFichier
-     */ 
+     */
     public function getLogoFormatFichier()
     {
         $marque = "LOGOIMAGE";
         $couleur = "LOGOCOULEUR";
-        $htmlLogo = "<h3 class=\"". $couleur ."\"><i class=\"". $marque ."\"></i></h3>";
+        $htmlLogo = "<h3 class=\"" . $couleur . "\"><i class=\"" . $marque . "\"></i></h3>";
         if (str_ends_with($this->nomfichier, ".pdf")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-pdf", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-danger", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".docx")) {
+        } else if (str_ends_with($this->nomfichier, ".docx")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-info", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".doc")) {
+        } else if (str_ends_with($this->nomfichier, ".doc")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-word", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-info", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".xls")) {
+        } else if (str_ends_with($this->nomfichier, ".xls")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-success", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".xlsx")) {
+        } else if (str_ends_with($this->nomfichier, ".xlsx")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-excel", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-success", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".zip")) {
+        } else if (str_ends_with($this->nomfichier, ".zip")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-file-zipper", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-warning", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".eml")) {
+        } else if (str_ends_with($this->nomfichier, ".eml")) {
             $htmlLogo = str_replace($marque, "fa-solid fa-envelope-open-text", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-secondary", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".jpg")) {
+        } else if (str_ends_with($this->nomfichier, ".jpg")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".png")) {
+        } else if (str_ends_with($this->nomfichier, ".png")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
-        }else if (str_ends_with($this->nomfichier, ".gif")) {
+        } else if (str_ends_with($this->nomfichier, ".gif")) {
             $htmlLogo = str_replace($marque, "fa-regular fa-image", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-black", $htmlLogo);
-        }else{
+        } else {
             $htmlLogo = str_replace($marque, "fa-solid fa-file", $htmlLogo);
             $htmlLogo = str_replace($couleur, "text-secondary", $htmlLogo);
         }

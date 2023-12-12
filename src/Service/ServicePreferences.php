@@ -1467,9 +1467,16 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
             ->setNumDecimals(2)
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('primeTotale', "Prime due")
+        $tabAttributs[] = MoneyField::new('primeTotale', "Prime")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()

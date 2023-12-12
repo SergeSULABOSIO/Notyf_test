@@ -331,4 +331,15 @@ class Tranche
         }
         return $this->primeTotale;
     }
+
+    /**
+     * Get the value of commissionTotale
+     */ 
+    public function getCommissionTotale()
+    {
+        if($this->getPolice() != null){
+            $this->commissionTotale = $this->getPolice()->getCommissionTotaleTTC() * $this->getTaux();
+        }
+        return $this->commissionTotale;
+    }
 }

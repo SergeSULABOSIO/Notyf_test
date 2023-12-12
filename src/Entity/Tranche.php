@@ -46,6 +46,14 @@ class Tranche
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
     private ?Police $police = null;
+    private ?string $periodeValidite;
+
+    private ?Client $client;
+    private ?Assureur $assureur;
+    private ?Produit $produit;
+    private ?Partenaire $partenaire;
+    private ?string $autoriteTaxeCourtier;
+    private ?string $autoriteTaxeAssureur;
 
 
     public function getId(): ?int
@@ -333,5 +341,36 @@ class Tranche
             $this->retroCommissionTotale = $this->getPolice()->getRetroComPartenaire() * $this->getTaux();
         }
         return $this->retroCommissionTotale;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotale
+     */ 
+    public function getTaxeCourtierTotale()
+    {
+        if($this->getPolice() != null){
+            $this->taxeCourtierTotale = $this->getPolice()->getTaxeCourtierTotale() * $this->getTaux();
+        }
+        return $this->taxeCourtierTotale;
+    }
+
+    /**
+     * Get the value of taxeAssureurTotale
+     */ 
+    public function getTaxeAssureurTotale()
+    {
+        if($this->getPolice() != null){
+            $this->taxeAssureurTotale = $this->getPolice()->getTaxeAssureur() * $this->getTaux();
+        }
+        return $this->taxeAssureurTotale;
+    }
+
+    /**
+     * Get the value of periodeValidite
+     */ 
+    public function getPeriodeValidite()
+    {
+        $this->periodeValidite = "Du " . date_format($this->getStartedAt(), "d/m/Y") . " au " . date_format($this->getEndedAt(), "d/m/Y");
+        return $this->periodeValidite;
     }
 }

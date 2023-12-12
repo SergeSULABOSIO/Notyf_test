@@ -1458,6 +1458,8 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        $tabAttributs[] = TextField::new('periodeValidite', "Période")
+            ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
@@ -1488,10 +1490,24 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
+        $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
             ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
+        //     ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)
             ->onlyOnIndex();
 

@@ -128,20 +128,20 @@ class TrancheCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
-            ->setIcon('fa-solid fa-copy')
-            ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
+        // $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
+        //     ->setIcon('fa-solid fa-copy')
+        //     ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
-        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
-            ->linkToCrudAction('exporterMSExcels')
-            ->addCssClass('btn btn-primary')
-            ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
+        // $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+        //     ->linkToCrudAction('exporterMSExcels')
+        //     ->addCssClass('btn btn-primary')
+        //     ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
 
         return $actions
             //Sur la page Index - Selection
-            ->addBatchAction($exporter_ms_excels)
+            // ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -184,13 +184,13 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
             //action dupliquer Assureur
-            ->add(Crud::PAGE_DETAIL, $duplicate)
-            ->add(Crud::PAGE_EDIT, $duplicate)
-            ->add(Crud::PAGE_INDEX, $duplicate)
+            // ->add(Crud::PAGE_DETAIL, $duplicate)
+            // ->add(Crud::PAGE_EDIT, $duplicate)
+            // ->add(Crud::PAGE_INDEX, $duplicate)
 
             //Reorganisation des boutons
-            ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            // ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            // ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -206,35 +206,35 @@ class TrancheCrudController extends AbstractCrudController
         ;
     }
 
-    public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        /** @var Tranche */
-        $entite = $context->getEntity()->getInstance();
-        $entiteDuplique = clone $entite;
-        parent::persistEntity($em, $entiteDuplique);
+    // public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     /** @var Tranche */
+    //     $entite = $context->getEntity()->getInstance();
+    //     $entiteDuplique = clone $entite;
+    //     parent::persistEntity($em, $entiteDuplique);
 
-        $url = $adminUrlGenerator
-            ->setController(self::class)
-            ->setAction(Action::DETAIL)
-            ->setEntityId($entiteDuplique->getId())
-            ->generateUrl();
+    //     $url = $adminUrlGenerator
+    //         ->setController(self::class)
+    //         ->setAction(Action::DETAIL)
+    //         ->setEntityId($entiteDuplique->getId())
+    //         ->generateUrl();
 
-        return $this->redirect($url);
-    }
+    //     return $this->redirect($url);
+    // }
 
-    public function exporterMSExcels(BatchActionDto $batchActionDto)
-    {
-        $className = $batchActionDto->getEntityFqcn();
-        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+    // public function exporterMSExcels(BatchActionDto $batchActionDto)
+    // {
+    //     $className = $batchActionDto->getEntityFqcn();
+    //     $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 
-        dd($batchActionDto->getEntityIds());
+    //     dd($batchActionDto->getEntityIds());
 
-        foreach ($batchActionDto->getEntityIds() as $id) {
-            $user = $entityManager->find($className, $id);
-            $user->approve();
-        }
-        $entityManager->flush();
-        return $this->redirect($batchActionDto->getReferrerUrl());
-    }
+    //     foreach ($batchActionDto->getEntityIds() as $id) {
+    //         $user = $entityManager->find($className, $id);
+    //         $user->approve();
+    //     }
+    //     $entityManager->flush();
+    //     return $this->redirect($batchActionDto->getReferrerUrl());
+    // }
 
 }

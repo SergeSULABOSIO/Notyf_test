@@ -14,42 +14,39 @@ class Tranche
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
     #[ORM\Column]
     private ?float $taux = null;
-
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
-
     #[ORM\ManyToOne]
     private ?Entreprise $entreprise = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
-    private ?float $montant = 0;
-
     #[ORM\ManyToOne(inversedBy: 'tranches', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
-
-    //#[ORM\Column]
-    private ?\DateTimeImmutable $startedAt = null;
-
-    //#[ORM\Column]
-    private ?\DateTimeImmutable $endedAt = null;
-
     #[ORM\Column]
     private ?int $duree = null;
 
+
+    private ?float $montant = 0;
+    private ?\DateTimeImmutable $startedAt = null;
+    private ?\DateTimeImmutable $endedAt = null;
     private ?string $description;
     private ?string $codeMonnaieAffichage;
     private ?Monnaie $monnaie_Affichage;
+
+    //valeurs monnétaires caculables
+    private ?float $primeTotale = 0;
+    private ?float $commissionTotale = 0;
+    private ?float $retroCommissionTotale = 0;
+    private ?float $taxeCourtierTotale = 0;
+    private ?float $taxeAssureurTotale = 0;
+    private ?Police $police = null;
+
 
     public function getId(): ?int
     {
@@ -101,18 +98,20 @@ class Tranche
         return $this->endedAt;
     }
 
-    private function getPolice()
+    /**
+     * Get the value of police
+     */
+    public function getPolice()
     {
         /** @var Police */
-        $police = null;
-        if ($this->getCotation()) {
-            if ($this->getCotation()->isValidated()) {
-                if (count($this->getCotation()->getPolices()) != 0) {
-                    $police = $this->getCotation()->getPolices()[0];
+        if ($this->cotation) {
+            if ($this->cotation->isValidated()) {
+                if (count($this->cotation->getPolices()) != 0) {
+                    $this->police = $this->cotation->getPolices()[0];
                 }
             }
         }
-        return $police;
+        return $this->police;
     }
 
     public function setStartedAt(\DateTimeInterface $startedAt): self
@@ -299,7 +298,7 @@ class Tranche
 
     /**
      * Get the value of codeMonnaieAffichage
-     */ 
+     */
     public function getCodeMonnaieAffichage()
     {
         $this->codeMonnaieAffichage = "";
@@ -312,7 +311,7 @@ class Tranche
 
     /**
      * Get the value of monnaie_Affichage
-     */ 
+     */
     public function getMonnaie_Affichage()
     {
         $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);

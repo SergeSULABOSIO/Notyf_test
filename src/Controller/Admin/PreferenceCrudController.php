@@ -1025,6 +1025,7 @@ class PreferenceCrudController extends AbstractCrudController
 
     public const PREF_PROD_TRANCHE_ID                   = 'Id';
     public const PREF_PROD_TRANCHE_COTATION             = "Cotation";
+    public const PREF_PROD_TRANCHE_POLICE               = "Police";
     public const PREF_PROD_TRANCHE_NOM                  = "Nom";
     public const PREF_PROD_TRANCHE_TAUX                 = "Taux";
     public const PREF_PROD_TRANCHE_DUREE                = "Durée (mois)";
@@ -1048,6 +1049,7 @@ class PreferenceCrudController extends AbstractCrudController
         self::PREF_PROD_TRANCHE_DATE_CREATION           => 8,
         self::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION    => 9,
         self::PREF_PROD_TRANCHE_COTATION                => 10,
+        self::PREF_PROD_TRANCHE_POLICE                  => 11,
     ];
 
 

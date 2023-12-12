@@ -1290,6 +1290,7 @@ class ServicePreferences
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)) {
             $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
+                ->setNumDecimals(2)
                 ->setColumns(12)
                 ->onlyOnForms();
         }
@@ -1457,56 +1458,29 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PROD_TRANCHE_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_COTATION])) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_NOM])) {
-            $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_TAUX])) {
-            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_MONTANT])) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_TRANCHE_MONTANT)
-                ->formatValue(function ($value, Tranche $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT])) {
-            $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_FIN])) {
-            $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_DATE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PROD_TRANCHE_DATE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PROD_TRANCHE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_PROD_TRANCHE_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PROD_TRANCHE_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+            ->onlyOnIndex();
+        // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_TRANCHE_MONTANT)
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)
+            ->onlyOnIndex();
+
         return $tabAttributs;
     }
 

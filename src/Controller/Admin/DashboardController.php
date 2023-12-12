@@ -175,7 +175,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Comptes bancaires', 'fa-solid fa-piggy-bank', CompteBancaire::class),
             MenuItem::linkToCrud('Taxes', 'fas fa-landmark-dome', Taxe::class), //<i class="fa-solid fa-landmark-dome"></i>
             MenuItem::linkToCrud('Monnaies', 'fas fa-money-bill-1', Monnaie::class), //<i class="fa-regular fa-money-bill-1"></i>
-            MenuItem::linkToCrud('Tranches', 'fa-solid fa-layer-group', Tranche::class), //<i class="fa-solid fa-receipt"></i>
+            MenuItem::linkToCrud('Outstanding', 'fa-solid fa-layer-group', Tranche::class), //<i class="fa-solid fa-receipt"></i>
             MenuItem::linkToCrud('Factures', 'fa-solid fa-receipt', Facture::class), //<i class="fa-solid fa-receipt"></i>
             MenuItem::linkToCrud('Paiements', 'fa-solid fa-cash-register', Paiement::class), //<i class="fa-solid fa-cash-register"></i>
         ])

@@ -326,7 +326,9 @@ class Tranche
      */ 
     public function getPrimeTotale()
     {
-        $this->primeTotale = $this->montant;
+        if($this->getPolice() != null){
+            $this->primeTotale = $this->getPolice()->getPrimeTotale() * $this->getTaux();
+        }
         return $this->primeTotale;
     }
 }

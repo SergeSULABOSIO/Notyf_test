@@ -1035,7 +1035,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_PROD_TRANCHE_UTILISATEUR          = "Utilisateur";
     public const PREF_PROD_TRANCHE_ENTREPRISE           = "Entreprise";
     public const PREF_PROD_TRANCHE_DATE_CREATION        = "Date de création";
-    public const PREF_PROD_TRANCHE_DERNIRE_MODIFICATION = "Dernière modification";
+    public const PREF_PROD_TRANCHE_DERNIRE_MODIFICATION = "D. modification";
 
     public const TAB_PROD_TRANCHE = [
         self::PREF_PROD_TRANCHE_ID                      => 0,

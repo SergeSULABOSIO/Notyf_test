@@ -67,7 +67,7 @@ class TrancheCrudController extends AbstractCrudController
         }
 
         return $filters
-            //->add('contacts')
+            //->add('validee')
             //->add('expiredAt')
             //->add('etape')
             //->add('police')
@@ -242,4 +242,17 @@ class TrancheCrudController extends AbstractCrudController
     //     return $this->redirect($batchActionDto->getReferrerUrl());
     // }
 
+    public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        /** @var Tranche */
+        $entite = $context->getEntity()->getInstance();
+
+        $url = $adminUrlGenerator
+            ->setController(self::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($entite->getId())
+            ->generateUrl();
+
+        return $this->redirect($url);
+    }
 }

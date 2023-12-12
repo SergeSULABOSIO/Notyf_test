@@ -859,13 +859,63 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Details($tabAttributs)
     {
-        $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PROD_TRANCHE_ID)->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)->onlyOnDetail();
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)->onlyOnDetail();
-        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_PROD_TRANCHE_MONTANT)
+        $tabAttributs[] = BooleanField::new('validee', "Validée")
+            ->renderAsSwitch(false)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('periodeValidite', "Période")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('client', "Client")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('assureur', "Assureur")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('produit', "Produit")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('autoriteTaxeAssureur', "Aut. Assureurs")
+            ->onlyOnDetail();
+        $tabAttributs[] = TextField::new('autoriteTaxeCourtier', "Aut. Courtier")
+            ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
+            ->onlyOnDetail();
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
+            ->setNumDecimals(2)
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('primeTotale', "Prime")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
@@ -1458,12 +1508,27 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        $tabAttributs[] = BooleanField::new('validee', "Validée")
+            ->renderAsSwitch(false)
+            ->onlyOnIndex();
         $tabAttributs[] = TextField::new('periodeValidite', "Période")
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
             ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('client', "Client")
+            ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('assureur', "Assureur")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('produit', "Produit")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('autoriteTaxeAssureur', "Aut. Assureurs")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('autoriteTaxeCourtier', "Aut. Courtier")
+        //     ->onlyOnIndex();
         // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
         //     ->onlyOnIndex();
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)

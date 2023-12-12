@@ -54,6 +54,7 @@ class Tranche
     private ?Partenaire $partenaire;
     private ?string $autoriteTaxeCourtier;
     private ?string $autoriteTaxeAssureur;
+    private ?bool $validee;
 
 
     public function getId(): ?int
@@ -281,7 +282,7 @@ class Tranche
         if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
             $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
         }
-        $strMont = " " . number_format($this->getMontant()/100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
+        $strMont = " " . number_format($this->getMontant() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
         return $this->getNom() . ": " . $strMont;
     }
 
@@ -312,10 +313,10 @@ class Tranche
 
     /**
      * Get the value of primeTotale
-     */ 
+     */
     public function getPrimeTotale()
     {
-        if($this->getPolice() != null){
+        if ($this->getPolice() != null) {
             $this->primeTotale = $this->getPolice()->getPrimeTotale() * $this->getTaux();
         }
         return $this->primeTotale;
@@ -323,10 +324,10 @@ class Tranche
 
     /**
      * Get the value of commissionTotale
-     */ 
+     */
     public function getCommissionTotale()
     {
-        if($this->getPolice() != null){
+        if ($this->getPolice() != null) {
             $this->commissionTotale = $this->getPolice()->getCommissionTotaleTTC() * $this->getTaux();
         }
         return $this->commissionTotale;
@@ -334,10 +335,10 @@ class Tranche
 
     /**
      * Get the value of retroCommissionTotale
-     */ 
+     */
     public function getRetroCommissionTotale()
     {
-        if($this->getPolice() != null){
+        if ($this->getPolice() != null) {
             $this->retroCommissionTotale = $this->getPolice()->getRetroComPartenaire() * $this->getTaux();
         }
         return $this->retroCommissionTotale;
@@ -345,10 +346,10 @@ class Tranche
 
     /**
      * Get the value of taxeCourtierTotale
-     */ 
+     */
     public function getTaxeCourtierTotale()
     {
-        if($this->getPolice() != null){
+        if ($this->getPolice() != null) {
             $this->taxeCourtierTotale = $this->getPolice()->getTaxeCourtierTotale() * $this->getTaux();
         }
         return $this->taxeCourtierTotale;
@@ -356,10 +357,10 @@ class Tranche
 
     /**
      * Get the value of taxeAssureurTotale
-     */ 
+     */
     public function getTaxeAssureurTotale()
     {
-        if($this->getPolice() != null){
+        if ($this->getPolice() != null) {
             $this->taxeAssureurTotale = $this->getPolice()->getTaxeAssureur() * $this->getTaux();
         }
         return $this->taxeAssureurTotale;
@@ -367,10 +368,100 @@ class Tranche
 
     /**
      * Get the value of periodeValidite
-     */ 
+     */
     public function getPeriodeValidite()
     {
-        $this->periodeValidite = "Du " . date_format($this->getStartedAt(), "d/m/Y") . " au " . date_format($this->getEndedAt(), "d/m/Y");
+        $this->periodeValidite = "Inconnue";
+        if ($this->getStartedAt() != null && $this->getEndedAt() != null) {
+            $this->periodeValidite = "Du " . date_format($this->getStartedAt(), "d/m/Y") . " au " . date_format($this->getEndedAt(), "d/m/Y");
+        }
         return $this->periodeValidite;
+    }
+
+    /**
+     * Get the value of client
+     */
+    public function getClient()
+    {
+        if ($this->getCotation()) {
+            $this->client = $this->getCotation()->getPiste()->getClient();
+        }
+        return $this->client;
+    }
+
+    /**
+     * Get the value of assureur
+     */
+    public function getAssureur()
+    {
+        if ($this->getCotation()) {
+            $this->assureur = $this->getCotation()->getAssureur();
+        }
+        return $this->assureur;
+    }
+
+    /**
+     * Get the value of produit
+     */
+    public function getProduit()
+    {
+        if ($this->getCotation()) {
+            $this->produit = $this->getCotation()->getPiste()->getProduit();
+        }
+        return $this->produit;
+    }
+
+    /**
+     * Get the value of partenaire
+     */
+    public function getPartenaire()
+    {
+        if ($this->getCotation()) {
+            $this->partenaire = $this->getCotation()->getPartenaire();
+        }
+        return $this->partenaire;
+    }
+
+    /**
+     * Get the value of autoriteTaxeCourtier
+     */
+    public function getAutoriteTaxeCourtier()
+    {
+        $this->autoriteTaxeCourtier = $this->checkTaxe(true);
+        return $this->autoriteTaxeCourtier;
+    }
+
+    private function checkTaxe(?bool $payableParCourtier): string
+    {
+        if ($this->getEntreprise()) {
+            /** @var Taxe */
+            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                if ($taxe->isPayableparcourtier() == $payableParCourtier) {
+                    return $taxe->getOrganisation();
+                }
+            }
+        } else {
+            return "Inconnue";
+        }
+    }
+
+    /**
+     * Get the value of autoriteTaxeAssureur
+     */
+    public function getAutoriteTaxeAssureur()
+    {
+        $this->autoriteTaxeAssureur = $this->checkTaxe(false);
+        return $this->autoriteTaxeAssureur;
+    }
+
+    /**
+     * Get the value of validee
+     */
+    public function getValidee()
+    {
+        if ($this->getCotation() != null) {
+            $this->validee = $this->getCotation()->isValidated();
+        }
+        return $this->validee;
     }
 }

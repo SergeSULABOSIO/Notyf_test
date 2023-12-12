@@ -193,7 +193,7 @@ class Cotation
         if ($this->piste->getProduit()) {
             $strNomProduit = $this->piste->getProduit()->getNom();
         }
-        $strValidation = ($this->isValidated() == true ? " (offre validée)" : "");        
+        $strValidation = ($this->isValidated() == true ? " (offre validée)" : "");
         //return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
         return  "" . $this->nom . $strValidation;
     }
@@ -414,10 +414,12 @@ class Cotation
 
     private function getMonnaie($fonction)
     {
-        $tabMonnaies = $this->getEntreprise()->getMonnaies();
-        foreach ($tabMonnaies as $monnaie) {
-            if ($monnaie->getFonction() == $fonction) {
-                return $monnaie;
+        if ($this->getEntreprise()) {
+            $tabMonnaies = $this->getEntreprise()->getMonnaies();
+            foreach ($tabMonnaies as $monnaie) {
+                if ($monnaie->getFonction() == $fonction) {
+                    return $monnaie;
+                }
             }
         }
         return null;
@@ -683,10 +685,10 @@ class Cotation
 
     /**
      * Get the value of client
-     */ 
+     */
     public function getClient()
     {
-        if($this->getPiste()){
+        if ($this->getPiste()) {
             $this->client = $this->getPiste()->getClient();
         }
         return $this->client;
@@ -694,10 +696,10 @@ class Cotation
 
     /**
      * Get the value of gestionnaire
-     */ 
+     */
     public function getGestionnaire()
     {
-        if($this->getPiste()){
+        if ($this->getPiste()) {
             $this->gestionnaire = $this->getPiste()->getGestionnaire();
         }
         return $this->gestionnaire;
@@ -705,7 +707,7 @@ class Cotation
 
     /**
      * Get the value of monnaie_Affichage
-     */ 
+     */
     public function getMonnaie_Affichage()
     {
         $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
@@ -717,12 +719,12 @@ class Cotation
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
-        if($this->isValidated() == true){
+        if ($this->isValidated() == true) {
             $this->status = "(validée)";
-        }else{
+        } else {
             $this->status = "";
         }
         return $this->status;

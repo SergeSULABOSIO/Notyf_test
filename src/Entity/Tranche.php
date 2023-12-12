@@ -245,25 +245,6 @@ class Tranche
         return $this;
     }
 
-    // private function getCodeMonnaieAffichage(): string
-    // {
-    //     $strMonnaie = "";
-    //     $monnaieAff = $this->getMonnaie_Affichage();
-    //     if ($monnaieAff != null) {
-    //         $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
-    //     }
-    //     return $strMonnaie;
-    // }
-
-    // private function getMonnaie_Affichage()
-    // {
-    //     $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-    //     if ($monnaie == null) {
-    //         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-    //     }
-    //     return $monnaie;
-    // }
-
     private function getMonnaie($fonction)
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
@@ -341,5 +322,16 @@ class Tranche
             $this->commissionTotale = $this->getPolice()->getCommissionTotaleTTC() * $this->getTaux();
         }
         return $this->commissionTotale;
+    }
+
+    /**
+     * Get the value of retroCommissionTotale
+     */ 
+    public function getRetroCommissionTotale()
+    {
+        if($this->getPolice() != null){
+            $this->retroCommissionTotale = $this->getPolice()->getRetroComPartenaire() * $this->getTaux();
+        }
+        return $this->retroCommissionTotale;
     }
 }

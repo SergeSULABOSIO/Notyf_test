@@ -54,7 +54,43 @@ class TrancheCrudController extends AbstractCrudController
     {
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
+
+        $validee = true; //Par defaut on ne filtre qu'avec le critère TRUE
+        
+        //dd($searchDto->getAppliedFilters()['validee']);
+        //dd($searchDto->getAppliedFilters());
+
+        /**
+         * On va capturer le critère non mappé et le retirer de la requète
+         * Mais on garde en mémoire ce critère car une requête séparée sera faite avec ça
+         */
+        if (isset($searchDto->getAppliedFilters()['validee'])) {
+            $appliedFilters = $searchDto->getAppliedFilters();
+            $validee = $appliedFilters['validee']['value'];
+            unset($appliedFilters['validee']);
+
+            $searchDto = new SearchDto(
+                $searchDto->getRequest(),
+                $searchDto->getSearchableProperties(),
+                $searchDto->getQuery(),
+                [],
+                $searchDto->getSort(),
+                $appliedFilters
+            );
+        }
+
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        //On fait une jointure
+        $defaultQueryBuilder->join('entity.cotation', 'cotation')
+            //->andWhere('cotation.validated IN (:validee)') //si validee est un tableau
+            ->Where('cotation.validated = :validee') //si validee n'est pas un tableau
+            ->setParameter('validee', $validee);
+
+        //dd($defaultQueryBuilder);
+
+
+        //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
                 ->Where('entity.utilisateur = :user')

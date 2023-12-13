@@ -55,15 +55,26 @@ class TrancheCrudController extends AbstractCrudController
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
 
-        $validee = true; //Par defaut on ne filtre qu'avec le critère TRUE
-        
-        //dd($searchDto->getAppliedFilters()['validee']);
-        //dd($searchDto->getAppliedFilters());
+        $defaultQueryBuilder = $this->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters);
 
+        //Filtre standard pour Utilisateur et Entreprise
+        if ($hasVisionGlobale == false) {
+            $defaultQueryBuilder
+                ->Where('entity.utilisateur = :user')
+                ->setParameter('user', $this->getUser());
+        }
+        return $defaultQueryBuilder
+            ->andWhere('entity.entreprise = :ese')
+            ->setParameter('ese', $connected_entreprise);
+    }
+
+    private function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
         /**
          * On va capturer le critère non mappé et le retirer de la requète
          * Mais on garde en mémoire ce critère car une requête séparée sera faite avec ça
          */
+        $validee = true; //Par defaut on ne filtre qu'avec le critère TRUE
         if (isset($searchDto->getAppliedFilters()['validee'])) {
             $appliedFilters = $searchDto->getAppliedFilters();
             $validee = $appliedFilters['validee']['value'];
@@ -78,27 +89,14 @@ class TrancheCrudController extends AbstractCrudController
                 $appliedFilters
             );
         }
-
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
         //On fait une jointure
         $defaultQueryBuilder->join('entity.cotation', 'cotation')
             //->andWhere('cotation.validated IN (:validee)') //si validee est un tableau
-            ->Where('cotation.validated = :validee') //si validee n'est pas un tableau
+            ->andWhere('cotation.validated = :validee') //si validee n'est pas un tableau
             ->setParameter('validee', $validee);
 
-        //dd($defaultQueryBuilder);
-
-
-        //Filtre standard pour Utilisateur et Entreprise
-        if ($hasVisionGlobale == false) {
-            $defaultQueryBuilder
-                ->Where('entity.utilisateur = :user')
-                ->setParameter('user', $this->getUser());
-        }
-        return $defaultQueryBuilder
-            ->andWhere('entity.entreprise = :ese')
-            ->setParameter('ese', $connected_entreprise);
+        return $defaultQueryBuilder;
     }
 
     public function configureFilters(Filters $filters): Filters

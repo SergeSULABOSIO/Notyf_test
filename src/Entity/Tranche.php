@@ -35,31 +35,29 @@ class Tranche
     /**
      * Les attributs non mappées
      */
-
-    private ?float $montant = 0;
     private ?\DateTimeImmutable $startedAt = null;
     private ?\DateTimeImmutable $endedAt = null;
     private ?string $description;
     private ?string $codeMonnaieAffichage;
-    private ?Monnaie $monnaie_Affichage;
-
     //valeurs monnétaires caculables
+    private ?float $montant = 0;
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
-    private ?Police $police = null;
+    //Autres champs
     private ?string $periodeValidite;
-
+    private ?string $autoriteTaxeCourtier;
+    private ?string $autoriteTaxeAssureur;
+    private ?bool $validee;
+    //Les objets
+    private ?Monnaie $monnaie_Affichage;
     private ?Client $client;
+    private ?Police $police = null;
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
-    private ?string $autoriteTaxeCourtier;
-    private ?string $autoriteTaxeAssureur;
-    //#[ORM\Column]
-    private ?bool $validee;
 
 
     public function getId(): ?int

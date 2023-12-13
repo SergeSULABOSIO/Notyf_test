@@ -55,6 +55,7 @@ class TrancheCrudController extends AbstractCrudController
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
 
+        //On applique le critère basé sur les attributs non mappés dans l'entité
         $defaultQueryBuilder = $this->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters);
 
         //Filtre standard pour Utilisateur et Entreprise
@@ -68,6 +69,16 @@ class TrancheCrudController extends AbstractCrudController
             ->setParameter('ese', $connected_entreprise);
     }
 
+    /**
+     * Cette fonction permet de définir comme l'un des critères un champ non mappé dans l'entité.
+     * En réalité, on lancera une autre requête SQL séparée et fera la jointure.
+     *
+     * @param SearchDto $searchDto
+     * @param EntityDto $entityDto
+     * @param FieldCollection $fields
+     * @param FilterCollection $filters
+     * @return QueryBuilder
+     */
     private function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         /**

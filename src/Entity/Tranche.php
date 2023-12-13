@@ -32,6 +32,10 @@ class Tranche
     private ?int $duree = null;
 
 
+    /**
+     * Les attributs non mappées
+     */
+
     private ?float $montant = 0;
     private ?\DateTimeImmutable $startedAt = null;
     private ?\DateTimeImmutable $endedAt = null;
@@ -54,6 +58,7 @@ class Tranche
     private ?Partenaire $partenaire;
     private ?string $autoriteTaxeCourtier;
     private ?string $autoriteTaxeAssureur;
+    //#[ORM\Column]
     private ?bool $validee;
 
 

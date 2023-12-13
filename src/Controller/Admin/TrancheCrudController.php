@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use mapped;
 use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -18,11 +19,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\ChoiceFilterType;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -67,7 +72,14 @@ class TrancheCrudController extends AbstractCrudController
         }
 
         return $filters
-            //->add('validee')
+            ->add(
+                ChoiceFilter::new('validee')
+                    ->setChoices([
+                        "Oui" => true,
+                        "Non" => false,
+                    ])
+                    ->setFormTypeOption('mapped', false)
+            )
             //->add('expiredAt')
             //->add('etape')
             //->add('police')

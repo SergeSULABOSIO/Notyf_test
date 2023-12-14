@@ -92,14 +92,32 @@ class TrancheCrudController extends AbstractCrudController
      */
     private function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
+        //validee
         $data = $this->serviceFiltresNonMappes->retirerCritere('validee', true, $searchDto);
         $searchDto = $data['searchDto'];
         $validee = $data['criterRetire'];
-
+        //police
         $data = $this->serviceFiltresNonMappes->retirerCritere('police', [], $searchDto);
         $searchDto = $data['searchDto'];
         $police = $data['criterRetire'];
-        
+        //client
+        $data = $this->serviceFiltresNonMappes->retirerCritere('client', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $client = $data['criterRetire'];
+        //partenaire
+        $data = $this->serviceFiltresNonMappes->retirerCritere('partenaire', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $partenaire = $data['criterRetire'];
+        //produit
+        $data = $this->serviceFiltresNonMappes->retirerCritere('produit', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $produit = $data['criterRetire'];
+        //assureur
+        $data = $this->serviceFiltresNonMappes->retirerCritere('assureur', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $assureur = $data['criterRetire'];
+
+
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         //Exécution des requêtes de jointures
         //critere Validee
@@ -113,6 +131,12 @@ class TrancheCrudController extends AbstractCrudController
             $defaultQueryBuilder->join('entity.cotation', 'requete2')
                 ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
                 ->setParameter('police', $police);
+        }
+        //critere Client
+        if (count($client)) {
+            $defaultQueryBuilder->join('entity.cotation', 'requete3')
+                ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
+                ->setParameter('client', $client);
         }
         return $defaultQueryBuilder;
     }

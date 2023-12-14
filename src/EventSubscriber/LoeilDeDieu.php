@@ -449,30 +449,23 @@ class LoeilDeDieu implements EventSubscriberInterface
                 if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
                     $quote->setValidated(false);
                     $quote->setPolice(null);
-                    $quote->setPartenaire(null);
-                    $quote->setClient(null);
-                    $quote->setProduit(null);
                     $quote->setDateEffet(null);
                     $quote->setDateExpiration(null);
                     $quote->setDateOperation(null);
                     $quote->setDateEmition(null);
-
-                    $this->entityManager->persist($quote);
-                    $this->entityManager->flush();
                 } else {
                     $quote->setValidated(true);
                     $quote->setPolice($policeRetenue);
-                    $quote->setPartenaire($piste->getPartenaire());
-                    $quote->setClient($piste->getClient());
-                    $quote->setProduit($piste->getProduit());
                     $quote->setDateEffet($policeRetenue->getDateeffet());
                     $quote->setDateExpiration($policeRetenue->getDateexpiration());
                     $quote->setDateOperation($policeRetenue->getDateoperation());
                     $quote->setDateEmition($policeRetenue->getDateemission());
-
-                    $this->entityManager->persist($quote);
-                    $this->entityManager->flush();
                 }
+                $quote->setPartenaire($piste->getPartenaire());
+                $quote->setClient($piste->getClient());
+                $quote->setProduit($piste->getProduit());
+                $this->entityManager->persist($quote);
+                $this->entityManager->flush();
             }
         }
     }

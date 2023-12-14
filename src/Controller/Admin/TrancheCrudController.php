@@ -2,8 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Police;
+use App\Entity\Assureur;
 use mapped;
+use App\Entity\Client;
+use App\Entity\Partenaire;
+use App\Entity\Police;
+use App\Entity\Produit;
 use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -11,6 +15,7 @@ use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceFiltresNonMappes;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\ChoiceFilterType;
 
@@ -44,7 +50,9 @@ class TrancheCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
-        private AdminUrlGenerator $adminUrlGenerator
+        private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceFiltresNonMappes $serviceFiltresNonMappes
+
     ) {
     }
 
@@ -84,88 +92,41 @@ class TrancheCrudController extends AbstractCrudController
      */
     private function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        /**
-         * On va capturer le critère non mappé et le retirer de la requète
-         * Mais on garde en mémoire ce critère car une requête séparée sera faite avec ça
-         */
-        $validee = true; //Par defaut on ne filtre qu'avec le critère TRUE
-        if (isset($searchDto->getAppliedFilters()['validee'])) {
-            $appliedFilters = $searchDto->getAppliedFilters();
-            $validee = $appliedFilters['validee']['value'];
-            unset($appliedFilters['validee']);
+        $data = $this->serviceFiltresNonMappes->retirerCritere('validee', true, $searchDto);
+        $searchDto = $data['searchDto'];
+        $validee = $data['criterRetire'];
 
-            $searchDto = new SearchDto(
-                $searchDto->getRequest(),
-                $searchDto->getSearchableProperties(),
-                $searchDto->getQuery(),
-                [],
-                $searchDto->getSort(),
-                $appliedFilters
-            );
-        }
-        $police = []; //Par defaut on ne filtre qu'avec le critère TRUE
-        if (isset($searchDto->getAppliedFilters()['police'])) {
-            $appliedFilters = $searchDto->getAppliedFilters();
-            $police = $appliedFilters['police']['value'];
-            unset($appliedFilters['police']);
-
-            $searchDto = new SearchDto(
-                $searchDto->getRequest(),
-                $searchDto->getSearchableProperties(),
-                $searchDto->getQuery(),
-                [],
-                $searchDto->getSort(),
-                $appliedFilters
-            );
-        }
-        //dd($police);
+        $data = $this->serviceFiltresNonMappes->retirerCritere('police', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $police = $data['criterRetire'];
+        
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
-        //On fait une jointure avec entité Cotation
-        $defaultQueryBuilder->join('entity.cotation', 'cotation')
-            //->andWhere('cotation.validated IN (:validee)') //si validee est un tableau
-            ->andWhere('cotation.validated = (:validee)') //si validee n'est pas un tableau
-            ->setParameter('validee', $validee);
-
-        //On fait une jointure avec entité Police
+        //Exécution des requêtes de jointures
+        //critere Validee
+        if (isset($validee)) {
+            $defaultQueryBuilder->join('entity.cotation', 'requete1')
+                ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
+                ->setParameter('validee', $validee);
+        }
+        //critere Police
         if (count($police)) {
-            $defaultQueryBuilder->join('entity.cotation', 'cotation2')
-                ->andWhere('cotation2.police IN (:police)') //si validee est un tableau
+            $defaultQueryBuilder->join('entity.cotation', 'requete2')
+                ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
                 ->setParameter('police', $police);
         }
-
         return $defaultQueryBuilder;
     }
 
-    public function configureFilters(Filters $filters): Filters
+    function configureFilters(Filters $filters): Filters
     {
         if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {
             $filters->add('utilisateur');
         }
 
-        return $filters
-            //FILTRES BASES SUR LES ATTRIBUTS NON MAPPES
-            ->add(
-                ChoiceFilter::new('validee')
-                    ->setChoices([
-                        "Oui" => true,
-                        "Non" => false,
-                    ])
-                    ->setFormTypeOption('mapped', false)
-            )
-            ->add(EntityFilter::new('police', 'Police')
-                ->setFormTypeOption('value_type_options.class', Police::class)
-                ->setFormTypeOption(
-                    'value_type_options.query_builder',
-                    static fn (EntityRepository $repository) => $repository
-                        ->createQueryBuilder('police')
-                        // ...
-                        ->orderBy('police.id', 'ASC')
-                )
-                ->setFormTypeOption('mapped', false)
-                ->setFormTypeOption('value_type_options.multiple', true)
-            )
+        //FILTRES BASES SUR LES ATTRIBUTS NON MAPPES
+        $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($filters);
 
+        return $filters
             //->add('expiredAt')
             //->add('etape')
             //->add('police')
@@ -239,7 +200,7 @@ class TrancheCrudController extends AbstractCrudController
 
         return $actions
             //Sur la page Index - Selection
-             ->addBatchAction($exporter_ms_excels)
+            ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);

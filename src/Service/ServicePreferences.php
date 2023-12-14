@@ -876,6 +876,14 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('produit', "Produit")
             ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateEffet', "Date d'effet")
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateExpiration', "Date d'expiration")
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateOperation', "Date d'opération")
+            ->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('dateEmition', "Date d'émition")
+            ->onlyOnDetail();
         $tabAttributs[] = TextField::new('autoriteTaxeAssureur', "Aut. Assureurs")
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('autoriteTaxeCourtier', "Aut. Courtier")
@@ -1515,22 +1523,6 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
-            ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('client', "Client")
-            ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('assureur', "Assureur")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('partenaire', "Partenaire")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('produit', "Produit")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('autoriteTaxeAssureur', "Aut. Assureurs")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('autoriteTaxeCourtier', "Aut. Courtier")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
-        //     ->onlyOnIndex();
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
             ->setNumDecimals(2)
             ->onlyOnIndex();
@@ -1569,6 +1561,25 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
+
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+            ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('client', "Client")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('assureur', "Assureur")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('produit', "Produit")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('dateEffet', "Date d'effet")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('dateExpiration', "Date d'expiration")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('dateOperation', "Date d'opération")
+        //     ->onlyOnIndex();
+        // $tabAttributs[] = DateTimeField::new('dateEmition', "Date d'émition")
+        //     ->onlyOnIndex();
         // $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
         //     ->onlyOnIndex();
         // $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
@@ -4444,8 +4455,9 @@ class ServicePreferences
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnIndex();
-        $tabAttributs[] = TextField::new('client', "Client")->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('client', "Client")->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('partenaire', "Partenaire")->onlyOnIndex();
         $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnIndex();
@@ -4468,8 +4480,10 @@ class ServicePreferences
                 return $value . " mois.";
             })
             ->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('client', "Client")->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('piste', PreferenceCrudController::PREF_CRM_COTATION_PISTE)->onlyOnDetail();
+        $tabAttributs[] = AssociationField::new('partenaire', "Partenaire")->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('revenus', PreferenceCrudController::PREF_CRM_COTATION_REVENUS)
             ->setTemplatePath('admin/segment/view_revenus.html.twig')
             ->onlyOnDetail();

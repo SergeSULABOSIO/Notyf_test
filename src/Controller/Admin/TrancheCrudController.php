@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Police;
 use mapped;
 use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
@@ -18,15 +20,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\ChoiceFilterType;
 
 class TrancheCrudController extends AbstractCrudController
@@ -100,12 +103,36 @@ class TrancheCrudController extends AbstractCrudController
                 $appliedFilters
             );
         }
+        $police = []; //Par defaut on ne filtre qu'avec le critère TRUE
+        if (isset($searchDto->getAppliedFilters()['police'])) {
+            $appliedFilters = $searchDto->getAppliedFilters();
+            $police = $appliedFilters['police']['value'];
+            unset($appliedFilters['police']);
+
+            $searchDto = new SearchDto(
+                $searchDto->getRequest(),
+                $searchDto->getSearchableProperties(),
+                $searchDto->getQuery(),
+                [],
+                $searchDto->getSort(),
+                $appliedFilters
+            );
+        }
+        //dd($police);
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        //On fait une jointure
+
+        //On fait une jointure avec entité Cotation
         $defaultQueryBuilder->join('entity.cotation', 'cotation')
             //->andWhere('cotation.validated IN (:validee)') //si validee est un tableau
-            ->andWhere('cotation.validated = :validee') //si validee n'est pas un tableau
+            ->andWhere('cotation.validated = (:validee)') //si validee n'est pas un tableau
             ->setParameter('validee', $validee);
+
+        //On fait une jointure avec entité Police
+        if (count($police)) {
+            $defaultQueryBuilder->join('entity.cotation', 'cotation2')
+                ->andWhere('cotation2.police IN (:police)') //si validee est un tableau
+                ->setParameter('police', $police);
+        }
 
         return $defaultQueryBuilder;
     }
@@ -117,6 +144,7 @@ class TrancheCrudController extends AbstractCrudController
         }
 
         return $filters
+            //FILTRES BASES SUR LES ATTRIBUTS NON MAPPES
             ->add(
                 ChoiceFilter::new('validee')
                     ->setChoices([
@@ -125,6 +153,19 @@ class TrancheCrudController extends AbstractCrudController
                     ])
                     ->setFormTypeOption('mapped', false)
             )
+            ->add(EntityFilter::new('police', 'Police')
+                ->setFormTypeOption('value_type_options.class', Police::class)
+                ->setFormTypeOption(
+                    'value_type_options.query_builder',
+                    static fn (EntityRepository $repository) => $repository
+                        ->createQueryBuilder('police')
+                        // ...
+                        ->orderBy('police.id', 'ASC')
+                )
+                ->setFormTypeOption('mapped', false)
+                ->setFormTypeOption('value_type_options.multiple', true)
+            )
+
             //->add('expiredAt')
             //->add('etape')
             //->add('police')
@@ -191,14 +232,14 @@ class TrancheCrudController extends AbstractCrudController
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
-        // $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
-        //     ->linkToCrudAction('exporterMSExcels')
-        //     ->addCssClass('btn btn-primary')
-        //     ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
+        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+            ->linkToCrudAction('exporterMSExcels')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
 
         return $actions
             //Sur la page Index - Selection
-            // ->addBatchAction($exporter_ms_excels)
+             ->addBatchAction($exporter_ms_excels)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -268,36 +309,20 @@ class TrancheCrudController extends AbstractCrudController
         ;
     }
 
-    // public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     /** @var Tranche */
-    //     $entite = $context->getEntity()->getInstance();
-    //     $entiteDuplique = clone $entite;
-    //     parent::persistEntity($em, $entiteDuplique);
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
+        $className = $batchActionDto->getEntityFqcn();
+        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 
-    //     $url = $adminUrlGenerator
-    //         ->setController(self::class)
-    //         ->setAction(Action::DETAIL)
-    //         ->setEntityId($entiteDuplique->getId())
-    //         ->generateUrl();
+        dd($batchActionDto->getEntityIds());
 
-    //     return $this->redirect($url);
-    // }
-
-    // public function exporterMSExcels(BatchActionDto $batchActionDto)
-    // {
-    //     $className = $batchActionDto->getEntityFqcn();
-    //     $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
-    //     dd($batchActionDto->getEntityIds());
-
-    //     foreach ($batchActionDto->getEntityIds() as $id) {
-    //         $user = $entityManager->find($className, $id);
-    //         $user->approve();
-    //     }
-    //     $entityManager->flush();
-    //     return $this->redirect($batchActionDto->getReferrerUrl());
-    // }
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            $user = $entityManager->find($className, $id);
+            $user->approve();
+        }
+        $entityManager->flush();
+        return $this->redirect($batchActionDto->getReferrerUrl());
+    }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {

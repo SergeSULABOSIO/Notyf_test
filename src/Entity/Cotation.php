@@ -26,11 +26,35 @@ class Cotation
     #[ORM\ManyToOne(inversedBy: 'cotations')]
     private ?Assureur $assureur = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Police $police = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Produit $produit = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Client $client = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cotations')]
+    private ?Partenaire $partenaire = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateEffet = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateExpiration = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateOperation = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateEmition = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -45,7 +69,6 @@ class Cotation
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Chargement::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $chargements;
-
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Tranche::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $tranches;
@@ -63,10 +86,13 @@ class Cotation
     private ?float $revenuTotalHT;
     private ?float $taxeCourtierTotale;
     private ?float $revenuNetTotal;
+    private ?float $commissionTotaleTTC;
+    private ?float $taxeAssureurTotal;
+    private ?float $taxeCourtierTotal;
 
     //partie partageable
     private ?float $revenuTotalHTPartageable;
-    private ?Partenaire $partenaire;
+    //private ?Partenaire $partenaire;
     private ?float $taxeCourtierTotalePartageable;
     private ?float $revenuNetTotalPartageable;
     #[ORM\Column]
@@ -83,7 +109,7 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    private ?string $client;
+    //private ?string $client;
     private ?string $gestionnaire;
 
     private ?Monnaie $monnaie_Affichage;
@@ -218,21 +244,8 @@ class Cotation
     public function setAssureur(?Assureur $assureur): self
     {
         $this->assureur = $assureur;
-
         return $this;
     }
-
-    // public function getValidated(): ?int
-    // {
-    //     return $this->validated;
-    // }
-
-    // public function setValidated(?int $validated): self
-    // {
-    //     $this->validated = $validated;
-
-    //     return $this;
-    // }
 
     /**
      * @return Collection<int, Revenu>
@@ -450,30 +463,6 @@ class Cotation
         return $this;
     }
 
-    /**
-     * Get the value of partenaire
-     */
-    public function getPartenaire()
-    {
-        if ($this->getPiste()) {
-            if ($this->getPiste()->getPartenaire()) {
-                $this->partenaire = $this->getPiste()->getPartenaire();
-            }
-        }
-        return $this->partenaire;
-    }
-
-    /**
-     * Set the value of partenaire
-     *
-     * @return  self
-     */
-    public function setPartenaire($partenaire)
-    {
-        $this->partenaire = $partenaire;
-
-        return $this;
-    }
 
     /**
      * Get the value of taxeCourtier
@@ -500,11 +489,14 @@ class Cotation
     {
         $taux = 0;
         if ($this->getTauxretrocompartenaire() == 0) {
-            $taux = $this->getPartenaire()->getPart();
+            if ($this->getPartenaire()) {
+                $taux = $this->getPartenaire()->getPart();
+            }
         } else {
             $taux = $this->getTauxretrocompartenaire();
         }
         $this->retroComPartenaire = $this->getRevenuNetTotalPartageable() * $taux;
+
         return $this->retroComPartenaire;
     }
 
@@ -684,17 +676,6 @@ class Cotation
     }
 
     /**
-     * Get the value of client
-     */
-    public function getClient()
-    {
-        if ($this->getPiste()) {
-            $this->client = $this->getPiste()->getClient();
-        }
-        return $this->client;
-    }
-
-    /**
      * Get the value of gestionnaire
      */
     public function getGestionnaire()
@@ -728,5 +709,230 @@ class Cotation
             $this->status = "";
         }
         return $this->status;
+    }
+
+    /**
+     * Get the value of police
+     */
+    public function getPolice()
+    {
+        return $this->police;
+    }
+
+    /**
+     * Set the value of police
+     *
+     * @return  self
+     */
+    public function setPolice($police)
+    {
+        $this->police = $police;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of partenaire
+     */
+    public function getPartenaire()
+    {
+        if ($this->getPiste()) {
+            $this->partenaire = $this->getPiste()->getPartenaire();
+        }
+        return $this->partenaire;
+    }
+
+    /**
+     * Set the value of partenaire
+     *
+     * @return  self
+     */
+    public function setPartenaire($partenaire)
+    {
+        $this->partenaire = $partenaire;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Set the value of client
+     *
+     * @return  self
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of produit
+     */
+    public function getProduit()
+    {
+        return $this->produit;
+    }
+
+    /**
+     * Set the value of produit
+     *
+     * @return  self
+     */
+    public function setProduit($produit)
+    {
+        $this->produit = $produit;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateEffet
+     */
+    public function getDateEffet()
+    {
+        return $this->dateEffet;
+    }
+
+    /**
+     * Set the value of dateEffet
+     *
+     * @return  self
+     */
+    public function setDateEffet($dateEffet)
+    {
+        $this->dateEffet = $dateEffet;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateExpiration
+     */
+    public function getDateExpiration()
+    {
+        return $this->dateExpiration;
+    }
+
+    /**
+     * Set the value of dateExpiration
+     *
+     * @return  self
+     */
+    public function setDateExpiration($dateExpiration)
+    {
+        $this->dateExpiration = $dateExpiration;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateOperation
+     */
+    public function getDateOperation()
+    {
+        return $this->dateOperation;
+    }
+
+    /**
+     * Set the value of dateOperation
+     *
+     * @return  self
+     */
+    public function setDateOperation($dateOperation)
+    {
+        $this->dateOperation = $dateOperation;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of dateEmition
+     */
+    public function getDateEmition()
+    {
+        return $this->dateEmition;
+    }
+
+    /**
+     * Set the value of dateEmition
+     *
+     * @return  self
+     */
+    public function setDateEmition($dateEmition)
+    {
+        $this->dateEmition = $dateEmition;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of commissionTotaleTTC
+     */
+    public function getCommissionTotaleTTC()
+    {
+        $this->commissionTotaleTTC = $this->getTaxeAssureurTotal() + $this->getRevenuTotalHT();
+        return $this->commissionTotaleTTC;
+    }
+
+    /**
+     * Get the value of taxeAssureurTotal
+     */
+    public function getTaxeAssureurTotal()
+    {
+        if ($this->getEntreprise()) {
+            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                if ($taxe->isPayableparcourtier() == false) {
+                    if ($this->getPiste()->getClient()->isExoneree()) {
+                        $this->taxeAssureurTotal = (0 * $this->getRevenuTotalHT()) / 100;
+                        break;
+                    } else {
+                        if ($this->getPiste()->getProduit()->isIard()) {
+                            $this->taxeAssureurTotal = ($taxe->getTauxIARD() * $this->getRevenuTotalHT()) / 100;
+                            break;
+                        } else {
+                            $this->taxeAssureurTotal = ($taxe->getTauxVIE() * $this->getRevenuTotalHT()) / 100;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return $this->taxeAssureurTotal;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotal
+     */ 
+    public function getTaxeCourtierTotal()
+    {
+        if ($this->getEntreprise()) {
+            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
+                if ($taxe->isPayableparcourtier() == true) {
+                    if ($this->getPiste()->getClient()->isExoneree()) {
+                        $this->taxeCourtierTotal = (0 * $this->getRevenuTotalHT()) / 100;
+                        break;
+                    } else {
+                        if ($this->getPiste()->getProduit()->isIard()) {
+                            $this->taxeCourtierTotal = ($taxe->getTauxIARD() * $this->getRevenuTotalHT()) / 100;
+                            break;
+                        } else {
+                            $this->taxeCourtierTotal = ($taxe->getTauxVIE() * $this->getRevenuTotalHT()) / 100;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return $this->taxeCourtierTotal;
     }
 }

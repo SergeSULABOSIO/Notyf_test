@@ -10,8 +10,6 @@ use App\Entity\Monnaie;
 use App\Entity\Cotation;
 use App\Entity\Paiement;
 use App\Entity\ActionCRM;
-use App\Entity\Entreprise;
-use App\Entity\Preference;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
@@ -23,8 +21,6 @@ use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Boolean;
-use Symfony\Bundle\SecurityBundle\Security;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
@@ -38,16 +34,13 @@ use App\Entity\DocPiece;
 use App\Entity\Partenaire;
 use App\Entity\Revenu;
 use App\Entity\Tranche;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityBuiltEvent;
-use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
-class AdminSubscriber implements EventSubscriberInterface
+class LoeilDeDieu implements EventSubscriberInterface
 {
 
     public function __construct(
@@ -73,15 +66,6 @@ class AdminSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /* public function updateCalculableFiledsOnPoliceEntity(AfterEntityBuiltEvent $event)
-    {
-        //dd($event);
-        $entityInstance = $event->getEntity()->getInstance();
-        //dd($entityInstance->getReference());
-        if($entityInstance instanceof Police){
-            $this->serviceCalculateur->updatePoliceCalculableFileds($entityInstance);
-        }
-    } */
 
     public function setCreatedAt(BeforeEntityPersistedEvent $event)
     {
@@ -152,7 +136,7 @@ class AdminSubscriber implements EventSubscriberInterface
                 $contact->setEntreprise($this->serviceEntreprise->getEntreprise());
             }
 
-            //Les documents de la cotation
+            //Les documents de la document
             foreach ($piste->getDocuments() as $document) {
                 if ($isCreate || $document->getCreatedAt() == null) {
                     $document->setCreatedAt(new \DateTimeImmutable());
@@ -354,7 +338,7 @@ class AdminSubscriber implements EventSubscriberInterface
                         }
                     }
                     //On marque la cotation retenue
-                    $this->setValidatedQuote($piste, $policeRetenue);
+                    $this->updateValidatedQuote($piste, $policeRetenue);
                     //dd($cotationValidee);
                     //dd($policeRetenue);
                 }
@@ -457,17 +441,35 @@ class AdminSubscriber implements EventSubscriberInterface
     }
 
 
-    private function setValidatedQuote(?Piste $piste, ?Police $policeRetenue)
+    private function updateValidatedQuote(?Piste $piste, ?Police $policeRetenue)
     {
         //On définit sa cotation comme étant validée
         foreach ($piste->getCotations() as $quote) {
             if ($policeRetenue->getCotation()) {
                 if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
                     $quote->setValidated(false);
+                    $quote->setPolice(null);
+                    $quote->setPartenaire(null);
+                    $quote->setClient(null);
+                    $quote->setProduit(null);
+                    $quote->setDateEffet(null);
+                    $quote->setDateExpiration(null);
+                    $quote->setDateOperation(null);
+                    $quote->setDateEmition(null);
+
                     $this->entityManager->persist($quote);
                     $this->entityManager->flush();
                 } else {
                     $quote->setValidated(true);
+                    $quote->setPolice($policeRetenue);
+                    $quote->setPartenaire($piste->getPartenaire());
+                    $quote->setClient($piste->getClient());
+                    $quote->setProduit($piste->getProduit());
+                    $quote->setDateEffet($policeRetenue->getDateeffet());
+                    $quote->setDateExpiration($policeRetenue->getDateexpiration());
+                    $quote->setDateOperation($policeRetenue->getDateoperation());
+                    $quote->setDateEmition($policeRetenue->getDateemission());
+
                     $this->entityManager->persist($quote);
                     $this->entityManager->flush();
                 }

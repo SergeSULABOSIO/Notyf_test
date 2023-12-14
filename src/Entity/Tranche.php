@@ -35,8 +35,6 @@ class Tranche
     /**
      * Les attributs non mappées
      */
-    private ?\DateTimeImmutable $startedAt = null;
-    private ?\DateTimeImmutable $endedAt = null;
     private ?string $description;
     private ?string $codeMonnaieAffichage;
     //valeurs monnétaires caculables
@@ -58,7 +56,13 @@ class Tranche
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
-
+    private ?\DateTimeImmutable $startedAt = null;
+    private ?\DateTimeImmutable $endedAt = null;
+    private ?\DateTimeImmutable $dateEffet = null;
+    private ?\DateTimeImmutable $dateExpiration = null;
+    private ?\DateTimeImmutable $dateOperation = null;
+    private ?\DateTimeImmutable $dateEmition = null;
+    
 
     public function getId(): ?int
     {
@@ -319,8 +323,8 @@ class Tranche
      */
     public function getPrimeTotale()
     {
-        if ($this->getPolice() != null) {
-            $this->primeTotale = $this->getPolice()->getPrimeTotale() * $this->getTaux();
+        if ($this->getCotation() != null) {
+            $this->primeTotale = $this->getCotation()->getPrimeTotale() * $this->getTaux();
         }
         return $this->primeTotale;
     }
@@ -330,8 +334,8 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        if ($this->getPolice() != null) {
-            $this->commissionTotale = $this->getPolice()->getCommissionTotaleTTC() * $this->getTaux();
+        if ($this->getCotation() != null) {
+            $this->commissionTotale = $this->getCotation()->getCommissionTotaleTTC() * $this->getTaux();
         }
         return $this->commissionTotale;
     }
@@ -341,8 +345,8 @@ class Tranche
      */
     public function getRetroCommissionTotale()
     {
-        if ($this->getPolice() != null) {
-            $this->retroCommissionTotale = $this->getPolice()->getRetroComPartenaire() * $this->getTaux();
+        if ($this->getCotation() != null) {
+            $this->retroCommissionTotale = $this->getCotation()->getRetroComPartenaire() * $this->getTaux();
         }
         return $this->retroCommissionTotale;
     }
@@ -352,8 +356,8 @@ class Tranche
      */
     public function getTaxeCourtierTotale()
     {
-        if ($this->getPolice() != null) {
-            $this->taxeCourtierTotale = $this->getPolice()->getTaxeCourtierTotale() * $this->getTaux();
+        if ($this->getCotation() != null) {
+            $this->taxeCourtierTotale = $this->getCotation()->getTaxeCourtierTotale() * $this->getTaux();
         }
         return $this->taxeCourtierTotale;
     }
@@ -363,8 +367,8 @@ class Tranche
      */
     public function getTaxeAssureurTotale()
     {
-        if ($this->getPolice() != null) {
-            $this->taxeAssureurTotale = $this->getPolice()->getTaxeAssureur() * $this->getTaux();
+        if ($this->getCotation() != null) {
+            $this->taxeAssureurTotale = $this->getCotation()->getTaxeAssureurTotal() * $this->getTaux();
         }
         return $this->taxeAssureurTotale;
     }
@@ -466,5 +470,49 @@ class Tranche
             $this->validee = $this->getCotation()->isValidated();
         }
         return $this->validee;
+    }
+
+    /**
+     * Get the value of dateEffet
+     */ 
+    public function getDateEffet()
+    {
+        if ($this->getCotation() != null) {
+            $this->dateEffet = $this->getCotation()->getDateEffet();
+        }
+        return $this->dateEffet;
+    }
+
+    /**
+     * Get the value of dateExpiration
+     */ 
+    public function getDateExpiration()
+    {
+        if ($this->getCotation() != null) {
+            $this->dateExpiration = $this->getCotation()->getDateExpiration();
+        }
+        return $this->dateExpiration;
+    }
+
+    /**
+     * Get the value of dateOperation
+     */ 
+    public function getDateOperation()
+    {
+        if ($this->getCotation() != null) {
+            $this->dateOperation = $this->getCotation()->getDateOperation();
+        }
+        return $this->dateOperation;
+    }
+
+    /**
+     * Get the value of dateEmition
+     */ 
+    public function getDateEmition()
+    {
+        if ($this->getCotation() != null) {
+            $this->dateEmition = $this->getCotation()->getDateEmition();
+        }
+        return $this->dateEmition;
     }
 }

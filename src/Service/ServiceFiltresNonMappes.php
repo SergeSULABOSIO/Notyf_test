@@ -129,7 +129,7 @@ class ServiceFiltresNonMappes
      * @param FilterCollection $filters
      * @return QueryBuilder
      */
-    public function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters, ?EcouteurServiceFiltresNonMappes $ecouteur): QueryBuilder
+    public function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters, callable $ecouteur): QueryBuilder
     {
         //validee
         $data = $this->retirerCritere('validee', true, $searchDto);
@@ -158,7 +158,7 @@ class ServiceFiltresNonMappes
 
 
         //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        $defaultQueryBuilder = $ecouteur->genererQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $defaultQueryBuilder = $ecouteur($searchDto, $entityDto, $fields, $filters);
         //Exécution des requêtes de jointures
         //critere Validee
         if ($this->canExcuterJointure($validee)) {

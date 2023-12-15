@@ -12,10 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 
 abstract class EcouteurServiceFiltresNonMappes
 {
-    public function __construct() {
-
-    }
-
     public abstract function genererQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder;
     //public abstract function genererQueryBuilder(): QueryBuilder;
 }

@@ -66,11 +66,11 @@ class TrancheCrudController extends AbstractCrudController
     {
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-
-        
         
         //On applique le critère basé sur les attributs non mappés dans l'entité
-        $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters, $ecouteur);
+        $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters, function (SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder{
+            return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        });
         
         //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
@@ -83,68 +83,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setParameter('ese', $connected_entreprise);
     }
 
-    // /**
-    //  * Cette fonction permet de définir comme l'un des critères un champ non mappé dans l'entité.
-    //  * En réalité, on lancera une autre requête SQL séparée et fera la jointure.
-    //  *
-    //  * @param SearchDto $searchDto
-    //  * @param EntityDto $entityDto
-    //  * @param FieldCollection $fields
-    //  * @param FilterCollection $filters
-    //  * @return QueryBuilder
-    //  */
-    // private function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
-    // {
-    //     //validee
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('validee', true, $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $validee = $data['criterRetire'];
-    //     //police
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('police', [], $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $police = $data['criterRetire'];
-    //     //client
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('client', [], $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $client = $data['criterRetire'];
-    //     //partenaire
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('partenaire', [], $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $partenaire = $data['criterRetire'];
-    //     //produit
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('produit', [], $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $produit = $data['criterRetire'];
-    //     //assureur
-    //     $data = $this->serviceFiltresNonMappes->retirerCritere('assureur', [], $searchDto);
-    //     $searchDto = $data['searchDto'];
-    //     $assureur = $data['criterRetire'];
-
-
-    //     $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-    //     //Exécution des requêtes de jointures
-    //     //critere Validee
-    //     if ($this->serviceFiltresNonMappes->canExcuterJointure($validee)) {
-    //         $defaultQueryBuilder->join('entity.cotation', 'requete1')
-    //             ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
-    //             ->setParameter('validee', $validee);
-    //     }
-    //     //critere Police
-    //     if ($this->serviceFiltresNonMappes->canExcuterJointure($police)) {
-    //         $defaultQueryBuilder->join('entity.cotation', 'requete2')
-    //             ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
-    //             ->setParameter('police', $police);
-    //     }
-    //     //critere Client
-    //     if ($this->serviceFiltresNonMappes->canExcuterJointure($client)) {
-    //         $defaultQueryBuilder->join('entity.cotation', 'requete3')
-    //             ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
-    //             ->setParameter('client', $client);
-    //     }
-    //     //ici
-    //     return $defaultQueryBuilder;
-    // }
-
+    
     function configureFilters(Filters $filters): Filters
     {
         if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {

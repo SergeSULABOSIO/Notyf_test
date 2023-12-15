@@ -67,11 +67,11 @@ class TrancheCrudController extends AbstractCrudController
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
 
-        ici
-        $ecouteur = new EcouteurServiceFiltresNonMappes();
+        
+        
         //On applique le critère basé sur les attributs non mappés dans l'entité
         $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters, $ecouteur);
-
+        
         //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder

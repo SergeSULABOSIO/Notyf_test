@@ -158,7 +158,7 @@ class ServiceFiltresNonMappes
 
 
         //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        $defaultQueryBuilder = $ecouteur->genererQueryBuilder();
+        $defaultQueryBuilder = $ecouteur->genererQueryBuilder($searchDto, $entityDto, $fields, $filters);
         //Exécution des requêtes de jointures
         //critere Validee
         if ($this->canExcuterJointure($validee)) {

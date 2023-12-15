@@ -18,6 +18,7 @@ use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\EcouteurServiceFiltresNonMappes;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -116,5 +117,68 @@ class ServiceFiltresNonMappes
             }
         }
         return $reponse;
+    }
+
+    /**
+     * Cette fonction permet de définir comme l'un des critères un champ non mappé dans l'entité.
+     * En réalité, on lancera une autre requête SQL séparée et fera la jointure.
+     *
+     * @param SearchDto $searchDto
+     * @param EntityDto $entityDto
+     * @param FieldCollection $fields
+     * @param FilterCollection $filters
+     * @return QueryBuilder
+     */
+    public function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters, ?EcouteurServiceFiltresNonMappes $ecouteur): QueryBuilder
+    {
+        //validee
+        $data = $this->retirerCritere('validee', true, $searchDto);
+        $searchDto = $data['searchDto'];
+        $validee = $data['criterRetire'];
+        //police
+        $data = $this->retirerCritere('police', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $police = $data['criterRetire'];
+        //client
+        $data = $this->retirerCritere('client', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $client = $data['criterRetire'];
+        //partenaire
+        $data = $this->retirerCritere('partenaire', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $partenaire = $data['criterRetire'];
+        //produit
+        $data = $this->retirerCritere('produit', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $produit = $data['criterRetire'];
+        //assureur
+        $data = $this->retirerCritere('assureur', [], $searchDto);
+        $searchDto = $data['searchDto'];
+        $assureur = $data['criterRetire'];
+
+
+        //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $defaultQueryBuilder = $ecouteur->genererQueryBuilder();
+        //Exécution des requêtes de jointures
+        //critere Validee
+        if ($this->canExcuterJointure($validee)) {
+            $defaultQueryBuilder->join('entity.cotation', 'requete1')
+                ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
+                ->setParameter('validee', $validee);
+        }
+        //critere Police
+        if ($this->canExcuterJointure($police)) {
+            $defaultQueryBuilder->join('entity.cotation', 'requete2')
+                ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
+                ->setParameter('police', $police);
+        }
+        //critere Client
+        if ($this->canExcuterJointure($client)) {
+            $defaultQueryBuilder->join('entity.cotation', 'requete3')
+                ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
+                ->setParameter('client', $client);
+        }
+        //ici
+        return $defaultQueryBuilder;
     }
 }

@@ -121,23 +121,24 @@ class TrancheCrudController extends AbstractCrudController
         $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         //Exécution des requêtes de jointures
         //critere Validee
-        if (isset($validee)) {
+        if ($this->serviceFiltresNonMappes->canExcuterJointure($validee)) {
             $defaultQueryBuilder->join('entity.cotation', 'requete1')
                 ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
                 ->setParameter('validee', $validee);
         }
         //critere Police
-        if (count($police)) {
+        if ($this->serviceFiltresNonMappes->canExcuterJointure($police)) {
             $defaultQueryBuilder->join('entity.cotation', 'requete2')
                 ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
                 ->setParameter('police', $police);
         }
         //critere Client
-        if (count($client)) {
+        if ($this->serviceFiltresNonMappes->canExcuterJointure($client)) {
             $defaultQueryBuilder->join('entity.cotation', 'requete3')
                 ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
                 ->setParameter('client', $client);
         }
+        //ici
         return $defaultQueryBuilder;
     }
 

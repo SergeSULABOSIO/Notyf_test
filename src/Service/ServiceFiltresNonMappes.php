@@ -97,9 +97,24 @@ class ServiceFiltresNonMappes
             );
         }
         return [
-            'searchDto' => $searchDto, 
+            'searchDto' => $searchDto,
             'criterRetire' => $criterRetire
         ];
         //return $criterRetire;
+    }
+
+    public function canExcuterJointure($critere): bool
+    {
+        $reponse = false;
+        if (is_array($critere)) {
+            if (count($critere)) {
+                $reponse = true;
+            }
+        } else {
+            if (isset($critere)) {
+                $reponse = true;
+            }
+        }
+        return $reponse;
     }
 }

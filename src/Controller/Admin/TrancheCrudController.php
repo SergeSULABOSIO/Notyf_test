@@ -66,7 +66,7 @@ class TrancheCrudController extends AbstractCrudController
     {
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-        
+
         //On applique le critère basé sur les attributs non mappés dans l'entité
         $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters, function (SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder{
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
@@ -83,7 +83,6 @@ class TrancheCrudController extends AbstractCrudController
             ->setParameter('ese', $connected_entreprise);
     }
 
-    
     function configureFilters(Filters $filters): Filters
     {
         if ($this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])) {

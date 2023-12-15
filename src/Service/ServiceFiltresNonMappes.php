@@ -156,7 +156,6 @@ class ServiceFiltresNonMappes
         $searchDto = $data['searchDto'];
         $assureur = $data['criterRetire'];
 
-
         //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         $defaultQueryBuilder = $ecouteur($searchDto, $entityDto, $fields, $filters);
         //Exécution des requêtes de jointures

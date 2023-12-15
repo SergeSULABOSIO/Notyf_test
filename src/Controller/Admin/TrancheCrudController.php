@@ -68,10 +68,16 @@ class TrancheCrudController extends AbstractCrudController
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
 
         //On applique le critère basé sur les attributs non mappés dans l'entité
-        $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes($searchDto, $entityDto, $fields, $filters, function (SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder{
-            return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        });
-        
+        $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes(
+            $searchDto,
+            $entityDto,
+            $fields,
+            $filters,
+            function (SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder {
+                return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+            }
+        );
+
         //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder

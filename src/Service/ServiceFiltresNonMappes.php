@@ -33,6 +33,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class ServiceFiltresNonMappes
 {
 
+    private ?array $criteresNonMappes = [];
+
     public function __construct(
         private ServiceEntreprise $serviceEntreprise,
     ) {
@@ -65,19 +67,31 @@ class ServiceFiltresNonMappes
             ->setFormTypeOption('value_type_options.multiple', false);
     }
 
-    public function definirFiltreNonMappe(Filters $filters): Filters
+    public function definirFiltreNonMappe(array $criteresNonMappes, Filters $filters): Filters
     {
+        $this->criteresNonMappes = $criteresNonMappes;
+        foreach ($this->criteresNonMappes as $attribut => $parametres) {
+            if (is_bool($parametres["defaultValue"])) {
+                $filters->add($this->getFiltreBooleanNonMappe($attribut, $parametres["label"], $parametres["options"]));
+            } else {
+                $filters->add($this->getFiltreEntiteNonMappe($attribut, $parametres["label"], $parametres["multipleChoices"], $parametres["class"]));
+            }
+        }
+
+
         return $filters
             //Par validité //$this->
-            ->add($this->getFiltreBooleanNonMappe("validee", "Validée?", [
-                "Oui" => true,
-                "Non" => false,
-            ]))
-            ->add($this->getFiltreEntiteNonMappe("police", "Police", true, Police::class))
-            ->add($this->getFiltreEntiteNonMappe("client", "Client", true, Client::class))
-            ->add($this->getFiltreEntiteNonMappe("produit", "Produit", true, Produit::class))
-            ->add($this->getFiltreEntiteNonMappe("assureur", "Assureur", true, Assureur::class))
-            ->add($this->getFiltreEntiteNonMappe("partenaire", "Partenaire", true, Partenaire::class));
+            // ->add($this->getFiltreBooleanNonMappe("validated", "Validée?", [
+            //     "Oui" => true,
+            //     "Non" => false,
+            // ]))
+            // ->add($this->getFiltreEntiteNonMappe("police", "Police", true, Police::class))
+            // ->add($this->getFiltreEntiteNonMappe("client", "Client", true, Client::class))
+            // ->add($this->getFiltreEntiteNonMappe("produit", "Produit", true, Produit::class))
+            // ->add($this->getFiltreEntiteNonMappe("assureur", "Assureur", true, Assureur::class))
+            // ->add($this->getFiltreEntiteNonMappe("partenaire", "Partenaire", true, Partenaire::class))
+            //
+        ;
     }
 
     public function retirerCritere(?string $attributARetirer, $valeurParDefaut, SearchDto $searchDto)
@@ -85,7 +99,9 @@ class ServiceFiltresNonMappes
         $criterRetire = $valeurParDefaut; //Par defaut on ne filtre qu'avec le critère TRUE
         if (isset($searchDto->getAppliedFilters()[$attributARetirer])) {
             $appliedFilters = $searchDto->getAppliedFilters();
-            $criterRetire = $appliedFilters[$attributARetirer]['value'];
+            if (isset($appliedFilters[$attributARetirer]['value'])) {
+                $criterRetire = $appliedFilters[$attributARetirer]['value'];
+            }
             unset($appliedFilters[$attributARetirer]);
 
             $searchDto = new SearchDto(
@@ -119,6 +135,21 @@ class ServiceFiltresNonMappes
         return $reponse;
     }
 
+    public function getOperateur($critere): string
+    {
+        //dd($critere);
+        $operateur = "=";
+        if ($critere != null) {
+            if (is_array($critere)) {
+                $operateur = "IN";
+                //dd($critere);
+            } else {
+                $operateur = "=";
+            }
+        }
+        return $operateur;
+    }
+
     /**
      * Cette fonction permet de définir comme l'un des critères un champ non mappé dans l'entité.
      * En réalité, on lancera une autre requête SQL séparée et fera la jointure.
@@ -131,52 +162,82 @@ class ServiceFiltresNonMappes
      */
     public function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters, callable $ecouteur): QueryBuilder
     {
+        //On retire les critères non mappés
+        //dd($this->criteresNonMappes);
+        foreach ($this->criteresNonMappes as $attribut => $parametres) {
+            $data = $this->retirerCritere($attribut, $parametres["defaultValue"], $searchDto);
+            $searchDto = $data['searchDto'];
+            $this->criteresNonMappes[$attribut]["userValues"] = $data['criterRetire'];
+        }
+        //dd($this->criteresNonMappes);
         //validee
-        $data = $this->retirerCritere('validee', true, $searchDto);
-        $searchDto = $data['searchDto'];
-        $validee = $data['criterRetire'];
+        // $data = $this->retirerCritere('validated', true, $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $validee = $data['criterRetire'];
         //police
-        $data = $this->retirerCritere('police', [], $searchDto);
-        $searchDto = $data['searchDto'];
-        $police = $data['criterRetire'];
-        //client
-        $data = $this->retirerCritere('client', [], $searchDto);
-        $searchDto = $data['searchDto'];
-        $client = $data['criterRetire'];
-        //partenaire
-        $data = $this->retirerCritere('partenaire', [], $searchDto);
-        $searchDto = $data['searchDto'];
-        $partenaire = $data['criterRetire'];
-        //produit
-        $data = $this->retirerCritere('produit', [], $searchDto);
-        $searchDto = $data['searchDto'];
-        $produit = $data['criterRetire'];
-        //assureur
-        $data = $this->retirerCritere('assureur', [], $searchDto);
-        $searchDto = $data['searchDto'];
-        $assureur = $data['criterRetire'];
-
+        // $data = $this->retirerCritere('police', [], $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $police = $data['criterRetire'];
+        //dd($police);
+        // //client
+        // $data = $this->retirerCritere('client', [], $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $client = $data['criterRetire'];
+        // //partenaire
+        // $data = $this->retirerCritere('partenaire', [], $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $partenaire = $data['criterRetire'];
+        // //produit
+        // $data = $this->retirerCritere('produit', [], $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $produit = $data['criterRetire'];
+        // //assureur
+        // $data = $this->retirerCritere('assureur', [], $searchDto);
+        // $searchDto = $data['searchDto'];
+        // $assureur = $data['criterRetire'];
+        //dd($filters);
         //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
         $defaultQueryBuilder = $ecouteur($searchDto, $entityDto, $fields, $filters);
+
         //Exécution des requêtes de jointures
-        //critere Validee
-        if ($this->canExcuterJointure($validee)) {
-            $defaultQueryBuilder->join('entity.cotation', 'requete1')
-                ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
-                ->setParameter('validee', $validee);
+        $indiceRequete = 1;
+        //dd($this->criteresNonMappes);
+        foreach ($this->criteresNonMappes as $attribut => $parametres) {
+            if ($this->canExcuterJointure($parametres["userValues"])) {
+                $nomRequete = 'requete' . $indiceRequete;
+                $operateur = $this->getOperateur($parametres["userValues"]);
+
+                // if($operateur == "IN"){
+                //     dd($nomRequete . '.' . $attribut . ' ' . $operateur . ' (:userValues)');
+                // }
+
+                $defaultQueryBuilder->join('entity.' . $parametres["joiningEntity"], $nomRequete)
+                    ->andWhere($nomRequete . '.' . $attribut . '.id ' . $operateur . ' (:userValues)') //si validee n'est pas un tableau
+                    ->setParameter('userValues', $parametres["userValues"]);
+            }
+            $indiceRequete = $indiceRequete + 1;
         }
+        //dd($this->criteresNonMappes);
+        //dd($defaultQueryBuilder);
+        // //critere Validee
+        // if ($this->canExcuterJointure($validee)) {
+        //     $defaultQueryBuilder->join('entity.cotation', 'requete1')
+        //         ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
+        //         ->setParameter('validee', $validee);
+        // }
         //critere Police
-        if ($this->canExcuterJointure($police)) {
-            $defaultQueryBuilder->join('entity.cotation', 'requete2')
-                ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
-                ->setParameter('police', $police);
-        }
-        //critere Client
-        if ($this->canExcuterJointure($client)) {
-            $defaultQueryBuilder->join('entity.cotation', 'requete3')
-                ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
-                ->setParameter('client', $client);
-        }
+        // if ($this->canExcuterJointure($police)) {
+        //     $defaultQueryBuilder->join('entity.cotation', 'requete2')
+        //         ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
+        //         ->setParameter('police', $police);
+        // }
+        // //critere Client
+        // if ($this->canExcuterJointure($client)) {
+        //     $defaultQueryBuilder->join('entity.cotation', 'requete3')
+        //         ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
+        //         ->setParameter('client', $client);
+        // }
         //ici
         return $defaultQueryBuilder;
     }

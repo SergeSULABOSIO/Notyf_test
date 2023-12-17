@@ -48,7 +48,7 @@ class Tranche
     private ?string $periodeValidite;
     private ?string $autoriteTaxeCourtier;
     private ?string $autoriteTaxeAssureur;
-    private ?bool $validee;
+    private ?bool $validated;
     //Les objets
     private ?Monnaie $monnaie_Affichage;
     private ?Client $client;
@@ -461,17 +461,7 @@ class Tranche
         return $this->autoriteTaxeAssureur;
     }
 
-    /**
-     * Get the value of validee
-     */
-    public function getValidee()
-    {
-        if ($this->getCotation() != null) {
-            $this->validee = $this->getCotation()->isValidated();
-        }
-        return $this->validee;
-    }
-
+    
     /**
      * Get the value of dateEffet
      */ 
@@ -514,5 +504,16 @@ class Tranche
             $this->dateEmition = $this->getCotation()->getDateEmition();
         }
         return $this->dateEmition;
+    }
+
+    /**
+     * Get the value of validated
+     */ 
+    public function getValidated()
+    {
+        if ($this->getCotation() != null) {
+            $this->validated = $this->getCotation()->isValidated();
+        }
+        return $this->validated;
     }
 }

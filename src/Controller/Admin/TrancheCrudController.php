@@ -38,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\ChoiceFilterType;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -96,8 +97,67 @@ class TrancheCrudController extends AbstractCrudController
         }
 
         //FILTRES BASES SUR LES ATTRIBUTS NON MAPPES
-        $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($filters);
-
+        $criteresNonMappes = [
+            // "validated" => [
+            //     "label" => "Validée?",
+            //     "class" => null,
+            //     "defaultValue" => true,
+            //     "userValues" => null,
+            //     "options" => [
+            //         "Oui" => true,
+            //         "Non" => false,
+            //     ],
+            //     "multipleChoices" => false,
+            //     "joiningEntity" => "cotation",
+            // ],
+            // "police" => [
+            //     "label" => "Polices",
+            //     "class" => Police::class,
+            //     "defaultValue" => [],
+            //     "userValues" => [],
+            //     "options" => [],
+            //     "multipleChoices" => true,
+            //     "joiningEntity" => "cotation",
+            // ],
+            // "client" => [
+            //     "label" => "Clients",
+            //     "class" => Client::class,
+            //     "defaultValue" => [],
+            //     "userValues" => [],
+            //     "options" => [],
+            //     "multipleChoices" => true,
+            //     "joiningEntity" => "cotation",
+            // ],
+            // "partenaire" => [
+            //     "label" => "Partenaires",
+            //     "class" => Partenaire::class,
+            //     "defaultValue" => [],
+            //     "userValues" => [],
+            //     "options" => [],
+            //     "multipleChoices" => true,
+            //     "joiningEntity" => "cotation",
+            // ],
+            // "produit" => [
+            //     "label" => "Produits",
+            //     "class" => Produit::class,
+            //     "defaultValue" => [],
+            //     "userValues" => [],
+            //     "options" => [],
+            //     "multipleChoices" => true,
+            //     "joiningEntity" => "cotation",
+            // ],
+            // "assureur" => [
+            //     "label" => "Assureurs",
+            //     "class" => Assureur::class,
+            //     "defaultValue" => [],
+            //     "userValues" => [],
+            //     "options" => [],
+            //     "multipleChoices" => true,
+            //     "joiningEntity" => "cotation",
+            // ],
+        ];
+        $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($criteresNonMappes, $filters);
+        //dd($filters);
         return $filters
             //->add('expiredAt')
             //->add('etape')

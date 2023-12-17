@@ -859,7 +859,7 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Details($tabAttributs)
     {
-        $tabAttributs[] = BooleanField::new('validee', "Validée")
+        $tabAttributs[] = BooleanField::new('validated', "Validée")
             ->renderAsSwitch(false)
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('periodeValidite', "Période")
@@ -1516,7 +1516,7 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        $tabAttributs[] = BooleanField::new('validee', "Validée")
+        $tabAttributs[] = BooleanField::new('validated', "Validée")
             ->renderAsSwitch(false)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('periodeValidite', "Période")

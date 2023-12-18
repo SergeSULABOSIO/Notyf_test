@@ -444,29 +444,29 @@ class LoeilDeDieu implements EventSubscriberInterface
     private function updateValidatedQuote(?Piste $piste, ?Police $policeRetenue)
     {
         //On définit sa cotation comme étant validée
-        foreach ($piste->getCotations() as $quote) {
-            if ($policeRetenue->getCotation()) {
-                if ($quote->getId() != $policeRetenue->getCotation()->getId()) {
-                    $quote->setValidated(false);
-                    $quote->setPolice(null);
-                    $quote->setDateEffet(null);
-                    $quote->setDateExpiration(null);
-                    $quote->setDateOperation(null);
-                    $quote->setDateEmition(null);
-                } else {
+        if ($policeRetenue->getCotation()) {
+            foreach ($piste->getCotations() as $quote) {
+                if ($quote->getId() == $policeRetenue->getCotation()->getId()) {
                     $quote->setValidated(true);
                     $quote->setPolice($policeRetenue);
                     $quote->setDateEffet($policeRetenue->getDateeffet());
                     $quote->setDateExpiration($policeRetenue->getDateexpiration());
                     $quote->setDateOperation($policeRetenue->getDateoperation());
                     $quote->setDateEmition($policeRetenue->getDateemission());
+                } else {
+                    $quote->setValidated(false);
+                    $quote->setPolice(null);
+                    $quote->setDateEffet(null);
+                    $quote->setDateExpiration(null);
+                    $quote->setDateOperation(null);
+                    $quote->setDateEmition(null);
                 }
-                $quote->setPartenaire($piste->getPartenaire());
-                $quote->setClient($piste->getClient());
-                $quote->setProduit($piste->getProduit());
-                $this->entityManager->persist($quote);
-                $this->entityManager->flush();
             }
+            $quote->setPartenaire($piste->getPartenaire());
+            $quote->setClient($piste->getClient());
+            $quote->setProduit($piste->getProduit());
+            $this->entityManager->persist($quote);
+            $this->entityManager->flush();
         }
     }
 

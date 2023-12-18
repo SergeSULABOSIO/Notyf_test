@@ -511,10 +511,14 @@ class Cotation
             foreach ($this->getRevenus() as $revenu) {
                 if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                     $tauxTaxe = 0;
-                    if ($this->getPiste()->getProduit()->isIard()) {
-                        $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
-                    } else {
-                        $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+                    if ($this->getPiste() && $this->getTaxeCourtier()) {
+                        if ($this->getPiste()->getProduit()) {
+                            if ($this->getPiste()->getProduit()->isIard()) {
+                                $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
+                            } else {
+                                $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+                            }
+                        }
                     }
                     $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
                 }
@@ -575,11 +579,18 @@ class Cotation
                 if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                     if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
                         $tauxTaxe = 0;
-                        if ($this->getPiste()->getProduit()->isIard()) {
-                            $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
-                        } else {
-                            $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+
+                        if ($this->getPiste() && $this->getTaxeCourtier()) {
+                            if ($this->getPiste()->getProduit()) {
+                                if ($this->getPiste()->getProduit()->isIard()) {
+                                    $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
+                                } else {
+                                    $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
+                                }
+                            }
                         }
+
+
                         $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
                     }
                 }
@@ -912,7 +923,7 @@ class Cotation
 
     /**
      * Get the value of taxeCourtierTotal
-     */ 
+     */
     public function getTaxeCourtierTotal()
     {
         if ($this->getEntreprise()) {

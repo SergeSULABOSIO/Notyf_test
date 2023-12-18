@@ -45,7 +45,7 @@ class Revenu
 
     #[ORM\Column]
     private ?float $montantFlat = null;
-    
+
     private ?float $montant = null;
 
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
@@ -196,7 +196,7 @@ class Revenu
     private function getMonnaie($fonction)
     {
         //dd($this->getEntreprise());
-        if($this->getEntreprise()){
+        if ($this->getEntreprise()) {
             $tabMonnaies = $this->getEntreprise()->getMonnaies();
             //dd($tabMonnaies);
             //dd($fonction);
@@ -220,7 +220,7 @@ class Revenu
 
     /**
      * Get the value of monnaie_Affichage
-     */ 
+     */
     public function getMonnaie_Affichage()
     {
         $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
@@ -328,7 +328,7 @@ class Revenu
 
     /**
      * Get the value of description
-     */ 
+     */
     public function getDescription()
     {
         $strMonnaie = $this->getCodeMonnaieAffichage();
@@ -339,7 +339,7 @@ class Revenu
             }
         }
 
-        
+
         //On calcul le revennu total
         $data = $this->getComNette();
 
@@ -378,10 +378,10 @@ class Revenu
                         $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
                         if ($i == 1) {
                             $portions =  number_format($comTranche, 2, ",", ".") . $strMonnaie;
-                        }else{
-                            if($i == count($tabTranches)){
+                        } else {
+                            if ($i == count($tabTranches)) {
                                 $portions = $portions . " et " . $comTranche . $strMonnaie;
-                            }else{
+                            } else {
                                 $portions = $portions . ", " . $comTranche . $strMonnaie;
                             }
                         }
@@ -392,8 +392,16 @@ class Revenu
         }
 
         $strPartageable = " Non partageable.";
-        if ($this->getPartageable() == 1) {
-            $strPartageable = " Partageable avec " . $this->getCotation()->getPiste()->getPartenaire();
+        if ($this->getCotation()) {
+            if ($this->getCotation()->getPiste()) {
+                if ($this->getCotation()->getPiste()) {
+                    if ($this->getPartageable()) {
+                        if ($this->getPartageable() == 1) {
+                            $strPartageable = " Partageable avec " . $this->getCotation()->getPiste()->getPartenaire();
+                        }
+                    }
+                }
+            }
         }
         $this->description = $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
         return $this->description;
@@ -401,7 +409,7 @@ class Revenu
 
     /**
      * Get the value of montantFlat
-     */ 
+     */
     public function getMontantFlat()
     {
         return $this->montantFlat;
@@ -411,7 +419,7 @@ class Revenu
      * Set the value of montantFlat
      *
      * @return  self
-     */ 
+     */
     public function setMontantFlat($montantFlat)
     {
         $this->montantFlat = $montantFlat;

@@ -207,16 +207,12 @@ class ServiceFiltresNonMappes
             if ($this->canExcuterJointure($parametres["userValues"])) {
                 $nomRequete = 'requete' . $indiceRequete;
                 $operateur = $this->getOperateur($parametres["userValues"]);
-
-                // if($operateur == "IN"){
-                //     dd($nomRequete . '.' . $attribut . ' ' . $operateur . ' (:userValues)');
-                // }
-
-                $defaultQueryBuilder->join('entity.' . $parametres["joiningEntity"], $nomRequete)
-                    ->andWhere($nomRequete . '.' . $attribut . '.id ' . $operateur . ' (:userValues)') //si validee n'est pas un tableau
-                    ->setParameter('userValues', $parametres["userValues"]);
+                $defaultQueryBuilder
+                    ->join('entity.' . $parametres["joiningEntity"], $nomRequete)
+                    ->andWhere($nomRequete . '.' . $attribut . ' ' . $operateur . ' (:userValues'.$nomRequete.')') //si validee n'est pas un tableau
+                    ->setParameter('userValues'.$nomRequete, $parametres["userValues"]);
+                $indiceRequete = $indiceRequete + 1;
             }
-            $indiceRequete = $indiceRequete + 1;
         }
         //dd($this->criteresNonMappes);
         //dd($defaultQueryBuilder);

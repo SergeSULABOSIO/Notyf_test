@@ -153,7 +153,7 @@ class RevenuCrudController extends AbstractCrudController
         $objet->setTaxable(RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]);
         $objet->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
         $objet->setTaux(10);
-        $objet->setMontant(0);
+        $objet->setMontantFlat(0);
         $objet->setCreatedAt($this->serviceDates->aujourdhui());
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());

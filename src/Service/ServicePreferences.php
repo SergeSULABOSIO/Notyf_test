@@ -1403,6 +1403,7 @@ class ServicePreferences
 
     public function setFIN_Fields_Revenu_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        ici
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_REVENU_ID)
                 ->onlyOnIndex();

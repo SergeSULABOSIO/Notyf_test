@@ -61,6 +61,15 @@ class Cotation
     private ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Utilisateur $gestionnaire = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Utilisateur $assistant = null;
+
+
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
 
@@ -110,7 +119,7 @@ class Cotation
     private Collection $documents;
 
     //private ?string $client;
-    private ?string $gestionnaire;
+    //private ?string $gestionnaire;
 
     private ?Monnaie $monnaie_Affichage;
 
@@ -687,17 +696,6 @@ class Cotation
     }
 
     /**
-     * Get the value of gestionnaire
-     */
-    public function getGestionnaire()
-    {
-        if ($this->getPiste()) {
-            $this->gestionnaire = $this->getPiste()->getGestionnaire();
-        }
-        return $this->gestionnaire;
-    }
-
-    /**
      * Get the value of monnaie_Affichage
      */
     public function getMonnaie_Affichage()
@@ -945,5 +943,45 @@ class Cotation
             }
         }
         return $this->taxeCourtierTotal;
+    }
+
+    /**
+     * Get the value of gestionnaire
+     */ 
+    public function getGestionnaire()
+    {
+        return $this->gestionnaire;
+    }
+
+    /**
+     * Set the value of gestionnaire
+     *
+     * @return  self
+     */ 
+    public function setGestionnaire($gestionnaire)
+    {
+        $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of assistant
+     */ 
+    public function getAssistant()
+    {
+        return $this->assistant;
+    }
+
+    /**
+     * Set the value of assistant
+     *
+     * @return  self
+     */ 
+    public function setAssistant($assistant)
+    {
+        $this->assistant = $assistant;
+
+        return $this;
     }
 }

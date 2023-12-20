@@ -463,7 +463,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                     $quote->setDateExpiration(null);
                     $quote->setDateOperation(null);
                     $quote->setDateEmition(null);
-
+                    
                     //on ajuste les periodes de chaque tranche
                     $this->serviceDates->detruirePeriodesPourTranches($quote);
                 }
@@ -471,6 +471,8 @@ class LoeilDeDieu implements EventSubscriberInterface
             $quote->setPartenaire($piste->getPartenaire());
             $quote->setClient($piste->getClient());
             $quote->setProduit($piste->getProduit());
+            $quote->setGestionnaire($piste->getGestionnaire());
+            $quote->setAssistant($piste->getAssistant());
             $this->entityManager->persist($quote);
             $this->entityManager->flush();
         }

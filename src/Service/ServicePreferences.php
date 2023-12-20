@@ -966,7 +966,9 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+        $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_PRO_POLICE_GESTIONNAIRE)
+            ->onlyOnIndex();
+        $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_PRO_POLICE_ASSISTANT)
             ->onlyOnIndex();
         // $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
         //     ->onlyOnIndex();

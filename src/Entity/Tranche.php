@@ -56,11 +56,18 @@ class Tranche
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
+
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $endedAt = null;
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEffet = null;
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateExpiration = null;
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateOperation = null;
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
     
 
@@ -81,39 +88,6 @@ class Tranche
         return $this;
     }
 
-    public function getTotalDureeTranchesPrecedantes($indiceCourant)
-    {
-        $totalDureesCumulees = 0;
-        /** @var Tranche */
-        foreach ($this->getPolice()->getTranches() as $tranche) {
-            if ($this->getPolice()->getTranches()->indexOf($tranche) < $indiceCourant) {
-                $totalDureesCumulees = $totalDureesCumulees + $tranche->getDuree();
-            }
-        }
-        return $totalDureesCumulees;
-    }
-
-    public function getStartedAt(): ?\DateTimeInterface
-    {
-        /** @var Police */
-        $police = $this->getPolice();
-        //dd($indice);
-        if ($police != null) {
-            $indiceCourant = ($police->getTranches()->indexOf($this));
-            $dureesPrecedantes = $this->getTotalDureeTranchesPrecedantes($indiceCourant);
-            $this->startedAt = $police->getDateeffet()->add(new DateInterval("P" . ($dureesPrecedantes) . "M"));
-            $this->endedAt = $this->startedAt->add(new DateInterval("P" . ($this->getDuree()) . "M"));
-            $this->endedAt = $this->endedAt->modify("-1 day");
-        }
-        //dd($this->startedAt);
-        return $this->startedAt;
-    }
-
-    public function getEndedAt(): ?\DateTimeInterface
-    {
-        return $this->endedAt;
-    }
-
     /**
      * Get the value of police
      */
@@ -128,22 +102,6 @@ class Tranche
             }
         }
         return $this->police;
-    }
-
-    public function setStartedAt(\DateTimeInterface $startedAt): self
-    {
-        $this->startedAt = $startedAt;
-
-        return $this;
-    }
-
-
-
-    public function setEndedAt(\DateTimeInterface $endedAt): self
-    {
-        $this->endedAt = $endedAt;
-
-        return $this;
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -461,51 +419,6 @@ class Tranche
         return $this->autoriteTaxeAssureur;
     }
 
-    
-    /**
-     * Get the value of dateEffet
-     */ 
-    public function getDateEffet()
-    {
-        if ($this->getCotation() != null) {
-            $this->dateEffet = $this->getCotation()->getDateEffet();
-        }
-        return $this->dateEffet;
-    }
-
-    /**
-     * Get the value of dateExpiration
-     */ 
-    public function getDateExpiration()
-    {
-        if ($this->getCotation() != null) {
-            $this->dateExpiration = $this->getCotation()->getDateExpiration();
-        }
-        return $this->dateExpiration;
-    }
-
-    /**
-     * Get the value of dateOperation
-     */ 
-    public function getDateOperation()
-    {
-        if ($this->getCotation() != null) {
-            $this->dateOperation = $this->getCotation()->getDateOperation();
-        }
-        return $this->dateOperation;
-    }
-
-    /**
-     * Get the value of dateEmition
-     */ 
-    public function getDateEmition()
-    {
-        if ($this->getCotation() != null) {
-            $this->dateEmition = $this->getCotation()->getDateEmition();
-        }
-        return $this->dateEmition;
-    }
-
     /**
      * Get the value of validated
      */ 
@@ -515,5 +428,125 @@ class Tranche
             $this->validated = $this->getCotation()->isValidated();
         }
         return $this->validated;
+    }
+
+    /**
+     * Get the value of startedAt
+     */ 
+    public function getStartedAt()
+    {
+        return $this->startedAt;
+    }
+
+    /**
+     * Set the value of startedAt
+     *
+     * @return  self
+     */ 
+    public function setStartedAt($startedAt)
+    {
+        $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of endedAt
+     */ 
+    public function getEndedAt()
+    {
+        return $this->endedAt;
+    }
+
+    /**
+     * Set the value of endedAt
+     *
+     * @return  self
+     */ 
+    public function setEndedAt($endedAt)
+    {
+        $this->endedAt = $endedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateEffet
+     */ 
+    public function getDateEffet()
+    {
+        return $this->dateEffet;
+    }
+
+    /**
+     * Set the value of dateEffet
+     *
+     * @return  self
+     */ 
+    public function setDateEffet($dateEffet)
+    {
+        $this->dateEffet = $dateEffet;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateExpiration
+     */ 
+    public function getDateExpiration()
+    {
+        return $this->dateExpiration;
+    }
+
+    /**
+     * Set the value of dateExpiration
+     *
+     * @return  self
+     */ 
+    public function setDateExpiration($dateExpiration)
+    {
+        $this->dateExpiration = $dateExpiration;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateOperation
+     */ 
+    public function getDateOperation()
+    {
+        return $this->dateOperation;
+    }
+
+    /**
+     * Set the value of dateOperation
+     *
+     * @return  self
+     */ 
+    public function setDateOperation($dateOperation)
+    {
+        $this->dateOperation = $dateOperation;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateEmition
+     */ 
+    public function getDateEmition()
+    {
+        return $this->dateEmition;
+    }
+
+    /**
+     * Set the value of dateEmition
+     *
+     * @return  self
+     */ 
+    public function setDateEmition($dateEmition)
+    {
+        $this->dateEmition = $dateEmition;
+
+        return $this;
     }
 }

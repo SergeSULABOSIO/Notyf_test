@@ -453,13 +453,19 @@ class LoeilDeDieu implements EventSubscriberInterface
                     $quote->setDateExpiration($policeRetenue->getDateexpiration());
                     $quote->setDateOperation($policeRetenue->getDateoperation());
                     $quote->setDateEmition($policeRetenue->getDateemission());
-                } else {
+
+                    //on ajuste les periodes de chaque tranche
+                    $this->serviceDates->ajusterPeriodesPourTranches($policeRetenue);
+                } else {    
                     $quote->setValidated(false);
                     $quote->setPolice(null);
                     $quote->setDateEffet(null);
                     $quote->setDateExpiration(null);
                     $quote->setDateOperation(null);
                     $quote->setDateEmition(null);
+
+                    //on ajuste les periodes de chaque tranche
+                    $this->serviceDates->detruirePeriodesPourTranches($quote);
                 }
             }
             $quote->setPartenaire($piste->getPartenaire());

@@ -2,56 +2,126 @@
 
 namespace App\Service;
 
+use App\Entity\Cotation;
 use DateTime;
 use DateInterval;
+use App\Entity\Police;
 use DateTimeImmutable;
+use App\Entity\Tranche;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 class ServiceDates
 {
-    public function __construct()
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    )
     {
     }
 
-    public function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime{
+    public function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime
+    {
         $txt = "P" . $nbJours . "D";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
     }
 
-    public function ajouterAnnees(DateTime $dateInitiale, $nbAnnee): DateTime{
+    public function ajouterAnnees(DateTime $dateInitiale, $nbAnnee): DateTime
+    {
         $txt = "P" . $nbAnnee . "Y";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
     }
 
-    public function ajouterMinutes(DateTime $dateInitiale, $nbMinutes): DateTime{
+    public function ajouterMinutes(DateTime $dateInitiale, $nbMinutes): DateTime
+    {
         $txt = "PT" . $nbMinutes . "M";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
     }
 
-    public function getTexte(DateTime $date): string{
+    public function getTexte(DateTime $date): string
+    {
         return $date->format('d-m-Y à H:i');
     }
 
-    public function aujourdhui(): DateTimeImmutable{
+    public function aujourdhui(): DateTimeImmutable
+    {
         return new \DateTimeImmutable("now");
     }
 
-    public function dansUneAnnee(): DateTimeImmutable{
+    public function dansUneAnnee(): DateTimeImmutable
+    {
         return new \DateTimeImmutable("+365 days");
     }
 
-    public function hier(): DateTimeImmutable{
+    public function hier(): DateTimeImmutable
+    {
         return new \DateTimeImmutable("-1 days");
     }
 
-    public function demain(): DateTimeImmutable{
+    public function demain(): DateTimeImmutable
+    {
         return new \DateTimeImmutable("+1 days");
     }
 
-    public function dansUneSemaine(): DateTimeImmutable{
+    public function dansUneSemaine(): DateTimeImmutable
+    {
         return new \DateTimeImmutable("+7 days");
+    }
+
+
+    //fonction pour gestion des tranches
+    public function ajusterPeriodesPourTranches(?Police $police)
+    {
+        if ($police != null) {
+            /** @var Tranche */
+            foreach ($police->getTranches() as $trancheEncours) {
+                $indiceCourant = ($police->getTranches()->indexOf($trancheEncours));
+                $dureesPrecedantes = $this->getTotalDureeTranchesPrecedantes($police, $indiceCourant);
+                $startedAt = $police->getDateeffet()->add(new DateInterval("P" . ($dureesPrecedantes) . "M"));
+                $endedAt = $startedAt->add(new DateInterval("P" . ($trancheEncours->getDuree()) . "M"));
+                $endedAt = $endedAt->modify("-1 day");
+                $trancheEncours->setStartedAt($startedAt);
+                $trancheEncours->setEndedAt($endedAt);
+                $trancheEncours->setDateEffet($police->getDateeffet());
+                $trancheEncours->setDateExpiration($police->getDateexpiration());
+                $trancheEncours->setDateOperation($police->getDateoperation());
+                $trancheEncours->setDateEmition($police->getDateemission());
+                //on enregistre les changements dans la base de données
+                $this->entityManager->persist($trancheEncours);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    public function detruirePeriodesPourTranches(?Cotation $cotation)
+    {
+        if ($cotation != null) {
+            /** @var Tranche */
+            foreach ($cotation->getTranches() as $trancheEncours) {
+                $trancheEncours->setStartedAt(null);
+                $trancheEncours->setEndedAt(null);
+                $trancheEncours->setDateEffet(null);
+                $trancheEncours->setDateExpiration(null);
+                $trancheEncours->setDateOperation(null);
+                $trancheEncours->setDateEmition(null);
+                //on enregistre les changements dans la base de données
+                $this->entityManager->persist($trancheEncours);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function getTotalDureeTranchesPrecedantes(?Police $police, $indiceCourant)
+    {
+        $totalDureesCumulees = 0;
+        /** @var Tranche */
+        foreach ($police->getTranches() as $tranche) {
+            if ($police->getTranches()->indexOf($tranche) < $indiceCourant) {
+                $totalDureesCumulees = $totalDureesCumulees + $tranche->getDuree();
+            }
+        }
+        return $totalDureesCumulees;
     }
 }

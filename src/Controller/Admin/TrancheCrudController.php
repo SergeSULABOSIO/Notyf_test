@@ -37,6 +37,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Filter\FilterInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\ChoiceFilterType;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -78,6 +79,8 @@ class TrancheCrudController extends AbstractCrudController
                 return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
             }
         );
+
+        //dd($defaultQueryBuilder);
 
         //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
@@ -159,8 +162,10 @@ class TrancheCrudController extends AbstractCrudController
         $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($criteresNonMappes, $filters);
         //dd($filters);
         return $filters
-            //->add('expiredAt')
-            //->add('etape')
+            ->add(DateTimeFilter::new('startedAt', "Début de la tranche"))
+            ->add(DateTimeFilter::new('endedAt', "Echéance de la tranche"))
+            ->add(DateTimeFilter::new('dateEffet', "Début de la police"))
+            ->add(DateTimeFilter::new('dateExpiration', "Echéance de la police"))
             //->add('police')
             //->add('utilisateur')
             //->add('actionCRMs')

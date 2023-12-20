@@ -77,21 +77,7 @@ class ServiceFiltresNonMappes
                 $filters->add($this->getFiltreEntiteNonMappe($attribut, $parametres["label"], $parametres["multipleChoices"], $parametres["class"]));
             }
         }
-
-
-        return $filters
-            //Par validité //$this->
-            // ->add($this->getFiltreBooleanNonMappe("validated", "Validée?", [
-            //     "Oui" => true,
-            //     "Non" => false,
-            // ]))
-            // ->add($this->getFiltreEntiteNonMappe("police", "Police", true, Police::class))
-            // ->add($this->getFiltreEntiteNonMappe("client", "Client", true, Client::class))
-            // ->add($this->getFiltreEntiteNonMappe("produit", "Produit", true, Produit::class))
-            // ->add($this->getFiltreEntiteNonMappe("assureur", "Assureur", true, Assureur::class))
-            // ->add($this->getFiltreEntiteNonMappe("partenaire", "Partenaire", true, Partenaire::class))
-            //
-        ;
+        return $filters;
     }
 
     public function retirerCritere(?string $attributARetirer, $valeurParDefaut, SearchDto $searchDto)
@@ -163,46 +149,14 @@ class ServiceFiltresNonMappes
     public function appliquerCriteresAttributsNonMappes(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters, callable $ecouteur): QueryBuilder
     {
         //On retire les critères non mappés
-        //dd($this->criteresNonMappes);
         foreach ($this->criteresNonMappes as $attribut => $parametres) {
             $data = $this->retirerCritere($attribut, $parametres["defaultValue"], $searchDto);
             $searchDto = $data['searchDto'];
             $this->criteresNonMappes[$attribut]["userValues"] = $data['criterRetire'];
         }
-        //dd($this->criteresNonMappes);
-        //validee
-        // $data = $this->retirerCritere('validated', true, $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $validee = $data['criterRetire'];
-        //police
-        // $data = $this->retirerCritere('police', [], $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $police = $data['criterRetire'];
-        //dd($police);
-        // //client
-        // $data = $this->retirerCritere('client', [], $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $client = $data['criterRetire'];
-        // //partenaire
-        // $data = $this->retirerCritere('partenaire', [], $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $partenaire = $data['criterRetire'];
-        // //produit
-        // $data = $this->retirerCritere('produit', [], $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $produit = $data['criterRetire'];
-        // //assureur
-        // $data = $this->retirerCritere('assureur', [], $searchDto);
-        // $searchDto = $data['searchDto'];
-        // $assureur = $data['criterRetire'];
-        //dd($filters);
-        //$defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
         $defaultQueryBuilder = $ecouteur($searchDto, $entityDto, $fields, $filters);
-
         //Exécution des requêtes de jointures
         $indiceRequete = 1;
-        //dd($this->criteresNonMappes);
         foreach ($this->criteresNonMappes as $attribut => $parametres) {
             if ($this->canExcuterJointure($parametres["userValues"])) {
                 $nomRequete = 'requete' . $indiceRequete;
@@ -214,27 +168,6 @@ class ServiceFiltresNonMappes
                 $indiceRequete = $indiceRequete + 1;
             }
         }
-        //dd($this->criteresNonMappes);
-        //dd($defaultQueryBuilder);
-        // //critere Validee
-        // if ($this->canExcuterJointure($validee)) {
-        //     $defaultQueryBuilder->join('entity.cotation', 'requete1')
-        //         ->andWhere('requete1.validated = (:validee)') //si validee n'est pas un tableau
-        //         ->setParameter('validee', $validee);
-        // }
-        //critere Police
-        // if ($this->canExcuterJointure($police)) {
-        //     $defaultQueryBuilder->join('entity.cotation', 'requete2')
-        //         ->andWhere('requete2.police IN (:police)') //si validee n'est pas un tableau
-        //         ->setParameter('police', $police);
-        // }
-        // //critere Client
-        // if ($this->canExcuterJointure($client)) {
-        //     $defaultQueryBuilder->join('entity.cotation', 'requete3')
-        //         ->andWhere('requete3.client IN (:client)') //si validee n'est pas un tableau
-        //         ->setParameter('client', $client);
-        // }
-        //ici
         return $defaultQueryBuilder;
     }
 }

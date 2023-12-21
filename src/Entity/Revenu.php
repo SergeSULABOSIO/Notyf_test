@@ -60,7 +60,24 @@ class Revenu
     private ?string $description;
     private ?Monnaie $monnaie_Affichage;
     private ?float $montant = null;
+    
     private ?bool $validated;
+    private ?Client $client;
+    private ?Police $police = null;
+    private ?Assureur $assureur;
+    private ?Produit $produit;
+    private ?Partenaire $partenaire;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateEffet = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateExpiration = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateOperation = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $dateEmition = null;
+    
+
 
     public function getId(): ?int
     {
@@ -318,6 +335,9 @@ class Revenu
 
     public function isIspartclient(): ?bool
     {
+        if ($this->getCotation()) {
+            $this->client = $this->getCotation()->getPiste()->getClient();
+        }
         return $this->ispartclient;
     }
 
@@ -438,5 +458,142 @@ class Revenu
             $this->validated = $this->getCotation()->isValidated();
         }
         return $this->validated;
+    }
+
+    /**
+     * Get the value of client
+     */ 
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Get the value of police
+     */ 
+    public function getPolice()
+    {
+        /** @var Police */
+        if ($this->cotation) {
+            if ($this->cotation->isValidated()) {
+                if (count($this->cotation->getPolices()) != 0) {
+                    $this->police = $this->cotation->getPolices()[0];
+                }
+            }
+        }
+        return $this->police;
+    }
+
+    /**
+     * Get the value of assureur
+     */ 
+    public function getAssureur()
+    {
+        if ($this->getCotation()) {
+            $this->assureur = $this->getCotation()->getAssureur();
+        }
+        return $this->assureur;
+    }
+
+    /**
+     * Get the value of produit
+     */ 
+    public function getProduit()
+    {
+        if ($this->getCotation()) {
+            $this->produit = $this->getCotation()->getPiste()->getProduit();
+        }
+        return $this->produit;
+    }
+
+    /**
+     * Get the value of partenaire
+     */ 
+    public function getPartenaire()
+    {
+        if ($this->getCotation()) {
+            $this->partenaire = $this->getCotation()->getPartenaire();
+        }
+        return $this->partenaire;
+    }
+
+    /**
+     * Get the value of dateEffet
+     */ 
+    public function getDateEffet()
+    {
+        return $this->dateEffet;
+    }
+
+    /**
+     * Set the value of dateEffet
+     *
+     * @return  self
+     */ 
+    public function setDateEffet($dateEffet)
+    {
+        $this->dateEffet = $dateEffet;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateExpiration
+     */ 
+    public function getDateExpiration()
+    {
+        return $this->dateExpiration;
+    }
+
+    /**
+     * Set the value of dateExpiration
+     *
+     * @return  self
+     */ 
+    public function setDateExpiration($dateExpiration)
+    {
+        $this->dateExpiration = $dateExpiration;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateOperation
+     */ 
+    public function getDateOperation()
+    {
+        return $this->dateOperation;
+    }
+
+    /**
+     * Set the value of dateOperation
+     *
+     * @return  self
+     */ 
+    public function setDateOperation($dateOperation)
+    {
+        $this->dateOperation = $dateOperation;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateEmition
+     */ 
+    public function getDateEmition()
+    {
+        return $this->dateEmition;
+    }
+
+    /**
+     * Set the value of dateEmition
+     *
+     * @return  self
+     */ 
+    public function setDateEmition($dateEmition)
+    {
+        $this->dateEmition = $dateEmition;
+
+        return $this;
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Cotation;
 use DateTime;
 use DateInterval;
 use App\Entity\Police;
+use App\Entity\Revenu;
 use DateTimeImmutable;
 use App\Entity\Tranche;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,8 +16,7 @@ class ServiceDates
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     public function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime
@@ -72,7 +72,7 @@ class ServiceDates
 
 
     //fonction pour gestion des tranches
-    public function ajusterPeriodesPourTranches(?Police $police)
+    public function ajusterPeriodesPourTranches_et_Revenus(?Police $police)
     {
         if ($police != null) {
             /** @var Tranche */
@@ -92,6 +92,17 @@ class ServiceDates
                 $this->entityManager->persist($trancheEncours);
                 $this->entityManager->flush();
             }
+
+            /** @var Revenu */
+            foreach ($police->getRevenus() as $revenuEncours) {
+                $revenuEncours->setDateEffet($police->getDateeffet());
+                $revenuEncours->setDateExpiration($police->getDateexpiration());
+                $revenuEncours->setDateOperation($police->getDateoperation());
+                $revenuEncours->setDateEmition($police->getDateemission());
+                //on enregistre les changements dans la base de données
+                $this->entityManager->persist($revenuEncours);
+                $this->entityManager->flush();
+            }
         }
     }
 
@@ -108,6 +119,17 @@ class ServiceDates
                 $trancheEncours->setDateEmition(null);
                 //on enregistre les changements dans la base de données
                 $this->entityManager->persist($trancheEncours);
+                $this->entityManager->flush();
+            }
+
+            /** @var Revenu */
+            foreach ($cotation->getRevenus() as $revenuEncours) {
+                $revenuEncours->setDateEffet(null);
+                $revenuEncours->setDateExpiration(null);
+                $revenuEncours->setDateOperation(null);
+                $revenuEncours->setDateEmition(null);
+                //on enregistre les changements dans la base de données
+                $this->entityManager->persist($revenuEncours);
                 $this->entityManager->flush();
             }
         }

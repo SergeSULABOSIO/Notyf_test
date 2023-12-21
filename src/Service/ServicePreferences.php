@@ -1403,7 +1403,7 @@ class ServicePreferences
 
     public function setFIN_Fields_Revenu_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        $tabAttributs[] = BooleanField::new('validated', "Validée")
+        $tabAttributs[] = BooleanField::new('validated', "Validée?")
             ->renderAsSwitch(false)
             ->onlyOnIndex();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
@@ -1437,6 +1437,8 @@ class ServicePreferences
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)
             ->onlyOnIndex();

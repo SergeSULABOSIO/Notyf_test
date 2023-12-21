@@ -2,7 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Piste;
+use App\Entity\Client;
+use App\Entity\Police;
 use App\Entity\Revenu;
+use App\Entity\Produit;
+use App\Entity\Assureur;
+use App\Entity\Partenaire;
+use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Func;
@@ -11,6 +18,7 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceFiltresNonMappes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -20,6 +28,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -80,10 +89,11 @@ class RevenuCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
-        private AdminUrlGenerator $adminUrlGenerator
+        private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceFiltresNonMappes $serviceFiltresNonMappes
     ) {
     }
-    
+
     public static function getEntityFqcn(): string
     {
         return Revenu::class;
@@ -93,7 +103,19 @@ class RevenuCrudController extends AbstractCrudController
     {
         $connected_entreprise = $this->serviceEntreprise->getEntreprise();
         $hasVisionGlobale = $this->isGranted(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
-        $defaultQueryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        //On applique le critère basé sur les attributs non mappés dans l'entité
+        $defaultQueryBuilder = $this->serviceFiltresNonMappes->appliquerCriteresAttributsNonMappes(
+            $searchDto,
+            $entityDto,
+            $fields,
+            $filters,
+            function (SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder {
+                return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+            }
+        );
+
+        //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
                 ->Where('entity.utilisateur = :user')
@@ -110,7 +132,98 @@ class RevenuCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
 
+        //FILTRES BASES SUR LES ATTRIBUTS NON MAPPES
+        $criteresNonMappes = [
+            "validated" => [
+                "label" => "Validée?",
+                "class" => null,
+                "defaultValue" => true,
+                "userValues" => null,
+                "options" => [
+                    "Oui" => true,
+                    "Non" => false,
+                ],
+                "multipleChoices" => false,
+                "joiningEntity" => "cotation",
+            ],
+            "piste" => [
+                "label" => "Pistes",
+                "class" => Piste::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "police" => [
+                "label" => "Polices",
+                "class" => Police::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "client" => [
+                "label" => "Clients",
+                "class" => Client::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "partenaire" => [
+                "label" => "Partenaires",
+                "class" => Partenaire::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "produit" => [
+                "label" => "Produits",
+                "class" => Produit::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "assureur" => [
+                "label" => "Assureurs",
+                "class" => Assureur::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "gestionnaire" => [
+                "label" => "Gestionnaire",
+                "class" => Utilisateur::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+            "assistant" => [
+                "label" => "Assistant",
+                "class" => Utilisateur::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
+                "joiningEntity" => "cotation",
+            ],
+        ];
+        $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($criteresNonMappes, $filters);
+
         return $filters
+            ->add(DateTimeFilter::new('dateEffet', "Début de la police"))
+            ->add(DateTimeFilter::new('dateExpiration', "Echéance de la police"))
             //->add('contacts')
             //->add('expiredAt')
             //->add('etape')
@@ -126,7 +239,7 @@ class RevenuCrudController extends AbstractCrudController
         $this->servicePreferences->appliquerPreferenceTaille(new Revenu(), $crud);
 
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy HH:mm:ss')
+            ->setDateTimeFormat('dd/MM/yyyy') // HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()
@@ -164,7 +277,7 @@ class RevenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if($this->crud){
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
@@ -173,9 +286,9 @@ class RevenuCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
-            ->setIcon('fa-solid fa-copy')
-            ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
+        // $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
+        //     ->setIcon('fa-solid fa-copy')
+        //     ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
@@ -229,13 +342,16 @@ class RevenuCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
             //action dupliquer Assureur
-            ->add(Crud::PAGE_DETAIL, $duplicate)
-            ->add(Crud::PAGE_EDIT, $duplicate)
-            ->add(Crud::PAGE_INDEX, $duplicate)
 
             //Reorganisation des boutons
-            ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-            ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            // ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+            // ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
+
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
+            ->remove(Crud::PAGE_DETAIL, Action::EDIT)
+            ->remove(Crud::PAGE_INDEX, Action::DELETE)
+            ->remove(Crud::PAGE_DETAIL, Action::DELETE)
 
             //Application des roles
             ->setPermission(Action::NEW, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
@@ -246,26 +362,7 @@ class RevenuCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
-    }
-
-    public function dupliquerEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-
-        /** @var Revenu */
-        $entite = $context->getEntity()->getInstance();
-        $entiteDuplique = clone $entite;
-        parent::persistEntity($em, $entiteDuplique);
-
-        $url = $adminUrlGenerator
-            ->setController(self::class)
-            ->setAction(Action::DETAIL)
-            ->setEntityId($entiteDuplique->getId())
-            ->generateUrl();
-
-        return $this->redirect($url);
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -295,5 +392,4 @@ class RevenuCrudController extends AbstractCrudController
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-   
 }

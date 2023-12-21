@@ -73,8 +73,6 @@ class TrancheCrudController extends AbstractCrudController
             }
         );
 
-        //dd($defaultQueryBuilder);
-
         //Filtre standard pour Utilisateur et Entreprise
         if ($hasVisionGlobale == false) {
             $defaultQueryBuilder
@@ -205,7 +203,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setEntityLabelInSingular("Tranche")
             ->setEntityLabelInPlural("Tranches")
             ->setPageTitle("index", "Liste des tranches")
-            ->setDefaultSort(['updatedAt' => 'ASC'])
+            ->setDefaultSort(['updatedAt' => 'DESC'])
             ->setEntityPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACCES_PRODUCTION])
             // ...
         ;
@@ -299,15 +297,10 @@ class TrancheCrudController extends AbstractCrudController
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
-            //action dupliquer Assureur
-            // ->add(Crud::PAGE_DETAIL, $duplicate)
-            // ->add(Crud::PAGE_EDIT, $duplicate)
-            // ->add(Crud::PAGE_INDEX, $duplicate)
-
+            
             //Reorganisation des boutons
             // ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             // ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
-
 
             ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->remove(Crud::PAGE_INDEX, Action::EDIT)
@@ -324,8 +317,6 @@ class TrancheCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            //->setPermission(self::ACTION_ACHEVER_MISSION, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            //->setPermission(self::ACTION_AJOUTER_UN_FEEDBACK, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
         ;
     }
 

@@ -67,6 +67,7 @@ class Revenu
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
+    private ?Partenaire $piste;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEffet = null;
@@ -336,7 +337,9 @@ class Revenu
     public function isIspartclient(): ?bool
     {
         if ($this->getCotation()) {
-            $this->client = $this->getCotation()->getPiste()->getClient();
+            if($this->getCotation()->getPiste()){
+                $this->client = $this->getCotation()->getPiste()->getClient();
+            }
         }
         return $this->ispartclient;
     }
@@ -501,7 +504,9 @@ class Revenu
     public function getProduit()
     {
         if ($this->getCotation()) {
-            $this->produit = $this->getCotation()->getPiste()->getProduit();
+            if($this->getCotation()->getPiste()){
+                $this->produit = $this->getCotation()->getPiste()->getProduit();
+            }
         }
         return $this->produit;
     }
@@ -595,5 +600,16 @@ class Revenu
         $this->dateEmition = $dateEmition;
 
         return $this;
+    }
+
+    /**
+     * Get the value of piste
+     */ 
+    public function getPiste()
+    {
+        if ($this->getCotation()) {
+            $this->piste = $this->getCotation()->getPiste();
+        }
+        return $this->piste;
     }
 }

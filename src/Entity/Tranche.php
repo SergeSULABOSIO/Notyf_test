@@ -56,6 +56,7 @@ class Tranche
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
+    private ?Partenaire $piste;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
@@ -548,5 +549,16 @@ class Tranche
         $this->dateEmition = $dateEmition;
 
         return $this;
+    }
+
+    /**
+     * Get the value of piste
+     */ 
+    public function getPiste()
+    {
+        if ($this->getCotation() != null) {
+            $this->piste = $this->getCotation()->getPiste();
+        }
+        return $this->piste;
     }
 }

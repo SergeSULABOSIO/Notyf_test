@@ -9,6 +9,7 @@ use App\Entity\Produit;
 use App\Entity\Tranche;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
+use App\Entity\Piste;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -103,6 +104,15 @@ class TrancheCrudController extends AbstractCrudController
                     "Non" => false,
                 ],
                 "multipleChoices" => false,
+                "joiningEntity" => "cotation",
+            ],
+            "piste" => [
+                "label" => "Pistes",
+                "class" => Piste::class,
+                "defaultValue" => [],
+                "userValues" => [],
+                "options" => [],
+                "multipleChoices" => true,
                 "joiningEntity" => "cotation",
             ],
             "police" => [

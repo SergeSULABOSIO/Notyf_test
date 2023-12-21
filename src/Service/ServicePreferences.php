@@ -802,6 +802,7 @@ class ServicePreferences
 
     public function setFIN_Fields_Revenu_Details($tabAttributs)
     {
+        ici
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_REVENU_ID)->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
             ->onlyOnDetail()

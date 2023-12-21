@@ -45,20 +45,22 @@ class Revenu
 
     #[ORM\Column]
     private ?float $montantFlat = null;
-
-    private ?float $montant = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
-
+    
     #[ORM\Column(nullable: true)]
     private ?bool $isparttranche = null;
-
+    
     #[ORM\Column(nullable: true)]
     private ?bool $ispartclient = null;
+    
 
+    //Les Champs non mappés
     private ?string $description;
     private ?Monnaie $monnaie_Affichage;
+    private ?float $montant = null;
+    private ?bool $validated;
 
     public function getId(): ?int
     {
@@ -277,7 +279,7 @@ class Revenu
             $prmNette = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
             $fronting = ($quote->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
-        $montantFlat = ($this->getMontantFlat() / 100);
+        $montantFlat = ($this->getMontantFlat());
         $taux = $this->taux;
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
@@ -425,5 +427,16 @@ class Revenu
         $this->montantFlat = $montantFlat;
 
         return $this;
+    }
+
+    /**
+     * Get the value of validated
+     */ 
+    public function getValidated()
+    {
+        if ($this->getCotation() != null) {
+            $this->validated = $this->getCotation()->isValidated();
+        }
+        return $this->validated;
     }
 }

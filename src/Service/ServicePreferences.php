@@ -1403,72 +1403,43 @@ class ServicePreferences
 
     public function setFIN_Fields_Revenu_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        ici
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_REVENU_ID)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TYPE])) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
-                ->onlyOnIndex()
-                ->setChoices(RevenuCrudController::TAB_TYPE);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE])) {
-            $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
-                ->onlyOnIndex()
-                ->renderExpanded()
-                ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
-                ->renderAsBadges([
-                    RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON] => 'dark',
-                    RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI] => 'success',
-                ]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TAXABLE])) {
-            $tabAttributs[] = ChoiceField::new('taxable', PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)
-                ->onlyOnIndex()
-                ->renderExpanded()
-                ->setChoices(RevenuCrudController::TAB_TAXABLE)
-                ->renderAsBadges([
-                    RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'danger',
-                    RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'success',
-                ]);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_BASE])) {
-            $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
-                ->onlyOnIndex()
-                ->setChoices(RevenuCrudController::TAB_BASE);
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_TAUX])) {
-            $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT])) {
-            $tabAttributs[] = MoneyField::new('montantFlat', PreferenceCrudController::PREF_FIN_REVENU_MONTANT_FLAT)
-                ->formatValue(function ($value, Revenu $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION])) {
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_REVENU__DATE_CREATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION])) {
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR])) {
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE])) {
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_REVENU_ENTREPRISE)
-                ->onlyOnIndex();
-        }
+        $tabAttributs[] = BooleanField::new('validated', "Validée")
+            ->renderAsSwitch(false)
+            ->onlyOnIndex();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_REVENU_TYPE)
+            ->onlyOnIndex()
+            ->setChoices(RevenuCrudController::TAB_TYPE);
+        $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
+            ->onlyOnIndex()
+            ->renderExpanded()
+            ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
+            ->renderAsBadges([
+                RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON] => 'dark',
+                RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI] => 'success',
+            ]);
+        $tabAttributs[] = ChoiceField::new('taxable', PreferenceCrudController::PREF_FIN_REVENU_TAXABLE)
+            ->onlyOnIndex()
+            ->renderExpanded()
+            ->setChoices(RevenuCrudController::TAB_TAXABLE)
+            ->renderAsBadges([
+                RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'danger',
+                RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'success',
+            ]);
+        $tabAttributs[] = ChoiceField::new('base', PreferenceCrudController::PREF_FIN_REVENU_BASE)
+            ->onlyOnIndex()
+            ->setChoices(RevenuCrudController::TAB_BASE);
+        $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)
+            ->setNumDecimals(2)
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('montant', "Total")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)
+            ->onlyOnIndex();
         return $tabAttributs;
     }
 
@@ -1536,7 +1507,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+        $tabAttributs[] = MoneyField::new('commissionTotale', "Com. (ht)")
             ->formatValue(function ($value, Tranche $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
             })

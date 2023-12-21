@@ -455,7 +455,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                     $quote->setDateEmition($policeRetenue->getDateemission());
 
                     //on ajuste les periodes de chaque tranche
-                    $this->serviceDates->ajusterPeriodesPourTranches($policeRetenue);
+                    $this->serviceDates->ajusterPeriodesPourTranches_et_Revenus($policeRetenue);
                 } else {    
                     $quote->setValidated(false);
                     $quote->setPolice(null);
@@ -465,7 +465,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                     $quote->setDateEmition(null);
                     
                     //on ajuste les periodes de chaque tranche
-                    $this->serviceDates->detruirePeriodesPourTranches($quote);
+                    $this->serviceDates->detruirePeriodesPourTranches_et_Revenus($quote);
                 }
             }
             $quote->setPartenaire($piste->getPartenaire());

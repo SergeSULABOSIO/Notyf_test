@@ -106,7 +106,7 @@ class ServiceDates
         }
     }
 
-    public function detruirePeriodesPourTranches(?Cotation $cotation)
+    public function detruirePeriodesPourTranches_et_Revenus(?Cotation $cotation)
     {
         if ($cotation != null) {
             /** @var Tranche */

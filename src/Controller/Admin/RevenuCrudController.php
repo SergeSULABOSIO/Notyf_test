@@ -33,6 +33,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class RevenuCrudController extends AbstractCrudController
 {
@@ -222,14 +225,26 @@ class RevenuCrudController extends AbstractCrudController
         $filters = $this->serviceFiltresNonMappes->definirFiltreNonMappe($criteresNonMappes, $filters);
 
         return $filters
+            ->add(
+                ChoiceFilter::new('partageable', "Partageable?")
+                    ->setChoices([
+                        "Oui" => true,
+                        "Non" => false
+                    ])
+            )
+            ->add(
+                ChoiceFilter::new('taxable', "Taxable?")
+                    ->setChoices([
+                        "Oui" => true,
+                        "Non" => false
+                    ])
+            )
+            ->add(
+                ChoiceFilter::new('type', "Type")
+                    ->setChoices(RevenuCrudController::TAB_TYPE)
+            )
             ->add(DateTimeFilter::new('dateEffet', "Début de la police"))
             ->add(DateTimeFilter::new('dateExpiration', "Echéance de la police"))
-            //->add('contacts')
-            //->add('expiredAt')
-            //->add('etape')
-            //->add('police')
-            //->add('utilisateur')
-            //->add('actionCRMs')
         ;
     }
 
@@ -361,8 +376,7 @@ class RevenuCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ;
+            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

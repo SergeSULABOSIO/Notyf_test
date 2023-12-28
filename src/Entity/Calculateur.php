@@ -21,7 +21,6 @@ class Calculateur
     private ?Partenaire $partenaire;
     private ?Assureur $assureur;
     private ?string $codeMonnaie;
-    private ?float $tauxCommissionCourtage;
     private ?Monnaie $monnaie;
     private ?Taxe $taxeAssureur;
     private ?Taxe $taxeCourtier;
@@ -37,8 +36,9 @@ class Calculateur
 
     public function getMontantTaxe(?Revenu $revenu, ?bool $forCourtier): float
     {
+        $this->setCotation($revenu->getCotation());
         $montantTaxe = 0;
-        if ($this->cotation != null & $this->piste != null) {
+        if ($revenu != null & $this->piste != null) {
             foreach ($this->getTaxes() as $taxe) {
                 if ($taxe->isPayableparcourtier() == $forCourtier) {
                     if ($this->client->isExoneree() == true || $revenu->getTaxable() == false) {
@@ -56,7 +56,6 @@ class Calculateur
                 }
             }
         }
-        //$montantTaxe = 100;
         return $montantTaxe * 100;
     }
 
@@ -77,6 +76,7 @@ class Calculateur
 
     private function getComfinaleHT(?Revenu $revenu): array
     {
+        $this->setEntreprise($revenu->getEntreprise());
         $strBase = "";
         foreach (RevenuCrudController::TAB_BASE as $key => $value) {
             if ($value == $revenu->getBase()) {
@@ -86,25 +86,25 @@ class Calculateur
         $data = [];
         $prmNette = 0;
         $fronting = 0;
-        if ($this->cotation) {
-            $prmNette = ($this->cotation->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
-            $fronting = ($this->cotation->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
+        if ($revenu->getCotation()) {
+            $prmNette = ($revenu->getCotation()->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
+            $fronting = ($revenu->getCotation()->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
-        $montantFlat = ($revenu->getMontantFlat());
+        //$montantFlat = ($revenu->getMontantFlat());
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
-                $data['montant_ht_valeur_numerique'] = ($this->tauxCommissionCourtage * $prmNette);
-                $data['montant_ht_description'] = number_format(($this->tauxCommissionCourtage * $prmNette), 2, ",", ".") . $this->codeMonnaie;
-                $data['montant_ht_formule'] = "" . number_format(($this->tauxCommissionCourtage * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
+                $data['montant_ht_valeur_numerique'] = ($revenu->getTaux() * $prmNette);
+                $data['montant_ht_description'] = number_format(($revenu->getTaux() * $prmNette), 2, ",", ".") . $this->codeMonnaie;
+                $data['montant_ht_formule'] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_FRONTING:
-                $data['montant_ht_valeur_numerique'] = ($this->tauxCommissionCourtage * $fronting);
-                $data['montant_ht_description'] = number_format(($this->tauxCommissionCourtage * $fronting), 2, ",", ".") . $this->codeMonnaie;
-                $data['montant_ht_formule'] = "" . number_format(($this->tauxCommissionCourtage * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
+                $data['montant_ht_valeur_numerique'] = ($revenu->getTaux() * $fronting);
+                $data['montant_ht_description'] = number_format(($revenu->getTaux() * $fronting), 2, ",", ".") . $this->codeMonnaie;
+                $data['montant_ht_formule'] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
-                $data['montant_ht_valeur_numerique'] = ($montantFlat);
-                $data['montant_ht_description'] = number_format($montantFlat, 2, ",", ".") . $this->codeMonnaie;
+                $data['montant_ht_valeur_numerique'] = $revenu->getMontantFlat();
+                $data['montant_ht_description'] = number_format($revenu->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
                 $data['montant_ht_formule'] = "une valeur fixe";
                 break;
             default:
@@ -268,9 +268,7 @@ class Calculateur
     {
         $this->produit = $produit;
         if ($this->produit) {
-            if ($this->produit->isIard()) {
-                $this->tauxCommissionCourtage = $this->produit->getTauxarca();
-            }
+            //$this->tauxCommissionCourtage = $this->produit->getTauxarca();
         }
         return $this;
     }
@@ -358,26 +356,7 @@ class Calculateur
         return $this;
     }
 
-    /**
-     * Get the value of tauxCommissionCourtage
-     */
-    public function getTauxCommissionCourtage()
-    {
-        return $this->tauxCommissionCourtage;
-    }
-
-    /**
-     * Set the value of tauxCommissionCourtage
-     *
-     * @return  self
-     */
-    public function setTauxCommissionCourtage($tauxCommissionCourtage)
-    {
-        $this->tauxCommissionCourtage = $tauxCommissionCourtage;
-
-        return $this;
-    }
-
+    
     /**
      * Get the value of monnaie
      */

@@ -352,11 +352,7 @@ class Cotation
         $tot = 0;
         if ($this->getRevenus()) {
             foreach ($this->getRevenus() as $revenu) {
-                //$tot = $tot + $revenu->calc_getRevenuFinal();
-                $tot = $tot + $calcuta
-                    ->setCotation($this)
-                    ->setTauxCommissionCourtage($revenu->getTaux())
-                    ->getComfinaleHT_valeur($revenu);
+                $tot = $tot + $calcuta->getComfinaleHT_valeur($revenu);
             }
         }
         $this->revenuTotalHT = $tot * 100;
@@ -491,9 +487,7 @@ class Cotation
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + $calcuta
-                    ->setCotation($this)
-                    ->getMontantTaxe($revenu, true);
+                $tot = $tot + $calcuta->getMontantTaxe($revenu, true);
             }
         }
         $this->taxeCourtierTotale = $tot * 100;
@@ -553,9 +547,7 @@ class Cotation
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
                 if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
-                    $tot = $tot + $calcuta
-                        ->setCotation($this)
-                        ->getMontantTaxe($revenu, true);
+                    $tot = $tot + $calcuta->getMontantTaxe($revenu, true);
                 }
             }
         }
@@ -644,11 +636,6 @@ class Cotation
      */
     public function getMonnaie_Affichage()
     {
-        // $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        // if ($this->monnaie_Affichage == null) {
-        //     $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        // }
-        // return $this->monnaie_Affichage;
         return (new Calculateur())->setCotation($this)->getMonnaie();
     }
 

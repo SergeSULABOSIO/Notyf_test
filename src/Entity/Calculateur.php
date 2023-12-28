@@ -10,7 +10,6 @@ use App\Controller\Admin\ChargementCrudController;
 
 class Calculateur
 {
-
     private ?Police $police;
     private ?Cotation $cotation;
     private ?Piste $piste;

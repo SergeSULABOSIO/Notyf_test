@@ -385,11 +385,6 @@ class Cotation
         return $this;
     }
 
-    // private function getCodeMonnaieAffichage(): string
-    // {
-    //     return (new Calculateur())->setCotation($this)->getCodeMonnaie();
-    // }
-
     /**
      * Get the value of taxes
      */

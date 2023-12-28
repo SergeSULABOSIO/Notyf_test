@@ -97,7 +97,7 @@ class Cotation
     private ?float $revenuNetTotal;
     private ?float $commissionTotaleTTC;
     private ?float $taxeAssureurTotal;
-    private ?float $taxeCourtierTotal;
+    //private ?float $taxeCourtierTotal;
 
     //partie partageable
     private ?float $revenuTotalHTPartageable;
@@ -348,10 +348,15 @@ class Cotation
      */
     public function getRevenuTotalHT()
     {
+        $calcuta = new Calculateur();
         $tot = 0;
         if ($this->getRevenus()) {
             foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + $revenu->calc_getRevenuFinal();
+                //$tot = $tot + $revenu->calc_getRevenuFinal();
+                $tot = $tot + $calcuta
+                    ->setCotation($this)
+                    ->setTauxCommissionCourtage($revenu->getTaux())
+                    ->getComfinaleHT_valeur($revenu);
             }
         }
         $this->revenuTotalHT = $tot * 100;
@@ -426,25 +431,7 @@ class Cotation
 
     private function getCodeMonnaieAffichage(): string
     {
-        $strMonnaie = "";
-        $monnaieAff = $this->getMonnaie_Affichage();
-        if ($monnaieAff != null) {
-            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
-        }
-        return $strMonnaie;
-    }
-
-    private function getMonnaie($fonction)
-    {
-        if ($this->getEntreprise()) {
-            $tabMonnaies = $this->getEntreprise()->getMonnaies();
-            foreach ($tabMonnaies as $monnaie) {
-                if ($monnaie->getFonction() == $fonction) {
-                    return $monnaie;
-                }
-            }
-        }
-        return null;
+        return (new Calculateur())->setCotation($this)->getCodeMonnaie();
     }
 
     /**
@@ -452,12 +439,7 @@ class Cotation
      */
     public function getTaxes()
     {
-        if ($this->getEntreprise()) {
-            if ($this->getEntreprise()->getTaxes()) {
-                $this->taxes = $this->getEntreprise()->getTaxes();
-            }
-        }
-        return $this->taxes;
+        return (new Calculateur())->setCotation($this)->getTaxes();
     }
 
     /**
@@ -478,17 +460,7 @@ class Cotation
      */
     public function getTaxeCourtier()
     {
-        if ($this->getEntreprise()) {
-            if ($this->getEntreprise()->getTaxes()) {
-                /** @var Taxe */
-                foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                    if ($taxe->isPayableparcourtier() == true) {
-                        $this->taxeCourtier = $taxe;
-                    }
-                }
-            }
-        }
-        return $this->taxeCourtier;
+        return (new Calculateur())->setCotation($this)->getTaxeCourtier();
     }
 
     /**
@@ -514,23 +486,14 @@ class Cotation
      */
     public function getTaxeCourtierTotale()
     {
+        $calcuta = new Calculateur();
         $tot = 0;
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
-                    $tauxTaxe = 0;
-                    if ($this->getPiste() && $this->getTaxeCourtier()) {
-                        if ($this->getPiste()->getProduit()) {
-                            if ($this->getPiste()->getProduit()->isIard()) {
-                                $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
-                            } else {
-                                $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
-                            }
-                        }
-                    }
-                    $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
-                }
+                $tot = $tot + $calcuta
+                    ->setCotation($this)
+                    ->getMontantTaxe($revenu, true);
             }
         }
         $this->taxeCourtierTotale = $tot * 100;
@@ -554,12 +517,15 @@ class Cotation
      */
     public function getRevenuTotalHTPartageable()
     {
+        $calcuta = new Calculateur();
         $tot = 0;
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
                 if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
-                    $tot = $tot + $revenu->calc_getRevenuFinal();
+                    $tot = $tot + $calcuta
+                        ->setCotation($this)
+                        ->getComfinaleHT_valeur($revenu);
                 }
             }
         }
@@ -581,27 +547,15 @@ class Cotation
      */
     public function getTaxeCourtierTotalePartageable()
     {
+        $calcuta = new Calculateur();
         $tot = 0;
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                if ($revenu->getTaxable() == RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
-                    if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
-                        $tauxTaxe = 0;
-
-                        if ($this->getPiste() && $this->getTaxeCourtier()) {
-                            if ($this->getPiste()->getProduit()) {
-                                if ($this->getPiste()->getProduit()->isIard()) {
-                                    $tauxTaxe = $this->getTaxeCourtier()->getTauxIARD();
-                                } else {
-                                    $tauxTaxe = $this->getTaxeCourtier()->getTauxVIE();
-                                }
-                            }
-                        }
-
-
-                        $tot = $tot + ($revenu->calc_getRevenuFinal() * $tauxTaxe);
-                    }
+                if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
+                    $tot = $tot + $calcuta
+                        ->setCotation($this)
+                        ->getMontantTaxe($revenu, true);
                 }
             }
         }
@@ -623,17 +577,7 @@ class Cotation
      */
     public function getTaxeAssureur()
     {
-        if ($this->getEntreprise()) {
-            if ($this->getEntreprise()->getTaxes()) {
-                /** @var Taxe */
-                foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                    if ($taxe->isPayableparcourtier() == false) {
-                        $this->taxeAssureur = $taxe;
-                    }
-                }
-            }
-        }
-        return $this->taxeAssureur;
+        return (new Calculateur())->setCotation($this)->getTaxeAssureur();
     }
 
     /**
@@ -700,11 +644,12 @@ class Cotation
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($this->monnaie_Affichage == null) {
-            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        return $this->monnaie_Affichage;
+        // $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
+        // if ($this->monnaie_Affichage == null) {
+        //     $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
+        // }
+        // return $this->monnaie_Affichage;
+        return (new Calculateur())->setCotation($this)->getMonnaie();
     }
 
     /**
@@ -919,35 +864,10 @@ class Cotation
         return $this->taxeAssureurTotal;
     }
 
-    /**
-     * Get the value of taxeCourtierTotal
-     */
-    public function getTaxeCourtierTotal()
-    {
-        if ($this->getEntreprise()) {
-            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                if ($taxe->isPayableparcourtier() == true) {
-                    if ($this->getPiste()->getClient()->isExoneree()) {
-                        $this->taxeCourtierTotal = (0 * $this->getRevenuTotalHT()) / 100;
-                        break;
-                    } else {
-                        if ($this->getPiste()->getProduit()->isIard()) {
-                            $this->taxeCourtierTotal = ($taxe->getTauxIARD() * $this->getRevenuTotalHT()) / 100;
-                            break;
-                        } else {
-                            $this->taxeCourtierTotal = ($taxe->getTauxVIE() * $this->getRevenuTotalHT()) / 100;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return $this->taxeCourtierTotal;
-    }
 
     /**
      * Get the value of gestionnaire
-     */ 
+     */
     public function getGestionnaire()
     {
         return $this->gestionnaire;
@@ -957,7 +877,7 @@ class Cotation
      * Set the value of gestionnaire
      *
      * @return  self
-     */ 
+     */
     public function setGestionnaire($gestionnaire)
     {
         $this->gestionnaire = $gestionnaire;
@@ -967,7 +887,7 @@ class Cotation
 
     /**
      * Get the value of assistant
-     */ 
+     */
     public function getAssistant()
     {
         return $this->assistant;
@@ -977,7 +897,7 @@ class Cotation
      * Set the value of assistant
      *
      * @return  self
-     */ 
+     */
     public function setAssistant($assistant)
     {
         $this->assistant = $assistant;

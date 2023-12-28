@@ -45,22 +45,26 @@ class Revenu
 
     #[ORM\Column]
     private ?float $montantFlat = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'revenus', cascade: ['remove', 'persist', 'refresh'])]
     private ?Cotation $cotation = null;
-    
+
     #[ORM\Column(nullable: true)]
     private ?bool $isparttranche = null;
-    
+
     #[ORM\Column(nullable: true)]
     private ?bool $ispartclient = null;
-    
+
 
     //Les Champs non mappés
     private ?string $description;
     private ?Monnaie $monnaie_Affichage;
     private ?float $montant = null;
-    
+    private ?float $commissionTotale = 0;
+    private ?float $retroCommissionTotale = 0;
+    private ?float $taxeAssureurTotale = 0;
+    private ?float $taxeCourtierTotale = 0;
+
     private ?bool $validated;
     private ?Client $client;
     private ?Police $police = null;
@@ -77,7 +81,7 @@ class Revenu
     private ?\DateTimeImmutable $dateOperation = null;
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
-    
+
 
 
     public function getId(): ?int
@@ -229,15 +233,6 @@ class Revenu
         return null;
     }
 
-    // private function getMonnaie_Affichage()
-    // {
-    //     $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-    //     if ($monnaie == null) {
-    //         $monnaie = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-    //     }
-    //     return $monnaie;
-    // }
-
     /**
      * Get the value of monnaie_Affichage
      */
@@ -266,17 +261,16 @@ class Revenu
         return $this->getDescription();
     }
 
-    public function calc_getRevenuFinal()
-    {
-        $strBase = "";
-        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
-            if ($value == $this->base) {
-                $strBase = $key;
-            }
-        }
-        //On calcul le revennu total
-        return $this->getComNette($strBase)['revenufinal'];
-    }
+    // public function calc_getRevenuFinal()
+    // {
+    //     //On calcul le revennu total
+    //     //return $this->getComNette()['revenufinal'];
+
+    //     $calcuta = new Calculateur();
+    //     return $calcuta
+    //         ->setCotation($this->getCotation())
+    //         ->getComfinaleHT_valeur($this);
+    // }
 
     private function getComNette()
     {
@@ -337,7 +331,7 @@ class Revenu
     public function isIspartclient(): ?bool
     {
         if ($this->getCotation()) {
-            if($this->getCotation()->getPiste()){
+            if ($this->getCotation()->getPiste()) {
                 $this->client = $this->getCotation()->getPiste()->getClient();
             }
         }
@@ -454,7 +448,7 @@ class Revenu
 
     /**
      * Get the value of validated
-     */ 
+     */
     public function getValidated()
     {
         if ($this->getCotation() != null) {
@@ -465,7 +459,7 @@ class Revenu
 
     /**
      * Get the value of client
-     */ 
+     */
     public function getClient()
     {
         return $this->client;
@@ -473,7 +467,7 @@ class Revenu
 
     /**
      * Get the value of police
-     */ 
+     */
     public function getPolice()
     {
         /** @var Police */
@@ -489,7 +483,7 @@ class Revenu
 
     /**
      * Get the value of assureur
-     */ 
+     */
     public function getAssureur()
     {
         if ($this->getCotation()) {
@@ -500,11 +494,11 @@ class Revenu
 
     /**
      * Get the value of produit
-     */ 
+     */
     public function getProduit()
     {
         if ($this->getCotation()) {
-            if($this->getCotation()->getPiste()){
+            if ($this->getCotation()->getPiste()) {
                 $this->produit = $this->getCotation()->getPiste()->getProduit();
             }
         }
@@ -513,7 +507,7 @@ class Revenu
 
     /**
      * Get the value of partenaire
-     */ 
+     */
     public function getPartenaire()
     {
         if ($this->getCotation()) {
@@ -524,7 +518,7 @@ class Revenu
 
     /**
      * Get the value of dateEffet
-     */ 
+     */
     public function getDateEffet()
     {
         return $this->dateEffet;
@@ -534,7 +528,7 @@ class Revenu
      * Set the value of dateEffet
      *
      * @return  self
-     */ 
+     */
     public function setDateEffet($dateEffet)
     {
         $this->dateEffet = $dateEffet;
@@ -544,7 +538,7 @@ class Revenu
 
     /**
      * Get the value of dateExpiration
-     */ 
+     */
     public function getDateExpiration()
     {
         return $this->dateExpiration;
@@ -554,7 +548,7 @@ class Revenu
      * Set the value of dateExpiration
      *
      * @return  self
-     */ 
+     */
     public function setDateExpiration($dateExpiration)
     {
         $this->dateExpiration = $dateExpiration;
@@ -564,7 +558,7 @@ class Revenu
 
     /**
      * Get the value of dateOperation
-     */ 
+     */
     public function getDateOperation()
     {
         return $this->dateOperation;
@@ -574,7 +568,7 @@ class Revenu
      * Set the value of dateOperation
      *
      * @return  self
-     */ 
+     */
     public function setDateOperation($dateOperation)
     {
         $this->dateOperation = $dateOperation;
@@ -584,7 +578,7 @@ class Revenu
 
     /**
      * Get the value of dateEmition
-     */ 
+     */
     public function getDateEmition()
     {
         return $this->dateEmition;
@@ -594,17 +588,16 @@ class Revenu
      * Set the value of dateEmition
      *
      * @return  self
-     */ 
+     */
     public function setDateEmition($dateEmition)
     {
         $this->dateEmition = $dateEmition;
-
         return $this;
     }
 
     /**
      * Get the value of piste
-     */ 
+     */
     public function getPiste()
     {
         if ($this->getCotation()) {

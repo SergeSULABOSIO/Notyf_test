@@ -826,37 +826,8 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('dateEmition', "Date d'émition")
             ->onlyOnDetail();
-        // $tabAttributs[] = TextField::new('autoriteTaxeAssureur', "Aut. Assureurs")
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = TextField::new('autoriteTaxeCourtier', "Aut. Courtier")
-        //     ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
             ->onlyOnDetail();
-
-        // $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
-        //     ->formatValue(function ($value, Tranche $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
-        //     ->formatValue(function ($value, Tranche $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-        // $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
-        //     ->formatValue(function ($value, Tranche $entity) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnDetail();
-
-
-
         $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
             ->onlyOnDetail()
             ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
@@ -871,12 +842,40 @@ class ServicePreferences
             ->onlyOnDetail()
             ->setChoices(RevenuCrudController::TAB_BASE);
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('revenuNet', "Montant net")
+        $tabAttributs[] = MoneyField::new('revenuPure', "Revenu pure")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuPure() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeCourtier', ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtier() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuNet', "Revenu net")
             ->formatValue(function ($value, Revenu $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuNet() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            //->setStoredAsCents()
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureur() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuTotale', "Revenu TTC")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotale() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_REVENU_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])

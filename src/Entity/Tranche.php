@@ -170,11 +170,7 @@ class Tranche
      */
     public function getMontant()
     {
-        $mont = 0;
-        if ($this->getCotation() != null) {
-            $mont = (($this->getCotation()->getPrimeTotale()) * $this->getTaux());
-        }
-        $this->montant = $mont;
+        $this->montant = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(["tranche" => $this]);
         return $this->montant;
     }
 
@@ -220,16 +216,6 @@ class Tranche
         return $this;
     }
 
-    private function getMonnaie($fonction)
-    {
-        $tabMonnaies = $this->getEntreprise()->getMonnaies();
-        foreach ($tabMonnaies as $monnaie) {
-            if ($monnaie->getFonction() == $fonction) {
-                return $monnaie;
-            }
-        }
-        return null;
-    }
 
     /**
      * Get the value of description

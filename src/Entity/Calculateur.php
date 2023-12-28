@@ -74,6 +74,21 @@ class Calculateur
         return $this->getComfinaleHT($revenu)["montant_ht_formule"];
     }
 
+    public function getComfinaleHTGlobale(?array $parametres)
+    {
+        $tot = 0;
+        foreach ($this->cotation->getRevenus() as $revenu) {
+            if (isset($parametres["isPartageable"])) {
+                if ($parametres["isPartageable"] == $revenu->getPartageable()) {
+                    $tot = $tot + $this->getComfinaleHT_valeur($revenu);
+                }
+            } else {
+                $tot = $tot + $this->getComfinaleHT_valeur($revenu);
+            }
+        }
+        return $tot;
+    }
+
     public function getMontantTaxeGlobal(?array $parametres)
     {
         $tot = 0;
@@ -102,10 +117,9 @@ class Calculateur
         $prmNette = 0;
         $fronting = 0;
         if ($revenu->getCotation()) {
-            $prmNette = ($revenu->getCotation()->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
-            $fronting = ($revenu->getCotation()->calc_getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
+            $prmNette = ($revenu->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
+            $fronting = ($revenu->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
-        //$montantFlat = ($revenu->getMontantFlat());
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
                 $data['montant_ht_valeur_numerique'] = ($revenu->getTaux() * $prmNette);

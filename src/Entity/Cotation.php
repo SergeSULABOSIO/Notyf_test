@@ -93,11 +93,10 @@ class Cotation
     private ?float $primeTotale;
     //parties partageable et non partageable tous confondues
     private ?float $revenuTotalHT;
-    private ?float $taxeCourtierTotale;
     private ?float $revenuNetTotal;
     private ?float $commissionTotaleTTC;
-    private ?float $taxeAssureurTotal;
-    //private ?float $taxeCourtierTotal;
+    private ?float $taxeAssureurTotale;
+    private ?float $taxeCourtierTotale;
 
     //partie partageable
     private ?float $revenuTotalHTPartageable;
@@ -200,7 +199,7 @@ class Cotation
 
 
 
-    public function calc_getChargement($type)
+    public function getChargement($type)
     {
         $total = 0;
         if ($this->getChargements()) {
@@ -215,21 +214,7 @@ class Cotation
 
     public function __toString()
     {
-        $strMonnaie = $this->getCodeMonnaieAffichage();
-        $strCommission = "";
-        if ($this->getRevenus()) {
-            $strCommission = " | Com. ht: " . number_format($this->getRevenuTotalHT() / 100, 2, ",", ".") . $strMonnaie . "";
-        }
-        $strNomAssureur = "";
-        if ($this->assureur) {
-            $strNomAssureur = $this->assureur->getNom();
-        }
-        $strNomProduit = "";
-        if ($this->piste->getProduit()) {
-            $strNomProduit = $this->piste->getProduit()->getNom();
-        }
         $strValidation = ($this->isValidated() == true ? " (offre validée)" : "");
-        //return "" . $this->nom . " | " . $strNomAssureur . " | " . $strNomProduit . " | Prime ttc: " . number_format(($this->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strCommission . ($this->isValidated() == true ? " (*validée*)." : ".");
         return  "" . $this->nom . $strValidation;
     }
 
@@ -435,7 +420,8 @@ class Cotation
      */
     public function getTaxes()
     {
-        return (new Calculateur())->setCotation($this)->getTaxes();
+        $this->taxes = (new Calculateur())->setCotation($this)->getTaxes();
+        return $this->taxes;
     }
 
     /**
@@ -504,19 +490,7 @@ class Cotation
      */
     public function getRevenuTotalHTPartageable()
     {
-        $calcuta = new Calculateur();
-        $tot = 0;
-        if ($this->getRevenus()) {
-            /** @var Revenu */
-            foreach ($this->getRevenus() as $revenu) {
-                if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
-                    $tot = $tot + $calcuta
-                        ->setCotation($this)
-                        ->getComfinaleHT_valeur($revenu);
-                }
-            }
-        }
-        $this->revenuTotalHTPartageable = $tot * 100;
+        $this->revenuTotalHTPartageable = (new Calculateur())->setCotation($this)->getComfinaleHTGlobale(["isPartageable" => true]) * 100;
         return $this->revenuTotalHTPartageable;
     }
 
@@ -552,7 +526,8 @@ class Cotation
      */
     public function getTaxeAssureur()
     {
-        return (new Calculateur())->setCotation($this)->getTaxeAssureur();
+        $this->taxeAssureur = (new Calculateur())->setCotation($this)->getTaxeAssureur();
+        return $this->taxeAssureur;
     }
 
     /**
@@ -804,17 +779,17 @@ class Cotation
      */
     public function getCommissionTotaleTTC()
     {
-        $this->commissionTotaleTTC = $this->getTaxeAssureurTotal() + $this->getRevenuTotalHT();
+        $this->commissionTotaleTTC = $this->getTaxeAssureurTotale() + $this->getRevenuTotalHT();
         return $this->commissionTotaleTTC;
     }
 
     /**
      * Get the value of taxeAssureurTotal
      */
-    public function getTaxeAssureurTotal()
+    public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotal = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]);
-        return $this->taxeAssureurTotal;
+        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]);
+        return $this->taxeAssureurTotale;
     }
 
 

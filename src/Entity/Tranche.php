@@ -327,7 +327,7 @@ class Tranche
     public function getTaxeAssureurTotale()
     {
         if ($this->getCotation() != null) {
-            $this->taxeAssureurTotale = $this->getCotation()->getTaxeAssureurTotal() * $this->getTaux();
+            $this->taxeAssureurTotale = $this->getCotation()->getTaxeAssureurTotale() * $this->getTaux();
         }
         return $this->taxeAssureurTotale;
     }

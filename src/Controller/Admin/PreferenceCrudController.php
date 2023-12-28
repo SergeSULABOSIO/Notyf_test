@@ -976,7 +976,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_REVENU_TAXABLE                = "Taxable?";
     public const PREF_FIN_REVENU_PAR_TRANCHE            = "Ce revenu est payable par tranche selon les termes de paiement.";
     public const PREF_FIN_REVENU_PAR_CLIENT             = "Ce revenu est payable par le client, pas par l'assureur";
-    public const PREF_FIN_REVENU_BASE                   = "Formule de base";
+    public const PREF_FIN_REVENU_BASE                   = "Formule";
     public const PREF_FIN_REVENU_TAUX                   = "Taux";
     public const PREF_FIN_REVENU_MONTANT_FLAT           = "Montant fixe";
     public const PREF_FIN_REVENU_UTILISATEUR            = "Utilisateur";

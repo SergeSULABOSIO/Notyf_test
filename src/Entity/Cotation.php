@@ -482,12 +482,11 @@ class Cotation
      */
     public function getTaxeCourtierTotale()
     {
-        $calcuta = new Calculateur();
         $tot = 0;
         if ($this->getRevenus()) {
             /** @var Revenu */
             foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + $calcuta->getMontantTaxe($revenu, true);
+                $tot = $tot + (new Calculateur())->getMontantTaxe($revenu, true);
             }
         }
         $this->taxeCourtierTotale = $tot * 100;
@@ -830,24 +829,14 @@ class Cotation
      */
     public function getTaxeAssureurTotal()
     {
-        if ($this->getEntreprise()) {
-            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                if ($taxe->isPayableparcourtier() == false) {
-                    if ($this->getPiste()->getClient()->isExoneree()) {
-                        $this->taxeAssureurTotal = (0 * $this->getRevenuTotalHT()) / 100;
-                        break;
-                    } else {
-                        if ($this->getPiste()->getProduit()->isIard()) {
-                            $this->taxeAssureurTotal = ($taxe->getTauxIARD() * $this->getRevenuTotalHT()) / 100;
-                            break;
-                        } else {
-                            $this->taxeAssureurTotal = ($taxe->getTauxVIE() * $this->getRevenuTotalHT()) / 100;
-                            break;
-                        }
-                    }
-                }
+        $tot = 0;
+        if ($this->getRevenus()) {
+            /** @var Revenu */
+            foreach ($this->getRevenus() as $revenu) {
+                $tot = $tot + (new Calculateur())->getMontantTaxe($revenu, false);
             }
         }
+        $this->taxeCourtierTotale = $tot * 100;
         return $this->taxeAssureurTotal;
     }
 

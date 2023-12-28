@@ -456,7 +456,8 @@ class Cotation
      */
     public function getTaxeCourtier()
     {
-        return (new Calculateur())->setCotation($this)->getTaxeCourtier();
+        $this->taxeCourtier = (new Calculateur())->setCotation($this)->getTaxeCourtier();
+        return $this->taxeCourtier;
     }
 
     /**
@@ -482,14 +483,7 @@ class Cotation
      */
     public function getTaxeCourtierTotale()
     {
-        $tot = 0;
-        if ($this->getRevenus()) {
-            /** @var Revenu */
-            foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + (new Calculateur())->getMontantTaxe($revenu, true);
-            }
-        }
-        $this->taxeCourtierTotale = $tot * 100;
+        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => true]) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -540,17 +534,7 @@ class Cotation
      */
     public function getTaxeCourtierTotalePartageable()
     {
-        $calcuta = new Calculateur();
-        $tot = 0;
-        if ($this->getRevenus()) {
-            /** @var Revenu */
-            foreach ($this->getRevenus() as $revenu) {
-                if ($revenu->getPartageable() == RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
-                    $tot = $tot + $calcuta->getMontantTaxe($revenu, true);
-                }
-            }
-        }
-        $this->taxeCourtierTotalePartageable = $tot * 100;
+        $this->taxeCourtierTotalePartageable = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => true, "isPartageable" => true]) * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 
@@ -829,14 +813,7 @@ class Cotation
      */
     public function getTaxeAssureurTotal()
     {
-        $tot = 0;
-        if ($this->getRevenus()) {
-            /** @var Revenu */
-            foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + (new Calculateur())->getMontantTaxe($revenu, false);
-            }
-        }
-        $this->taxeCourtierTotale = $tot * 100;
+        $this->taxeAssureurTotal = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]);
         return $this->taxeAssureurTotal;
     }
 

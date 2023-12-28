@@ -74,6 +74,21 @@ class Calculateur
         return $this->getComfinaleHT($revenu)["montant_ht_formule"];
     }
 
+    public function getMontantTaxeGlobal(?array $parametres)
+    {
+        $tot = 0;
+        foreach ($this->cotation->getRevenus() as $revenu) {
+            if (isset($parametres["isPartageable"])) {
+                if ($parametres["isPartageable"] == $revenu->getPartageable()) {
+                    $tot = $tot + $this->getMontantTaxe($revenu, $parametres["forCourtier"]);
+                }
+            } else {
+                $tot = $tot + $this->getMontantTaxe($revenu, $parametres["forCourtier"]);
+            }
+        }
+        return $tot;
+    }
+
     private function getComfinaleHT(?Revenu $revenu): array
     {
         $this->setEntreprise($revenu->getEntreprise());
@@ -356,7 +371,7 @@ class Calculateur
         return $this;
     }
 
-    
+
     /**
      * Get the value of monnaie
      */

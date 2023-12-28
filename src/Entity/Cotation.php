@@ -422,7 +422,7 @@ class Cotation
      */
     public function getRetroComPartenaire()
     {
-        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire([]);
+        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire([]) * 100;
         return $this->retroComPartenaire;
     }
 

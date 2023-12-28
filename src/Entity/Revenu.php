@@ -59,12 +59,12 @@ class Revenu
     //Les Champs non mappés
     private ?string $description;
     private ?Monnaie $monnaie_Affichage;
-    private ?float $comPure = null;
-    private ?float $taxeCourtierTotale = 0;
-    private ?float $montant = null;
-    private ?float $taxeAssureurTotale = 0;
+    private ?float $revenuPure = null;
+    private ?float $taxeCourtier = 0;
+    private ?float $revenuNet = 0;
+    private ?float $taxeAssureur = 0;
     private ?float $revenuTotale = 0;
-    private ?float $retroCommissionTotale = 0;
+    private ?float $retroCommission = 0;
 
     private ?bool $validated;
     private ?Client $client;
@@ -196,13 +196,6 @@ class Revenu
         $this->taux = $taux;
 
         return $this;
-    }
-
-    public function getMontant(): ?float
-    {
-        //On calcul le revennu total
-        $this->montant = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT_valeur($this);
-        return $this->montant;
     }
 
     public function getCotation(): ?Cotation
@@ -525,5 +518,51 @@ class Revenu
             $this->piste = $this->getCotation()->getPiste();
         }
         return $this->piste;
+    }
+
+    /**
+     * Get the value of revenuNet
+     */ 
+    public function getRevenuNet()
+    {
+        //On calcul le revennu total
+        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT_valeur($this);
+        return $this->revenuNet;
+    }
+
+    /**
+     * Get the value of taxeAssureur
+     */ 
+    public function getTaxeAssureur()
+    {
+        $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe($this, false);
+        return $this->taxeAssureur;
+    }
+
+    /**
+     * Get the value of taxeCourtier
+     */ 
+    public function getTaxeCourtier()
+    {
+        $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe($this, true);
+        return $this->taxeCourtier;
+    }
+
+    /**
+     * Get the value of revenuPure
+     */ 
+    public function getRevenuPure()
+    {
+        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getComPure($this);
+        return $this->revenuPure;
+    }
+
+    /**
+     * Get the value of revenuTotale
+     */ 
+    public function getRevenuTotale()
+    {
+        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getComTTC($this);
+        return $this->revenuTotale;
     }
 }

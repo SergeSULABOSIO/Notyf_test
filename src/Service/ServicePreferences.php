@@ -832,7 +832,7 @@ class ServicePreferences
         //     ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PROD_TRANCHE_COTATION)
             ->onlyOnDetail();
-        
+
         // $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
         //     ->formatValue(function ($value, Tranche $entity) {
         //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale());
@@ -854,7 +854,7 @@ class ServicePreferences
         //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
         //     ->setStoredAsCents()
         //     ->onlyOnDetail();
-        
+
 
 
         $tabAttributs[] = ChoiceField::new('partageable', PreferenceCrudController::PREF_FIN_REVENU_PARTAGEABLE)
@@ -871,9 +871,9 @@ class ServicePreferences
             ->onlyOnDetail()
             ->setChoices(RevenuCrudController::TAB_BASE);
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('montant', "Montant net")
+        $tabAttributs[] = MoneyField::new('revenuNet', "Montant net")
             ->formatValue(function ($value, Revenu $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuNet() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             //->setStoredAsCents()
@@ -1486,16 +1486,44 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_FIN_REVENU_TAUX)
             ->setNumDecimals(2)
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('montant', "Total net")
+        $tabAttributs[] = MoneyField::new('revenuPure', "Revenu pure")
             ->formatValue(function ($value, Revenu $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuPure() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+        $tabAttributs[] = MoneyField::new('taxeCourtier', "ARCA")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtier() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_REVENU_DERNIRE_MODIFICATION)
+        $tabAttributs[] = MoneyField::new('revenuNet', "Revenu net")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuNet() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('taxeAssureur', "TVA")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureur() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('revenuTotale', "Revenu TTC")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotale() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+        //     ->onlyOnIndex();
+        $tabAttributs[] = DateTimeField::new('updatedAt', "Modification")
             ->onlyOnIndex();
         return $tabAttributs;
     }

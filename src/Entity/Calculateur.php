@@ -135,6 +135,27 @@ class Calculateur
         return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
+    public function getComPure(?Revenu $revenu)
+    {
+        $comPure = $this->getComfinaleHT_valeur($revenu) - $this->getMontantTaxe($revenu, true);
+        return $comPure;
+    }
+
+    public function getComTTC(?Revenu $revenu)
+    {
+        $comPure = $this->getComfinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+        return $comPure;
+    }
+
+    public function getComTTCGlobal()
+    {
+        $tot = 0;
+        foreach ($this->cotation->getRevenus() as $revenu) {
+            $tot = $tot + $this->getComTTC($revenu);
+        }
+        return $tot;
+    }
+
 
     public function getMontantTaxeGlobal(?array $parametres)
     {

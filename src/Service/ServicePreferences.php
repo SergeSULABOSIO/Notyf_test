@@ -1493,7 +1493,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('taxeCourtier', "ARCA")
+        $tabAttributs[] = MoneyField::new('taxeCourtier', ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
             ->formatValue(function ($value, Revenu $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtier() * 100);
             })
@@ -1507,7 +1507,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('taxeAssureur', "TVA")
+        $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
             ->formatValue(function ($value, Revenu $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureur() * 100);
             })
@@ -4309,7 +4309,8 @@ class ServicePreferences
 
     public function setCRM_Fields_Cotation_form($tabAttributs, $adminUrlGenerator)
     {
-        $taux = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        $tauxArca = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        $tauxTva = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), false);
         //dd($this->isExoneree());
 
         if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM)) {
@@ -4409,6 +4410,18 @@ class ServicePreferences
                 ->setRequired(false)
                 ->setColumns(12)
                 ->onlyOnForms();
+            $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu pure")
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxArca * 100) . "%)"))
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->setStoredAsCents()
+                ->onlyOnForms()
+                ->setDisabled(true)
+                ->setColumns(12);
             $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setHelp("La partie partageable + la partie non partageable.")
@@ -4416,19 +4429,18 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
+            $tabAttributs[] = MoneyField::new('taxeAssureurTotale', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($tauxTva * 100) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-            $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu net total")
+            $tabAttributs[] = MoneyField::new('revenuTotalTTC', "Revenu TTC")
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-
             $tabAttributs[] = FormField::addPanel("Détails relatifs à la rétrocommission dûe au partenaire")
                 ->setIcon("fas fa-handshake")
                 ->onlyOnForms();
@@ -4439,8 +4451,7 @@ class ServicePreferences
                 ->onlyOnForms()
                 ->setDisabled(true)
                 ->setColumns(12);
-
-            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($taux * 100) . "%)"))
+            $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxTva * 100) . "%)"))
                 ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                 ->setStoredAsCents()
                 ->onlyOnForms()

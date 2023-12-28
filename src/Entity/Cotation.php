@@ -93,6 +93,7 @@ class Cotation
     private ?float $primeTotale;
     //parties partageable et non partageable tous confondues
     private ?float $revenuTotalHT;
+    private ?float $revenuTotalTTC;
     private ?float $revenuNetTotal;
     private ?float $commissionTotaleTTC;
     private ?float $taxeAssureurTotale;
@@ -750,7 +751,7 @@ class Cotation
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]);
+        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -793,5 +794,14 @@ class Cotation
         $this->assistant = $assistant;
 
         return $this;
+    }
+
+    /**
+     * Get the value of revenuTotalTTC
+     */ 
+    public function getRevenuTotalTTC()
+    {
+        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getComTTCGlobal() * 100;
+        return $this->revenuTotalTTC;
     }
 }

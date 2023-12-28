@@ -109,6 +109,7 @@ class Cotation
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
+    private ?Monnaie $monnaie_Affichage;
 
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: Police::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $polices;
@@ -196,15 +197,7 @@ class Cotation
 
     public function getChargement($type)
     {
-        $total = 0;
-        if ($this->getChargements()) {
-            foreach ($this->getChargements() as $chargement) {
-                if ($type == $chargement->getType()) {
-                    $total = $total + $chargement->getMontant();
-                }
-            }
-        }
-        return $total;
+        return (new Calculateur())->setCotation($this)->getChargement(["type" => $type]);
     }
 
     public function __toString()
@@ -301,13 +294,7 @@ class Cotation
      */
     public function getPrimeTotale()
     {
-        $tot = 0;
-        if ($this->getChargements()) {
-            foreach ($this->getChargements() as $chargement) {
-                $tot = $tot + $chargement->getMontant();
-            }
-        }
-        $this->primeTotale = $tot;
+        $this->primeTotale = (new Calculateur())->setCotation($this)->getPrimeTotale();
         return $this->primeTotale;
     }
 
@@ -328,14 +315,7 @@ class Cotation
      */
     public function getRevenuTotalHT()
     {
-        $calcuta = new Calculateur();
-        $tot = 0;
-        if ($this->getRevenus()) {
-            foreach ($this->getRevenus() as $revenu) {
-                $tot = $tot + $calcuta->getComfinaleHT_valeur($revenu);
-            }
-        }
-        $this->revenuTotalHT = $tot * 100;
+        $this->revenuTotalHT = (new Calculateur())->setCotation($this)->getComfinaleHTGlobale([]) * 100;
         return $this->revenuTotalHT;
     }
 
@@ -405,10 +385,10 @@ class Cotation
         return $this;
     }
 
-    private function getCodeMonnaieAffichage(): string
-    {
-        return (new Calculateur())->setCotation($this)->getCodeMonnaie();
-    }
+    // private function getCodeMonnaieAffichage(): string
+    // {
+    //     return (new Calculateur())->setCotation($this)->getCodeMonnaie();
+    // }
 
     /**
      * Get the value of taxes
@@ -446,16 +426,7 @@ class Cotation
      */
     public function getRetroComPartenaire()
     {
-        $taux = 0;
-        if ($this->getTauxretrocompartenaire() == 0) {
-            if ($this->getPartenaire()) {
-                $taux = $this->getPartenaire()->getPart();
-            }
-        } else {
-            $taux = $this->getTauxretrocompartenaire();
-        }
-        $this->retroComPartenaire = $this->getRevenuNetTotalPartageable() * $taux;
-
+        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire();
         return $this->retroComPartenaire;
     }
 
@@ -494,7 +465,7 @@ class Cotation
      */
     public function getRevenuNetTotal()
     {
-        $this->revenuNetTotal = $this->getRevenuTotalHT() - $this->getTaxeCourtierTotale();
+        $this->revenuNetTotal = (new Calculateur())->setCotation($this)->getComPureGlobale() * 100;
         return $this->revenuNetTotal;
     }
 
@@ -512,7 +483,7 @@ class Cotation
      */
     public function getRevenuNetTotalPartageable()
     {
-        $this->revenuNetTotalPartageable = $this->getRevenuTotalHTPartageable() - $this->getTaxeCourtierTotalePartageable();
+        $this->revenuNetTotalPartageable = (new Calculateur())->setCotation($this)->getComPureGlobalePartageable() * 100;
         return $this->revenuNetTotalPartageable;
     }
 
@@ -589,7 +560,8 @@ class Cotation
      */
     public function getMonnaie_Affichage()
     {
-        return (new Calculateur())->setCotation($this)->getMonnaie();
+        $this->monnaie_Affichage = (new Calculateur())->setCotation($this)->getMonnaie();
+        return $this->monnaie_Affichage;
     }
 
     /**

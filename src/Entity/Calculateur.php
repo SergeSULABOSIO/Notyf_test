@@ -89,6 +89,54 @@ class Calculateur
         return $tot;
     }
 
+    public function getPrimeTotale()
+    {
+        return $this->getChargement([]);
+    }
+
+    public function getChargement(?array $parametres)
+    {
+        $tot = 0;
+        if ($this->cotation->getChargements()) {
+            foreach ($this->cotation->getChargements() as $chargement) {
+                if (isset($parametres["type"])) {
+                    if ($chargement->getType() == $parametres["type"]) {
+                        $tot = $tot + $chargement->getMontant();
+                    }
+                } else {
+                    $tot = $tot + $chargement->getMontant();
+                }
+            }
+        }
+        return $tot;
+    }
+
+    public function getRetroComPartenaire(): float
+    {
+        $taux = 0;
+        if ($this->cotation->getTauxretrocompartenaire() == 0) {
+            if ($this->partenaire) {
+                $taux = $this->partenaire->getPart();
+            }
+        } else {
+            $taux = $this->cotation->getTauxretrocompartenaire();
+        }
+        return $this->getComPureGlobalePartageable() * $taux * 100;
+    }
+
+    public function getComPureGlobalePartageable()
+    {
+        $parametres = ["isPartageable" => true, "forCourtier" => true];
+        return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
+    }
+
+    public function getComPureGlobale()
+    {
+        $parametres = ["forCourtier" => true];
+        return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
+    }
+
+
     public function getMontantTaxeGlobal(?array $parametres)
     {
         $tot = 0;

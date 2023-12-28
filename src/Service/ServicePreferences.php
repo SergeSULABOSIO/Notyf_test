@@ -1593,35 +1593,35 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
 
-        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
-            ->onlyOnIndex();
+        // $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+        //     ->onlyOnIndex();
         // $tabAttributs[] = TextField::new('client', "Client")
         //     ->onlyOnIndex();
         // $tabAttributs[] = TextField::new('assureur', "Assureur")

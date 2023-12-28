@@ -257,11 +257,7 @@ class Tranche
      */
     public function getCodeMonnaieAffichage()
     {
-        $this->codeMonnaieAffichage = "";
-        $monnaieAff = $this->getMonnaie_Affichage();
-        if ($monnaieAff != null) {
-            $this->codeMonnaieAffichage = " " . $this->getMonnaie_Affichage()->getCode();
-        }
+        $this->codeMonnaieAffichage = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
         return $this->codeMonnaieAffichage;
     }
 
@@ -270,10 +266,7 @@ class Tranche
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($this->monnaie_Affichage == null) {
-            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
+        $this->monnaie_Affichage = (new Calculateur())->setCotation($this->getCotation())->getMonnaie();
         return $this->monnaie_Affichage;
     }
 
@@ -282,9 +275,7 @@ class Tranche
      */
     public function getPrimeTotale()
     {
-        if ($this->getCotation() != null) {
-            $this->primeTotale = $this->getCotation()->getPrimeTotale() * $this->getTaux();
-        }
+        $this->primeTotale = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(["tranche" => $this]);
         return $this->primeTotale;
     }
 
@@ -293,9 +284,7 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        if ($this->getCotation() != null) {
-            $this->commissionTotale = $this->getCotation()->getCommissionTotaleTTC() * $this->getTaux();
-        }
+        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getComTTCGlobal(["tranche" => $this]);
         return $this->commissionTotale;
     }
 
@@ -304,9 +293,7 @@ class Tranche
      */
     public function getRetroCommissionTotale()
     {
-        if ($this->getCotation() != null) {
-            $this->retroCommissionTotale = $this->getCotation()->getRetroComPartenaire() * $this->getTaux();
-        }
+        $this->retroCommissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRetroComPartenaire(["tranche" => $this]);
         return $this->retroCommissionTotale;
     }
 
@@ -315,9 +302,7 @@ class Tranche
      */
     public function getTaxeCourtierTotale()
     {
-        if ($this->getCotation() != null) {
-            $this->taxeCourtierTotale = $this->getCotation()->getTaxeCourtierTotale() * $this->getTaux();
-        }
+        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(["forCourtier" => true, "tranche" => $this]);
         return $this->taxeCourtierTotale;
     }
 
@@ -326,9 +311,7 @@ class Tranche
      */
     public function getTaxeAssureurTotale()
     {
-        if ($this->getCotation() != null) {
-            $this->taxeAssureurTotale = $this->getCotation()->getTaxeAssureurTotale() * $this->getTaux();
-        }
+        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(["forCourtier" => false, "tranche" => $this]);
         return $this->taxeAssureurTotale;
     }
 

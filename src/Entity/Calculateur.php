@@ -88,9 +88,13 @@ class Calculateur
         return $tot;
     }
 
-    public function getPrimeTotale()
+    public function getPrimeTotale(?array $parametres)
     {
-        return $this->getChargement([]);
+        if (isset($parametres["tranche"])) {
+            return $this->getChargement([]) * ($parametres["tranche"])->getTaux();
+        } else {
+            return $this->getChargement([]);
+        }
     }
 
     public function getChargement(?array $parametres)
@@ -110,7 +114,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getRetroComPartenaire(): float
+    public function getRetroComPartenaire(?array $parametres): float
     {
         $taux = 0;
         if ($this->cotation->getTauxretrocompartenaire() == 0) {
@@ -120,7 +124,12 @@ class Calculateur
         } else {
             $taux = $this->cotation->getTauxretrocompartenaire();
         }
-        return $this->getComPureGlobalePartageable() * $taux * 100;
+
+        if (isset($parametres["tranche"])) {
+            return $this->getComPureGlobalePartageable() * $taux * $parametres["tranche"]->getTaux();
+        } else {
+            return $this->getComPureGlobalePartageable() * $taux;
+        }
     }
 
     public function getComPureGlobalePartageable()
@@ -147,13 +156,17 @@ class Calculateur
         return $comPure;
     }
 
-    public function getComTTCGlobal()
+    public function getComTTCGlobal(?array $parametres)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
             $tot = $tot + $this->getComTTC($revenu);
         }
-        return $tot;
+        if (isset($parametres["tranche"])) {
+            return $tot * $parametres["tranche"]->getTaux();
+        } else {
+            return $tot;
+        }
     }
 
 
@@ -169,7 +182,11 @@ class Calculateur
                 $tot = $tot + $this->getMontantTaxe($revenu, $parametres["forCourtier"]);
             }
         }
-        return $tot;
+        if(isset($parametres["tranche"])){
+            return $tot * $parametres["tranche"]->getTaux();
+        }else{
+            return $tot;
+        }
     }
 
     public function getComfinaleHT(?Revenu $revenu): array

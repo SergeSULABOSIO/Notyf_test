@@ -295,7 +295,7 @@ class Cotation
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = (new Calculateur())->setCotation($this)->getPrimeTotale();
+        $this->primeTotale = (new Calculateur())->setCotation($this)->getPrimeTotale([]);
         return $this->primeTotale;
     }
 
@@ -422,7 +422,7 @@ class Cotation
      */
     public function getRetroComPartenaire()
     {
-        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire();
+        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire([]);
         return $this->retroComPartenaire;
     }
 
@@ -801,7 +801,7 @@ class Cotation
      */ 
     public function getRevenuTotalTTC()
     {
-        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getComTTCGlobal() * 100;
+        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getComTTCGlobal([]) * 100;
         return $this->revenuTotalTTC;
     }
 }

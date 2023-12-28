@@ -57,7 +57,7 @@ class RevenuCrudController extends AbstractCrudController
     ];
 
     //Partageable?
-    public const PARTAGEABLE_OUI = "Oui (avec le partenaire)";
+    public const PARTAGEABLE_OUI = "Oui";
     public const PARTAGEABLE_NON = "Pas du tout";
     public const TAB_PARTAGEABLE = [
         self::PARTAGEABLE_NON   => 0,

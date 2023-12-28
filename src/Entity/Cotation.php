@@ -106,7 +106,6 @@ class Cotation
     #[ORM\Column]
     private ?float $tauxretrocompartenaire = 0;
     private ?float $retroComPartenaire;
-
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
@@ -117,10 +116,6 @@ class Cotation
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    //private ?string $client;
-    //private ?string $gestionnaire;
-
-    private ?Monnaie $monnaie_Affichage;
 
     public function __construct()
     {

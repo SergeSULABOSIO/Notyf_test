@@ -1592,7 +1592,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('commissionTotale', "Com. (ht)")
+        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
             ->formatValue(function ($value, Tranche $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
             })

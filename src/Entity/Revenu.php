@@ -59,11 +59,12 @@ class Revenu
     //Les Champs non mappés
     private ?string $description;
     private ?Monnaie $monnaie_Affichage;
-    private ?float $montant = null;
-    private ?float $commissionTotale = 0;
-    private ?float $retroCommissionTotale = 0;
-    private ?float $taxeAssureurTotale = 0;
+    private ?float $comPure = null;
     private ?float $taxeCourtierTotale = 0;
+    private ?float $montant = null;
+    private ?float $taxeAssureurTotale = 0;
+    private ?float $revenuTotale = 0;
+    private ?float $retroCommissionTotale = 0;
 
     private ?bool $validated;
     private ?Client $client;
@@ -200,8 +201,7 @@ class Revenu
     public function getMontant(): ?float
     {
         //On calcul le revennu total
-        $data = $this->getComNette();
-        $this->montant = $data['revenufinal'];
+        $this->montant = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT_valeur($this);
         return $this->montant;
     }
 
@@ -217,103 +217,25 @@ class Revenu
         return $this;
     }
 
-    private function getMonnaie($fonction)
-    {
-        //dd($this->getEntreprise());
-        if ($this->getEntreprise()) {
-            $tabMonnaies = $this->getEntreprise()->getMonnaies();
-            //dd($tabMonnaies);
-            //dd($fonction);
-            foreach ($tabMonnaies as $monnaie) {
-                if ($monnaie->getFonction() == $fonction) {
-                    return $monnaie;
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * Get the value of monnaie_Affichage
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($this->monnaie_Affichage == null) {
-            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        //dd($this->monnaie_Affichage);
+        $this->monnaie_Affichage = (new Calculateur())->getMonnaie();
         return $this->monnaie_Affichage;
     }
 
     private function getCodeMonnaieAffichage(): string
     {
-        $strMonnaie = "";
-        $monnaieAff = $this->getMonnaie_Affichage();
-        if ($monnaieAff != null) {
-            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
-        }
+        $strMonnaie = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
         return $strMonnaie;
     }
 
     public function __toString()
     {
         return $this->getDescription();
-    }
-
-    // public function calc_getRevenuFinal()
-    // {
-    //     //On calcul le revennu total
-    //     //return $this->getComNette()['revenufinal'];
-
-    //     $calcuta = new Calculateur();
-    //     return $calcuta
-    //         ->setCotation($this->getCotation())
-    //         ->getComfinaleHT_valeur($this);
-    // }
-
-    private function getComNette()
-    {
-        $strBase = "";
-        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
-            if ($value == $this->base) {
-                $strBase = $key;
-            }
-        }
-
-        $strMonnaie = $this->getCodeMonnaieAffichage();
-        $data = [];
-        $prmNette = 0;
-        $fronting = 0;
-        if ($this->getCotation()) {
-            /** @var Cotation */
-            $quote = $this->getCotation();
-            $prmNette = ($quote->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
-            $fronting = ($quote->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
-        }
-        $montantFlat = ($this->getMontantFlat());
-        $taux = $this->taux;
-        switch ($strBase) {
-            case RevenuCrudController::BASE_PRIME_NETTE:
-                $data['revenufinal'] = ($taux * $prmNette);
-                $data['comNette'] = number_format(($taux * $prmNette), 2, ",", ".") . $strMonnaie;
-                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $strMonnaie;
-                break;
-            case RevenuCrudController::BASE_FRONTING:
-                $data['revenufinal'] = ($taux * $fronting);
-                $data['comNette'] = number_format(($taux * $fronting), 2, ",", ".") . $strMonnaie;
-                $data['formule'] = "" . number_format(($taux * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $strMonnaie;
-                break;
-            case RevenuCrudController::BASE_MONTANT_FIXE:
-                $data['revenufinal'] = ($montantFlat);
-                $data['comNette'] = number_format($montantFlat, 2, ",", ".") . $strMonnaie;
-                $data['formule'] = "une valeur fixe";
-                break;
-            default:
-                # code...
-                break;
-        }
-        return $data;
     }
 
     public function isIsparttranche(): ?bool
@@ -358,9 +280,8 @@ class Revenu
             }
         }
 
-
         //On calcul le revennu total
-        $data = $this->getComNette();
+        $data = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT($this);
 
         $strRedevablePar = "";
         if ($this->isIspartclient() == true) {
@@ -394,7 +315,7 @@ class Revenu
                     $i = 0;
                     foreach ($tabTranches as $tranche) {
                         $i = $i + 1;
-                        $comTranche = (($tranche->getTaux() / 100) * $data['revenufinal']) * 100;
+                        $comTranche = (($tranche->getTaux() / 100) * $data['montant_ht_valeur_numerique']) * 100;
                         if ($i == 1) {
                             $portions =  number_format($comTranche, 2, ",", ".") . $strMonnaie;
                         } else {
@@ -422,7 +343,7 @@ class Revenu
                 }
             }
         }
-        $this->description = $strType . " (" . $data['comNette'] . ", soit " . $data['formule'] . ")" . $strTranches . $strPartageable;
+        $this->description = $strType . " (" . $data['montant_ht_valeur_numerique'] . ", soit " . $data['montant_ht_formule'] . ")" . $strTranches . $strPartageable;
         return $this->description;
     }
 

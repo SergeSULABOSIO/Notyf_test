@@ -151,7 +151,7 @@ class Calculateur
         return $tot;
     }
 
-    private function getComfinaleHT(?Revenu $revenu): array
+    public function getComfinaleHT(?Revenu $revenu): array
     {
         $this->setEntreprise($revenu->getEntreprise());
         $strBase = "";

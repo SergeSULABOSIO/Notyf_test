@@ -56,7 +56,7 @@ class Tranche
     private ?Assureur $assureur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
-    private ?Partenaire $piste;
+    private ?Piste $piste;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;

@@ -216,7 +216,7 @@ class Revenu
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = (new Calculateur())->getMonnaie();
+        $this->monnaie_Affichage = (new Calculateur())->setCotation($this->getCotation())->getMonnaie();
         return $this->monnaie_Affichage;
     }
 

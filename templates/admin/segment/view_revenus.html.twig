@@ -19,7 +19,7 @@
                         <tr>
                             <td scope="row">{{ i }}</td>
                             <td>{{revenu.description}}</td>
-                            <td>{{(revenu.montant)|format_currency(revenu.monnaie_Affichage.code)}}</td>
+                            <td>{{(revenu.revenuTotale)|format_currency(revenu.monnaie_Affichage.code)}}</td>
                         </tr>
                         {% set i = i + 1 %}
                     {% endfor %}

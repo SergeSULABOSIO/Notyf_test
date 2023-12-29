@@ -94,14 +94,7 @@ class Tranche
      */
     public function getPolice()
     {
-        /** @var Police */
-        if ($this->cotation) {
-            if ($this->cotation->isValidated()) {
-                if (count($this->cotation->getPolices()) != 0) {
-                    $this->police = $this->cotation->getPolices()[0];
-                }
-            }
-        }
+        $this->police = (new Calculateur())->setCotation($this->getCotation())->getPolice();
         return $this->police;
     }
 
@@ -318,9 +311,7 @@ class Tranche
      */
     public function getClient()
     {
-        if ($this->getCotation()) {
-            $this->client = $this->getCotation()->getPiste()->getClient();
-        }
+        $this->client = (new Calculateur())->setCotation($this->getCotation())->getClient();
         return $this->client;
     }
 
@@ -329,9 +320,7 @@ class Tranche
      */
     public function getAssureur()
     {
-        if ($this->getCotation()) {
-            $this->assureur = $this->getCotation()->getAssureur();
-        }
+        $this->assureur = (new Calculateur())->setCotation($this->getCotation())->getAssureur();
         return $this->assureur;
     }
 
@@ -340,9 +329,7 @@ class Tranche
      */
     public function getProduit()
     {
-        if ($this->getCotation()) {
-            $this->produit = $this->getCotation()->getPiste()->getProduit();
-        }
+        $this->produit = (new Calculateur())->setCotation($this->getCotation())->getProduit();
         return $this->produit;
     }
 
@@ -351,9 +338,7 @@ class Tranche
      */
     public function getPartenaire()
     {
-        if ($this->getCotation()) {
-            $this->partenaire = $this->getCotation()->getPartenaire();
-        }
+        $this->partenaire = (new Calculateur())->setCotation($this->getCotation())->getPartenaire();
         return $this->partenaire;
     }
 
@@ -362,30 +347,17 @@ class Tranche
      */
     public function getAutoriteTaxeCourtier()
     {
-        $this->autoriteTaxeCourtier = $this->checkTaxe(true);
+        $this->autoriteTaxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getTaxeCourtier()->getOrganisation();
         return $this->autoriteTaxeCourtier;
     }
 
-    private function checkTaxe(?bool $payableParCourtier): string
-    {
-        if ($this->getEntreprise()) {
-            /** @var Taxe */
-            foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                if ($taxe->isPayableparcourtier() == $payableParCourtier) {
-                    return $taxe->getOrganisation();
-                }
-            }
-        } else {
-            return "Inconnue";
-        }
-    }
 
     /**
      * Get the value of autoriteTaxeAssureur
      */
     public function getAutoriteTaxeAssureur()
     {
-        $this->autoriteTaxeAssureur = $this->checkTaxe(false);
+        $this->autoriteTaxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getTaxeAssureur()->getOrganisation();
         return $this->autoriteTaxeAssureur;
     }
 
@@ -525,9 +497,7 @@ class Tranche
      */ 
     public function getPiste()
     {
-        if ($this->getCotation() != null) {
-            $this->piste = $this->getCotation()->getPiste();
-        }
+        $this->piste = (new Calculateur())->setCotation($this->getCotation())->getPiste();
         return $this->piste;
     }
 }

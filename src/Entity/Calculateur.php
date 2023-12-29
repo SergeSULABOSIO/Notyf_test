@@ -13,7 +13,7 @@ class Calculateur
     public const PARAMETRE_forCOURTIER = "forCourtier";
     public const PARAMETRE_isPARTAGEABLE = "isPartageable";
     public const PARAMETRE_TRANCHE = "tranche";
-    
+
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
     public const DATA_DESCRIPTION = "montant_ht_description";
     public const DATA_FORMULE = "montant_ht_formule";
@@ -190,9 +190,9 @@ class Calculateur
                 $tot = $tot + $this->getMontantTaxe($revenu, $parametres[self::PARAMETRE_forCOURTIER]);
             }
         }
-        if(isset($parametres[self::PARAMETRE_TRANCHE])){
+        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
             return $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
-        }else{
+        } else {
             return $tot;
         }
     }
@@ -261,6 +261,12 @@ class Calculateur
                 ->setAssureur($this->cotation->getAssureur())
                 ->setEntreprise($this->cotation->getEntreprise())
                 ->setUtilisateur($this->cotation->getUtilisateur());
+
+            if ($this->cotation->isValidated()) {
+                if (count($this->cotation->getPolices()) != 0) {
+                    $this->police = $this->cotation->getPolices()[0];
+                }
+            }
         }
         return $this;
     }

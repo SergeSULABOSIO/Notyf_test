@@ -308,7 +308,7 @@ class Revenu
                     $i = 0;
                     foreach ($tabTranches as $tranche) {
                         $i = $i + 1;
-                        $comTranche = (($tranche->getTaux() / 100) * $data['montant_ht_valeur_numerique']) * 100;
+                        $comTranche = (($tranche->getTaux() / 100) * $data[Calculateur::DATA_VALEUR]) * 100;
                         if ($i == 1) {
                             $portions =  number_format($comTranche, 2, ",", ".") . $strMonnaie;
                         } else {
@@ -336,7 +336,7 @@ class Revenu
                 }
             }
         }
-        $this->description = $strType . " (" . $data['montant_ht_valeur_numerique'] . ", soit " . $data['montant_ht_formule'] . ")" . $strTranches . $strPartageable;
+        $this->description = $strType . " (" . $data[Calculateur::DATA_VALEUR] . ", soit " . $data[Calculateur::DATA_FORMULE] . ")" . $strTranches . $strPartageable;
         return $this->description;
     }
 
@@ -384,14 +384,7 @@ class Revenu
      */
     public function getPolice()
     {
-        /** @var Police */
-        if ($this->cotation) {
-            if ($this->cotation->isValidated()) {
-                if (count($this->cotation->getPolices()) != 0) {
-                    $this->police = $this->cotation->getPolices()[0];
-                }
-            }
-        }
+        $this->police = (new Calculateur())->setCotation($this->getCotation())->getPolice();
         return $this->police;
     }
 
@@ -400,9 +393,7 @@ class Revenu
      */
     public function getAssureur()
     {
-        if ($this->getCotation()) {
-            $this->assureur = $this->getCotation()->getAssureur();
-        }
+        $this->assureur = (new Calculateur())->setCotation($this->getCotation())->getAssureur();
         return $this->assureur;
     }
 
@@ -411,11 +402,7 @@ class Revenu
      */
     public function getProduit()
     {
-        if ($this->getCotation()) {
-            if ($this->getCotation()->getPiste()) {
-                $this->produit = $this->getCotation()->getPiste()->getProduit();
-            }
-        }
+        $this->produit = (new Calculateur())->setCotation($this->getCotation())->getProduit();
         return $this->produit;
     }
 
@@ -424,9 +411,7 @@ class Revenu
      */
     public function getPartenaire()
     {
-        if ($this->getCotation()) {
-            $this->partenaire = $this->getCotation()->getPartenaire();
-        }
+        $this->partenaire = (new Calculateur())->setCotation($this->getCotation())->getPartenaire();
         return $this->partenaire;
     }
 
@@ -514,9 +499,7 @@ class Revenu
      */
     public function getPiste()
     {
-        if ($this->getCotation()) {
-            $this->piste = $this->getCotation()->getPiste();
-        }
+        $this->piste = (new Calculateur())->setCotation($this->getCotation())->getPiste();
         return $this->piste;
     }
 

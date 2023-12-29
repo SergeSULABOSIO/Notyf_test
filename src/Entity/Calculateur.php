@@ -13,6 +13,10 @@ class Calculateur
     public const PARAMETRE_forCOURTIER = "forCourtier";
     public const PARAMETRE_isPARTAGEABLE = "isPartageable";
     public const PARAMETRE_TRANCHE = "tranche";
+    
+    public const DATA_VALEUR = "montant_ht_valeur_numerique";
+    public const DATA_DESCRIPTION = "montant_ht_description";
+    public const DATA_FORMULE = "montant_ht_formule";
 
     private ?Police $police;
     private ?Cotation $cotation;
@@ -211,19 +215,19 @@ class Calculateur
         }
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
-                $data['montant_ht_valeur_numerique'] = ($revenu->getTaux() * $prmNette);
-                $data['montant_ht_description'] = number_format(($revenu->getTaux() * $prmNette), 2, ",", ".") . $this->codeMonnaie;
-                $data['montant_ht_formule'] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_VALEUR] = ($revenu->getTaux() * $prmNette);
+                $data[self::DATA_DESCRIPTION] = number_format(($revenu->getTaux() * $prmNette), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_FORMULE] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_FRONTING:
-                $data['montant_ht_valeur_numerique'] = ($revenu->getTaux() * $fronting);
-                $data['montant_ht_description'] = number_format(($revenu->getTaux() * $fronting), 2, ",", ".") . $this->codeMonnaie;
-                $data['montant_ht_formule'] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_VALEUR] = ($revenu->getTaux() * $fronting);
+                $data[self::DATA_DESCRIPTION] = number_format(($revenu->getTaux() * $fronting), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_FORMULE] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
-                $data['montant_ht_valeur_numerique'] = $revenu->getMontantFlat();
-                $data['montant_ht_description'] = number_format($revenu->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
-                $data['montant_ht_formule'] = "une valeur fixe";
+                $data[self::DATA_VALEUR] = $revenu->getMontantFlat();
+                $data[self::DATA_DESCRIPTION] = number_format($revenu->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_FORMULE] = "une valeur fixe";
                 break;
             default:
                 # code...

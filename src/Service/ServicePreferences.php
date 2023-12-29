@@ -956,28 +956,28 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
         $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()

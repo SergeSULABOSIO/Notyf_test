@@ -10,6 +10,10 @@ use App\Controller\Admin\ChargementCrudController;
 
 class Calculateur
 {
+    public const PARAMETRE_forCOURTIER = "forCourtier";
+    public const PARAMETRE_isPARTAGEABLE = "isPartageable";
+    public const PARAMETRE_TRANCHE = "tranche";
+
     private ?Police $police;
     private ?Cotation $cotation;
     private ?Piste $piste;
@@ -77,8 +81,8 @@ class Calculateur
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
-            if (isset($parametres["isPartageable"])) {
-                if ($parametres["isPartageable"] == $revenu->getPartageable()) {
+            if (isset($parametres[self::PARAMETRE_isPARTAGEABLE])) {
+                if ($parametres[self::PARAMETRE_isPARTAGEABLE] == $revenu->getPartageable()) {
                     $tot = $tot + $this->getComfinaleHT_valeur($revenu);
                 }
             } else {
@@ -90,8 +94,8 @@ class Calculateur
 
     public function getPrimeTotale(?array $parametres)
     {
-        if (isset($parametres["tranche"])) {
-            return $this->getChargement([]) * ($parametres["tranche"])->getTaux();
+        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
+            return $this->getChargement([]) * ($parametres[self::PARAMETRE_TRANCHE])->getTaux();
         } else {
             return $this->getChargement([]);
         }
@@ -125,8 +129,8 @@ class Calculateur
             $taux = $this->cotation->getTauxretrocompartenaire();
         }
 
-        if (isset($parametres["tranche"])) {
-            return $this->getComPureGlobalePartageable() * $taux * $parametres["tranche"]->getTaux();
+        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
+            return $this->getComPureGlobalePartageable() * $taux * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
         } else {
             return $this->getComPureGlobalePartageable() * $taux;
         }
@@ -134,13 +138,13 @@ class Calculateur
 
     public function getComPureGlobalePartageable()
     {
-        $parametres = ["isPartageable" => true, "forCourtier" => true];
+        $parametres = [self::PARAMETRE_isPARTAGEABLE => true, self::PARAMETRE_forCOURTIER => true];
         return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
     public function getComPureGlobale()
     {
-        $parametres = ["forCourtier" => true];
+        $parametres = [self::PARAMETRE_forCOURTIER => true];
         return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
@@ -162,8 +166,8 @@ class Calculateur
         foreach ($this->cotation->getRevenus() as $revenu) {
             $tot = $tot + $this->getComTTC($revenu);
         }
-        if (isset($parametres["tranche"])) {
-            return $tot * $parametres["tranche"]->getTaux();
+        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
+            return $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
         } else {
             return $tot;
         }
@@ -174,16 +178,16 @@ class Calculateur
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
-            if (isset($parametres["isPartageable"])) {
-                if ($parametres["isPartageable"] == $revenu->getPartageable()) {
-                    $tot = $tot + $this->getMontantTaxe($revenu, $parametres["forCourtier"]);
+            if (isset($parametres[self::PARAMETRE_isPARTAGEABLE])) {
+                if ($parametres[self::PARAMETRE_isPARTAGEABLE] == $revenu->getPartageable()) {
+                    $tot = $tot + $this->getMontantTaxe($revenu, $parametres[self::PARAMETRE_forCOURTIER]);
                 }
             } else {
-                $tot = $tot + $this->getMontantTaxe($revenu, $parametres["forCourtier"]);
+                $tot = $tot + $this->getMontantTaxe($revenu, $parametres[self::PARAMETRE_forCOURTIER]);
             }
         }
-        if(isset($parametres["tranche"])){
-            return $tot * $parametres["tranche"]->getTaux();
+        if(isset($parametres[self::PARAMETRE_TRANCHE])){
+            return $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
         }else{
             return $tot;
         }

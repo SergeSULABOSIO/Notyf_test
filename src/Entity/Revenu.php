@@ -245,11 +245,6 @@ class Revenu
 
     public function isIspartclient(): ?bool
     {
-        if ($this->getCotation()) {
-            if ($this->getCotation()->getPiste()) {
-                $this->client = $this->getCotation()->getPiste()->getClient();
-            }
-        }
         return $this->ispartclient;
     }
 

@@ -15,8 +15,8 @@ class ElementFacture
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
-    private ?Tranche $tranche = null;
+    // #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
+    // private ?Tranche $tranche = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $montant = null;
@@ -50,6 +50,9 @@ class ElementFacture
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
+
+    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade: ['persist', 'remove'])]
+    private ?Tranche $tranche = null;
 
     
 
@@ -159,17 +162,17 @@ class ElementFacture
         return $this;
     }
 
-    public function getTranche(): ?Tranche
-    {
-        return $this->tranche;
-    }
+    // public function getTranche(): ?Tranche
+    // {
+    //     return $this->tranche;
+    // }
 
-    public function setTranche(?Tranche $tranche): self
-    {
-        $this->tranche = $tranche;
+    // public function setTranche(?Tranche $tranche): self
+    // {
+    //     $this->tranche = $tranche;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * Get the value of primeTotale
@@ -232,5 +235,17 @@ class ElementFacture
     {
         $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale() * 100;
         return $this->taxeAssureurTotale;
+    }
+
+    public function getTranche(): ?Tranche
+    {
+        return $this->tranche;
+    }
+
+    public function setTranche(?Tranche $tranche): self
+    {
+        $this->tranche = $tranche;
+
+        return $this;
     }
 }

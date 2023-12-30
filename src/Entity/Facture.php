@@ -444,9 +444,7 @@ class Facture
     {
         $total = 0;
         foreach ($this->elementFactures as $ef) {
-            /** @var Tranche */
-            $tranche = $ef->getTranche();
-            $total = $total + $tranche->getMontant();
+            $total = $total + $ef->getMontant();
         }
         $this->montantTTC = $total;
         return $this->montantTTC;

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
 use App\Controller\Admin\MonnaieCrudController;
@@ -73,8 +75,16 @@ class Tranche
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
 
-    #[ORM\OneToOne(mappedBy: 'tranche', cascade: ['persist', 'remove'])]
-    private ?ElementFacture $elementFacture = null;
+    #[ORM\OneToMany(mappedBy: 'tranche', targetEntity: ElementFacture::class)]
+    private Collection $elementFactures;
+
+    public function __construct()
+    {
+        $this->elementFactures = new ArrayCollection();
+    }
+
+    // #[ORM\OneToOne(mappedBy: 'tranche', cascade: ['persist', 'remove'])]
+    // private ?ElementFacture $elementFacture = null;
 
 
     public function getId(): ?int
@@ -511,27 +521,27 @@ class Tranche
         return $this->piste;
     }
 
-    public function getElementFacture(): ?ElementFacture
-    {
-        return $this->elementFacture;
-    }
+    // public function getElementFacture(): ?ElementFacture
+    // {
+    //     return $this->elementFacture;
+    // }
 
-    public function setElementFacture(?ElementFacture $elementFacture): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($elementFacture === null && $this->elementFacture !== null) {
-            $this->elementFacture->setTranche(null);
-        }
+    // public function setElementFacture(?ElementFacture $elementFacture): self
+    // {
+    //     // unset the owning side of the relation if necessary
+    //     if ($elementFacture === null && $this->elementFacture !== null) {
+    //         $this->elementFacture->setTranche(null);
+    //     }
 
-        // set the owning side of the relation if necessary
-        if ($elementFacture !== null && $elementFacture->getTranche() !== $this) {
-            $elementFacture->setTranche($this);
-        }
+    //     // set the owning side of the relation if necessary
+    //     if ($elementFacture !== null && $elementFacture->getTranche() !== $this) {
+    //         $elementFacture->setTranche($this);
+    //     }
 
-        $this->elementFacture = $elementFacture;
+    //     $this->elementFacture = $elementFacture;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * Get the value of fraisGestionTotale
@@ -558,5 +568,35 @@ class Tranche
             ]
         );
         return $this->revenuTotal;
+    }
+
+    /**
+     * @return Collection<int, ElementFacture>
+     */
+    public function getElementFactures(): Collection
+    {
+        return $this->elementFactures;
+    }
+
+    public function addElementFacture(ElementFacture $elementFacture): self
+    {
+        if (!$this->elementFactures->contains($elementFacture)) {
+            $this->elementFactures->add($elementFacture);
+            $elementFacture->setTranche($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElementFacture(ElementFacture $elementFacture): self
+    {
+        if ($this->elementFactures->removeElement($elementFacture)) {
+            // set the owning side to null (unless already changed)
+            if ($elementFacture->getTranche() === $this) {
+                $elementFacture->setTranche(null);
+            }
+        }
+
+        return $this;
     }
 }

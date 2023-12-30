@@ -383,11 +383,36 @@ class TrancheCrudController extends AbstractCrudController
     public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect(
-            $this->serviceCrossCanal->crossCanal_creer_facture(
-                $adminUrlGenerator,
+            // $this->serviceCrossCanal->crossCanal_creer_facture(
+            //     $adminUrlGenerator,
+            //     [($context->getEntity()->getInstance())->getId()],
+            //     FactureCrudController::TYPE_FACTURE_PRIME
+            // )
+            $this->editFacture(
                 [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_PRIME
+                FactureCrudController::TYPE_FACTURE_PRIME,
+                $adminUrlGenerator
             )
+        );
+    }
+
+    public function facturerCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_COMMISSIONS,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    private function editFacture(?array $tabIdTranches, ?string $typeFacture, AdminUrlGenerator $adminUrlGenerator): ?string
+    {
+        return $this->serviceCrossCanal->crossCanal_creer_facture(
+            $adminUrlGenerator,
+            $tabIdTranches,
+            $typeFacture
         );
     }
 }

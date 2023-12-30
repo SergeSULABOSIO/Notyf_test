@@ -270,21 +270,21 @@ class ServiceFacture
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getCommissionTotale());
+                        $ef->setMontant($oTranche->getCommissionTotale() * 100);
                         $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getFraisGestionTotale());
+                        $ef->setMontant($oTranche->getFraisGestionTotale() * 100);
                         $facture->setAutreTiers($oTranche->getClient());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getRetroCommissionTotale());
+                        $ef->setMontant($oTranche->getRetroCommissionTotale() * 100);
                         $facture->setPartenaire($oTranche->getPartenaire());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
@@ -293,7 +293,7 @@ class ServiceFacture
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getTaxeAssureurTotale());
+                        $ef->setMontant($oTranche->getTaxeAssureurTotale() * 100);
                         $facture->setAutreTiers($taxe->getOrganisation());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
@@ -302,7 +302,7 @@ class ServiceFacture
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getTaxeCourtierTotale());
+                        $ef->setMontant($oTranche->getTaxeCourtierTotale() * 100);
                         $facture->setAutreTiers($taxe->getOrganisation());
                         break;
                     default:

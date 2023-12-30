@@ -189,9 +189,9 @@ class ServiceCrossCanal
             ->setController(DocPieceCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Cotation: " . $entite . "]")
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            // ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            // ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            // ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
 
             ->set(self::CROSSED_ENTITY_COTATION, $entite->getId())
             ->setEntityId(null)
@@ -512,28 +512,28 @@ class ServiceCrossCanal
             // ->set("champsADesactiver[4]", PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
             // ->set("champsADesactiver[5]", PreferenceCrudController::PREF_PRO_POLICE_PRODUIT)
             ->set("champsADesactiver[6]", PreferenceCrudController::PREF_PRO_POLICE_COTATION);
-            // ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
-            // ->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
-            // ->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
-            // ->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
-            // ->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
-            // ->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
-            // ->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
-            // ->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
-            // ->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
-            // ->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
-            // ->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
-            // ->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
-            // ->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
-            // ->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
-            // ->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
-            // ->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
-            // ->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
-            // ->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
-            // ->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
-            // ->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
-            // ->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
-            // ->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE);
+        // ->set("champsADesactiver[7]", PreferenceCrudController::PREF_PRO_POLICE_REASSUREURS)
+        // ->set("champsADesactiver[8]", PreferenceCrudController::PREF_PRO_POLICE_CAPITAL)
+        // ->set("champsADesactiver[9]", PreferenceCrudController::PREF_PRO_POLICE_MODE_PAIEMENT)
+        // ->set("champsADesactiver[10]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_NETTE)
+        // ->set("champsADesactiver[11]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING)
+        // ->set("champsADesactiver[12]", PreferenceCrudController::PREF_PRO_POLICE_ARCA)
+        // ->set("champsADesactiver[13]", PreferenceCrudController::PREF_PRO_POLICE_TVA)
+        // ->set("champsADesactiver[14]", PreferenceCrudController::PREF_PRO_POLICE_FRAIS_ADMIN)
+        // ->set("champsADesactiver[15]", PreferenceCrudController::PREF_PRO_POLICE_DISCOUNT)
+        // ->set("champsADesactiver[16]", PreferenceCrudController::PREF_PRO_POLICE_PRIME_TOTALE)
+        // ->set("champsADesactiver[17]", PreferenceCrudController::PREF_PRO_POLICE_PARTENAIRE)
+        // ->set("champsADesactiver[18]", PreferenceCrudController::PREF_PRO_POLICE_PART_EXCEPTIONNELLE)
+        // ->set("champsADesactiver[19]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM)
+        // ->set("champsADesactiver[20]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_RI_COM)
+        // ->set("champsADesactiver[21]", PreferenceCrudController::PREF_PRO_POLICE_RI_COM_PAYABLE_BY)
+        // ->set("champsADesactiver[22]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM)
+        // ->set("champsADesactiver[23]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_LOCAL_COM)
+        // ->set("champsADesactiver[24]", PreferenceCrudController::PREF_PRO_POLICE_LOCAL_COM_PAYABLE_BY)
+        // ->set("champsADesactiver[25]", PreferenceCrudController::PREF_PRO_POLICE_FRONTIN_COM)
+        // ->set("champsADesactiver[26]", PreferenceCrudController::PREF_PRO_POLICE_CANHSARE_FRONTING_COM)
+        // ->set("champsADesactiver[27]", PreferenceCrudController::PREF_PRO_POLICE_FRONTING_COM_PAYABLE_BY)
+        // ->set("champsADesactiver[28]", PreferenceCrudController::PREF_PRO_POLICE_REMARQUE);
     }
 
     private function desactiverChampsRenouvellement(AdminUrlGenerator $adminUrlGenerator)
@@ -722,9 +722,9 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PIECE - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            // ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            // ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            // ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -735,7 +735,7 @@ class ServiceCrossCanal
         /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementCommissionCrudController::class)
+            // ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP COMMISSION - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
@@ -749,7 +749,7 @@ class ServiceCrossCanal
         /** @var Police */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementCommissionCrudController::class)
+            // ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::NEW)
             ->set("titre", "NOUVELLE PDP COMMISSION - [Police: " . $entite . "]")
             ->set(self::CROSSED_ENTITY_POLICE, $entite->getId())
@@ -885,9 +885,9 @@ class ServiceCrossCanal
             ->setAction(Action::NEW)
             ->set("titre", "NOUVEAU DOCUMENT - [Sinistre: " . $sinistre . "]")
             ->set(self::CROSSED_ENTITY_SINISTRE, $sinistre->getId())
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            // ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            // ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            // ->set("champsACacher[2]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
             ->setEntityId(null)
             ->generateUrl();
         return $url;
@@ -1012,7 +1012,7 @@ class ServiceCrossCanal
             ->set('filters[' . self::CROSSED_ENTITY_PISTE . '][comparison]', ComparisonType::EQ) //'='
             ->setEntityId(null)
             ->generateUrl();
-        
+
         return $url;
     }
 
@@ -1230,7 +1230,7 @@ class ServiceCrossCanal
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementCommissionCrudController::class)
+            // ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP COMMISSIONS - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1246,7 +1246,7 @@ class ServiceCrossCanal
         /** @var DocPiece */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementCommissionCrudController::class)
+            // ->setController(PaiementCommissionCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP COMMISSIONS - [Pièce justificative: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1262,7 +1262,7 @@ class ServiceCrossCanal
         /** @var DocPiece */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementPartenaireCrudController::class)
+            // ->setController(PaiementPartenaireCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP RETO-COMMISSIONS - [Pièce justificative: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1278,7 +1278,7 @@ class ServiceCrossCanal
         /** @var DocPiece */
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementTaxeCrudController::class)
+            // ->setController(PaiementTaxeCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP TAXES - [Pièce justificative: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_DOC_PIECE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1293,7 +1293,7 @@ class ServiceCrossCanal
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementPartenaireCrudController::class)
+            // ->setController(PaiementPartenaireCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP PARTENAIRES - [Police: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1550,22 +1550,33 @@ class ServiceCrossCanal
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementTaxeCrudController::class)
-            ->setAction(Action::INDEX)
-            ->set("titre", "LISTE DES PDP TAXE - [Police: " . $entite . "] & [Taxe: " . $taxe . "]")
-            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
-            ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
-            ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][value]', $taxe->getId()) //il faut juste passer son ID
-            ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][comparison]', '=')
-            ->setEntityId(null)
+            // ->setController(PaiementTaxeCrudController::class)
+            // ->setAction(Action::INDEX)
+            // ->set("titre", "LISTE DES PDP TAXE - [Police: " . $entite . "] & [Taxe: " . $taxe . "]")
+            // ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][value]', $entite->getId()) //il faut juste passer son ID
+            // ->set('filters[' . self::CROSSED_ENTITY_POLICE . '][comparison]', '=')
+            // ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][value]', $taxe->getId()) //il faut juste passer son ID
+            // ->set('filters[' . self::CROSSED_ENTITY_TAXE . '][comparison]', '=')
+            // ->setEntityId(null)
             ->generateUrl();
 
         return $url;
     }
 
-    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, $typeFacture)
+
+    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, ?string $typeFacture)
     {
         switch ($typeFacture) {
+            case FactureCrudController::TYPE_FACTURE_PRIME:
+                $adminUrlGenerator
+                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+                    ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+                    ->set("champsACacher[4]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
+                break;
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                 $adminUrlGenerator
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
@@ -1574,6 +1585,15 @@ class ServiceCrossCanal
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                     ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                     ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
+                break;
+            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                $adminUrlGenerator
+                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
                 break;
             case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                 $adminUrlGenerator
@@ -1605,15 +1625,6 @@ class ServiceCrossCanal
                     ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                     ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
                 break;
-            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                $adminUrlGenerator
-                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                    ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
-                break;
             default:
                 # code...
                 break;
@@ -1621,17 +1632,17 @@ class ServiceCrossCanal
         return $adminUrlGenerator;
     }
 
-    public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdPolice, $typeFacture)
+    public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdTranches, ?string $typeFacture)
     {
         //$entite = $context->getEntity()->getInstance();
         $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", $typeFacture)
+            ->set("titre", "EDITION FACTURE - " . $typeFacture)
             ->set("donnees[type]", $typeFacture)
             ->set("donnees[action]", "facture")
-            ->set("donnees[tabPolices]", $tabIdPolice)
+            ->set("donnees[tabTranches]", $tabIdTranches)
             ->setEntityId(null)
             ->generateUrl();
 
@@ -1678,9 +1689,9 @@ class ServiceCrossCanal
     public function paiement_definirChampsCollectionPieces(AdminUrlGenerator $adminUrlGenerator)
     {
         $adminUrlGenerator
-            ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
-            ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
-            ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
+            // ->set("champsACacher[0]", PreferenceCrudController::PREF_BIB_DOCUMENT_POLICE)
+            // ->set("champsACacher[1]", PreferenceCrudController::PREF_BIB_DOCUMENT_SINISTRE)
+            // ->set("champsACacher[5]", PreferenceCrudController::PREF_BIB_DOCUMENT_COTATION)
             ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
             ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE);
     }
@@ -1748,7 +1759,7 @@ class ServiceCrossCanal
     {
         $entite = $context->getEntity()->getInstance();
         $url = $adminUrlGenerator
-            ->setController(PaiementPartenaireCrudController::class)
+            // ->setController(PaiementPartenaireCrudController::class)
             ->setAction(Action::INDEX)
             ->set("titre", "LISTE DES PDP PARTENAIRES - [Partenaire: " . $entite . "]")
             ->set('filters[' . self::CROSSED_ENTITY_PARTENAIRE . '][value]', $entite->getId()) //il faut juste passer son ID
@@ -1780,7 +1791,7 @@ class ServiceCrossCanal
         $paramIDAction = $adminUrlGenerator->get(self::CROSSED_ENTITY_ACTION);
         if ($paramIDAction != null) {
             $actionCRM = $this->entityManager->getRepository(ActionCRM::class)->find($paramIDAction);
-            $feedbackCRM->setAction($actionCRM);
+            // $feedbackCRM->setAction($actionCRM);
         }
         return $feedbackCRM;
     }
@@ -1854,7 +1865,7 @@ class ServiceCrossCanal
         $paramIDSinistre = $adminUrlGenerator->get(self::CROSSED_ENTITY_SINISTRE);
         if ($paramIDSinistre != null) {
             $sinistre = $this->entityManager->getRepository(Sinistre::class)->find($paramIDSinistre);
-            $docPiece->setSinistre($sinistre);
+            // $docPiece->setSinistre($sinistre);
             $docPiece->setPolice($sinistre->getPolice());
             $docPiece->setCotation($sinistre->getPolice()->getCotation());
         }
@@ -2094,7 +2105,7 @@ class ServiceCrossCanal
         if ($paramID != null) {
             /** @var Police */
             $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
-            $actionCRM->setPolice($objet);
+            // $actionCRM->setPolice($objet);
             // if ($objet->getCotation() != null) {
             //     $actionCRM->setCotation($objet->getCotation());
             //     if ($objet->getCotation()->getPiste() != null) {
@@ -2111,7 +2122,7 @@ class ServiceCrossCanal
         if ($paramID != null) {
             /** @var Cotation */
             $objet = $this->entityManager->getRepository(Cotation::class)->find($paramID);
-            $actionCRM->setCotation($objet);
+            // $actionCRM->setCotation($objet);
             if ($objet->getPiste() != null) {
                 $actionCRM->setPiste($objet->getPiste());
             }
@@ -2125,10 +2136,10 @@ class ServiceCrossCanal
         if ($paramID != null) {
             /** @var Sinistre */
             $objet = $this->entityManager->getRepository(Sinistre::class)->find($paramID);
-            $actionCRM->setSinistre($objet);
+            // $actionCRM->setSinistre($objet);
             //Définition de la police
             if ($objet->getPolice() != null) {
-                $actionCRM->setPolice($objet->getPolice());
+                // $actionCRM->setPolice($objet->getPolice());
                 //Définition de la cotation
                 // if ($objet->getPolice()->getCotation() != null) {
                 //     $actionCRM->setCotation($objet->getPolice()->getCotation());
@@ -2155,7 +2166,7 @@ class ServiceCrossCanal
 
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator, $entite): Crud
     {
-        
+
         if ($adminUrlGenerator->get("titre")) {
             $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));

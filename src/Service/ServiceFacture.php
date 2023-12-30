@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\Assureur;
 use App\Entity\DocPiece;
 use App\Entity\Paiement;
 use App\Entity\Tranche;
@@ -54,10 +55,8 @@ class ServiceFacture
             //dd($data["type"]);
             if (isset($data["type"]) && isset($data["tabTranches"])) {
                 $description = $data["type"] . ", Ref.:" . $facture->getReference();
-                //$description = $description . "<br>" . count($data["tabPolices"]) . " élément(s).";
                 $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
                 $total = $this->chargerElementFactures($facture, $data["type"], $data["tabTranches"]);
-                //$description = $description . "<br>Montant Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total);
             }
             $facture->setDescription($description);
         }
@@ -265,24 +264,28 @@ class ServiceFacture
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
                         $ef->setMontant($oTranche->getPrimeTotale());
+                        $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
                         $ef->setMontant($oTranche->getCommissionTotale());
+                        $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
                         $ef->setMontant($oTranche->getFraisGestionTotale());
+                        $facture->setAutreTiers($oTranche->getClient());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
                         $ef->setMontant($oTranche->getRetroCommissionTotale());
+                        $facture->setPartenaire($oTranche->getPartenaire());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                         /** @var Taxe */
@@ -399,7 +402,8 @@ class ServiceFacture
         }
     }
 
-    private function stream(?string $fileName, ?array $options){
+    private function stream(?string $fileName, ?array $options)
+    {
         $this->dompdf->stream($fileName, $options);
         return "RAS-SERGE";
     }

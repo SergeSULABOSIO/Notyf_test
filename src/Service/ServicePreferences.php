@@ -511,9 +511,9 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Facture) {
             $tabAttributs = [
-                FormField::addPanel('Facture')
+                FormField::addTab(' Informations générales')
                     ->setIcon('fa-solid fa-receipt') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Facture / Note de débit.")
+                    ->setHelp("Facture / Note de débit / Note de percetion pertant de collecter des fonds. Ceci n'est qu'une représentation virtuelle de la copie réelle que vous devez attacher ici dès que possible.")
             ];
             $tabAttributs = $this->setFIN_Fields_Facture_Index($preference->getFinFactures(), PreferenceCrudController::TAB_FIN_FACTURE, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Facture_Details($tabAttributs);
@@ -1709,7 +1709,7 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID)
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+        $tabAttributs[] = AssociationField::new('tranche', "Tranche")
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_FACTURE)
             ->onlyOnDetail();
@@ -1743,8 +1743,51 @@ class ServicePreferences
             ->setStoredAsCents()
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
+        $tabAttributs[] = MoneyField::new('primeTotale', "Prime d'assurance")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
             ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('fraisGestionTotale', "Frais de gestion")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-commission")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('taxeAssureurTotale', ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(12)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('tranche', "Tranche")
+            ->setColumns(12)
+            ->setDisabled(true)
             ->setRequired(false)
             ->onlyOnForms();
 
@@ -1845,78 +1888,93 @@ class ServicePreferences
 
     public function setFIN_Fields_Facture_form($tabAttributs)
     {
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_TYPE)) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
-            $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-                ->setRequired(false)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
-            $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                ->setRequired(false)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
-            $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
-                ->setRequired(false)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)) {
-            $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
-                ->useEntryCrudForm(ElementFactureCrudController::class)
-                ->allowAdd(true)
-                ->allowDelete(true)
-                ->setEntryIsComplex()
-                ->setRequired(false)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
-            $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
-                ->setRequired(false)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
-            $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                ->setRequired(false)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)
-                ->setRequired(true)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)) {
-            $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)
-                ->setRequired(true)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        //On désactive les champs non éditables
-        $this->appliquerCanDesable($tabAttributs);
+        //Section - Principale
+        $tabAttributs[] = FormField::addPanel("Section principale")
+            ->setIcon("fas fa-location-crosshairs")
+            ->setColumns(10)
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+            ->setRequired(false)
+            ->setColumns(5)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+            ->setRequired(false)
+            ->setColumns(5)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+            ->setRequired(false)
+            ->setColumns(5)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->onlyOnForms()
+            ->setColumns(5);
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
+            ->onlyOnForms()
+            ->setColumns(5);
 
-        return $tabAttributs;
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+        $tabAttributs[] = AssociationField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)
+            ->setRequired(true)
+            ->setColumns(5)
+            ->onlyOnForms();
+        $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)
+            ->setRequired(true)
+            ->setColumns(5)
+            ->onlyOnForms();
+
+        //Onglet Article
+        $tabAttributs[] = FormField::addTab(' Articles facturés')
+            ->setIcon('fas fa-handshake')
+            ->setHelp("Les articles de la facture.")
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('montantTTC', "Totale à payer")
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+        $tabAttributs[] = FormField::addPanel("Articles facturés")
+            ->setIcon("fa-solid fa-layer-group")
+            ->setHelp("Elements constitutifs de la facture ou de la note de débit/crédit.")
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = CollectionField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
+            ->useEntryCrudForm(ElementFactureCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+        //Section - Documents
+        $tabAttributs[] = FormField::addTab("Documents ou pièces jointes")
+            ->setIcon("fa-solid fa-paperclip")
+            ->setHelp("Merci d'attacher vos pièces justificatives par ici.")
+            ->onlyOnForms();
+        $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
+            //->setHelp("Vous avez la possibilité d'en ajouter des données à volonté.")
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(12)
+            ->onlyOnForms();
+
+        return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
     }
 
     public function setCRM_Fields_Produits_Details($tabAttributs)
@@ -2284,11 +2342,37 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function appliquerCanDesable($tabAttributs)
+    public function appliquerCanDesable($tabAttributs): ?array
     {
         foreach ($tabAttributs as $champ) {
-            $champ->setDisabled($this->canDesable($this->adminUrlGenerator, $champ->getAsDto()->getLabel()));
+            if ($this->canDesable($this->adminUrlGenerator, $champ->getAsDto()->getLabel())) {
+                $champ->setDisabled(true);
+            }
         }
+        return $tabAttributs;
+    }
+
+    public function appliquerCanHide($tabAttributs): ?array
+    {
+        $tabIndexASupprimer = [];
+        $index = 0;
+        //On identifie les champs à ne pas afficher sur le formulaire
+        foreach ($tabAttributs as $champ) {
+            if ($this->canHide($this->adminUrlGenerator, $champ->getAsDto()->getLabel())) {
+                $tabIndexASupprimer[] = $index;
+                //dd("I can hide: " . $champ->getAsDto()->getLabel() . "=" . $index);
+            }
+            $index = $index + 1;
+        }
+        //dd($tabIndexASupprimer);
+        //On retire les champs à ne pas afficher sur le formulaire
+        for ($i = 0; $i < count($tabIndexASupprimer); $i++) {
+            $indexASupprimer = $tabIndexASupprimer[$i];
+            //dd("Indice à supprimer = " . $indexASupprimer);
+            unset($tabAttributs[$indexASupprimer]);
+        }
+        //dd($tabAttributs);
+        return $tabAttributs;
     }
 
     public function setCRM_Fields_Produits_form($tabAttributs)
@@ -4295,16 +4379,23 @@ class ServicePreferences
 
     public function canHide($adminUrlGenerator, $nomChamp): Bool
     {
-        $reponse = false;
         $champsACacher = new ArrayCollection([]);
         if ($adminUrlGenerator->get("champsACacher")) {
             $champsACacher = new ArrayCollection($adminUrlGenerator->get("champsACacher"));
         }
         //dd($champsACacher);
-        $reponse = !$champsACacher->contains($nomChamp);
-        //dd($champsACacher . ": " . $reponse);
+        //dd($nomChamp);
+        return $champsACacher->contains($nomChamp);
+    }
 
-        return $reponse;
+    private function contient(?array $tab, $donnees): bool
+    {
+        foreach ($tab as $key => $value) {
+            if ($donnees == $value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function canDesable($adminUrlGenerator, $nomChamp): Bool
@@ -5037,7 +5128,6 @@ class ServicePreferences
             ->onlyOnForms() //
             ->setColumns(10)
             ->setDisabled(true);
-
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_CRM_PISTE_NOM)
             ->setColumns(10)
             ->onlyOnForms();

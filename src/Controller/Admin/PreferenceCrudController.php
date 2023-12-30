@@ -728,7 +728,7 @@ class PreferenceCrudController extends AbstractCrudController
     public const PREF_FIN_ELEMENT_FACTURE_ID                = "Id";
     public const PREF_FIN_ELEMENT_FACTURE_POLICE            = "Police";
     public const PREF_FIN_ELEMENT_FACTURE_FACTURE           = "Facture";
-    public const PREF_FIN_ELEMENT_FACTURE_MONTANT           = "Montant";
+    public const PREF_FIN_ELEMENT_FACTURE_MONTANT           = "Montant à payer";
     public const PREF_FIN_ELEMENT_FACTURE_ENTREPRISE        = "Entreprise";
     public const PREF_FIN_ELEMENT_FACTURE_UTILISATEUR       = "Utilisateur";
     public const PREF_FIN_ELEMENT_FACTURE_DATE_CREATION     = "Date de création";

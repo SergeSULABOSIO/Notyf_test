@@ -51,8 +51,8 @@ class Facture
 
     #[ORM\Column(nullable: true)]
     private ?float $totalRecu = null;
-    
-    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class, cascade:['remove', 'persist', 'refresh'])]
+
+    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: ElementFacture::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $elementFactures;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -76,11 +76,17 @@ class Facture
     #[ORM\Column(nullable: true)]
     private ?int $status = null;
 
+    #[ORM\OneToMany(mappedBy: 'facture', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
+    private Collection $documents;
+
+    private ?float $montantTTC;
+
     public function __construct()
     {
         $this->elementFactures = new ArrayCollection();
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,7 +258,7 @@ class Facture
                 //$tiers = ".";
                 break;
         }
-        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers;// . $this->description;
+        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers; // . $this->description;
     }
 
     /**
@@ -398,5 +404,51 @@ class Facture
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, DocPiece>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(DocPiece $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setFacture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(DocPiece $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getFacture() === $this) {
+                $document->setFacture(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of montantTTC
+     */
+    public function getMontantTTC()
+    {
+        $total = 0;
+        foreach ($this->elementFactures as $ef) {
+            /** @var Tranche */
+            $tranche = $ef->getTranche();
+            $total = $total + $tranche->getMontant();
+        }
+        $this->montantTTC = $total;
+        return $this->montantTTC;
     }
 }

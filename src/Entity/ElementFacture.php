@@ -43,6 +43,15 @@ class ElementFacture
     private ?string $typeavenant = null;
 
     
+    private ?float $primeTotale = 0;
+    private ?float $commissionTotale = 0;
+    private ?float $fraisGestionTotale = 0;
+    private ?float $revenuTotal = 0;
+    private ?float $retroCommissionTotale = 0;
+    private ?float $taxeCourtierTotale = 0;
+    private ?float $taxeAssureurTotale = 0;
+
+    
 
     public function getId(): ?int
     {
@@ -111,7 +120,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "Id: " . $this->id;// . " | Police: " . $this->police . " | Mnt: " . ($this->montant/100). "";
+        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . ($this->getMontant() / 100). "";
     }
 
     public function getFacture(): ?Facture
@@ -160,5 +169,68 @@ class ElementFacture
         $this->tranche = $tranche;
 
         return $this;
+    }
+
+    /**
+     * Get the value of primeTotale
+     */ 
+    public function getPrimeTotale()
+    {
+        $this->primeTotale = $this->getTranche()->getPrimeTotale();
+        return $this->primeTotale;
+    }
+
+    /**
+     * Get the value of commissionTotale
+     */ 
+    public function getCommissionTotale()
+    {
+        $this->commissionTotale = $this->getTranche()->getCommissionTotale() * 100;
+        return $this->commissionTotale;
+    }
+
+    /**
+     * Get the value of fraisGestionTotale
+     */ 
+    public function getFraisGestionTotale()
+    {
+        $this->fraisGestionTotale = $this->getTranche()->getFraisGestionTotale() * 100;
+        return $this->fraisGestionTotale;
+    }
+
+    /**
+     * Get the value of revenuTotal
+     */ 
+    public function getRevenuTotal()
+    {
+        $this->revenuTotal = $this->getTranche()->getRevenuTotal() * 100;
+        return $this->revenuTotal;
+    }
+
+    /**
+     * Get the value of retroCommissionTotale
+     */ 
+    public function getRetroCommissionTotale()
+    {
+        $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale() * 100;
+        return $this->retroCommissionTotale;
+    }
+
+    /**
+     * Get the value of taxeCourtierTotale
+     */ 
+    public function getTaxeCourtierTotale()
+    {
+        $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale() * 100;
+        return $this->taxeCourtierTotale;
+    }
+
+    /**
+     * Get the value of taxeAssureurTotale
+     */ 
+    public function getTaxeAssureurTotale()
+    {
+        $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale() * 100;
+        return $this->taxeAssureurTotale;
     }
 }

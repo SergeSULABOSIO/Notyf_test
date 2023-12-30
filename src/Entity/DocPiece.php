@@ -68,6 +68,9 @@ class DocPiece
     private ?int $codeFormatFichier;
     private ?string $logoFormatFichier;
 
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Facture $facture = null;
+
     public function __construct()
     {
     }
@@ -352,5 +355,17 @@ class DocPiece
         }
         $this->logoFormatFichier = $htmlLogo;
         return $this->logoFormatFichier;
+    }
+
+    public function getFacture(): ?Facture
+    {
+        return $this->facture;
+    }
+
+    public function setFacture(?Facture $facture): self
+    {
+        $this->facture = $facture;
+
+        return $this;
     }
 }

@@ -356,12 +356,13 @@ class FactureCrudController extends AbstractCrudController
     public function getDataTransform(Facture $facture, bool $isBordereau): array{
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         //dd(count($facture->getElementFactures()));
+
         //On actualise les attributs calculables des Polices
-        foreach ($facture->getElementFactures() as $ef) {
-            /** @var Police  */
-            $pol = $ef->getPolice();
-            $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
-        }
+        // foreach ($facture->getElementFactures() as $ef) {
+        //     /** @var Tranche  */
+        //     $pol = $ef->getTranche();
+        //     $this->serviceCalculateur->updatePoliceCalculableFileds($pol);
+        // }
 
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),

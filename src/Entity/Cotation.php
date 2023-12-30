@@ -316,7 +316,7 @@ class Cotation
      */
     public function getRevenuTotalHT()
     {
-        $this->revenuTotalHT = (new Calculateur())->setCotation($this)->getComfinaleHTGlobale([]) * 100;
+        $this->revenuTotalHT = (new Calculateur())->setCotation($this)->getRevenufinaleHTGlobale([]) * 100;
         return $this->revenuTotalHT;
     }
 
@@ -452,7 +452,7 @@ class Cotation
      */
     public function getRevenuTotalHTPartageable()
     {
-        $this->revenuTotalHTPartageable = (new Calculateur())->setCotation($this)->getComfinaleHTGlobale(["isPartageable" => true]) * 100;
+        $this->revenuTotalHTPartageable = (new Calculateur())->setCotation($this)->getRevenufinaleHTGlobale(["isPartageable" => true]) * 100;
         return $this->revenuTotalHTPartageable;
     }
 
@@ -461,7 +461,7 @@ class Cotation
      */
     public function getRevenuNetTotal()
     {
-        $this->revenuNetTotal = (new Calculateur())->setCotation($this)->getComPureGlobale() * 100;
+        $this->revenuNetTotal = (new Calculateur())->setCotation($this)->getRevenuPureGlobale() * 100;
         return $this->revenuNetTotal;
     }
 
@@ -479,7 +479,7 @@ class Cotation
      */
     public function getRevenuNetTotalPartageable()
     {
-        $this->revenuNetTotalPartageable = (new Calculateur())->setCotation($this)->getComPureGlobalePartageable() * 100;
+        $this->revenuNetTotalPartageable = (new Calculateur())->setCotation($this)->getRevenuPureGlobalePartageable() * 100;
         return $this->revenuNetTotalPartageable;
     }
 
@@ -801,7 +801,7 @@ class Cotation
      */ 
     public function getRevenuTotalTTC()
     {
-        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getComTTCGlobal([]) * 100;
+        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getRevenuTTCGlobal([]) * 100;
         return $this->revenuTotalTTC;
     }
 }

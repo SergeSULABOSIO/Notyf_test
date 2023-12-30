@@ -389,12 +389,18 @@ class ServiceFacture
             $options = ["Attachment" => $canDownload];
             $streamPDF = $this->dompdf->stream($fileName, $options);
             return new Response(
-                $streamPDF,
+                //$streamPDF,
+                $this->stream($fileName, $options),
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/pdf']
             );
         } else {
             return new Response("", Response::HTTP_NO_CONTENT, []);
         }
+    }
+
+    private function stream(?string $fileName, ?array $options){
+        $this->dompdf->stream($fileName, $options);
+        return "RAS-SERGE";
     }
 }

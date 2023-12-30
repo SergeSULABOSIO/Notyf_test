@@ -242,12 +242,35 @@ class TrancheCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        // $duplicate = Action::new(DashboardController::ACTION_DUPLICATE)
-        //     ->setIcon('fa-solid fa-copy')
-        //     ->linkToCrudAction('dupliquerEntite'); //<i class="fa-solid fa-copy"></i>
         $ouvrir = Action::new(DashboardController::ACTION_OPEN)
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
+
+        $facturePrime = Action::new("Facturer la prime")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
+
+        $factureCommission = Action::new("Facturer la commission")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
+
+        $factureFraisGestion = Action::new("Facturer les frais de gestion")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
+
+        $factureRetroCommission = Action::new("Facturer les retro-com.")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerRetroCommission'); //<i class="fa-solid fa-eye"></i>
+
+        $factureTaxeCourtier = Action::new("Facturer la Taxe Courtier")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
+
+        $factureTaxeAssureur = Action::new("Facturer la Taxe Assureur")
+            ->setIcon('fa-solid fa-receipt')
+            ->linkToCrudAction('facturerTaxeAssureur'); //<i class="fa-solid fa-eye"></i>
+
+
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
@@ -294,10 +317,19 @@ class TrancheCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
+            ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
+            ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
+            ->add(Crud::PAGE_INDEX, $factureRetroCommission)
+            ->add(Crud::PAGE_INDEX, $factureFraisGestion)
+            ->add(Crud::PAGE_INDEX, $factureCommission)
+            ->add(Crud::PAGE_INDEX, $facturePrime)
+
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
-            
+
+
+
             //Reorganisation des boutons
             // ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             // ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -316,8 +348,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ;
+            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
     public function exporterMSExcels(BatchActionDto $batchActionDto)
@@ -344,6 +375,26 @@ class TrancheCrudController extends AbstractCrudController
             ->setController(self::class)
             ->setAction(Action::DETAIL)
             ->setEntityId($entite->getId())
+            ->generateUrl();
+
+        return $this->redirect($url);
+    }
+
+    public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        $typeFacture = FactureCrudController::TYPE_FACTURE_PRIME;
+        /** @var Tranche */
+        $tranche = $context->getEntity()->getInstance();
+        $tabIdTranches = [$tranche->getId()];
+
+        $url = $adminUrlGenerator
+            ->setController(FactureCrudController::class)
+            ->setAction(Action::NEW)
+            ->set("titre", $typeFacture)
+            ->set("donnees[type]", $typeFacture)
+            ->set("donnees[action]", "facture")
+            ->set("donnees[tabTranches]", $tabIdTranches)
+            ->setEntityId(null)
             ->generateUrl();
 
         return $this->redirect($url);

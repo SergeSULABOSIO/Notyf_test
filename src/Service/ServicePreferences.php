@@ -1598,6 +1598,20 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('fraisGestionTotale', "Frais de gestion")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisGestionTotale() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotal() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
             ->formatValue(function ($value, Tranche $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale() * 100);

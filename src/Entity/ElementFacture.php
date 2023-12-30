@@ -15,8 +15,8 @@ class ElementFacture
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures')]
-    private ?Police $police = null;
+    #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
+    private ?Tranche $tranche = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $montant = null;
@@ -42,21 +42,11 @@ class ElementFacture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
 
+    
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPolice(): ?Police
-    {
-        return $this->police;
-    }
-
-    public function setPolice(?Police $police): self
-    {
-        $this->police = $police;
-
-        return $this;
     }
 
     public function getMontant(): ?float
@@ -121,7 +111,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "Id: " . $this->id . " | Police: " . $this->police . " | Mnt: " . ($this->montant/100). "";
+        return "Id: " . $this->id;// . " | Police: " . $this->police . " | Mnt: " . ($this->montant/100). "";
     }
 
     public function getFacture(): ?Facture
@@ -156,6 +146,18 @@ class ElementFacture
     public function setTypeavenant(?string $typeavenant): self
     {
         $this->typeavenant = $typeavenant;
+
+        return $this;
+    }
+
+    public function getTranche(): ?Tranche
+    {
+        return $this->tranche;
+    }
+
+    public function setTranche(?Tranche $tranche): self
+    {
+        $this->tranche = $tranche;
 
         return $this;
     }

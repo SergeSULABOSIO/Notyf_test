@@ -41,6 +41,8 @@ class Tranche
     private ?float $montant = 0;
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
+    private ?float $fraisGestionTotale = 0;
+    private ?float $revenuTotal = 0;
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
@@ -70,7 +72,10 @@ class Tranche
     private ?\DateTimeImmutable $dateOperation = null;
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
-    
+
+    #[ORM\OneToOne(mappedBy: 'tranche', cascade: ['persist', 'remove'])]
+    private ?ElementFacture $elementFacture = null;
+
 
     public function getId(): ?int
     {
@@ -263,7 +268,12 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getComTTCGlobal(["tranche" => $this]);
+        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
+            [
+                Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
+                "tranche" => $this
+            ]
+        );
         return $this->commissionTotale;
     }
 
@@ -363,7 +373,7 @@ class Tranche
 
     /**
      * Get the value of validated
-     */ 
+     */
     public function getValidated()
     {
         if ($this->getCotation() != null) {
@@ -374,7 +384,7 @@ class Tranche
 
     /**
      * Get the value of startedAt
-     */ 
+     */
     public function getStartedAt()
     {
         return $this->startedAt;
@@ -384,7 +394,7 @@ class Tranche
      * Set the value of startedAt
      *
      * @return  self
-     */ 
+     */
     public function setStartedAt($startedAt)
     {
         $this->startedAt = $startedAt;
@@ -394,7 +404,7 @@ class Tranche
 
     /**
      * Get the value of endedAt
-     */ 
+     */
     public function getEndedAt()
     {
         return $this->endedAt;
@@ -404,7 +414,7 @@ class Tranche
      * Set the value of endedAt
      *
      * @return  self
-     */ 
+     */
     public function setEndedAt($endedAt)
     {
         $this->endedAt = $endedAt;
@@ -414,7 +424,7 @@ class Tranche
 
     /**
      * Get the value of dateEffet
-     */ 
+     */
     public function getDateEffet()
     {
         return $this->dateEffet;
@@ -424,7 +434,7 @@ class Tranche
      * Set the value of dateEffet
      *
      * @return  self
-     */ 
+     */
     public function setDateEffet($dateEffet)
     {
         $this->dateEffet = $dateEffet;
@@ -434,7 +444,7 @@ class Tranche
 
     /**
      * Get the value of dateExpiration
-     */ 
+     */
     public function getDateExpiration()
     {
         return $this->dateExpiration;
@@ -444,7 +454,7 @@ class Tranche
      * Set the value of dateExpiration
      *
      * @return  self
-     */ 
+     */
     public function setDateExpiration($dateExpiration)
     {
         $this->dateExpiration = $dateExpiration;
@@ -454,7 +464,7 @@ class Tranche
 
     /**
      * Get the value of dateOperation
-     */ 
+     */
     public function getDateOperation()
     {
         return $this->dateOperation;
@@ -464,7 +474,7 @@ class Tranche
      * Set the value of dateOperation
      *
      * @return  self
-     */ 
+     */
     public function setDateOperation($dateOperation)
     {
         $this->dateOperation = $dateOperation;
@@ -474,7 +484,7 @@ class Tranche
 
     /**
      * Get the value of dateEmition
-     */ 
+     */
     public function getDateEmition()
     {
         return $this->dateEmition;
@@ -484,7 +494,7 @@ class Tranche
      * Set the value of dateEmition
      *
      * @return  self
-     */ 
+     */
     public function setDateEmition($dateEmition)
     {
         $this->dateEmition = $dateEmition;
@@ -494,10 +504,59 @@ class Tranche
 
     /**
      * Get the value of piste
-     */ 
+     */
     public function getPiste()
     {
         $this->piste = (new Calculateur())->setCotation($this->getCotation())->getPiste();
         return $this->piste;
+    }
+
+    public function getElementFacture(): ?ElementFacture
+    {
+        return $this->elementFacture;
+    }
+
+    public function setElementFacture(?ElementFacture $elementFacture): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($elementFacture === null && $this->elementFacture !== null) {
+            $this->elementFacture->setTranche(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($elementFacture !== null && $elementFacture->getTranche() !== $this) {
+            $elementFacture->setTranche($this);
+        }
+
+        $this->elementFacture = $elementFacture;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fraisGestionTotale
+     */
+    public function getFraisGestionTotale()
+    {
+        $this->fraisGestionTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
+            [
+                Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
+                "tranche" => $this
+            ]
+        );
+        return $this->fraisGestionTotale;
+    }
+
+    /**
+     * Get the value of revenuTotal
+     */ 
+    public function getRevenuTotal()
+    {
+        $this->revenuTotal = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
+            [
+                "tranche" => $this
+            ]
+        );
+        return $this->revenuTotal;
     }
 }

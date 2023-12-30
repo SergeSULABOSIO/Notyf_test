@@ -5,13 +5,13 @@ namespace App\Entity;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ChargementCrudController;
-
-
+use Doctrine\Common\Collections\Collection;
 
 class Calculateur
 {
     public const PARAMETRE_forCOURTIER = "forCourtier";
     public const PARAMETRE_isPARTAGEABLE = "isPartageable";
+    public const PARAMETRE_isPAYABLE_PAR_CLIENT = "isPayableParClient";
     public const PARAMETRE_TRANCHE = "tranche";
 
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
@@ -23,6 +23,7 @@ class Calculateur
     private ?Piste $piste;
     private ?Client $client;
     private ?Entreprise $entreprise;
+    private ?Collection $comptesBancaires;
     private ?Utilisateur $utilisateur;
     private ?Produit $produit;
     private ?Partenaire $partenaire;
@@ -49,14 +50,14 @@ class Calculateur
             foreach ($this->getTaxes() as $taxe) {
                 if ($taxe->isPayableparcourtier() == $forCourtier) {
                     if ($this->client->isExoneree() == true || $revenu->getTaxable() == false) {
-                        $montantTaxe = (0 * $this->getComfinaleHT_valeur($revenu)) / 100;
+                        $montantTaxe = (0 * $this->getRevenufinaleHT_valeur($revenu)) / 100;
                         break;
                     } else {
                         if ($this->produit->isIard()) {
-                            $montantTaxe = ($taxe->getTauxIARD() * $this->getComfinaleHT_valeur($revenu)) / 100;
+                            $montantTaxe = ($taxe->getTauxIARD() * $this->getRevenufinaleHT_valeur($revenu)) / 100;
                             break;
                         } else {
-                            $montantTaxe = ($taxe->getTauxVIE() * $this->getComfinaleHT_valeur($revenu)) / 100;
+                            $montantTaxe = ($taxe->getTauxVIE() * $this->getRevenufinaleHT_valeur($revenu)) / 100;
                             break;
                         }
                     }
@@ -66,31 +67,31 @@ class Calculateur
         return $montantTaxe * 100;
     }
 
-    public function getComfinaleHT_valeur(?Revenu $revenu)
+    public function getRevenufinaleHT_valeur(?Revenu $revenu)
     {
-        return $this->getComfinaleHT($revenu)["montant_ht_valeur_numerique"];
+        return $this->getRevenufinaleHT($revenu)["montant_ht_valeur_numerique"];
     }
 
-    public function getComfinaleHT_description(?Revenu $revenu)
+    public function getRevenufinaleHT_description(?Revenu $revenu)
     {
-        return $this->getComfinaleHT($revenu)["montant_ht_description"];
+        return $this->getRevenufinaleHT($revenu)["montant_ht_description"];
     }
 
-    public function getComfinaleHT_formule(?Revenu $revenu)
+    public function getRevenufinaleHT_formule(?Revenu $revenu)
     {
-        return $this->getComfinaleHT($revenu)["montant_ht_formule"];
+        return $this->getRevenufinaleHT($revenu)["montant_ht_formule"];
     }
 
-    public function getComfinaleHTGlobale(?array $parametres)
+    public function getRevenufinaleHTGlobale(?array $parametres)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
             if (isset($parametres[self::PARAMETRE_isPARTAGEABLE])) {
                 if ($parametres[self::PARAMETRE_isPARTAGEABLE] == $revenu->getPartageable()) {
-                    $tot = $tot + $this->getComfinaleHT_valeur($revenu);
+                    $tot = $tot + $this->getRevenufinaleHT_valeur($revenu);
                 }
             } else {
-                $tot = $tot + $this->getComfinaleHT_valeur($revenu);
+                $tot = $tot + $this->getRevenufinaleHT_valeur($revenu);
             }
         }
         return $tot;
@@ -134,41 +135,48 @@ class Calculateur
         }
 
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
-            return $this->getComPureGlobalePartageable() * $taux * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
+            return $this->getRevenuPureGlobalePartageable() * $taux * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
         } else {
-            return $this->getComPureGlobalePartageable() * $taux;
+            return $this->getRevenuPureGlobalePartageable() * $taux;
         }
     }
 
-    public function getComPureGlobalePartageable()
+    public function getRevenuPureGlobalePartageable()
     {
         $parametres = [self::PARAMETRE_isPARTAGEABLE => true, self::PARAMETRE_forCOURTIER => true];
-        return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
+        return $this->getRevenufinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
-    public function getComPureGlobale()
+    public function getRevenuPureGlobale()
     {
         $parametres = [self::PARAMETRE_forCOURTIER => true];
-        return $this->getComfinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
+        return $this->getRevenufinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
-    public function getComPure(?Revenu $revenu)
+    public function getRevenuPure(?Revenu $revenu)
     {
-        $comPure = $this->getComfinaleHT_valeur($revenu) - $this->getMontantTaxe($revenu, true);
+        $comPure = $this->getRevenufinaleHT_valeur($revenu) - $this->getMontantTaxe($revenu, true);
         return $comPure;
     }
 
-    public function getComTTC(?Revenu $revenu)
+    public function getRevenuTTC(?array $parametres, ?Revenu $revenu)
     {
-        $comPure = $this->getComfinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+        $comPure = 0;
+        if (isset($parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT])) {
+            if ($revenu->isIspartclient() == $parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT]) {
+                $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+            }
+        }else{
+            $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+        }
         return $comPure;
     }
 
-    public function getComTTCGlobal(?array $parametres)
+    public function getRevenuTTCGlobal(?array $parametres)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
-            $tot = $tot + $this->getComTTC($revenu);
+            $tot = $tot + $this->getRevenuTTC($parametres, $revenu);
         }
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
             return $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
@@ -197,7 +205,7 @@ class Calculateur
         }
     }
 
-    public function getComfinaleHT(?Revenu $revenu): array
+    public function getRevenufinaleHT(?Revenu $revenu): array
     {
         $this->setEntreprise($revenu->getEntreprise());
         $strBase = "";
@@ -350,6 +358,8 @@ class Calculateur
                     $this->taxeAssureur = $taxe;
                 }
             }
+            //On charge les comptes bancaires
+            $this->comptesBancaires = $this->entreprise->getCompteBancaires();
         }
         return $this;
     }
@@ -543,5 +553,13 @@ class Calculateur
         $this->taxeCourtier = $taxeCourtier;
 
         return $this;
+    }
+
+    /**
+     * Get the value of comptesBancaires
+     */
+    public function getComptesBancaires()
+    {
+        return $this->comptesBancaires;
     }
 }

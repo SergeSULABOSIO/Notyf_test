@@ -64,7 +64,6 @@ class Revenu
     private ?float $revenuNet = 0;
     private ?float $taxeAssureur = 0;
     private ?float $revenuTotale = 0;
-    private ?float $retroCommission = 0;
 
     private ?bool $validated;
     private ?Client $client;
@@ -269,7 +268,7 @@ class Revenu
         }
 
         //On calcul le revennu total
-        $data = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT($this);
+        $data = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT($this);
 
         $strRedevablePar = "";
         if ($this->isIspartclient() == true) {
@@ -504,7 +503,7 @@ class Revenu
     public function getRevenuNet()
     {
         //On calcul le revennu total
-        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getComfinaleHT_valeur($this);
+        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT_valeur($this);
         return $this->revenuNet;
     }
 
@@ -531,7 +530,7 @@ class Revenu
      */ 
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getComPure($this);
+        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRevenuPure($this);
         return $this->revenuPure;
     }
 
@@ -540,7 +539,7 @@ class Revenu
      */ 
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getComTTC($this);
+        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTC([], $this);
         return $this->revenuTotale;
     }
 }

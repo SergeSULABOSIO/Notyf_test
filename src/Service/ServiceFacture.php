@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
 use App\Entity\DocPiece;
 use App\Entity\Paiement;
+use App\Entity\Tranche;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -50,11 +51,12 @@ class ServiceFacture
         if ($adminUrlGenerator->get("donnees")) {
             $data = $adminUrlGenerator->get("donnees");
             $description = "";
-            if ($data["type"] && $data["tabPolices"]) {
+            //dd($data["type"]);
+            if (isset($data["type"]) && isset($data["tabTranches"])) {
                 $description = $data["type"] . ", Ref.:" . $facture->getReference();
                 //$description = $description . "<br>" . count($data["tabPolices"]) . " élément(s).";
                 $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
-                $total = $this->chargerElementFactures($facture, $data["type"], $data["tabPolices"]);
+                $total = $this->chargerElementFactures($facture, $data["type"], $data["tabTranches"]);
                 //$description = $description . "<br>Montant Total: " . $this->serviceMonnaie->getMonantEnMonnaieAffichage($total);
             }
             $facture->setDescription($description);
@@ -180,7 +182,8 @@ class ServiceFacture
         return $reponses;
     }
 
-    public function updatePieceInfos(Paiement $paiement){
+    public function updatePieceInfos(Paiement $paiement)
+    {
         foreach ($paiement->getPieces() as $piece) {
             $piece->setCreatedAt($paiement->getCreatedAt());
             $piece->setUpdatedAt($paiement->getUpdatedAt());
@@ -233,35 +236,41 @@ class ServiceFacture
         return $police->calc_taxes_courtier_solde != 0;
     }
 
-    private function chargerElementFactures(Facture $facture, $typeFacture, array $tabIdPolices)
+    private function chargerElementFactures(Facture $facture, $typeFacture, array $tabIdTranches)
     {
         $total = 0;
-        foreach ($tabIdPolices as $idPolice) {
-            /** @var Police */
-            $oPolice = $this->entityManager->getRepository(Police::class)->find($idPolice);
-            if ($oPolice) {
-                $this->serviceCalculateur->updatePoliceCalculableFileds($oPolice);
-
+        foreach ($tabIdTranches as $idTranche) {
+            /** @var Tranche */
+            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+            if ($oTranche) {
+                //$this->serviceCalculateur->updatePoliceCalculableFileds($oPolice);
                 switch ($typeFacture) {
+                    case FactureCrudController::TYPE_FACTURE_PRIME:
+                        /** @var ElementFacture */
+                        $ef = new ElementFacture();
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getPrimeTotale());
+                        // $facture->setAssureur($oPolice->getAssureur());
+                        break;
                     case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
-                        $ef->setPolice($oPolice);
-                        $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getCommissionTotale());
                         // $facture->setAssureur($oPolice->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
-                        $ef->setPolice($oPolice);
-                        $ef->setMontant($oPolice->calc_revenu_ttc_solde_restant_du);
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getFraisGestionTotale());
                         // $facture->setAutreTiers($oPolice->getClient()->getNom());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
-                        $ef->setPolice($oPolice);
-                        $ef->setMontant($oPolice->calc_retrocom_solde);
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getRetroCommissionTotale());
                         // $facture->setPartenaire($oPolice->getPartenaire());
                         break;
                     case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
@@ -295,9 +304,9 @@ class ServiceFacture
         //Etablissement du lien entre Police et Facture
         //C'est super important.
         //foreach ($facture->getElementFactures() as $ef) {
-            /** @var Police */
-            //$oPolice = $ef->getPolice();
-            //$oPolice->addFacture($facture);
+        /** @var Police */
+        //$oPolice = $ef->getPolice();
+        //$oPolice->addFacture($facture);
         //}
         //dd($facture);
         return $total;

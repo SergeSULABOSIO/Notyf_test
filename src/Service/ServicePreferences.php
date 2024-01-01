@@ -1845,44 +1845,6 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)->onlyOnDetail();
 
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)) {
-        //     $tabAttributs[] = TextareaField::new('description', PreferenceCrudController::PREF_FIN_FACTURE_DESCRIPTION)
-        //         ->renderAsHtml()
-        //         ->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)) {
-        //     $tabAttributs[] = TextField::new('signedBy', PreferenceCrudController::PREF_FIN_FACTURE_SIGNED_BY)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)) {
-        //     $tabAttributs[] = TextField::new('posteSignedBy', PreferenceCrudController::PREF_FIN_FACTURE_POSTE_SIGNED_BY)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)) {
-        //     $tabAttributs[] = AssociationField::new('partenaire', PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)) {
-        //     $tabAttributs[] = AssociationField::new('assureur', PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)) {
-        //     $tabAttributs[] = TextField::new('autreTiers', PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_PIECE)) {
-        //     $tabAttributs[] = AssociationField::new('piece', PreferenceCrudController::PREF_FIN_FACTURE_PIECE)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)) {
-        //     $tabAttributs[] = ArrayField::new('compteBancaires', PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)) {
-        //     $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_FIN_FACTURE_DATE_DE_CREATION)->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_DATE_MODIFICATION)) {
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)) {
-        //     $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_FIN_FACTURE_UTILISATEUR)
-        //         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])->onlyOnDetail();
-        // }
-        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)) {
-        //     $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_FIN_FACTURE_ENTREPRISE)->onlyOnDetail();
-        // }
         return $tabAttributs;
     }
 
@@ -1974,8 +1936,8 @@ class ServicePreferences
             ->setColumns(12)
             ->onlyOnForms();
 
-        return $tabAttributs;
-        //return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
+        //return $tabAttributs;
+        return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
     }
 
     public function setCRM_Fields_Produits_Details($tabAttributs)
@@ -2110,67 +2072,51 @@ class ServicePreferences
         $tauxAssureur = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), false);
         $tauxCourtier = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
         //dd($taux);
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION)) {
-            $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
-                ->onlyOnForms()
-                ->setColumns(12)
-                ->setRequired(false)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
-                    if ($this->entityInstance instanceof Piste) {
-                        /** @var Piste */
-                        $piste = $this->entityInstance;
-                        if ($this->isNewPiste == false) {
-                            return $entityRepository
-                                ->createQueryBuilder('e')
-                                ->Where('e.entreprise = :ese')
-                                ->andWhere('e.piste = :piste')
-                                ->setParameter('piste', $piste)
-                                ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                        } else {
-                            return $entityRepository
-                                ->createQueryBuilder('e')
-                                ->Where('e.entreprise = :ese')
-                                ->andWhere('e.validated = :val')
-                                ->andWhere('e.piste = :piste')
-                                ->setParameter('val', 0)
-                                ->setParameter('piste', null)
-                                ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
-                        }
+        //dd($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_COTATION));
+        $tabAttributs[] = AssociationField::new('cotation', PreferenceCrudController::PREF_PRO_POLICE_COTATION)
+            ->onlyOnForms()
+            ->setColumns(12)
+            ->setRequired(false)
+            ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                if ($this->entityInstance instanceof Piste) {
+                    /** @var Piste */
+                    $piste = $this->entityInstance;
+                    if ($this->isNewPiste == false) {
+                        return $entityRepository
+                            ->createQueryBuilder('e')
+                            ->Where('e.entreprise = :ese')
+                            ->andWhere('e.piste = :piste')
+                            ->setParameter('piste', $piste)
+                            ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                     } else {
                         return $entityRepository
                             ->createQueryBuilder('e')
                             ->Where('e.entreprise = :ese')
+                            ->andWhere('e.validated = :val')
+                            ->andWhere('e.piste = :piste')
+                            ->setParameter('val', 0)
+                            ->setParameter('piste', null)
                             ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
                     }
-                });
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)) {
-            $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
-                ->onlyOnForms()
-                ->setColumns(12);
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)) {
-            $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
-                ->onlyOnForms()
-                ->setColumns(12);
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)) {
-            $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
-                ->onlyOnForms()
-                ->setColumns(12);
-        }
-        if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)) {
-            $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
-                ->onlyOnForms()
-                ->setColumns(12);
-        }
-        // if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)) {
-        //     $tabAttributs[] = DateTimeField::new('dateexpiration', PreferenceCrudController::PREF_PRO_POLICE_DATE_EXPIRATION)
-        //         ->onlyOnForms()
-        //         //->setDisabled(true)
-        //         ->setColumns(12);
-        // }
-
+                } else {
+                    return $entityRepository
+                        ->createQueryBuilder('e')
+                        ->Where('e.entreprise = :ese')
+                        ->setParameter('ese', $this->serviceEntreprise->getEntreprise());
+                }
+            });
+        $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_PRO_POLICE_REFERENCE)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = DateTimeField::new('dateoperation', PreferenceCrudController::PREF_PRO_POLICE_DATE_OPERATION)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = DateTimeField::new('dateemission', PreferenceCrudController::PREF_PRO_POLICE_DATE_EMISSION)
+            ->onlyOnForms()
+            ->setColumns(12);
+        $tabAttributs[] = DateTimeField::new('dateeffet', PreferenceCrudController::PREF_PRO_POLICE_DATE_EFFET)
+            ->onlyOnForms()
+            ->setColumns(12);
 
         if ($this->piste != null) {
             if (count($this->piste->getPolices()) != 0) {
@@ -2340,7 +2286,7 @@ class ServicePreferences
             }
         }
 
-        // return $tabAttributs;
+        //return $tabAttributs;
         return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
     }
 
@@ -2349,8 +2295,6 @@ class ServicePreferences
         foreach ($tabAttributs as $champ) {
             if ($this->canDesable($this->adminUrlGenerator, $champ->getAsDto()->getLabel())) {
                 $champ->setDisabled(true);
-            } else {
-                $champ->setDisabled(false);
             }
         }
         return $tabAttributs;
@@ -4550,7 +4494,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setDisabled(true)
             ->setColumns(12);
-        $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxTva * 100) . "%)"))
+        $tabAttributs[] = MoneyField::new('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxArca * 100) . "%)"))
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()
@@ -4581,22 +4525,8 @@ class ServicePreferences
             ->setDisabled(true)
             ->setColumns(12);
 
-
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_NOM) == true) {
-        }
-
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_ASSUREUR)) {
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)) {
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)) {
-        }
-        if ($this->canHide($adminUrlGenerator, PreferenceCrudController::PREF_CRM_COTATION_REVENUS)) {
-        }
-
-
-        return $tabAttributs;
-        //return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
+        //return $tabAttributs;
+        return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
     }
 
     private function isExoneree(): bool

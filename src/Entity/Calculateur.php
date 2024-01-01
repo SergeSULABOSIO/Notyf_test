@@ -166,7 +166,7 @@ class Calculateur
             if ($revenu->isIspartclient() == $parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT]) {
                 $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
             }
-        }else{
+        } else {
             $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
         }
         return $comPure;
@@ -233,7 +233,7 @@ class Calculateur
                 $data[self::DATA_FORMULE] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
-                $data[self::DATA_VALEUR] = $revenu->getMontantFlat();
+                $data[self::DATA_VALEUR] = $revenu->getMontantFlat() / 100;
                 $data[self::DATA_DESCRIPTION] = number_format($revenu->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
                 $data[self::DATA_FORMULE] = "une valeur fixe";
                 break;
@@ -262,14 +262,16 @@ class Calculateur
         $this->cotation = $cotation;
         if ($this->cotation != null) {
             $this
-                ->setClient($this->cotation->getPiste()->getClient())
-                ->setProduit($this->cotation->getPiste()->getProduit())
-                ->setPartenaire($this->cotation->getPartenaire())
                 ->setPiste($this->cotation->getPiste())
                 ->setAssureur($this->cotation->getAssureur())
                 ->setEntreprise($this->cotation->getEntreprise())
                 ->setUtilisateur($this->cotation->getUtilisateur());
-
+            if ($this->piste != null) {
+                $this
+                    ->setClient($this->piste->getClient())
+                    ->setProduit($this->piste->getProduit())
+                    ->setPartenaire($this->piste->getPartenaire());
+            }
             if ($this->cotation->isValidated()) {
                 if (count($this->cotation->getPolices()) != 0) {
                     $this->police = $this->cotation->getPolices()[0];
@@ -479,6 +481,7 @@ class Calculateur
      */
     public function getCodeMonnaie()
     {
+        //dd($this);
         return $this->codeMonnaie;
     }
 

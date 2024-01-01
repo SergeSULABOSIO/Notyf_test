@@ -22,11 +22,7 @@ use App\Entity\Partenaire;
 use App\Entity\DocClasseur;
 use App\Entity\FeedbackCRM;
 use App\Entity\DocCategorie;
-use App\Entity\PaiementTaxe;
 use App\Entity\EtapeSinistre;
-use App\Entity\PaiementCommission;
-use App\Entity\PaiementPartenaire;
-use App\Entity\CommentaireSinistre;
 use App\Entity\Facture;
 use App\Entity\Paiement;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,9 +30,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Service\ServiceEntreprise as ServiceServiceEntreprise;
-use Doctrine\Persistence\ObjectManager;
 
 class ServiceSuppression
 {
@@ -412,22 +406,22 @@ class ServiceSuppression
         $this->detruireEntites($this->entityManager->getRepository(Monnaie::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         ));
-        $this->detruireEntites($this->entityManager->getRepository(PaiementCommission::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        ));
-        $this->detruireEntites($this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        ));
-        $this->detruireEntites($this->entityManager->getRepository(PaiementTaxe::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        ));
+        // $this->detruireEntites($this->entityManager->getRepository(PaiementCommission::class)->findBy(
+        //     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        // ));
+        // $this->detruireEntites($this->entityManager->getRepository(PaiementPartenaire::class)->findBy(
+        //     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        // ));
+        // $this->detruireEntites($this->entityManager->getRepository(PaiementTaxe::class)->findBy(
+        //     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        // ));
     }
 
     private function detruireSINISTRE()
     {
-        $this->detruireEntites($this->entityManager->getRepository(CommentaireSinistre::class)->findBy(
-            ['entreprise' => $this->serviceEntreprise->getEntreprise()]
-        ));
+        // $this->detruireEntites($this->entityManager->getRepository(CommentaireSinistre::class)->findBy(
+        //     ['entreprise' => $this->serviceEntreprise->getEntreprise()]
+        // ));
         $this->detruireEntites($this->entityManager->getRepository(EtapeSinistre::class)->findBy(
             ['entreprise' => $this->serviceEntreprise->getEntreprise()]
         ));

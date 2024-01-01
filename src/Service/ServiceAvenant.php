@@ -118,17 +118,17 @@ class ServiceAvenant
     public function initialiserChampsNumerique(Police $police): Police
     {
         return $police;
-            // ->setCapital(0)
-            // ->setPrimenette(0)
-            // ->setFronting(0)
-            // ->setArca(0)
-            // ->setTva(0)
-            // ->setFraisadmin(0)
-            // ->setPrimetotale(0)
-            // ->setDiscount(0)
-            // ->setRicom(0)
-            // ->setLocalcom(0)
-            // ->setFrontingcom(0);
+        // ->setCapital(0)
+        // ->setPrimenette(0)
+        // ->setFronting(0)
+        // ->setArca(0)
+        // ->setTva(0)
+        // ->setFraisadmin(0)
+        // ->setPrimetotale(0)
+        // ->setDiscount(0)
+        // ->setRicom(0)
+        // ->setLocalcom(0)
+        // ->setFrontingcom(0);
     }
 
     /**
@@ -222,14 +222,26 @@ class ServiceAvenant
                         'entreprise' => $this->serviceEntreprise->getEntreprise()
                     ]
                 ));
-                $nbAvenantElementFacture = count($this->entityManager->getRepository(ElementFacture::class)->findBy(
+
+                $elementsFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
                     [
-                        'police' => $police,
+                        // 'police' => $police,
                         'entreprise' => $this->serviceEntreprise->getEntreprise()
                     ]
-                ));
+                );
+                $nbAvenantElementFacture = 0;
+                /** @var ElementFacture */
+                foreach ($elementsFactures as $ef) {
+                    if($ef->getTranche() != null){
+                        if($ef->getTranche()->getPolice() != null){
+                            if($police->getReference() == $ef->getTranche()->getPolice()->getReference()){
+                                $nbAvenantElementFacture = $nbAvenantElementFacture + 1;
+                            }
+                        }
+                    }
+                }
                 $id = $nbAvenantElementFacture + $nbAvenantPolice;
-            }else{
+            } else {
                 $id = 0;
             }
         }
@@ -608,23 +620,23 @@ class ServiceAvenant
                 ->setCreatedAt($this->serviceDates->aujourdhui())
                 ->setUtilisateur($this->serviceEntreprise->getUtilisateur())
                 ->setGestionnaire($policeDeBase->getGestionnaire());
-                // ->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire())
-                // ->setClient($policeDeBase->getClient())
-                // ->setProduit($policeDeBase->getProduit())
-                // ->setPartenaire($policeDeBase->getPartenaire())
-                // ->setAssureur($policeDeBase->getAssureur())
-                //Initialisation des variables numériques
-                // ->setCapital(0)
-                // ->setPrimenette(0)
-                // ->setFronting(0)
-                // ->setArca(0)
-                // ->setTva(0)
-                // ->setFraisadmin(0)
-                // ->setPrimetotale(0)
-                // ->setDiscount(0)
-                // ->setRicom(0)
-                // ->setLocalcom(0)
-                // ->setFrontingcom(0);
+            // ->setPartExceptionnellePartenaire($policeDeBase->getPartExceptionnellePartenaire())
+            // ->setClient($policeDeBase->getClient())
+            // ->setProduit($policeDeBase->getProduit())
+            // ->setPartenaire($policeDeBase->getPartenaire())
+            // ->setAssureur($policeDeBase->getAssureur())
+            //Initialisation des variables numériques
+            // ->setCapital(0)
+            // ->setPrimenette(0)
+            // ->setFronting(0)
+            // ->setArca(0)
+            // ->setTva(0)
+            // ->setFraisadmin(0)
+            // ->setPrimetotale(0)
+            // ->setDiscount(0)
+            // ->setRicom(0)
+            // ->setLocalcom(0)
+            // ->setFrontingcom(0);
         }
         return $entite;
     }

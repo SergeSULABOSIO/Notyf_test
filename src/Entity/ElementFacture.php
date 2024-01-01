@@ -18,6 +18,9 @@ class ElementFacture
     // #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
     // private ?Tranche $tranche = null;
 
+    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade: ['persist', 'remove'])]
+    private ?Tranche $tranche = null;
+
     #[ORM\Column(nullable: true)]
     private ?float $montant = null;
 
@@ -51,8 +54,6 @@ class ElementFacture
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade: ['persist', 'remove'])]
-    private ?Tranche $tranche = null;
 
     
 

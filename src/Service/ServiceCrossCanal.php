@@ -1569,6 +1569,7 @@ class ServiceCrossCanal
         switch ($typeFacture) {
             case FactureCrudController::TYPE_FACTURE_PRIME:
                 $adminUrlGenerator
+                    ->set("titre", "EDITION: FACTURE - " . $typeFacture)
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
@@ -1579,6 +1580,7 @@ class ServiceCrossCanal
                 break;
             case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                 $adminUrlGenerator
+                    ->set("titre", "EDITION: NOTE DE DEBIT - " . $typeFacture)
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
@@ -1588,25 +1590,28 @@ class ServiceCrossCanal
                 break;
             case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                 $adminUrlGenerator
-                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                    ->set("titre", "EDITION: NOTE DE DEBIT - " . $typeFacture)
+                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
+                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
                 break;
             case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
                 $adminUrlGenerator
-                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
-                    ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
+                    ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
+                    ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
+                    ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
+                    ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
+                    ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
+                    ->set("champsACacher[4]", PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
                     ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                    ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE);
+                    ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE);
                 break;
             case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
                 $adminUrlGenerator
+                    ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
@@ -1617,6 +1622,7 @@ class ServiceCrossCanal
                 break;
             case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
                 $adminUrlGenerator
+                    ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
                     ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                     ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                     ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
@@ -1639,7 +1645,7 @@ class ServiceCrossCanal
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", "EDITION FACTURE - " . $typeFacture)
+            // ->set("titre", "EDITION FACTURE - " . $typeFacture)
             ->set("donnees[type]", $typeFacture)
             ->set("donnees[action]", "facture")
             ->set("donnees[tabTranches]", $tabIdTranches)

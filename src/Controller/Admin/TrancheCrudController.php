@@ -248,28 +248,45 @@ class TrancheCrudController extends AbstractCrudController
 
         $facturePrime = Action::new("Facturer la prime")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getPrimeTotale() != 0;
+            })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
         $factureCommission = Action::new("Facturer la commission")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getCommissionTotale() != 0;
+            })
             ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
 
         $factureFraisGestion = Action::new("Facturer les frais de gestion")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getFraisGestionTotale() != 0;
+            })
             ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
 
         $factureRetroCommission = Action::new("Facturer les retro-com.")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getRetroCommissionTotale() != 0;
+            })
             ->linkToCrudAction('facturerRetroCommission'); //<i class="fa-solid fa-eye"></i>
 
         $factureTaxeCourtier = Action::new("Facturer la Taxe Courtier")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getTaxeCourtierTotale() != 0;
+            })
             ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
 
         $factureTaxeAssureur = Action::new("Facturer la Taxe Assureur")
             ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function(Tranche $tranche){
+                return $tranche->getTaxeAssureurTotale() != 0;
+            })
             ->linkToCrudAction('facturerTaxeAssureur'); //<i class="fa-solid fa-eye"></i>
-
 
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
@@ -328,8 +345,6 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, $ouvrir)
             ->add(Crud::PAGE_INDEX, $ouvrir)
 
-
-
             //Reorganisation des boutons
             // ->reorder(Crud::PAGE_INDEX, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
             // ->reorder(Crud::PAGE_EDIT, [DashboardController::ACTION_OPEN, DashboardController::ACTION_DUPLICATE])
@@ -383,11 +398,6 @@ class TrancheCrudController extends AbstractCrudController
     public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect(
-            // $this->serviceCrossCanal->crossCanal_creer_facture(
-            //     $adminUrlGenerator,
-            //     [($context->getEntity()->getInstance())->getId()],
-            //     FactureCrudController::TYPE_FACTURE_PRIME
-            // )
             $this->editFacture(
                 [($context->getEntity()->getInstance())->getId()],
                 FactureCrudController::TYPE_FACTURE_PRIME,
@@ -402,6 +412,50 @@ class TrancheCrudController extends AbstractCrudController
             $this->editFacture(
                 [($context->getEntity()->getInstance())->getId()],
                 FactureCrudController::TYPE_FACTURE_COMMISSIONS,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerFraisGestion(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerRetroCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA,
                 $adminUrlGenerator
             )
         );

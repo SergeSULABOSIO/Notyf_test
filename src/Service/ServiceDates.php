@@ -19,14 +19,14 @@ class ServiceDates
     ) {
     }
 
-    public function ajouterJours(DateTime $dateInitiale, $nbJours): DateTime
+    public function ajouterJours(DateTimeImmutable $dateInitiale, $nbJours): DateTimeImmutable
     {
         $txt = "P" . $nbJours . "D";
         $copie = clone $dateInitiale;
         return $copie->add(new DateInterval($txt));
     }
 
-    public function ajouterAnnees(DateTime $dateInitiale, $nbAnnee): DateTime
+    public function ajouterAnnees(DateTimeImmutable $dateInitiale, $nbAnnee): DateTimeImmutable
     {
         $txt = "P" . $nbAnnee . "Y";
         $copie = clone $dateInitiale;

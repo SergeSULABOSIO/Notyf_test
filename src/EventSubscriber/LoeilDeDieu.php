@@ -100,7 +100,7 @@ class LoeilDeDieu implements EventSubscriberInterface
             $facture = $entityInstance->getFacture();
             foreach ($facture->getElementFactures() as $elementFacture) {
                 /** @var ElementFacture */
-                $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($elementFacture->getPolice()));
+                $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($elementFacture->getTranche()->getPolice()));
                 $elementFacture->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_AUTRE_MODIFICATION]);
                 $elementFacture->setUpdatedAt(new \DateTimeImmutable());
                 //ici il faut actualiser la base de données

@@ -251,6 +251,7 @@ class Tranche
      */
     public function getCodeMonnaieAffichage()
     {
+        //dd($this->getCotation());
         $this->codeMonnaieAffichage = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
         return $this->codeMonnaieAffichage;
     }
@@ -521,27 +522,6 @@ class Tranche
         return $this->piste;
     }
 
-    // public function getElementFacture(): ?ElementFacture
-    // {
-    //     return $this->elementFacture;
-    // }
-
-    // public function setElementFacture(?ElementFacture $elementFacture): self
-    // {
-    //     // unset the owning side of the relation if necessary
-    //     if ($elementFacture === null && $this->elementFacture !== null) {
-    //         $this->elementFacture->setTranche(null);
-    //     }
-
-    //     // set the owning side of the relation if necessary
-    //     if ($elementFacture !== null && $elementFacture->getTranche() !== $this) {
-    //         $elementFacture->setTranche($this);
-    //     }
-
-    //     $this->elementFacture = $elementFacture;
-
-    //     return $this;
-    // }
 
     /**
      * Get the value of fraisGestionTotale

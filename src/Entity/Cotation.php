@@ -20,7 +20,7 @@ class Cotation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations', cascade: ['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'cotations')]//, cascade: ['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\ManyToOne(inversedBy: 'cotations')]

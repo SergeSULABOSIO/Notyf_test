@@ -144,6 +144,7 @@ class PisteCrudController extends AbstractCrudController
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);

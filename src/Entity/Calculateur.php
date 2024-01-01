@@ -46,7 +46,7 @@ class Calculateur
     {
         $this->setCotation($revenu->getCotation());
         $montantTaxe = 0;
-        if ($revenu != null & $this->piste != null) {
+        if ($revenu != null & $this->piste != null && $this->client != null) {
             foreach ($this->getTaxes() as $taxe) {
                 if ($taxe->isPayableparcourtier() == $forCourtier) {
                     if ($this->client->isExoneree() == true || $revenu->getTaxable() == false) {
@@ -262,10 +262,10 @@ class Calculateur
         $this->cotation = $cotation;
         if ($this->cotation != null) {
             $this
-                ->setClient($this->cotation->getClient())
+                ->setClient($this->cotation->getPiste()->getClient())
+                ->setProduit($this->cotation->getPiste()->getProduit())
                 ->setPartenaire($this->cotation->getPartenaire())
                 ->setPiste($this->cotation->getPiste())
-                ->setProduit($this->cotation->getProduit())
                 ->setAssureur($this->cotation->getAssureur())
                 ->setEntreprise($this->cotation->getEntreprise())
                 ->setUtilisateur($this->cotation->getUtilisateur());

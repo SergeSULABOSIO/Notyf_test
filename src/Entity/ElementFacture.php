@@ -18,7 +18,7 @@ class ElementFacture
     // #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
     // private ?Tranche $tranche = null;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'elementFactures')]//, cascade: ['persist', 'remove'])]
     private ?Tranche $tranche = null;
 
     #[ORM\Column(nullable: true)]

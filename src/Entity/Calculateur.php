@@ -179,16 +179,7 @@ class Calculateur
             $tot = $tot + $this->getRevenuTTC($parametres, $revenu);
         }
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
-            if ($revenu->isIsparttranche() == true) {
-                $tot = $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
-            } else {
-                if ($this->police != null) {
-                    $dateDebutTranche = ($parametres[self::PARAMETRE_TRANCHE])->getStartedAt();
-                    if ($this->police->getDateeffet() == $dateDebutTranche) {
-                        $tot = $this->getRevenuTTC($parametres, $revenu);
-                    }
-                }
-            }
+            $tot = $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
         }
         return $tot;
     }

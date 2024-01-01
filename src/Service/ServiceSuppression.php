@@ -342,7 +342,7 @@ class ServiceSuppression
 
             //$this->activerContrainteIntegrite(false);
         } catch (\Throwable $th) {
-            dd($th);
+            //dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
         }

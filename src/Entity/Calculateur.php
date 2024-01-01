@@ -258,7 +258,7 @@ class Calculateur
             } else {
                 $dateDebutTranche = ($parametres[Calculateur::PARAMETRE_TRANCHE])->getStartedAt();
                 $dateDebutPolice = ($parametres[Calculateur::PARAMETRE_TRANCHE])->getPolice()->getDateEffet();
-                //dd($dateDebutTranche, $dateDebutPolice);
+                dd($dateDebutTranche, $dateDebutPolice);
                 if ($dateDebutPolice == $dateDebutTranche) {
                     $data[self::DATA_VALEUR] = $data[self::DATA_VALEUR];
                 } else {

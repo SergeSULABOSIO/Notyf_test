@@ -314,23 +314,23 @@ class ServiceSuppression
     {
         //dd($facture);
         try {
-            $this->activerContrainteIntegrite(true);
+            //$this->activerContrainteIntegrite(true);
 
             //Il faut aussi modifier les paiements qui sont éventuellement liés à cette facture
             //Il faut les détacher de ce paiement que nous allons supprimer.
-            $paiements = $this->entityManager->getRepository(Paiement::class)->findBy(
-                [
-                    'entreprise' => $this->serviceEntreprise->getEntreprise(),
-                    'facture' => $facture->getId()
-                ]
-            );
-            foreach ($paiements as $paiement) {
-                if ($paiement->getFacture()->getId() == $facture->getId()) {
-                    $paiement->setFacture(null);
-                    $this->entityManager->persist($paiement);
-                    $this->entityManager->flush();
-                }
-            }
+            // $paiements = $this->entityManager->getRepository(Paiement::class)->findBy(
+            //     [
+            //         'entreprise' => $this->serviceEntreprise->getEntreprise(),
+            //         'facture' => $facture->getId()
+            //     ]
+            // );
+            // foreach ($paiements as $paiement) {
+            //     if ($paiement->getFacture()->getId() == $facture->getId()) {
+            //         $paiement->setFacture(null);
+            //         $this->entityManager->persist($paiement);
+            //         $this->entityManager->flush();
+            //     }
+            // }
             //On supprime les élements facture
             foreach ($facture->getElementFactures() as $elementfacture) {
                 $this->entityManager->remove($elementfacture);
@@ -340,7 +340,7 @@ class ServiceSuppression
             $this->entityManager->remove($facture);
             $this->entityManager->flush();
 
-            $this->activerContrainteIntegrite(false);
+            //$this->activerContrainteIntegrite(false);
         } catch (\Throwable $th) {
             dd($th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";

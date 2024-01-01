@@ -270,7 +270,11 @@ class Tranche
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(["tranche" => $this]);
+        $this->primeTotale = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(
+            [
+                "tranche" => $this
+            ]
+        );
         return $this->primeTotale;
     }
 
@@ -539,7 +543,7 @@ class Tranche
 
     /**
      * Get the value of revenuTotal
-     */ 
+     */
     public function getRevenuTotal()
     {
         $this->revenuTotal = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(

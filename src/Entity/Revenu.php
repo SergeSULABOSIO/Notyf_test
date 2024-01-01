@@ -268,7 +268,7 @@ class Revenu
         }
 
         //On calcul le revennu total
-        $data = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT($this);
+        $data = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT(["revenu" => $this]);
 
         $strRedevablePar = "";
         if ($this->isIspartclient() == true) {
@@ -503,7 +503,7 @@ class Revenu
     public function getRevenuNet()
     {
         //On calcul le revennu total
-        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT_valeur($this);
+        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT_valeur([Calculateur::PARAMETRE_REVENU => $this]);
         return $this->revenuNet;
     }
 
@@ -512,7 +512,7 @@ class Revenu
      */ 
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe($this, false);
+        $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe([Calculateur::PARAMETRE_REVENU => $this, Calculateur::PARAMETRE_forCOURTIER => false]);
         return $this->taxeAssureur;
     }
 
@@ -521,7 +521,7 @@ class Revenu
      */ 
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe($this, true);
+        $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe([Calculateur::PARAMETRE_REVENU => $this, Calculateur::PARAMETRE_forCOURTIER => true]);
         return $this->taxeCourtier;
     }
 
@@ -530,7 +530,7 @@ class Revenu
      */ 
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRevenuPure($this);
+        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRevenuPure([Calculateur::PARAMETRE_REVENU => $this]);
         return $this->revenuPure;
     }
 

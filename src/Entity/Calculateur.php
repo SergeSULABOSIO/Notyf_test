@@ -13,6 +13,7 @@ class Calculateur
     public const PARAMETRE_isPARTAGEABLE = "isPartageable";
     public const PARAMETRE_isPAYABLE_PAR_CLIENT = "isPayableParClient";
     public const PARAMETRE_TRANCHE = "tranche";
+    public const PARAMETRE_REVENU = "revenu";
 
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
     public const DATA_DESCRIPTION = "montant_ht_description";
@@ -42,22 +43,22 @@ class Calculateur
     }
 
 
-    public function getMontantTaxe(?Revenu $revenu, ?bool $forCourtier): float
+    public function getMontantTaxe(?array $parametres): float
     {
-        $this->setCotation($revenu->getCotation());
+        $this->setCotation($parametres[Calculateur::PARAMETRE_REVENU]->getCotation());
         $montantTaxe = 0;
-        if ($revenu != null & $this->piste != null && $this->client != null) {
+        if ($parametres[Calculateur::PARAMETRE_REVENU] != null & $this->piste != null && $this->client != null) {
             foreach ($this->getTaxes() as $taxe) {
-                if ($taxe->isPayableparcourtier() == $forCourtier) {
-                    if ($this->client->isExoneree() == true || $revenu->getTaxable() == false) {
-                        $montantTaxe = (0 * $this->getRevenufinaleHT_valeur($revenu)) / 100;
+                if ($taxe->isPayableparcourtier() == $parametres[Calculateur::PARAMETRE_forCOURTIER]) {
+                    if ($this->client->isExoneree() == true || $parametres[Calculateur::PARAMETRE_REVENU]->getTaxable() == false) {
+                        $montantTaxe = (0 * $this->getRevenufinaleHT_valeur($parametres)) / 100;
                         break;
                     } else {
                         if ($this->produit->isIard()) {
-                            $montantTaxe = ($taxe->getTauxIARD() * $this->getRevenufinaleHT_valeur($revenu)) / 100;
+                            $montantTaxe = ($taxe->getTauxIARD() * $this->getRevenufinaleHT_valeur($parametres)) / 100;
                             break;
                         } else {
-                            $montantTaxe = ($taxe->getTauxVIE() * $this->getRevenufinaleHT_valeur($revenu)) / 100;
+                            $montantTaxe = ($taxe->getTauxVIE() * $this->getRevenufinaleHT_valeur($parametres)) / 100;
                             break;
                         }
                     }
@@ -67,31 +68,33 @@ class Calculateur
         return $montantTaxe * 100;
     }
 
-    public function getRevenufinaleHT_valeur(?Revenu $revenu)
+    public function getRevenufinaleHT_valeur(?array $parametres)
     {
-        return $this->getRevenufinaleHT($revenu)["montant_ht_valeur_numerique"];
+        //dd($parametres);
+        return $this->getRevenufinaleHT($parametres)["montant_ht_valeur_numerique"];
     }
 
-    public function getRevenufinaleHT_description(?Revenu $revenu)
+    public function getRevenufinaleHT_description(?array $parametres)
     {
-        return $this->getRevenufinaleHT($revenu)["montant_ht_description"];
+        return $this->getRevenufinaleHT($parametres)["montant_ht_description"];
     }
 
-    public function getRevenufinaleHT_formule(?Revenu $revenu)
+    public function getRevenufinaleHT_formule(?array $parametres)
     {
-        return $this->getRevenufinaleHT($revenu)["montant_ht_formule"];
+        return $this->getRevenufinaleHT($parametres)["montant_ht_formule"];
     }
 
     public function getRevenufinaleHTGlobale(?array $parametres)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
+            $parametres[Calculateur::PARAMETRE_REVENU] = $revenu;
             if (isset($parametres[self::PARAMETRE_isPARTAGEABLE])) {
                 if ($parametres[self::PARAMETRE_isPARTAGEABLE] == $revenu->getPartageable()) {
-                    $tot = $tot + $this->getRevenufinaleHT_valeur($revenu);
+                    $tot = $tot + $this->getRevenufinaleHT_valeur($parametres);
                 }
             } else {
-                $tot = $tot + $this->getRevenufinaleHT_valeur($revenu);
+                $tot = $tot + $this->getRevenufinaleHT_valeur($parametres);
             }
         }
         return $tot;
@@ -153,21 +156,27 @@ class Calculateur
         return $this->getRevenufinaleHTGlobale($parametres) - $this->getMontantTaxeGlobal($parametres);
     }
 
-    public function getRevenuPure(?Revenu $revenu)
+    public function getRevenuPure(?array $parametres)
     {
-        $comPure = $this->getRevenufinaleHT_valeur($revenu) - $this->getMontantTaxe($revenu, true);
+        $comPure = $this->getRevenufinaleHT_valeur($parametres) - $this->getMontantTaxe($parametres, true);
         return $comPure;
     }
 
-    public function getRevenuTTC(?array $parametres, ?Revenu $revenu)
+    public function getRevenuTTC(?array $parametres)
     {
         $comPure = 0;
         if (isset($parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT])) {
-            if ($revenu->isIspartclient() == $parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT]) {
-                $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+            if ($parametres[Calculateur::PARAMETRE_REVENU]->isIspartclient() == $parametres[self::PARAMETRE_isPAYABLE_PAR_CLIENT]) {
+                $net = $this->getRevenufinaleHT_valeur($parametres);
+                $parametres[Calculateur::PARAMETRE_forCOURTIER] = true;
+                $taxe = $this->getMontantTaxe($parametres);
+                $comPure = $net + $taxe;
             }
         } else {
-            $comPure = $this->getRevenufinaleHT_valeur($revenu) + $this->getMontantTaxe($revenu, false);
+            $net = $this->getRevenufinaleHT_valeur($parametres);
+            $parametres[Calculateur::PARAMETRE_forCOURTIER] = true;
+            $taxe = $this->getMontantTaxe($parametres);
+            $comPure = $net + $taxe;
         }
         return $comPure;
     }
@@ -176,7 +185,8 @@ class Calculateur
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
-            $tot = $tot + $this->getRevenuTTC($parametres, $revenu);
+            $parametres[Calculateur::PARAMETRE_REVENU] = $revenu;
+            $tot = $tot + $this->getRevenuTTC($parametres);
         }
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
             $tot = $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
@@ -189,12 +199,13 @@ class Calculateur
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
+            $parametres[Calculateur::PARAMETRE_REVENU] = $revenu;
             if (isset($parametres[self::PARAMETRE_isPARTAGEABLE])) {
                 if ($parametres[self::PARAMETRE_isPARTAGEABLE] == $revenu->getPartageable()) {
-                    $tot = $tot + $this->getMontantTaxe($revenu, $parametres[self::PARAMETRE_forCOURTIER]);
+                    $tot = $tot + $this->getMontantTaxe($parametres, $parametres[self::PARAMETRE_forCOURTIER]);
                 }
             } else {
-                $tot = $tot + $this->getMontantTaxe($revenu, $parametres[self::PARAMETRE_forCOURTIER]);
+                $tot = $tot + $this->getMontantTaxe($parametres, $parametres[self::PARAMETRE_forCOURTIER]);
             }
         }
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
@@ -204,42 +215,58 @@ class Calculateur
         }
     }
 
-    public function getRevenufinaleHT(?Revenu $revenu): array
+    public function getRevenufinaleHT(?array $parametres): array
     {
-        $this->setEntreprise($revenu->getEntreprise());
+        $this->setEntreprise($parametres[Calculateur::PARAMETRE_REVENU]->getEntreprise());
         $strBase = "";
         foreach (RevenuCrudController::TAB_BASE as $key => $value) {
-            if ($value == $revenu->getBase()) {
+            if ($value == $parametres[Calculateur::PARAMETRE_REVENU]->getBase()) {
                 $strBase = $key;
             }
         }
         $data = [];
         $prmNette = 0;
         $fronting = 0;
-        if ($revenu->getCotation()) {
-            $prmNette = ($revenu->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
-            $fronting = ($revenu->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
+        if ($parametres[Calculateur::PARAMETRE_REVENU]->getCotation()) {
+            $prmNette = ($parametres[Calculateur::PARAMETRE_REVENU]->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) / 100);
+            $fronting = ($parametres[Calculateur::PARAMETRE_REVENU]->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) / 100);
         }
         switch ($strBase) {
             case RevenuCrudController::BASE_PRIME_NETTE:
-                $data[self::DATA_VALEUR] = ($revenu->getTaux() * $prmNette);
-                $data[self::DATA_DESCRIPTION] = number_format(($revenu->getTaux() * $prmNette), 2, ",", ".") . $this->codeMonnaie;
-                $data[self::DATA_FORMULE] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_VALEUR] = ($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * $prmNette);
+                $data[self::DATA_DESCRIPTION] = number_format(($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * $prmNette), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_FORMULE] = "" . number_format(($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * 100), 2, ",", ".") . "% de la prime nette de " . number_format($prmNette, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_FRONTING:
-                $data[self::DATA_VALEUR] = ($revenu->getTaux() * $fronting);
-                $data[self::DATA_DESCRIPTION] = number_format(($revenu->getTaux() * $fronting), 2, ",", ".") . $this->codeMonnaie;
-                $data[self::DATA_FORMULE] = "" . number_format(($revenu->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_VALEUR] = ($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * $fronting);
+                $data[self::DATA_DESCRIPTION] = number_format(($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * $fronting), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_FORMULE] = "" . number_format(($parametres[Calculateur::PARAMETRE_REVENU]->getTaux() * 100), 2, ",", ".") . "% du fronting de " . number_format($fronting, 2, ",", ".") . $this->codeMonnaie;
                 break;
             case RevenuCrudController::BASE_MONTANT_FIXE:
-                $data[self::DATA_VALEUR] = $revenu->getMontantFlat() / 100;
-                $data[self::DATA_DESCRIPTION] = number_format($revenu->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
+                $data[self::DATA_VALEUR] = $parametres[Calculateur::PARAMETRE_REVENU]->getMontantFlat() / 100;
+                $data[self::DATA_DESCRIPTION] = number_format($parametres[Calculateur::PARAMETRE_REVENU]->getMontantFlat(), 2, ",", ".") . $this->codeMonnaie;
                 $data[self::DATA_FORMULE] = "une valeur fixe";
                 break;
             default:
                 # code...
                 break;
         }
+
+        if (isset($parametres[Calculateur::PARAMETRE_TRANCHE])) {
+            if ($parametres[Calculateur::PARAMETRE_REVENU]->isIsparttranche() == true) {
+                $data[self::DATA_VALEUR] = $data[self::DATA_VALEUR] * ($parametres[Calculateur::PARAMETRE_TRANCHE])->getTaux();
+            } else {
+                $dateDebutTranche = ($parametres[Calculateur::PARAMETRE_TRANCHE])->getStartedAt();
+                $dateDebutPolice = ($parametres[Calculateur::PARAMETRE_TRANCHE])->getPolice()->getDateEffet();
+                //dd($dateDebutTranche, $dateDebutPolice);
+                if ($dateDebutPolice == $dateDebutTranche) {
+                    $data[self::DATA_VALEUR] = $data[self::DATA_VALEUR];
+                } else {
+                    $data[self::DATA_VALEUR] = $data[self::DATA_VALEUR] * ($parametres[Calculateur::PARAMETRE_TRANCHE])->getTaux();
+                }
+            }
+        }
+
         return $data;
     }
 

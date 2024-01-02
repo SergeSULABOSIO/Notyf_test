@@ -626,6 +626,16 @@ class Calculateur
 
 
 
+
+
+
+
+
+
+
+
+
+
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
     public const DATA_DESCRIPTION = "montant_ht_description";
     public const DATA_FORMULE = "montant_ht_formule";
@@ -643,92 +653,62 @@ class Calculateur
 
 
     //Les nouvelles fonctions unifiées
-    public function getRev_com_rea(?array $parametres): float
-    {
-        $tot = 0;
+    public function getRev_taxe(?array $parametres):float{
+        $tx = 0;
+        $montant_ht = $this->getRev_ht($parametres);
+        $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
+        if (isset($parametres[self::Param_rev_montant_net])) {
+            $tx = 0;
+        }
+        if (isset($parametres[self::PARAMETRE_TAXE_forCOURTIER])) {
+            $tx = $this->dataTaxe($montant_ht, $parametres);
+        }
+        return $tx;
+    }
+
+    public function getRev_ht(?array $parametres):float{
         $montant_ht = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
-            if ($revenu->getType() == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_REA]) {
-                $montant_ht = $this->dataHT($parametres)[self::DATA_VALEUR];
+            if (isset($parametres[self::Param_objet_revenu])) {
+                if ($revenu == $parametres[self::Param_objet_revenu]) {
+                    $montant_ht = $montant_ht + $this->dataHT($parametres)[self::DATA_VALEUR];
+                }
+            }else{
+                $montant_ht = $montant_ht + $this->dataHT($parametres)[self::DATA_VALEUR];
             }
         }
-        $parametres[self::PARAMETRE_TAXE_forCOURTIER] = false;
-        $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
-        $montant_tx_assureur = $this->dataTaxe($montant_ht, $parametres);
-
-
-        if (isset($parametres[self::Param_rev_montant_net])) {
-            $tot = $montant_ht;
-        }
-        if (isset($parametres[self::Param_rev_montant_ttc])) {
-            $tot = $montant_ht + $montant_tx_assureur;
-        }
-        if (isset($parametres[self::Param_rev_montant_pure])) {
-        
-        }
-
-
-        dd("Com de réa", $tot, $parametres);
-        return $tot;
-    }
-
-    public function getRev_com_loc(?array $parametres): float
-    {
-
-        return 0;
-    }
-
-    public function getRev_com_frg(?array $parametres): float
-    {
-
-        return 0;
-    }
-
-    public function getRev_frs_gest(?array $parametres): float
-    {
-
-        return 0;
+        return $montant_ht;
     }
 
     public function getRev_total(?array $parametres): float
     {
-        return $this->getRev_com_rea($parametres) + $this->getRev_com_loc($parametres) + $this->getRev_frs_gest($parametres);
+        $tot = 0;
+        $montant_ht = $this->getRev_ht($parametres);
+        $tot = $this->appliquerPURE_NET_TTC($montant_ht, $parametres);
+        //dd("Com de réa", $tot, $parametres);
+        return $tot;
     }
 
     public function getRetroCom_total(?array $parametres): float
     {
-
-        return 0;
-    }
-
-    public function getTax_courtier(?array $parametres): float
-    {
-
-        return 0;
-    }
-
-    public function getTax_assureur(?array $parametres): float
-    {
-
-        return 0;
+        ici
+        return -100;
     }
 
     public function dataTaxe(?float $montantHT, ?array $parametres): float
     {
         $tot = 0;
-        if (isset($parametres[self::PARAMETRE_TAXE_forCOURTIER]) && $parametres[self::Param_rev_isExonere]) {
-            /** @var Taxe */
-            foreach ($this->cotation->getTaxes() as $taxe) {
-                if ($taxe->isPayableparcourtier() == $parametres[self::PARAMETRE_TAXE_forCOURTIER] || $this->client->isExoneree() == $parametres[self::Param_rev_isExonere]) {
-                    if ($this->produit->isIard()) {
-                        $tot = $montantHT * $taxe->getTauxIARD();
-                    } else {
-                        $tot = $montantHT * $taxe->getTauxVIE();
-                    }
+        /** @var Taxe */
+        foreach ($this->cotation->getTaxes() as $taxe) {
+            if ($taxe->isPayableparcourtier() == $parametres[self::PARAMETRE_TAXE_forCOURTIER]) {
+                if ($this->produit->isIard()) {
+                    $tot = $montantHT * $taxe->getTauxIARD();
+                } else {
+                    $tot = $montantHT * $taxe->getTauxVIE();
                 }
             }
         }
-
+        //dd($this->cotation->getTaxes());
         return $tot;
     }
 
@@ -773,5 +753,23 @@ class Calculateur
                 break;
         }
         return $data;
+    }
+
+    private function appliquerPURE_NET_TTC($montant_ht, ?array $parametres)
+    {
+        $tot = 0;
+        $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
+        if (isset($parametres[self::Param_rev_montant_net])) {
+            $tot = $montant_ht;
+        }
+        if (isset($parametres[self::Param_rev_montant_ttc])) {
+            $parametres[self::PARAMETRE_TAXE_forCOURTIER] = false;
+            $tot = $montant_ht + $this->dataTaxe($montant_ht, $parametres);
+        }
+        if (isset($parametres[self::Param_rev_montant_pure])) {
+            $parametres[self::PARAMETRE_TAXE_forCOURTIER] = true;
+            $tot = $montant_ht - $this->dataTaxe($montant_ht, $parametres);
+        }
+        return $tot;
     }
 }

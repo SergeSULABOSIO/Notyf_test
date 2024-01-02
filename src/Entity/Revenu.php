@@ -62,6 +62,7 @@ class Revenu
     private ?float $revenuNet = 0;
     private ?float $taxeAssureur = 0;
     private ?float $revenuTotale = 0;
+    private ?float $retrocommissionTotale = 0;
 
     private ?bool $validated;
     private ?Client $client;
@@ -565,5 +566,18 @@ class Revenu
         );
         //dd("Revenu TTC", $this->revenuTotale, "Super!!!!");
         return $this->revenuTotale;
+    }
+
+    /**
+     * Get the value of retrocommissionTotale
+     */ 
+    public function getRetrocommissionTotale()
+    {
+        $this->retrocommissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRetroComPartenaire(
+            [
+                Calculateur::PARAMETRE_REVENU => $this
+            ]
+        );
+        return $this->retrocommissionTotale;
     }
 }

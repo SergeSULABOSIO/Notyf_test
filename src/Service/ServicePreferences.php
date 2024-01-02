@@ -1520,6 +1520,13 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('retrocommissionTotale', "Rétrocom")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetrocommissionTotale() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
         // $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
         //     ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', "Modification")
@@ -4463,7 +4470,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setDisabled(true)
             ->setColumns(12);
-        $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur(). " (net)")
+        $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur() . " (net)")
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setHelp("La partie partageable + la partie non partageable.")
             ->setStoredAsCents()

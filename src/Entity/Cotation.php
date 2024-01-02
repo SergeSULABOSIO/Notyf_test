@@ -20,7 +20,7 @@ class Cotation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
-    #[ORM\ManyToOne(inversedBy: 'cotations')]//, cascade: ['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'cotations')] //, cascade: ['remove', 'persist', 'refresh'])]
     private ?Piste $piste = null;
 
     #[ORM\ManyToOne(inversedBy: 'cotations')]
@@ -431,7 +431,11 @@ class Cotation
      */
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => true]) * 100;
+        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
+            [
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => true
+            ]
+        ) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -470,7 +474,12 @@ class Cotation
      */
     public function getTaxeCourtierTotalePartageable()
     {
-        $this->taxeCourtierTotalePartageable = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => true, "isPartageable" => true]) * 100;
+        $this->taxeCourtierTotalePartageable = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
+            [
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
+                Calculateur::PARAMETRE_isPARTAGEABLE => true
+            ]
+        ) * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 
@@ -751,7 +760,11 @@ class Cotation
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(["forCourtier" => false]) * 100;
+        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
+            [
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => false
+            ]
+        ) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -798,7 +811,7 @@ class Cotation
 
     /**
      * Get the value of revenuTotalTTC
-     */ 
+     */
     public function getRevenuTotalTTC()
     {
         $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getRevenuTTCGlobal([]) * 100;

@@ -52,8 +52,8 @@ class RevenuCrudController extends AbstractCrudController
         self::TYPE_COM_LOCALE           => 1,
         self::TYPE_COM_FRONTING         => 2,
         self::TYPE_FRAIS_DE_GESTION     => 3,
-        self::TYPE_FRAIS_DE_DEBOURS     => 4,
-        self::TYPE_AUTRE_CHARGEMENT     => 5
+        // self::TYPE_FRAIS_DE_DEBOURS     => 4,
+        // self::TYPE_AUTRE_CHARGEMENT     => 5
     ];
 
     //Partageable?

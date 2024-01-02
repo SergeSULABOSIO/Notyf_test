@@ -519,7 +519,7 @@ class Revenu
         $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe(
             [
                 Calculateur::PARAMETRE_REVENU => $this,
-                Calculateur::PARAMETRE_forCOURTIER => false
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => false
             ]
         );
         //dd("Taxe Assureur (TVA)", $this->taxeAssureur, "Fin.");
@@ -534,7 +534,7 @@ class Revenu
         $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe(
             [
                 Calculateur::PARAMETRE_REVENU => $this,
-                Calculateur::PARAMETRE_forCOURTIER => true
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => true
             ]
         );
         //dd("taxe pour courtier (Arca): ", $this->taxeCourtier);
@@ -559,9 +559,10 @@ class Revenu
      */
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTC(
+        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRev_total(
             [
-                Calculateur::PARAMETRE_REVENU => $this
+                Calculateur::Param_rev_montant_ttc => true,
+                Calculateur::Param_objet_revenu => $this
             ]
         );
         //dd("Revenu TTC", $this->revenuTotale, "Super!!!!");

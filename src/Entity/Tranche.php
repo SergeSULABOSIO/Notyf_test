@@ -283,7 +283,7 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
+        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getCommissionTTCGlobal(
             [
                 Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
                 "tranche" => $this
@@ -306,7 +306,12 @@ class Tranche
      */
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(["forCourtier" => true, "tranche" => $this]);
+        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(
+            [
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
+                Calculateur::PARAMETRE_TRANCHE => $this
+            ]
+        );
         return $this->taxeCourtierTotale;
     }
 
@@ -315,7 +320,12 @@ class Tranche
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(["forCourtier" => false, "tranche" => $this]);
+        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(
+            [
+                Calculateur::PARAMETRE_TAXE_forCOURTIER => false,
+                Calculateur::PARAMETRE_TRANCHE => $this
+            ]
+        );
         return $this->taxeAssureurTotale;
     }
 
@@ -532,9 +542,9 @@ class Tranche
      */
     public function getFraisGestionTotale()
     {
-        $this->fraisGestionTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
+        $this->fraisGestionTotale = (new Calculateur())->setCotation($this->getCotation())->getFraisGestionTTCGlobal(
             [
-                Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
+                // Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
                 "tranche" => $this
             ]
         );

@@ -691,7 +691,7 @@ class Calculateur
 
     public function getRetroCom_total(?array $parametres): float
     {
-        ici
+        // ici
         return -100;
     }
 

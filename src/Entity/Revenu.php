@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ChargementCrudController;
-use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Repository\RevenuRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -499,47 +497,73 @@ class Revenu
 
     /**
      * Get the value of revenuNet
-     */ 
+     */
     public function getRevenuNet()
     {
         //On calcul le revennu total
-        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT_valeur([Calculateur::PARAMETRE_REVENU => $this]);
+        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT_valeur(
+            [
+                Calculateur::PARAMETRE_REVENU => $this
+            ]
+        );
+        //dd("Revenu net: ", $this->revenuNet);
         return $this->revenuNet;
     }
 
     /**
      * Get the value of taxeAssureur
-     */ 
+     */
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe([Calculateur::PARAMETRE_REVENU => $this, Calculateur::PARAMETRE_forCOURTIER => false]);
+        $this->taxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe(
+            [
+                Calculateur::PARAMETRE_REVENU => $this,
+                Calculateur::PARAMETRE_forCOURTIER => false
+            ]
+        );
+        //dd("Taxe Assureur (TVA)", $this->taxeAssureur, "Fin.");
         return $this->taxeAssureur;
     }
 
     /**
      * Get the value of taxeCourtier
-     */ 
+     */
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe([Calculateur::PARAMETRE_REVENU => $this, Calculateur::PARAMETRE_forCOURTIER => true]);
+        $this->taxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxe(
+            [
+                Calculateur::PARAMETRE_REVENU => $this,
+                Calculateur::PARAMETRE_forCOURTIER => true
+            ]
+        );
+        //dd("taxe pour courtier (Arca): ", $this->taxeCourtier);
         return $this->taxeCourtier;
     }
 
     /**
      * Get the value of revenuPure
-     */ 
+     */
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRevenuPure([Calculateur::PARAMETRE_REVENU => $this]);
+        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRevenuPure(
+            [
+                Calculateur::PARAMETRE_REVENU => $this
+            ]
+        );
         return $this->revenuPure;
     }
 
     /**
      * Get the value of revenuTotale
-     */ 
+     */
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTC([], $this);
+        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTC(
+            [
+                Calculateur::PARAMETRE_REVENU => $this
+            ]
+        );
+        //dd("Revenu TTC", $this->revenuTotale, "Super!!!!");
         return $this->revenuTotale;
     }
 }

@@ -4463,7 +4463,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setDisabled(true)
             ->setColumns(12);
-        $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
+        $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur(). " (net)")
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setHelp("La partie partageable + la partie non partageable.")
             ->setStoredAsCents()

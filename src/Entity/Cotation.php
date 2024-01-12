@@ -316,7 +316,9 @@ class Cotation
      */
     public function getRevenuTotalHT()
     {
-        $this->revenuTotalHT = (new Calculateur())->setCotation($this)->getRevenufinaleHTGlobale([]) * 100;
+        $this->revenuTotalHT = (new Calculateur())
+            ->setCotation($this)
+            ->getRevenufinaleHTGlobale(true) * 100;
         return $this->revenuTotalHT;
     }
 
@@ -431,11 +433,12 @@ class Cotation
      */
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => true
-            ]
-        ) * 100;
+        $this->taxeCourtierTotale = (new Calculateur())
+            ->setCotation($this)
+            ->getMontantTaxeGlobal(
+                null,
+                true
+            ) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -456,7 +459,9 @@ class Cotation
      */
     public function getRevenuTotalHTPartageable()
     {
-        $this->revenuTotalHTPartageable = (new Calculateur())->setCotation($this)->getRevenufinaleHTGlobale(["isPartageable" => true]) * 100;
+        $this->revenuTotalHTPartageable = (new Calculateur())
+            ->setCotation($this)
+            ->getRevenufinaleHTGlobale(true) * 100;
         return $this->revenuTotalHTPartageable;
     }
 
@@ -465,7 +470,13 @@ class Cotation
      */
     public function getRevenuNetTotal()
     {
-        $this->revenuNetTotal = (new Calculateur())->setCotation($this)->getRevenuPureGlobale() * 100;
+        $this->revenuNetTotal = (new Calculateur())
+            ->setCotation($this)
+            ->getRevenuPureGlobale(
+                null,
+                true,
+                true
+            ) * 100;
         return $this->revenuNetTotal;
     }
 
@@ -474,12 +485,12 @@ class Cotation
      */
     public function getTaxeCourtierTotalePartageable()
     {
-        $this->taxeCourtierTotalePartageable = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
-                Calculateur::PARAMETRE_isPARTAGEABLE => true
-            ]
-        ) * 100;
+        $this->taxeCourtierTotalePartageable = (new Calculateur())
+            ->setCotation($this)
+            ->getMontantTaxeGlobal(
+                null,
+                true
+            ) * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 
@@ -760,11 +771,12 @@ class Cotation
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this)->getMontantTaxeGlobal(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => false
-            ]
-        ) * 100;
+        $this->taxeAssureurTotale = (new Calculateur())
+            ->setCotation($this)
+            ->getMontantTaxeGlobal(
+                null,
+                false
+            ) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -814,7 +826,9 @@ class Cotation
      */
     public function getRevenuTotalTTC()
     {
-        $this->revenuTotalTTC = (new Calculateur())->setCotation($this)->getRevenuTTCGlobal([]) * 100;
+        $this->revenuTotalTTC = (new Calculateur())
+            ->setCotation($this)
+            ->getRevenuTTCGlobal(null, true, null) * 100;
         return $this->revenuTotalTTC;
     }
 }

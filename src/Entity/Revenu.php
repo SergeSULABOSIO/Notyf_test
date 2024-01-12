@@ -267,7 +267,9 @@ class Revenu
         }
 
         //On calcul le revennu total
-        $data = (new Calculateur())->setCotation($this->getCotation())->getRevenufinaleHT(["revenu" => $this]);
+        $data = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRevenufinaleHT($this);
 
         $strRedevablePar = "";
         if ($this->isIspartclient() == true) {
@@ -492,7 +494,9 @@ class Revenu
      */
     public function getPiste()
     {
-        $this->piste = (new Calculateur())->setCotation($this->getCotation())->getPiste();
+        $this->piste = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPiste();
         return $this->piste;
     }
 
@@ -501,12 +505,12 @@ class Revenu
      */
     public function getRevenuNet()
     {
-        $this->revenuNet = (new Calculateur())->setCotation($this->getCotation())->getRev_total(
-            [
-                Calculateur::Param_rev_montant_net => true,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->revenuNet = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRev_total(
+                $this,
+                Calculateur::Param_rev_montant_net
+            );
         //dd("Revenu net: ", $this->revenuNet);
         return $this->revenuNet;
     }
@@ -516,12 +520,12 @@ class Revenu
      */
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRev_taxe(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => false,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->taxeAssureur = $this->revenuPure = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRev_taxe(
+                $this,
+                false
+            );
         //dd("Taxe Assureur (TVA)", $this->taxeAssureur, "Fin.");
         return $this->taxeAssureur;
     }
@@ -531,12 +535,12 @@ class Revenu
      */
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRev_taxe(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->taxeCourtier = $this->revenuPure = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRev_taxe(
+                $this,
+                true
+            );
         //dd("taxe pour courtier (Arca): ", $this->taxeCourtier);
         return $this->taxeCourtier;
     }
@@ -546,12 +550,12 @@ class Revenu
      */
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->setCotation($this->getCotation())->getRev_total(
-            [
-                Calculateur::Param_rev_montant_pure => true,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->revenuPure = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRev_total(
+                $this,
+                Calculateur::Param_rev_montant_pure
+            );
         return $this->revenuPure;
     }
 
@@ -560,27 +564,26 @@ class Revenu
      */
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->setCotation($this->getCotation())->getRev_total(
-            [
-                Calculateur::Param_rev_montant_ttc => true,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->revenuTotale = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRev_total(
+                $this,
+                Calculateur::Param_rev_montant_ttc
+            );
         //dd("Revenu TTC", $this->revenuTotale, "Super!!!!");
         return $this->revenuTotale;
     }
 
     /**
      * Get the value of retrocommissionTotale
-     */ 
+     */
     public function getRetrocommissionTotale()
     {
-        $this->retrocommissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRetroCom_total(
-            [
-                Calculateur::Param_rev_montant_ttc => true,
-                Calculateur::Param_objet_revenu => $this
-            ]
-        );
+        $this->retrocommissionTotale = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRetroCom_total(
+                $this
+            );
         return $this->retrocommissionTotale;
     }
 }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Controller\Admin\RevenuCrudController;
 use DateInterval;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
@@ -314,7 +315,12 @@ class Tranche
         //             Calculateur::PARAMETRE_TRANCHE => $this
         //         ]
         //     );
-        $this->taxeCourtierTotale = (new Calculateur())->getTaxePourCourtier(null, $this);
+        $this->taxeCourtierTotale = (new Calculateur())
+        ->getTaxePourCourtier(
+            null,
+            null, 
+            $this
+        );
         return $this->taxeCourtierTotale;
     }
 
@@ -332,7 +338,12 @@ class Tranche
         //         ]
         //     );
 
-        $this->taxeAssureurTotale = (new Calculateur())->getTaxePourAssureur(null, $this);
+        $this->taxeAssureurTotale = (new Calculateur())
+        ->getTaxePourAssureur(
+            null,
+            null, 
+            $this
+        );
         return $this->taxeAssureurTotale;
     }
 
@@ -560,7 +571,11 @@ class Tranche
         //         ]
         //     );
         $this->fraisGestionTotale = (new Calculateur())
-            ->getRevenuTotale(null, $this);
+            ->getRevenuTotale(
+                RevenuCrudController::TYPE_FRAIS_DE_GESTION,
+                null,
+                $this
+            );
         return $this->fraisGestionTotale;
     }
 
@@ -577,7 +592,11 @@ class Tranche
         //         ]
         //     );
         $this->fraisGestionTotale = (new Calculateur())
-            ->getRevenuTotale(null, $this);
+            ->getRevenuTotale(
+                null,
+                null,
+                $this
+            );
         return $this->revenuTotal;
     }
 

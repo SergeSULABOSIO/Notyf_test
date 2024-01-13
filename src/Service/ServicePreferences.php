@@ -1527,8 +1527,18 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
-        //     ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('reserve', "Réserve")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+            ->formatValue(function ($value, Revenu $entity) {
+                return $entity->getPolice()->getReference();
+            })
+            ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', "Modification")
             ->onlyOnIndex();
         return $tabAttributs;

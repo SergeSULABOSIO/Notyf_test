@@ -149,7 +149,7 @@ class Calculateur
         return $this->getRevenufinaleHTGlobale($isPartageable) - $this->getMontantTaxeGlobal($tranche, $forCourtier);
     }
 
-    public function getRevenuPure(?Revenu $revenu, ?bool $forCourtier)
+    /* public function getRevenuPure(?Revenu $revenu, ?bool $forCourtier)
     {
         $net = $this->getRevenufinaleHT_valeur($revenu);
         $parametres[Calculateur::PARAMETRE_TAXE_forCOURTIER] = true;
@@ -157,7 +157,7 @@ class Calculateur
         $comPure = $net - $taxe;
         //dd($parametres, $comPure);
         return $comPure;
-    }
+    } */
 
     public function getRevenuTTC(?Revenu $revenu)
     {
@@ -614,19 +614,19 @@ class Calculateur
     public const Param_rev_isPartTranches = "isParTranches";
     public const Param_rev_isTaxable = "isTaxable";
     public const Param_rev_isExonere = "isExonere";
-    public const Param_rev_montant_partageable = "partageable";
-    public const Param_rev_montant_pure = "pure";
-    public const Param_rev_montant_net = "net";
-    public const Param_rev_montant_ttc = "ttc";
+    public const Param_rev_mode_partageable = "partageable";
+    public const Param_rev_mode_pure = "pure";
+    public const Param_rev_mode_net = "net";
+    public const Param_rev_mode_ttc = "ttc";
 
 
     //Les nouvelles fonctions unifiées
-    public function getRev_taxe(?Revenu $revenu, ?bool $forCourtier): float
+    private function getRev_taxe(?Revenu $revenu, ?bool $forCourtier): float
     {
         $tx = 0;
         $montant_ht = $this->getRev_ht($revenu);
         $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
-        if (isset($parametres[self::Param_rev_montant_net])) {
+        if (isset($parametres[self::Param_rev_mode_net])) {
             $tx = 0;
         }
         $tx = $this->dataTaxe($montant_ht, $forCourtier);
@@ -638,7 +638,7 @@ class Calculateur
         return $this->dataHT($revenu)[self::DATA_VALEUR];
     }
 
-    public function getRev_total(?Revenu $revenu, ?string $mode): float
+    private function getRev_total(?Revenu $revenu, ?string $mode): float
     {
         $tot = 0;
         $montant_ht = $this->getRev_ht($revenu);
@@ -647,7 +647,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getRetroCom_total(?Revenu $revenu): float
+    private function getRetroCom_total(?Revenu $revenu): float
     {
         // ici
         $montant_ht = $this->getRev_ht($revenu);
@@ -664,7 +664,79 @@ class Calculateur
         return $tot;
     }
 
-    public function dataTaxe(?float $montantHT, ?bool $forCourtier): float
+    public function getRevenuTotale(?Revenu $revenu): float
+    {
+        $revenuTotale = $this
+            ->setCotation($revenu->getCotation())
+            ->getRev_total(
+                $revenu,
+                self::Param_rev_mode_ttc
+            );
+        return $revenuTotale;
+    }
+
+    public function getRevenuPure(?Revenu $revenu): float
+    {
+        $revenuPure = $this
+            ->setCotation($revenu->getCotation())
+            ->getRev_total(
+                $revenu,
+                self::Param_rev_mode_pure
+            );
+        return $revenuPure;
+    }
+
+    public function getRevenuNet(?Revenu $revenu): float
+    {
+        $revenuNet = $this
+            ->setCotation($revenu->getCotation())
+            ->getRev_total(
+                $revenu,
+                self::Param_rev_mode_net
+            );
+        //dd("Revenu net: ", $this->revenuNet);
+        return $revenuNet;
+    }
+
+    public function getRetrocommissionTotale(?Revenu $revenu): float
+    {
+        $retrocommissionTotale = $this
+            ->setCotation($revenu->getCotation())
+            ->getRetroCom_total(
+                $revenu
+            );
+        return $retrocommissionTotale;
+    }
+
+    public function getTaxePourCourtier(?Revenu $revenu): float
+    {
+        $taxeCourtier = $this
+            ->setCotation($revenu->getCotation())
+            ->getRev_taxe(
+                $revenu,
+                true
+            );
+        return $taxeCourtier;
+    }
+
+    public function getTaxePourAssureur(?Revenu $revenu): float
+    {
+        $taxeAssureur = $this
+            ->setCotation($revenu->getCotation())
+            ->getRev_taxe(
+                $revenu,
+                false
+            );
+        return $taxeAssureur;
+    }
+
+    public function getReserve(?Revenu $revenu)
+    {
+        $reserve = $this->getRevenuPure($revenu) - $this->getRetrocommissionTotale($revenu);
+        return $reserve;
+    }
+
+    private function dataTaxe(?float $montantHT, ?bool $forCourtier): float
     {
         $tot = 0;
         /** @var Taxe */
@@ -728,13 +800,13 @@ class Calculateur
     {
         $tot = 0;
         $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
-        if (self::Param_rev_montant_net == $mode) {
+        if (self::Param_rev_mode_net == $mode) {
             $tot = $montant_ht;
         }
-        if (self::Param_rev_montant_ttc == $mode) {
+        if (self::Param_rev_mode_ttc == $mode) {
             $tot = $montant_ht + $this->dataTaxe($montant_ht, false);
         }
-        if (self::Param_rev_montant_pure == $mode) {
+        if (self::Param_rev_mode_pure == $mode) {
             $tot = $montant_ht - $this->dataTaxe($montant_ht, true);
         }
         return $tot;

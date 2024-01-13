@@ -516,7 +516,11 @@ class Revenu
      */
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = (new Calculateur())->getTaxePourAssureur($this);
+        $this->taxeAssureur = (new Calculateur())->getTaxePourAssureur(
+            null,
+            $this,
+            null
+        );
         return $this->taxeAssureur;
     }
 
@@ -525,7 +529,11 @@ class Revenu
      */
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = (new Calculateur())->getTaxePourCourtier($this);
+        $this->taxeCourtier = (new Calculateur())->getTaxePourCourtier(
+            null,
+            $this,
+            null
+        );
         return $this->taxeCourtier;
     }
 
@@ -534,7 +542,11 @@ class Revenu
      */
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->getRevenuPure($this);
+        $this->revenuPure = (new Calculateur())->getRevenuPure(
+            null,
+            $this,
+            null
+        );
         return $this->revenuPure;
     }
 
@@ -543,7 +555,11 @@ class Revenu
      */
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->getRevenuTotale($this);
+        $this->revenuTotale = (new Calculateur())->getRevenuTotale(
+            null,
+            $this,
+            null
+        );
         return $this->revenuTotale;
     }
 
@@ -552,7 +568,11 @@ class Revenu
      */
     public function getRevenuNet()
     {
-        $this->revenuNet = (new Calculateur())->getRevenuNet($this);
+        $this->revenuNet = (new Calculateur())->getRevenuNet(
+            null,
+            $this,
+            null
+        );
         return $this->revenuNet;
     }
 
@@ -561,16 +581,25 @@ class Revenu
      */
     public function getRetrocommissionTotale()
     {
-        $this->retrocommissionTotale = (new Calculateur())->getRetrocommissionTotale($this);
+        $this->retrocommissionTotale = (new Calculateur())
+            ->getRetrocommissionTotale(
+                null,
+                $this,
+                null
+            );
         return $this->retrocommissionTotale;
     }
 
     /**
      * Get the value of reserve
-     */ 
+     */
     public function getReserve()
     {
-        $this->reserve = (new Calculateur())->getReserve($this);
+        $this->reserve = (new Calculateur())->getReserve(
+            null,
+            $this,
+            null
+        );
         return $this->reserve;
     }
 }

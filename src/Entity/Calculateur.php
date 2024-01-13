@@ -214,7 +214,7 @@ class Calculateur
     }
 
 
-    public function getMontantTaxeGlobal(?Tranche $tranche, ?bool $forCourtier)
+    private function getMontantTaxeGlobal(?Tranche $tranche, ?bool $forCourtier)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
@@ -625,8 +625,7 @@ class Calculateur
     {
         $tx = 0;
         $montant_ht = $this->getRev_ht($revenu);
-        $parametres[self::Param_rev_isExonere] = $this->client->isExoneree();
-        if (isset($parametres[self::Param_rev_mode_net])) {
+        if ($this->client->isExoneree() == true) {
             $tx = 0;
         }
         $tx = $this->dataTaxe($montant_ht, $forCourtier);
@@ -635,7 +634,15 @@ class Calculateur
 
     public function getRev_ht(?Revenu $revenu): float
     {
-        return $this->dataHT($revenu)[self::DATA_VALEUR];
+        if ($revenu != null) {
+            return $this->dataHT($revenu)[self::DATA_VALEUR];
+        } else {
+            $cumulValeur = 0;
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $cumulValeur = $cumulValeur + $this->dataHT($revenu)[self::DATA_VALEUR];
+            }
+            return $cumulValeur;
+        }
     }
 
     private function getRev_total(?Revenu $revenu, ?string $mode): float
@@ -664,75 +671,137 @@ class Calculateur
         return $tot;
     }
 
-    public function getRevenuTotale(?Revenu $revenu): float
+    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $revenuTotale = $this
-            ->setCotation($revenu->getCotation())
-            ->getRev_total(
-                $revenu,
-                self::Param_rev_mode_ttc
-            );
+        $revenuTotale = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $revenuTotale = $this
+                ->setCotation($revenu->getCotation())
+                ->getRev_total(
+                    $revenu,
+                    self::Param_rev_mode_ttc
+                );
+        }
+
+        $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
         return $revenuTotale;
     }
 
-    public function getRevenuPure(?Revenu $revenu): float
+    public function getRevenuPure(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $revenuPure = $this
-            ->setCotation($revenu->getCotation())
-            ->getRev_total(
-                $revenu,
-                self::Param_rev_mode_pure
-            );
+        $revenuPure = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $revenuPure = $this
+                ->setCotation($revenu->getCotation())
+                ->getRev_total(
+                    $revenu,
+                    self::Param_rev_mode_pure
+                );
+        }
+
+        $revenuPure = $tranche == null ? $revenuPure : $revenuPure * $tranche->getTaux();
         return $revenuPure;
     }
 
-    public function getRevenuNet(?Revenu $revenu): float
+    public function getRevenuNet(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $revenuNet = $this
-            ->setCotation($revenu->getCotation())
-            ->getRev_total(
-                $revenu,
-                self::Param_rev_mode_net
-            );
-        //dd("Revenu net: ", $this->revenuNet);
+        $revenuNet = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $revenuNet = $this
+                ->setCotation($revenu->getCotation())
+                ->getRev_total(
+                    $revenu,
+                    self::Param_rev_mode_net
+                );
+        }
+        $revenuNet = $tranche == null ? $revenuNet : $revenuNet * $tranche->getTaux();
         return $revenuNet;
     }
 
-    public function getRetrocommissionTotale(?Revenu $revenu): float
+    public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $retrocommissionTotale = $this
-            ->setCotation($revenu->getCotation())
-            ->getRetroCom_total(
-                $revenu
-            );
+        $retrocommissionTotale = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $retrocommissionTotale = $this
+                ->setCotation($revenu->getCotation())
+                ->getRetroCom_total(
+                    $revenu
+                );
+        }
+        $retrocommissionTotale = ($tranche == null) ? $retrocommissionTotale : $retrocommissionTotale * $tranche->getTaux();
         return $retrocommissionTotale;
     }
 
-    public function getTaxePourCourtier(?Revenu $revenu): float
+    public function getTaxePourCourtier(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $taxeCourtier = $this
-            ->setCotation($revenu->getCotation())
-            ->getRev_taxe(
-                $revenu,
-                true
-            );
+        $taxeCourtier = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $taxeCourtier = $this
+                ->setCotation($revenu->getCotation())
+                ->getRev_taxe(
+                    $revenu,
+                    true
+                );
+        }
+
+        $taxeCourtier = $tranche == null ? $taxeCourtier : $taxeCourtier * $tranche->getTaux();
         return $taxeCourtier;
     }
 
-    public function getTaxePourAssureur(?Revenu $revenu): float
+    public function getTaxePourAssureur(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
     {
-        $taxeAssureur = $this
-            ->setCotation($revenu->getCotation())
-            ->getRev_taxe(
-                $revenu,
-                false
-            );
+
+        // $this->taxeCourtierTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getMontantTaxeGlobal(
+        //         [
+        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
+        //             Calculateur::PARAMETRE_TRANCHE => $this
+        //         ]
+        //     );
+
+        $taxeAssureur = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $taxeAssureur = $this
+                ->setCotation($revenu->getCotation())
+                ->getRev_taxe(
+                    $revenu,
+                    false
+                );
+        }
+
+        $taxeAssureur = $tranche == null ? $taxeAssureur : $taxeAssureur * $tranche->getTaux();
         return $taxeAssureur;
     }
 
-    public function getReserve(?Revenu $revenu)
+    public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche)
     {
-        $reserve = $this->getRevenuPure($revenu) - $this->getRetrocommissionTotale($revenu);
+        $reserve = 0;
+        if ($typeRevenu != null) {
+            //...
+            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
+        } else {
+            $reserve = $this->getRevenuPure($typeRevenu, $revenu, $tranche) - $this->getRetrocommissionTotale($typeRevenu, $revenu, $tranche);
+        }
+        $reserve = $tranche == null ? $reserve : $reserve * $tranche->getTaux();
         return $reserve;
     }
 

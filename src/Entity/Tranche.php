@@ -306,12 +306,15 @@ class Tranche
      */
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
-                Calculateur::PARAMETRE_TRANCHE => $this
-            ]
-        );
+        // $this->taxeCourtierTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getMontantTaxeGlobal(
+        //         [
+        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
+        //             Calculateur::PARAMETRE_TRANCHE => $this
+        //         ]
+        //     );
+        $this->taxeCourtierTotale = (new Calculateur())->getTaxePourCourtier(null, $this);
         return $this->taxeCourtierTotale;
     }
 
@@ -320,12 +323,16 @@ class Tranche
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = (new Calculateur())->setCotation($this->getCotation())->getMontantTaxeGlobal(
-            [
-                Calculateur::PARAMETRE_TAXE_forCOURTIER => false,
-                Calculateur::PARAMETRE_TRANCHE => $this
-            ]
-        );
+        // $this->taxeAssureurTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getMontantTaxeGlobal(
+        //         [
+        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => false,
+        //             Calculateur::PARAMETRE_TRANCHE => $this
+        //         ]
+        //     );
+
+        $this->taxeAssureurTotale = (new Calculateur())->getTaxePourAssureur(null, $this);
         return $this->taxeAssureurTotale;
     }
 
@@ -532,7 +539,9 @@ class Tranche
      */
     public function getPiste()
     {
-        $this->piste = (new Calculateur())->setCotation($this->getCotation())->getPiste();
+        $this->piste = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPiste();
         return $this->piste;
     }
 
@@ -542,12 +551,16 @@ class Tranche
      */
     public function getFraisGestionTotale()
     {
-        $this->fraisGestionTotale = (new Calculateur())->setCotation($this->getCotation())->getFraisGestionTTCGlobal(
-            [
-                // Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
-                "tranche" => $this
-            ]
-        );
+        // $this->fraisGestionTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getFraisGestionTTCGlobal(
+        //         [
+        //             // Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
+        //             "tranche" => $this
+        //         ]
+        //     );
+        $this->fraisGestionTotale = (new Calculateur())
+            ->getRevenuTotale(null, $this);
         return $this->fraisGestionTotale;
     }
 
@@ -556,11 +569,15 @@ class Tranche
      */
     public function getRevenuTotal()
     {
-        $this->revenuTotal = (new Calculateur())->setCotation($this->getCotation())->getRevenuTTCGlobal(
-            [
-                "tranche" => $this
-            ]
-        );
+        // $this->revenuTotal = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getRevenuTTCGlobal(
+        //         [
+        //             "tranche" => $this
+        //         ]
+        //     );
+        $this->fraisGestionTotale = (new Calculateur())
+            ->getRevenuTotale(null, $this);
         return $this->revenuTotal;
     }
 

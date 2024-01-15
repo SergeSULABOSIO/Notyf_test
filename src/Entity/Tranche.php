@@ -49,6 +49,7 @@ class Tranche
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
+    private ?float $reserve = 0;
     //Autres champs
     private ?string $periodeValidite;
     private ?string $autoriteTaxeCourtier;
@@ -83,9 +84,6 @@ class Tranche
     {
         $this->elementFactures = new ArrayCollection();
     }
-
-    // #[ORM\OneToOne(mappedBy: 'tranche', cascade: ['persist', 'remove'])]
-    // private ?ElementFacture $elementFacture = null;
 
 
     public function getId(): ?int
@@ -179,7 +177,9 @@ class Tranche
      */
     public function getMontant()
     {
-        $this->montant = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(["tranche" => $this]);
+        $this->montant = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPrimeTotale(["tranche" => $this]);
         return $this->montant;
     }
 
@@ -252,8 +252,9 @@ class Tranche
      */
     public function getCodeMonnaieAffichage()
     {
-        //dd($this->getCotation());
-        $this->codeMonnaieAffichage = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
+        $this->codeMonnaieAffichage = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getCodeMonnaie();
         return $this->codeMonnaieAffichage;
     }
 
@@ -262,7 +263,9 @@ class Tranche
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = (new Calculateur())->setCotation($this->getCotation())->getMonnaie();
+        $this->monnaie_Affichage = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getMonnaie();
         return $this->monnaie_Affichage;
     }
 
@@ -271,11 +274,13 @@ class Tranche
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = (new Calculateur())->setCotation($this->getCotation())->getPrimeTotale(
-            [
-                "tranche" => $this
-            ]
-        );
+        $this->primeTotale = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPrimeTotale(
+                [
+                    "tranche" => $this
+                ]
+            );
         return $this->primeTotale;
     }
 
@@ -284,12 +289,14 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        $this->commissionTotale = (new Calculateur())->setCotation($this->getCotation())->getCommissionTTCGlobal(
-            [
-                Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
-                "tranche" => $this
-            ]
-        );
+        $this->commissionTotale = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getCommissionTTCGlobal(
+                [
+                    Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
+                    "tranche" => $this
+                ]
+            );
         return $this->commissionTotale;
     }
 
@@ -298,7 +305,9 @@ class Tranche
      */
     public function getRetroCommissionTotale()
     {
-        $this->retroCommissionTotale = (new Calculateur())->setCotation($this->getCotation())->getRetroComPartenaire(["tranche" => $this]);
+        $this->retroCommissionTotale = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getRetroComPartenaire(["tranche" => $this]);
         return $this->retroCommissionTotale;
     }
 
@@ -307,20 +316,14 @@ class Tranche
      */
     public function getTaxeCourtierTotale()
     {
-        // $this->taxeCourtierTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getMontantTaxeGlobal(
-        //         [
-        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
-        //             Calculateur::PARAMETRE_TRANCHE => $this
-        //         ]
-        //     );
         $this->taxeCourtierTotale = (new Calculateur())
-        ->getTaxePourCourtier(
-            null,
-            null, 
-            $this
-        );
+            ->getTaxePourCourtier(
+                null,
+                null,
+                $this,
+                null,
+                null
+            );
         return $this->taxeCourtierTotale;
     }
 
@@ -329,21 +332,14 @@ class Tranche
      */
     public function getTaxeAssureurTotale()
     {
-        // $this->taxeAssureurTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getMontantTaxeGlobal(
-        //         [
-        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => false,
-        //             Calculateur::PARAMETRE_TRANCHE => $this
-        //         ]
-        //     );
-
         $this->taxeAssureurTotale = (new Calculateur())
-        ->getTaxePourAssureur(
-            null,
-            null, 
-            $this
-        );
+            ->getTaxePourAssureur(
+                null,
+                null,
+                $this,
+                null,
+                null
+            );
         return $this->taxeAssureurTotale;
     }
 
@@ -562,19 +558,13 @@ class Tranche
      */
     public function getFraisGestionTotale()
     {
-        // $this->fraisGestionTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getFraisGestionTTCGlobal(
-        //         [
-        //             // Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => true,
-        //             "tranche" => $this
-        //         ]
-        //     );
         $this->fraisGestionTotale = (new Calculateur())
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_FRAIS_DE_GESTION,
                 null,
-                $this
+                $this,
+                null,
+                null
             );
         return $this->fraisGestionTotale;
     }
@@ -584,18 +574,13 @@ class Tranche
      */
     public function getRevenuTotal()
     {
-        // $this->revenuTotal = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getRevenuTTCGlobal(
-        //         [
-        //             "tranche" => $this
-        //         ]
-        //     );
         $this->fraisGestionTotale = (new Calculateur())
             ->getRevenuTotale(
                 null,
                 null,
-                $this
+                $this,
+                null,
+                null
             );
         return $this->revenuTotal;
     }
@@ -628,5 +613,21 @@ class Tranche
         }
 
         return $this;
+    }
+
+    /**
+     * Get the value of reserve
+     */
+    public function getReserve()
+    {
+        $this->reserve = (new Calculateur())
+            ->getReserve(
+                null,
+                null,
+                $this,
+                null,
+                null
+            );
+        return $this->reserve;
     }
 }

@@ -92,9 +92,9 @@ class Cotation
     //Les champs calculables automatiquement sur base des données existantes
     private ?float $primeTotale;
     //parties partageable et non partageable tous confondues
-    private ?float $revenuTotalHT;
-    private ?float $revenuTotalTTC;
+    private ?float $revenuPureTotal;
     private ?float $revenuNetTotal;
+    private ?float $revenuTotalTTC;
     private ?float $commissionTotaleTTC;
     private ?float $taxeAssureurTotale;
     private ?float $taxeCourtierTotale;
@@ -107,6 +107,7 @@ class Cotation
     #[ORM\Column]
     private ?float $tauxretrocompartenaire = 0;
     private ?float $retroComPartenaire;
+    private ?float $reserve;
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
@@ -198,7 +199,9 @@ class Cotation
 
     public function getChargement($type)
     {
-        return (new Calculateur())->setCotation($this)->getChargement(["type" => $type]);
+        return (new Calculateur())
+            ->setCotation($this)
+            ->getChargement(["type" => $type]);
     }
 
     public function __toString()
@@ -295,7 +298,9 @@ class Cotation
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = (new Calculateur())->setCotation($this)->getPrimeTotale([]);
+        $this->primeTotale = (new Calculateur())
+            ->setCotation($this)
+            ->getPrimeTotale([]);
         return $this->primeTotale;
     }
 
@@ -307,29 +312,6 @@ class Cotation
     public function setPrimeTotale($primeTotale)
     {
         $this->primeTotale = $primeTotale;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of revenuTotalHT
-     */
-    public function getRevenuTotalHT()
-    {
-        $this->revenuTotalHT = (new Calculateur())
-            ->setCotation($this)
-            ->getRevenufinaleHTGlobale(true) * 100;
-        return $this->revenuTotalHT;
-    }
-
-    /**
-     * Set the value of revenuTotalHT
-     *
-     * @return  self
-     */
-    public function setRevenuTotalHT($revenuTotalHT)
-    {
-        $this->revenuTotalHT = $revenuTotalHT;
 
         return $this;
     }
@@ -393,7 +375,9 @@ class Cotation
      */
     public function getTaxes()
     {
-        $this->taxes = (new Calculateur())->setCotation($this)->getTaxes();
+        $this->taxes = (new Calculateur())
+            ->setCotation($this)
+            ->getTaxes();
         return $this->taxes;
     }
 
@@ -415,7 +399,9 @@ class Cotation
      */
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = (new Calculateur())->setCotation($this)->getTaxeCourtier();
+        $this->taxeCourtier = (new Calculateur())
+            ->setCotation($this)
+            ->getTaxeCourtier();
         return $this->taxeCourtier;
     }
 
@@ -424,7 +410,8 @@ class Cotation
      */
     public function getRetroComPartenaire()
     {
-        $this->retroComPartenaire = (new Calculateur())->setCotation($this)->getRetroComPartenaire([]) * 100;
+        $this->retroComPartenaire = (new Calculateur())
+            ->getRetrocommissionTotale(null, null, null, $this, null) * 100;
         return $this->retroComPartenaire;
     }
 
@@ -434,11 +421,7 @@ class Cotation
     public function getTaxeCourtierTotale()
     {
         $this->taxeCourtierTotale = (new Calculateur())
-            ->setCotation($this)
-            ->getMontantTaxeGlobal(
-                null,
-                true
-            ) * 100;
+            ->getTaxePourCourtier(null, null, null, $this, null) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -471,12 +454,7 @@ class Cotation
     public function getRevenuNetTotal()
     {
         $this->revenuNetTotal = (new Calculateur())
-            ->setCotation($this)
-            ->getRevenuPureGlobale(
-                null,
-                true,
-                true
-            ) * 100;
+            ->getRevenuNet(null, null, null, $this, null) * 100;
         return $this->revenuNetTotal;
     }
 
@@ -486,11 +464,7 @@ class Cotation
     public function getTaxeCourtierTotalePartageable()
     {
         $this->taxeCourtierTotalePartageable = (new Calculateur())
-            ->setCotation($this)
-            ->getMontantTaxeGlobal(
-                null,
-                true
-            ) * 100;
+            ->getTaxePourCourtier(null, null, null, $this, true) * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 
@@ -499,7 +473,8 @@ class Cotation
      */
     public function getRevenuNetTotalPartageable()
     {
-        $this->revenuNetTotalPartageable = (new Calculateur())->setCotation($this)->getRevenuPureGlobalePartageable() * 100;
+        $this->revenuNetTotalPartageable = (new Calculateur())
+            ->getRevenuPure(null, null, null, $this, true) * 100;
         return $this->revenuNetTotalPartageable;
     }
 
@@ -508,7 +483,9 @@ class Cotation
      */
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = (new Calculateur())->setCotation($this)->getTaxeAssureur();
+        $this->taxeAssureur = (new Calculateur())
+            ->setCotation($this)
+            ->getTaxeAssureur();
         return $this->taxeAssureur;
     }
 
@@ -576,7 +553,9 @@ class Cotation
      */
     public function getMonnaie_Affichage()
     {
-        $this->monnaie_Affichage = (new Calculateur())->setCotation($this)->getMonnaie();
+        $this->monnaie_Affichage = (new Calculateur())
+            ->setCotation($this)
+            ->getMonnaie();
         return $this->monnaie_Affichage;
     }
 
@@ -762,7 +741,7 @@ class Cotation
      */
     public function getCommissionTotaleTTC()
     {
-        $this->commissionTotaleTTC = $this->getTaxeAssureurTotale() + $this->getRevenuTotalHT();
+        $this->commissionTotaleTTC = $this->getTaxeAssureurTotale() + $this->getRevenuNetTotal();
         return $this->commissionTotaleTTC;
     }
 
@@ -772,11 +751,7 @@ class Cotation
     public function getTaxeAssureurTotale()
     {
         $this->taxeAssureurTotale = (new Calculateur())
-            ->setCotation($this)
-            ->getMontantTaxeGlobal(
-                null,
-                false
-            ) * 100;
+            ->getTaxePourAssureur(null, null, null, $this) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -827,8 +802,27 @@ class Cotation
     public function getRevenuTotalTTC()
     {
         $this->revenuTotalTTC = (new Calculateur())
-            ->setCotation($this)
-            ->getRevenuTTCGlobal(null, true, null) * 100;
+            ->getRevenuTotale(null, null, null, $this) * 100;
         return $this->revenuTotalTTC;
+    }
+
+    /**
+     * Get the value of revenuPureTotal
+     */
+    public function getRevenuPureTotal()
+    {
+        $this->revenuPureTotal = (new Calculateur())
+            ->getRevenuPure(null, null, null, $this, null) * 100;
+        return $this->revenuPureTotal;
+    }
+
+    /**
+     * Get the value of reserve
+     */
+    public function getReserve()
+    {
+        $this->reserve = (new Calculateur())
+            ->getReserve(null, null, null, $this, null) * 100;
+        return $this->reserve;
     }
 }

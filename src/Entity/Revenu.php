@@ -372,6 +372,9 @@ class Revenu
      */
     public function getClient()
     {
+        $this->client = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getClient();
         return $this->client;
     }
 
@@ -516,9 +519,12 @@ class Revenu
      */
     public function getTaxeAssureur()
     {
-        $this->taxeAssureur = (new Calculateur())->getTaxePourAssureur(
+        $this->taxeAssureur = (new Calculateur())
+        ->getTaxePourAssureur(
             null,
             $this,
+            null,
+            null,
             null
         );
         return $this->taxeAssureur;
@@ -529,11 +535,14 @@ class Revenu
      */
     public function getTaxeCourtier()
     {
-        $this->taxeCourtier = (new Calculateur())->getTaxePourCourtier(
-            null,
-            $this,
-            null
-        );
+        $this->taxeCourtier = (new Calculateur())
+            ->getTaxePourCourtier(
+                null,
+                $this,
+                null,
+                null,
+                null
+            );
         return $this->taxeCourtier;
     }
 
@@ -542,11 +551,14 @@ class Revenu
      */
     public function getRevenuPure()
     {
-        $this->revenuPure = (new Calculateur())->getRevenuPure(
-            null,
-            $this,
-            null
-        );
+        $this->revenuPure = (new Calculateur())
+            ->getRevenuPure(
+                null,
+                $this,
+                null,
+                null,
+                null
+            );
         return $this->revenuPure;
     }
 
@@ -555,11 +567,14 @@ class Revenu
      */
     public function getRevenuTotale()
     {
-        $this->revenuTotale = (new Calculateur())->getRevenuTotale(
-            null,
-            $this,
-            null
-        );
+        $this->revenuTotale = (new Calculateur())
+            ->getRevenuTotale(
+                null,
+                $this,
+                null,
+                null,
+                null
+            );
         return $this->revenuTotale;
     }
 
@@ -568,11 +583,14 @@ class Revenu
      */
     public function getRevenuNet()
     {
-        $this->revenuNet = (new Calculateur())->getRevenuNet(
-            null,
-            $this,
-            null
-        );
+        $this->revenuNet = (new Calculateur())
+            ->getRevenuNet(
+                null,
+                $this,
+                null,
+                null,
+                null
+            );
         return $this->revenuNet;
     }
 
@@ -585,6 +603,8 @@ class Revenu
             ->getRetrocommissionTotale(
                 null,
                 $this,
+                null,
+                null,
                 null
             );
         return $this->retrocommissionTotale;
@@ -595,11 +615,14 @@ class Revenu
      */
     public function getReserve()
     {
-        $this->reserve = (new Calculateur())->getReserve(
-            null,
-            $this,
-            null
-        );
+        $this->reserve = (new Calculateur())
+            ->getReserve(
+                null,
+                $this,
+                null,
+                null,
+                null
+            );
         return $this->reserve;
     }
 }

@@ -1534,9 +1534,24 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
+        $tabAttributs[] = TextField::new('police', "Police")
             ->formatValue(function ($value, Revenu $entity) {
                 return $entity->getPolice()->getReference();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('client', "Client")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $entity->getClient()->getNom();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('produit', "Produit")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $entity->getProduit()->getNom();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+            ->formatValue(function ($value, Revenu $entity) {
+                return $entity->getPartenaire()->getNom();
             })
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', "Modification")
@@ -1673,6 +1688,33 @@ class ServicePreferences
         //     ->onlyOnIndex();
         // $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
         //     ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('reserve', "Réserve")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve() * 100);
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('police', "Police")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $entity->getPolice()->getReference();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('client', "Client")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $entity->getClient()->getNom();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('produit', "Produit")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $entity->getProduit()->getNom();
+            })
+            ->onlyOnIndex();
+        $tabAttributs[] = TextField::new('partenaire', "Partenaire")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $entity->getPartenaire()->getNom();
+            })
+            ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)
             ->onlyOnIndex();
 
@@ -4468,7 +4510,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu pure")
+        $tabAttributs[] = MoneyField::new('revenuPureTotal', "Revenu pure")
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setStoredAsCents()
             ->onlyOnForms()
@@ -4480,7 +4522,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setDisabled(true)
             ->setColumns(12);
-        $tabAttributs[] = MoneyField::new('revenuTotalHT', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur() . " (net)")
+        $tabAttributs[] = MoneyField::new('revenuNetTotal', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur() . " (net)")
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setHelp("La partie partageable + la partie non partageable.")
             ->setStoredAsCents()
@@ -4540,6 +4582,15 @@ class ServicePreferences
             ->setStoredAsCents()
             ->onlyOnForms()
             ->setDisabled(true)
+            ->setColumns(12);
+        $tabAttributs[] = MoneyField::new('reserve', "Réserve")
+            ->formatValue(function ($value, Cotation $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->setDisabled(true)
+            ->onlyOnForms()
             ->setColumns(12);
 
         //return $tabAttributs;

@@ -352,7 +352,7 @@ class Police
     {
         if ($this->getCotation()) {
             if ($this->getCotation()->isValidated()) {
-                $this->commissionTotaleHT = $this->getCotation()->getRevenuTotalHT();
+                $this->commissionTotaleHT = $this->getCotation()->getRevenuNetTotal();
             }
         }
         return $this->commissionTotaleHT;

@@ -41,7 +41,7 @@ class Calculateur
     }
 
 
-    public function getMontantTaxe(?Revenu $revenu, ?bool $forCourtier): float
+    private function getMontantTaxe(?Revenu $revenu, ?bool $forCourtier): float
     {
         //dd($parametres);
         $this->setCotation($revenu->getCotation());
@@ -68,23 +68,23 @@ class Calculateur
         return $montantTaxe;
     }
 
-    public function getRevenufinaleHT_valeur(?Revenu $revenu)
+    private function getRevenufinaleHT_valeur(?Revenu $revenu)
     {
         //dd($parametres);
         return $this->getRevenufinaleHT($revenu)["montant_ht_valeur_numerique"];
     }
 
-    public function getRevenufinaleHT_description(?Revenu $revenu)
+    private function getRevenufinaleHT_description(?Revenu $revenu)
     {
         return $this->getRevenufinaleHT($revenu)["montant_ht_description"];
     }
 
-    public function getRevenufinaleHT_formule(?Revenu $revenu)
+    private function getRevenufinaleHT_formule(?Revenu $revenu)
     {
         return $this->getRevenufinaleHT($revenu)["montant_ht_formule"];
     }
 
-    public function getRevenufinaleHTGlobale(?bool $isPartageable)
+    private function getRevenufinaleHTGlobale(?bool $isPartageable)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
@@ -95,7 +95,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getPrimeTotale(?array $parametres)
+    private function getPrimeTotale(?array $parametres)
     {
         if (isset($parametres[self::PARAMETRE_TRANCHE])) {
             return $this->getChargement([]) * ($parametres[self::PARAMETRE_TRANCHE])->getTaux();
@@ -104,7 +104,7 @@ class Calculateur
         }
     }
 
-    public function getChargement(?array $parametres)
+    private function getChargement(?array $parametres)
     {
         $tot = 0;
         if ($this->cotation->getChargements()) {
@@ -121,7 +121,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getRetroComPartenaire(?array $parametres): float
+    private function getRetroComPartenaire(?array $parametres): float
     {
         $taux = 0;
         if ($this->cotation->getTauxretrocompartenaire() == 0) {
@@ -159,7 +159,7 @@ class Calculateur
         return $comPure;
     } */
 
-    public function getRevenuTTC(?Revenu $revenu)
+    private function getRevenuTTC(?Revenu $revenu)
     {
         $net = $this->getRevenufinaleHT_valeur($revenu);
         // $parametres[Calculateur::PARAMETRE_TAXE_forCOURTIER] = false;
@@ -184,7 +184,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getCommissionTTCGlobal(?array $parametres)
+    private function getCommissionTTCGlobal(?array $parametres)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
@@ -199,7 +199,7 @@ class Calculateur
         return $tot;
     }
 
-    public function getFraisGestionTTCGlobal(?Tranche $tranche)
+    private function getFraisGestionTTCGlobal(?Tranche $tranche)
     {
         $tot = 0;
         foreach ($this->cotation->getRevenus() as $revenu) {
@@ -227,7 +227,7 @@ class Calculateur
         }
     }
 
-    public function getRevenufinaleHT(?Revenu $revenu): array
+    private function getRevenufinaleHT(?Revenu $revenu): array
     {
         $this->setEntreprise($revenu->getEntreprise());
         $strBase = "";
@@ -671,136 +671,264 @@ class Calculateur
         return $tot;
     }
 
-    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    private function getRevenu(?string $typeRevenu): Revenu
+    {
+        foreach ($this->cotation->getRevenus() as $revenu) {
+            if ($revenu->getType() == RevenuCrudController::TAB_TYPE[$typeRevenu]) {
+                // dd($this->cotation->getRevenus()[0]->getType(), RevenuCrudController::TAB_TYPE[$typeRevenu], $revenu);
+                return $revenu;
+            }
+        }
+        return null;
+    }
+
+    private function setCotation_getRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche)
+    {
+        $rev = null;
+        if ($typeRevenu != null) {
+            $rev = $this
+                ->setCotation($tranche->getCotation())
+                ->getRevenu($typeRevenu);
+        } else if ($revenu != null) {
+            $rev = $revenu;
+            $this->setCotation($revenu->getCotation());
+        } else if ($tranche != null) {
+            $this->setCotation($tranche->getCotation());
+        }
+        // dd($rev);
+        return $rev;
+    }
+
+    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation): float
     {
         $revenuTotale = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
+        // dd($typeRevenu, $revenu, $tranche);
+        // dd($typeRevenu, $revenu, $this->getCotation());
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        // dd($rev);
+        if ($rev != null) {
             $revenuTotale = $this
-                ->setCotation($revenu->getCotation())
+                ->setCotation($rev->getCotation())
                 ->getRev_total(
-                    $revenu,
+                    $rev,
                     self::Param_rev_mode_ttc
                 );
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $revenuTotale = $revenuTotale + $this
+                    ->getRev_total(
+                        $revenu,
+                        self::Param_rev_mode_ttc
+                    );
+            }
+            // dd($this->cotation->getRevenus());
         }
-
+        // dd("Ici", $revenuTotale);
         $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
+        //dd($rev, "Revenu total", $revenuTotale);
         return $revenuTotale;
     }
 
-    public function getRevenuPure(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    public function getRevenuPure(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
         $revenuPure = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
-            $revenuPure = $this
-                ->setCotation($revenu->getCotation())
-                ->getRev_total(
-                    $revenu,
-                    self::Param_rev_mode_pure
-                );
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        if ($rev != null) {
+            $go = false;
+            if ($partageable == null) {
+                $go = true;
+            } else if ($partageable == $revenu->getPartageable()) {
+                $go = true;
+            }
+            if ($go == true) {
+                $revenuPure = $this
+                    ->setCotation($this->cotation)
+                    ->getRev_total(
+                        $rev,
+                        self::Param_rev_mode_pure
+                    );
+            }
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $go = false;
+                if ($partageable == null) {
+                    $go = true;
+                } else if ($partageable == $revenu->getPartageable()) {
+                    $go = true;
+                }
+                if ($go == true) {
+                    $revenuPure = $this
+                        // ->setCotation($this->cotation)
+                        ->getRev_total(
+                            $revenu,
+                            self::Param_rev_mode_pure
+                        );
+                }
+            }
         }
 
         $revenuPure = $tranche == null ? $revenuPure : $revenuPure * $tranche->getTaux();
         return $revenuPure;
     }
 
-    public function getRevenuNet(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    public function getRevenuNet(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
         $revenuNet = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
-            $revenuNet = $this
-                ->setCotation($revenu->getCotation())
-                ->getRev_total(
-                    $revenu,
-                    self::Param_rev_mode_net
-                );
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        if ($rev != null) {
+            $go = false;
+            if ($partageable == null) {
+                $go = true;
+            } else if ($partageable == $revenu->getPartageable()) {
+                $go = true;
+            }
+            if ($go == true) {
+                $revenuNet = $this
+                    ->setCotation($this->cotation)
+                    ->getRev_total(
+                        $rev,
+                        self::Param_rev_mode_net
+                    );
+            }
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $go = false;
+                if ($partageable == null) {
+                    $go = true;
+                } else if ($partageable == $revenu->getPartageable()) {
+                    $go = true;
+                }
+                if ($go == true) {
+                    $revenuNet = $revenuNet + $this
+                        // ->setCotation($this->cotation)
+                        ->getRev_total(
+                            $revenu,
+                            self::Param_rev_mode_net
+                        );
+                }
+            }
+            // dd($revenuNet);
         }
         $revenuNet = $tranche == null ? $revenuNet : $revenuNet * $tranche->getTaux();
         return $revenuNet;
     }
 
-    public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
         $retrocommissionTotale = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
-            $retrocommissionTotale = $this
-                ->setCotation($revenu->getCotation())
-                ->getRetroCom_total(
-                    $revenu
-                );
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        if ($rev != null) {
+            $go = false;
+            if ($partageable == null) {
+                $go = true;
+            } else if ($partageable == $rev->getPartageable()) {
+                $go = true;
+            }
+            if ($go) {
+                $retrocommissionTotale = $this
+                    // ->setCotation($this->cotation)
+                    ->getRetroCom_total(
+                        $rev
+                    );
+            }
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $go = false;
+                if ($partageable == null) {
+                    $go = true;
+                } else if ($partageable == $revenu->getPartageable()) {
+                    $go = true;
+                }
+                if ($go) {
+                    $retrocommissionTotale = $retrocommissionTotale + $this
+                        ->getRetroCom_total(
+                            $revenu
+                        );
+                }
+            }
         }
         $retrocommissionTotale = ($tranche == null) ? $retrocommissionTotale : $retrocommissionTotale * $tranche->getTaux();
         return $retrocommissionTotale;
     }
 
-    public function getTaxePourCourtier(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    public function getTaxePourCourtier(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
         $taxeCourtier = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
-            $taxeCourtier = $this
-                ->setCotation($revenu->getCotation())
-                ->getRev_taxe(
-                    $revenu,
-                    true
-                );
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        if ($rev != null) {
+            $go = false;
+            if ($partageable == null) {
+                $go = true;
+            } else if ($partageable == $rev->getPartageable()) {
+                $go = true;
+            }
+            if ($go) {
+                $taxeCourtier = $this
+                    ->setCotation($this->cotation)
+                    ->getRev_taxe(
+                        $rev,
+                        true
+                    );
+            }
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $go = false;
+                if ($partageable == null) {
+                    $go = true;
+                } else if ($partageable == $revenu->getPartageable()) {
+                    $go = true;
+                }
+                if ($go) {
+                    $taxeCourtier = $taxeCourtier + $this
+                        // ->setCotation($this->cotation)
+                        ->getRev_taxe(
+                            $revenu,
+                            true
+                        );
+                }
+            }
         }
 
         $taxeCourtier = $tranche == null ? $taxeCourtier : $taxeCourtier * $tranche->getTaux();
         return $taxeCourtier;
     }
 
-    public function getTaxePourAssureur(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): float
+    public function getTaxePourAssureur(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation): float
     {
-
-        // $this->taxeCourtierTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getMontantTaxeGlobal(
-        //         [
-        //             Calculateur::PARAMETRE_TAXE_forCOURTIER => true,
-        //             Calculateur::PARAMETRE_TRANCHE => $this
-        //         ]
-        //     );
-
         $taxeAssureur = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        if ($rev != null) {
             $taxeAssureur = $this
-                ->setCotation($revenu->getCotation())
+                ->setCotation($this->cotation)
                 ->getRev_taxe(
-                    $revenu,
+                    $rev,
                     false
                 );
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $taxeAssureur = $taxeAssureur + $this
+                    ->getRev_taxe(
+                        $revenu,
+                        false
+                    );
+            }
         }
 
         $taxeAssureur = $tranche == null ? $taxeAssureur : $taxeAssureur * $tranche->getTaux();
         return $taxeAssureur;
     }
 
-    public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche)
+    public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable)
     {
-        $reserve = 0;
-        if ($typeRevenu != null) {
-            //...
-            dd("Préciser le type de revenu à filtrer!", "Cette fonction n'est pas encore définie.");
-        } else {
-            $reserve = $this->getRevenuPure($typeRevenu, $revenu, $tranche) - $this->getRetrocommissionTotale($typeRevenu, $revenu, $tranche);
-        }
+        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+        $reserve = $this->getRevenuPure($typeRevenu, $rev, $tranche, $cotation, $partageable) - $this->getRetrocommissionTotale($typeRevenu, $rev, $tranche, $cotation, $partageable);
         $reserve = $tranche == null ? $reserve : $reserve * $tranche->getTaux();
         return $reserve;
     }

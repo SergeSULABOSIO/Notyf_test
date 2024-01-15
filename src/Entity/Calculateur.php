@@ -584,7 +584,7 @@ class Calculateur
         return $tot;
     }
 
-    private function getRevenu(?string $typeRevenu): Revenu
+    private function getRevenu(?string $typeRevenu): ?Revenu
     {
         foreach ($this->cotation->getRevenus() as $revenu) {
             if ($revenu->getType() == RevenuCrudController::TAB_TYPE[$typeRevenu]) {
@@ -595,7 +595,7 @@ class Calculateur
         return null;
     }
 
-    private function setCotation_getRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche)
+    private function setCotation_getRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche):?Revenu
     {
         $rev = null;
         if ($typeRevenu != null) {
@@ -612,32 +612,46 @@ class Calculateur
         return $rev;
     }
 
-    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation): float
+    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
         $revenuTotale = 0;
-        // dd($typeRevenu, $revenu, $tranche);
-        // dd($typeRevenu, $revenu, $this->getCotation());
         $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        // dd($rev);
+        // dd("Rev", $rev);
         if ($rev != null) {
-            $revenuTotale = $this
-                ->setCotation($rev->getCotation())
-                ->getRev_total(
-                    $rev,
-                    self::Param_rev_mode_ttc
-                );
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $revenuTotale = $revenuTotale + $this
+            $go = false;
+            if ($partageable == null) {
+                $go = true;
+            } else if ($partageable == $revenu->getPartageable()) {
+                $go = true;
+            }
+            if ($go == true) {
+                $revenuTotale = $this
+                    ->setCotation($rev->getCotation())
                     ->getRev_total(
-                        $revenu,
+                        $rev,
                         self::Param_rev_mode_ttc
                     );
             }
+        } else if ($cotation != null) {
+            $this->setCotation($cotation);
+            foreach ($this->cotation->getRevenus() as $revenu) {
+                $go = false;
+                if ($partageable == null) {
+                    $go = true;
+                } else if ($partageable == $revenu->getPartageable()) {
+                    $go = true;
+                }
+                if ($go == true) {
+                    $revenuTotale = $revenuTotale + $this
+                        ->getRev_total(
+                            $revenu,
+                            self::Param_rev_mode_ttc
+                        );
+                }
+            }
             // dd($this->cotation->getRevenus());
         }
-        // dd("Ici", $revenuTotale);
+        
         $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
         //dd($rev, "Revenu total", $revenuTotale);
         return $revenuTotale;
@@ -681,7 +695,6 @@ class Calculateur
                 }
             }
         }
-
         $revenuPure = $tranche == null ? $revenuPure : $revenuPure * $tranche->getTaux();
         return $revenuPure;
     }

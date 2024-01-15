@@ -42,10 +42,14 @@ class Tranche
     private ?string $codeMonnaieAffichage;
     //valeurs monnétaires caculables
     private ?float $primeTotaleTranche = 0;
-    private ?float $primeTotale = 0;
-    private ?float $commissionTotale = 0;
-    private ?float $fraisGestionTotale = 0;
+    //les type de revenu
+    private ?float $com_reassurance = 0;
+    private ?float $com_locale = 0;
+    private ?float $com_fronting = 0;
+    private ?float $com_frais_gestion = 0;
+    private ?float $com_autre_chargement = 0;
     private ?float $revenuTotal = 0;
+
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
@@ -248,44 +252,12 @@ class Tranche
     }
 
     /**
-     * Get the value of primeTotale
-     */
-    public function getPrimeTotale()
-    {
-        $this->primeTotale = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getPrimeTotale(null, null);
-        return $this->primeTotale;
-    }
-
-    /**
-     * Get the value of commissionTotale
-     */
-    public function getCommissionTotale()
-    {
-        // $this->commissionTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getCommissionTTCGlobal(
-        //         [
-        //             Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
-        //             "tranche" => $this
-        //         ]
-        //     );
-        $this->commissionTotale = (new Calculateur)
-            ->getRevenuTotale(null, null, $this, null);
-        return $this->commissionTotale;
-    }
-
-    /**
      * Get the value of retroCommissionTotale
      */
     public function getRetroCommissionTotale()
     {
-        // $this->retroCommissionTotale = (new Calculateur())
-        //     ->setCotation($this->getCotation())
-        //     ->getRetroComPartenaire(["tranche" => $this]);
         $this->retroCommissionTotale = (new Calculateur())
-            ->getRetroCommissionTotale(null, null, $this, null, null);
+            ->getRetroCommissionTotale(null, null, $this, null, null) * 100;
         return $this->retroCommissionTotale;
     }
 
@@ -295,13 +267,7 @@ class Tranche
     public function getTaxeCourtierTotale()
     {
         $this->taxeCourtierTotale = (new Calculateur())
-            ->getTaxePourCourtier(
-                null,
-                null,
-                $this,
-                null,
-                null
-            );
+            ->getTaxePourCourtier(null, null, $this, null, null);
         return $this->taxeCourtierTotale;
     }
 
@@ -311,13 +277,7 @@ class Tranche
     public function getTaxeAssureurTotale()
     {
         $this->taxeAssureurTotale = (new Calculateur())
-            ->getTaxePourAssureur(
-                null,
-                null,
-                $this,
-                null,
-                null
-            );
+            ->getTaxePourAssureur(null, null, $this, null, null);
         return $this->taxeAssureurTotale;
     }
 
@@ -545,39 +505,6 @@ class Tranche
         return $this->piste;
     }
 
-
-    /**
-     * Get the value of fraisGestionTotale
-     */
-    public function getFraisGestionTotale()
-    {
-        $this->fraisGestionTotale = (new Calculateur())
-            ->getRevenuTotale(
-                RevenuCrudController::TYPE_FRAIS_DE_GESTION,
-                null,
-                $this,
-                null,
-                null
-            );
-        return $this->fraisGestionTotale;
-    }
-
-    /**
-     * Get the value of revenuTotal
-     */
-    public function getRevenuTotal()
-    {
-        $this->fraisGestionTotale = (new Calculateur())
-            ->getRevenuTotale(
-                null,
-                null,
-                $this,
-                null,
-                null
-            );
-        return $this->revenuTotal;
-    }
-
     /**
      * @return Collection<int, ElementFacture>
      */
@@ -614,23 +541,83 @@ class Tranche
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
-            ->getReserve(
-                null,
-                null,
-                $this,
-                null,
-                null
-            );
+            ->getReserve(null, null, $this, null, null);
         return $this->reserve;
     }
 
     /**
      * Get the value of primeTotaleTranche
-     */ 
+     */
     public function getPrimeTotaleTranche()
     {
         $this->primeTotaleTranche = (new Calculateur())
             ->getPrimeTotale(null, $this);
+        // dd($this->primeTotaleTranche);
         return $this->primeTotaleTranche;
+    }
+
+    /**
+     * Get the value of com_reassurance
+     */
+    public function getCom_reassurance()
+    {
+        $this->com_reassurance = (new Calculateur)
+            ->getRevenuTotale(RevenuCrudController::TYPE_COM_REA, null, $this, null, null) * 100;
+        // dd($this->com_reassurance);
+        return $this->com_reassurance;
+    }
+
+    /**
+     * Get the value of com_locale
+     */
+    public function getCom_locale()
+    {
+        $this->com_locale = (new Calculateur)
+            ->getRevenuTotale(RevenuCrudController::TYPE_COM_LOCALE, null, $this, null, null) * 100;
+        // dd($this->com_locale);
+        return $this->com_locale;
+    }
+
+    /**
+     * Get the value of com_fronting
+     */
+    public function getCom_fronting()
+    {
+        $this->com_fronting = (new Calculateur)
+            ->getRevenuTotale(RevenuCrudController::TYPE_COM_FRONTING, null, $this, null, null) * 100;
+        // dd($this->com_fronting);
+        return $this->com_fronting;
+    }
+
+    /**
+     * Get the value of com_frais_gestion
+     */
+    public function getCom_frais_gestion()
+    {
+        $this->com_frais_gestion = (new Calculateur)
+            ->getRevenuTotale(RevenuCrudController::TYPE_FRAIS_DE_GESTION, null, $this, null, null) * 100;
+        // dd($this->com_frais_gestion);
+        return $this->com_frais_gestion;
+    }
+
+    /**
+     * Get the value of com_autre_chargement
+     */
+    public function getCom_autre_chargement()
+    {
+        $this->com_autre_chargement = (new Calculateur)
+            ->getRevenuTotale(RevenuCrudController::TYPE_AUTRE_CHARGEMENT, null, $this, null, null) * 100;
+        return $this->com_autre_chargement;
+    }
+
+    /**
+     * Get the value of revenuTotal
+     */
+    public function getRevenuTotal()
+    {
+        $this->revenuTotal = (new Calculateur)
+            ->getRevenuTotale(null, null, $this, null, null) * 100;
+        //dd($this->revenuTotal);
+        return $this->revenuTotal;
     }
 }

@@ -45,15 +45,13 @@ class RevenuCrudController extends AbstractCrudController
     public const TYPE_COM_FRONTING = "Commission sur Fronting";
     public const TYPE_FRAIS_DE_GESTION = "Frais de gestion";
     public const TYPE_AUTRE_CHARGEMENT = "Autre chargement";
-    public const TYPE_FRAIS_DE_DEBOURS = "Frais de débours";
 
     public const TAB_TYPE = [
         self::TYPE_COM_REA              => 0,
         self::TYPE_COM_LOCALE           => 1,
         self::TYPE_COM_FRONTING         => 2,
         self::TYPE_FRAIS_DE_GESTION     => 3,
-        // self::TYPE_FRAIS_DE_DEBOURS     => 4,
-        // self::TYPE_AUTRE_CHARGEMENT     => 5
+        self::TYPE_AUTRE_CHARGEMENT     => 4
     ];
 
     //Partageable?

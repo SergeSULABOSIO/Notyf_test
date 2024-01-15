@@ -249,23 +249,23 @@ class TrancheCrudController extends AbstractCrudController
         $facturePrime = Action::new("Facturer la prime")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function(Tranche $tranche){
-                return $tranche->getPrimeTotale() != 0;
+                return $tranche->getPrimeTotaleTranche() != 0;
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
-        $factureCommission = Action::new("Facturer la commission")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getCommissionTotale() != 0;
-            })
-            ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
+        // $factureCommission = Action::new("Facturer la commission")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function(Tranche $tranche){
+        //         return $tranche->getCommissionTotale() != 0;
+        //     })
+        //     ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
 
-        $factureFraisGestion = Action::new("Facturer les frais de gestion")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getFraisGestionTotale() != 0;
-            })
-            ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
+        // $factureFraisGestion = Action::new("Facturer les frais de gestion")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function(Tranche $tranche){
+        //         return $tranche->getFraisGestionTotale() != 0;
+        //     })
+        //     ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
 
         $factureRetroCommission = Action::new("Facturer les retro-com.")
             ->setIcon('fa-solid fa-receipt')
@@ -337,8 +337,8 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
             ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
             ->add(Crud::PAGE_INDEX, $factureRetroCommission)
-            ->add(Crud::PAGE_INDEX, $factureFraisGestion)
-            ->add(Crud::PAGE_INDEX, $factureCommission)
+            // ->add(Crud::PAGE_INDEX, $factureFraisGestion)
+            // ->add(Crud::PAGE_INDEX, $factureCommission)
             ->add(Crud::PAGE_INDEX, $facturePrime)
 
             //Action ouvrir

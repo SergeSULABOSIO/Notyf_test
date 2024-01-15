@@ -947,16 +947,53 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
             ->setNumDecimals(2)
             ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('primeTotale', "Prime")
+
+        $tabAttributs[] = MoneyField::new('primeTotaleTranche', "Prime")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotaleTranche());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+        //Les type de commission
+        $tabAttributs[] = MoneyField::new('com_reassurance', "Com / Réa")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_reassurance());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('com_locale', "Com / Loc")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_locale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('com_fronting', "Com / Frtg")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_fronting());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / F. Gest")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_frais_gestion());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / Autre")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_autre_chargement());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnDetail();
+        $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotal());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
@@ -1616,30 +1653,52 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
             ->setNumDecimals(2)
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('primeTotale', "Prime")
+        $tabAttributs[] = MoneyField::new('primeTotaleTranche', "Prime")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotaleTranche());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
+        //Les type de commission
+        $tabAttributs[] = MoneyField::new('com_reassurance', "Com / Réa")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCommissionTotale() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_reassurance());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('fraisGestionTotale', "Frais de gestion")
+        $tabAttributs[] = MoneyField::new('com_locale', "Com / Loc")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getFraisGestionTotale() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_locale());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('com_fronting', "Com / Frtg")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_fronting());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / F. Gest")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_frais_gestion());
+            })
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setStoredAsCents()
+            ->onlyOnIndex();
+        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / Autre")
+            ->formatValue(function ($value, Tranche $entity) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_autre_chargement());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
             ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotal() * 100);
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotal());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()

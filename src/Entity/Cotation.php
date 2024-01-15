@@ -781,7 +781,7 @@ class Cotation
     public function getRevenuTotalTTC()
     {
         $this->revenuTotalTTC = (new Calculateur())
-            ->getRevenuTotale(null, null, null, $this) * 100;
+            ->getRevenuTotale(null, null, null, $this, null) * 100;
         return $this->revenuTotalTTC;
     }
 

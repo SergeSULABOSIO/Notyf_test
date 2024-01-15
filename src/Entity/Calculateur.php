@@ -637,13 +637,15 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $revenuTotale = $this->getRev_total($rev, $mode);
+                            // $revenuTotale = $this->getRev_total($rev, $mode);
+                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
+                            // $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
+                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                         }
                     }
                 }
@@ -652,7 +654,8 @@ class Calculateur
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
                 if ($this->canGo($partageable, $revenu) == true) {
-                    $revenuTotale = $this->getRev_total($revenu, $mode);
+                    // $revenuTotale = $this->getRev_total($revenu, $mode);
+                    $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                 }
                 break;
 
@@ -662,19 +665,38 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $revenuTotale = $this->getRev_total($rev, $mode);
+                            // $revenuTotale = $this->getRev_total($rev, $mode);
+                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
+                            // $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
+                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                         }
                     }
                 }
                 break;
         }
-        $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
+        // $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
+        return $revenuTotale;
+    }
+
+    private function appliquerTrancheRevenu($revenuTotale, ?Revenu $revenu, ?Tranche $tranche, ?string $mode){
+        // dd($revenu, $revenu->isIsparttranche());
+        if ($revenu->isIsparttranche() == true) {
+            if ($tranche != null) {
+                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode) * $tranche->getTaux();
+            } else {
+                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode) * 1;
+            }
+        } else {
+            // dd("ici", $this->cotation->getPolices()[0]->getDateeffet(), $tranche->getStartedAt());
+            if($this->cotation->getPolices()[0]->getDateeffet() == $tranche->getStartedAt()){
+                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
+            }
+        }
         return $revenuTotale;
     }
 
@@ -856,8 +878,6 @@ class Calculateur
                 }
                 break;
         }
-
-        //$reserve = $tranche == null ? $reserve : $reserve * $tranche->getTaux();
         return $reserve;
     }
 

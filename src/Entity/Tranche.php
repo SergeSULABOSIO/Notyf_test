@@ -177,9 +177,7 @@ class Tranche
      */
     public function getMontant()
     {
-        $this->montant = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getPrimeTotale(["tranche" => $this]);
+        $this->montant = (new Calculateur())->getPrimeTotale(null, $this);
         return $this->montant;
     }
 
@@ -276,11 +274,7 @@ class Tranche
     {
         $this->primeTotale = (new Calculateur())
             ->setCotation($this->getCotation())
-            ->getPrimeTotale(
-                [
-                    "tranche" => $this
-                ]
-            );
+            ->getPrimeTotale(null, null);
         return $this->primeTotale;
     }
 
@@ -289,14 +283,16 @@ class Tranche
      */
     public function getCommissionTotale()
     {
-        $this->commissionTotale = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getCommissionTTCGlobal(
-                [
-                    Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
-                    "tranche" => $this
-                ]
-            );
+        // $this->commissionTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getCommissionTTCGlobal(
+        //         [
+        //             Calculateur::PARAMETRE_isPAYABLE_PAR_CLIENT => false,
+        //             "tranche" => $this
+        //         ]
+        //     );
+        $this->commissionTotale = (new Calculateur)
+            ->getRevenuTotale(null, null, $this, null);
         return $this->commissionTotale;
     }
 
@@ -305,9 +301,11 @@ class Tranche
      */
     public function getRetroCommissionTotale()
     {
+        // $this->retroCommissionTotale = (new Calculateur())
+        //     ->setCotation($this->getCotation())
+        //     ->getRetroComPartenaire(["tranche" => $this]);
         $this->retroCommissionTotale = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getRetroComPartenaire(["tranche" => $this]);
+            ->getRetroCommissionTotale(null, null, $this, null, null);
         return $this->retroCommissionTotale;
     }
 
@@ -360,7 +358,9 @@ class Tranche
      */
     public function getClient()
     {
-        $this->client = (new Calculateur())->setCotation($this->getCotation())->getClient();
+        $this->client = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getClient();
         return $this->client;
     }
 
@@ -369,7 +369,9 @@ class Tranche
      */
     public function getAssureur()
     {
-        $this->assureur = (new Calculateur())->setCotation($this->getCotation())->getAssureur();
+        $this->assureur = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getAssureur();
         return $this->assureur;
     }
 
@@ -378,7 +380,9 @@ class Tranche
      */
     public function getProduit()
     {
-        $this->produit = (new Calculateur())->setCotation($this->getCotation())->getProduit();
+        $this->produit = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getProduit();
         return $this->produit;
     }
 
@@ -387,7 +391,9 @@ class Tranche
      */
     public function getPartenaire()
     {
-        $this->partenaire = (new Calculateur())->setCotation($this->getCotation())->getPartenaire();
+        $this->partenaire = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPartenaire();
         return $this->partenaire;
     }
 
@@ -396,7 +402,10 @@ class Tranche
      */
     public function getAutoriteTaxeCourtier()
     {
-        $this->autoriteTaxeCourtier = (new Calculateur())->setCotation($this->getCotation())->getTaxeCourtier()->getOrganisation();
+        $this->autoriteTaxeCourtier = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getTaxeCourtier()
+            ->getOrganisation();
         return $this->autoriteTaxeCourtier;
     }
 
@@ -406,7 +415,10 @@ class Tranche
      */
     public function getAutoriteTaxeAssureur()
     {
-        $this->autoriteTaxeAssureur = (new Calculateur())->setCotation($this->getCotation())->getTaxeAssureur()->getOrganisation();
+        $this->autoriteTaxeAssureur = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getTaxeAssureur()
+            ->getOrganisation();
         return $this->autoriteTaxeAssureur;
     }
 
@@ -416,7 +428,8 @@ class Tranche
     public function getValidated()
     {
         if ($this->getCotation() != null) {
-            $this->validated = $this->getCotation()->isValidated();
+            $this->validated = $this->getCotation()
+                ->isValidated();
         }
         return $this->validated;
     }

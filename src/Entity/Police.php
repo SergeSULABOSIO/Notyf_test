@@ -500,7 +500,7 @@ class Police
     public function getRevenuTotalHTPartageable()
     {
         if ($this->getCotation()) {
-            $this->revenuTotalHTPartageable = $this->getCotation()->getRevenuTotalHTPartageable();
+            $this->revenuTotalHTPartageable = $this->getCotation()->getRevenuNetTotalPartageable();
         }
         return $this->revenuTotalHTPartageable;
     }

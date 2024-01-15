@@ -7,6 +7,7 @@ use App\Repository\CotationRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\RevenuCrudController;
+use App\Repository\ChargementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
@@ -95,19 +96,17 @@ class Cotation
     private ?float $revenuPureTotal;
     private ?float $revenuNetTotal;
     private ?float $revenuTotalTTC;
-    private ?float $commissionTotaleTTC;
     private ?float $taxeAssureurTotale;
     private ?float $taxeCourtierTotale;
-
     //partie partageable
-    private ?float $revenuTotalHTPartageable;
-    //private ?Partenaire $partenaire;
     private ?float $taxeCourtierTotalePartageable;
     private ?float $revenuNetTotalPartageable;
-    #[ORM\Column]
-    private ?float $tauxretrocompartenaire = 0;
     private ?float $retroComPartenaire;
     private ?float $reserve;
+
+    #[ORM\Column]
+    private ?float $tauxretrocompartenaire = 0;
+
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
     private ?Collection $taxes;
@@ -201,7 +200,7 @@ class Cotation
     {
         return (new Calculateur())
             ->setCotation($this)
-            ->getChargement(["type" => $type]);
+            ->getChargement($type);
     }
 
     public function __toString()
@@ -300,7 +299,7 @@ class Cotation
     {
         $this->primeTotale = (new Calculateur())
             ->setCotation($this)
-            ->getPrimeTotale([]);
+            ->getPrimeTotale(null, null);
         return $this->primeTotale;
     }
 
@@ -435,17 +434,6 @@ class Cotation
         $this->tauxretrocompartenaire = $tauxretrocompartenaire;
 
         return $this;
-    }
-
-    /**
-     * Get the value of revenuTotalHTPartageable
-     */
-    public function getRevenuTotalHTPartageable()
-    {
-        $this->revenuTotalHTPartageable = (new Calculateur())
-            ->setCotation($this)
-            ->getRevenufinaleHTGlobale(true) * 100;
-        return $this->revenuTotalHTPartageable;
     }
 
     /**
@@ -734,15 +722,6 @@ class Cotation
         $this->dateEmition = $dateEmition;
 
         return $this;
-    }
-
-    /**
-     * Get the value of commissionTotaleTTC
-     */
-    public function getCommissionTotaleTTC()
-    {
-        $this->commissionTotaleTTC = $this->getTaxeAssureurTotale() + $this->getRevenuNetTotal();
-        return $this->commissionTotaleTTC;
     }
 
     /**

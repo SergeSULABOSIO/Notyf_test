@@ -95,22 +95,23 @@ class Calculateur
         return $tot;
     }
 
-    private function getPrimeTotale(?array $parametres)
+    public function getPrimeTotale(?int $typeChargement, ?Tranche $tranche)
     {
-        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
-            return $this->getChargement([]) * ($parametres[self::PARAMETRE_TRANCHE])->getTaux();
+        if ($tranche != null) {
+            $this->setCotation($tranche->getCotation());
+            return $this->getChargement($typeChargement) * ($tranche)->getTaux();
         } else {
-            return $this->getChargement([]);
+            return $this->getChargement($typeChargement);
         }
     }
 
-    private function getChargement(?array $parametres)
+    public function getChargement(?int $typeChargement)
     {
         $tot = 0;
         if ($this->cotation->getChargements()) {
             foreach ($this->cotation->getChargements() as $chargement) {
-                if (isset($parametres["type"])) {
-                    if ($chargement->getType() == $parametres["type"]) {
+                if ($typeChargement != null) {
+                    if ($chargement->getType() == $typeChargement) {
                         $tot = $tot + $chargement->getMontant();
                     }
                 } else {
@@ -148,16 +149,6 @@ class Calculateur
     {
         return $this->getRevenufinaleHTGlobale($isPartageable) - $this->getMontantTaxeGlobal($tranche, $forCourtier);
     }
-
-    /* public function getRevenuPure(?Revenu $revenu, ?bool $forCourtier)
-    {
-        $net = $this->getRevenufinaleHT_valeur($revenu);
-        $parametres[Calculateur::PARAMETRE_TAXE_forCOURTIER] = true;
-        $taxe = $this->getMontantTaxe($revenu, $forCourtier);
-        $comPure = $net - $taxe;
-        //dd($parametres, $comPure);
-        return $comPure;
-    } */
 
     private function getRevenuTTC(?Revenu $revenu)
     {
@@ -227,7 +218,7 @@ class Calculateur
         }
     }
 
-    private function getRevenufinaleHT(?Revenu $revenu): array
+    public function getRevenufinaleHT(?Revenu $revenu): array
     {
         $this->setEntreprise($revenu->getEntreprise());
         $strBase = "";

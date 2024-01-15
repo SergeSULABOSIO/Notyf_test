@@ -98,11 +98,11 @@ class Cotation
     private ?float $revenuTotalTTC;
     private ?float $taxeAssureurTotale;
     private ?float $taxeCourtierTotale;
+    private ?float $retroComPartenaire;
+    private ?float $reserve;
     //partie partageable
     private ?float $taxeCourtierTotalePartageable;
     private ?float $revenuNetTotalPartageable;
-    private ?float $retroComPartenaire;
-    private ?float $reserve;
 
     #[ORM\Column]
     private ?float $tauxretrocompartenaire = 0;

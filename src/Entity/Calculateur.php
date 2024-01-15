@@ -16,7 +16,6 @@ class Calculateur
     public const PARAMETRE_REVENU = "revenu";
 
 
-
     private ?Police $police;
     private ?Cotation $cotation;
     private ?Piste $piste;
@@ -70,18 +69,7 @@ class Calculateur
 
     private function getRevenufinaleHT_valeur(?Revenu $revenu)
     {
-        //dd($parametres);
         return $this->getRevenufinaleHT($revenu)["montant_ht_valeur_numerique"];
-    }
-
-    private function getRevenufinaleHT_description(?Revenu $revenu)
-    {
-        return $this->getRevenufinaleHT($revenu)["montant_ht_description"];
-    }
-
-    private function getRevenufinaleHT_formule(?Revenu $revenu)
-    {
-        return $this->getRevenufinaleHT($revenu)["montant_ht_formule"];
     }
 
     private function getRevenufinaleHTGlobale(?bool $isPartageable)
@@ -122,24 +110,6 @@ class Calculateur
         return $tot;
     }
 
-    private function getRetroComPartenaire(?array $parametres): float
-    {
-        $taux = 0;
-        if ($this->cotation->getTauxretrocompartenaire() == 0) {
-            if ($this->partenaire) {
-                $taux = $this->partenaire->getPart();
-            }
-        } else {
-            $taux = $this->cotation->getTauxretrocompartenaire();
-        }
-
-        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
-            return $this->getRevenuPureGlobalePartageable() * $taux * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
-        } else {
-            return $this->getRevenuPureGlobalePartageable() * $taux;
-        }
-    }
-
     public function getRevenuPureGlobalePartageable()
     {
         return $this->getRevenufinaleHTGlobale(true) - $this->getMontantTaxeGlobal(null, true);
@@ -153,7 +123,6 @@ class Calculateur
     private function getRevenuTTC(?Revenu $revenu)
     {
         $net = $this->getRevenufinaleHT_valeur($revenu);
-        // $parametres[Calculateur::PARAMETRE_TAXE_forCOURTIER] = false;
         $comPure = $net + $this->getMontantTaxe($revenu, true);
         return $comPure;
     }
@@ -169,35 +138,6 @@ class Calculateur
             }
         }
 
-        if ($tranche != null) {
-            $tot = $tot * $tranche->getTaux();
-        }
-        return $tot;
-    }
-
-    private function getCommissionTTCGlobal(?array $parametres)
-    {
-        $tot = 0;
-        foreach ($this->cotation->getRevenus() as $revenu) {
-            if ($revenu->getType() == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]) {
-                $parametres[Calculateur::PARAMETRE_REVENU] = $revenu;
-                $tot = $tot + $this->getRevenuTTC($revenu, true);
-            }
-        }
-        if (isset($parametres[self::PARAMETRE_TRANCHE])) {
-            $tot = $tot * $parametres[self::PARAMETRE_TRANCHE]->getTaux();
-        }
-        return $tot;
-    }
-
-    private function getFraisGestionTTCGlobal(?Tranche $tranche)
-    {
-        $tot = 0;
-        foreach ($this->cotation->getRevenus() as $revenu) {
-            if ($revenu->getType() == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_FRAIS_DE_GESTION]) {
-                $tot = $tot + $this->getRevenuTTC($revenu);
-            }
-        }
         if ($tranche != null) {
             $tot = $tot * $tranche->getTaux();
         }
@@ -598,14 +538,14 @@ class Calculateur
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
     public const DATA_DESCRIPTION = "montant_ht_description";
     public const DATA_FORMULE = "montant_ht_formule";
-    public const Param_objet_tranche = "tranche";
-    public const Param_objet_revenu = "revenu";
-    public const Param_rev_type = "type";
-    public const Param_rev_isPartageable = "isPartageable";
-    public const Param_rev_isPartTranches = "isParTranches";
+    // public const Param_objet_tranche = "tranche";
+    // public const Param_objet_revenu = "revenu";
+    // public const Param_rev_type = "type";
+    // public const Param_rev_isPartageable = "isPartageable";
+    // public const Param_rev_isPartTranches = "isParTranches";
     public const Param_rev_isTaxable = "isTaxable";
     public const Param_rev_isExonere = "isExonere";
-    public const Param_rev_mode_partageable = "partageable";
+    // public const Param_rev_mode_partageable = "partageable";
     public const Param_rev_mode_pure = "pure";
     public const Param_rev_mode_net = "net";
     public const Param_rev_mode_ttc = "ttc";

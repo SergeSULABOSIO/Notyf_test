@@ -4546,7 +4546,7 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel("Détails relatifs à la rétrocommission dûe au partenaire")
             ->setIcon("fas fa-handshake")
             ->onlyOnForms();
-        $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
+        $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu hors " . $this->serviceTaxes->getNomTaxeAssureur())
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())
             ->setHelp("Uniquement la partie partageable avec le partenaire.")
             ->setStoredAsCents()

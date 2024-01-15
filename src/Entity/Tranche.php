@@ -531,7 +531,6 @@ class Tranche
                 $elementFacture->setTranche(null);
             }
         }
-
         return $this;
     }
 
@@ -541,7 +540,7 @@ class Tranche
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
-            ->getReserve(null, null, $this, null, null);
+            ->getReserve(null, null, $this, null, null, Calculateur::Param_from_tranche);
         return $this->reserve;
     }
 

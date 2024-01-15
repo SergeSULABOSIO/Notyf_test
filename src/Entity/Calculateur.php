@@ -615,7 +615,22 @@ class Calculateur
         return $rev;
     }
 
+    public function getRevenuPure(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
+    {
+        return $this->processRevenu($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from, self::Param_rev_mode_pure);
+    }
+
+    public function getRevenuNet(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
+    {
+        return $this->processRevenu($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from, self::Param_rev_mode_net);
+    }
+
     public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
+    {
+        return $this->processRevenu($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from, self::Param_rev_mode_ttc);
+    }
+
+    public function processRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from, ?string $mode): float
     {
         $revenuTotale = 0;
         switch ($from) {
@@ -624,34 +639,14 @@ class Calculateur
                 if ($typeRevenu != null) {
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
-                        $go = false;
-                        if ($partageable == null) {
-                            $go = true;
-                        } else if ($partageable == $rev->getPartageable()) {
-                            $go = true;
-                        }
-                        if ($go == true) {
-                            $revenuTotale = $this
-                                ->getRev_total(
-                                    $rev,
-                                    self::Param_rev_mode_ttc
-                                );
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $revenuTotale = $this->getRev_total($rev, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
-                        $go = false;
-                        if ($partageable == null) {
-                            $go = true;
-                        } else if ($partageable == $revenu->getPartageable()) {
-                            $go = true;
-                        }
-                        if ($go == true) {
-                            $revenuTotale = $revenuTotale + $this
-                                ->getRev_total(
-                                    $revenu,
-                                    self::Param_rev_mode_ttc
-                                );
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
                         }
                     }
                 }
@@ -659,18 +654,8 @@ class Calculateur
 
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
-                $go = false;
-                if ($partageable == null) {
-                    $go = true;
-                } else if ($partageable == $revenu->getPartageable()) {
-                    $go = true;
-                }
-                if ($go == true) {
-                    $revenuTotale = $this
-                        ->getRev_total(
-                            $revenu,
-                            self::Param_rev_mode_ttc
-                        );
+                if ($this->canGo($partageable, $revenu) == true) {
+                    $revenuTotale = $this->getRev_total($revenu, $mode);
                 }
                 break;
 
@@ -679,34 +664,14 @@ class Calculateur
                 if ($typeRevenu != null) {
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
-                        $go = false;
-                        if ($partageable == null) {
-                            $go = true;
-                        } else if ($partageable == $rev->getPartageable()) {
-                            $go = true;
-                        }
-                        if ($go == true) {
-                            $revenuTotale = $this
-                                ->getRev_total(
-                                    $rev,
-                                    self::Param_rev_mode_ttc
-                                );
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $revenuTotale = $this->getRev_total($rev, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
-                        $go = false;
-                        if ($partageable == null) {
-                            $go = true;
-                        } else if ($partageable == $revenu->getPartageable()) {
-                            $go = true;
-                        }
-                        if ($go == true) {
-                            $revenuTotale = $revenuTotale + $this
-                                ->getRev_total(
-                                    $revenu,
-                                    self::Param_rev_mode_ttc
-                                );
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
                         }
                     }
                 }
@@ -716,90 +681,18 @@ class Calculateur
         return $revenuTotale;
     }
 
-    public function getRevenuPure(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
+    private function canGo(?bool $partageable, ?Revenu $revenu)
     {
-        $revenuPure = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        if ($rev != null) {
-            $go = false;
-            if ($partageable == null) {
-                $go = true;
-            } else if ($partageable == $revenu->getPartageable()) {
-                $go = true;
-            }
-            if ($go == true) {
-                $revenuPure = $this
-                    ->setCotation($this->cotation)
-                    ->getRev_total(
-                        $rev,
-                        self::Param_rev_mode_pure
-                    );
-            }
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $go = false;
-                if ($partageable == null) {
-                    $go = true;
-                } else if ($partageable == $revenu->getPartageable()) {
-                    $go = true;
-                }
-                if ($go == true) {
-                    $revenuPure = $this
-                        // ->setCotation($this->cotation)
-                        ->getRev_total(
-                            $revenu,
-                            self::Param_rev_mode_pure
-                        );
-                }
-            }
+        $go = false;
+        if ($partageable == null) {
+            $go = true;
+        } else if ($partageable == $revenu->getPartageable()) {
+            $go = true;
         }
-        $revenuPure = $tranche == null ? $revenuPure : $revenuPure * $tranche->getTaux();
-        return $revenuPure;
+        return $go;
     }
 
-    public function getRevenuNet(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
-    {
-        $revenuNet = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        if ($rev != null) {
-            $go = false;
-            if ($partageable == null) {
-                $go = true;
-            } else if ($partageable == $revenu->getPartageable()) {
-                $go = true;
-            }
-            if ($go == true) {
-                $revenuNet = $this
-                    ->setCotation($this->cotation)
-                    ->getRev_total(
-                        $rev,
-                        self::Param_rev_mode_net
-                    );
-            }
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $go = false;
-                if ($partageable == null) {
-                    $go = true;
-                } else if ($partageable == $revenu->getPartageable()) {
-                    $go = true;
-                }
-                if ($go == true) {
-                    $revenuNet = $revenuNet + $this
-                        // ->setCotation($this->cotation)
-                        ->getRev_total(
-                            $revenu,
-                            self::Param_rev_mode_net
-                        );
-                }
-            }
-            // dd($revenuNet);
-        }
-        $revenuNet = $tranche == null ? $revenuNet : $revenuNet * $tranche->getTaux();
-        return $revenuNet;
-    }
+    
 
     public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
     {
@@ -910,10 +803,10 @@ class Calculateur
         return $taxeAssureur;
     }
 
-    public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable)
+    public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from)
     {
         $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        $reserve = $this->getRevenuPure($typeRevenu, $rev, $tranche, $cotation, $partageable) - $this->getRetrocommissionTotale($typeRevenu, $rev, $tranche, $cotation, $partageable);
+        $reserve = $this->getRevenuPure($typeRevenu, $rev, $tranche, $cotation, $partageable, $from) - $this->getRetrocommissionTotale($typeRevenu, $rev, $tranche, $cotation, $partageable);
         $reserve = $tranche == null ? $reserve : $reserve * $tranche->getTaux();
         return $reserve;
     }

@@ -557,7 +557,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->revenuPure;
     }
@@ -590,7 +591,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->revenuNet;
     }
@@ -622,7 +624,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->reserve;
     }

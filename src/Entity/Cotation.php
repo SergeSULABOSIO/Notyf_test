@@ -442,7 +442,7 @@ class Cotation
     public function getRevenuNetTotal()
     {
         $this->revenuNetTotal = (new Calculateur())
-            ->getRevenuNet(null, null, null, $this, null) * 100;
+            ->getRevenuNet(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
         return $this->revenuNetTotal;
     }
 
@@ -462,7 +462,7 @@ class Cotation
     public function getRevenuNetTotalPartageable()
     {
         $this->revenuNetTotalPartageable = (new Calculateur())
-            ->getRevenuPure(null, null, null, $this, true) * 100;
+            ->getRevenuPure(null, null, null, $this, true, Calculateur::Param_from_revenu) * 100;
         return $this->revenuNetTotalPartageable;
     }
 
@@ -798,7 +798,7 @@ class Cotation
     public function getRevenuPureTotal()
     {
         $this->revenuPureTotal = (new Calculateur())
-            ->getRevenuPure(null, null, null, $this, null) * 100;
+            ->getRevenuPure(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
         return $this->revenuPureTotal;
     }
 
@@ -808,7 +808,7 @@ class Cotation
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
-            ->getReserve(null, null, null, $this, null) * 100;
+            ->getReserve(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
         return $this->reserve;
     }
 }

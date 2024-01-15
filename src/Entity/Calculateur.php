@@ -532,6 +532,9 @@ class Calculateur
     public const Param_rev_mode_pure = "pure";
     public const Param_rev_mode_net = "net";
     public const Param_rev_mode_ttc = "ttc";
+    public const Param_from_tranche = "from_tranche";
+    public const Param_from_revenu = "from_revenu";
+    public const Param_from_cotation = "from_cotation";
 
 
     //Les nouvelles fonctions unifiées
@@ -595,7 +598,7 @@ class Calculateur
         return null;
     }
 
-    private function setCotation_getRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche):?Revenu
+    private function setCotation_getRevenu(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche): ?Revenu
     {
         $rev = null;
         if ($typeRevenu != null) {
@@ -612,29 +615,50 @@ class Calculateur
         return $rev;
     }
 
-    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
+    public function getRevenuTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
     {
         $revenuTotale = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        // dd("Rev", $rev);
-        if ($rev != null) {
-            $go = false;
-            if ($partageable == null) {
-                $go = true;
-            } else if ($partageable == $revenu->getPartageable()) {
-                $go = true;
-            }
-            if ($go == true) {
-                $revenuTotale = $this
-                    ->setCotation($rev->getCotation())
-                    ->getRev_total(
-                        $rev,
-                        self::Param_rev_mode_ttc
-                    );
-            }
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
+        switch ($from) {
+            case self::Param_from_tranche:
+                $this->setCotation($tranche->getCotation());
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        $go = false;
+                        if ($partageable == null) {
+                            $go = true;
+                        } else if ($partageable == $rev->getPartageable()) {
+                            $go = true;
+                        }
+                        if ($go == true) {
+                            $revenuTotale = $this
+                                ->getRev_total(
+                                    $rev,
+                                    self::Param_rev_mode_ttc
+                                );
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        $go = false;
+                        if ($partageable == null) {
+                            $go = true;
+                        } else if ($partageable == $revenu->getPartageable()) {
+                            $go = true;
+                        }
+                        if ($go == true) {
+                            $revenuTotale = $revenuTotale + $this
+                                ->getRev_total(
+                                    $revenu,
+                                    self::Param_rev_mode_ttc
+                                );
+                        }
+                    }
+                }
+                break;
+
+            case self::Param_from_revenu:
+                $this->setCotation($revenu->getCotation());
                 $go = false;
                 if ($partageable == null) {
                     $go = true;
@@ -642,18 +666,53 @@ class Calculateur
                     $go = true;
                 }
                 if ($go == true) {
-                    $revenuTotale = $revenuTotale + $this
+                    $revenuTotale = $this
                         ->getRev_total(
                             $revenu,
                             self::Param_rev_mode_ttc
                         );
                 }
-            }
-            // dd($this->cotation->getRevenus());
+                break;
+
+            case self::Param_from_cotation:
+                $this->setCotation($cotation);
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        $go = false;
+                        if ($partageable == null) {
+                            $go = true;
+                        } else if ($partageable == $rev->getPartageable()) {
+                            $go = true;
+                        }
+                        if ($go == true) {
+                            $revenuTotale = $this
+                                ->getRev_total(
+                                    $rev,
+                                    self::Param_rev_mode_ttc
+                                );
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        $go = false;
+                        if ($partageable == null) {
+                            $go = true;
+                        } else if ($partageable == $revenu->getPartageable()) {
+                            $go = true;
+                        }
+                        if ($go == true) {
+                            $revenuTotale = $revenuTotale + $this
+                                ->getRev_total(
+                                    $revenu,
+                                    self::Param_rev_mode_ttc
+                                );
+                        }
+                    }
+                }
+                break;
         }
-        
         $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
-        //dd($rev, "Revenu total", $revenuTotale);
         return $revenuTotale;
     }
 

@@ -984,7 +984,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / Autre")
+        $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
             ->formatValue(function ($value, Tranche $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_autre_chargement());
             })
@@ -1689,7 +1689,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / Autre")
+        $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
             ->formatValue(function ($value, Tranche $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_autre_chargement());
             })

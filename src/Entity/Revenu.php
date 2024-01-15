@@ -573,7 +573,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->revenuTotale;
     }

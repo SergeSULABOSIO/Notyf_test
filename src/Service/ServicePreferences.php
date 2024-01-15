@@ -1654,72 +1654,72 @@ class ServicePreferences
             ->setNumDecimals(2)
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('primeTotaleTranche', "Prime")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotaleTranche());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getPrimeTotaleTranche());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         //Les type de commission
         $tabAttributs[] = MoneyField::new('com_reassurance', "Com / Réa")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_reassurance());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getCom_reassurance());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_locale', "Com / Loc")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_locale());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getCom_locale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_fronting', "Com / Frtg")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_fronting());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getCom_fronting());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / F. Gest")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_frais_gestion());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getCom_frais_gestion());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getCom_autre_chargement());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getCom_autre_chargement());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRevenuTotal());
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getRetroCommissionTotale() * 100);
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeCourtierTotale() * 100);
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getTaxeAssureurTotale() * 100);
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
@@ -1748,30 +1748,30 @@ class ServicePreferences
         // $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
         //     ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('reserve', "Réserve")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve() * 100);
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getReserve());
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('police', "Police")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $entity->getPolice()->getReference();
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $tranche->getPolice()->getReference();
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('client', "Client")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $entity->getClient()->getNom();
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $tranche->getClient()->getNom();
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('produit', "Produit")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $entity->getProduit()->getNom();
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $tranche->getProduit()->getNom();
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('partenaire', "Partenaire")
-            ->formatValue(function ($value, Tranche $entity) {
-                return $entity->getPartenaire()->getNom();
+            ->formatValue(function ($value, Tranche $tranche) {
+                return $tranche->getPartenaire()->getNom();
             })
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)

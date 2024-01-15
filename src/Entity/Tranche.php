@@ -267,7 +267,7 @@ class Tranche
     public function getTaxeCourtierTotale()
     {
         $this->taxeCourtierTotale = (new Calculateur())
-            ->getTaxePourCourtier(null, null, $this, null, null);
+            ->getTaxePourCourtier(null, null, $this, null, null) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -277,7 +277,7 @@ class Tranche
     public function getTaxeAssureurTotale()
     {
         $this->taxeAssureurTotale = (new Calculateur())
-            ->getTaxePourAssureur(null, null, $this, null, null);
+            ->getTaxePourAssureur(null, null, $this, null, null) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -540,7 +540,7 @@ class Tranche
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
-            ->getReserve(null, null, $this, null, null, Calculateur::Param_from_tranche);
+            ->getReserve(null, null, $this, null, null, Calculateur::Param_from_tranche) * 100;
         return $this->reserve;
     }
 

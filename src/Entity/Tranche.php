@@ -43,11 +43,11 @@ class Tranche
     //valeurs monnétaires caculables
     private ?float $primeTotaleTranche = 0;
     //les type de revenu
-    private ?float $com_reassurance = 0;
-    private ?float $com_locale = 0;
-    private ?float $com_fronting = 0;
-    private ?float $com_frais_gestion = 0;
-    private ?float $com_autre_chargement = 0;
+    private ?float $comReassurance = 0;
+    private ?float $comLocale = 0;
+    private ?float $comFronting = 0;
+    private ?float $comFraisGestion = 0;
+    private ?float $comAutreChargement = 0;
     private ?float $revenuTotal = 0;
 
     private ?float $retroCommissionTotale = 0;
@@ -565,9 +565,9 @@ class Tranche
     /**
      * Get the value of com_reassurance
      */
-    public function getCom_reassurance()
+    public function getComReassurance()
     {
-        $this->com_reassurance = (new Calculateur)
+        $this->comReassurance = (new Calculateur)
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_COM_REA,
                 null,
@@ -577,15 +577,15 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_reassurance);
-        return $this->com_reassurance;
+        return $this->comReassurance;
     }
 
     /**
      * Get the value of com_locale
      */
-    public function getCom_locale()
+    public function getComLocale()
     {
-        $this->com_locale = (new Calculateur)
+        $this->comLocale = (new Calculateur)
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_COM_LOCALE,
                 null,
@@ -595,15 +595,15 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_locale);
-        return $this->com_locale;
+        return $this->comLocale;
     }
 
     /**
      * Get the value of com_fronting
      */
-    public function getCom_fronting()
+    public function getComFronting()
     {
-        $this->com_fronting = (new Calculateur)
+        $this->comFronting = (new Calculateur)
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_COM_FRONTING,
                 null,
@@ -613,15 +613,15 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_fronting);
-        return $this->com_fronting;
+        return $this->comFronting;
     }
 
     /**
      * Get the value of com_frais_gestion
      */
-    public function getCom_frais_gestion()
+    public function getComFraisGestion()
     {
-        $this->com_frais_gestion = (new Calculateur)
+        $this->comFraisGestion = (new Calculateur)
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_FRAIS_DE_GESTION,
                 null,
@@ -631,15 +631,15 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_frais_gestion);
-        return $this->com_frais_gestion;
+        return $this->comFraisGestion;
     }
 
     /**
      * Get the value of com_autre_chargement
      */
-    public function getCom_autre_chargement()
+    public function getComAutreChargement()
     {
-        $this->com_autre_chargement = (new Calculateur)
+        $this->comAutreChargement = (new Calculateur)
             ->getRevenuTotale(
                 RevenuCrudController::TYPE_AUTRE_CHARGEMENT,
                 null,
@@ -648,7 +648,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->com_autre_chargement;
+        return $this->comAutreChargement;
     }
 
     /**

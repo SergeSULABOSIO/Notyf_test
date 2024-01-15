@@ -33,8 +33,6 @@ class Calculateur
 
 
 
-
-
     public function __construct()
     {
     }
@@ -591,7 +589,6 @@ class Calculateur
     {
         foreach ($this->cotation->getRevenus() as $revenu) {
             if ($revenu->getType() == RevenuCrudController::TAB_TYPE[$typeRevenu]) {
-                // dd($this->cotation->getRevenus()[0]->getType(), RevenuCrudController::TAB_TYPE[$typeRevenu], $revenu);
                 return $revenu;
             }
         }
@@ -692,121 +689,131 @@ class Calculateur
         return $go;
     }
 
-    
 
-    public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
+
+    public function getRetrocommissionTotale(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
     {
         $retrocommissionTotale = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        if ($rev != null) {
-            $go = false;
-            if ($partageable == null) {
-                $go = true;
-            } else if ($partageable == $rev->getPartageable()) {
-                $go = true;
-            }
-            if ($go) {
-                $retrocommissionTotale = $this
-                    // ->setCotation($this->cotation)
-                    ->getRetroCom_total(
-                        $rev
-                    );
-            }
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $go = false;
-                if ($partageable == null) {
-                    $go = true;
-                } else if ($partageable == $revenu->getPartageable()) {
-                    $go = true;
+        switch ($from) {
+            case self::Param_from_tranche:
+                $this->setCotation($tranche->getCotation());
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $retrocommissionTotale = $this->getRetroCom_total($rev);
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $retrocommissionTotale = $retrocommissionTotale + $this->getRetroCom_total($revenu);
+                        }
+                    }
                 }
-                if ($go) {
-                    $retrocommissionTotale = $retrocommissionTotale + $this
-                        ->getRetroCom_total(
-                            $revenu
-                        );
+                break;
+            case self::Param_from_revenu:
+                $this->setCotation($revenu->getCotation());
+                if ($this->canGo($partageable, $revenu) == true) {
+                    $retrocommissionTotale = $this->getRetroCom_total($revenu);
                 }
-            }
+                break;
+            case self::Param_from_cotation:
+                $this->setCotation($cotation);
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $retrocommissionTotale = $this->getRetroCom_total($rev);
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $retrocommissionTotale = $retrocommissionTotale + $this->getRetroCom_total($revenu);
+                        }
+                    }
+                }
+                break;
         }
         $retrocommissionTotale = ($tranche == null) ? $retrocommissionTotale : $retrocommissionTotale * $tranche->getTaux();
         return $retrocommissionTotale;
     }
 
-    public function getTaxePourCourtier(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable): float
+    public function getTaxePourCourtier(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
     {
+        return $this->processTaxe($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from, true);
+    }
+
+    public function getTaxePourAssureur(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from): float
+    {
+        return $this->processTaxe($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from, false);
+    }
+
+    private function processTaxe(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from, ?bool $forCourtier){
         $taxeCourtier = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        if ($rev != null) {
-            $go = false;
-            if ($partageable == null) {
-                $go = true;
-            } else if ($partageable == $rev->getPartageable()) {
-                $go = true;
-            }
-            if ($go) {
-                $taxeCourtier = $this
-                    ->setCotation($this->cotation)
-                    ->getRev_taxe(
-                        $rev,
-                        true
-                    );
-            }
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $go = false;
-                if ($partageable == null) {
-                    $go = true;
-                } else if ($partageable == $revenu->getPartageable()) {
-                    $go = true;
+        switch ($from) {
+            case self::Param_from_tranche:
+                $this->setCotation($tranche->getCotation());
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($rev, $forCourtier);
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $taxeCourtier = $taxeCourtier + $this->getRev_taxe($revenu, $forCourtier);
+                        }
+                    }
                 }
-                if ($go) {
-                    $taxeCourtier = $taxeCourtier + $this
-                        // ->setCotation($this->cotation)
-                        ->getRev_taxe(
-                            $revenu,
-                            true
-                        );
+                break;
+            case self::Param_from_revenu:
+                $this->setCotation($revenu->getCotation());
+                if ($this->canGo($partageable, $revenu) == true) {
+                    $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($revenu, $forCourtier);
                 }
-            }
+                break;
+            case self::Param_from_cotation:
+                $this->setCotation($cotation);
+                if ($typeRevenu != null) {
+                    $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
+                    if ($rev != null) {
+                        if ($this->canGo($partageable, $rev) == true) {
+                            $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($rev, $forCourtier);
+                        }
+                    }
+                } else {
+                    foreach ($this->cotation->getRevenus() as $revenu) {
+                        if ($this->canGo($partageable, $revenu) == true) {
+                            $taxeCourtier = $taxeCourtier + $this->getRev_taxe($revenu, $forCourtier);
+                        }
+                    }
+                }
+                break;
         }
-
         $taxeCourtier = $tranche == null ? $taxeCourtier : $taxeCourtier * $tranche->getTaux();
         return $taxeCourtier;
     }
 
-    public function getTaxePourAssureur(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation): float
-    {
-        $taxeAssureur = 0;
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        if ($rev != null) {
-            $taxeAssureur = $this
-                ->setCotation($this->cotation)
-                ->getRev_taxe(
-                    $rev,
-                    false
-                );
-        } else if ($cotation != null) {
-            $this->setCotation($cotation);
-            foreach ($this->cotation->getRevenus() as $revenu) {
-                $taxeAssureur = $taxeAssureur + $this
-                    ->getRev_taxe(
-                        $revenu,
-                        false
-                    );
-            }
-        }
-
-        $taxeAssureur = $tranche == null ? $taxeAssureur : $taxeAssureur * $tranche->getTaux();
-        return $taxeAssureur;
-    }
-
     public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from)
     {
-        $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
-        $reserve = $this->getRevenuPure($typeRevenu, $rev, $tranche, $cotation, $partageable, $from) - $this->getRetrocommissionTotale($typeRevenu, $rev, $tranche, $cotation, $partageable);
+        switch ($from) {
+            case self::Param_from_tranche:
+                $this->setCotation($tranche->getCotation());
+                break;
+            case self::Param_from_revenu:
+                $this->setCotation($revenu->getCotation());
+                break;
+            case self::Param_from_cotation:
+                $this->setCotation($cotation);
+                break;
+        }
+        $revenuPure = $this->getRevenuPure($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from);
+        $retrcom = $this->getRetrocommissionTotale($typeRevenu, $revenu, $tranche, $cotation, $partageable, $from);
+        $reserve = $revenuPure - $retrcom;
         $reserve = $tranche == null ? $reserve : $reserve * $tranche->getTaux();
         return $reserve;
     }

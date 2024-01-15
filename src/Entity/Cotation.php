@@ -410,7 +410,14 @@ class Cotation
     public function getRetroComPartenaire()
     {
         $this->retroComPartenaire = (new Calculateur())
-            ->getRetrocommissionTotale(null, null, null, $this, null) * 100;
+            ->getRetrocommissionTotale(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->retroComPartenaire;
     }
 
@@ -420,7 +427,14 @@ class Cotation
     public function getTaxeCourtierTotale()
     {
         $this->taxeCourtierTotale = (new Calculateur())
-            ->getTaxePourCourtier(null, null, null, $this, null) * 100;
+            ->getTaxePourCourtier(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -442,7 +456,14 @@ class Cotation
     public function getRevenuNetTotal()
     {
         $this->revenuNetTotal = (new Calculateur())
-            ->getRevenuNet(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
+            ->getRevenuNet(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->revenuNetTotal;
     }
 
@@ -452,7 +473,14 @@ class Cotation
     public function getTaxeCourtierTotalePartageable()
     {
         $this->taxeCourtierTotalePartageable = (new Calculateur())
-            ->getTaxePourCourtier(null, null, null, $this, true) * 100;
+            ->getTaxePourCourtier(
+                null,
+                null,
+                null,
+                $this,
+                true,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->taxeCourtierTotalePartageable;
     }
 
@@ -462,7 +490,14 @@ class Cotation
     public function getRevenuNetTotalPartageable()
     {
         $this->revenuNetTotalPartageable = (new Calculateur())
-            ->getRevenuPure(null, null, null, $this, true, Calculateur::Param_from_revenu) * 100;
+            ->getRevenuPure(
+                null,
+                null,
+                null,
+                $this,
+                true,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->revenuNetTotalPartageable;
     }
 
@@ -730,7 +765,14 @@ class Cotation
     public function getTaxeAssureurTotale()
     {
         $this->taxeAssureurTotale = (new Calculateur())
-            ->getTaxePourAssureur(null, null, null, $this) * 100;
+            ->getTaxePourAssureur(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -787,7 +829,7 @@ class Cotation
                 null,
                 $this,
                 null,
-                Calculateur::Param_from_revenu
+                Calculateur::Param_from_cotation
             ) * 100;
         return $this->revenuTotalTTC;
     }
@@ -798,7 +840,14 @@ class Cotation
     public function getRevenuPureTotal()
     {
         $this->revenuPureTotal = (new Calculateur())
-            ->getRevenuPure(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
+            ->getRevenuPure(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->revenuPureTotal;
     }
 
@@ -808,7 +857,14 @@ class Cotation
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
-            ->getReserve(null, null, null, $this, null, Calculateur::Param_from_cotation) * 100;
+            ->getReserve(
+                null,
+                null,
+                null,
+                $this,
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
         return $this->reserve;
     }
 }

@@ -525,7 +525,8 @@ class Revenu
             $this,
             null,
             null,
-            null
+            null,
+            Calculateur::Param_from_revenu
         );
         return $this->taxeAssureur;
     }
@@ -541,7 +542,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->taxeCourtier;
     }
@@ -608,7 +610,8 @@ class Revenu
                 $this,
                 null,
                 null,
-                null
+                null,
+                Calculateur::Param_from_revenu
             );
         return $this->retrocommissionTotale;
     }

@@ -41,7 +41,7 @@ class Tranche
     private ?string $description;
     private ?string $codeMonnaieAffichage;
     //valeurs monnétaires caculables
-    private ?float $montant = 0;
+    private ?float $primeTotaleTranche = 0;
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
     private ?float $fraisGestionTotale = 0;
@@ -172,26 +172,6 @@ class Tranche
         return $this;
     }
 
-    /**
-     * Get the value of montant
-     */
-    public function getMontant()
-    {
-        $this->montant = (new Calculateur())->getPrimeTotale(null, $this);
-        return $this->montant;
-    }
-
-    /**
-     * Set the value of montant
-     *
-     * @return  self
-     */
-    public function setMontant($montant)
-    {
-        $this->montant = $montant;
-
-        return $this;
-    }
 
     public function getCotation(): ?Cotation
     {
@@ -241,7 +221,7 @@ class Tranche
         if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
             $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
         }
-        $strMont = " " . number_format($this->getMontant() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
+        $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
         return $this->getNom() . ": " . $strMont;
     }
 
@@ -642,5 +622,15 @@ class Tranche
                 null
             );
         return $this->reserve;
+    }
+
+    /**
+     * Get the value of primeTotaleTranche
+     */ 
+    public function getPrimeTotaleTranche()
+    {
+        $this->primeTotaleTranche = (new Calculateur())
+            ->getPrimeTotale(null, $this);
+        return $this->primeTotaleTranche;
     }
 }

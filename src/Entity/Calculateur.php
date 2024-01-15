@@ -524,28 +524,11 @@ class Calculateur
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     public const DATA_VALEUR = "montant_ht_valeur_numerique";
     public const DATA_DESCRIPTION = "montant_ht_description";
     public const DATA_FORMULE = "montant_ht_formule";
-    // public const Param_objet_tranche = "tranche";
-    // public const Param_objet_revenu = "revenu";
-    // public const Param_rev_type = "type";
-    // public const Param_rev_isPartageable = "isPartageable";
-    // public const Param_rev_isPartTranches = "isParTranches";
     public const Param_rev_isTaxable = "isTaxable";
     public const Param_rev_isExonere = "isExonere";
-    // public const Param_rev_mode_partageable = "partageable";
     public const Param_rev_mode_pure = "pure";
     public const Param_rev_mode_net = "net";
     public const Param_rev_mode_ttc = "ttc";
@@ -581,7 +564,6 @@ class Calculateur
         $tot = 0;
         $montant_ht = $this->getRev_ht($revenu);
         $tot = $this->appliquerPURE_NET_TTC($montant_ht, $mode);
-        //dd("Com de réa", $tot, $parametres);
         return $tot;
     }
 

@@ -306,7 +306,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                 }
             }
 
-            //Les chargements de la police
+            //Enregistrement de la police
             if ($piste->getPolices()) {
                 if (count($piste->getPolices()) != 0) {
                     /** @var Police */
@@ -319,7 +319,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                     $policeRetenue->setUtilisateur($this->serviceEntreprise->getUtilisateur());
                     $policeRetenue->setEntreprise($this->serviceEntreprise->getEntreprise());
 
-                    //Les documents de la cotation
+                    //Les documents de la police
                     foreach ($policeRetenue->getDocuments() as $document) {
                         if ($isCreate || $document->getCreatedAt() == null) {
                             $document->setCreatedAt(new \DateTimeImmutable());
@@ -339,8 +339,10 @@ class LoeilDeDieu implements EventSubscriberInterface
                     }
                     //On marque la cotation retenue
                     $this->updateValidatedQuote($piste, $policeRetenue);
-                    //dd($cotationValidee);
-                    //dd($policeRetenue);
+                    dd(
+                        "Ici, on lancera la fonction de création automatique de la réplique de la facture de l'assureur",
+                        $policeRetenue
+                    );
                 }
             }
 
@@ -456,14 +458,14 @@ class LoeilDeDieu implements EventSubscriberInterface
 
                     //on ajuste les periodes de chaque tranche
                     $this->serviceDates->ajusterPeriodesPourTranches_et_Revenus($policeRetenue);
-                } else {    
+                } else {
                     $quote->setValidated(false);
                     $quote->setPolice(null);
                     $quote->setDateEffet(null);
                     $quote->setDateExpiration(null);
                     $quote->setDateOperation(null);
                     $quote->setDateEmition(null);
-                    
+
                     //on ajuste les periodes de chaque tranche
                     $this->serviceDates->detruirePeriodesPourTranches_et_Revenus($quote);
                 }

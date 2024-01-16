@@ -80,14 +80,14 @@ class ServiceFacture
             //il faut switcher ici : On agit différemment selon le type de facture
             switch ($typeFacture) {
                 case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
-                    $soldeComNull = ($tranche->getPrimeTotale() == 0);
+                    $soldeComNull = ($tranche->getPrimeTotaleTranche() == 0);
                     if (!$tabTiers->contains($tranche->getAssureur())) {
                         $tabTiers_str = $tabTiers_str  . $tranche->getAssureur()->getNom() . ", ";
                     }
                     $tabTiers->add($tranche->getAssureur());
                     break;
                 case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                    $soldeComNull = ($tranche->getFraisGestionTotale() == 0);
+                    $soldeComNull = ($tranche->getComFraisGestion() == 0);
                     if (!$tabTiers->contains($tranche->getClient())) {
                         $tabTiers_str = $tabTiers_str  . $tranche->getClient()->getNom() . ", ";
                     }
@@ -227,12 +227,17 @@ class ServiceFacture
 
     public function canCollectCommissions(Tranche $tranche)
     {
-        return $tranche->getCommissionTotale() != 0;
+        $com =
+            $tranche->getComAutreChargement() +
+            $tranche->getComFronting() +
+            $tranche->getComLocale() +
+            $tranche->getComReassurance();
+        return $com != 0;
     }
 
     public function canCollectFraisGestion(Tranche $tranche)
     {
-        return $tranche->getFraisGestionTotale() != 0;
+        return $tranche->getComFraisGestion() != 0;
     }
 
     public function canPayPartner(Tranche $tranche)
@@ -263,21 +268,28 @@ class ServiceFacture
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getPrimeTotale());
+                        $ef->setMontant($oTranche->getPrimeTotaleTranche());
                         $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getCommissionTotale() * 100);
+
+                        $com =
+                            $oTranche->getComAutreChargement() +
+                            $oTranche->getComFronting() +
+                            $oTranche->getComLocale() +
+                            $oTranche->getComReassurance();
+
+                        $ef->setMontant($com);
                         $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getFraisGestionTotale() * 100);
+                        $ef->setMontant($oTranche->getComFraisGestion() * 100);
                         $facture->setAutreTiers($oTranche->getClient());
                         break;
                     case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:

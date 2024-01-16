@@ -654,7 +654,7 @@ class Calculateur
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
                 if ($this->canGo($partageable, $revenu) == true) {
-                    $revenuTotale = $this->processTranche($this->getRev_total($revenu, $mode), null, $revenu);
+                    $revenuTotale = $this->processTranche($this->getRev_total($revenu, $mode), $tranche, $revenu);
                     // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                 }
                 break;
@@ -665,7 +665,7 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $revenuTotale = $this->processTranche($this->getRev_total($rev, $mode), null, $rev);
+                            $revenuTotale = $this->processTranche($this->getRev_total($rev, $mode), $tranche, $rev);
                             // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
                         }
                     }
@@ -689,19 +689,19 @@ class Calculateur
     {
         $nouvelleValeur = 0;
         $taux = 0;
-        if($tranche != null){
-            if($revenu != null){
-                if($revenu->isIsparttranche() == true){
+        if ($tranche != null) {
+            if ($revenu != null) {
+                if ($revenu->isIsparttranche() == true) {
                     $taux = $tranche->getTaux();
-                }else{
-                    if($this->cotation->getPolices()[0]->getDateeffet() == $tranche->getStartedAt()){
+                } else {
+                    if ($this->cotation->getPolices()[0]->getDateeffet() == $tranche->getStartedAt()) {
                         $taux = 1;
-                    }else{
+                    } else {
                         $taux = 0;
                     }
                 }
             }
-        }else{
+        } else {
             $taux = 1;
         }
         $nouvelleValeur = $ancienneValeur * $taux;
@@ -783,7 +783,7 @@ class Calculateur
 
     private function processTaxe(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from, ?bool $forCourtier)
     {
-        $taxeCourtier = 0;
+        $taxe = 0;
         switch ($from) {
             case self::Param_from_tranche:
                 $this->setCotation($tranche->getCotation());
@@ -791,13 +791,21 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($rev, $forCourtier);
+                            $taxe = $this->processTranche(
+                                $this->getRev_taxe($rev, $forCourtier),
+                                $tranche,
+                                $rev
+                            );
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $taxeCourtier = $taxeCourtier + $this->getRev_taxe($revenu, $forCourtier);
+                            $taxe = $taxe + $this->processTranche(
+                                $this->getRev_taxe($revenu, $forCourtier),
+                                $tranche,
+                                $revenu
+                            );
                         }
                     }
                 }
@@ -805,7 +813,11 @@ class Calculateur
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
                 if ($this->canGo($partageable, $revenu) == true) {
-                    $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($revenu, $forCourtier);
+                    $taxe = $this->processTranche(
+                        $this->getRev_taxe($revenu, $forCourtier),
+                        $tranche,
+                        $revenu
+                    );
                 }
                 break;
             case self::Param_from_cotation:
@@ -814,20 +826,27 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $taxeCourtier = $this->setCotation($this->cotation)->getRev_taxe($rev, $forCourtier);
+                            $taxe = $this->processTranche(
+                                $this->getRev_taxe($rev, $forCourtier),
+                                $tranche,
+                                $revenu
+                            );
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $taxeCourtier = $taxeCourtier + $this->getRev_taxe($revenu, $forCourtier);
+                            $taxe = $taxe + $this->processTranche(
+                                $this->getRev_taxe($revenu, $forCourtier),
+                                $tranche,
+                                $revenu
+                            );
                         }
                     }
                 }
                 break;
         }
-        $taxeCourtier = $tranche == null ? $taxeCourtier : $taxeCourtier * $tranche->getTaux();
-        return $taxeCourtier;
+        return $taxe;
     }
 
     public function getReserve(?string $typeRevenu, ?Revenu $revenu, ?Tranche $tranche, ?Cotation $cotation, ?bool $partageable, ?string $from)

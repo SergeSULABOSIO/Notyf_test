@@ -637,15 +637,15 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            // $revenuTotale = $this->getRev_total($rev, $mode);
-                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
+                            $revenuTotale = $this->processTranche($this->getRev_total($rev, $mode), $tranche, $rev);
+                            // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            // $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
-                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
+                            $revenuTotale = $revenuTotale + $this->processTranche($this->getRev_total($revenu, $mode), $tranche, $revenu);
+                            // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                         }
                     }
                 }
@@ -654,8 +654,8 @@ class Calculateur
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
                 if ($this->canGo($partageable, $revenu) == true) {
-                    // $revenuTotale = $this->getRev_total($revenu, $mode);
-                    $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
+                    $revenuTotale = $this->processTranche($this->getRev_total($revenu, $mode), null, $revenu);
+                    // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                 }
                 break;
 
@@ -665,40 +665,49 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            // $revenuTotale = $this->getRev_total($rev, $mode);
-                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
+                            $revenuTotale = $this->processTranche($this->getRev_total($rev, $mode), null, $rev);
+                            // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $rev, $tranche, $mode);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            // $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
-                            $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
+                            $revenuTotale = $revenuTotale + $this->processTranche($this->getRev_total($revenu, $mode), $tranche, $revenu);
+                            // $revenuTotale = $this->appliquerTrancheRevenu($revenuTotale, $revenu, $tranche, $mode);
                         }
                     }
                 }
                 break;
         }
+
         // $revenuTotale = $tranche == null ? $revenuTotale : $revenuTotale * $tranche->getTaux();
+
         return $revenuTotale;
     }
 
-    private function appliquerTrancheRevenu($revenuTotale, ?Revenu $revenu, ?Tranche $tranche, ?string $mode){
-        // dd($revenu, $revenu->isIsparttranche());
-        if ($revenu->isIsparttranche() == true) {
-            if ($tranche != null) {
-                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode) * $tranche->getTaux();
-            } else {
-                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode) * 1;
+    private function processTranche($ancienneValeur, ?Tranche $tranche, ?Revenu $revenu): float
+    {
+        $nouvelleValeur = 0;
+        $taux = 0;
+        if($tranche != null){
+            if($revenu != null){
+                if($revenu->isIsparttranche() == true){
+                    $taux = $tranche->getTaux();
+                }else{
+                    if($this->cotation->getPolices()[0]->getDateeffet() == $tranche->getStartedAt()){
+                        $taux = 1;
+                    }else{
+                        $taux = 0;
+                    }
+                }
             }
-        } else {
-            // dd("ici", $this->cotation->getPolices()[0]->getDateeffet(), $tranche->getStartedAt());
-            if($this->cotation->getPolices()[0]->getDateeffet() == $tranche->getStartedAt()){
-                $revenuTotale = $revenuTotale + $this->getRev_total($revenu, $mode);
-            }
+        }else{
+            $taux = 1;
         }
-        return $revenuTotale;
+        $nouvelleValeur = $ancienneValeur * $taux;
+        return $nouvelleValeur;
     }
+
 
     private function canGo(?bool $partageable, ?Revenu $revenu)
     {
@@ -723,13 +732,13 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $retrocommissionTotale = $this->getRetroCom_total($rev);
+                            $retrocommissionTotale = $this->processTranche($this->getRetroCom_total($rev), $tranche, $rev);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $retrocommissionTotale = $retrocommissionTotale + $this->getRetroCom_total($revenu);
+                            $retrocommissionTotale = $retrocommissionTotale + $this->processTranche($this->getRetroCom_total($revenu), $tranche, $revenu);
                         }
                     }
                 }
@@ -737,7 +746,7 @@ class Calculateur
             case self::Param_from_revenu:
                 $this->setCotation($revenu->getCotation());
                 if ($this->canGo($partageable, $revenu) == true) {
-                    $retrocommissionTotale = $this->getRetroCom_total($revenu);
+                    $retrocommissionTotale = $this->processTranche($this->getRetroCom_total($revenu), $tranche, $revenu);
                 }
                 break;
             case self::Param_from_cotation:
@@ -746,19 +755,19 @@ class Calculateur
                     $rev = $this->setCotation_getRevenu($typeRevenu, $revenu, $tranche);
                     if ($rev != null) {
                         if ($this->canGo($partageable, $rev) == true) {
-                            $retrocommissionTotale = $this->getRetroCom_total($rev);
+                            $retrocommissionTotale = $this->processTranche($this->getRetroCom_total($rev), $tranche, $rev);
                         }
                     }
                 } else {
                     foreach ($this->cotation->getRevenus() as $revenu) {
                         if ($this->canGo($partageable, $revenu) == true) {
-                            $retrocommissionTotale = $retrocommissionTotale + $this->getRetroCom_total($revenu);
+                            $retrocommissionTotale = $retrocommissionTotale + $this->processTranche($this->getRetroCom_total($revenu), $tranche, $revenu);
                         }
                     }
                 }
                 break;
         }
-        $retrocommissionTotale = ($tranche == null) ? $retrocommissionTotale : $retrocommissionTotale * $tranche->getTaux();
+        // $retrocommissionTotale = ($tranche == null) ? $retrocommissionTotale : $retrocommissionTotale * $tranche->getTaux();
         return $retrocommissionTotale;
     }
 

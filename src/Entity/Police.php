@@ -71,6 +71,8 @@ class Police
     private ?float $taxeCourtierTotalePartageable;
     private ?float $revenuNetTotalPartageable;
     private ?float $retroComPartenaire;
+    private ?float $reserve;
+
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateoperation = null;
@@ -614,5 +616,22 @@ class Police
             $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
         return $this->monnaie_Affichage;
+    }
+
+    /**
+     * Get the value of reserve
+     */ 
+    public function getReserve()
+    {
+        $this->reserve = (new Calculateur())
+            ->getReserve(
+                null,
+                null,
+                null,
+                $this->getCotation(),
+                null,
+                Calculateur::Param_from_cotation
+            ) * 100;
+        return $this->reserve;
     }
 }

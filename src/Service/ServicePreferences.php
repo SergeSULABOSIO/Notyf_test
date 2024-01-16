@@ -2401,6 +2401,12 @@ class ServicePreferences
                     ->onlyOnForms()
                     ->setDisabled(true)
                     ->setColumns(12);
+                $tabAttributs[] = MoneyField::new('reserve', "Réserve dû au courtier lui-même")
+                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                    ->setStoredAsCents()
+                    ->setDisabled(true)
+                    ->onlyOnForms()
+                    ->setColumns(12);
             }
         }
 
@@ -4642,10 +4648,10 @@ class ServicePreferences
             ->onlyOnForms()
             ->setDisabled(true)
             ->setColumns(12);
-        $tabAttributs[] = MoneyField::new('reserve', "Réserve")
-            ->formatValue(function ($value, Cotation $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve());
-            })
+        $tabAttributs[] = MoneyField::new('reserve', "Réserve dû au courtier lui-même")
+            // ->formatValue(function ($value, Cotation $entity) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getReserve());
+            // })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->setDisabled(true)

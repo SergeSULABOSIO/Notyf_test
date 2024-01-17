@@ -84,8 +84,7 @@ class ServiceFacture
             $indice = 1;
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
-                dd("has been invoiced", $this->hasPrimeBeeInvoiced($tranche));
-                
+                dd("has been invoiced", $this->hasPrimeBeenInvoiced($tranche));
                 
                 $factureDeLaTranche = new Facture();
                 $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
@@ -102,10 +101,27 @@ class ServiceFacture
         }
     }
 
-    private function hasPrimeBeeInvoiced(?Tranche $tranche):bool{
-        $prime = $tranche->getPrimeTotaleTranche();
+    private function hasPrimeBeenInvoiced(?Tranche $tranche):bool{
+        $reponse = false;
 
-        return false;
+        /** @var ElementFacture */
+        foreach ($tranche->getElementFactures() as $ef) {
+            /** @var Facture */
+            $factureEnregistrees = $this->entityManager->getRepository(Facture::class)->find($ef->getFacture());
+            //Nouvelle facture
+            $nvMontant = $tranche->getPrimeTotaleTranche();
+            $nvTypeFacture = $ef->getFacture()->getType();
+            //Ancienne facture
+            $anMontant = $factureEnregistrees->getMontantTTC();
+            $anTypeFacture = $factureEnregistrees->getType();
+
+            // dd("New facture", $nvMontant, $nvTypeFacture, "Old facture", $anMontant, $anTypeFacture);
+            if(($nvMontant == $anMontant) && ($nvTypeFacture == $anTypeFacture)){
+                $reponse = true;
+            }
+        }
+
+        return $reponse;
     }
 
     private function populateFacturePrime($indice, ?Facture $factureDeLaTranche, ?Police $police, ?Tranche $tranche): Facture

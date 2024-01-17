@@ -84,18 +84,14 @@ class ServiceFacture
             $indice = 1;
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
-                dd("has been invoiced", $this->hasPrimeBeenInvoiced($tranche));
-                
-                $factureDeLaTranche = new Facture();
-                $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
-                // dd(
-                //     "Initialisation de la facture",
-                //     $factureDeLaTranche
-                // );
-                //Enregistrement de la facture
-                $this->entityManager->persist($factureDeLaTranche);
-                $this->entityManager->flush();
-
+                if($this->hasPrimeBeenInvoiced($tranche) == false){
+                    $factureDeLaTranche = new Facture();
+                    $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
+                    //Enregistrement de la facture
+                    $this->entityManager->persist($factureDeLaTranche);
+                    $this->entityManager->flush();
+                }
+                // dd("has been invoiced", $this->hasPrimeBeenInvoiced($tranche));
                 $indice = $indice + 1;
             }
         }

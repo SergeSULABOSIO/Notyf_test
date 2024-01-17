@@ -1782,10 +1782,7 @@ class ServicePreferences
 
     public function setFIN_Fields_Element_Facture_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
-        if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID])) {
-            $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_ID)
-                ->onlyOnIndex();
-        }
+        // dd("Ici");
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE])) {
             $tabAttributs[] = AssociationField::new('police', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_POLICE)
                 ->onlyOnIndex();
@@ -1854,61 +1851,62 @@ class ServicePreferences
     public function setFIN_Fields_Element_Facture_form($tabAttributs)
     {
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
-            ->formatValue(function ($value, ElementFacture $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->setColumns(12)
-            ->onlyOnForms();
+        // ->formatValue(function ($value, ElementFacture $entity) {
+        //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getMontant());
+        // })
+        ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        ->setStoredAsCents()
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('primeTotale', "Prime d'assurance")
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('commissionTotale', "Commission")
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('fraisGestionTotale', "Frais de gestion")
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-commission")
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('taxeAssureurTotale', ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
-            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-            ->setStoredAsCents()
-            ->setDisabled(true)
-            ->setColumns(12)
-            ->onlyOnForms();
+        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+        ->setStoredAsCents()
+        ->setDisabled(true)
+        ->setColumns(12)
+        ->onlyOnForms();
         $tabAttributs[] = AssociationField::new('tranche', "Tranche")
-            ->setColumns(12)
-            ->setDisabled(true)
-            ->setRequired(false)
-            ->onlyOnForms();
-
+        ->setColumns(12)
+        ->setDisabled(true)
+        ->setRequired(false)
+        ->onlyOnForms();
+        // dd("Ici");
+        
         return $tabAttributs;
     }
 
@@ -2053,6 +2051,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
+        // dd("Ici");
 
         //return $tabAttributs;
         return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));

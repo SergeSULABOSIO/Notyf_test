@@ -158,7 +158,7 @@ class FactureCrudController extends AbstractCrudController
         $objet = new Facture();
         $objet = $this->serviceFacture->initFature($objet, $this->adminUrlGenerator);
         //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-        //dd($objet);
+        // dd($objet);
         return $objet;
     }
 
@@ -171,6 +171,7 @@ class FactureCrudController extends AbstractCrudController
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
+        
         return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);
     }
 

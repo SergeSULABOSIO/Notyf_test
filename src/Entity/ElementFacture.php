@@ -230,7 +230,7 @@ class ElementFacture
      */ 
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale() * 100;
+        $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale();
         return $this->taxeCourtierTotale;
     }
 
@@ -239,7 +239,7 @@ class ElementFacture
      */ 
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale() * 100;
+        $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale();
         return $this->taxeAssureurTotale;
     }
 

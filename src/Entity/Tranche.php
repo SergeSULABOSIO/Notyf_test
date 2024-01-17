@@ -219,15 +219,20 @@ class Tranche
 
     private function generateDescription()
     {
-        $strMonnaie = $this->getCodeMonnaieAffichage();
-        // dd("Ici", $strMonnaie);
-        $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
-        if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
-            $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
+        // dd($this->getCotation()==null);
+        if ($this->getCotation()) {
+            $strMonnaie = $this->getCodeMonnaieAffichage();
+            // dd("Ici", $strMonnaie);
+            $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
+            if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
+                $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
+            }
+            $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
+            // dd($this->getNom() . ": " . $strMont);
+            return $this->getNom() . ": " . $strMont;
+        } else {
+            return "RAS";
         }
-        $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
-        // dd($this->getNom() . ": " . $strMont);
-        return $this->getNom() . ": " . $strMont;
     }
 
     /**
@@ -235,8 +240,9 @@ class Tranche
      */
     public function getCodeMonnaieAffichage()
     {
-        $code = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
-        $this->codeMonnaieAffichage = $code;
+        $this->codeMonnaieAffichage = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getCodeMonnaie();
         // dd($code);
         return $this->codeMonnaieAffichage;
     }
@@ -293,13 +299,13 @@ class Tranche
     {
         $this->taxeAssureurTotale = (new Calculateur())
             ->getTaxePourAssureur(
-                null, 
-                null, 
-                $this, 
-                null, 
+                null,
+                null,
+                $this,
+                null,
                 null,
                 Calculateur::Param_from_tranche
-                ) * 100;
+            ) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -579,6 +585,7 @@ class Tranche
     public function getPrimeTotaleTranche()
     {
         $this->primeTotaleTranche = (new Calculateur())
+            ->setCotation($this->getCotation())
             ->getPrimeTotale(null, $this);
         // dd($this->primeTotaleTranche);
         return $this->primeTotaleTranche;

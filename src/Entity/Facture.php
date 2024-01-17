@@ -242,6 +242,9 @@ class Facture
     {
         $tiers = " à nous.";
         switch ($this->type) {
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
+                $tiers = ", dû à " . $this->assureur . " par " . $this->autreTiers;
+                break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
                 $tiers = ", dû par " . $this->assureur;
                 break;

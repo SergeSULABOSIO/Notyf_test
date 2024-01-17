@@ -46,7 +46,7 @@ class ServiceFacture
 
     private function generateInvoiceReference($indice): string
     {
-        return strtoupper(str_replace(" ", "", "ND". $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
+        return strtoupper(str_replace(" ", "", "ND" . $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
     }
 
     public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
@@ -84,6 +84,9 @@ class ServiceFacture
             $indice = 1;
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
+                dd("has been invoiced", $this->hasPrimeBeeInvoiced($tranche));
+                
+                
                 $factureDeLaTranche = new Facture();
                 $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
                 // dd(
@@ -97,6 +100,12 @@ class ServiceFacture
                 $indice = $indice + 1;
             }
         }
+    }
+
+    private function hasPrimeBeeInvoiced(?Tranche $tranche):bool{
+        $prime = $tranche->getPrimeTotaleTranche();
+
+        return false;
     }
 
     private function populateFacturePrime($indice, ?Facture $factureDeLaTranche, ?Police $police, ?Tranche $tranche): Facture
@@ -144,13 +153,14 @@ class ServiceFacture
 
     private function generateDescriptionFacture(?Tranche $tranche, ?Police $police): string
     {
-        return $tranche->getNom() .
-            " : Ref.:" .
-            $police->getReference() . "/" .
-            $police->getProduit() . "/" .
-            $police->getClient() . "/" .
+        return "Prime d'assurance - " .
+            $tranche->getNom() .
+            " : Ref. police: " .
+            $police->getReference() . " / " .
+            $police->getProduit() . " / " .
+            $police->getClient() . " / " .
             $police->getAssureur() .
-            "/Du " .
+            " / Du " .
             $this->serviceDates->getTexteSimple(
                 $police->getDateeffet()
             ) .

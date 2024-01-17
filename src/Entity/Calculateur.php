@@ -211,7 +211,7 @@ class Calculateur
      *
      * @return  self
      */
-    public function setCotation($cotation)
+    public function setCotation(?Cotation $cotation)
     {
         $this->cotation = $cotation;
         if ($this->cotation != null) {
@@ -220,8 +220,8 @@ class Calculateur
                 ->setAssureur($this->cotation->getAssureur())
                 ->setEntreprise($this->cotation->getEntreprise())
                 ->setUtilisateur($this->cotation->getUtilisateur());
-            if ($this->piste != null) {
-                $this
+                if ($this->piste != null) {
+                    $this
                     ->setClient($this->piste->getClient())
                     ->setProduit($this->piste->getProduit())
                     ->setPartenaire($this->piste->getPartenaire());
@@ -435,7 +435,7 @@ class Calculateur
      */
     public function getCodeMonnaie()
     {
-        //dd($this);
+        // dd("Ici", $this->codeMonnaie);
         return $this->codeMonnaie;
     }
 

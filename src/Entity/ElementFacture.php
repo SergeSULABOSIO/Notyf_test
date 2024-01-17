@@ -180,7 +180,7 @@ class ElementFacture
      */ 
     public function getPrimeTotale()
     {
-        $this->primeTotale = $this->getTranche()->getPrimeTotale();
+        $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
         return $this->primeTotale;
     }
 
@@ -189,7 +189,12 @@ class ElementFacture
      */ 
     public function getCommissionTotale()
     {
-        $this->commissionTotale = $this->getTranche()->getCommissionTotale() * 100;
+        $this->commissionTotale = 
+        $this->getTranche()->getComLocale() + 
+        $this->getTranche()->getComFronting() + 
+        $this->getTranche()->getComReassurance() +
+        $this->getTranche()->getComAutreChargement()
+        ;
         return $this->commissionTotale;
     }
 
@@ -198,7 +203,7 @@ class ElementFacture
      */ 
     public function getFraisGestionTotale()
     {
-        $this->fraisGestionTotale = $this->getTranche()->getFraisGestionTotale() * 100;
+        $this->fraisGestionTotale = $this->getTranche()->getComFraisGestion();
         return $this->fraisGestionTotale;
     }
 
@@ -207,7 +212,7 @@ class ElementFacture
      */ 
     public function getRevenuTotal()
     {
-        $this->revenuTotal = $this->getTranche()->getRevenuTotal() * 100;
+        $this->revenuTotal = $this->getTranche()->getRevenuTotal();
         return $this->revenuTotal;
     }
 
@@ -216,7 +221,7 @@ class ElementFacture
      */ 
     public function getRetroCommissionTotale()
     {
-        $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale() * 100;
+        $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale();
         return $this->retroCommissionTotale;
     }
 

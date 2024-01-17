@@ -406,45 +406,45 @@ class ServiceCalculateur
             foreach ($this->paiements as $paiement) {
                 if ($paiement->getFacture()) {
                     foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
-                        if ($elementFacture->getPolice() === $police) {
+                        // if ($elementFacture->getPolice() === $police) {
 
-                            $totDue = $paiement->getFacture()->getTotalDu() / 100;
-                            $totPaid = $paiement->getMontant() / 100;
-                            $proportionPaid = ($totPaid / $totDue);
+                        //     $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                        //     $totPaid = $paiement->getMontant() / 100;
+                        //     $proportionPaid = ($totPaid / $totDue);
 
-                            switch ($paiement->getFacture()->getType()) {
-                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
-                                    $obj->calc_revenu_ttc_encaisse = $obj->calc_revenu_ttc_encaisse + ($elementFacture->getMontant() * $proportionPaid);
-                                    $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
-                                    //dd("J'ai trouvé le paiement de commission de courtage. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
-                                    break;
-                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
-                                    $obj->calc_revenu_ttc_encaisse = $obj->calc_revenu_ttc_encaisse + ($elementFacture->getMontant() * $proportionPaid);
-                                    $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
-                                    //dd("J'ai trouvé le paiement de frais de gestion. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
-                                    break;
-                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
-                                    $obj->calc_taxes_courtier_payees = $obj->calc_taxes_courtier_payees + ($elementFacture->getMontant() * $proportionPaid);
-                                    $obj->calc_taxes_courtier_solde = $obj->calc_taxes_courtier - $obj->calc_taxes_courtier_payees;
-                                    //dd("J'ai trouvé le paiement de frais Arca. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
-                                    break;
-                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
-                                    $obj->calc_taxes_assureurs_payees = $obj->calc_taxes_assureurs_payees + ($elementFacture->getMontant() * $proportionPaid);
-                                    $obj->calc_taxes_assureurs_solde = $obj->calc_taxes_assureurs - $obj->calc_taxes_assureurs_payees;
-                                    //dd("J'ai trouvé le paiement de la Tva. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
-                                    break;
-                                case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
-                                    $obj->calc_retrocom_payees = $obj->calc_retrocom_payees + ($elementFacture->getMontant() * $proportionPaid);
-                                    $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
-                                    //dd("J'ai trouvé le paiement de frais de gestion. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
-                                    break;
+                        //     switch ($paiement->getFacture()->getType()) {
+                        //         case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]:
+                        //             $obj->calc_revenu_ttc_encaisse = $obj->calc_revenu_ttc_encaisse + ($elementFacture->getMontant() * $proportionPaid);
+                        //             $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
+                        //             //dd("J'ai trouvé le paiement de commission de courtage. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                        //             break;
+                        //         case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
+                        //             $obj->calc_revenu_ttc_encaisse = $obj->calc_revenu_ttc_encaisse + ($elementFacture->getMontant() * $proportionPaid);
+                        //             $obj->calc_revenu_ttc_solde_restant_du = $obj->calc_revenu_ttc - $obj->calc_revenu_ttc_encaisse;
+                        //             //dd("J'ai trouvé le paiement de frais de gestion. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                        //             break;
+                        //         case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                        //             $obj->calc_taxes_courtier_payees = $obj->calc_taxes_courtier_payees + ($elementFacture->getMontant() * $proportionPaid);
+                        //             $obj->calc_taxes_courtier_solde = $obj->calc_taxes_courtier - $obj->calc_taxes_courtier_payees;
+                        //             //dd("J'ai trouvé le paiement de frais Arca. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                        //             break;
+                        //         case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
+                        //             $obj->calc_taxes_assureurs_payees = $obj->calc_taxes_assureurs_payees + ($elementFacture->getMontant() * $proportionPaid);
+                        //             $obj->calc_taxes_assureurs_solde = $obj->calc_taxes_assureurs - $obj->calc_taxes_assureurs_payees;
+                        //             //dd("J'ai trouvé le paiement de la Tva. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                        //             break;
+                        //         case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                        //             $obj->calc_retrocom_payees = $obj->calc_retrocom_payees + ($elementFacture->getMontant() * $proportionPaid);
+                        //             $obj->calc_retrocom_solde = $obj->calc_retrocom - $obj->calc_retrocom_payees;
+                        //             //dd("J'ai trouvé le paiement de frais de gestion. Montant = " . ($obj->calc_revenu_ttc_encaisse / 100) . " (dû: " . $totDue . " vs payé:" . $totPaid . ")");
+                        //             break;
 
-                                default:
-                                    # code...
-                                    break;
-                            }
-                            //$obj->calc_revenu_ttc_encaisse += $proportionPaid * $obj->calc_revenu_ttc_solde_restant_du;
-                        }
+                        //         default:
+                        //             # code...
+                        //             break;
+                        //     }
+                        //     //$obj->calc_revenu_ttc_encaisse += $proportionPaid * $obj->calc_revenu_ttc_solde_restant_du;
+                        // }
                     }
                 }
             }
@@ -545,12 +545,12 @@ class ServiceCalculateur
         foreach ($this->paiements as $paiement) {
             if ($paiement->getFacture()) {
                 foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
-                    if ($elementFacture->getPolice() === $police) {
-                        $totDue = $paiement->getFacture()->getTotalDu() / 100;
-                        $totPaid = $paiement->getMontant() / 100;
-                        $proportionPaid = ($totPaid / $totDue);
-                        $calculableEntity->calc_taxes_courtier_payees += $proportionPaid * $calculableEntity->calc_taxes_courtier_solde;
-                    }
+                    // if ($elementFacture->getPolice() === $police) {
+                    //     $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                    //     $totPaid = $paiement->getMontant() / 100;
+                    //     $proportionPaid = ($totPaid / $totDue);
+                    //     $calculableEntity->calc_taxes_courtier_payees += $proportionPaid * $calculableEntity->calc_taxes_courtier_solde;
+                    // }
                 }
             }
         }
@@ -565,12 +565,12 @@ class ServiceCalculateur
         foreach ($this->paiements as $paiement) {
             if ($paiement->getFacture()) {
                 foreach ($paiement->getFacture()->getElementFactures() as $elementFacture) {
-                    if ($elementFacture->getPolice() === $police) {
-                        $totDue = $paiement->getFacture()->getTotalDu() / 100;
-                        $totPaid = $paiement->getMontant() / 100;
-                        $proportionPaid = ($totPaid / $totDue);
-                        $calculableEntity->calc_taxes_assureurs_payees += $proportionPaid * $calculableEntity->calc_taxes_assureurs_solde;
-                    }
+                    // if ($elementFacture->getPolice() === $police) {
+                    //     $totDue = $paiement->getFacture()->getTotalDu() / 100;
+                    //     $totPaid = $paiement->getMontant() / 100;
+                    //     $proportionPaid = ($totPaid / $totDue);
+                    //     $calculableEntity->calc_taxes_assureurs_payees += $proportionPaid * $calculableEntity->calc_taxes_assureurs_solde;
+                    // }
                 }
             }
         }

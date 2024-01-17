@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
+use App\Controller\Admin\PoliceCrudController;
 use App\Entity\Assureur;
 use App\Entity\DocPiece;
 use App\Entity\Paiement;
@@ -27,6 +28,7 @@ class ServiceFacture
     private ?Options $pdfOptions = null;
 
     public function __construct(
+        private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes,
@@ -42,9 +44,14 @@ class ServiceFacture
         $this->dompdf = new Dompdf($this->pdfOptions);
     }
 
+    private function generateInvoiceReference($indice): string
+    {
+        return strtoupper(str_replace(" ", "", "ND". $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
+    }
+
     public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
     {
-        $facture->setReference(strtoupper(str_replace(" ", "", "ND" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y"))));
+        $facture->setReference($this->generateInvoiceReference(1));
         $facture->setCreatedAt($this->serviceDates->aujourdhui());
         $facture->setUpdatedAt($this->serviceDates->aujourdhui());
         $facture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -62,6 +69,95 @@ class ServiceFacture
         }
         $this->serviceCompteBancaire->setComptes($facture, "");
         return $facture;
+    }
+
+    /**
+     * Cette fonction a pour vocation de créer puis initialiser l'objet facture
+     * avec les informations collectées depuis l'objet Police que l'on passera en paramètre.
+     *
+     * @param Police|null $police
+     * @return void
+     */
+    public function processFacturePrime(?Police $police)
+    {
+        if ($police != null) {
+            $indice = 1;
+            /** @var Tranche */
+            foreach ($police->getTranches() as $tranche) {
+                $factureDeLaTranche = new Facture();
+                $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
+                // dd(
+                //     "Initialisation de la facture",
+                //     $factureDeLaTranche
+                // );
+                //Enregistrement de la facture
+                $this->entityManager->persist($factureDeLaTranche);
+                $this->entityManager->flush();
+
+                $indice = $indice + 1;
+            }
+        }
+    }
+
+    private function populateFacturePrime($indice, ?Facture $factureDeLaTranche, ?Police $police, ?Tranche $tranche): Facture
+    {
+        // $factureDeLaTranche = new Facture();
+        $factureDeLaTranche->setSignedBy("Pour " . $police->getAssureur()->getNom());
+        $factureDeLaTranche->setPosteSignedBy("Direction financière");
+        $factureDeLaTranche->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
+        $factureDeLaTranche->setAutreTiers($police->getClient()->getNom());
+        $factureDeLaTranche->setPartenaire($police->getPartenaire());
+        $factureDeLaTranche->setAssureur($police->getAssureur());
+        $factureDeLaTranche->setDescription($this->generateDescriptionFacture($tranche, $police));
+        $factureDeLaTranche->setReference($this->generateInvoiceReference($indice));
+        $factureDeLaTranche->setType(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]);
+        $factureDeLaTranche->setEntreprise($police->getEntreprise());
+        $factureDeLaTranche->setUtilisateur($police->getUtilisateur());
+        $factureDeLaTranche->setCreatedAt($police->getCreatedAt());
+        $factureDeLaTranche->setUpdatedAt($police->getUpdatedAt());
+        //Element facture / article de la facture
+        $elementFacture = $this->generateElementFacturePrime($police, $factureDeLaTranche, $tranche);
+
+        $factureDeLaTranche->setTotalDu($elementFacture->getMontant());
+        $factureDeLaTranche->setTotalRecu(0);
+        $factureDeLaTranche->setTotalSolde(($elementFacture->getMontant() - 0));
+        $factureDeLaTranche->addElementFacture($elementFacture);
+        $tranche->addElementFacture($elementFacture);
+        return $factureDeLaTranche;
+    }
+
+    private function generateElementFacturePrime(?Police $police, ?Facture $factureDeLaTranche, ?Tranche $tranche): ElementFacture
+    {
+        $elementFacture = new ElementFacture();
+        $elementFacture->setEntreprise($police->getEntreprise());
+        $elementFacture->setUtilisateur($police->getUtilisateur());
+        $elementFacture->setCreatedAt($police->getCreatedAt());
+        $elementFacture->setUpdatedAt($police->getUpdatedAt());
+        $elementFacture->setFacture($factureDeLaTranche);
+        $elementFacture->setMontant($tranche->getPrimeTotaleTranche());
+        $elementFacture->setTranche($tranche);
+        $elementFacture->setTypeavenant($police->getTypeavenant());
+        $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($police));
+        return $elementFacture;
+    }
+
+
+    private function generateDescriptionFacture(?Tranche $tranche, ?Police $police): string
+    {
+        return $tranche->getNom() .
+            " : Ref.:" .
+            $police->getReference() . "/" .
+            $police->getProduit() . "/" .
+            $police->getClient() . "/" .
+            $police->getAssureur() .
+            "/Du " .
+            $this->serviceDates->getTexteSimple(
+                $police->getDateeffet()
+            ) .
+            " au " .
+            $this->serviceDates->getTexteSimple(
+                $police->getDateexpiration()
+            );
     }
 
     public function canIssueFacture(BatchActionDto $batchActionDto, $typeFacture): array

@@ -339,10 +339,8 @@ class LoeilDeDieu implements EventSubscriberInterface
                     }
                     //On marque la cotation retenue
                     $this->updateValidatedQuote($piste, $policeRetenue);
-                    dd(
-                        "Ici, on lancera la fonction de création automatique de la réplique de la facture de l'assureur",
-                        $policeRetenue
-                    );
+                    //On génère ou actualise la/les facture(s) payables par le client
+                    $this->serviceFacture->processFacturePrime($policeRetenue);
                 }
             }
 
@@ -355,6 +353,8 @@ class LoeilDeDieu implements EventSubscriberInterface
             $this->updateEtapePiste($piste);
         }
     }
+
+    
 
 
     /**

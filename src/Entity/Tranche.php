@@ -38,8 +38,8 @@ class Tranche
     /**
      * Les attributs non mappées
      */
-    private ?string $description;
-    private ?string $codeMonnaieAffichage;
+    private ?string $description = "";
+    private ?string $codeMonnaieAffichage = "";
     //valeurs monnétaires caculables
     private ?float $primeTotaleTranche = 0;
     //les type de revenu
@@ -220,12 +220,13 @@ class Tranche
     private function generateDescription()
     {
         $strMonnaie = $this->getCodeMonnaieAffichage();
+        // dd("Ici", $strMonnaie);
         $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
-        //dd($this->getStartedAt());
         if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
             $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
         }
         $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
+        // dd($this->getNom() . ": " . $strMont);
         return $this->getNom() . ": " . $strMont;
     }
 
@@ -234,9 +235,9 @@ class Tranche
      */
     public function getCodeMonnaieAffichage()
     {
-        $this->codeMonnaieAffichage = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getCodeMonnaie();
+        $code = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
+        $this->codeMonnaieAffichage = $code;
+        // dd($code);
         return $this->codeMonnaieAffichage;
     }
 

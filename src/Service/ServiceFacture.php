@@ -84,60 +84,65 @@ class ServiceFacture
             $indice = 1;
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
-                if($this->hasPrimeBeenInvoiced($tranche) == false){
-                    $factureDeLaTranche = new Facture();
-                    $factureDeLaTranche = $this->populateFacturePrime($indice, $factureDeLaTranche, $police, $tranche);
-                    //Enregistrement de la facture
-                    $this->entityManager->persist($factureDeLaTranche);
-                    $this->entityManager->flush();
-                }
-                // dd("has been invoiced", $this->hasPrimeBeenInvoiced($tranche));
+                $savedPremiumInvoice = $this->getSavedPremiumInvoice($tranche);
+                $newPremiumInvoice = $this->createPremiumInvoice($indice, $tranche);
+
+                dd("Comparaison", $this->areEqual($savedPremiumInvoice, $newPremiumInvoice));
+
+                // //Enregistrement de la facture
+                // $this->entityManager->persist($newPremiumInvoice);
+                // $this->entityManager->flush();
+                // dd("Ancienne facture", $savedInvoice, "Nouvelle facture", $newPremiumInvoice);
                 $indice = $indice + 1;
             }
         }
     }
 
-    private function hasPrimeBeenInvoiced(?Tranche $tranche):bool{
-        $reponse = false;
 
-        /** @var ElementFacture */
-        foreach ($tranche->getElementFactures() as $ef) {
-            /** @var Facture */
-            $factureEnregistrees = $this->entityManager->getRepository(Facture::class)->find($ef->getFacture());
-            //Nouvelle facture
-            $nvMontant = $tranche->getPrimeTotaleTranche();
-            $nvTypeFacture = $ef->getFacture()->getType();
-            //Ancienne facture
-            $anMontant = $factureEnregistrees->getMontantTTC();
-            $anTypeFacture = $factureEnregistrees->getType();
-
-            // dd("New facture", $nvMontant, $nvTypeFacture, "Old facture", $anMontant, $anTypeFacture);
-            if(($nvMontant == $anMontant) && ($nvTypeFacture == $anTypeFacture)){
-                $reponse = true;
-            }
-        }
-
-        return $reponse;
+    private function areEqual(?Facture $factureA, ?Facture $factureB):array{
+        $sameMontant = $factureA->getMontantTTC() == $factureB->getMontantTTC();
+        $sameClient = $factureA->getAutreTiers() == $factureB->getAutreTiers();
+        $sameAssureur = $factureA->getAssureur() == $factureB->getAssureur();
+        $sameTranche = $factureA->getElementFactures()[0]->getTranche() == $factureB->getElementFactures()[0]->getTranche();
+        
+        $final = $sameMontant && $sameClient && $sameAssureur && $sameTranche;
+        return [
+            "sameMontant" => $sameMontant,
+            "sameClient" => $sameClient,
+            "sameAssureur" => $sameAssureur,
+            "sameTranche" => $sameTranche,
+            "final" => $final,
+        ];
     }
 
-    private function populateFacturePrime($indice, ?Facture $factureDeLaTranche, ?Police $police, ?Tranche $tranche): Facture
+    private function getSavedPremiumInvoice(?Tranche $tranche): ?Facture{
+        if($tranche->getElementFactures()[0] != null){
+            $factureEnregistrees = $this->entityManager->getRepository(Facture::class)->find($tranche->getElementFactures()[0]->getFacture()->getId());
+            if($factureEnregistrees != null){
+                return $factureEnregistrees;
+            }
+        }
+        return null;
+    }
+
+    private function createPremiumInvoice($indice, ?Tranche $tranche): Facture
     {
-        // $factureDeLaTranche = new Facture();
-        $factureDeLaTranche->setSignedBy("Pour " . $police->getAssureur()->getNom());
+        $factureDeLaTranche = new Facture();
+        $factureDeLaTranche->setSignedBy("Pour " . $tranche->getPolice()->getAssureur()->getNom());
         $factureDeLaTranche->setPosteSignedBy("Direction financière");
         $factureDeLaTranche->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
-        $factureDeLaTranche->setAutreTiers($police->getClient()->getNom());
-        $factureDeLaTranche->setPartenaire($police->getPartenaire());
-        $factureDeLaTranche->setAssureur($police->getAssureur());
-        $factureDeLaTranche->setDescription($this->generateDescriptionFacture($tranche, $police));
+        $factureDeLaTranche->setAutreTiers($tranche->getPolice()->getClient()->getNom());
+        $factureDeLaTranche->setPartenaire($tranche->getPolice()->getPartenaire());
+        $factureDeLaTranche->setAssureur($tranche->getPolice()->getAssureur());
+        $factureDeLaTranche->setDescription($this->generateDescriptionFacture($tranche, $tranche->getPolice()));
         $factureDeLaTranche->setReference($this->generateInvoiceReference($indice));
         $factureDeLaTranche->setType(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]);
-        $factureDeLaTranche->setEntreprise($police->getEntreprise());
-        $factureDeLaTranche->setUtilisateur($police->getUtilisateur());
-        $factureDeLaTranche->setCreatedAt($police->getCreatedAt());
-        $factureDeLaTranche->setUpdatedAt($police->getUpdatedAt());
+        $factureDeLaTranche->setEntreprise($tranche->getPolice()->getEntreprise());
+        $factureDeLaTranche->setUtilisateur($tranche->getPolice()->getUtilisateur());
+        $factureDeLaTranche->setCreatedAt($tranche->getPolice()->getCreatedAt());
+        $factureDeLaTranche->setUpdatedAt($tranche->getPolice()->getUpdatedAt());
         //Element facture / article de la facture
-        $elementFacture = $this->generateElementFacturePrime($police, $factureDeLaTranche, $tranche);
+        $elementFacture = $this->generateElementFacturePrime($tranche->getPolice(), $factureDeLaTranche, $tranche);
 
         $factureDeLaTranche->setTotalDu($elementFacture->getMontant());
         $factureDeLaTranche->setTotalRecu(0);

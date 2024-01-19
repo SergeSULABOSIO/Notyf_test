@@ -776,7 +776,7 @@ class LoeilDeDieu implements EventSubscriberInterface
         /** @var Police */
         foreach ($polices as $pol) {
             if ($pol->getPiste() == null) {
-                //On detruit enfin la cotation
+                //On detruit enfin la police
                 $this->entityManager->remove($pol);
                 $this->entityManager->flush();
             }

@@ -63,6 +63,9 @@ class DocPiece
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?ActionCRM $actionCRM = null;
 
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    private ?Paiement $paiement = null;
+
     private ?string $nomType;
 
     private ?int $codeFormatFichier;
@@ -273,6 +276,18 @@ class DocPiece
     public function setPiste(?Piste $piste): self
     {
         $this->piste = $piste;
+
+        return $this;
+    }
+
+    public function getPaiement(): ?Paiement
+    {
+        return $this->paiement;
+    }
+
+    public function setPaiement(?Paiement $paiement): self
+    {
+        $this->paiement = $paiement;
 
         return $this;
     }

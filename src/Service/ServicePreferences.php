@@ -575,9 +575,9 @@ class ServicePreferences
         }
         if ($objetInstance instanceof Paiement) {
             $tabAttributs = [
-                FormField::addPanel('Informations générales')
+                FormField::addTab('Informations générales')
                     ->setIcon('fa-solid fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
-                    ->setHelp("Cashflow.")
+                    ->setHelp("Veuillez saisir les informations relatives au paiement.")
             ];
             //$tabAttributs = $this->setCRM_Fields_PaiementTaxes_Index_Details($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENTS_TAXES, $tabAttributs);
             $tabAttributs = $this->setFIN_Fields_Paiement_Index($preference->getFinTaxesPayees(), PreferenceCrudController::TAB_FIN_PAIEMENT, $tabAttributs);
@@ -1213,7 +1213,7 @@ class ServicePreferences
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE])) {
-            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+            $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
                 ->onlyOnIndex();
         }
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE])) {
@@ -1270,7 +1270,7 @@ class ServicePreferences
             $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
-            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)->onlyOnDetail();
+            $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)->onlyOnDetail();
         }
         if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
             $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)->onlyOnDetail();
@@ -1293,54 +1293,73 @@ class ServicePreferences
 
     public function setFIN_Fields_Paiement_form($tabAttributs)
     {
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)) {
-            $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
-                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
-                ->setColumns(2)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {
-            $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
-                ->setRequired(false)
-                ->setColumns(10)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {
-            $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
-                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
-                ->setStoredAsCents()
-                ->onlyOnForms()
-                ->setColumns(2);
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
-            $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
-                ->setRequired(false)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
-            $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
-                ->setColumns(4)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)) {
-            $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
-                ->setColumns(12)
-                ->onlyOnForms();
-        }
-        if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
-            $tabAttributs[] = CollectionField::new('pieces', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
-                ->useEntryCrudForm(DocPieceCrudController::class)
-                ->allowAdd(true)
-                ->allowDelete(true)
-                ->setEntryIsComplex()
-                ->setRequired(false)
-                ->setColumns(6)
-                ->onlyOnForms();
-        }
+        //Section principale
+        $tabAttributs[] = FormField::addPanel("Section principale")
+            ->setIcon("fas fa-location-crosshairs")
+            ->setColumns(10)
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+        $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
+            ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+            ->setColumns(6)
+            ->onlyOnForms();
+        $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
+            ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+            ->setStoredAsCents()
+            ->onlyOnForms()
+            ->setColumns(2);
+        $tabAttributs[] = DateTimeField::new('paidAt', PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)
+            ->setColumns(2)
+            ->onlyOnForms();
+        $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+        //Section références bancaires
+        $tabAttributs[] = FormField::addPanel("Références bancaires")
+            ->setIcon("fa-solid fa-piggy-bank")
+            ->setColumns(10)
+            ->onlyOnForms();
+        $tabAttributs[] = AssociationField::new('compteBancaire', PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+        //Section - Documents
+        $tabAttributs[] = FormField::addPanel("Pièces jointes")
+            ->setIcon("fa-solid fa-paperclip")
+            ->onlyOnForms(); //fa-solid fa-paperclip
+        $tabAttributs[] = CollectionField::new('documents', PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->setEntryIsComplex()
+            ->setRequired(false)
+            ->setColumns(10)
+            ->onlyOnForms();
+
+
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_COMPTE_BANCAIRE)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DATE)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_DESCRIPTION)) {
+        // }
+        // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_PIECE)) {
+        // }
         //On désactive les champs non éditables
         //$this->appliquerCanDesable($tabAttributs);
-        return $this->appliquerCanDesable($tabAttributs);
+        // return $this->appliquerCanDesable($tabAttributs);
+        return $tabAttributs;
     }
 
     public function setFIN_Fields_Revenu_form($tabAttributs)

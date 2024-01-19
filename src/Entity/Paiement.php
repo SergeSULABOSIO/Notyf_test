@@ -43,14 +43,14 @@ class Paiement
     private ?CompteBancaire $compteBancaire = null;
 
     #[ORM\OneToMany(mappedBy: 'paiement', targetEntity: DocPiece::class, cascade:['remove', 'persist', 'refresh'])]
-    private Collection $pieces;
+    private Collection $documents;
 
     #[ORM\Column]
     private ?int $type = null;
 
     public function __construct()
     {
-        $this->pieces = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,30 +175,30 @@ class Paiement
         return $this;
     }
 
-    /**
+     /**
      * @return Collection<int, DocPiece>
      */
-    public function getPieces(): Collection
+    public function getDocuments(): Collection
     {
-        return $this->pieces;
+        return $this->documents;
     }
 
-    public function addPiece(DocPiece $piece): self
+    public function addDocument(DocPiece $document): self
     {
-        if (!$this->pieces->contains($piece)) {
-            $this->pieces->add($piece);
-            $piece->setPaiement($this);
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setPaiement($this);
         }
 
         return $this;
     }
 
-    public function removePiece(DocPiece $piece): self
+    public function removeDocument(DocPiece $document): self
     {
-        if ($this->pieces->removeElement($piece)) {
+        if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
-            if ($piece->getPaiement() === $this) {
-                $piece->setPaiement(null);
+            if ($document->getPaiement() === $this) {
+                $document->setPaiement(null);
             }
         }
 

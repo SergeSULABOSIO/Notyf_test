@@ -7,7 +7,6 @@ use App\Entity\ElementFacture;
 use App\Entity\Entreprise;
 use App\Entity\Facture;
 use App\Entity\Partenaire;
-use App\Entity\Police;
 use App\Entity\Tranche;
 use App\Entity\Utilisateur;
 use DateTimeImmutable;

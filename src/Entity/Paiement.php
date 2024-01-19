@@ -48,6 +48,10 @@ class Paiement
     #[ORM\Column]
     private ?int $type = null;
 
+    // #[ORM\Column]
+    #[ORM\Column(nullable: true)]
+    private ?int $typeFacture = null;
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -213,6 +217,18 @@ class Paiement
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getTypeFacture(): ?int
+    {
+        return $this->typeFacture;
+    }
+
+    public function setTypeFacture(int $typeFacture): self
+    {
+        $this->typeFacture = $typeFacture;
 
         return $this;
     }

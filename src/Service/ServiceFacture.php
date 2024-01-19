@@ -8,18 +8,14 @@ use Dompdf\Options;
 use App\Entity\Taxe;
 use App\Entity\Police;
 use App\Entity\Facture;
+use App\Entity\Tranche;
+use App\Entity\Paiement;
 use App\Entity\ElementFacture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Service\Builders\FacturePrimeBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\PoliceCrudController;
-use App\Entity\Assureur;
-use App\Entity\DocPiece;
-use App\Entity\Paiement;
-use App\Entity\Tranche;
-use App\Service\Monteurs\FactureDirecteur;
-use App\Service\Monteurs\FacturePrimeBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -237,7 +233,7 @@ class ServiceFacture
 
     public function updatePieceInfos(Paiement $paiement)
     {
-        foreach ($paiement->getPieces() as $piece) {
+        foreach ($paiement->getDocuments() as $piece) {
             $piece->setCreatedAt($paiement->getCreatedAt());
             $piece->setUpdatedAt($paiement->getUpdatedAt());
             $piece->setEntreprise($paiement->getEntreprise());

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Monteurs;
+namespace App\Service\Builders;
 
 use App\Entity\Police;
 use DateTimeImmutable;
@@ -33,6 +33,7 @@ class FacturePrimeBuilder implements FactureBuilder
         private EntityManagerInterface $entityManager,
         private ServiceCompteBancaire $serviceCompteBancaire
     ) {
+        $this->facture = new Facture();
     }
     public function setComptesBancaires()
     {
@@ -163,7 +164,6 @@ class FacturePrimeBuilder implements FactureBuilder
 
     public function buildFacture(?int $indice, ?Tranche $tranche): ?Facture
     {
-        $this->facture = new Facture();
         $this->setTranche($tranche);
         $this->setSignedBy("Pour " . $tranche->getPolice()->getAssureur()->getNom());
         $this->setPosteSignedBy("Direction financière");

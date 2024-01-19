@@ -125,6 +125,7 @@ class PaiementCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
+        
         $objet = new Paiement();
         $objet->setPaidAt(new \DateTimeImmutable("now"));
         $objet->setCreatedAt(new \DateTimeImmutable("now"));

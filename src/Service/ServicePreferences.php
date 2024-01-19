@@ -1300,11 +1300,13 @@ class ServicePreferences
             ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = AssociationField::new('facture', PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)
             ->setRequired(false)
+            ->setDisabled(true)
             ->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)
             ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
             ->setColumns(6)
+            ->setDisabled(true)
             ->onlyOnForms();
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_PAIEMENT_MONTANT)
             ->setCurrency($this->serviceMonnaie->getCodeSaisie())

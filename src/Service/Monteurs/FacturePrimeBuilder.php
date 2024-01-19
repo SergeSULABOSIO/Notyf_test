@@ -200,12 +200,17 @@ class FacturePrimeBuilder implements FactureBuilder
 
     public function areEqual(?Facture $factureA, ?Facture $factureB)
     {
-        $sameMontant = $factureA->getMontantTTC() == $factureB->getMontantTTC();
-        $sameClient = $factureA->getAutreTiers() == $factureB->getAutreTiers();
-        $sameAssureur = $factureA->getAssureur() == $factureB->getAssureur();
-        $sameTranche = $factureA->getElementFactures()[0]->getTranche() == $factureB->getElementFactures()[0]->getTranche();
-
-        $final = $sameMontant && $sameClient && $sameAssureur && $sameTranche;
+        $sameMontant = false;
+        $sameClient = false;
+        $sameAssureur = false;
+        $sameTranche = false;
+        if ($factureA != null && $factureB != null) {
+            $sameMontant = $factureA->getMontantTTC() == $factureB->getMontantTTC();
+            $sameClient = $factureA->getAutreTiers() == $factureB->getAutreTiers();
+            $sameAssureur = $factureA->getAssureur() == $factureB->getAssureur();
+            $sameTranche = $factureA->getElementFactures()[0]->getTranche() == $factureB->getElementFactures()[0]->getTranche();
+        }
+        $final = $sameMontant == true && $sameClient == true && $sameAssureur == true && $sameTranche == true;
         return [
             self::PARAM_SAME_MONTANT => $sameMontant,
             self::PARAM_SAME_CLIENT => $sameClient,
@@ -217,11 +222,13 @@ class FacturePrimeBuilder implements FactureBuilder
 
     public function saveFacture()
     {
-        dd("Cette fonction n'est pas encore définie.");
+        // dd("Cette fonction n'est pas encore définie.");
         if ($this->facture != null) {
             $ancienneFacture = $this->loadSavedFacture($this->tranche);
-            if ($this->areEqual($ancienneFacture, $this->facture)[self::PARAM_FINAL] == false) {
+            $testEquality = $this->areEqual($ancienneFacture, $this->facture)[self::PARAM_FINAL];
+            if ($testEquality == false) {
                 //Enregistrement de la facture
+                dd("Test Avant SaveFacture", $testEquality, "NV Facture", $this->facture, "AC Facture", $ancienneFacture);
                 $this->entityManager->persist($this->facture);
                 $this->entityManager->flush();
             }

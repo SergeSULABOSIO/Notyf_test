@@ -95,9 +95,7 @@ class ServiceFacture
             foreach ($police->getTranches() as $tranche) {
                 $newPremiumInvoice = $facturePrimeBuilder->buildFacture($indice, $tranche);
                 $savedPremiumInvoice = $facturePrimeBuilder->loadSavedFacture($tranche);
-
-                dd("Comparaison", $facturePrimeBuilder->areEqual($savedPremiumInvoice, $newPremiumInvoice));
-
+                //dd("Comparaison", $facturePrimeBuilder->areEqual($savedPremiumInvoice, $newPremiumInvoice));
                 // //Enregistrement de la facture
                 $facturePrimeBuilder->saveFacture();
                 $indice = $indice + 1;
@@ -107,7 +105,7 @@ class ServiceFacture
 
 
 
-    
+
 
     public function canIssueFacture(BatchActionDto $batchActionDto, $typeFacture): array
     {

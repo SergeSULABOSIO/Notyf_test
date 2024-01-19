@@ -218,29 +218,26 @@ class FacturePrimeBuilder implements FactureBuilder
             foreach ($anciennesFactures as $ancienneFacture) {
                 if ($ancienneFacture->getType() == $nouvelleFacture->getType()) {
                     $cumulMontantAncienneFactures = $cumulMontantAncienneFactures + $ancienneFacture->getMontantTTC();
-
-                    $sameMontantTempo = $ancienneFacture->getMontantTTC() == $nouvelleFacture->getMontantTTC();
+                    // $sameMontantTempo = $ancienneFacture->getMontantTTC() == $nouvelleFacture->getMontantTTC();
                     $sameClientTempo = $ancienneFacture->getAutreTiers() == $nouvelleFacture->getAutreTiers();
                     $sameAssureurTempo = $ancienneFacture->getAssureur() == $nouvelleFacture->getAssureur();
                     $sameTrancheTempo = $ancienneFacture->getElementFactures()[0]->getTranche() == $nouvelleFacture->getElementFactures()[0]->getTranche();
-                
-                    if($sameMontantTempo == true){
-                        $sameMontant = $sameMontantTempo;
-                    }
-                    if($sameClientTempo == true){
+
+                    if ($sameClientTempo == true) {
                         $sameClient = $sameClientTempo;
                     }
-                    if($sameAssureurTempo == true){
+                    if ($sameAssureurTempo == true) {
                         $sameAssureur = $sameAssureurTempo;
                     }
-                    if($sameTrancheTempo == true){
+                    if ($sameTrancheTempo == true) {
                         $sameTranche = $sameTrancheTempo;
                     }
                 }
             }
+            $sameMontant = $cumulMontantAncienneFactures == $nouvelleFacture->getMontantTTC();
             $final = $sameMontant == true && $sameClient == true && $sameAssureur == true && $sameTranche == true;
             $diff = ($nouvelleFacture->getMontantTTC() - $cumulMontantAncienneFactures);
-        }else if(count($anciennesFactures) == 0 && $nouvelleFacture != null){
+        } else if (count($anciennesFactures) == 0 && $nouvelleFacture != null) {
             $diff = $nouvelleFacture->getMontantTTC();
         }
         $reponse = [
@@ -268,16 +265,17 @@ class FacturePrimeBuilder implements FactureBuilder
         if ($this->facture != null) {
             $ancienneFacture = $this->loadSavedFactures($this->tranche);
             $testEquality = $this->areEqual($ancienneFacture, $this->facture);
+            // dd("Ici", $testEquality);
             if ($testEquality[self::PARAM_FINAL] == false) {
                 // dd("Ici", $testEquality);
                 //Enregistrement de la facture
                 if (
-                    $testEquality[self::PARAM_SAME_MONTANT] == false && 
+                    $testEquality[self::PARAM_SAME_MONTANT] == false &&
                     $testEquality[self::PARAM_SAME_CLIENT] == true &&
                     $testEquality[self::PARAM_SAME_ASSUREUR] == true &&
                     $testEquality[self::PARAM_SAME_TRANCHE] == true
                 ) {
-                    dd("Test Avant SaveFacture", $testEquality, "NV Facture", $this->facture, "AC Facture", $ancienneFacture);
+                    // dd("Test Avant SaveFacture", $testEquality, "NV Facture", $this->facture, "AC Facture", $ancienneFacture);
                     //On y ajoute la différence
                     /** @var ElementFacture  */
                     $elementFacture = $this->facture->getElementFactures()[0];

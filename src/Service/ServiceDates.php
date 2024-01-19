@@ -40,7 +40,7 @@ class ServiceDates
         return $copie->add(new DateInterval($txt));
     }
 
-    public function getTexte(DateTime $date): string
+    public function getTexte(DateTimeImmutable $date): string
     {
         return $date->format('d-m-Y à H:i');
     }

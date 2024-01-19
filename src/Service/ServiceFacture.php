@@ -94,10 +94,11 @@ class ServiceFacture
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
                 $newPremiumInvoice = $facturePrimeBuilder->buildFacture($indice, $tranche);
-                $savedPremiumInvoice = $facturePrimeBuilder->loadSavedFacture($tranche);
+                // $savedPremiumInvoice = $facturePrimeBuilder->loadSavedFacture($tranche);
                 //dd("Comparaison", $facturePrimeBuilder->areEqual($savedPremiumInvoice, $newPremiumInvoice));
                 // //Enregistrement de la facture
                 $facturePrimeBuilder->saveFacture();
+                $facturePrimeBuilder->reset();
                 $indice = $indice + 1;
             }
         }

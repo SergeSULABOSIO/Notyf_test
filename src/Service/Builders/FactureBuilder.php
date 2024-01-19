@@ -15,6 +15,7 @@ use DateTimeImmutable;
 interface FactureBuilder
 {
     public const PARAM_FINAL = "final";
+    public const PARAM_DIFFERENCES = "differences";
     public const PARAM_SAME_MONTANT = "sameMontant";
     public const PARAM_SAME_CLIENT = "sameClient";
     public const PARAM_SAME_ASSUREUR = "sameAssureur";
@@ -46,7 +47,8 @@ interface FactureBuilder
     public function generateInvoiceReference(?int $indice):?string;
     //Production de la facture
     public function buildFacture(?int $indice, ?Tranche $tranche):?Facture;
-    public function loadSavedFacture(?Tranche $tranche):?Facture;
-    public function areEqual(?Facture $factureA, ?Facture $factureB);
+    public function loadSavedFactures(?Tranche $tranche):?array;
+    public function areEqual(?array $anciennesFactures, ?Facture $nouvelleFacture);
     public function saveFacture();
+    public function reset();
 }

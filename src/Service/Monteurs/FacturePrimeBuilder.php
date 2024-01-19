@@ -18,6 +18,7 @@ use App\Service\Builders\FactureBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 use App\Service\ServiceCompteBancaire;
+use PhpParser\Node\Expr\Cast\Array_;
 
 class FacturePrimeBuilder implements FactureBuilder
 {
@@ -187,49 +188,109 @@ class FacturePrimeBuilder implements FactureBuilder
         return $this->facture;
     }
 
-    public function loadSavedFacture(?Tranche $tranche): ?Facture
+    public function loadSavedFactures(?Tranche $tranche): ?array
     {
-        if ($tranche->getElementFactures()[0] != null) {
-            $factureEnregistrees = $this->entityManager->getRepository(Facture::class)->find($tranche->getElementFactures()[0]->getFacture()->getId());
-            if ($factureEnregistrees != null) {
-                return $factureEnregistrees;
+        $tabFactures = [];
+        if (count($tranche->getElementFactures()) != 0) {
+            // dd("Liste des elements Factures de la tranche: " . $tranche, $tranche->getElementFactures());
+            /** @var ElementFacture */
+            foreach ($tranche->getElementFactures() as $elementFacture) {
+                $factureEnregistree = $this->entityManager->getRepository(Facture::class)->find($elementFacture->getFacture()->getId());
+                if ($factureEnregistree != null) {
+                    $tabFactures[] = $factureEnregistree;
+                }
             }
         }
-        return null;
+        return $tabFactures;
     }
 
-    public function areEqual(?Facture $factureA, ?Facture $factureB)
+    public function areEqual(?array $anciennesFactures, ?Facture $nouvelleFacture)
     {
         $sameMontant = false;
         $sameClient = false;
         $sameAssureur = false;
         $sameTranche = false;
-        if ($factureA != null && $factureB != null) {
-            $sameMontant = $factureA->getMontantTTC() == $factureB->getMontantTTC();
-            $sameClient = $factureA->getAutreTiers() == $factureB->getAutreTiers();
-            $sameAssureur = $factureA->getAssureur() == $factureB->getAssureur();
-            $sameTranche = $factureA->getElementFactures()[0]->getTranche() == $factureB->getElementFactures()[0]->getTranche();
+        $final = false;
+        $diff = 0;
+        if (count($anciennesFactures) != 0 && $nouvelleFacture != null) {
+            $cumulMontantAncienneFactures = 0;
+            /** @var Facture */
+            foreach ($anciennesFactures as $ancienneFacture) {
+                if ($ancienneFacture->getType() == $nouvelleFacture->getType()) {
+                    $cumulMontantAncienneFactures = $cumulMontantAncienneFactures + $ancienneFacture->getMontantTTC();
+
+                    $sameMontantTempo = $ancienneFacture->getMontantTTC() == $nouvelleFacture->getMontantTTC();
+                    $sameClientTempo = $ancienneFacture->getAutreTiers() == $nouvelleFacture->getAutreTiers();
+                    $sameAssureurTempo = $ancienneFacture->getAssureur() == $nouvelleFacture->getAssureur();
+                    $sameTrancheTempo = $ancienneFacture->getElementFactures()[0]->getTranche() == $nouvelleFacture->getElementFactures()[0]->getTranche();
+                
+                    if($sameMontantTempo == true){
+                        $sameMontant = $sameMontantTempo;
+                    }
+                    if($sameClientTempo == true){
+                        $sameClient = $sameClientTempo;
+                    }
+                    if($sameAssureurTempo == true){
+                        $sameAssureur = $sameAssureurTempo;
+                    }
+                    if($sameTrancheTempo == true){
+                        $sameTranche = $sameTrancheTempo;
+                    }
+                }
+            }
+            $final = $sameMontant == true && $sameClient == true && $sameAssureur == true && $sameTranche == true;
+            $diff = ($nouvelleFacture->getMontantTTC() - $cumulMontantAncienneFactures);
+        }else if(count($anciennesFactures) == 0 && $nouvelleFacture != null){
+            $diff = $nouvelleFacture->getMontantTTC();
         }
-        $final = $sameMontant == true && $sameClient == true && $sameAssureur == true && $sameTranche == true;
-        return [
+        $reponse = [
             self::PARAM_SAME_MONTANT => $sameMontant,
             self::PARAM_SAME_CLIENT => $sameClient,
             self::PARAM_SAME_ASSUREUR => $sameAssureur,
             self::PARAM_SAME_TRANCHE => $sameTranche,
             self::PARAM_FINAL => $final,
+            self::PARAM_DIFFERENCES => [
+                self::PARAM_SAME_MONTANT => $diff,
+            ],
         ];
+        // dd("Anciennes factures: ", count($anciennesFactures), $anciennesFactures, $reponse);
+        return $reponse;
+    }
+
+    public function reset()
+    {
+        $this->facture = null;
     }
 
     public function saveFacture()
     {
         // dd("Cette fonction n'est pas encore définie.");
         if ($this->facture != null) {
-            $ancienneFacture = $this->loadSavedFacture($this->tranche);
-            $testEquality = $this->areEqual($ancienneFacture, $this->facture)[self::PARAM_FINAL];
-            if ($testEquality == false) {
+            $ancienneFacture = $this->loadSavedFactures($this->tranche);
+            $testEquality = $this->areEqual($ancienneFacture, $this->facture);
+            if ($testEquality[self::PARAM_FINAL] == false) {
+                // dd("Ici", $testEquality);
                 //Enregistrement de la facture
-                dd("Test Avant SaveFacture", $testEquality, "NV Facture", $this->facture, "AC Facture", $ancienneFacture);
-                $this->entityManager->persist($this->facture);
+                if (
+                    $testEquality[self::PARAM_SAME_MONTANT] == false && 
+                    $testEquality[self::PARAM_SAME_CLIENT] == true &&
+                    $testEquality[self::PARAM_SAME_ASSUREUR] == true &&
+                    $testEquality[self::PARAM_SAME_TRANCHE] == true
+                ) {
+                    dd("Test Avant SaveFacture", $testEquality, "NV Facture", $this->facture, "AC Facture", $ancienneFacture);
+                    //On y ajoute la différence
+                    /** @var ElementFacture  */
+                    $elementFacture = $this->facture->getElementFactures()[0];
+                    $elementFacture
+                        ->setMontant(
+                            $testEquality[self::PARAM_DIFFERENCES][self::PARAM_SAME_MONTANT]
+                        );
+                    $this->facture->setDescription("Ajustement (" . $this->serviceDates->getTexte($this->serviceDates->aujourdhui()) . ") - " . $this->facture->getDescription());
+                    // dd("Facture à ajouter", $this->facture);
+                    $this->entityManager->persist($this->facture);
+                } else {
+                    $this->entityManager->persist($this->facture);
+                }
                 $this->entityManager->flush();
             }
         }

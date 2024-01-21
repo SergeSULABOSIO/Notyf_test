@@ -112,7 +112,7 @@ class PaiementPrimeBuilder implements PaiementBuilder
         $this->paiement->setMontant($paidAmount);
         $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
         $this->paiement->setTypeFacture($facture->getType());
-        $this->paiement->setDescription("Paiement de la prime. Facture n°" . $facture.". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
+        $this->paiement->setDescription("Paiement de la prime. Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
         $this->paiement->setEntreprise($facture->getEntreprise());
         $this->paiement->setUtilisateur($facture->getUtilisateur());
         $this->paiement->setCreatedAt($this->serviceDates->aujourdhui());
@@ -127,23 +127,76 @@ class PaiementPrimeBuilder implements PaiementBuilder
         $tabPaiements = [];
         if (count($facture->getPaiements()) != 0) {
             /** @var Paiement */
-            foreach ($facture->getPaiements() as $paiement) {
-                $paiementEnregistre = $this->entityManager->getRepository(Paiement::class)->find($fact->getFacture()->getId());
-                if ($factureEnregistree != null) {
-                    $tabFactures[] = $factureEnregistree;
+            foreach ($facture->getPaiements() as $paiementEnregistre) {
+                // $paiementEnregistre = $this->entityManager->getRepository(Paiement::class)->find($fact->getFacture()->getId());
+                if ($paiementEnregistre != null) {
+                    $tabPaiements[] = $paiementEnregistre;
                 }
             }
         }
-        return $tabFactures;
+        return $tabPaiements;
     }
 
     public function savePaiement()
     {
-        dd("Fonction non encore définie");
+        if ($this->paiement != null) {
+            $ancienPaiements = $this->loadSavedPaiements($this->facture);
+            $testEquality = $this->areEqual($ancienPaiements, $this->paiement);
+            if ($testEquality[self::PARAM_FINAL] == false) {
+                //Enregistrement du paiement
+                if (
+                    $testEquality[self::PARAM_SAME_MONTANT] == false &&
+                    $testEquality[self::PARAM_SAME_FACTURE] == true
+                ) {
+                    //On y ajoute la différence
+                    $this->paiement->setMontant(
+                        $testEquality[self::PARAM_DIFFERENCES][self::PARAM_SAME_MONTANT]
+                    );
+                    $this->paiement->setDescription("Ajustement (" . $this->serviceDates->getTexte($this->serviceDates->aujourdhui()) . ") - " . $this->paiement->getDescription());
+                    // dd("Facture à ajouter", $this->facture);
+                    $this->entityManager->persist($this->paiement);
+                } else {
+                    $this->entityManager->persist($this->paiement);
+                }
+                $this->entityManager->flush();
+            }
+        }
     }
 
     public function areEqual(?array $anciennesPaiements, ?Paiement $nouveauPaiement)
     {
-        dd("Fonction non encore définie");
+        // dd("Fonction non encore définie");
+        $sameMontant = false;
+        $sameFacture = false;
+        $final = false;
+        $diff = 0;
+        if (count($anciennesPaiements) != 0 && $nouveauPaiement != null) {
+            $cumulMontantAnciennePaiements = 0;
+            /** @var Paiement */
+            foreach ($anciennesPaiements as $anciennePaiement) {
+                if ($anciennePaiement->getTypeFacture() == $nouveauPaiement->getTypeFacture()) {
+                    $cumulMontantAnciennePaiements = $cumulMontantAnciennePaiements + $nouveauPaiement->getMontant();
+                    $sameFactureTempo = $anciennePaiement->getFacture() == $nouveauPaiement->getFacture();
+                    if ($sameFactureTempo == true) {
+                        $sameFacture = $sameFactureTempo;
+                    }
+                }
+            }
+            $sameMontant = $cumulMontantAnciennePaiements == $nouveauPaiement->getMontant();
+            $final = $sameMontant == true && $sameFacture;
+            $diff = ($nouveauPaiement->getMontant() - $cumulMontantAnciennePaiements);
+        } else if (count($anciennesPaiements) == 0 && $nouveauPaiement != null) {
+            $diff = $nouveauPaiement->getMontant();
+        }
+        $reponse = [
+            self::PARAM_SAME_MONTANT => $sameMontant,
+            self::PARAM_SAME_FACTURE => $sameFacture,
+            self::PARAM_FINAL => $final,
+            self::PARAM_DIFFERENCES => [
+                self::PARAM_SAME_MONTANT => $diff,
+            ],
+        ];
+        // dd("Anciennes factures: ", count($anciennesFactures), $anciennesFactures, $reponse);
+        return $reponse;
     }
 }

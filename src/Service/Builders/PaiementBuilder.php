@@ -17,6 +17,10 @@ use DateTimeImmutable;
 
 interface PaiementBuilder
 {
+    public const PARAM_FINAL = "final";
+    public const PARAM_DIFFERENCES = "differences";
+    public const PARAM_SAME_MONTANT = "sameMontant";
+    public const PARAM_SAME_FACTURE = "sameFacture";
     //Fonctions de creation du paiement
     public function setFacture(?Facture $facture);
     public function setPaidAt(?DateTimeImmutable $paidAt);

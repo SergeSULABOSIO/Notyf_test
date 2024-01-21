@@ -1659,8 +1659,8 @@ class ServiceCrossCanal
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        //dd($facture);
-        $this->paiement_definirChampsCollectionPieces($adminUrlGenerator);
+        // dd($facture);
+        // $this->paiement_definirChampsCollectionPieces($adminUrlGenerator);
         $url = $adminUrlGenerator
             ->setController(PaiementCrudController::class)
             ->setAction(Action::NEW)

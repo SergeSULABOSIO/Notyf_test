@@ -1,28 +1,31 @@
 <?php
 
-namespace App\Service\Builders;
+namespace App\Service\RefactoringJS\Builders;
 
 use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Facture;
 use App\Entity\Tranche;
 use App\Entity\Assureur;
+use App\Entity\DocPiece;
+use App\Entity\Paiement;
 use App\Entity\Entreprise;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
+use App\Entity\CompteBancaire;
 use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use PhpParser\Node\Expr\Cast\Array_;
+use App\Service\ServiceCompteBancaire;
 use App\Service\Builders\FactureBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PaiementCrudController;
-use App\Entity\CompteBancaire;
-use App\Entity\DocPiece;
-use App\Entity\Paiement;
-use App\Service\ServiceCompteBancaire;
-use PhpParser\Node\Expr\Cast\Array_;
+use App\Controller\Admin\PreferenceCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class PaiementPrimeBuilder implements PaiementBuilder
 {
@@ -31,6 +34,7 @@ class PaiementPrimeBuilder implements PaiementBuilder
     private ?Paiement $paiement;
 
     public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator,
         private ServiceAvenant $serviceAvenant,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
@@ -107,9 +111,23 @@ class PaiementPrimeBuilder implements PaiementBuilder
 
     public function buildPaiement(?Facture $facture, ?DateTimeImmutable $dateOfPayment, ?Utilisateur $utilisateur, ?float $paidAmount): ?Paiement
     {
-        $this->paiement->setFacture($facture);
+        if ($facture == null) {
+            /** @var Facture*/
+            $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
+            if ($paramIDFacture != null) {
+                $this->paiement->setFacture(
+                    $this->entityManager->getRepository(Facture::class)->find($paramIDFacture)
+                );
+            }
+        }else{
+            $this->paiement->setFacture($facture);
+        }
         $this->paiement->setPaidAt($dateOfPayment);
-        $this->paiement->setMontant($paidAmount);
+        if ($paidAmount != 0) {
+            $this->paiement->setMontant($paidAmount);
+        } else {
+            $this->paiement->setMontant($facture->getTotalDu() - $facture->getTotalRecu());
+        }
         $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
         $this->paiement->setTypeFacture($facture->getType());
         $this->paiement->setDescription("Paiement de la prime. Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));

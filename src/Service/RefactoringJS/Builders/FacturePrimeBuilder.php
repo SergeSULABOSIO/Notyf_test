@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Builders;
+namespace App\Service\RefactoringJS\Builders;
 
 use App\Entity\Police;
 use DateTimeImmutable;
@@ -14,11 +14,11 @@ use App\Service\ServiceDates;
 use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
-use App\Service\Builders\FactureBuilder;
+use PhpParser\Node\Expr\Cast\Array_;
+use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
-use App\Service\ServiceCompteBancaire;
-use PhpParser\Node\Expr\Cast\Array_;
+use App\Service\RefactoringJS\Builders\FactureBuilder;
 
 class FacturePrimeBuilder implements FactureBuilder
 {

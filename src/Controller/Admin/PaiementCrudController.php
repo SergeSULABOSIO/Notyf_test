@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Facture;
 use App\Entity\Paiement;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
@@ -13,6 +14,7 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -23,6 +25,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -32,7 +35,8 @@ class PaiementCrudController extends AbstractCrudController
 {
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
-    
+    public ?PaiementPrimeBuilder $paiementPrimeBuilder = null;
+
     public const TAB_TYPE_PAIEMENT = [
         self::TYPE_PAIEMENT_ENTREE  => 0,
         self::TYPE_PAIEMENT_SORTIE  => 1
@@ -52,9 +56,18 @@ class PaiementCrudController extends AbstractCrudController
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes
     ) {
         //$this->dompdf = new Dompdf();
+        $this->paiementPrimeBuilder = new PaiementPrimeBuilder(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
     }
 
 
@@ -125,15 +138,22 @@ class PaiementCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
-        
         $objet = new Paiement();
-        $objet->setPaidAt(new \DateTimeImmutable("now"));
-        $objet->setCreatedAt(new \DateTimeImmutable("now"));
-        $objet->setUpdatedAt(new \DateTimeImmutable("now"));
-        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
-        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $objet = $this->serviceCrossCanal->crossCanal_Paiement_setFacture($this->container, $objet, $this->adminUrlGenerator);
-        
+        /** @var Facture*/
+        $objetFacture = null;
+        $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
+        if ($paramIDFacture != null) {
+            $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
+        }
+        switch ($objetFacture->getType()) {
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
+                $objet = $this->paiementPrimeBuilder->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+
+            default:
+                # code...
+                break;
+        }
         //dd($objet);
         return $objet;
     }

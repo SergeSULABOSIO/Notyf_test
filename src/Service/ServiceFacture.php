@@ -13,11 +13,11 @@ use App\Entity\Paiement;
 use App\Entity\ElementFacture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use App\Service\Builders\FacturePrimeBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
+use App\Service\RefactoringJS\Builders\FacturePrimeBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class ServiceFacture
@@ -90,8 +90,6 @@ class ServiceFacture
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
                 $newPremiumInvoice = $facturePrimeBuilder->buildFacture($indice, $tranche);
-                // $savedPremiumInvoice = $facturePrimeBuilder->loadSavedFacture($tranche);
-                //dd("Comparaison", $facturePrimeBuilder->areEqual($savedPremiumInvoice, $newPremiumInvoice));
                 // //Enregistrement de la facture
                 $facturePrimeBuilder->saveFacture();
                 $facturePrimeBuilder->reset();

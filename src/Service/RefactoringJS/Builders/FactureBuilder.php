@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Builders;
+namespace App\Service\RefactoringJS\Builders;
 
 use App\Entity\Assureur;
 use App\Entity\ElementFacture;

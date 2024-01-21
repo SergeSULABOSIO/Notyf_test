@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Builders;
+namespace App\Service\RefactoringJS\Builders;
 
 use App\Entity\Assureur;
 use App\Entity\CompteBancaire;
@@ -14,6 +14,7 @@ use App\Entity\Police;
 use App\Entity\Tranche;
 use App\Entity\Utilisateur;
 use DateTimeImmutable;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 interface PaiementBuilder
 {

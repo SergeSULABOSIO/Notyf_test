@@ -1343,7 +1343,6 @@ class ServicePreferences
             ->setColumns(10)
             ->onlyOnForms();
 
-
         // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_TYPE)) {
         // }
         // if ($this->canShow_url(PreferenceCrudController::PREF_FIN_PAIEMENT_FACTURE)) {

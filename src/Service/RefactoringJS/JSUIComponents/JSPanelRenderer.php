@@ -91,13 +91,14 @@ abstract class JSPanelRenderer implements JSPanel
             ->setColumns($columns);
     }
 
-    public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices)
+    public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badget)
     {
         $this->champsPanel[] = ChoiceField::new($attribut, $titre)
             ->setPermission($permission)
             ->setChoices($choices)
             ->setColumns($columns)
             ->setRequired($required)
+            ->renderAsBadges($badget)
             ->setDisabled($desabled);
     }
 

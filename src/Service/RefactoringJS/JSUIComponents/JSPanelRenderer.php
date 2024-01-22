@@ -43,6 +43,7 @@ abstract class JSPanelRenderer implements JSPanel
         foreach ($this->champsPanel as $champ) {
             switch ($this->type) {
                 case self::TYPE_LISTE:
+                    dd("Je suis ici...");
                     $champ->onlyOnIndex();
                     break;
                 case self::TYPE_DETAILS:
@@ -93,13 +94,22 @@ abstract class JSPanelRenderer implements JSPanel
 
     public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badget)
     {
-        $this->champsPanel[] = ChoiceField::new($attribut, $titre)
-            ->setPermission($permission)
+        $champTempo = ChoiceField::new($attribut, $titre)
             ->setChoices($choices)
-            ->setColumns($columns)
-            ->setRequired($required)
-            ->renderAsBadges($badget)
-            ->setDisabled($desabled);
+            ->renderAsBadges($badget);
+        if ($permission != null) {
+            $champTempo->setPermission($permission);
+        }
+        if ($columns != null) {
+            $champTempo->setColumns($columns);
+        }
+        if ($desabled != null) {
+            $champTempo->setDisabled($desabled);
+        }
+        if ($required != null) {
+            $champTempo->setRequired($required);
+        }
+        $this->champsPanel[] = $champTempo;
     }
 
     public function addChampDate(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns)
@@ -160,6 +170,7 @@ abstract class JSPanelRenderer implements JSPanel
 
     public function getChamps(): ?array
     {
+        $this->render();
         return $this->champsPanel;
     }
 }

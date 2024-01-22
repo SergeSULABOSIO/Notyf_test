@@ -26,6 +26,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
+use App\Service\RefactoringJS\JSUIComponents\PaiementBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -168,7 +169,9 @@ class PaiementCrudController extends AbstractCrudController
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
+        
+        // return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
+        return (new PaiementBuilder($this->serviceMonnaie))->buildListPanel($pageName, $this->paiement, $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions

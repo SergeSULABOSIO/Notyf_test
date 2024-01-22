@@ -8,10 +8,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class PaiementBuilder extends JSPanelBuilder
 {
-    public function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
+
+    public function __construct(
+        private ServiceMonnaie $serviceMonnaie
+    )
     {
         
-        return [];
+    }
+
+    public function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
+    {
+        return (new PaiementListeRenderer($this->serviceMonnaie))->getChamps();
     }
 
     public function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array

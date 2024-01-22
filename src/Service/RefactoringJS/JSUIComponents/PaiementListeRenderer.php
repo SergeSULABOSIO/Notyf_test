@@ -9,8 +9,7 @@ class PaiementListeRenderer extends JSPanelRenderer
 {
     public function __construct(
         private ServiceMonnaie $serviceMonnaie
-    )
-    {
+    ) {
         parent::__construct(self::TYPE_LISTE);
     }
 

@@ -18,17 +18,16 @@ abstract class JSPanelRenderer implements JSPanel
     private ?int $type;
     private ?array $champsPanel = [];
 
-    public function __construct()
+    public function __construct(?string $type)
     {
-        
+        $this->type = $type;
     }
 
     public abstract function design();
 
-    public function render(?string $type)
+    public function render()
     {
         //On construit le panel
-        $this->type = $type;
         $this->init();
         $this->design();
         $this->appliquerType();

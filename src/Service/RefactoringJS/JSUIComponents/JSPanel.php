@@ -23,5 +23,5 @@ interface JSPanel
     
     public function getChamps():?array;
     public function init();
-    public function render(?string $type);
+    public function render();
 }

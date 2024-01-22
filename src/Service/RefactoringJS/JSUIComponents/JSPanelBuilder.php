@@ -27,9 +27,9 @@ abstract class JSPanelBuilder
         $this->initChamps();
     }
 
-    public abstract function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?JSPanel;
-    public abstract function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?JSPanel;
-    public abstract function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?JSPanel;
+    public abstract function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
+    public abstract function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
+    public abstract function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
 
     private function initChamps(){
         $this->champs = [];

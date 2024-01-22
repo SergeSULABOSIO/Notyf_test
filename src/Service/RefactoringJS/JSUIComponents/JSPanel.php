@@ -8,7 +8,7 @@ interface JSPanel
     public const TYPE_LISTE = 0;
     public const TYPE_DETAILS = 1;
     public const TYPE_FORMULAIRE = 2;
-
+    
     //Fonctions de creation du panel
     public function addSection(?string $titre, ?string $icone, ?int $colonne);
     public function addOnglet(?string $titre, ?string $icone, ?string $helpMessage);

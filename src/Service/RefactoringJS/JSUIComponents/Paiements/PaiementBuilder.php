@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents;
+namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
-use App\Controller\Admin\PaiementCrudController;
 use App\Service\ServiceMonnaie;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementListeRenderer;
 
 class PaiementBuilder extends JSPanelBuilder
 {
@@ -12,6 +13,7 @@ class PaiementBuilder extends JSPanelBuilder
     public function __construct(
         private ServiceMonnaie $serviceMonnaie
     ) {
+        
     }
 
     public function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array

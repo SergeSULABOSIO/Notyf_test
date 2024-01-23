@@ -26,11 +26,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
-use App\Service\RefactoringJS\JSUIComponents\PaiementBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementBuilder;
 
 class PaiementCrudController extends AbstractCrudController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
+namespace App\Service\RefactoringJS\JSUIComponents;
 
 use App\Service\ServiceMonnaie;
 use App\Controller\Admin\PaiementCrudController;

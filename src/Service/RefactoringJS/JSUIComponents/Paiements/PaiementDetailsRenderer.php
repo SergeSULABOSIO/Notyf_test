@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents;
+namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
 use App\Service\ServiceMonnaie;
 use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
 
 class PaiementDetailsRenderer extends JSPanelRenderer
 {

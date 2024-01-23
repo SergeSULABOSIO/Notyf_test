@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents;
+namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
 use App\Service\ServiceMonnaie;
 use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
 
 class PaiementFormRenderer extends JSPanelRenderer
 {
@@ -26,7 +27,11 @@ class PaiementFormRenderer extends JSPanelRenderer
             "fa-solid fa-cash-register",
             "Veuillez saisir les informations relatives au paiement."
         );
-        ici
+        $this->addSection(
+            "Section principale",
+            "fas fa-location-crosshairs",
+            10
+        );
         // $this->addChampDate(
         //     null,
         //     "paidAt",

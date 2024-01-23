@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents;
+namespace App\Service\RefactoringJS\JSUIComponents\Parametres;
 
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;

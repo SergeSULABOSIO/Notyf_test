@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents;
+namespace App\Service\RefactoringJS\JSUIComponents\Parametres;
 
 
 interface JSPanel

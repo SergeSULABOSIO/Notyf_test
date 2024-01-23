@@ -11,25 +11,39 @@ class PaiementBuilder extends JSPanelBuilder
 
     public function __construct(
         private ServiceMonnaie $serviceMonnaie
-    )
-    {
-        
+    ) {
     }
 
     public function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
     {
-        return (new PaiementListeRenderer($this->serviceMonnaie))->getChamps();
+        return (new PaiementListeRenderer(
+            $this->serviceMonnaie,
+            $pageName,
+            $objetInstance,
+            $crud,
+            $adminUrlGenerator
+        ))->getChamps();
     }
 
     public function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
     {
-
-        return [];
+        return (new PaiementFormRenderer(
+            $this->serviceMonnaie,
+            $pageName,
+            $objetInstance,
+            $crud,
+            $adminUrlGenerator
+        ))->getChamps();
     }
 
     public function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
     {
-
-        return [];
+        return (new PaiementDetailsRenderer(
+            $this->serviceMonnaie,
+            $pageName,
+            $objetInstance,
+            $crud,
+            $adminUrlGenerator
+        ))->getChamps();
     }
 }

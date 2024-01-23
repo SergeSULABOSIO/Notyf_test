@@ -2,15 +2,20 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents;
 
-use App\Controller\Admin\PaiementCrudController;
 use App\Service\ServiceMonnaie;
+use App\Controller\Admin\PaiementCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class PaiementListeRenderer extends JSPanelRenderer
 {
     public function __construct(
-        private ServiceMonnaie $serviceMonnaie
+        private ServiceMonnaie $serviceMonnaie,
+        string $pageName,
+        $objetInstance,
+        $crud,
+        AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_LISTE);
+        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()

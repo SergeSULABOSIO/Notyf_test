@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents;
 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -9,18 +10,29 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 
 abstract class JSPanelRenderer implements JSPanel
 {
-    private ?int $type;
     private ?array $champsPanel = [];
+    private ?int $type;
+    private ?string $pageName;
+    private $objetInstance;
+    private ?Crud $crud;
+    private ?AdminUrlGenerator $adminUrlGenerator;
 
-    public function __construct(?string $type)
+    public function __construct(?string $type, ?string $pageName, $objetInstance, ?Crud $crud, ?AdminUrlGenerator $adminUrlGenerator)
     {
         $this->type = $type;
+        $this->pageName = $pageName;
+        $this->objetInstance = $objetInstance;
+        $this->crud = $crud;
+        $this->adminUrlGenerator = $adminUrlGenerator;
     }
 
     public abstract function design();
@@ -74,6 +86,25 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($icone != null) {
             $champTempo->setIcon($icone);
+        }
+        $this->champsPanel[] = $champTempo;
+    }
+
+    public function addChampZoneTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
+    {
+        $champTempo = TextareaField::new($attribut, $titre)
+            ->renderAsHtml();
+        if ($permission != null) {
+            $champTempo->setPermission($permission);
+        }
+        if ($columns != null) {
+            $champTempo->setColumns($columns);
+        }
+        if ($desabled != null) {
+            $champTempo->setDisabled($desabled);
+        }
+        if ($required != null) {
+            $champTempo->setRequired($required);
         }
         $this->champsPanel[] = $champTempo;
     }

@@ -61,7 +61,7 @@ abstract class JSPanelBuilder
                 );
                 break;
             case Crud::PAGE_EDIT:
-                $this->champs = $this->buildListPanel(
+                $this->champs = $this->buildFormPanel(
                     $this->pageName,
                     $this->objetInstance,
                     $this->crud,

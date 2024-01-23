@@ -26,7 +26,7 @@ class PaiementFormRenderer extends JSPanelRenderer
             "fa-solid fa-cash-register",
             "Veuillez saisir les informations relatives au paiement."
         );
-
+        ici
         // $this->addChampDate(
         //     null,
         //     "paidAt",

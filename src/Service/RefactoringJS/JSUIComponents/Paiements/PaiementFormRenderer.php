@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
+use App\Controller\Admin\DocPieceCrudController;
 use App\Service\ServiceMonnaie;
 use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
@@ -31,6 +32,81 @@ class PaiementFormRenderer extends JSPanelRenderer
             "Section principale",
             "fas fa-location-crosshairs",
             10
+        );
+        $this->addChampAssociation(
+            null,
+            "facture",
+            "Facture",
+            false,
+            true,
+            10,
+            null
+        );
+        $this->addChampChoix(
+            null,
+            "type",
+            "Tye de facture",
+            null,
+            true,
+            6,
+            PaiementCrudController::TAB_TYPE_PAIEMENT,
+            null
+        );
+        $this->addChampArgent(
+            null,
+            "montant",
+            "Montant",
+            null,
+            null,
+            2,
+            $this->serviceMonnaie->getCodeSaisie()
+        );
+        $this->addChampDate(
+            null,
+            "paidAt",
+            "Date",
+            true,
+            null,
+            2
+        );
+        $this->addChampEditeurTexte(
+            null,
+            "description",
+            "Description",
+            false,
+            null,
+            10
+        );
+        $this->addSection(
+            "Références bancaires",
+            "fa-solid fa-piggy-bank",
+            10
+        );
+        $this->addChampAssociation(
+            null,
+            "compteBancaire",
+            "Comptes bancaires",
+            false,
+            null,
+            10,
+            null
+        );
+        $this->addSection(
+            "Pièces jointes",
+            "fa-solid fa-paperclip",
+            10
+        );
+        $this->addChampCollection(
+            null,
+            "documents",
+            "Documents",
+            false,
+            null,
+            10,
+            null,
+            DocPieceCrudController::class,
+            true,
+            true
         );
         // $this->addChampDate(
         //     null,

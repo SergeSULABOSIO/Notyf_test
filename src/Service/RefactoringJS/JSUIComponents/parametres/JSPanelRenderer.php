@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -94,6 +95,24 @@ abstract class JSPanelRenderer implements JSPanel
     {
         $champTempo = TextareaField::new($attribut, $titre)
             ->renderAsHtml();
+        if ($permission != null) {
+            $champTempo->setPermission($permission);
+        }
+        if ($columns != null) {
+            $champTempo->setColumns($columns);
+        }
+        if ($desabled != null) {
+            $champTempo->setDisabled($desabled);
+        }
+        if ($required != null) {
+            $champTempo->setRequired($required);
+        }
+        $this->champsPanel[] = $champTempo;
+    }
+
+    public function addChampEditeurTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
+    {
+        $champTempo = TextEditorField::new($attribut, $titre);
         if ($permission != null) {
             $champTempo->setPermission($permission);
         }

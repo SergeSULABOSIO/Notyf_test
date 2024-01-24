@@ -122,12 +122,18 @@ class PaiementFormRenderer extends JSPanelRenderer
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
+        // dd($pageName);
         /** @var Facture */
-        $oFacture = $this->entityManager
-            ->getRepository(Facture::class)
-            ->find(
-                $adminUrlGenerator->get("donnees")["facture"]
-            );
+        $oFacture = null;
+        if ($pageName == "new") {
+            $oFacture = $this->entityManager
+                ->getRepository(Facture::class)
+                ->find(
+                    $adminUrlGenerator->get("donnees")["facture"]
+                );
+        }else{
+            $oFacture = $objetInstance->getFacture();
+        }
 
         $newChamps = [];
         /** @var FormField */

@@ -31,7 +31,8 @@ abstract class JSPanelBuilder
     public abstract function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
     public abstract function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
 
-    private function initChamps(){
+    private function initChamps()
+    {
         $this->champs = [];
     }
 
@@ -60,7 +61,7 @@ abstract class JSPanelBuilder
                     $this->adminUrlGenerator
                 );
                 break;
-            case Crud::PAGE_EDIT:
+            case Crud::PAGE_EDIT || Crud::PAGE_NEW:
                 $this->champs = $this->buildFormPanel(
                     $this->pageName,
                     $this->objetInstance,
@@ -68,10 +69,14 @@ abstract class JSPanelBuilder
                     $this->adminUrlGenerator
                 );
                 break;
-
-            default:
-                dd("Opération non prise en compte.");
-                break;
+            // case Crud::PAGE_NEW:
+            //     $this->champs = $this->buildFormPanel(
+            //         $this->pageName,
+            //         $this->objetInstance,
+            //         $this->crud,
+            //         $this->adminUrlGenerator
+            //     );
+            //     break;
         }
         return $this->champs;
     }

@@ -2,15 +2,20 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
-use App\Controller\Admin\DocPieceCrudController;
 use App\Service\ServiceMonnaie;
+use App\Service\ServiceCrossCanal;
+use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class PaiementFormRenderer extends JSPanelRenderer
 {
+    private ?AdminUrlGenerator $adminUrlGenerator;
+
     public function __construct(
         private ServiceMonnaie $serviceMonnaie,
         string $pageName,
@@ -19,6 +24,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         AdminUrlGenerator $adminUrlGenerator
     ) {
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        $this->adminUrlGenerator = $adminUrlGenerator;
     }
 
     public function design()
@@ -108,97 +114,30 @@ class PaiementFormRenderer extends JSPanelRenderer
             true,
             true
         );
-        // $this->addChampDate(
-        //     null,
-        //     "paidAt",
-        //     "Date de paiement",
-        //     null,
-        //     null,
-        //     null
+    }
+
+    public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    {
+        // $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
+        // dd(
+        //     $champs,
+        //     $type,
+        //     $pageName,
+        //     $objetInstance,
+        //     $crud,
+        //     $adminUrlGenerator
         // );
-        // $this->addChampArgent(
-        //     null,
-        //     "montant",
-        //     "Montant",
-        //     null,
-        //     null,
-        //     null,
-        //     $this->serviceMonnaie->getCodeAffichage()
-        // );
-        // $this->addChampZoneTexte(
-        //     null,
-        //     "description",
-        //     "Description",
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampAssociation(
-        //     null,
-        //     "facture",
-        //     "Facture",
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampTableau(
-        //     null,
-        //     "documents",
-        //     "Documents",
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampAssociation(
-        //     null,
-        //     "compteBancaire",
-        //     "Comptes bancaires",
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampDate(
-        //     null,
-        //     "createdAt",
-        //     "Date de création",
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampDate(
-        //     null,
-        //     "updatedAt",
-        //     "Dernière modification",
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampAssociation(
-        //     UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
-        //     "utilisateur",
-        //     "Utilisateur",
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        // );
-        // $this->addChampAssociation(
-        //     UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
-        //     "entreprise",
-        //     "Entreprise",
-        //     null,
-        //     null,
-        //     null,
-        //     null,
-        //     null
-        // );
+        //dd($pageName, $champs);
+
+        $newChamps = [];
+        /** @var FormField */
+        foreach ($champs as $champ) {
+            // dd($champ->getAsDto()->getProperty(), $champs);
+            if($champ->getAsDto()->getProperty() != "compteBancaire"){
+                $newChamps[] = $champ;
+            }
+        }
+        dd($pageName, $type, $objetInstance, "Ancien tableau:", $champs, "Nouveau tableau:", $newChamps);
+        return [];
     }
 }

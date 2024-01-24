@@ -37,6 +37,12 @@ abstract class JSPanelRenderer implements JSPanel
     }
 
     public abstract function design();
+    public abstract function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null):?array;
+
+    public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    {
+        return $this->batchActions($this->champsPanel, $type, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+    }
 
     public function render()
     {
@@ -44,6 +50,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->init();
         $this->design();
         $this->appliquerType();
+        $this->runBatchActions($this->type, $this->pageName, $this->objetInstance, $this->crud, $this->adminUrlGenerator);
     }
 
     public function init()

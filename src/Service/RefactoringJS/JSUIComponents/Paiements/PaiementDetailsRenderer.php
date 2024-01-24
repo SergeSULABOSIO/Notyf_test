@@ -7,6 +7,7 @@ use App\Controller\Admin\PaiementCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class PaiementDetailsRenderer extends JSPanelRenderer
 {
@@ -114,5 +115,10 @@ class PaiementDetailsRenderer extends JSPanelRenderer
             null,
             null
         );
+    }
+
+    public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    {
+        return [];
     }
 }

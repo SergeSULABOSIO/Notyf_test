@@ -50,7 +50,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->init();
         $this->design();
         $this->appliquerType();
-        $this->runBatchActions($this->type, $this->pageName, $this->objetInstance, $this->crud, $this->adminUrlGenerator);
+        $this->champsPanel = $this->runBatchActions($this->type, $this->pageName, $this->objetInstance, $this->crud, $this->adminUrlGenerator);
     }
 
     public function init()

@@ -3,14 +3,16 @@
 namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
 
 use App\Service\ServiceMonnaie;
+use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class PaiementListeRenderer extends JSPanelRenderer
 {
     public function __construct(
+        private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
         string $pageName,
         $objetInstance,
@@ -88,6 +90,6 @@ class PaiementListeRenderer extends JSPanelRenderer
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return [];
+        return $champs;
     }
 }

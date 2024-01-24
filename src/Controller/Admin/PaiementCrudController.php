@@ -171,7 +171,10 @@ class PaiementCrudController extends AbstractCrudController
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
 
         // return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
-        return (new PaiementBuilder($this->serviceMonnaie))
+        return (new PaiementBuilder(
+            $this->entityManager,
+            $this->serviceMonnaie
+            ))
             ->render(
                 $pageName,
                 $this->paiement,

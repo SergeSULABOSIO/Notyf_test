@@ -23,9 +23,9 @@ abstract class JSPanelBuilder
         $this->initChamps();
     }
 
-    public static abstract function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
-    public static abstract function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
-    public static abstract function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
+    public abstract function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
+    public abstract function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
+    public abstract function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
 
     private function initChamps()
     {

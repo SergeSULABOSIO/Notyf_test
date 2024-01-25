@@ -169,13 +169,12 @@ class PaiementCrudController extends AbstractCrudController
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-
+        
         // return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
-        return (new PaiementBuilder(
-            $this->entityManager,
-            $this->serviceMonnaie
-            ))
+        return (new PaiementBuilder())
             ->render(
+                $this->entityManager,
+                $this->serviceMonnaie,
                 $pageName,
                 $this->paiement,
                 $this->crud,

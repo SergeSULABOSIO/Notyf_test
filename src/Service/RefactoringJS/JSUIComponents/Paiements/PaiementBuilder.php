@@ -11,50 +11,57 @@ use Doctrine\ORM\EntityManager;
 class PaiementBuilder extends JSPanelBuilder
 {
 
-    private static ?PaiementListeRenderer $paiementListeRendere = null;
-    private static ?PaiementFormRenderer $paiementFormRendere = null;
-    private static ?PaiementDetailsRenderer $paiementDetailsRendere = null;
+    private ?PaiementListeRenderer $paiementListeRendere = null;
+    private ?PaiementFormRenderer $paiementFormRendere = null;
+    private ?PaiementDetailsRenderer $paiementDetailsRendere = null;
 
-    public function __construct(
-        private EntityManager $entityManager,
-        private ServiceMonnaie $serviceMonnaie
-    ) {
-        
+    public function __construct()
+    {
     }
 
-    public static function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    public function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return (new PaiementListeRenderer(
-            $entityManager,
-            $serviceMonnaie,
-            $pageName,
-            $objetInstance,
-            $crud,
-            $adminUrlGenerator
-        ))->getChamps();
+        if ($this->paiementListeRendere == null) {
+            $this->paiementListeRendere = new PaiementListeRenderer(
+                $entityManager,
+                $serviceMonnaie,
+                $pageName,
+                $objetInstance,
+                $crud,
+                $adminUrlGenerator
+            );
+            dd("ici");
+        }
+        return $this->paiementListeRendere->getChamps();
     }
 
-    public static function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    public function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return (new PaiementFormRenderer(
-            $entityManager,
-            $serviceMonnaie,
-            $pageName,
-            $objetInstance,
-            $crud,
-            $adminUrlGenerator
-        ))->getChamps();
+        if ($this->paiementFormRendere == null) {
+            $this->paiementFormRendere = new PaiementFormRenderer(
+                $entityManager,
+                $serviceMonnaie,
+                $pageName,
+                $objetInstance,
+                $crud,
+                $adminUrlGenerator
+            );
+        }
+        return $this->paiementFormRendere->getChamps();
     }
 
-    public static function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
+    public function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return (new PaiementDetailsRenderer(
-            $entityManager,
-            $serviceMonnaie,
-            $pageName,
-            $objetInstance,
-            $crud,
-            $adminUrlGenerator
-        ))->getChamps();
+        if ($this->paiementDetailsRendere == null) {
+            $this->paiementDetailsRendere = new PaiementDetailsRenderer(
+                $entityManager,
+                $serviceMonnaie,
+                $pageName,
+                $objetInstance,
+                $crud,
+                $adminUrlGenerator
+            );
+        }
+        return $this->paiementDetailsRendere->getChamps();
     }
 }

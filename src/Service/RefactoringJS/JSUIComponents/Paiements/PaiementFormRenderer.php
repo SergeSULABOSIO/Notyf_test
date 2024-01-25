@@ -12,6 +12,7 @@ use App\Entity\Facture;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
 use Doctrine\ORM\EntityManager;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
@@ -122,16 +123,15 @@ class PaiementFormRenderer extends JSPanelRenderer
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        // dd($pageName);
         /** @var Facture */
         $oFacture = null;
-        if ($pageName == "new") {
+        if ($pageName == Action::NEW) {
             $oFacture = $this->entityManager
                 ->getRepository(Facture::class)
                 ->find(
                     $adminUrlGenerator->get("donnees")["facture"]
                 );
-        }else{
+        } else {
             $oFacture = $objetInstance->getFacture();
         }
 
@@ -153,15 +153,12 @@ class PaiementFormRenderer extends JSPanelRenderer
                     case "Références bancaires":
                         # on ne fait absolument rien ici
                         break;
-
                     default:
                         $newChamps[] = $champ;
                         break;
                 }
             }
         }
-        //dd($champs);
-        // dd($pageName, $type, $objetInstance, "Ancien tableau:", $champs, "Nouveau tableau:", $newChamps);
         return $newChamps;
     }
 }

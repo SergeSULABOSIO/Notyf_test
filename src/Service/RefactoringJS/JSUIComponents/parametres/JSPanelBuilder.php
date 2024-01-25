@@ -2,19 +2,15 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Parametres;
 
-use DateTimeImmutable;
-use App\Entity\Facture;
-use App\Entity\Tranche;
-use App\Entity\Assureur;
-use App\Entity\Entreprise;
-use App\Entity\Partenaire;
-use App\Entity\Utilisateur;
-use App\Entity\ElementFacture;
+use App\Service\ServiceMonnaie;
+use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 abstract class JSPanelBuilder
 {
+    private ?EntityManager $entityManager;
+    private ?ServiceMonnaie $serviceMonnaie; 
     private ?array $champs;
     private ?string $pageName;
     private $objetInstance;
@@ -27,17 +23,19 @@ abstract class JSPanelBuilder
         $this->initChamps();
     }
 
-    public abstract function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
-    public abstract function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
-    public abstract function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array;
+    public static abstract function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
+    public static abstract function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
+    public static abstract function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName = null, $objetInstance = null, $crud = null, AdminUrlGenerator $adminUrlGenerator = null): ?array;
 
     private function initChamps()
     {
         $this->champs = [];
     }
 
-    public function render(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator)
+    public function render(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        $this->entityManager = $entityManager;
+        $this->serviceMonnaie = $serviceMonnaie;
         $this->pageName = $pageName;
         $this->objetInstance = $objetInstance;
         $this->crud = $crud;
@@ -47,6 +45,8 @@ abstract class JSPanelBuilder
         switch ($this->pageName) {
             case Crud::PAGE_INDEX:
                 $this->champs = $this->buildListPanel(
+                    $this->entityManager,
+                    $this->serviceMonnaie,
                     $this->pageName,
                     $this->objetInstance,
                     $this->crud,
@@ -55,6 +55,8 @@ abstract class JSPanelBuilder
                 break;
             case Crud::PAGE_DETAIL:
                 $this->champs = $this->buildDetailsPanel(
+                    $this->entityManager,
+                    $this->serviceMonnaie,
                     $this->pageName,
                     $this->objetInstance,
                     $this->crud,
@@ -63,20 +65,14 @@ abstract class JSPanelBuilder
                 break;
             case Crud::PAGE_EDIT || Crud::PAGE_NEW:
                 $this->champs = $this->buildFormPanel(
+                    $this->entityManager,
+                    $this->serviceMonnaie,
                     $this->pageName,
                     $this->objetInstance,
                     $this->crud,
                     $this->adminUrlGenerator
                 );
                 break;
-            // case Crud::PAGE_NEW:
-            //     $this->champs = $this->buildFormPanel(
-            //         $this->pageName,
-            //         $this->objetInstance,
-            //         $this->crud,
-            //         $this->adminUrlGenerator
-            //     );
-            //     break;
         }
         return $this->champs;
     }

@@ -11,6 +11,10 @@ use Doctrine\ORM\EntityManager;
 class PaiementBuilder extends JSPanelBuilder
 {
 
+    private static ?PaiementListeRenderer $paiementListeRendere = null;
+    private static ?PaiementFormRenderer $paiementFormRendere = null;
+    private static ?PaiementDetailsRenderer $paiementDetailsRendere = null;
+
     public function __construct(
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie
@@ -18,11 +22,11 @@ class PaiementBuilder extends JSPanelBuilder
         
     }
 
-    public function buildListPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
+    public static function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
         return (new PaiementListeRenderer(
-            $this->entityManager,
-            $this->serviceMonnaie,
+            $entityManager,
+            $serviceMonnaie,
             $pageName,
             $objetInstance,
             $crud,
@@ -30,11 +34,11 @@ class PaiementBuilder extends JSPanelBuilder
         ))->getChamps();
     }
 
-    public function buildFormPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
+    public static function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
         return (new PaiementFormRenderer(
-            $this->entityManager,
-            $this->serviceMonnaie,
+            $entityManager,
+            $serviceMonnaie,
             $pageName,
             $objetInstance,
             $crud,
@@ -42,11 +46,11 @@ class PaiementBuilder extends JSPanelBuilder
         ))->getChamps();
     }
 
-    public function buildDetailsPanel(string $pageName, $objetInstance, $crud, AdminUrlGenerator $adminUrlGenerator): ?array
+    public static function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
         return (new PaiementDetailsRenderer(
-            $this->entityManager,
-            $this->serviceMonnaie,
+            $entityManager,
+            $serviceMonnaie,
             $pageName,
             $objetInstance,
             $crud,

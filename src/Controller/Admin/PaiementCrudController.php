@@ -37,7 +37,9 @@ class PaiementCrudController extends AbstractCrudController
 {
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
+
     public ?PaiementPrimeBuilder $paiementPrimeBuilder = null;
+    public ?PaiementUIBuilder $paiementUIBuilder = null;
 
     public const TAB_TYPE_PAIEMENT = [
         self::TYPE_PAIEMENT_ENTREE  => 0,
@@ -70,6 +72,7 @@ class PaiementCrudController extends AbstractCrudController
             $this->entityManager,
             $this->serviceCompteBancaire
         );
+        $this->paiementUIBuilder = new PaiementUIBuilder();
     }
 
 
@@ -166,21 +169,16 @@ class PaiementCrudController extends AbstractCrudController
             /** @var Paiement */
             $this->paiement = $this->getContext()->getEntity()->getInstance();
         }
-        //dd($this->getContext()->getEntity()->getInstance());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
 
-        // return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
-        return (new PaiementUIBuilder())
-            ->render(
-                $this->entityManager,
-                $this->serviceMonnaie,
-                $pageName,
-                $this->paiement,
-                $this->crud,
-                $this->adminUrlGenerator
-            );
+        return $this->paiementUIBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $pageName,
+            $this->paiement,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions

@@ -246,47 +246,47 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
-        $facturePrime = Action::new("Facturer la prime")
+        $facturePrime = Action::new("Facturer Prime")
             ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getPrimeTotaleTranche() != 0;
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getPremiumInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
-        // $factureCommission = Action::new("Facturer la commission")
-        //     ->setIcon('fa-solid fa-receipt')
-        //     ->displayIf(static function(Tranche $tranche){
-        //         return $tranche->getCommissionTotale() != 0;
-        //     })
-        //     ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
-
-        // $factureFraisGestion = Action::new("Facturer les frais de gestion")
-        //     ->setIcon('fa-solid fa-receipt')
-        //     ->displayIf(static function(Tranche $tranche){
-        //         return $tranche->getFraisGestionTotale() != 0;
-        //     })
-        //     ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
-
-        $factureRetroCommission = Action::new("Facturer les retro-com.")
+        $factureCommission = Action::new("Facturer Commissions")
             ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getRetroCommissionTotale() != 0;
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getComInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
-            ->linkToCrudAction('facturerRetroCommission'); //<i class="fa-solid fa-eye"></i>
+            ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeCourtier = Action::new("Facturer la Taxe Courtier")
+        $factureFraisGestion = Action::new("Facturer Frais de Gestion")
             ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getTaxeCourtierTotale() != 0;
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getFraisGestionInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+            })
+            ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
+
+        $factureTaxeCourtier = Action::new("Facturer Taxes Courtier")
+            ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getTaxCourtierInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeAssureur = Action::new("Facturer la Taxe Assureur")
+        $factureTaxeAssureur = Action::new("Facturer Taxes Assureur")
             ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function(Tranche $tranche){
-                return $tranche->getTaxeAssureurTotale() != 0;
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getTaxAssureurInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
-            ->linkToCrudAction('facturerTaxeAssureur'); //<i class="fa-solid fa-eye"></i>
+            ->linkToCrudAction('facturerTaxeAssureur');
+
+        $factureRetroCom = Action::new("Facturer Retro-commission")
+            ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getRetrocomInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+            })
+            ->linkToCrudAction('facturerRetroCommission');
 
         $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
@@ -336,9 +336,9 @@ class TrancheCrudController extends AbstractCrudController
 
             ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
             ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
-            ->add(Crud::PAGE_INDEX, $factureRetroCommission)
-            // ->add(Crud::PAGE_INDEX, $factureFraisGestion)
-            // ->add(Crud::PAGE_INDEX, $factureCommission)
+            ->add(Crud::PAGE_INDEX, $factureRetroCom)
+            ->add(Crud::PAGE_INDEX, $factureCommission)
+            ->add(Crud::PAGE_INDEX, $factureFraisGestion)
             ->add(Crud::PAGE_INDEX, $facturePrime)
 
             //Action ouvrir
@@ -428,6 +428,7 @@ class TrancheCrudController extends AbstractCrudController
         );
     }
 
+
     public function facturerRetroCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect(
@@ -460,6 +461,7 @@ class TrancheCrudController extends AbstractCrudController
             )
         );
     }
+
 
     private function editFacture(?array $tabIdTranches, ?string $typeFacture, AdminUrlGenerator $adminUrlGenerator): ?string
     {

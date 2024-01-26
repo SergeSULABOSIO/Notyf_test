@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateInterval;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
-use App\Controller\Admin\MonnaieCrudController;
+use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
-use DateInterval;
+use App\Controller\Admin\FactureCrudController;
+use App\Controller\Admin\MonnaieCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche
@@ -59,6 +60,14 @@ class Tranche
     private ?string $autoriteTaxeCourtier;
     private ?string $autoriteTaxeAssureur;
     private ?bool $validated;
+
+    private ?array $premiumInvoiceDetails;
+    private ?array $retrocomInvoiceDetails;
+    private ?array $comInvoiceDetails;
+    private ?array $taxCourtierInvoiceDetails;
+    private ?array $taxAssureurInvoiceDetails;
+    private ?array $fraisGestionInvoiceDetails;
+
     //Les objets
     private ?Monnaie $monnaie_Affichage;
     private ?Client $client;
@@ -67,6 +76,13 @@ class Tranche
     private ?Produit $produit;
     private ?Partenaire $partenaire;
     private ?Piste $piste;
+    //constantes
+    public const FACTURE = "facture";
+    public const PAIEMENTS = "paiements";
+    public const MONTANT = "montant";
+    public const DATA = "data";
+    public const SOLDE = "solde";
+    public const TOBE_INVOICED = "toBeInvoiced";
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startedAt = null;
@@ -696,5 +712,240 @@ class Tranche
             ) * 100;
         //dd($this->revenuTotal);
         return $this->revenuTotal;
+    }
+
+    /**
+     * Get the value of premiumInvoiceDetails
+     */
+    public function getPremiumInvoiceDetails(): ?array
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->premiumInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+
+        return $this->premiumInvoiceDetails;
+    }
+
+    /**
+     * Get the value of fraisGestionInvoiceDetails
+     */
+    public function getFraisGestionInvoiceDetails(): ?array
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->fraisGestionInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+        return $this->fraisGestionInvoiceDetails;
+    }
+
+    /**
+     * Get the value of retrocomInvoiceDetails
+     */ 
+    public function getRetrocomInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->retrocomInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+        return $this->retrocomInvoiceDetails;
+    }
+
+    /**
+     * Get the value of comInvoiceDetails
+     */ 
+    public function getComInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->comInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+        return $this->comInvoiceDetails;
+    }
+
+    /**
+     * Get the value of taxInvoiceDetails
+     */ 
+    public function getTaxCourtierInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->taxCourtierInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+        return $this->taxCourtierInvoiceDetails;
+    }
+
+    /**
+     * Get the value of taxAssureurInvoiceDetails
+     */ 
+    public function getTaxAssureurInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->taxAssureurInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+        ];
+        return $this->taxAssureurInvoiceDetails;
     }
 }

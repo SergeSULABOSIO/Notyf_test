@@ -253,7 +253,7 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
-        $factureCommission = Action::new("Facturer Commissions")
+        $factureCommission = Action::new("Facturer Autres Commissions")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 return $tranche->getComInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;

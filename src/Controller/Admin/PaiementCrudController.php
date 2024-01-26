@@ -31,6 +31,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementUIBuilder;
 
 class PaiementCrudController extends AbstractCrudController
 {
@@ -169,9 +170,9 @@ class PaiementCrudController extends AbstractCrudController
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         //$this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        
+
         // return $this->servicePreferences->getChamps(new Paiement(), $this->crud, $this->adminUrlGenerator);
-        return (new PaiementBuilder())
+        return (new PaiementUIBuilder())
             ->render(
                 $this->entityManager,
                 $this->serviceMonnaie,

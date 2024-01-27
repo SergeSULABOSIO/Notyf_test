@@ -3,12 +3,9 @@
 namespace App\Controller\Admin;
 
 
-use App\Entity\Client;
-use App\Entity\Police;
 use App\Entity\Facture;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
-use App\Service\ServicePdf;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -20,22 +17,16 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use App\Controller\FactureController;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -84,8 +75,7 @@ class FactureCrudController extends AbstractCrudController
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator,
-        private ServiceTaxes $serviceTaxes,
-        private PaiementPrimeBuilder $paiementPrimeBuilder
+        private ServiceTaxes $serviceTaxes
     ) {
         //$this->dompdf = new Dompdf();
     }
@@ -158,8 +148,6 @@ class FactureCrudController extends AbstractCrudController
     {
         $objet = new Facture();
         $objet = $this->serviceFacture->initFature($objet, $this->adminUrlGenerator);
-        //$objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
-        // dd($objet);
         return $objet;
     }
 

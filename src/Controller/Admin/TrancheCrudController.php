@@ -249,6 +249,7 @@ class TrancheCrudController extends AbstractCrudController
         $facturePrime = Action::new("Facturer Prime")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
                 return $tranche->getPremiumInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>

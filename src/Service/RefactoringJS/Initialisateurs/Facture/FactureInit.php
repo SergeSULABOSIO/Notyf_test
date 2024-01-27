@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\Builders;
+namespace App\Service\RefactoringJS\Initisateurs\Facture;
 
 use App\Entity\Assureur;
 use App\Entity\ElementFacture;
@@ -11,7 +11,7 @@ use App\Entity\Tranche;
 use App\Entity\Utilisateur;
 use DateTimeImmutable;
 
-interface FactureBuilder
+interface FactureInit
 {
     public const PARAM_FINAL = "final";
     public const PARAM_DIFFERENCES = "differences";

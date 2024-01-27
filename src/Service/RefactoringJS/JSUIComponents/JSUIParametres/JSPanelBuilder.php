@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Parametres;
+namespace App\Service\RefactoringJS\JSUIComponents\JSUIParametres;
 
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;

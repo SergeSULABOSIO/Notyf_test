@@ -29,16 +29,16 @@ use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\Initisateurs\Paiement\PaiementPrimeInit;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementBuilder;
-use App\Service\RefactoringJS\JSUIComponents\Paiements\PaiementUIBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\PaiementUIBuilder;
 
 class PaiementCrudController extends AbstractCrudController
 {
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
 
-    public ?PaiementPrimeBuilder $paiementPrimeBuilder = null;
+    public ?PaiementPrimeInit $paiementPrimeInit = null;
     public ?PaiementUIBuilder $paiementUIBuilder = null;
 
     public const TAB_TYPE_PAIEMENT = [
@@ -64,7 +64,7 @@ class PaiementCrudController extends AbstractCrudController
         private ServiceTaxes $serviceTaxes
     ) {
         //$this->dompdf = new Dompdf();
-        $this->paiementPrimeBuilder = new PaiementPrimeBuilder(
+        $this->paiementPrimeInit = new PaiementPrimeInit(
             $this->adminUrlGenerator,
             $this->serviceAvenant,
             $this->serviceDates,
@@ -152,7 +152,7 @@ class PaiementCrudController extends AbstractCrudController
         }
         switch ($objetFacture->getType()) {
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
-                $objet = $this->paiementPrimeBuilder->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
                 break;
 
             default:

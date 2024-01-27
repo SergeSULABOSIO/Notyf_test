@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
+namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
 class PaiementListeRenderer extends JSPanelRenderer
 {

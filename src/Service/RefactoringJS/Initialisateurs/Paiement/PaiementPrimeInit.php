@@ -1,33 +1,24 @@
 <?php
 
-namespace App\Service\RefactoringJS\Builders;
+namespace App\Service\RefactoringJS\Initisateurs\Paiement;
 
-use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Facture;
-use App\Entity\Tranche;
-use App\Entity\Assureur;
 use App\Entity\DocPiece;
 use App\Entity\Paiement;
 use App\Entity\Entreprise;
-use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
 use App\Entity\CompteBancaire;
-use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
-use PhpParser\Node\Expr\Cast\Array_;
 use App\Service\ServiceCompteBancaire;
-use App\Service\Builders\FactureBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PaiementCrudController;
-use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
-class PaiementPrimeBuilder implements PaiementBuilder
+class PaiementPrimeInit implements PaiementInit
 {
     // private ?Police $police;
     private ?Facture $facture;

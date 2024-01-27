@@ -1,22 +1,16 @@
 <?php
 
-namespace App\Service\RefactoringJS\Builders;
+namespace App\Service\RefactoringJS\Initisateurs\Paiement;
 
-use App\Entity\Assureur;
 use App\Entity\CompteBancaire;
 use App\Entity\DocPiece;
-use App\Entity\ElementFacture;
 use App\Entity\Entreprise;
 use App\Entity\Facture;
 use App\Entity\Paiement;
-use App\Entity\Partenaire;
-use App\Entity\Police;
-use App\Entity\Tranche;
 use App\Entity\Utilisateur;
 use DateTimeImmutable;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
-interface PaiementBuilder
+interface Paiementinit
 {
     public const PARAM_FINAL = "final";
     public const PARAM_DIFFERENCES = "differences";

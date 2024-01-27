@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use App\Service\RefactoringJS\Builders\FacturePrimeBuilder;
+use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class ServiceFacture
@@ -49,23 +49,34 @@ class ServiceFacture
 
     public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
     {
-        $facture->setReference($this->generateInvoiceReference(1));
-        $facture->setCreatedAt($this->serviceDates->aujourdhui());
-        $facture->setUpdatedAt($this->serviceDates->aujourdhui());
-        $facture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $facture->setEntreprise($this->serviceEntreprise->getEntreprise());
-        if ($adminUrlGenerator->get("donnees")) {
-            $data = $adminUrlGenerator->get("donnees");
-            $description = "";
-            //dd($data["type"]);
-            if (isset($data["type"]) && isset($data["tabTranches"])) {
-                $description = $data["type"] . ", Ref.:" . $facture->getReference();
-                $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
-                $total = $this->chargerElementFactures($facture, $data["type"], $data["tabTranches"]);
-            }
-            $facture->setDescription($description);
-        }
-        $this->serviceCompteBancaire->setComptes($facture, "");
+        dd("Nous sômmes ici.");
+        // $facture->setReference($this->generateInvoiceReference(1));
+        // $facture->setCreatedAt($this->serviceDates->aujourdhui());
+        // $facture->setUpdatedAt($this->serviceDates->aujourdhui());
+        // $facture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        // $facture->setEntreprise($this->serviceEntreprise->getEntreprise());
+        // if ($adminUrlGenerator->get("donnees")) {
+        //     $data = $adminUrlGenerator->get("donnees");
+        //     $description = "";
+        //     //dd($data["type"]);
+        //     if (isset($data["type"]) && isset($data["tabTranches"])) {
+        //         $description = $data["type"] . ", Ref.:" . $facture->getReference();
+        //         $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
+        //         $total = $this->chargerElementFactures($facture, $data["type"], $data["tabTranches"]);
+        //     }
+        //     $facture->setDescription($description);
+        // }
+        // $this->serviceCompteBancaire->setComptes($facture, "");
+
+        //Il faut plutôt appeler la fonction d'initialisation des autres facture selon la refactoring appliqué
+
+
+
+
+
+
+
+
         return $facture;
     }
 
@@ -78,21 +89,22 @@ class ServiceFacture
      */
     public function processFacturePrime(?Police $police)
     {
-        $facturePrimeBuilder = new FacturePrimeBuilder(
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
+
         if ($police != null) {
             $indice = 1;
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
-                $newPremiumInvoice = $facturePrimeBuilder->buildFacture($indice, $tranche);
+                // dd($indice, $tranche);
+                $facturePrimeInit = new FacturePrimeInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $newPremiumInvoice = $facturePrimeInit->buildFacture($indice, $tranche);
                 // //Enregistrement de la facture
-                $facturePrimeBuilder->saveFacture();
-                $facturePrimeBuilder->reset();
+                $facturePrimeInit->saveFacture();
                 $indice = $indice + 1;
             }
         }

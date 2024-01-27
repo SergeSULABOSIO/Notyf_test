@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Service\RefactoringJS\Builders;
+namespace App\Service\RefactoringJS\Initisateurs\Facture;
 
-use App\Entity\Police;
 use DateTimeImmutable;
 use App\Entity\Facture;
 use App\Entity\Tranche;
@@ -14,13 +13,11 @@ use App\Service\ServiceDates;
 use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
-use PhpParser\Node\Expr\Cast\Array_;
 use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
-use App\Service\RefactoringJS\Builders\FactureBuilder;
 
-class FacturePrimeBuilder implements FactureBuilder
+class FacturePrimeInit implements FactureInit
 {
     // private ?Police $police;
     private ?Tranche $tranche;
@@ -164,6 +161,7 @@ class FacturePrimeBuilder implements FactureBuilder
 
     public function buildFacture(?int $indice, ?Tranche $tranche): ?Facture
     {
+        // dd($this->facture);
         $this->setTranche($tranche);
         $this->setSignedBy("Pour " . $tranche->getPolice()->getAssureur()->getNom());
         $this->setPosteSignedBy("Direction financière");

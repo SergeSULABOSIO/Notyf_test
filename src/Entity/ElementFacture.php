@@ -54,9 +54,7 @@ class ElementFacture
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
 
-
     
-
     public function getId(): ?int
     {
         return $this->id;
@@ -124,7 +122,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . ($this->getMontant() / 100). "";
+        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . ($this->getMontant()/100). "";
     }
 
     public function getFacture(): ?Facture

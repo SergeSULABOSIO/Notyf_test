@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiements;
+namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
-use App\Service\ServiceMonnaie;
-use App\Service\ServiceCrossCanal;
-use App\Controller\Admin\DocPieceCrudController;
-use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\PaiementCrudController;
-use App\Controller\Admin\UtilisateurCrudController;
 use App\Entity\Facture;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Parametres\JSPanelRenderer;
+use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use App\Service\ServiceCrossCanal;
+use App\Controller\Admin\FactureCrudController;
+use App\Controller\Admin\DocPieceCrudController;
+use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
 class PaiementFormRenderer extends JSPanelRenderer
 {
@@ -49,7 +48,7 @@ class PaiementFormRenderer extends JSPanelRenderer
             "facture",
             "Facture",
             false,
-            true,
+            false,
             10,
             null
         );

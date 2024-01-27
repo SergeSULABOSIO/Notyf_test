@@ -722,9 +722,11 @@ class Tranche
         //les paramètres
         $invoices = [];
         $invoice_amount = 0;
+        $total_due = 0;
         $payments = [];
         $payments_amount = 0;
 
+        
         foreach ($this->getElementFactures() as $ef) {
             $facture = $ef->getFacture();
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {

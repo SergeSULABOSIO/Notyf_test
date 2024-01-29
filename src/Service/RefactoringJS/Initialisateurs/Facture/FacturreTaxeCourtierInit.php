@@ -144,13 +144,12 @@ class FacturetaxeCourtierInit implements FactureInit
 
     public function generateDescriptionFacture(): string
     {
-        return "Taxe Courtier - " . ici
+        return "Taxe " . $this->tranche->getAutoriteTaxeCourtier() .
             $this->tranche->getNom() .
             " : Ref. police: " .
             $this->tranche->getPolice()->getReference() . " / " .
             $this->tranche->getPolice()->getProduit() . " / " .
             $this->tranche->getPolice()->getClient() . " / " .
-            $this->tranche->getPolice()->getPartenaire() . " / " .
             $this->tranche->getPolice()->getAssureur() .
             " / Du " .
             $this->serviceDates->getTexteSimple(
@@ -169,7 +168,7 @@ class FacturetaxeCourtierInit implements FactureInit
         $this->setSignedBy("Pour " . $tranche->getEntreprise()->getNom());
         $this->setPosteSignedBy("Direction financière");
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
-        $this->setType(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+        $this->setType(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]);
         $this->setAutreTiers($tranche->getPolice()->getClient()->getNom());
         $this->setPartenaire($tranche->getPolice()->getPartenaire());
         $this->setAssureur($tranche->getPolice()->getAssureur());

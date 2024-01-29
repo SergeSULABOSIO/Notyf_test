@@ -21,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturetaxeCourtierInit;
 
 class ServiceFacture
 {
@@ -44,10 +45,10 @@ class ServiceFacture
         $this->dompdf = new Dompdf($this->pdfOptions);
     }
 
-    private function generateInvoiceReference($indice): string
-    {
-        return strtoupper(str_replace(" ", "", "ND" . $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
-    }
+    // private function generateInvoiceReference($indice): string
+    // {
+    //     return strtoupper(str_replace(" ", "", "ND" . $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
+    // }
 
     public function initFature(AdminUrlGenerator $adminUrlGenerator): Facture
     {
@@ -109,7 +110,23 @@ class ServiceFacture
                             // dd($facture);
                         }
                         break;
-                        
+                    case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+                        $indice = 1;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FacturetaxeCourtierInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
+                            // dd($facture);
+                        }
+                        break;
 
                     default:
                         dd("Type de facture non pris en compte pour l'instant");

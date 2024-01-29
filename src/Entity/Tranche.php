@@ -790,7 +790,7 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::TOBE_INVOICED => $this->getComFraisGestion() - $invoice_amount
         ];
         return $this->fraisGestionInvoiceDetails;
     }
@@ -829,7 +829,7 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::TOBE_INVOICED => $this->getRetroCommissionTotale() - $invoice_amount
         ];
         return $this->retrocomInvoiceDetails;
     }
@@ -868,7 +868,7 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::TOBE_INVOICED => ($this->getComLocale() + $this->getComReassurance() + $this->getComFronting()) - $invoice_amount
         ];
         return $this->comInvoiceDetails;
     }
@@ -907,7 +907,7 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::TOBE_INVOICED => $this->getTaxeCourtierTotale() - $invoice_amount
         ];
         return $this->taxCourtierInvoiceDetails;
     }
@@ -946,7 +946,7 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::TOBE_INVOICED => $this->getTaxeAssureurTotale() - $invoice_amount
         ];
         return $this->taxAssureurInvoiceDetails;
     }

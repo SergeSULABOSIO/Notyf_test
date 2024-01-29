@@ -16,6 +16,7 @@ interface FactureInit
     public const PARAM_FINAL = "final";
     public const PARAM_DIFFERENCES = "differences";
     public const PARAM_SAME_MONTANT = "sameMontant";
+    public const PARAM_SAME_PARTENAIRE = "samePartenaire";
     public const PARAM_SAME_CLIENT = "sameClient";
     public const PARAM_SAME_ASSUREUR = "sameAssureur";
     public const PARAM_SAME_TRANCHE = "sameTranche";

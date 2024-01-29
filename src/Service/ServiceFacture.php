@@ -20,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 
 class ServiceFacture
 {
@@ -58,7 +59,7 @@ class ServiceFacture
             if (isset($donnees["type"])) {
                 switch ($donnees["type"]) {
                     case FactureCrudController::TYPE_FACTURE_PRIME:
-                        $indice = 0;
+                        $indice = 1;
                         foreach ($donnees["tabTranches"] as $idTranche) {
                             $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                             // dd($oTranche . "");
@@ -70,11 +71,12 @@ class ServiceFacture
                                 $this->serviceCompteBancaire
                             );
                             $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
                             // dd($facture);
                         }
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                        $indice = 0;
+                        $indice = 1;
                         foreach ($donnees["tabTranches"] as $idTranche) {
                             $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                             // dd($oTranche . "");
@@ -86,12 +88,31 @@ class ServiceFacture
                                 $this->serviceCompteBancaire
                             );
                             $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
                             // dd($facture);
                         }
                         break;
+                    case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+                        $indice = 1;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FactureRetroCommissionInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
+                            // dd($facture);
+                        }
+                        break;
+                        
 
                     default:
-                        # code...
+                        dd("Type de facture non pris en compte pour l'instant");
                         break;
                 }
             }

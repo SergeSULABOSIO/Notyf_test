@@ -57,6 +57,22 @@ class ServiceFacture
             // dd($donnees["tabTranches"]);
             if (isset($donnees["type"])) {
                 switch ($donnees["type"]) {
+                    case FactureCrudController::TYPE_FACTURE_PRIME:
+                        $indice = 0;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FacturePrimeInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            // dd($facture);
+                        }
+                        break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
                         $indice = 0;
                         foreach ($donnees["tabTranches"] as $idTranche) {
@@ -70,11 +86,7 @@ class ServiceFacture
                                 $this->serviceCompteBancaire
                             );
                             $facture = $ffg->buildFacture($indice, $oTranche);
-                            dd($facture);
-                            
-                            // // //Enregistrement de la facture
-                            // $facturePrimeInit->saveFacture();
-                            // $indice = $indice + 1;
+                            // dd($facture);
                         }
                         break;
 

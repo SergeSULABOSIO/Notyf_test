@@ -268,21 +268,21 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeCourtier = Action::new("Facturer Taxes Courtier")
+        $factureTaxeCourtier = Action::new("Note de crédit - Taxes Courtier")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 return $tranche->getTaxCourtierInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeAssureur = Action::new("Facturer Taxes Assureur")
+        $factureTaxeAssureur = Action::new("Note de crédit - Taxes Assureur")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 return $tranche->getTaxAssureurInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerTaxeAssureur');
 
-        $factureRetroCom = Action::new("Facturer Retro-commission")
+        $factureRetroCom = Action::new("Note de crédit - Retro-com")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 // dd($tranche->getRetrocomInvoiceDetails()[Tranche::TOBE_INVOICED]);

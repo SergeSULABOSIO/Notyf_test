@@ -21,8 +21,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FacturetaxeAssureurInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FacturetaxeCourtierInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 
 class ServiceFacture
 {
@@ -116,7 +116,7 @@ class ServiceFacture
                         foreach ($donnees["tabTranches"] as $idTranche) {
                             $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                             // dd($oTranche . "");
-                            $ffg = new FacturetaxeCourtierInit(
+                            $ffg = new FactureTaxeCourtierInit(
                                 $this->serviceAvenant,
                                 $this->serviceDates,
                                 $this->serviceEntreprise,
@@ -133,7 +133,7 @@ class ServiceFacture
                         foreach ($donnees["tabTranches"] as $idTranche) {
                             $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                             // dd($oTranche . "");
-                            $ffg = new FacturetaxeAssureurInit(
+                            $ffg = new FactureTaxeAssureurInit(
                                 $this->serviceAvenant,
                                 $this->serviceDates,
                                 $this->serviceEntreprise,

@@ -19,7 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 use App\Service\RefactoringJS\Initisateurs\Facture\FactureInit;
 
-class FacturetaxeCourtierInit implements FactureInit
+class FactureTaxeCourtierInit implements FactureInit
 {
     // private ?Police $police;
     private ?Tranche $tranche;

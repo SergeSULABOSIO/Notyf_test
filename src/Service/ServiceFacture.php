@@ -17,8 +17,9 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
 
 class ServiceFacture
 {
@@ -47,36 +48,41 @@ class ServiceFacture
         return strtoupper(str_replace(" ", "", "ND" . $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
     }
 
-    public function initFature(Facture $facture, AdminUrlGenerator $adminUrlGenerator): Facture
+    public function initFature(AdminUrlGenerator $adminUrlGenerator): Facture
     {
-        dd("Nous sômmes ici.");
-        // $facture->setReference($this->generateInvoiceReference(1));
-        // $facture->setCreatedAt($this->serviceDates->aujourdhui());
-        // $facture->setUpdatedAt($this->serviceDates->aujourdhui());
-        // $facture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        // $facture->setEntreprise($this->serviceEntreprise->getEntreprise());
-        // if ($adminUrlGenerator->get("donnees")) {
-        //     $data = $adminUrlGenerator->get("donnees");
-        //     $description = "";
-        //     //dd($data["type"]);
-        //     if (isset($data["type"]) && isset($data["tabTranches"])) {
-        //         $description = $data["type"] . ", Ref.:" . $facture->getReference();
-        //         $facture->setType(FactureCrudController::TAB_TYPE_FACTURE[$data["type"]]);
-        //         $total = $this->chargerElementFactures($facture, $data["type"], $data["tabTranches"]);
-        //     }
-        //     $facture->setDescription($description);
-        // }
-        // $this->serviceCompteBancaire->setComptes($facture, "");
+        $facture = new Facture();
+        // dd($adminUrlGenerator->get("donnees"));
+        if ($adminUrlGenerator->get("donnees")) {
+            $donnees = $adminUrlGenerator->get("donnees");
+            // dd($donnees["tabTranches"]);
+            if (isset($donnees["type"])) {
+                switch ($donnees["type"]) {
+                    case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                        $indice = 0;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FactureFraisGestionInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            dd($facture);
+                            // // //Enregistrement de la facture
+                            // $facturePrimeInit->saveFacture();
+                            // $indice = $indice + 1;
+                        }
+                        break;
 
-        //Il faut plutôt appeler la fonction d'initialisation des autres facture selon la refactoring appliqué
-
-
-
-
-
-
-
-
+                    default:
+                        # code...
+                        break;
+                }
+            }
+        }
         return $facture;
     }
 

@@ -146,9 +146,7 @@ class FactureCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
-        $objet = new Facture();
-        $objet = $this->serviceFacture->initFature($objet, $this->adminUrlGenerator);
-        return $objet;
+        return $this->serviceFacture->initFature($this->adminUrlGenerator);
     }
 
     public function configureFields(string $pageName): iterable

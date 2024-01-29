@@ -71,6 +71,7 @@ class ServiceFacture
                             );
                             $facture = $ffg->buildFacture($indice, $oTranche);
                             dd($facture);
+                            
                             // // //Enregistrement de la facture
                             // $facturePrimeInit->saveFacture();
                             // $indice = $indice + 1;

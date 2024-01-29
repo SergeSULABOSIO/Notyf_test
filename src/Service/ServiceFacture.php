@@ -146,6 +146,10 @@ class ServiceFacture
                         }
                         break;
 
+                    case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                        dd("Je suis ici....");
+                        break;
+
                     default:
                         dd("Type de facture non pris en compte pour l'instant");
                         break;

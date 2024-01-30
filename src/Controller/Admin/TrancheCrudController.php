@@ -254,12 +254,26 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
-        $factureCommission = Action::new("Facturer Autres Commissions")
+        $factureCommissionLocale = Action::new("Facturer Com. locale")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                return $tranche->getComInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getComLocaleInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
-            ->linkToCrudAction('facturerCommission'); //<i class="fa-solid fa-eye"></i>
+            ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
+
+        $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
+            ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getComReassuranceInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+            })
+            ->linkToCrudAction('facturerCommissionReassurance');
+
+        $factureCommissionFronting = Action::new("Facturer Com. fronting.")
+            ->setIcon('fa-solid fa-receipt')
+            ->displayIf(static function (Tranche $tranche) {
+                return $tranche->getComFrontingInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+            })
+            ->linkToCrudAction('facturerCommissionFronting');
 
         $factureFraisGestion = Action::new("Facturer Frais de Gestion")
             ->setIcon('fa-solid fa-receipt')
@@ -339,7 +353,9 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
             ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
             ->add(Crud::PAGE_INDEX, $factureRetroCom)
-            ->add(Crud::PAGE_INDEX, $factureCommission)
+            ->add(Crud::PAGE_INDEX, $factureCommissionLocale)
+            ->add(Crud::PAGE_INDEX, $factureCommissionReassurance)
+            ->add(Crud::PAGE_INDEX, $factureCommissionFronting)
             ->add(Crud::PAGE_INDEX, $factureFraisGestion)
             ->add(Crud::PAGE_INDEX, $facturePrime)
 
@@ -408,12 +424,34 @@ class TrancheCrudController extends AbstractCrudController
         );
     }
 
-    public function facturerCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    public function facturerCommissionLocale(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect(
             $this->editFacture(
                 [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_COMMISSIONS,
+                FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+    public function facturerCommissionFronting(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFacture(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING,
                 $adminUrlGenerator
             )
         );

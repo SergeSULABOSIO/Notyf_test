@@ -63,7 +63,9 @@ class Tranche
 
     private ?array $premiumInvoiceDetails;
     private ?array $retrocomInvoiceDetails;
-    private ?array $comInvoiceDetails;
+    private ?array $comLocaleInvoiceDetails;
+    private ?array $comReassuranceInvoiceDetails;
+    private ?array $comFrontingInvoiceDetails;
     private ?array $taxCourtierInvoiceDetails;
     private ?array $taxAssureurInvoiceDetails;
     private ?array $fraisGestionInvoiceDetails;
@@ -835,45 +837,6 @@ class Tranche
     }
 
     /**
-     * Get the value of comInvoiceDetails
-     */ 
-    public function getComInvoiceDetails()
-    {
-        //les paramètres
-        $invoices = [];
-        $invoice_amount = 0;
-        $payments = [];
-        $payments_amount = 0;
-
-        foreach ($this->getElementFactures() as $ef) {
-            $facture = $ef->getFacture();
-            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSIONS]) {
-                //Facture
-                $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
-                //Paiements
-                $payments[] = $facture->getPaiements();
-                foreach ($facture->getPaiements() as $paiement) {
-                    $payments_amount = $payments_amount + $paiement->getMontant();
-                }
-            }
-        }
-        $this->comInvoiceDetails = [
-            self::FACTURE => [
-                self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
-            ],
-            self::PAIEMENTS => [
-                self::DATA => $payments,
-                self::MONTANT => $payments_amount
-            ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => ($this->getComLocale() + $this->getComReassurance() + $this->getComFronting()) - $invoice_amount
-        ];
-        return $this->comInvoiceDetails;
-    }
-
-    /**
      * Get the value of taxInvoiceDetails
      */ 
     public function getTaxCourtierInvoiceDetails()
@@ -949,5 +912,122 @@ class Tranche
             self::TOBE_INVOICED => $this->getTaxeAssureurTotale() - $invoice_amount
         ];
         return $this->taxAssureurInvoiceDetails;
+    }
+
+    /**
+     * Get the value of comLocaleInvoiceDetails
+     */ 
+    public function getComLocaleInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->comLocaleInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getComLocale() - $invoice_amount
+        ];
+        return $this->comLocaleInvoiceDetails;
+    }
+
+    /**
+     * Get the value of comReassuranceInvoiceDetails
+     */ 
+    public function getComReassuranceInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->comReassuranceInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getComReassurance() - $invoice_amount
+        ];
+        return $this->comReassuranceInvoiceDetails;
+    }
+
+    /**
+     * Get the value of comFrontingInvoiceDetails
+     */ 
+    public function getComFrontingInvoiceDetails()
+    {
+        //les paramètres
+        $invoices = [];
+        $invoice_amount = 0;
+        $payments = [];
+        $payments_amount = 0;
+
+        foreach ($this->getElementFactures() as $ef) {
+            $facture = $ef->getFacture();
+            if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]) {
+                //Facture
+                $invoices[] = $facture;
+                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                //Paiements
+                $payments[] = $facture->getPaiements();
+                foreach ($facture->getPaiements() as $paiement) {
+                    $payments_amount = $payments_amount + $paiement->getMontant();
+                }
+            }
+        }
+        $this->comFrontingInvoiceDetails = [
+            self::FACTURE => [
+                self::DATA => $invoices,
+                self::MONTANT => $invoice_amount
+            ],
+            self::PAIEMENTS => [
+                self::DATA => $payments,
+                self::MONTANT => $payments_amount
+            ],
+            self::SOLDE => $invoice_amount - $payments_amount,
+            self::TOBE_INVOICED => $this->getComFronting() - $invoice_amount
+        ];
+        return $this->comFrontingInvoiceDetails;
     }
 }

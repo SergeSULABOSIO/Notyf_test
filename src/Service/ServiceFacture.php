@@ -15,6 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -146,10 +149,57 @@ class ServiceFacture
                         }
                         break;
 
-                    case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
-                        dd("Je suis ici....");
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE:
+                        $indice = 1;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FactureComLocaleInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
+                            // dd($facture);
+                        }
                         break;
-
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+                        $indice = 1;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FactureComReassuranceInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
+                            // dd($facture);
+                        }
+                        break;
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
+                        $indice = 1;
+                        foreach ($donnees["tabTranches"] as $idTranche) {
+                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                            // dd($oTranche . "");
+                            $ffg = new FactureComFrontingInit(
+                                $this->serviceAvenant,
+                                $this->serviceDates,
+                                $this->serviceEntreprise,
+                                $this->entityManager,
+                                $this->serviceCompteBancaire
+                            );
+                            $facture = $ffg->buildFacture($indice, $oTranche);
+                            $indice = $indice + 1;
+                            // dd($facture);
+                        }
+                        break;
                     default:
                         dd("Type de facture non pris en compte pour l'instant");
                         break;
@@ -208,7 +258,7 @@ class ServiceFacture
             //$this->serviceCalculateur->updatePoliceCalculableFileds($police);
             //il faut switcher ici : On agit différemment selon le type de facture
             switch ($typeFacture) {
-                case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
                     $soldeComNull = ($tranche->getPrimeTotaleTranche() == 0);
                     if (!$tabTiers->contains($tranche->getAssureur())) {
                         $tabTiers_str = $tabTiers_str  . $tranche->getAssureur()->getNom() . ", ";
@@ -270,7 +320,7 @@ class ServiceFacture
                     $reponses["Messages"] = $reponses["Messages"] . "La prime totale due est nulle, donc rien à collecter.";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
                 if ($this->hasUniqueData($tabTiers) == false) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs assureurs différents (nous avons trouvé " . $tabTiers_str . "). Elle ne devrait conerner qu'un seul assureur à la fois. ";
@@ -400,18 +450,25 @@ class ServiceFacture
                         $ef->setMontant($oTranche->getPrimeTotaleTranche());
                         $facture->setAssureur($oTranche->getAssureur());
                         break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE:
                         /** @var ElementFacture */
                         $ef = new ElementFacture();
                         $ef->setTranche($oTranche);
-
-                        $com =
-                            $oTranche->getComAutreChargement() +
-                            $oTranche->getComFronting() +
-                            $oTranche->getComLocale() +
-                            $oTranche->getComReassurance();
-
-                        $ef->setMontant($com);
+                        $ef->setMontant($oTranche->getComLocale() * 100);
+                        $facture->setAssureur($oTranche->getAssureur());
+                        break;
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+                        /** @var ElementFacture */
+                        $ef = new ElementFacture();
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getComReassurance() * 100);
+                        $facture->setAssureur($oTranche->getAssureur());
+                        break;
+                    case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
+                        /** @var ElementFacture */
+                        $ef = new ElementFacture();
+                        $ef->setTranche($oTranche);
+                        $ef->setMontant($oTranche->getComFronting() * 100);
                         $facture->setAssureur($oTranche->getAssureur());
                         break;
                     case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:

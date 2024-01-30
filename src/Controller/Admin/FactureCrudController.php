@@ -37,18 +37,23 @@ class FactureCrudController extends AbstractCrudController
     public ?Facture $facture = null;
     public const TYPE_FACTURE_PRIME                     = "PRIME D'ASSURANCE";
     public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
-    public const TYPE_FACTURE_COMMISSIONS               = "COMMISSION";
+    public const TYPE_FACTURE_COMMISSION_LOCALE         = "COMMISSION LOCALE";
+    public const TYPE_FACTURE_COMMISSION_REASSURANCE    = "COMMISSION DE REASSURANCE";
+    public const TYPE_FACTURE_COMMISSION_FRONTING       = "COMMISSION SUR FRONTING / CESSION";
     public const TYPE_FACTURE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
     public const TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA    = "TVA";
     public const TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA   = "REGULATEUR";
 
     public const TAB_TYPE_FACTURE = [
-        self::TYPE_FACTURE_COMMISSIONS              => 0,
+        self::TYPE_FACTURE_COMMISSION_LOCALE        => 0,
         self::TYPE_FACTURE_RETROCOMMISSIONS         => 1,
         self::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA   => 2,
         self::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA  => 3,
         self::TYPE_FACTURE_FRAIS_DE_GESTION         => 4,
-        self::TYPE_FACTURE_PRIME                    => 5
+        self::TYPE_FACTURE_PRIME                    => 5,
+        self::TYPE_FACTURE_COMMISSION_LOCALE        => 6,
+        self::TYPE_FACTURE_COMMISSION_FRONTING      => 7,
+        self::TYPE_FACTURE_COMMISSION_REASSURANCE   => 8
     ];
 
     public const STATUS_FACTURE_IMPAYEE     = "Impayée";
@@ -369,7 +374,7 @@ class FactureCrudController extends AbstractCrudController
     private function getPour(?Facture $facture)
     {
         switch ($this->serviceFacture->getType($facture->getType())) {
-            case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
                 /** @var Assureur */
                 $assureur = $facture->getAssureur();
                 return "<span class = 'texte-gras'>" . $assureur->getNom() . ",</span></br>" . $assureur->getTelephone() . ", " . $assureur->getAdresse();

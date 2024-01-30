@@ -71,7 +71,7 @@ class ServiceCompteBancaire
     {
         $add = false;
         switch ($this->getTypeFacture($facture->getType())) {
-            case FactureCrudController::TYPE_FACTURE_COMMISSIONS:
+            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
                 $add = true;
                 break;
             case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:

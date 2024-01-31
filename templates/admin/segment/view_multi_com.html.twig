@@ -18,10 +18,10 @@ Edition des factures et/ou notes de débits (ou de crédit) en masse
     <h5 class="card-title"><i class="fas fa-file-shield"></i> {{ tranche.police }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary"><i class="fa-solid fa-layer-group"></i> {{ tranche }}</h6>
     <p class="card-text">
-        <a href="#" class="link-primary"><i class="fas fa-person-shelter"></i> {{ tranche.client }}</a> || 
-        <a href="#" class="link-primary"><i class="fas fa-gifts"></i> {{ tranche.produit }}</a> || 
-        <a href="#" class="link-primary"><i class="fas fa-handshake"></i> {{ tranche.partenaire }}</a> || 
-        <a href="#" class="link-primary"><i class="fa-regular fa-calendar-check"></i> Enregistrée le {{tranche.createdAt|date("d/m/Y")}}</a> ||
+        <a href="#" class="link-primary"><i class="fas fa-person-shelter"></i> {{ tranche.client }}</a>&nbsp; 
+        <a href="#" class="link-primary"><i class="fas fa-gifts"></i> {{ tranche.produit }}</a>&nbsp;
+        <a href="#" class="link-primary"><i class="fas fa-handshake"></i> {{ tranche.partenaire }}</a>&nbsp;
+        <a href="#" class="link-primary"><i class="fa-regular fa-calendar-check"></i> Enregistrée le {{tranche.createdAt|date("d/m/Y")}}</a>&nbsp;
         <a href="#" class="link-primary"><i class="fa-solid fa-user"></i> {{ tranche.utilisateur }}</a>
     </p>
   </div>

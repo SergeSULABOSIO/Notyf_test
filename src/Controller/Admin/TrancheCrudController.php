@@ -278,6 +278,8 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
+                ici
+                dd($tranche->getComReassuranceInvoiceDetails());
                 return $tranche->getComReassuranceInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerCommissionReassurance');

@@ -528,9 +528,12 @@ class TrancheCrudController extends AbstractCrudController
             ->getForm();
 
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
-        return $this->render('admin/segment/view_multi_com.html.twig', [
-            'form' => $formulaire,
-        ]);
+        return $this->render(
+            'admin/segment/view_multi_com.html.twig',
+            [
+                'form' => $formulaire,
+            ]
+        );
     }
 
     public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em): Response

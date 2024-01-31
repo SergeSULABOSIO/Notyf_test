@@ -1,12 +1,16 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
+{# this tag only applies to the forms defined in this template #}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
 {% block content_title %}
 Edition des factures et/ou notes de débits (ou de crédit) en masse
 {% endblock %}
+{#
 {% block page_actions %}
-    <a class="btn btn-primary" href="...">Lister toutes les factures</a>
-    <a class="btn btn-primary" href="...">Paiements</a>
+    <a class="btn btn-primary" href="...">Produire</a>
 {% endblock %}
+#}
 
 {% block main %}
     {{ form(form) }}

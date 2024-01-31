@@ -18,10 +18,11 @@ Edition des factures et/ou notes de débits (ou de crédit) en masse
     <h5 class="card-title"><i class="fas fa-file-shield"></i> {{ tranche.police }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary"><i class="fa-solid fa-layer-group"></i> {{ tranche }}</h6>
     <p class="card-text">
-        <i class="fas fa-person-shelter"></i> PROTEAM | 
-        <i class="fas fa-gifts"></i> BBB | 
-        <i class="fas fa-handshake"></i> OLEA | 
-        <i class="fa-regular fa-calendar-check"></i> du 01/01/2024 au 31/12/2024.
+        <i class="fas fa-person-shelter"></i> {{ tranche.client }} || 
+        <i class="fas fa-gifts"></i> {{ tranche.produit }} || 
+        <i class="fas fa-handshake"></i> {{ tranche.partenaire }} || 
+        <i class="fa-regular fa-calendar-check"></i> Enregistrée le {{tranche.createdAt|date("d/m/Y")}} |
+        <i class="fa-solid fa-user"></i> {{ tranche.utilisateur }}
     </p>
   </div>
 </div>

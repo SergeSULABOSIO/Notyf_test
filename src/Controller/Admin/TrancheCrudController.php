@@ -3,15 +3,16 @@
 namespace App\Controller\Admin;
 
 use mapped;
+use App\Entity\Piste;
 use App\Entity\Client;
 use App\Entity\Police;
 use App\Entity\Produit;
 use App\Entity\Tranche;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
-use App\Entity\Piste;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
@@ -20,6 +21,8 @@ use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use App\Service\ServiceFiltresNonMappes;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
@@ -28,11 +31,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -47,6 +53,7 @@ class TrancheCrudController extends AbstractCrudController
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator,
+        private ServiceTaxes $serviceTaxes,
         private ServiceFiltresNonMappes $serviceFiltresNonMappes
 
     ) {
@@ -261,6 +268,13 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
 
+        $factureMultiCommissions = Action::new("Facturer multi-commissions")
+            ->setIcon('fa-solid fa-receipt')
+            // ->displayIf(static function (Tranche $tranche) {
+            //     // return $tranche->getComLocaleInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+            // })
+            ->linkToCrudAction('facturerMultiCommissions');
+
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
@@ -357,6 +371,7 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $factureCommissionReassurance)
             ->add(Crud::PAGE_INDEX, $factureCommissionFronting)
             ->add(Crud::PAGE_INDEX, $factureFraisGestion)
+            ->add(Crud::PAGE_INDEX, $factureMultiCommissions)
             ->add(Crud::PAGE_INDEX, $facturePrime)
 
             //Action ouvrir
@@ -435,7 +450,90 @@ class TrancheCrudController extends AbstractCrudController
         );
     }
 
-    public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // Pas besoin ce décorateur pour l'instant.
+    #[Route('/multiCom', name: 'multiCom')]
+    public function facturerMultiCommissions(AdminContext $context = null, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em, ServiceTaxes $serviceTaxes): Response
+    {
+        $objetMultiCom = new ObjetMultiCom(
+            $serviceTaxes->getTaxe(true),
+            $serviceTaxes->getTaxe(false)
+        );
+        $taxeCourtier = $serviceTaxes->getTaxe(true);
+        $taxeAssureur = $serviceTaxes->getTaxe(false);
+
+        $formulaire = $this->createFormBuilder($objetMultiCom)
+            ->add(
+                "produireNDPrime",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une facture pour collecte de la prime d'assurance."
+                ]
+            )
+            ->add(
+                "produireNDFraisGestion",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une facture pour collecte des frais de gestion."
+                ]
+            )
+            ->add(
+                "produireNDComLocale",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une facture pour collecte de la commission locale / ordinaire."
+                ]
+            )
+            ->add(
+                "produireNDComReassurance",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une facture pour collecte de la commission de réassurance."
+                ]
+            )
+            ->add(
+                "produireNDComFronting",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une facture pour collecte de la commission sur fronting / commission de cession facultavive."
+                ]
+            )
+            ->add(
+                "produireNCRetrocommission",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une note de crédit pour rétro-commission vers le partenaire."
+                ]
+            )
+            ->add(
+                "produireNCTaxeCourtier",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une note de crédit pour les frais " . $taxeCourtier->getNom() . " destinés à \"" . $taxeCourtier->getOrganisation() . "\"."
+                ]
+            )
+            ->add(
+                "produireNCTaxeAssureur",
+                CheckboxType::class,
+                [
+                    "label" => "Produire une note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\"."
+                ]
+            )
+            ->add(
+                'Produire',
+                SubmitType::class,
+                [
+                    'label' => 'Produire les notes de débit (ou de crédit).'
+                ]
+            )
+            ->getForm();
+
+        // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
+        return $this->render('admin/segment/view_multi_com.html.twig', [
+            'form' => $formulaire,
+        ]);
+    }
+
+    public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em): Response
     {
         return $this->redirect(
             $this->editFacture(

@@ -1,0 +1,13 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+Edition des factures et/ou notes de débits (ou de crédit) en masse
+{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Lister toutes les factures</a>
+    <a class="btn btn-primary" href="...">Paiements</a>
+{% endblock %}
+
+{% block main %}
+    {{ form(form) }}
+{% endblock %}

@@ -454,6 +454,13 @@ class TrancheCrudController extends AbstractCrudController
     #[Route('/multiCom', name: 'multiCom')]
     public function facturerMultiCommissions(AdminContext $context = null, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em, ServiceTaxes $serviceTaxes): Response
     {
+        /** @var Tranche */
+        $tranche = null;
+        if($context != null){
+            $tranche = $context->getEntity()->getInstance();
+        }
+
+
         $objetMultiCom = new ObjetMultiCom(
             $serviceTaxes->getTaxe(true),
             $serviceTaxes->getTaxe(false)
@@ -532,6 +539,7 @@ class TrancheCrudController extends AbstractCrudController
             'admin/segment/view_multi_com.html.twig',
             [
                 'form' => $formulaire,
+                'tranche' => $tranche,
             ]
         );
     }

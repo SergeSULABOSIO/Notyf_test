@@ -623,7 +623,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        // dd($this->com_reassurance);
+        // dd($this->comReassurance);
         return $this->comReassurance;
     }
 
@@ -966,6 +966,7 @@ class Tranche
 
         foreach ($this->getElementFactures() as $ef) {
             $facture = $ef->getFacture();
+            // dd($facture);
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]) {
                 //Facture
                 $invoices[] = $facture;
@@ -987,8 +988,11 @@ class Tranche
                 self::MONTANT => $payments_amount
             ],
             self::SOLDE => $invoice_amount - $payments_amount,
+            "invoiced" => count($invoices) != 0,
+            "montant_tranche" => $this->getComReassurance(),
             self::TOBE_INVOICED => $this->getComReassurance() - $invoice_amount
         ];
+        // dd($this->getComReassurance(), $invoice_amount);
         return $this->comReassuranceInvoiceDetails;
     }
 

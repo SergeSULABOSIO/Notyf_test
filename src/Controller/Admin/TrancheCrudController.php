@@ -264,6 +264,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionLocale = Action::new("Facturer Com. locale")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getComLocaleInvoiceDetails());
                 return $tranche->getComLocaleInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
@@ -278,7 +279,6 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                ici
                 dd($tranche->getComReassuranceInvoiceDetails());
                 return $tranche->getComReassuranceInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
@@ -287,6 +287,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionFronting = Action::new("Facturer Com. fronting.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getComFrontingInvoiceDetails());
                 return $tranche->getComFrontingInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
             })
             ->linkToCrudAction('facturerCommissionFronting');

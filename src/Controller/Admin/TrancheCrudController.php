@@ -279,7 +279,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getComReassuranceInvoiceDetails());
+                dd($tranche->getComReassuranceInvoiceDetails());
                 return $tranche->getComReassuranceInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerCommissionReassurance');
@@ -316,7 +316,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureRetroCom = Action::new("Note de crédit - Retro-com")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getRetrocomInvoiceDetails()[Tranche::TOBE_INVOICED]);
+                // dd($tranche->getRetrocomInvoiceDetails());
                 return $tranche->getRetrocomInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerRetroCommission');

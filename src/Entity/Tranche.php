@@ -838,6 +838,7 @@ class Tranche
             self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() != $invoice_amount
         ];
+        // dd($this->getRetroCommissionTotale()*100, $invoice_amount*100);
         return $this->retrocomInvoiceDetails;
     }
 

@@ -135,7 +135,6 @@ class ServicePreferences
         private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
-        private ServiceCalculateur $serviceCalculateur
     ) {
     }
 

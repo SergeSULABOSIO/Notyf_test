@@ -40,7 +40,6 @@ class CompteBancaireCrudController extends AbstractCrudController
         private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,

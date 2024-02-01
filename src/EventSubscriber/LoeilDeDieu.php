@@ -50,7 +50,6 @@ class LoeilDeDieu implements EventSubscriberInterface
         private ServiceDates $serviceDates,
         private UserPasswordHasherInterface $hasher,
         private ServiceEntreprise $serviceEntreprise,
-        private ServiceCalculateur $serviceCalculateur,
         private ServicePreferences $servicePreferences,
         private ServiceSuppression $serviceSuppression,
         private ServiceAvenant $serviceAvenant

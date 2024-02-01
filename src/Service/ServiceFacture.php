@@ -39,7 +39,6 @@ class ServiceFacture
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceDates $serviceDates,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private Security $security
@@ -56,6 +55,7 @@ class ServiceFacture
 
     public function initFature(AdminUrlGenerator $adminUrlGenerator): Facture
     {
+        /** @var Facture */
         $facture = new Facture();
         // dd($adminUrlGenerator->get("donnees"));
         if ($adminUrlGenerator->get("donnees")) {
@@ -169,6 +169,7 @@ class ServiceFacture
                     case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
                         $indice = 1;
                         foreach ($donnees["tabTranches"] as $idTranche) {
+                            /** @var Tranche */
                             $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                             // dd($oTranche . "");
                             $ffg = new FactureComReassuranceInit(
@@ -180,7 +181,7 @@ class ServiceFacture
                             );
                             $facture = $ffg->buildFacture($indice, $oTranche);
                             $indice = $indice + 1;
-                            // dd($facture);
+                            // dd($facture->getMontantTTC() == $oTranche->getComReassurance());
                         }
                         break;
                     case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:

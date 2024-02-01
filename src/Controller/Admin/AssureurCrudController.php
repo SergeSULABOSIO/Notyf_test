@@ -43,7 +43,6 @@ class AssureurCrudController extends AbstractCrudController
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
@@ -129,7 +128,6 @@ class AssureurCrudController extends AbstractCrudController
     {
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_ASSUREUR);
         return $this->servicePreferences->getChamps(new Assureur(), $this->crud, $this->adminUrlGenerator);
     }
 

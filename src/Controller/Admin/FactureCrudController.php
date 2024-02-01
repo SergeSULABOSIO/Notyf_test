@@ -74,7 +74,6 @@ class FactureCrudController extends AbstractCrudController
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
@@ -161,9 +160,6 @@ class FactureCrudController extends AbstractCrudController
             $this->facture = $this->getContext()->getEntity()->getInstance();
         }
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->facture);
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
-        
         return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);
     }
 
@@ -332,7 +328,6 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $contenuHtml = $this->renderView('pdf/instances/note/index.html.twig', $this->getDataTransform($facture, false));
         return $this->serviceFacture->visualiserFacture($facture, $contenuHtml);
     }
@@ -341,7 +336,6 @@ class FactureCrudController extends AbstractCrudController
     {
         /** @var Facture */
         $facture = $context->getEntity()->getInstance();
-        $this->serviceCalculateur->calculate($this->container, ServiceCalculateur::RUBRIQUE_FACTURE);
         $contenuHtml = $this->renderView('pdf/instances/bordereau/index.html.twig', $this->getDataTransform($facture, true));
         return $this->serviceFacture->visualiserBordereau($facture, $contenuHtml);
     }

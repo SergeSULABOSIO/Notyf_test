@@ -39,6 +39,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\HttpFoundation\Request;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -46,7 +47,6 @@ class TrancheCrudController extends AbstractCrudController
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
@@ -279,7 +279,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                dd($tranche->getComReassuranceInvoiceDetails());
+                // dd($tranche->getComReassuranceInvoiceDetails());
                 return $tranche->getComReassuranceInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerCommissionReassurance');
@@ -455,7 +455,7 @@ class TrancheCrudController extends AbstractCrudController
 
     // Pas besoin ce décorateur pour l'instant.
     #[Route('/multiCom', name: 'multiCom')]
-    public function facturerMultiCommissions(AdminContext $context = null, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em, ServiceTaxes $serviceTaxes): Response
+    public function facturerMultiCommissions(Request $request = null, AdminContext $context = null, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em, ServiceTaxes $serviceTaxes): Response
     {
         /** @var Tranche */
         $tranche = null;
@@ -470,6 +470,8 @@ class TrancheCrudController extends AbstractCrudController
         );
         $taxeCourtier = $serviceTaxes->getTaxe(true);
         $taxeAssureur = $serviceTaxes->getTaxe(false);
+
+
 
         $formulaire = $this->createFormBuilder($objetMultiCom)
             ->add(
@@ -536,6 +538,9 @@ class TrancheCrudController extends AbstractCrudController
                 ]
             )
             ->getForm();
+
+        $formulaire->handleRequest($request);
+        // dd($formulaire);
 
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
         return $this->render(

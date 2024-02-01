@@ -81,7 +81,8 @@ class Tranche
     //constantes
     public const FACTURE = "facture";
     public const PAIEMENTS = "paiements";
-    public const MONTANT = "montant";
+    public const MONTANT_DU = "montantDu";
+    public const MONTANT_PAYE = "montantPaye";
     public const TARGET = "target";
     public const DATA = "data";
     public const SOLDE_DU = "solde";
@@ -748,11 +749,11 @@ class Tranche
             self::TARGET => $this->getPrimeTotaleTranche(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getPrimeTotaleTranche() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getPrimeTotaleTranche() != $invoice_amount
@@ -789,11 +790,11 @@ class Tranche
             self::TARGET => $this->getComFraisGestion(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getComFraisGestion() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComFraisGestion() != $invoice_amount
@@ -829,11 +830,11 @@ class Tranche
             self::TARGET => $this->getRetroCommissionTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() != $invoice_amount
@@ -870,11 +871,11 @@ class Tranche
             self::TARGET => $this->getTaxeCourtierTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getTaxeCourtierTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getTaxeCourtierTotale() != $invoice_amount
@@ -910,11 +911,11 @@ class Tranche
             self::TARGET => $this->getTaxeAssureurTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getTaxeAssureurTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getTaxeAssureurTotale() != $invoice_amount
@@ -950,11 +951,11 @@ class Tranche
             self::TARGET => $this->getComLocale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getComLocale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComLocale() != $invoice_amount
@@ -978,8 +979,9 @@ class Tranche
             // dd($facture);
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]) {
                 //Facture
+                // dd($facture->getTotalDu());
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -991,11 +993,11 @@ class Tranche
             self::TARGET => $this->getComReassurance(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getComReassurance() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComReassurance() != $invoice_amount
@@ -1032,11 +1034,11 @@ class Tranche
             self::TARGET => $this->getComFronting(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT => $invoice_amount
+                self::MONTANT_DU => $invoice_amount
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
-                self::MONTANT => $payments_amount
+                self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getComFronting() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComFronting() != $invoice_amount

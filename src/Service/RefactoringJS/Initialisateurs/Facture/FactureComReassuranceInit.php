@@ -103,6 +103,7 @@ class FactureComReassuranceInit implements FactureInit
         $elementFacture->setCreatedAt($this->tranche->getCreatedAt());
         $elementFacture->setUpdatedAt($this->tranche->getUpdatedAt());
         $elementFacture->setMontant($this->tranche->getComReassurance());
+        // dd($this->tranche->getComReassurance() * 100);
         $elementFacture->setTranche($this->tranche);
         $elementFacture->setTypeavenant($this->tranche->getPolice()->getTypeavenant());
         $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($this->tranche->getPolice()));
@@ -184,6 +185,7 @@ class FactureComReassuranceInit implements FactureInit
         $this->setTotalSolde(($elementFacture->getMontant() - 0));
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
+        // dd($this);
         return $this->facture;
     }
 

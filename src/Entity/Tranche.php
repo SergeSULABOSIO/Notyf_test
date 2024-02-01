@@ -82,8 +82,10 @@ class Tranche
     public const FACTURE = "facture";
     public const PAIEMENTS = "paiements";
     public const MONTANT = "montant";
+    public const TARGET = "target";
     public const DATA = "data";
-    public const SOLDE = "solde";
+    public const SOLDE_DU = "solde";
+    public const PRODUIRE_FACTURE = "produire";
     public const TOBE_INVOICED = "toBeInvoiced";
 
     #[ORM\Column(nullable: true)]
@@ -743,6 +745,7 @@ class Tranche
             }
         }
         $this->premiumInvoiceDetails = [
+            self::TARGET => $this->getPrimeTotaleTranche(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -751,8 +754,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getPrimeTotaleTranche() - $invoice_amount
+            self::SOLDE_DU => $this->getPrimeTotaleTranche() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getPrimeTotaleTranche() != $invoice_amount
         ];
 
         return $this->premiumInvoiceDetails;
@@ -783,6 +786,7 @@ class Tranche
             }
         }
         $this->fraisGestionInvoiceDetails = [
+            self::TARGET => $this->getComFraisGestion(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -791,8 +795,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getComFraisGestion() - $invoice_amount
+            self::SOLDE_DU => $this->getComFraisGestion() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getComFraisGestion() != $invoice_amount
         ];
         return $this->fraisGestionInvoiceDetails;
     }
@@ -822,6 +826,7 @@ class Tranche
             }
         }
         $this->retrocomInvoiceDetails = [
+            self::TARGET => $this->getRetroCommissionTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -830,8 +835,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getRetroCommissionTotale() - $invoice_amount
+            self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() != $invoice_amount
         ];
         return $this->retrocomInvoiceDetails;
     }
@@ -861,6 +866,7 @@ class Tranche
             }
         }
         $this->taxCourtierInvoiceDetails = [
+            self::TARGET => $this->getTaxeCourtierTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -869,8 +875,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getTaxeCourtierTotale() - $invoice_amount
+            self::SOLDE_DU => $this->getTaxeCourtierTotale() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getTaxeCourtierTotale() != $invoice_amount
         ];
         return $this->taxCourtierInvoiceDetails;
     }
@@ -900,6 +906,7 @@ class Tranche
             }
         }
         $this->taxAssureurInvoiceDetails = [
+            self::TARGET => $this->getTaxeAssureurTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -908,8 +915,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getTaxeAssureurTotale() - $invoice_amount
+            self::SOLDE_DU => $this->getTaxeAssureurTotale() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getTaxeAssureurTotale() != $invoice_amount
         ];
         return $this->taxAssureurInvoiceDetails;
     }
@@ -939,6 +946,7 @@ class Tranche
             }
         }
         $this->comLocaleInvoiceDetails = [
+            self::TARGET => $this->getComLocale(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -947,8 +955,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getComLocale() - $invoice_amount
+            self::SOLDE_DU => $this->getComLocale() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getComLocale() != $invoice_amount
         ];
         return $this->comLocaleInvoiceDetails;
     }
@@ -979,6 +987,7 @@ class Tranche
             }
         }
         $this->comReassuranceInvoiceDetails = [
+            self::TARGET => $this->getComReassurance(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -987,10 +996,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            "invoiced" => count($invoices) != 0,
-            "montant_tranche" => $this->getComReassurance(),
-            self::TOBE_INVOICED => $this->getComReassurance() - $invoice_amount
+            self::SOLDE_DU => $this->getComReassurance() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getComReassurance() != $invoice_amount
         ];
         // dd($this->getComReassurance(), $invoice_amount);
         return $this->comReassuranceInvoiceDetails;
@@ -1021,6 +1028,7 @@ class Tranche
             }
         }
         $this->comFrontingInvoiceDetails = [
+            self::TARGET => $this->getComFronting(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT => $invoice_amount
@@ -1029,8 +1037,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT => $payments_amount
             ],
-            self::SOLDE => $invoice_amount - $payments_amount,
-            self::TOBE_INVOICED => $this->getComFronting() - $invoice_amount
+            self::SOLDE_DU => $this->getComFronting() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getComFronting() != $invoice_amount
         ];
         return $this->comFrontingInvoiceDetails;
     }

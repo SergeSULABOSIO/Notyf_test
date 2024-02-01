@@ -257,7 +257,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 // dd($tranche->getPremiumInvoiceDetails());
-                return $tranche->getPremiumInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
@@ -265,7 +265,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 // dd($tranche->getComLocaleInvoiceDetails());
-                return $tranche->getComLocaleInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
 
@@ -279,8 +279,8 @@ class TrancheCrudController extends AbstractCrudController
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                dd($tranche->getComReassuranceInvoiceDetails());
-                return $tranche->getComReassuranceInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                // dd($tranche->getComReassuranceInvoiceDetails());
+                return $tranche->getComReassuranceInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerCommissionReassurance');
 
@@ -288,28 +288,28 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 // dd($tranche->getComFrontingInvoiceDetails());
-                return $tranche->getComFrontingInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerCommissionFronting');
 
         $factureFraisGestion = Action::new("Facturer Frais de Gestion")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                return $tranche->getFraisGestionInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
 
         $factureTaxeCourtier = Action::new("Note de crédit - Taxes Courtier")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                return $tranche->getTaxCourtierInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
 
         $factureTaxeAssureur = Action::new("Note de crédit - Taxes Assureur")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                return $tranche->getTaxAssureurInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerTaxeAssureur');
 
@@ -317,7 +317,7 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 // dd($tranche->getRetrocomInvoiceDetails()[Tranche::TOBE_INVOICED]);
-                return $tranche->getRetrocomInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
+                return $tranche->getRetrocomInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerRetroCommission');
 
@@ -459,7 +459,7 @@ class TrancheCrudController extends AbstractCrudController
     {
         /** @var Tranche */
         $tranche = null;
-        if($context != null){
+        if ($context != null) {
             $tranche = $context->getEntity()->getInstance();
         }
 

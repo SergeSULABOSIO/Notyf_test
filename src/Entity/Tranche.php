@@ -282,7 +282,7 @@ class Tranche
     /**
      * Get the value of retroCommissionTotale
      */
-    public function getRetroCommissionTotale()
+    public function getRetroCommissionTotale():float
     {
         $this->retroCommissionTotale = (new Calculateur())
             ->getRetroCommissionTotale(
@@ -817,8 +817,9 @@ class Tranche
             $facture = $ef->getFacture();
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
                 //Facture
+                // dd($facture->getTotalDu());
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -837,9 +838,9 @@ class Tranche
                 self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
-            self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() != $invoice_amount
+            self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() !== $invoice_amount
         ];
-        // dd($this->getRetroCommissionTotale()*100, $invoice_amount*100);
+        // dd($this->getRetroCommissionTotale() == $invoice_amount);
         return $this->retrocomInvoiceDetails;
     }
 
@@ -859,7 +860,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -899,7 +900,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + $facture->getMontantTTC();
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {

@@ -59,7 +59,6 @@ class PisteCrudController extends AbstractCrudController
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,

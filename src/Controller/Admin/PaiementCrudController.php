@@ -54,7 +54,6 @@ class PaiementCrudController extends AbstractCrudController
         private ServiceDates $serviceDates,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,

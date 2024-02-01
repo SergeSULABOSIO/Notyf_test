@@ -158,7 +158,6 @@ class ServiceCrossCanal
         private ServiceAvenant $serviceAvenant,
         private ServiceDates $serviceDates,
         private EntityManagerInterface $entityManager,
-        private ServiceCalculateur $serviceCalculateur,
         private ServiceEntreprise $serviceEntreprise,
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceTaxes $serviceTaxes,
@@ -1816,8 +1815,6 @@ class ServiceCrossCanal
         if ($paramIDFacture != null) {
             /** @var Facture  */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
-
-            $this->serviceCalculateur->calculate($container, ServiceCalculateur::RUBRIQUE_FACTURE);
             //dd($objetFacture);
             if ($objetFacture != null) {
                 $paiement->setFacture($objetFacture);
@@ -2020,8 +2017,6 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
-            //On calcule d'abord les champs calculables
-            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
             $paiementCommission->setPolice($objet);
             $paiementCommission->setMontant($objet->calc_revenu_ttc_solde_restant_du); //calc_revenu_ttc_solde_restant_du
         }
@@ -2038,8 +2033,6 @@ class ServiceCrossCanal
             $police = $this->entityManager->getRepository(Police::class)->find($paramPoliceID);
             /** @var Taxe */
             $taxe = $this->entityManager->getRepository(Taxe::class)->find($paramTaxeID);
-            //On calcule d'abord les champs calculables
-            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
             $paiementTaxe->setPolice($police);
             $paiementTaxe->setTaxe($taxe);
             $paiementTaxe->setExercice(Date("Y"));
@@ -2060,8 +2053,6 @@ class ServiceCrossCanal
         if ($paramPoliceID != null) {
             /** @var Police */
             $police = $this->entityManager->getRepository(Police::class)->find($paramPoliceID);
-            //On calcule d'abord les champs calculables
-            $this->serviceCalculateur->updatePoliceCalculableFileds($police);
             $sinistre->setPolice($police);
             $sinistre->setOccuredAt(new \DateTimeImmutable("now"));
             $sinistre->setCout(0);
@@ -2079,8 +2070,6 @@ class ServiceCrossCanal
         $paramID = $adminUrlGenerator->get(self::CROSSED_ENTITY_POLICE);
         if ($paramID != null) {
             $objet = $this->entityManager->getRepository(Police::class)->find($paramID);
-            //On calcule d'abord les champs calculables
-            $this->serviceCalculateur->updatePoliceCalculableFileds($objet);
             $paiementPartenaire->setPolice($objet);
             $paiementPartenaire->setPartenaire($objet->getPartenaire());
             $paiementPartenaire->setMontant($objet->calc_retrocom_solde);

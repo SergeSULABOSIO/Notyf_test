@@ -33,8 +33,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class RevenuCrudController extends AbstractCrudController
@@ -84,7 +82,6 @@ class RevenuCrudController extends AbstractCrudController
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,

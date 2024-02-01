@@ -87,7 +87,6 @@ class PoliceCrudController extends AbstractCrudController
         private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
-        private ServiceCalculateur $serviceCalculateur,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
@@ -629,7 +628,8 @@ class PoliceCrudController extends AbstractCrudController
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
+        dd("Ici");
+        // return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_COMMISSIONS);
     }
 
     public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)

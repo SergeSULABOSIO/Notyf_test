@@ -1492,93 +1492,71 @@ class ServicePreferences
         //Les type de commission
         $tabAttributs[] = MoneyField::new('com_reassurance', "Com / Réa")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_locale', "Com / Loc")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComLocale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComLocale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_fronting', "Com / Frtg")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFronting());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFronting() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / F. Gest")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFraisGestion());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFraisGestion() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComAutreChargement());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComAutreChargement() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
 
-        // $tabAttributs[] = TextField::new('police', PreferenceCrudController::PREF_PROD_TRANCHE_POLICE)
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('client', "Client")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('assureur', "Assureur")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('produit', "Produit")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = TextField::new('partenaire', "Partenaire")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('dateEffet', "Date d'effet")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('dateExpiration', "Date d'expiration")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('dateOperation', "Date d'opération")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('dateEmition', "Date d'émition")
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('startedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DEBUT)
-        //     ->onlyOnIndex();
-        // $tabAttributs[] = DateTimeField::new('endedAt', PreferenceCrudController::PREF_PROD_TRANCHE_FIN)
-        //     ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('reserve', "Réserve")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getReserve());
+                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getReserve() * 100);
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()

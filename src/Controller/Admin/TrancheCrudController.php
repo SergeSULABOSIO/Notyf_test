@@ -318,7 +318,7 @@ class TrancheCrudController extends AbstractCrudController
         $factureRetroCom = Action::new("Note de crédit - Retro-com")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
-                dd($tranche->getRetrocomInvoiceDetails());
+                // dd($tranche->getRetrocomInvoiceDetails());
                 return $tranche->getRetrocomInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
             })
             ->linkToCrudAction('facturerRetroCommission');

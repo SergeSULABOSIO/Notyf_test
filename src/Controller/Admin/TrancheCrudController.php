@@ -287,9 +287,8 @@ class TrancheCrudController extends AbstractCrudController
                 //     $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
                 //     $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE]
                 // );
-
-                $repFinale = $okFPrime||$okComLocal||$okComFronting||$okComFraisGest||$okTaxeCourtier ||$okTaxeAssureur;
-                return $repFinale;
+                
+                return $okFPrime||$okComLocal||$okComFronting||$okComFraisGest||$okTaxeCourtier||$okTaxeAssureur;
             })
             ->linkToCrudAction('facturerMultiCommissions');
 

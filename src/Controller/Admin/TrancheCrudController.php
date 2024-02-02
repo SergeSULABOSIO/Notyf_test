@@ -271,9 +271,26 @@ class TrancheCrudController extends AbstractCrudController
 
         $factureMultiCommissions = Action::new("Facturer multi-commissions")
             ->setIcon('fa-solid fa-receipt')
-            // ->displayIf(static function (Tranche $tranche) {
-            //     // return $tranche->getComLocaleInvoiceDetails()[Tranche::TOBE_INVOICED] != 0;
-            // })
+            ->displayIf(static function (Tranche $tranche) {
+                $okFPrime = $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                $okComLocal = $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                $okComFronting = $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                $okComFraisGest = $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                $okTaxeCourtier = $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                $okTaxeAssureur = $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+
+                // dd(
+                //     $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+                //     $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+                //     $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+                //     $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+                //     $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+                //     $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE]
+                // );
+
+                $repFinale = $okFPrime||$okComLocal||$okComFronting||$okComFraisGest||$okTaxeCourtier ||$okTaxeAssureur;
+                return $repFinale;
+            })
             ->linkToCrudAction('facturerMultiCommissions');
 
         $factureCommissionReassurance = Action::new("Facturer Com. de réa.")

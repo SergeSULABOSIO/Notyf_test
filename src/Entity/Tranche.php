@@ -292,7 +292,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         return $this->retroCommissionTotale;
     }
 
@@ -309,7 +309,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         return $this->taxeCourtierTotale;
     }
 
@@ -326,7 +326,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         return $this->taxeAssureurTotale;
     }
 
@@ -596,7 +596,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         return $this->reserve;
     }
 
@@ -625,7 +625,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         // dd($this->comReassurance);
         return $this->comReassurance;
     }
@@ -643,7 +643,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         // dd($this->com_locale);
         return $this->comLocale;
     }
@@ -661,7 +661,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         // dd($this->com_fronting);
         return $this->comFronting;
     }
@@ -679,7 +679,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         // dd($this->com_frais_gestion);
         return $this->comFraisGestion;
     }
@@ -697,7 +697,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         return $this->comAutreChargement;
     }
 
@@ -714,7 +714,7 @@ class Tranche
                 null,
                 null,
                 Calculateur::Param_from_tranche
-            );
+            ) * 100;
         //dd($this->revenuTotal);
         return $this->revenuTotal;
     }
@@ -778,7 +778,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -828,7 +828,7 @@ class Tranche
             }
         }
         $this->retrocomInvoiceDetails = [
-            self::TARGET => $this->getRetroCommissionTotale(),
+            self::TARGET => $this->getRetroCommissionTotale() / 100,
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount
@@ -837,8 +837,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT_PAYE => $payments_amount
             ],
-            self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
-            self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() !== $invoice_amount
+            self::SOLDE_DU => ($this->getRetroCommissionTotale() / 100) - $payments_amount,
+            self::PRODUIRE_FACTURE => ($this->getRetroCommissionTotale() / 100) !== $invoice_amount
         ];
         // dd(($this->getRetroCommissionTotale()) - ($invoice_amount));
         return $this->retrocomInvoiceDetails;
@@ -860,7 +860,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -900,7 +900,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -940,7 +940,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -982,7 +982,7 @@ class Tranche
                 //Facture
                 // dd($facture->getTotalDu());
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -1023,7 +1023,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {

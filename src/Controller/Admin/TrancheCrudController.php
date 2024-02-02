@@ -545,7 +545,10 @@ class TrancheCrudController extends AbstractCrudController
                 "produireNCTaxeAssureur",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\"."
+                    "label" => "Produire une note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\".",
+                    "attr" => [
+                        "disabled" => "disabled"
+                    ]
                 ]
             )
             ->add(

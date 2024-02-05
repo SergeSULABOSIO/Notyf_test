@@ -490,72 +490,64 @@ class TrancheCrudController extends AbstractCrudController
         $taxeAssureur = $serviceTaxes->getTaxe(false);
 
 
-
         $formulaire = $this->createFormBuilder($objetMultiCom)
             ->add(
                 "produireNDPrime",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une facture pour collecte de la prime d'assurance."
+                    "label" => "Note de débit pour prime d'assurance."
                 ]
             )
             ->add(
                 "produireNDFraisGestion",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une facture pour collecte des frais de gestion."
+                    "label" => "Note de débit pour frais de gestion."
                 ]
             )
             ->add(
                 "produireNDComLocale",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une facture pour collecte de la commission locale / ordinaire."
+                    "label" => "Note de débit pour commission locale / ordinaire."
                 ]
             )
             ->add(
                 "produireNDComReassurance",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une facture pour collecte de la commission de réassurance."
+                    "label" => "Note de débit pour commission de réassurance."
                 ]
             )
             ->add(
                 "produireNDComFronting",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une facture pour collecte de la commission sur fronting / commission de cession facultavive."
+                    "label" => "Note de débit pour commission sur fronting / commission de cession facultavive."
                 ]
             )
             ->add(
                 "produireNCRetrocommission",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une note de crédit pour rétro-commission vers le partenaire."
+                    "label" => "Note de crédit pour rétro-commission."
                 ]
             )
             ->add(
                 "produireNCTaxeCourtier",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une note de crédit pour les frais " . $taxeCourtier->getNom() . " destinés à \"" . $taxeCourtier->getOrganisation() . "\"."
+                    "label" => "Note de crédit pour les frais " . $taxeCourtier->getNom() . " destinés à \"" . $taxeCourtier->getOrganisation() . "\"."
                 ]
             )
             ->add(
                 "produireNCTaxeAssureur",
                 CheckboxType::class,
                 [
-                    "label" => "Produire une note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\".",
+                    "label" => "Note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\".",
                     "attr" => [
                         "disabled" => "disabled"
                     ]
-                ]
-            )
-            ->add(
-                'Produire',
-                SubmitType::class,
-                [
-                    'label' => 'Produire les notes de débit (ou de crédit).'
                 ]
             )
             ->getForm();

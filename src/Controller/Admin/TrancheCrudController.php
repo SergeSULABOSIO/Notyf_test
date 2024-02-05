@@ -269,7 +269,7 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
 
-        $factureMultiCommissions = Action::new("Facturer multi-commissions")
+        $factureMultiCommissions = Action::new("Exécuter Pronema")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 $okFPrime = $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
@@ -486,6 +486,15 @@ class TrancheCrudController extends AbstractCrudController
             $serviceTaxes->getTaxe(true),
             $serviceTaxes->getTaxe(false)
         );
+        $objetMultiCom->setProduireNDPrime($tranche->getPremiumInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNDFraisGestion($tranche->getFraisGestionInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNDComLocale($tranche->getComLocaleInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNDComReassurance($tranche->getComReassuranceInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNDComFronting($tranche->getComFrontingInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNCRetrocommission($tranche->getRetrocomInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNCTaxeCourtier($tranche->getTaxCourtierInvoiceDetails()['produire']);
+        $objetMultiCom->setProduireNCTaxeAssureur($tranche->getTaxAssureurInvoiceDetails()['produire']);
+        
         $taxeCourtier = $serviceTaxes->getTaxe(true);
         $taxeAssureur = $serviceTaxes->getTaxe(false);
 
@@ -545,9 +554,6 @@ class TrancheCrudController extends AbstractCrudController
                 CheckboxType::class,
                 [
                     "label" => "Note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\".",
-                    "attr" => [
-                        "disabled" => "disabled"
-                    ]
                 ]
             )
             ->getForm();

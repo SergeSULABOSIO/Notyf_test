@@ -36,13 +36,13 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
         <li class="list-group-item list-group-item-primary">
           <h5 class="mb-1">Groupe A: les notes de débit destinées à {{ tranche.client }}</h5>
         </li>
-        <li class="list-group-item pt-3 pb-0 d-flex justify-content-between align-items-center">
+        <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {{ form_row(form.produireNDPrime) }}
           <span class="badge badge-primary badge-pill">
             Solde dû à facturer : {{ (tranche.premiumInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
           </span>
         </li>
-        <li class="list-group-item pt-3 pb-0 d-flex justify-content-between align-items-center">
+        <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {{ form_row(form.produireNDFraisGestion) }}
           <span class="badge badge-primary badge-pill">
             Solde dû à facturer : {{ (tranche.fraisGestionInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
@@ -53,22 +53,22 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
         <li class="list-group-item list-group-item-primary">
           <h5 class="mb-1">Groupe B: les notes de débit destinées à {{ tranche.assureur }}</h5>
         </li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNDComLocale) }}</li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNDComReassurance) }}</li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNDComFronting) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNDComLocale) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNDComReassurance) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNDComFronting) }}</li>
       </ul>
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
           <h5 class="mb-1">Groupe C: la note de crédit vers  {{ tranche.partenaire }}</h5>
         </li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNCRetrocommission) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNCRetrocommission) }}</li>
       </ul>
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
           <h5 class="mb-1">Groupe D: les notes de crédit vers l'autorité fiscale et/ou le régulateur</h5>
         </li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNCTaxeCourtier) }}</li>
-        <li class="list-group-item pt-3 pb-0">{{ form_row(form.produireNCTaxeAssureur) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNCTaxeCourtier) }}</li>
+        <li class="list-group-item list-group-item-action pt-3 pb-0">{{ form_row(form.produireNCTaxeAssureur) }}</li>
       </ul>
       {# {{ form_widget(form) }} #}
       <button type="submit" class="btn btn-primary mt-3">Produire les notes</button>

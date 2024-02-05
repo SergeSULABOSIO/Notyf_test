@@ -288,7 +288,7 @@ class TrancheCrudController extends AbstractCrudController
                 //     $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE]
                 // );
 
-                return $okFPrime||$okComLocal||$okComFronting||$okComFraisGest||$okTaxeCourtier||$okTaxeAssureur;
+                return $okFPrime || $okComLocal || $okComFronting || $okComFraisGest || $okTaxeCourtier || $okTaxeAssureur;
             })
             ->linkToCrudAction('facturerMultiCommissions');
 
@@ -486,15 +486,16 @@ class TrancheCrudController extends AbstractCrudController
             $serviceTaxes->getTaxe(true),
             $serviceTaxes->getTaxe(false)
         );
-        $objetMultiCom->setProduireNDPrime($tranche->getPremiumInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNDFraisGestion($tranche->getFraisGestionInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNDComLocale($tranche->getComLocaleInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNDComReassurance($tranche->getComReassuranceInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNDComFronting($tranche->getComFrontingInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNCRetrocommission($tranche->getRetrocomInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNCTaxeCourtier($tranche->getTaxCourtierInvoiceDetails()['produire']);
-        $objetMultiCom->setProduireNCTaxeAssureur($tranche->getTaxAssureurInvoiceDetails()['produire']);
-        
+        $objetMultiCom
+            ->setProduireNDPrime($tranche->getPremiumInvoiceDetails()['produire'])
+            ->setProduireNDFraisGestion($tranche->getFraisGestionInvoiceDetails()['produire'])
+            ->setProduireNDComLocale($tranche->getComLocaleInvoiceDetails()['produire'])
+            ->setProduireNDComReassurance($tranche->getComReassuranceInvoiceDetails()['produire'])
+            ->setProduireNDComFronting($tranche->getComFrontingInvoiceDetails()['produire'])
+            ->setProduireNCRetrocommission($tranche->getRetrocomInvoiceDetails()['produire'])
+            ->setProduireNCTaxeCourtier($tranche->getTaxCourtierInvoiceDetails()['produire'])
+            ->setProduireNCTaxeAssureur($tranche->getTaxAssureurInvoiceDetails()['produire']);
+
         $taxeCourtier = $serviceTaxes->getTaxe(true);
         $taxeAssureur = $serviceTaxes->getTaxe(false);
 
@@ -561,6 +562,9 @@ class TrancheCrudController extends AbstractCrudController
         $formulaire->handleRequest($request);
         // dd($formulaire);
 
+        if($formulaire->isSubmitted() && $formulaire->isValid()){
+            dd("Le formulaire valide vient d'être soumis", $formulaire);
+        }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
         return $this->render(
             'admin/segment/view_multi_com.html.twig',

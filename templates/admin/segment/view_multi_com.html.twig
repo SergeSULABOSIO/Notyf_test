@@ -34,7 +34,7 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
     {{ form_start(form) }}
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
-          <h5 class="mb-1">Groupe A: les notes de débit destinées à {{ tranche.client }}</h5>
+          <h5 class="mb-1"><i class="fas fa-person-shelter"></i> Groupe A: les notes de débit destinées à {{ tranche.client }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.premiumInvoiceDetails['produire'] == false %}
@@ -42,9 +42,18 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNDPrime) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.premiumInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.premiumInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.premiumInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.premiumInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>
+          
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.fraisGestionInvoiceDetails['produire'] == false %}
@@ -52,14 +61,22 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNDFraisGestion) }}
           {% endif %}    
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.fraisGestionInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.fraisGestionInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.fraisGestionInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.fraisGestionInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>  
         </li>
       </ul>
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
-          <h5 class="mb-1">Groupe B: les notes de débit destinées à {{ tranche.assureur }}</h5>
+          <h5 class="mb-1"><i class="fas fa-umbrella"></i> Groupe B: les notes de débit destinées à {{ tranche.assureur }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.comLocaleInvoiceDetails['produire'] == false %}
@@ -67,8 +84,16 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNDComLocale) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.comLocaleInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.comLocaleInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.comLocaleInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.comLocaleInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
@@ -77,8 +102,16 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNDComReassurance) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.comReassuranceInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.comReassuranceInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.comReassuranceInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.comReassuranceInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>
           </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
@@ -87,14 +120,22 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNDComFronting) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.comFrontingInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.comFrontingInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.comFrontingInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.comFrontingInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>  
         </li>
       </ul>
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
-          <h5 class="mb-1">Groupe C: la note de crédit destinée à {{ tranche.partenaire }}</h5>
+          <h5 class="mb-1"><i class="fas fa-handshake"></i> Groupe C: la note de crédit destinée à {{ tranche.partenaire }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.retrocomInvoiceDetails['produire'] == false %}
@@ -102,14 +143,22 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNCRetrocommission) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.retrocomInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.retrocomInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.retrocomInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.retrocomInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>
         </li>
       </ul>
       <ul class="list-group mt-3">
         <li class="list-group-item list-group-item-primary">
-          <h5 class="mb-1">Groupe D: les notes de crédit destinées à l'autorité fiscale et/ou au régulateur</h5>
+          <h5 class="mb-1"><i class="fas fa-landmark-dome"></i> Groupe D: les notes de crédit destinées à l'autorité fiscale et/ou au régulateur</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.taxCourtierInvoiceDetails['produire'] == false %}
@@ -117,9 +166,17 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNCTaxeCourtier)}}
           {% endif %}
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.taxCourtierInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.taxCourtierInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.taxCourtierInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-          </span>  
+            {% if (tranche.taxCourtierInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
+           </span>  
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
           {% if tranche.taxAssureurInvoiceDetails['produire'] == false %}
@@ -127,8 +184,16 @@ PRONEMA - Production des Notes (de débit, de crédit ou perception) en Masse
           {% else %}
             {{ form_row(form.produireNCTaxeAssureur) }}
           {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3">
+          <span class="badge badge-primary badge-pill mb-3 p-1">
+            <i class="fa-solid fa-cash-register"></i> 
+            Total : {{ (tranche.taxAssureurInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
+            Paiements : {{ (tranche.taxAssureurInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
             Solde dû à facturer : {{ (tranche.taxAssureurInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
+            {% if (tranche.taxAssureurInvoiceDetails['produire'] == true) %}
+              <span class="badge badge-pill bg-warning text-white">Veuillez émettre la note</span>
+            {% else %}
+              <span class="badge badge-pill bg-dark text-white">Note déjà émise</span>
+            {% endif %}
           </span>  
         </li>
       </ul>

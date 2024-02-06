@@ -673,6 +673,8 @@ class TrancheCrudController extends AbstractCrudController
                 $ffg->saveFacture();
             }
 
+            //On se redirige vers la page des facture
+            //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement
             $url = $adminUrlGenerator
                 ->setController(FactureCrudController::class)
                 ->setAction(Action::INDEX)

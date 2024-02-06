@@ -837,7 +837,7 @@ class Tranche
                 //Facture
                 // dd($facture->getTotalDu() * 1000000);
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu() / 100);
+                $invoice_amount = $invoice_amount + (($facture->getTotalDu() / 100) * 100);
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -846,7 +846,7 @@ class Tranche
             }
         }
         $this->retrocomInvoiceDetails = [
-            self::TARGET => $this->getRetroCommissionTotale() / 100,
+            self::TARGET => ($this->getRetroCommissionTotale() / 100) * 100,
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount
@@ -855,8 +855,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT_PAYE => $payments_amount
             ],
-            self::SOLDE_DU => ($this->getRetroCommissionTotale() / 100) - $payments_amount,
-            self::PRODUIRE_FACTURE => ($this->getRetroCommissionTotale() / 100) !== $invoice_amount
+            self::SOLDE_DU => (($this->getRetroCommissionTotale() / 100) * 100) - $payments_amount,
+            self::PRODUIRE_FACTURE => (($this->getRetroCommissionTotale() / 100) * 100) !== $invoice_amount
         ];
         // dd(($this->getRetroCommissionTotale()) - ($invoice_amount));
         return $this->editMessage($this->retrocomInvoiceDetails);

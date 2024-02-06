@@ -1,30 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>My Webpage</title>
-    </head>
-    <body>
-      {% if field.value is not empty %}
-        {% set i = 1 %}
-          {% for tabDetails in field.value %}
-              
-              <span class="badge badge-primary mb-3 p-1 text-wrap">
-                <i class="fa-solid fa-cash-register"></i> 
-                Total : {{ (tranche.taxAssureurInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-                Paiements : {{ (tranche.taxAssureurInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-                Solde dû à facturer : {{ (tranche.taxAssureurInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-                {% if (tranche.taxAssureurInvoiceDetails['produire'] == true) %}
-                  <span class="badge bg-warning text-white text-wrap">{{tranche.taxAssureurInvoiceDetails['message']}}</span>
-                {% else %}
-                  <span class="badge bg-dark text-white text-wrap">{{tranche.taxAssureurInvoiceDetails['message']}}</span>
-                {% endif %}
-              </span>
-
-              {% set i = i + 1 %}
-          {% endfor %}
-
-      {% else %}
-          <i class="fa-solid fa-face-frown-open"></i> Aucune cotation n'est disponible pour l'instant.
-      {% endif %}
-    </body>
-</html>
+<span class="badge badge-primary mb-3 p-1 text-wrap">
+  <i class="fa-solid fa-cash-register"></i> 
+  Total : {{ (tabDetails['target'] / 100)|format_currency(monnaie.code)}} |
+  Paiements : {{ (tabDetails['paiements']['montantPaye'] / 100)|format_currency(monnaie.code)}} |
+  Solde dû à facturer : {{ (tabDetails['solde'] / 100)|format_currency(monnaie.code)}}
+  {% if (tabDetails['produire'] == true) %}
+    <span class="badge bg-warning text-white text-wrap">
+      {{tabDetails['message']}}
+    </span>
+  {% else %}
+    <span class="badge bg-dark text-white text-wrap">
+      {{tabDetails['message']}}
+    </span>
+  {% endif %}
+</span>

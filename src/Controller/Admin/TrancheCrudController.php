@@ -481,7 +481,6 @@ class TrancheCrudController extends AbstractCrudController
             $tranche = $context->getEntity()->getInstance();
         }
 
-
         $objetMultiCom = new ObjetMultiCom(
             $serviceTaxes->getTaxe(true),
             $serviceTaxes->getTaxe(false)

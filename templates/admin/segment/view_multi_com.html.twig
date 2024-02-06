@@ -37,41 +37,10 @@ PRONEMA - Production des Notes (de débit, de crédit ou avoir) en Masse
           <h5 class="mb-1"><i class="fas fa-person-shelter"></i> Groupe A: les notes de débit destinées à {{ tranche.client }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.premiumInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNDPrime, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNDPrime) }}
-          {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.premiumInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.premiumInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.premiumInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.premiumInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.premiumInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.premiumInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>
-          
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.premiumInvoiceDetails, 'champ': form.produireNDPrime, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.fraisGestionInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNDFraisGestion, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNDFraisGestion) }}
-          {% endif %}    
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.fraisGestionInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.fraisGestionInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.fraisGestionInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.fraisGestionInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.fraisGestionInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.fraisGestionInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>  
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.fraisGestionInvoiceDetails, 'champ': form.produireNDFraisGestion, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
       </ul>
       <ul class="list-group mt-3">
@@ -79,58 +48,13 @@ PRONEMA - Production des Notes (de débit, de crédit ou avoir) en Masse
           <h5 class="mb-1"><i class="fas fa-umbrella"></i> Groupe B: les notes de débit destinées à {{ tranche.assureur }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.comLocaleInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNDComLocale, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNDComLocale) }}
-          {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.comLocaleInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.comLocaleInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.comLocaleInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.comLocaleInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.comLocaleInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.comLocaleInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.comLocaleInvoiceDetails, 'champ': form.produireNDComLocale, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.comReassuranceInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNDComReassurance, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNDComReassurance) }}
-          {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.comReassuranceInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.comReassuranceInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.comReassuranceInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.comReassuranceInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.comReassuranceInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.comReassuranceInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>
-          </li>
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.comReassuranceInvoiceDetails, 'champ': form.produireNDComReassurance, 'monnaie': tranche.monnaie_Affichage} %}
+        </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.comFrontingInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNDComFronting, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNDComFronting) }}
-          {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.comFrontingInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.comFrontingInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.comFrontingInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.comFrontingInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.comFrontingInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.comFrontingInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>  
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.comFrontingInvoiceDetails, 'champ': form.produireNDComFronting, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
       </ul>
       <ul class="list-group mt-3">
@@ -138,22 +62,7 @@ PRONEMA - Production des Notes (de débit, de crédit ou avoir) en Masse
           <h5 class="mb-1"><i class="fas fa-handshake"></i> Groupe C: la note de crédit destinée à {{ tranche.partenaire }}</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.retrocomInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNCRetrocommission, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNCRetrocommission) }}
-          {% endif %}  
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.retrocomInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.retrocomInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.retrocomInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.retrocomInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.retrocomInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.retrocomInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.retrocomInvoiceDetails, 'champ': form.produireNCRetrocommission, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
       </ul>
       <ul class="list-group mt-3">
@@ -161,44 +70,10 @@ PRONEMA - Production des Notes (de débit, de crédit ou avoir) en Masse
           <h5 class="mb-1"><i class="fas fa-landmark-dome"></i> Groupe D: les notes de crédit destinées à l'autorité fiscale et/ou au régulateur</h5>
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.taxCourtierInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNCTaxeCourtier, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNCTaxeCourtier)}}
-          {% endif %}
-          <span class="badge badge-primary badge-pill mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.taxCourtierInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.taxCourtierInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.taxCourtierInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.taxCourtierInvoiceDetails['produire'] == true) %}
-              <span class="badge badge-pill bg-warning text-white text-wrap">{{tranche.taxCourtierInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge badge-pill bg-dark text-white text-wrap">{{tranche.taxCourtierInvoiceDetails['message']}}</span>
-            {% endif %}
-           </span>  
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.taxCourtierInvoiceDetails, 'champ': form.produireNCTaxeCourtier, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
         <li class="list-group-item list-group-item-action pt-3 pb-0 d-flex justify-content-between align-items-center">
-          {% if tranche.taxAssureurInvoiceDetails['produire'] == false %}
-            {{ form_row(form.produireNCTaxeAssureur, {"attr": {"disabled" : "disabled"}}) }}
-          {% else %}
-            {{ form_row(form.produireNCTaxeAssureur) }}
-          {% endif %}  
-
-          {# Comment inclure un composant graphique twig #}
-          {# {% include 'pdf/composants/_footer.html.twig' with {'currentPage': page, 'totalPage': pageTotale} %} #}
-
-          <span class="badge badge-primary mb-3 p-1 text-wrap">
-            <i class="fa-solid fa-cash-register"></i> 
-            Total : {{ (tranche.taxAssureurInvoiceDetails['target'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Paiements : {{ (tranche.taxAssureurInvoiceDetails['paiements']['montantPaye'] / 100)|format_currency(tranche.monnaie_Affichage.code)}} |
-            Solde dû à facturer : {{ (tranche.taxAssureurInvoiceDetails['solde'] / 100)|format_currency(tranche.monnaie_Affichage.code)}}
-            {% if (tranche.taxAssureurInvoiceDetails['produire'] == true) %}
-              <span class="badge bg-warning text-white text-wrap">{{tranche.taxAssureurInvoiceDetails['message']}}</span>
-            {% else %}
-              <span class="badge bg-dark text-white text-wrap">{{tranche.taxAssureurInvoiceDetails['message']}}</span>
-            {% endif %}
-          </span>  
+          {% include 'admin/segment/view_champ_form_multi_com_tranche.html.twig' with {'tabDetails': tranche.taxAssureurInvoiceDetails, 'champ': form.produireNCTaxeAssureur, 'monnaie': tranche.monnaie_Affichage} %}
         </li>
       </ul>
       <button type="submit" class="btn btn-primary mt-3"><i class="fa-solid fa-receipt"></i>  Produire les notes</button>

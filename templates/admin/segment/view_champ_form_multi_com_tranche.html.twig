@@ -1,0 +1,6 @@
+{% if tabDetails['produire'] == false %}
+  {{ form_row(champ, {"attr": {"disabled" : "disabled"}}) }}
+{% else %}
+  {{ form_row(champ) }}
+{% endif %}  
+{% include 'admin/segment/view_badge_tranche.html.twig' with {'tabDetails': tabDetails, 'monnaie': monnaie} %}

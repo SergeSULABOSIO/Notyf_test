@@ -1491,7 +1491,7 @@ class ServicePreferences
             // ->setStoredAsCents()
             ->onlyOnIndex();
         //Les type de commission
-        $tabAttributs[] = CollectionField::new('retrocomInvoiceDetails', "Com / Réa")//com_reassurance
+        $tabAttributs[] = CollectionField::new('comReassuranceInvoiceDetails', "Com / Réa")//com_reassurance
             ->setTemplatePath('admin/segment/index_tranche.html.twig')
             // ->formatValue(function ($value, Tranche $tranche) {
             //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance());

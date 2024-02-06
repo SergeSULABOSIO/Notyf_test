@@ -10,6 +10,7 @@ use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche
@@ -84,6 +85,7 @@ class Tranche
     public const MONTANT_DU = "montantDu";
     public const MONTANT_PAYE = "montantPaye";
     public const TARGET = "target";
+    public const MESSAGE = "message";
     public const DATA = "data";
     public const SOLDE_DU = "solde";
     public const PRODUIRE_FACTURE = "produire";
@@ -282,7 +284,7 @@ class Tranche
     /**
      * Get the value of retroCommissionTotale
      */
-    public function getRetroCommissionTotale():float
+    public function getRetroCommissionTotale(): float
     {
         $this->retroCommissionTotale = (new Calculateur())
             ->getRetroCommissionTotale(
@@ -731,7 +733,7 @@ class Tranche
         $payments = [];
         $payments_amount = 0;
 
-        
+
         foreach ($this->getElementFactures() as $ef) {
             $facture = $ef->getFacture();
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {
@@ -758,8 +760,24 @@ class Tranche
             self::SOLDE_DU => $this->getPrimeTotaleTranche() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getPrimeTotaleTranche() != $invoice_amount
         ];
+        return $this->editMessage($this->premiumInvoiceDetails);
+    }
 
-        return $this->premiumInvoiceDetails;
+    private function editMessage(array $tab): array
+    {
+        $target = $tab[self::TARGET];
+        $montantDu = $tab[self::FACTURE][self::MONTANT_DU];
+        $montantPaye = $tab[self::PAIEMENTS][self::MONTANT_PAYE];
+
+        if ($target == 0) {
+            $tab[self::MESSAGE] = "A ne pas facturer";
+        } else if ($target == $montantDu) {
+            $tab[self::MESSAGE] = "Note émise et reglée à " . ($montantPaye / $montantDu) * 100 . "%";
+        } else {
+            $tab[self::MESSAGE] = "Vous pouvez émettre la note";
+        }
+        // dd($tab);
+        return $tab;
     }
 
     /**
@@ -799,12 +817,12 @@ class Tranche
             self::SOLDE_DU => $this->getComFraisGestion() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComFraisGestion() != $invoice_amount
         ];
-        return $this->fraisGestionInvoiceDetails;
+        return $this->editMessage($this->fraisGestionInvoiceDetails);
     }
 
     /**
      * Get the value of retrocomInvoiceDetails
-     */ 
+     */
     public function getRetrocomInvoiceDetails()
     {
         //les paramètres
@@ -819,7 +837,7 @@ class Tranche
                 //Facture
                 // dd($facture->getTotalDu() * 1000000);
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu()/100);
+                $invoice_amount = $invoice_amount + ($facture->getTotalDu() / 100);
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -841,12 +859,12 @@ class Tranche
             self::PRODUIRE_FACTURE => ($this->getRetroCommissionTotale() / 100) !== $invoice_amount
         ];
         // dd(($this->getRetroCommissionTotale()) - ($invoice_amount));
-        return $this->retrocomInvoiceDetails;
+        return $this->editMessage($this->retrocomInvoiceDetails);
     }
 
     /**
      * Get the value of taxInvoiceDetails
-     */ 
+     */
     public function getTaxCourtierInvoiceDetails()
     {
         //les paramètres
@@ -881,12 +899,12 @@ class Tranche
             self::SOLDE_DU => $this->getTaxeCourtierTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getTaxeCourtierTotale() != $invoice_amount
         ];
-        return $this->taxCourtierInvoiceDetails;
+        return $this->editMessage($this->taxCourtierInvoiceDetails);
     }
 
     /**
      * Get the value of taxAssureurInvoiceDetails
-     */ 
+     */
     public function getTaxAssureurInvoiceDetails()
     {
         //les paramètres
@@ -921,12 +939,12 @@ class Tranche
             self::SOLDE_DU => $this->getTaxeAssureurTotale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getTaxeAssureurTotale() != $invoice_amount
         ];
-        return $this->taxAssureurInvoiceDetails;
+        return $this->editMessage($this->taxAssureurInvoiceDetails);
     }
 
     /**
      * Get the value of comLocaleInvoiceDetails
-     */ 
+     */
     public function getComLocaleInvoiceDetails()
     {
         //les paramètres
@@ -961,12 +979,12 @@ class Tranche
             self::SOLDE_DU => $this->getComLocale() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComLocale() != $invoice_amount
         ];
-        return $this->comLocaleInvoiceDetails;
+        return $this->editMessage($this->comLocaleInvoiceDetails);
     }
 
     /**
      * Get the value of comReassuranceInvoiceDetails
-     */ 
+     */
     public function getComReassuranceInvoiceDetails()
     {
         //les paramètres
@@ -1004,12 +1022,12 @@ class Tranche
             self::PRODUIRE_FACTURE => $this->getComReassurance() != $invoice_amount
         ];
         // dd($this->getComReassurance(), $invoice_amount);
-        return $this->comReassuranceInvoiceDetails;
+        return $this->editMessage($this->comReassuranceInvoiceDetails);
     }
 
     /**
      * Get the value of comFrontingInvoiceDetails
-     */ 
+     */
     public function getComFrontingInvoiceDetails()
     {
         //les paramètres
@@ -1044,6 +1062,6 @@ class Tranche
             self::SOLDE_DU => $this->getComFronting() - $payments_amount,
             self::PRODUIRE_FACTURE => $this->getComFronting() != $invoice_amount
         ];
-        return $this->comFrontingInvoiceDetails;
+        return $this->editMessage($this->comFrontingInvoiceDetails);
     }
 }

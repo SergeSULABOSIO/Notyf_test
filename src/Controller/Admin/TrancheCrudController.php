@@ -570,8 +570,35 @@ class TrancheCrudController extends AbstractCrudController
         // dd($formulaire);
         
         if($formulaire->isSubmitted() && $formulaire->isValid()){
-            dd("Le formulaire valide vient d'être soumis", $formulaire);
-            ici
+            /** @var ObjetMultiCom */
+            $objetReponse = $formulaire->getData();
+
+            // dd("Réponse de l'utilisateur:", $objetReponse);
+
+            if($objetReponse->getProduireNDPrime() == true){
+                Ici
+            }
+            if($objetReponse->getProduireNDFraisGestion() == true){
+                
+            }
+            if($objetReponse->getProduireNDComLocale() == true){
+                
+            }
+            if($objetReponse->getProduireNDComReassurance() == true){
+                
+            }
+            if($objetReponse->getProduireNDComFronting() == true){
+                
+            }
+            if($objetReponse->getProduireNCRetrocommission() == true){
+                
+            }
+            if($objetReponse->getProduireNCTaxeCourtier() == true){
+                
+            }
+            if($objetReponse->getProduireNCTaxeAssureur() == true){
+                
+            }
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
         return $this->render(

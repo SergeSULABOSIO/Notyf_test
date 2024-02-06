@@ -11,6 +11,13 @@ use App\Entity\Tranche;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -21,6 +28,7 @@ use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use App\Service\ServiceFiltresNonMappes;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -33,19 +41,23 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
+use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceCompteBancaire;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\HttpFoundation\Request;
 
 class TrancheCrudController extends AbstractCrudController
 {
     public ?Crud $crud = null;
 
     public function __construct(
+        private ServiceAvenant $serviceAvenant,
+        private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
@@ -573,29 +585,94 @@ class TrancheCrudController extends AbstractCrudController
             $objetReponse = $formulaire->getData();
             // dd("Réponse de l'utilisateur:", $objetReponse);
             if($objetReponse->getProduireNDPrime() == true){
-                Ici
+                $ffg = new FacturePrimeInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNDFraisGestion() == true){
-                
+                $ffg = new FactureFraisGestionInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNDComLocale() == true){
-                
+                $ffg = new FactureComLocaleInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNDComReassurance() == true){
-                
+                $ffg = new FactureComReassuranceInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNDComFronting() == true){
-                
+                $ffg = new FactureComFrontingInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNCRetrocommission() == true){
-                
+                $ffg = new FactureRetroCommissionInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNCTaxeCourtier() == true){
-                
+                $ffg = new FactureTaxeCourtierInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
             if($objetReponse->getProduireNCTaxeAssureur() == true){
-                
+                $ffg = new FactureTaxeAssureurInit(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager,
+                    $this->serviceCompteBancaire
+                );
+                $facture = $ffg->buildFacture(1, $tranche);
+                $ffg->saveFacture();
             }
+            Il faut balancer un message
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
         return $this->render(

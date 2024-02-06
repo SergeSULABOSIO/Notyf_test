@@ -498,7 +498,6 @@ class TrancheCrudController extends AbstractCrudController
         $taxeCourtier = $serviceTaxes->getTaxe(true);
         $taxeAssureur = $serviceTaxes->getTaxe(false);
 
-
         $formulaire = $this->createFormBuilder($objetMultiCom)
             ->add(
                 "produireNDPrime",
@@ -572,9 +571,7 @@ class TrancheCrudController extends AbstractCrudController
         if($formulaire->isSubmitted() && $formulaire->isValid()){
             /** @var ObjetMultiCom */
             $objetReponse = $formulaire->getData();
-
             // dd("Réponse de l'utilisateur:", $objetReponse);
-
             if($objetReponse->getProduireNDPrime() == true){
                 Ici
             }

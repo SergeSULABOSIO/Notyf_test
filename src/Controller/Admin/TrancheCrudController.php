@@ -579,12 +579,12 @@ class TrancheCrudController extends AbstractCrudController
 
         $formulaire->handleRequest($request);
         // dd($formulaire);
-        
-        if($formulaire->isSubmitted() && $formulaire->isValid()){
+
+        if ($formulaire->isSubmitted() && $formulaire->isValid()) {
             /** @var ObjetMultiCom */
             $objetReponse = $formulaire->getData();
             // dd("Réponse de l'utilisateur:", $objetReponse);
-            if($objetReponse->getProduireNDPrime() == true){
+            if ($objetReponse->getProduireNDPrime() == true) {
                 $ffg = new FacturePrimeInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -595,7 +595,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNDFraisGestion() == true){
+            if ($objetReponse->getProduireNDFraisGestion() == true) {
                 $ffg = new FactureFraisGestionInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -606,7 +606,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNDComLocale() == true){
+            if ($objetReponse->getProduireNDComLocale() == true) {
                 $ffg = new FactureComLocaleInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -617,7 +617,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNDComReassurance() == true){
+            if ($objetReponse->getProduireNDComReassurance() == true) {
                 $ffg = new FactureComReassuranceInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -628,7 +628,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNDComFronting() == true){
+            if ($objetReponse->getProduireNDComFronting() == true) {
                 $ffg = new FactureComFrontingInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -639,7 +639,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNCRetrocommission() == true){
+            if ($objetReponse->getProduireNCRetrocommission() == true) {
                 $ffg = new FactureRetroCommissionInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -650,7 +650,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNCTaxeCourtier() == true){
+            if ($objetReponse->getProduireNCTaxeCourtier() == true) {
                 $ffg = new FactureTaxeCourtierInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -661,7 +661,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            if($objetReponse->getProduireNCTaxeAssureur() == true){
+            if ($objetReponse->getProduireNCTaxeAssureur() == true) {
                 $ffg = new FactureTaxeAssureurInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
@@ -672,7 +672,18 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            Il faut balancer un message
+
+            $url = $adminUrlGenerator
+                ->setController(FactureCrudController::class)
+                ->setAction(Action::INDEX)
+                // // ->set("titre", "EDITION FACTURE - " . $typeFacture)
+                // ->set("donnees[type]", $typeFacture)
+                // ->set("donnees[action]", "facture")
+                // ->set("donnees[tabTranches]", $tabIdTranches)
+                ->setEntityId(null)
+                ->generateUrl();
+
+            return $this->redirect($url);
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);
         return $this->render(

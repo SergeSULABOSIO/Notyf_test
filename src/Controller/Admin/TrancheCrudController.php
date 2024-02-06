@@ -676,11 +676,11 @@ class TrancheCrudController extends AbstractCrudController
             //On se redirige vers la page des facture
             //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement
             $url = $adminUrlGenerator
-                ->setController(FactureCrudController::class)
+                ->setController(TrancheCrudController::class)
                 ->setAction(Action::INDEX)
                 ->setEntityId(null)
                 ->generateUrl();
-            
+
             return $this->redirect($url);
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);

@@ -678,13 +678,9 @@ class TrancheCrudController extends AbstractCrudController
             $url = $adminUrlGenerator
                 ->setController(FactureCrudController::class)
                 ->setAction(Action::INDEX)
-                // // ->set("titre", "EDITION FACTURE - " . $typeFacture)
-                // ->set("donnees[type]", $typeFacture)
-                // ->set("donnees[action]", "facture")
-                // ->set("donnees[tabTranches]", $tabIdTranches)
                 ->setEntityId(null)
                 ->generateUrl();
-
+            
             return $this->redirect($url);
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);

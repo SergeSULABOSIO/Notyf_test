@@ -672,7 +672,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-
+            
             //On se redirige vers la page des facture
             //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement
             $url = $adminUrlGenerator
@@ -680,7 +680,7 @@ class TrancheCrudController extends AbstractCrudController
                 ->setAction(Action::INDEX)
                 ->setEntityId(null)
                 ->generateUrl();
-
+            $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". Les factures/notes ont été générées avec succès.");
             return $this->redirect($url);
         }
         // dd("Ici - MultiCommissions", $objetMultiCom, $formulaire);

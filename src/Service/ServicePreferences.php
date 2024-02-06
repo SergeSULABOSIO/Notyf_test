@@ -1482,49 +1482,54 @@ class ServicePreferences
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
             ->setNumDecimals(2)
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('primeTotaleTranche', "Prime")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getPrimeTotaleTranche());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('premiumInvoiceDetails', "Prime d'assurance")//primeTotaleTranche
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getPrimeTotaleTranche());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
         //Les type de commission
-        $tabAttributs[] = MoneyField::new('com_reassurance', "Com / Réa")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('retrocomInvoiceDetails', "Com / Réa")//com_reassurance
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('com_locale', "Com / Loc")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComLocale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('comLocaleInvoiceDetails', "Com / Loc")//com_locale
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComLocale());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('com_fronting', "Com / Frtg")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFronting());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('comFrontingInvoiceDetails', "Com / Frtg")
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFronting());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('com_frais_gestion', "Com / F. Gest")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFraisGestion());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('fraisGestionInvoiceDetails', "Com / F. Gest")
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFraisGestion());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComAutreChargement());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnIndex();
+        // $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
+        //     ->formatValue(function ($value, Tranche $tranche) {
+        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComAutreChargement());
+        //     })
+        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+        //     ->setStoredAsCents()
+        //     ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
             ->formatValue(function ($value, Tranche $tranche) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal());
@@ -1532,26 +1537,29 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('retroCommissionTotale', "Rétro-Com")
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('retrocomInvoiceDetails', "Rétro-Com")
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('taxeCourtierTotale', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('taxCourtierInvoiceDetails', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
-        $tabAttributs[] = MoneyField::new('taxeAssureurTotale', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
-            ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale());
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('taxAssureurInvoiceDetails', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
+            ->setTemplatePath('admin/segment/index_tranche.html.twig')
+            // ->formatValue(function ($value, Tranche $tranche) {
+            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale());
+            // })
+            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            // ->setStoredAsCents()
             ->onlyOnIndex();
 
         $tabAttributs[] = MoneyField::new('reserve', "Réserve")

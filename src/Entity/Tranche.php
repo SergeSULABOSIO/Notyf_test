@@ -87,6 +87,7 @@ class Tranche
     public const TARGET = "target";
     public const MESSAGE = "message";
     public const DATA = "data";
+    public const MONNAIE = "monnaie";
     public const SOLDE_DU = "solde";
     public const PRODUIRE_FACTURE = "produire";
     public const TOBE_INVOICED = "toBeInvoiced";
@@ -748,6 +749,7 @@ class Tranche
             }
         }
         $this->premiumInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getPrimeTotaleTranche(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -805,6 +807,7 @@ class Tranche
             }
         }
         $this->fraisGestionInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComFraisGestion(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -846,6 +849,7 @@ class Tranche
             }
         }
         $this->retrocomInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => ($this->getRetroCommissionTotale() / 100) * 100,
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -887,6 +891,7 @@ class Tranche
             }
         }
         $this->taxCourtierInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getTaxeCourtierTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -927,6 +932,7 @@ class Tranche
             }
         }
         $this->taxAssureurInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getTaxeAssureurTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -967,6 +973,7 @@ class Tranche
             }
         }
         $this->comLocaleInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComLocale(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -1009,6 +1016,7 @@ class Tranche
             }
         }
         $this->comReassuranceInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComReassurance(),
             self::FACTURE => [
                 self::DATA => $invoices,
@@ -1050,6 +1058,7 @@ class Tranche
             }
         }
         $this->comFrontingInvoiceDetails = [
+            self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComFronting(),
             self::FACTURE => [
                 self::DATA => $invoices,

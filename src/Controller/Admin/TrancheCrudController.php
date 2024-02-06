@@ -505,49 +505,56 @@ class TrancheCrudController extends AbstractCrudController
                 "produireNDPrime",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour prime d'assurance."
+                    "label" => "Note de débit pour prime d'assurance.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNDFraisGestion",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour frais de gestion."
+                    "label" => "Note de débit pour frais de gestion.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNDComLocale",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour commission locale / ordinaire."
+                    "label" => "Note de débit pour commission locale / ordinaire.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNDComReassurance",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour commission de réassurance."
+                    "label" => "Note de débit pour commission de réassurance.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNDComFronting",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour commission sur fronting / commission de cession facultavive."
+                    "label" => "Note de débit pour commission sur fronting / commission de cession facultavive.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNCRetrocommission",
                 CheckboxType::class,
                 [
-                    "label" => "Note de crédit pour rétro-commission."
+                    "label" => "Note de crédit pour rétro-commission.",
+                    'required' => false,
                 ]
             )
             ->add(
                 "produireNCTaxeCourtier",
                 CheckboxType::class,
                 [
-                    "label" => "Note de crédit pour les frais " . $taxeCourtier->getNom() . " destinés à \"" . $taxeCourtier->getOrganisation() . "\"."
+                    "label" => "Note de crédit pour les frais " . $taxeCourtier->getNom() . " destinés à \"" . $taxeCourtier->getOrganisation() . "\".",
+                    'required' => false,
                 ]
             )
             ->add(
@@ -555,6 +562,7 @@ class TrancheCrudController extends AbstractCrudController
                 CheckboxType::class,
                 [
                     "label" => "Note de crédit pour les frais " . $taxeAssureur->getNom() . " destinés à \"" . $taxeAssureur->getOrganisation() . "\".",
+                    'required' => false,
                 ]
             )
             ->getForm();

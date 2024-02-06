@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Service\RefactoringJS\Initialisateurs\Facture;
-
 use App\Entity\Taxe;
 
 class ObjetMultiCom
@@ -14,7 +13,6 @@ class ObjetMultiCom
     private ?bool $produireNCRetrocommission = false;
     private ?bool $produireNCTaxeCourtier = false;
     private ?bool $produireNCTaxeAssureur = false;
-
     private ?Taxe $taxeCourtier;
     private ?Taxe $taxeAssureur;
 

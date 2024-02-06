@@ -547,7 +547,7 @@ class TrancheCrudController extends AbstractCrudController
                 "produireNDComFronting",
                 CheckboxType::class,
                 [
-                    "label" => "Note de débit pour commission sur fronting / commission de cession facultavive.",
+                    "label" => "Note de débit pour commission sur fronting / commission de cession facultative.",
                     'required' => false,
                 ]
             )

@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -36,7 +37,7 @@ abstract class JSPanelRenderer implements JSPanel
     }
 
     public abstract function design();
-    public abstract function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null):?array;
+    public abstract function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array;
 
     public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
@@ -106,6 +107,24 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($columns != null) {
             $champTempo->setColumns($columns);
+        }
+        if ($desabled != null) {
+            $champTempo->setDisabled($desabled);
+        }
+        if ($required != null) {
+            $champTempo->setRequired($required);
+        }
+        $this->champsPanel[] = $champTempo;
+    }
+
+    public function addChampBooleen(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?bool $renderAsSwitch = false)
+    {
+        $champTempo = BooleanField::new($attribut, $titre);
+        if ($permission != null) {
+            $champTempo->setPermission($permission);
+        }
+        if ($renderAsSwitch != null) {
+            $champTempo->renderAsSwitch($renderAsSwitch);
         }
         if ($desabled != null) {
             $champTempo->setDisabled($desabled);
@@ -219,7 +238,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns)
+    public function addChampTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
     {
         $champTempo = TextField::new($attribut, $titre);
         if ($permission != null) {
@@ -234,10 +253,13 @@ abstract class JSPanelRenderer implements JSPanel
         if ($required != null) {
             $champTempo->setRequired($required);
         }
+        if ($formatValue != null) {
+            $champTempo->formatValue($formatValue);
+        }
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampNombre(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue)
+    public function addChampNombre(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
     {
         $champTempo = NumberField::new($attribut, $titre);
         if ($permission != null) {
@@ -255,6 +277,28 @@ abstract class JSPanelRenderer implements JSPanel
         if ($formatValue != null) {
             $champTempo->formatValue($formatValue);
         }
+        $this->champsPanel[] = $champTempo;
+    }
+
+    public function addChampPourcentage(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
+    {
+        $champTempo = NumberField::new($attribut, $titre);
+        if ($permission != null) {
+            $champTempo->setPermission($permission);
+        }
+        if ($columns != null) {
+            $champTempo->setColumns($columns);
+        }
+        if ($desabled != null) {
+            $champTempo->setDisabled($desabled);
+        }
+        if ($required != null) {
+            $champTempo->setRequired($required);
+        }
+        if ($formatValue != null) {
+            $champTempo->formatValue($formatValue);
+        }
+        $champTempo->setNumDecimals(2);
         $this->champsPanel[] = $champTempo;
     }
 

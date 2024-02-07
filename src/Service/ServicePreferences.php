@@ -1472,124 +1472,88 @@ class ServicePreferences
 
     public function setPROD_Fields_Tranche_Index(array $tabPreferences, array $tabDefaultAttributs, $tabAttributs)
     {
+        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
+            ->formatValue(function ($value, Tranche $tranche) {
+                return "<span class='badge badge-light text-bold'>" . $value . "</span>";
+            })
+            ->onlyOnIndex();
         $tabAttributs[] = BooleanField::new('validated', "Validée")
             ->renderAsSwitch(false)
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('periodeValidite', "Période")
-            ->onlyOnIndex();
-        $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PROD_TRANCHE_NOM)
+            ->formatValue(function ($value, Tranche $tranche) {
+                return "<span class='badge badge-light text-bold'>" . $value . "</span>";
+            })
             ->onlyOnIndex();
         $tabAttributs[] = PercentField::new('taux', PreferenceCrudController::PREF_PROD_TRANCHE_TAUX)
+            ->formatValue(function ($value, Tranche $tranche) {
+                return "<span class='badge badge-light text-bold'>" . $value . "</span>";
+            })
             ->setNumDecimals(2)
             ->onlyOnIndex();
-        $tabAttributs[] = CollectionField::new('premiumInvoiceDetails', "Prime d'assurance")//primeTotaleTranche
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getPrimeTotaleTranche());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('premiumInvoiceDetails', "Prime d'assurance") //primeTotaleTranche
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
         //Les type de commission
-        $tabAttributs[] = CollectionField::new('comReassuranceInvoiceDetails', "Com / Réa")//com_reassurance
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComReassurance());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('comReassuranceInvoiceDetails', "Com / Réa") //com_reassurance
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
-        $tabAttributs[] = CollectionField::new('comLocaleInvoiceDetails', "Com / Loc")//com_locale
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComLocale());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+        $tabAttributs[] = CollectionField::new('comLocaleInvoiceDetails', "Com / Loc") //com_locale
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
         $tabAttributs[] = CollectionField::new('comFrontingInvoiceDetails', "Com / Frtg")
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFronting());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
         $tabAttributs[] = CollectionField::new('fraisGestionInvoiceDetails', "Com / F. Gest")
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComFraisGestion());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
-        // $tabAttributs[] = MoneyField::new('com_autre_chargement', "Com / Autre")
-        //     ->formatValue(function ($value, Tranche $tranche) {
-        //         return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getComAutreChargement());
-        //     })
-        //     ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-        //     ->setStoredAsCents()
-        //     ->onlyOnIndex();
         $tabAttributs[] = MoneyField::new('revenuTotal', "Revenu total")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal());
+                return "<span class='badge badge-light text-bold'>" . $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRevenuTotal()) . "</span>";
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = CollectionField::new('retrocomInvoiceDetails', "Rétro-Com")
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getRetroCommissionTotale());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
         $tabAttributs[] = CollectionField::new('taxCourtierInvoiceDetails', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier()))
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeCourtierTotale());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
         $tabAttributs[] = CollectionField::new('taxAssureurInvoiceDetails', "Taxe " . ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
-            ->setTemplatePath('admin/segment/index_tranche.html.twig')
-            // ->formatValue(function ($value, Tranche $tranche) {
-            //     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getTaxeAssureurTotale());
-            // })
-            // ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            // ->setStoredAsCents()
+            ->setTemplatePath('admin/segment/index_tranche_status.html.twig')
             ->onlyOnIndex();
-
         $tabAttributs[] = MoneyField::new('reserve', "Réserve")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getReserve());
+                return "<span class='badge badge-light text-bold'>" . $this->serviceMonnaie->getMonantEnMonnaieAffichage($tranche->getReserve()) . "</span>";
             })
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('police', "Police")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $tranche->getPolice()->getReference();
+                return "<span class='badge badge-light text-bold'>" . $tranche->getPolice()->getReference() . "</span>";
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('client', "Client")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $tranche->getClient()->getNom();
+                return "<span class='badge badge-light text-bold'>" . $tranche->getClient()->getNom() . "</span>";
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('produit', "Produit")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $tranche->getProduit()->getNom();
+                return "<span class='badge badge-light text-bold'>" . $tranche->getProduit()->getNom() . "</span>";
             })
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('partenaire', "Partenaire")
             ->formatValue(function ($value, Tranche $tranche) {
-                return $tranche->getPartenaire()->getNom();
+                return "<span class='badge badge-light text-bold'>" . $tranche->getPartenaire()->getNom() . "</span>";
             })
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PROD_TRANCHE_DERNIRE_MODIFICATION)
+            ->formatValue(function ($value, Tranche $tranche) {
+                return "<span class='badge badge-light text-bold'>" . $value . "</span>";
+            })
             ->onlyOnIndex();
 
         return $tabAttributs;

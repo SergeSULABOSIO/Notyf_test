@@ -12,12 +12,18 @@
                 Solde : {{ (field.value['solde'] / 100)|format_currency(monnaie)}}<br/> 
                 {% if (field.value['produire'] == true) %}
                     <span class="badge bg-warning text-white text-wrap">
-                    {{field.value['message']}}
+                        {{field.value['message']}}
                     </span>
                 {% else %}
-                    <span class="badge bg-dark text-white text-wrap">
-                    {{field.value['message']}}
-                    </span>
+                    {% if ((field.value['target'] / 100) == 0) %}
+                        <span class="badge bg-danger text-white text-wrap">
+                            {{field.value['message']}}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-dark text-white text-wrap">
+                            {{field.value['message']}}
+                        </span>
+                    {% endif %}
                 {% endif %}
             </span>
         {% else %}

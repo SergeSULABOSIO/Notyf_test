@@ -772,7 +772,7 @@ class Tranche
         $montantPaye = $tab[self::PAIEMENTS][self::MONTANT_PAYE];
 
         if ($target == 0) {
-            $tab[self::MESSAGE] = "A ne pas facturer";
+            $tab[self::MESSAGE] = "Ne pas facturer, car pas un revenu";
         } else if ($target == $montantDu) {
             $tab[self::MESSAGE] = "Note émise et reglée à " . ($montantPaye / $montantDu) * 100 . "%";
         } else {

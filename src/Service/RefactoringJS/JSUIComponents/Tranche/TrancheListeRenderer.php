@@ -13,6 +13,9 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
 class TrancheListeRenderer extends JSPanelRenderer
 {
+    private ?string $twig_template_status_tranche = "admin/segment/index_tranche_status.html.twig";
+    private ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
+
     public function __construct(
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
@@ -37,7 +40,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             function ($value, Tranche $tranche) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss("badge badge-light text-bold")
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
             }
@@ -62,7 +65,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             function ($value, Tranche $tranche) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss("badge badge-light text-bold")
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
             }
@@ -78,7 +81,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             function ($value, Tranche $tranche) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss("badge badge-light text-bold")
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
             }
@@ -91,7 +94,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            "admin/segment/index_tranche_status.html.twig"
+            $this->twig_template_status_tranche
         );
         Ici
     }

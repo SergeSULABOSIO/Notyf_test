@@ -298,6 +298,23 @@ class TrancheListeRenderer extends JSPanelRenderer
                 return $formatedHtml;
             }
         );
+        //Dernière modification
+        $this->addChampDate(
+            null,
+            "updatedAt",
+            "D. Modification",
+            false,
+            false,
+            10,
+            function ($value, Tranche $tranche) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

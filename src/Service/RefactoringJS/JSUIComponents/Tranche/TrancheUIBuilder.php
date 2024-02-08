@@ -8,10 +8,12 @@ use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheDetailsRenderer;
 
 class TrancheUIBuilder extends JSPanelBuilder
 {
     private ?TrancheListeRenderer $trancheListeRendere = null;
+    private ?TrancheDetailsRenderer $trancheDetailsRendere = null;
 
     public function __construct()
     {
@@ -39,6 +41,15 @@ class TrancheUIBuilder extends JSPanelBuilder
 
     public function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return null;
+        $this->trancheDetailsRendere = new TrancheDetailsRenderer(
+            $entityManager,
+            $serviceMonnaie,
+            $serviceTaxes,
+            $pageName,
+            $objetInstance,
+            $crud,
+            $adminUrlGenerator
+        );
+        return $this->trancheDetailsRendere->getChamps();
     }
 }

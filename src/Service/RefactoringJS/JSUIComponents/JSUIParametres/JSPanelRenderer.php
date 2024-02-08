@@ -174,7 +174,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency)
+    public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null)
     {
         $champTempo = MoneyField::new($attribut, $titre)
             ->setStoredAsCents();
@@ -192,6 +192,9 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($required != null) {
             $champTempo->setRequired($required);
+        }
+        if ($formatValue != null) {
+            $champTempo->formatValue($formatValue);
         }
         $this->champsPanel[] = $champTempo;
     }
@@ -220,7 +223,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampDate(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns)
+    public function addChampDate(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
     {
         $champTempo = DateTimeField::new($attribut, $titre);
         if ($permission != null) {
@@ -234,6 +237,9 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($required != null) {
             $champTempo->setRequired($required);
+        }
+        if ($formatValue != null) {
+            $champTempo->formatValue($formatValue);
         }
         $this->champsPanel[] = $champTempo;
     }

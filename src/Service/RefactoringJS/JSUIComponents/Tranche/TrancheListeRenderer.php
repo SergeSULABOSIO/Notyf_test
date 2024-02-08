@@ -100,7 +100,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             false,
             $this->twig_template_status_tranche
         );
-        // Ici
+        Ici
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

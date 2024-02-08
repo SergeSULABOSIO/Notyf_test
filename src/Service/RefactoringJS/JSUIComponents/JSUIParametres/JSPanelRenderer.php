@@ -323,7 +323,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampCollection(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10, ?string $helpMessage = "Une Collection d'objets.", ?string $crudControllerFqcn, ?bool $allowAdd = true, ?bool $allowDelete = true)
+    public function addChampCollection(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10, ?string $helpMessage = "Une Collection d'objets.", ?string $crudControllerFqcn, ?bool $allowAdd = true, ?bool $allowDelete = true, ?string $templatePath = null)
     {
         $champTempo = CollectionField::new($attribut, $titre)
             ->setEntryIsComplex();
@@ -350,6 +350,9 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($allowDelete != null) {
             $champTempo->allowDelete($allowDelete);
+        }
+        if ($templatePath != null) {
+            $champTempo->setTemplatePath($templatePath);
         }
         $this->champsPanel[] = $champTempo;
     }

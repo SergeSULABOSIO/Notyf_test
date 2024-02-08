@@ -87,16 +87,20 @@ class TrancheListeRenderer extends JSPanelRenderer
             }
         );
         //Prime Annuelle
-        $this->addChampTableau(
+        $this->addChampCollection(
             null,
             "premiumInvoiceDetails",
             "Prime totale",
             false,
             false,
             10,
+            null,
+            null,
+            false,
+            false,
             $this->twig_template_status_tranche
         );
-        Ici
+        // Ici
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

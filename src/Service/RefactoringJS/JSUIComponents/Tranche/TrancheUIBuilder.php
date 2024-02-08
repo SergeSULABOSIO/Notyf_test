@@ -2,17 +2,16 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
+use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
-use App\Service\ServiceTaxes;
 
-class PaiementUIBuilder extends JSPanelBuilder
+class TrancheUIBuilder extends JSPanelBuilder
 {
-    private ?PaiementListeRenderer $paiementListeRendere = null;
-    private ?PaiementFormRenderer $paiementFormRendere = null;
-    private ?PaiementDetailsRenderer $paiementDetailsRendere = null;
+    private ?TrancheListeRenderer $trancheListeRendere = null;
 
     public function __construct()
     {
@@ -21,40 +20,25 @@ class PaiementUIBuilder extends JSPanelBuilder
 
     public function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->paiementListeRendere = new PaiementListeRenderer(
+        $this->trancheListeRendere = new TrancheListeRenderer(
             $entityManager,
             $serviceMonnaie,
+            $serviceTaxes,
             $pageName,
             $objetInstance,
             $crud,
             $adminUrlGenerator
         );
-        return $this->paiementListeRendere->getChamps();
+        return $this->trancheListeRendere->getChamps();
     }
 
     public function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->paiementFormRendere = new PaiementFormRenderer(
-            $entityManager,
-            $serviceMonnaie,
-            $pageName,
-            $objetInstance,
-            $crud,
-            $adminUrlGenerator
-        );
-        return $this->paiementFormRendere->getChamps();
+        return null;
     }
 
     public function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->paiementDetailsRendere = new PaiementDetailsRenderer(
-            $entityManager,
-            $serviceMonnaie,
-            $pageName,
-            $objetInstance,
-            $crud,
-            $adminUrlGenerator
-        );
-        return $this->paiementDetailsRendere->getChamps();
+        return null;
     }
 }

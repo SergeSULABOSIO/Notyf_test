@@ -47,16 +47,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
 use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\TrancheUIBuilder;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceCompteBancaire;
+use App\Service\ServiceMonnaie;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class TrancheCrudController extends AbstractCrudController
 {
     public ?Crud $crud = null;
+    public ?Tranche $tranche = null;
+    public ?TrancheUIBuilder $trancheUIBuilder = null;
 
     public function __construct(
         private ServiceAvenant $serviceAvenant,
+        private ServiceMonnaie $serviceMonnaie,
         private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -69,6 +74,7 @@ class TrancheCrudController extends AbstractCrudController
         private ServiceFiltresNonMappes $serviceFiltresNonMappes
 
     ) {
+        $this->trancheUIBuilder = new TrancheUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -252,11 +258,25 @@ class TrancheCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if ($this->crud) {
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        }
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Tranche(), $this->crud, $this->adminUrlGenerator);
+        // if ($this->crud) {
+        //     $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // }
+        // //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        // return $this->servicePreferences->getChamps(new Tranche(), $this->crud, $this->adminUrlGenerator);
+    
+        /** @var Tranche */
+        $this->tranche = $this->getContext()->getEntity()->getInstance();
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->tranche);
+
+        return $this->trancheUIBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->tranche,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions

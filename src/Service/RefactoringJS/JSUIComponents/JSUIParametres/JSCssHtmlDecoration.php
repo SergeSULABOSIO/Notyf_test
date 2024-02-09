@@ -3,6 +3,7 @@
 namespace App\Service\RefactoringJS\JSUIComponents\JSUIParametres;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class JSCssHtmlDecoration
 {
@@ -13,16 +14,13 @@ class JSCssHtmlDecoration
     public function __construct(?string $balise, ?string $contenu) {
         $this->balise = $balise;
         $this->contenu = $contenu;
-        $this->classesCSS = [];
+        $this->classesCSS = new ArrayCollection();
     }
 
     public function ajouterClasseCss(?string $newClasseCss):?JSCssHtmlDecoration{
-        foreach ($this->classesCSS as $classeCSS) {
-            if($classeCSS == $newClasseCss){
-                return $this;
-            }
+        if (!$this->classesCSS->contains($newClasseCss)) {
+            $this->classesCSS->add($newClasseCss);
         }
-        $this->classesCSS[] = $newClasseCss;
         return $this;
     }
 

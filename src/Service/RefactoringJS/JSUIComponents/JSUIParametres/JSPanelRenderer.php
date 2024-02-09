@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -61,12 +62,12 @@ abstract class JSPanelRenderer implements JSPanel
     private function appliquerType()
     {
         foreach ($this->champsPanel as $champ) {
+            // dd("Je suis ici...", $this->type);
             switch ($this->type) {
                 case self::TYPE_LISTE:
-                    // dd("Je suis ici...");
                     $champ->onlyOnIndex();
                     break;
-                case self::TYPE_DETAILS:
+                    case self::TYPE_DETAILS:
                     $champ->onlyOnDetail();
                     break;
                 case self::TYPE_FORMULAIRE:
@@ -288,7 +289,7 @@ abstract class JSPanelRenderer implements JSPanel
 
     public function addChampPourcentage(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
     {
-        $champTempo = NumberField::new($attribut, $titre);
+        $champTempo = PercentField::new($attribut, $titre);
         if ($permission != null) {
             $champTempo->setPermission($permission);
         }

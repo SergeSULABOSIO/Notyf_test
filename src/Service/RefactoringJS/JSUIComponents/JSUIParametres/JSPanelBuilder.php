@@ -11,8 +11,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 abstract class JSPanelBuilder
 {
     private ?EntityManager $entityManager;
-    private ?ServiceMonnaie $serviceMonnaie; 
-    private ?ServiceTaxes $serviceTaxe; 
+    private ?ServiceMonnaie $serviceMonnaie;
+    private ?ServiceTaxes $serviceTaxe;
     private ?array $champs;
     private ?string $pageName;
     private $objetInstance;
@@ -67,6 +67,7 @@ abstract class JSPanelBuilder
                     $this->crud,
                     $this->adminUrlGenerator
                 );
+                // dd("Ici", $this->champs);
                 break;
             case Crud::PAGE_EDIT || Crud::PAGE_NEW:
                 $this->champs = $this->buildFormPanel(
@@ -80,6 +81,7 @@ abstract class JSPanelBuilder
                 );
                 break;
         }
+        // dd("Ici", $this->champs);
         return $this->champs;
     }
 }

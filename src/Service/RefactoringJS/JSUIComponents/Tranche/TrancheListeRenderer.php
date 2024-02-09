@@ -53,7 +53,7 @@ class TrancheListeRenderer extends JSPanelRenderer
             "validated",
             "Validée",
             false,
-            false,
+            true,
             false
         );
         //Période
@@ -238,7 +238,7 @@ class TrancheListeRenderer extends JSPanelRenderer
         $this->addChampTexte(
             null,
             "police",
-            "Police",
+            "Réf. de la police",
             false,
             false,
             10,

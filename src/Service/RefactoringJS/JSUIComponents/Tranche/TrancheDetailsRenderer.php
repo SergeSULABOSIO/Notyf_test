@@ -3,14 +3,15 @@
 namespace App\Service\RefactoringJS\JSUIComponents\Tranche;
 
 use App\Entity\Tranche;
+use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
-use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
-use App\Service\ServiceTaxes;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class TrancheDetailsRenderer extends JSPanelRenderer
 {
@@ -26,12 +27,11 @@ class TrancheDetailsRenderer extends JSPanelRenderer
         $crud,
         AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
-        Ici
         //Nom
         $this->addChampTexte(
             null,
@@ -239,13 +239,13 @@ class TrancheDetailsRenderer extends JSPanelRenderer
         $this->addChampTexte(
             null,
             "police",
-            "Police",
+            "Réf. de la police",
             false,
             false,
             10,
             function ($value, Tranche $tranche) {
                 /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getPolice()->getReference()))
+                $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getPolice()))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
@@ -314,6 +314,28 @@ class TrancheDetailsRenderer extends JSPanelRenderer
                     ->outputHtml();
                 return $formatedHtml;
             }
+        );
+        //Date de création
+        $this->addChampAssociation(
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
+            "utilisateur",
+            "Utilisateur",
+            false,
+            false,
+            10,
+            null,
+            null
+        );
+        //Entreprise
+        $this->addChampAssociation(
+            null,
+            "entreprise",
+            "Entreprise",
+            false,
+            false,
+            10,
+            null,
+            null
         );
 
     }

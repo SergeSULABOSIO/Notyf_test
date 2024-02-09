@@ -173,6 +173,7 @@ class PaiementCrudController extends AbstractCrudController
         return $this->paiementUIBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,
+            $this->serviceTaxes,
             $pageName,
             $this->paiement,
             $this->crud,

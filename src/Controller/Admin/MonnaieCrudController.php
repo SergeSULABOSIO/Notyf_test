@@ -3,11 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Monnaie;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\MonnaieUIBuilder;
 use App\Service\ServiceCrossCanal;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceMonnaie;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceTaxes;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -39,6 +42,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\MoneyConfigurator;
 
 class MonnaieCrudController extends AbstractCrudController
 {
+    public ?Monnaie $monnaie = null;
+    public ?MonnaieUIBuilder $uiBuilder = null;
+
     public const TAB_MONNAIE_MONNAIE_LOCALE = [
         'Non' => 0,
         'Oui' => 1
@@ -246,8 +252,11 @@ class MonnaieCrudController extends AbstractCrudController
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
-        private ServicePreferences $servicePreferences
+        private ServicePreferences $servicePreferences,
+        private ServiceTaxes $serviceTaxes,
+        private ServiceMonnaie $serviceMonnaie
     ) {
+        $this->uiBuilder = new MonnaieUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -320,8 +329,22 @@ class MonnaieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        return $this->servicePreferences->getChamps(new Monnaie(), $this->crud, $this->adminUrlGenerator);
+        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // return $this->servicePreferences->getChamps(new Monnaie(), $this->crud, $this->adminUrlGenerator);
+    
+        /** @var Monnaie */
+        $this->monnaie = $this->getContext()->getEntity()->getInstance();
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->monnaie);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->monnaie,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
 

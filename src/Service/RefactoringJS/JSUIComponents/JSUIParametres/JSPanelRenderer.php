@@ -177,7 +177,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null)
+    public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null, $decimals = 2)
     {
         $champTempo = MoneyField::new($attribut, $titre)
             ->setStoredAsCents();
@@ -198,6 +198,9 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($formatValue != null) {
             $champTempo->formatValue($formatValue);
+        }
+        if($decimals != 2){
+            $champTempo->setNumDecimals($decimals);
         }
         $this->champsPanel[] = $champTempo;
     }

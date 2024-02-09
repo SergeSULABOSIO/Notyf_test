@@ -69,7 +69,7 @@ abstract class JSPanelRenderer implements JSPanel
                 case self::TYPE_LISTE:
                     $champ->onlyOnIndex();
                     break;
-                    case self::TYPE_DETAILS:
+                case self::TYPE_DETAILS:
                     $champ->onlyOnDetail();
                     break;
                 case self::TYPE_FORMULAIRE:
@@ -202,7 +202,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badget)
+    public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badges)
     {
         $champTempo = ChoiceField::new($attribut, $titre);
         if ($choices != null) {
@@ -220,8 +220,8 @@ abstract class JSPanelRenderer implements JSPanel
         if ($required != null) {
             $champTempo->setRequired($required);
         }
-        if ($badget != null) {
-            $champTempo->renderAsBadges($badget);
+        if ($badges != null) {
+            $champTempo->renderAsBadges($badges);
         }
         $this->champsPanel[] = $champTempo;
     }
@@ -265,6 +265,7 @@ abstract class JSPanelRenderer implements JSPanel
         if ($formatValue != null) {
             $champTempo->formatValue($formatValue);
         }
+        $champTempo->renderAsHtml(true);
         $this->champsPanel[] = $champTempo;
     }
 

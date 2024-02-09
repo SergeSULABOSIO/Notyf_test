@@ -3,12 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Taxe;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\TaxeUIBuilder;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServiceCrossCanal;
+use App\Service\ServiceMonnaie;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -28,6 +31,8 @@ class TaxeCrudController extends AbstractCrudController
 {
     public const TAXE_COURTIER = 1;
     public const TAXE_ASSUREUR = 0;
+    public ?TaxeUIBuilder $uiBuilder = null;
+    public ?Taxe $taxe = null;
 
     public const TAB_TAXE_PAYABLE_PAR_COURTIER = [
         'Non' => 0,
@@ -42,8 +47,11 @@ class TaxeCrudController extends AbstractCrudController
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new TaxeUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -117,8 +125,21 @@ class TaxeCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        return $this->servicePreferences->getChamps(new Taxe(), $this->crud, $this->adminUrlGenerator);
+        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // return $this->servicePreferences->getChamps(new Taxe(), $this->crud, $this->adminUrlGenerator);
+        /** @var Taxe */
+        $this->taxe = $this->getContext()->getEntity()->getInstance();
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->taxe);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->taxe,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
 

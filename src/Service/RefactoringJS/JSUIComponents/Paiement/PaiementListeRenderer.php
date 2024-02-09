@@ -13,8 +13,6 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class PaiementListeRenderer extends JSPanelRenderer
 {
-    private ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
-
     public function __construct(
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,

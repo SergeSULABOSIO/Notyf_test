@@ -21,6 +21,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 abstract class JSPanelRenderer implements JSPanel
 {
+    public ?string $twig_template_status_tranche = "admin/segment/index_tranche_status.html.twig";
+    public ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
     private ?array $champsPanel = [];
     private ?int $type;
     private ?string $pageName;

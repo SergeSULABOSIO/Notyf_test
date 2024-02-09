@@ -14,9 +14,6 @@ use App\Service\ServiceTaxes;
 
 class TrancheListeRenderer extends JSPanelRenderer
 {
-    private ?string $twig_template_status_tranche = "admin/segment/index_tranche_status.html.twig";
-    private ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
-
     public function __construct(
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,

@@ -315,7 +315,7 @@ class TrancheDetailsRenderer extends JSPanelRenderer
                 return $formatedHtml;
             }
         );
-        //Date de création
+        //Utilisateur
         $this->addChampAssociation(
             UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
             "utilisateur",

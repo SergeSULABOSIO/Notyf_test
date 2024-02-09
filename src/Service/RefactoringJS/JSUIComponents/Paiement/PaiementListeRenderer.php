@@ -2,15 +2,19 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
+use App\Entity\Paiement;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class PaiementListeRenderer extends JSPanelRenderer
 {
+    private ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
+
     public function __construct(
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
@@ -49,7 +53,14 @@ class PaiementListeRenderer extends JSPanelRenderer
             true,
             false,
             10,
-            $this->serviceMonnaie->getCodeAffichage()
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, Paiement $paiement) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
         );
         $this->addChampDate(
             null,
@@ -57,7 +68,14 @@ class PaiementListeRenderer extends JSPanelRenderer
             "Date de paiement",
             false,
             false,
-            10
+            10,
+            function ($value, Paiement $paiement) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
         );
         $this->addChampAssociation(
             null,

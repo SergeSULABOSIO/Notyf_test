@@ -5,12 +5,14 @@ namespace App\Controller\Admin;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use App\Entity\CompteBancaire;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\CompteBancaireUIBuilder;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceFacture;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
+use App\Service\ServiceMonnaie;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,11 +36,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 class CompteBancaireCrudController extends AbstractCrudController
 {
     public ?Crud $crud = null;
+    public ?CompteBancaire $compteBancaire = null;
+    public ?CompteBancaireUIBuilder $uiBuilder = null;
     
     public function __construct(
         private ServiceDates $serviceDates,
         private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
+        private ServiceMonnaie $serviceMonnaie,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
@@ -47,6 +52,7 @@ class CompteBancaireCrudController extends AbstractCrudController
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceTaxes $serviceTaxes
     ) {
+        $this->uiBuilder = new CompteBancaireUIBuilder();
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
 
@@ -125,8 +131,22 @@ class CompteBancaireCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        return $this->servicePreferences->getChamps(new CompteBancaire(), $this->crud, $this->adminUrlGenerator);
+        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // return $this->servicePreferences->getChamps(new CompteBancaire(), $this->crud, $this->adminUrlGenerator);
+        
+        /** @var CompteBancaire */
+        $this->compteBancaire = $this->getContext()->getEntity()->getInstance();
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->compteBancaire);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->compteBancaire,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions

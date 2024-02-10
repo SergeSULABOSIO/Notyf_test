@@ -6,6 +6,7 @@ namespace App\Controller\Admin;
 use App\Entity\Facture;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\FactureUIBuilder;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -35,6 +36,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class FactureCrudController extends AbstractCrudController
 {
     public ?Facture $facture = null;
+    public ?FactureUIBuilder $uiBuilder = null;
+
+
     public const TYPE_FACTURE_PRIME                     = "PRIME D'ASSURANCE";
     public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
     public const TYPE_FACTURE_COMMISSION_LOCALE         = "COMMISSION LOCALE";
@@ -82,6 +86,7 @@ class FactureCrudController extends AbstractCrudController
         private ServiceTaxes $serviceTaxes
     ) {
         //$this->dompdf = new Dompdf();
+        $this->uiBuilder = new FactureUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -155,12 +160,26 @@ class FactureCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if ($pageName == Crud::PAGE_EDIT) {
-            /** @var Facture */
-            $this->facture = $this->getContext()->getEntity()->getInstance();
-        }
+        // if ($pageName == Crud::PAGE_EDIT) {
+        //     /** @var Facture */
+        //     $this->facture = $this->getContext()->getEntity()->getInstance();
+        // }
+        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->facture);
+        // return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);
+
+        /** @var Facture */
+        $this->facture = $this->getContext()->getEntity()->getInstance();
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->facture);
-        return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->facture,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions
@@ -340,7 +359,8 @@ class FactureCrudController extends AbstractCrudController
         return $this->serviceFacture->visualiserBordereau($facture, $contenuHtml);
     }
 
-    public function getDataTransform(Facture $facture, bool $isBordereau): array{
+    public function getDataTransform(Facture $facture, bool $isBordereau): array
+    {
         $lienImage = $this->getParameter('kernel.project_dir') . '/public/icones/icon04.png';
         //dd(count($facture->getElementFactures()));
 
@@ -395,8 +415,9 @@ class FactureCrudController extends AbstractCrudController
                 break;
         }
     }
-    
-    public function exporterMSExcels(BatchActionDto $batchActionDto){
+
+    public function exporterMSExcels(BatchActionDto $batchActionDto)
+    {
         $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
 

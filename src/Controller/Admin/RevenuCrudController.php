@@ -294,13 +294,6 @@ class RevenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        // if ($this->crud) {
-        //     $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        // }
-        // //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        // return $this->servicePreferences->getChamps(new Revenu(), $this->crud, $this->adminUrlGenerator);
-
-
         /** @var Revenu */
         $this->revenu = $this->getContext()->getEntity()->getInstance();
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->revenu);

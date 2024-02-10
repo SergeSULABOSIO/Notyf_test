@@ -34,7 +34,11 @@ class FactureFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Onglet Article
-        $this->addOnglet(" Informations générales", "fas fa-handshake", "Les articles de la facture.");
+        $this->addOnglet(
+            " Informations générales",
+            "fas fa-handshake",
+            "Les articles de la facture."
+        );
         //Section - Principale
         $this->addSection(
             "Section principale",

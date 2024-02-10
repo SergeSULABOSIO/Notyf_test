@@ -228,6 +228,8 @@ class Facture
 
     public function getTotalRecu(): ?float
     {
+        ici
+        $this->totalRecu = 10000;
         return $this->totalRecu;
     }
 

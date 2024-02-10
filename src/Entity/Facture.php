@@ -228,19 +228,12 @@ class Facture
 
     public function getTotalRecu(): ?float
     {
-        Ici
-        /** @var Paiement */
-        foreach ($this->paiements as $paiement) {
-            $this->totalRecu = $this->totalRecu + $paiement->getMontant();
-        }
-        // dd($this->totalRecu);
         return $this->totalRecu;
     }
 
     public function setTotalRecu(?float $totalRecu): self
     {
         $this->totalRecu = $totalRecu;
-
         return $this;
     }
 

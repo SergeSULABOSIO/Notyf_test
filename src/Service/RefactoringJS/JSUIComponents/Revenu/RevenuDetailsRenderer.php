@@ -140,7 +140,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Tranche $tranche) {
+            function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
@@ -156,7 +156,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Tranche $tranche) {
+            function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
@@ -172,7 +172,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Tranche $tranche) {
+            function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
@@ -188,7 +188,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Tranche $tranche) {
+            function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
@@ -270,7 +270,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             $this->serviceMonnaie->getCodeAffichage(),
             function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getRevenuPure() * 100))
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuPure() * 100)))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
@@ -287,7 +287,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             $this->serviceMonnaie->getCodeAffichage(),
             function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getRevenuNet() * 100))
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuNet() * 100)))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
@@ -304,7 +304,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             $this->serviceMonnaie->getCodeAffichage(),
             function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getTaxeAssureur() * 100))
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureur() * 100)))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
@@ -321,7 +321,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
             $this->serviceMonnaie->getCodeAffichage(),
             function ($value, Revenu $objet) {
                 /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getRevenuTotale() * 100))
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotale() * 100)))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;

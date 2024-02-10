@@ -10,6 +10,7 @@ use App\Entity\Produit;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\RevenuUIBuilder;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Func;
@@ -19,6 +20,8 @@ use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use App\Service\ServiceFiltresNonMappes;
+use App\Service\ServiceMonnaie;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -79,6 +82,8 @@ class RevenuCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
+    public ?Revenu $revenu = null;
+    public ?RevenuUIBuilder $uiBuilder = null;
 
     public function __construct(
         private ServiceSuppression $serviceSuppression,
@@ -87,9 +92,12 @@ class RevenuCrudController extends AbstractCrudController
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
+        private ServiceTaxes $serviceTaxes,
+        private ServiceMonnaie $serviceMonnaie,
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceFiltresNonMappes $serviceFiltresNonMappes
     ) {
+        $this->uiBuilder = new RevenuUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -239,8 +247,7 @@ class RevenuCrudController extends AbstractCrudController
                     ->setChoices(RevenuCrudController::TAB_TYPE)
             )
             ->add(DateTimeFilter::new('dateEffet', "Début de la police"))
-            ->add(DateTimeFilter::new('dateExpiration', "Echéance de la police"))
-        ;
+            ->add(DateTimeFilter::new('dateExpiration', "Echéance de la police"));
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -287,11 +294,26 @@ class RevenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if ($this->crud) {
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        }
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Revenu(), $this->crud, $this->adminUrlGenerator);
+        // if ($this->crud) {
+        //     $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // }
+        // //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        // return $this->servicePreferences->getChamps(new Revenu(), $this->crud, $this->adminUrlGenerator);
+
+
+        /** @var Revenu */
+        $this->revenu = $this->getContext()->getEntity()->getInstance();
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->revenu);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->revenu,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions

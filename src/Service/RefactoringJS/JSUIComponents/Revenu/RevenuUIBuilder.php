@@ -6,16 +6,19 @@ use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuFormRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuListeRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheFormRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuDetailsRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheDetailsRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheFormRenderer;
 
 class RevenuUIBuilder extends JSPanelBuilder
 {
-    private ?TrancheListeRenderer $trancheListeRendere = null;
-    private ?TrancheDetailsRenderer $trancheDetailsRendere = null;
-    private ?TrancheFormRenderer $trancheFormRendere = null;
+    private ?RevenuListeRenderer $listeRendere = null;
+    private ?RevenuDetailsRenderer $detailsRendere = null;
+    private ?RevenuFormRenderer $formRendere = null;
 
     public function __construct()
     {
@@ -24,7 +27,7 @@ class RevenuUIBuilder extends JSPanelBuilder
 
     public function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->trancheListeRendere = new TrancheListeRenderer(
+        $this->listeRendere = new RevenuListeRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,
@@ -33,12 +36,12 @@ class RevenuUIBuilder extends JSPanelBuilder
             $crud,
             $adminUrlGenerator
         );
-        return $this->trancheListeRendere->getChamps();
+        return $this->listeRendere->getChamps();
     }
 
     public function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->trancheFormRendere = new TrancheFormRenderer(
+        $this->formRendere = new RevenuFormRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,
@@ -47,12 +50,12 @@ class RevenuUIBuilder extends JSPanelBuilder
             $crud,
             $adminUrlGenerator
         );
-        return $this->trancheFormRendere->getChamps();
+        return $this->formRendere->getChamps();
     }
 
     public function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->trancheDetailsRendere = new TrancheDetailsRenderer(
+        $this->detailsRendere = new RevenuDetailsRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,
@@ -61,6 +64,6 @@ class RevenuUIBuilder extends JSPanelBuilder
             $crud,
             $adminUrlGenerator
         );
-        return $this->trancheDetailsRendere->getChamps();
+        return $this->detailsRendere->getChamps();
     }
 }

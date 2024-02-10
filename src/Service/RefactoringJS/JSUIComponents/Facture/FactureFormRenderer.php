@@ -33,16 +33,59 @@ class FactureFormRenderer extends JSPanelRenderer
 
     public function design()
     {
+        //Onglet Article
+        $this->addOnglet(" Informations générales", "fas fa-handshake", "Les articles de la facture.");
         //Section - Principale
-        $this->addSection("Section principale", "fas fa-location-crosshairs", 10);
+        $this->addSection(
+            "Section principale",
+            "fas fa-location-crosshairs",
+            null,
+            10
+        );
         //Assureur
-        $this->addChampAssociation(null, "assureur", "Assureur", false, false, 5);
+        $this->addChampAssociation(
+            null,
+            "assureur",
+            "Assureur",
+            false,
+            false,
+            5,
+            null,
+            null
+        );
         //Partenaire
-        $this->addChampAssociation(null, "partenaire", "Partenaire", false, false, 5);
+        $this->addChampAssociation(
+            null,
+            "partenaire",
+            "Partenaire",
+            false,
+            false,
+            5,
+            null,
+            null
+        );
         //Autres tiers
-        $this->addChampAssociation(null, "autreTiers", "Tiers Concerné", false, false, 5);
+        $this->addChampTexte(
+            null,
+            "autreTiers",
+            "Tiers Concerné",
+            false,
+            false,
+            5,
+            null,
+            null
+        );
         //Pièces justificatives
-        $this->addChampAssociation(null, "piece", "Pièces justificatives", false, false, 10);
+        $this->addChampAssociation(
+            null,
+            "piece",
+            "Pièces justificatives",
+            false,
+            false,
+            10,
+            null,
+            null
+        );
         //Type
         $this->addChampChoix(
             null,
@@ -81,7 +124,16 @@ class FactureFormRenderer extends JSPanelRenderer
             null
         );
         //Comptes Bancaires
-        $this->addChampAssociation(null, "compteBancaires", "Comptes bancaires", false, false, 10);
+        $this->addChampAssociation(
+            null,
+            "compteBancaires",
+            "Comptes bancaires",
+            false,
+            false,
+            10,
+            null,
+            null
+        );
         //Signed By
         $this->addChampTexte(
             null,

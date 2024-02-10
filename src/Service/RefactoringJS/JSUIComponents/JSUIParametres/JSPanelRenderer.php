@@ -82,11 +82,19 @@ abstract class JSPanelRenderer implements JSPanel
         }
     }
 
-    public function addSection(?string $titre, ?string $icone, ?int $colonne)
+    public function addSection(?string $titre, ?string $icone, ?string $helpMessage, ?int $colonne)
     {
-        $this->champsPanel[] = FormField::addPanel($titre)
-            ->setIcon($icone)
-            ->setColumns($colonne);
+        $champTempo = FormField::addPanel($titre);
+        if($icone != null){
+            $champTempo->setIcon($icone);
+        }
+        if($helpMessage != null){
+            $champTempo->setHelp($helpMessage);
+        }
+        if($colonne != null){
+            $champTempo->setColumns($colonne);
+        }
+        $this->champsPanel[] = $champTempo;
     }
 
     public function addOnglet(?string $titre, ?string $icone, ?string $helpMessage)
@@ -156,7 +164,7 @@ abstract class JSPanelRenderer implements JSPanel
         $this->champsPanel[] = $champTempo;
     }
 
-    public function addChampAssociation(?string $permission = null, ?string $attribut = null, ?string $titre = null, ?bool $required = null, ?bool $desabled = null, ?int $columns = null, ?callable $formTypeOption = null)
+    public function addChampAssociation(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formTypeOption, ?callable $formatValue = null)
     {
         $champTempo = AssociationField::new($attribut, $titre);
         if ($formTypeOption != null) {
@@ -173,6 +181,9 @@ abstract class JSPanelRenderer implements JSPanel
         }
         if ($required != null) {
             $champTempo->setRequired($required);
+        }
+        if ($formatValue != null) {
+            $champTempo->formatValue($formatValue);
         }
         $this->champsPanel[] = $champTempo;
     }

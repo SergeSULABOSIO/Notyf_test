@@ -13,9 +13,9 @@ interface JSPanel
     public const TYPE_FORMULAIRE = 2;
 
     //Fonctions de creation du panel
-    public function addSection(?string $titre, ?string $icone, ?int $colonne);
+    public function addSection(?string $titre, ?string $icone, ?string $helpMessage, ?int $colonne);
     public function addOnglet(?string $titre, ?string $icone, ?string $helpMessage);
-    public function addChampAssociation(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formTypeOption);
+    public function addChampAssociation(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formTypeOption, ?callable $formatValue = null);
     public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badges);
     public function addChampBooleen(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?bool $renderAsSwitch = false);
     public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null, $decimals = 2);

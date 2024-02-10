@@ -41,6 +41,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addSection(
             "Section principale",
             "fas fa-location-crosshairs",
+            null,
             10
         );
         $this->addChampAssociation(
@@ -90,6 +91,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addSection(
             "Références bancaires",
             "fa-solid fa-piggy-bank",
+            null,
             10
         );
         $this->addChampAssociation(
@@ -104,6 +106,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addSection(
             "Pièces jointes",
             "fa-solid fa-paperclip",
+            null,
             10
         );
         $this->addChampCollection(

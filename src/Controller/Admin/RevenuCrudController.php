@@ -82,7 +82,7 @@ class RevenuCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
-    public ?Revenu $revenu = null;
+    public $revenu = null;
     public ?RevenuUIBuilder $uiBuilder = null;
 
     public function __construct(
@@ -294,9 +294,10 @@ class RevenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        /** @var Revenu */
         $this->revenu = $this->getContext()->getEntity()->getInstance();
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->revenu);
+        if ($this->crud != null) {
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->revenu);
+        }
 
         return $this->uiBuilder->render(
             $this->entityManager,

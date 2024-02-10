@@ -33,7 +33,6 @@ class FactureListeRenderer extends JSPanelRenderer
 
     public function design()
     {
-        dd("Ici");
         //Status
         $this->addChampChoix(
             null,
@@ -77,13 +76,14 @@ class FactureListeRenderer extends JSPanelRenderer
             null
         );
         //Elements facture
-        $this->addChampNombre(
+        $this->addChampAssociation(
             null,
             "elementFactures",
             "Eléments facturés",
             false,
             false,
             10,
+            null,
             function ($value, Facture $entity) {
                 return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
             }

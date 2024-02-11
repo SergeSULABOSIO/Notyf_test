@@ -89,6 +89,19 @@ class Facture
         $this->documents = new ArrayCollection();
     }
 
+    private function initMontantsPayes()
+    {
+        //Init paiements
+        $this->totalRecu = 0;
+        /** @var Paiement */
+        foreach ($this->paiements as $paiement) {
+            if ($this->getType() == $paiement->getTypeFacture()) {
+                $tabPaiements[] = $paiement;
+                $this->totalRecu = $this->totalRecu + $paiement->getMontant();
+            }
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -228,6 +241,7 @@ class Facture
 
     public function getTotalRecu(): ?float
     {
+        $this->initMontantsPayes();
         return $this->totalRecu;
     }
 
@@ -386,6 +400,7 @@ class Facture
 
     public function getTotalSolde(): ?float
     {
+        $this->totalSolde = $this->getTotalDu() - $this->getTotalRecu();
         return $this->totalSolde;
     }
 

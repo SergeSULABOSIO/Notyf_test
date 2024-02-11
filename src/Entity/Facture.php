@@ -413,6 +413,14 @@ class Facture
 
     public function getStatus(): ?int
     {
+        $solde = $this->getTotalSolde();
+        if($solde == 0){
+            $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE];
+        }else if($this->getTotalRecu() == 0){
+            $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE];
+        }else{
+            $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS];
+        }
         return $this->status;
     }
 

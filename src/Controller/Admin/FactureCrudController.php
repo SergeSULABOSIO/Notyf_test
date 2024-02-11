@@ -61,7 +61,7 @@ class FactureCrudController extends AbstractCrudController
     ];
 
     public const STATUS_FACTURE_IMPAYEE     = "Impayée";
-    public const STATUS_FACTURE_ENCOURS     = "En cours...";
+    public const STATUS_FACTURE_ENCOURS     = "Payée en partie";
     public const STATUS_FACTURE_SOLDEE      = "Soldée";
 
     public const TAB_STATUS_FACTURE = [

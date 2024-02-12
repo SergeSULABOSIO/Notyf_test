@@ -143,8 +143,13 @@ class PaiementFormRenderer extends JSPanelRenderer
         } else {
             $oFacture = $objetInstance->getFacture();
         }
-        
-        if ($oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {
+
+        if (
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]
+        ) {
             $this->addChampToRemove("compteBancaire");
             $this->addChampToRemove("Références bancaires");
         }

@@ -97,7 +97,7 @@ class Facture
         foreach ($this->paiements as $paiement) {
             if ($this->getType() == $paiement->getTypeFacture()) {
                 $tabPaiements[] = $paiement;
-                $this->totalRecu = $this->totalRecu + $paiement->getMontant();
+                $this->totalRecu = $this->totalRecu + round($paiement->getMontant(), 0);
             }
         }
     }
@@ -229,7 +229,8 @@ class Facture
 
     public function getTotalDu(): ?float
     {
-        return $this->totalDu;
+        // dd($this->totalDu);
+        return round($this->totalDu, 0);
     }
 
     public function setTotalDu(?float $totalDu): self
@@ -242,7 +243,8 @@ class Facture
     public function getTotalRecu(): ?float
     {
         $this->initMontantsPayes();
-        return $this->totalRecu;
+        // dd($this->totalRecu);
+        return round($this->totalRecu, 0);
     }
 
     public function setTotalRecu(?float $totalRecu): self

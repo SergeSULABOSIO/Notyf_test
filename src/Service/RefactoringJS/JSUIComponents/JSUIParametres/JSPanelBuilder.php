@@ -44,7 +44,7 @@ abstract class JSPanelBuilder
         $this->crud = $crud;
         $this->adminUrlGenerator = $adminUrlGenerator;
         $this->initChamps();
-
+        
         switch ($this->pageName) {
             case Crud::PAGE_INDEX:
                 $this->champs = $this->buildListPanel(

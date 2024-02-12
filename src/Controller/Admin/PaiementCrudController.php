@@ -26,6 +26,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComFrontingInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComLocaleInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComReaInit;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -33,6 +36,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\JSUIComponents\Paiement\PaiementUIBuilder;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementPrimeInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementFraisGestionInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementRetroComInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementTaxeAssureurInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementTaxeCourtierInit;
 
 class PaiementCrudController extends AbstractCrudController
 {
@@ -41,6 +47,12 @@ class PaiementCrudController extends AbstractCrudController
 
     public ?PaiementPrimeInit $paiementPrimeInit = null;
     public ?PaiementFraisGestionInit $paiementFraisGestionInit = null;
+    public ?PaiementComLocaleInit $paiementComLocalInit = null;
+    public ?PaiementComFrontingInit $paiementComFrontingInit = null;
+    public ?PaiementRetroComInit $paiementRetroComInit = null;
+    public ?PaiementTaxeCourtierInit $paiementTaxeCourtierInit = null;
+    public ?PaiementTaxeAssureurInit $paiementTaxeAssureurInit = null;
+    public ?PaiementComReaInit $paiementComReaInit = null;
     public ?PaiementUIBuilder $uiBuilder = null;
 
     public const TAB_TYPE_PAIEMENT = [
@@ -77,6 +89,56 @@ class PaiementCrudController extends AbstractCrudController
             $this->adminUrlGenerator,
             $this->serviceAvenant,
             $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementComLocalInit = new PaiementComLocaleInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementComReaInit = new PaiementComReaInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementComFrontingInit = new PaiementComFrontingInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementRetroComInit = new PaiementRetroComInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementTaxeAssureurInit = new PaiementTaxeAssureurInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceTaxes,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        $this->paiementTaxeCourtierInit = new PaiementTaxeCourtierInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceTaxes,
             $this->serviceEntreprise,
             $this->entityManager,
             $this->serviceCompteBancaire
@@ -168,6 +230,24 @@ class PaiementCrudController extends AbstractCrudController
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
                 $objet = $this->paiementFraisGestionInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
                 break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]:
+                $objet = $this->paiementComLocalInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]:
+                $objet = $this->paiementComReaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]:
+                $objet = $this->paiementComFrontingInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+                $objet = $this->paiementRetroComInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
+                $objet = $this->paiementTaxeAssureurInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+                $objet = $this->paiementTaxeCourtierInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
 
             default:
                 dd("Cette fonction n'est pas prise en compte.");
@@ -184,9 +264,7 @@ class PaiementCrudController extends AbstractCrudController
             $this->paiement = $this->getContext()->getEntity()->getInstance();
         }
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-
         // dd($pageName);
-
         return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,

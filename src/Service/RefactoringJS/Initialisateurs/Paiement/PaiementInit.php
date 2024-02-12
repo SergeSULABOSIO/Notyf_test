@@ -10,7 +10,7 @@ use App\Entity\Paiement;
 use App\Entity\Utilisateur;
 use DateTimeImmutable;
 
-interface Paiementinit
+interface PaiementInit
 {
     public const PARAM_FINAL = "final";
     public const PARAM_DIFFERENCES = "differences";

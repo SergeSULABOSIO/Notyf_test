@@ -119,13 +119,27 @@ class FactureRetroCommissionInit implements FactureInit
     {
         $this->facture->setTotalDu($montantDu);
     }
-    public function setTotalRecu(?float $montantRecu)
+    public function setTotalRecu()
     {
-        $this->facture->setTotalRecu($montantRecu);
+        // Ici
+        $totRecu = 0;
+        $tabPaiementsRecus = [];
+        foreach ($this->tranche->getElementFactures() as $ef) {
+            if ($ef->getFacture() != null) {
+                if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
+                    foreach ($ef->getFacture()->getPaiements() as $paiement) {
+                        $totRecu = $totRecu + $paiement->getMontant();
+                        $tabPaiementsRecus[] = $paiement;
+                    }
+                }
+            }
+        }
+        dd($this->tranche, $tabPaiementsRecus, $totRecu);
+        $this->facture->setTotalRecu(0);
     }
-    public function setTotalSolde(?float $montantSolde)
+    public function setTotalSolde()
     {
-        $this->facture->setTotalSolde($montantSolde);
+        $this->facture->setTotalSolde(0);
     }
     public function addElementsFacture(?array $TabElementsFactures)
     {
@@ -182,10 +196,10 @@ class FactureRetroCommissionInit implements FactureInit
         //Element facture / article de la facture
         $elementFacture = $this->produireElementFacture();
         $this->setTotalDu($elementFacture->getMontant());
-        $this->setTotalRecu(0);
-        $this->setTotalSolde(($elementFacture->getMontant() - 0));
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
+        $this->setTotalRecu();
+        $this->setTotalSolde();
         return $this->facture;
     }
 

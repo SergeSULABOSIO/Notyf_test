@@ -118,13 +118,13 @@ class FactureComLocaleInit implements FactureInit
     {
         $this->facture->setTotalDu($montantDu);
     }
-    public function setTotalRecu(?float $montantRecu)
+    public function setTotalRecu()
     {
-        $this->facture->setTotalRecu($montantRecu);
+        $this->facture->setTotalRecu(0);
     }
-    public function setTotalSolde(?float $montantSolde)
+    public function setTotalSolde()
     {
-        $this->facture->setTotalSolde($montantSolde);
+        $this->facture->setTotalSolde(0);
     }
     public function addElementsFacture(?array $TabElementsFactures)
     {
@@ -180,10 +180,10 @@ class FactureComLocaleInit implements FactureInit
         //Element facture / article de la facture
         $elementFacture = $this->produireElementFacture();
         $this->setTotalDu($elementFacture->getMontant());
-        $this->setTotalRecu(0);
-        $this->setTotalSolde(($elementFacture->getMontant() - 0));
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
+        $this->setTotalRecu();
+        $this->setTotalSolde();
         return $this->facture;
     }
 

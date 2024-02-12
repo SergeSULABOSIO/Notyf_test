@@ -1017,7 +1017,7 @@ class Tranche
         }
         $this->comReassuranceInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => $this->getComReassurance(),
+            self::TARGET => round($this->getComReassurance(),0),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount
@@ -1026,8 +1026,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT_PAYE => $payments_amount
             ],
-            self::SOLDE_DU => $this->getComReassurance() - $payments_amount,
-            self::PRODUIRE_FACTURE => $this->getComReassurance() != $invoice_amount
+            self::SOLDE_DU => round($this->getComReassurance(), 0) - round($payments_amount, 0),
+            self::PRODUIRE_FACTURE => round($this->getComReassurance(), 0) != round($invoice_amount, 0)
         ];
         // dd($this->getComReassurance(), $invoice_amount);
         return $this->editMessage($this->comReassuranceInvoiceDetails);

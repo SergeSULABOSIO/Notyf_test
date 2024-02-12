@@ -2,10 +2,12 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
+use App\Controller\Admin\FactureCrudController;
 use App\Entity\Paiement;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
@@ -34,7 +36,7 @@ class PaiementListeRenderer extends JSPanelRenderer
         $this->addChampChoix(
             null,
             "type",
-            "Type",
+            "Mouvement",
             true,
             true,
             10,
@@ -43,6 +45,16 @@ class PaiementListeRenderer extends JSPanelRenderer
                 PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE] => 'success', //info
                 PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE] => 'danger', //info
             ]
+        );
+        $this->addChampChoix(
+            null,
+            "typeFacture",
+            "Type",
+            true,
+            true,
+            10,
+            FactureCrudController::TAB_TYPE_FACTURE,
+            null
         );
         $this->addChampArgent(
             null,

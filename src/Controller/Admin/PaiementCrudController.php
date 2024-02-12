@@ -42,6 +42,7 @@ use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementTaxeCourtierInit;
 
 class PaiementCrudController extends AbstractCrudController
 {
+    public const TYPE_PAIEMENT_AUCUN   = "Aucun";
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
 
@@ -57,7 +58,8 @@ class PaiementCrudController extends AbstractCrudController
 
     public const TAB_TYPE_PAIEMENT = [
         self::TYPE_PAIEMENT_ENTREE  => 0,
-        self::TYPE_PAIEMENT_SORTIE  => 1
+        self::TYPE_PAIEMENT_SORTIE  => 1,
+        self::TYPE_PAIEMENT_AUCUN   => 2
     ];
 
     public ?Paiement $paiement = null;

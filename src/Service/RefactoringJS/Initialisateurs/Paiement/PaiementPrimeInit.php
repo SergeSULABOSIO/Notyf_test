@@ -119,7 +119,7 @@ class PaiementPrimeInit implements PaiementInit
         } else {
             $this->paiement->setMontant($facture->getTotalDu() - $facture->getTotalRecu());
         }
-        $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+        $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_AUCUN]);
         $this->paiement->setTypeFacture($facture->getType());
         $this->paiement->setDescription("Paiement de la prime. Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
         $this->paiement->setEntreprise($facture->getEntreprise());

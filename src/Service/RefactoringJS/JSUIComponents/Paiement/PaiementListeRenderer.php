@@ -44,6 +44,7 @@ class PaiementListeRenderer extends JSPanelRenderer
             [
                 PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE] => 'success', //info
                 PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE] => 'danger', //info
+                PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_AUCUN] => 'dark', //info
             ]
         );
         $this->addChampChoix(

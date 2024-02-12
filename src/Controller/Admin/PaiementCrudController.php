@@ -29,9 +29,10 @@ use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use App\Service\RefactoringJS\Initisateurs\Paiement\PaiementPrimeInit;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\JSUIComponents\Paiement\PaiementUIBuilder;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementPrimeInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementFraisGestionInit;
 
 class PaiementCrudController extends AbstractCrudController
 {
@@ -39,7 +40,8 @@ class PaiementCrudController extends AbstractCrudController
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
 
     public ?PaiementPrimeInit $paiementPrimeInit = null;
-    public ?PaiementUIBuilder $paiementUIBuilder = null;
+    public ?PaiementFraisGestionInit $paiementFraisGestionInit = null;
+    public ?PaiementUIBuilder $uiBuilder = null;
 
     public const TAB_TYPE_PAIEMENT = [
         self::TYPE_PAIEMENT_ENTREE  => 0,
@@ -71,7 +73,16 @@ class PaiementCrudController extends AbstractCrudController
             $this->entityManager,
             $this->serviceCompteBancaire
         );
-        $this->paiementUIBuilder = new PaiementUIBuilder();
+        $this->paiementFraisGestionInit = new PaiementFraisGestionInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+        // dd($this->paiementFraisGestionInit);
+        $this->uiBuilder = new PaiementUIBuilder();
     }
 
 
@@ -142,6 +153,7 @@ class PaiementCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
+        // dd($this->paiementFraisGestionInit);
         $objet = new Paiement();
         /** @var Facture*/
         $objetFacture = null;
@@ -153,9 +165,12 @@ class PaiementCrudController extends AbstractCrudController
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
                 $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
                 break;
+            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
+                $objet = $this->paiementFraisGestionInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                break;
 
             default:
-                # code...
+                dd("Cette fonction n'est pas prise en compte.");
                 break;
         }
         //dd($objet);
@@ -170,7 +185,9 @@ class PaiementCrudController extends AbstractCrudController
         }
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
 
-        return $this->paiementUIBuilder->render(
+        // dd($pageName);
+
+        return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,
             $this->serviceTaxes,

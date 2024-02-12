@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
-class PaiementPrimeInit implements PaiementInit
+class PaiementFraisGestionInit implements PaiementInit
 {
     // private ?Police $police;
     private ?Facture $facture;
@@ -121,7 +121,7 @@ class PaiementPrimeInit implements PaiementInit
         }
         $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
         $this->paiement->setTypeFacture($facture->getType());
-        $this->paiement->setDescription("Paiement de la prime. Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
+        $this->paiement->setDescription("Paiement des frais de gestion. Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
         $this->paiement->setEntreprise($facture->getEntreprise());
         $this->paiement->setUtilisateur($facture->getUtilisateur());
         $this->paiement->setCreatedAt($this->serviceDates->aujourdhui());

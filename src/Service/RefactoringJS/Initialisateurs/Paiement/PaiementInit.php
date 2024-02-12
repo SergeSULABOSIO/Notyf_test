@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\Initisateurs\Paiement;
+namespace App\Service\RefactoringJS\Initialisateurs\Paiement;
 
 use App\Entity\CompteBancaire;
 use App\Entity\DocPiece;

@@ -125,6 +125,12 @@ class PaiementFormRenderer extends JSPanelRenderer
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
+        /**
+         * L'objectif de ce traitement de masse c'est de pouvoir ne pas afficher certains champs
+         * du formulaire en fonction du type de facture que l'on est en train
+         * de payer.
+         * Le comportement du formulaire doit varier en fonction du type de facture que l'on paie.
+         */
         /** @var Facture */
         $oFacture = null;
         if ($pageName == Action::NEW) {
@@ -133,34 +139,16 @@ class PaiementFormRenderer extends JSPanelRenderer
                 ->find(
                     $adminUrlGenerator->get("donnees")["facture"]
                 );
+            $this->addChampToDeactivate("facture");
         } else {
             $oFacture = $objetInstance->getFacture();
         }
-
-        $newChamps = [];
-        /** @var FormField */
-        foreach ($champs as $champ) {
-            $propertName = null;
-            if ($champ instanceof FormField) {
-                $propertName = $champ->getAsDto()->getLabel();
-            } else {
-                $propertName = $champ->getAsDto()->getProperty();
-            }
-            // dd($champ->getAsDto()->getProperty(), $champs);
-            if ($oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {
-                switch ($propertName) {
-                    case "compteBancaire":
-                        # on ne fait absolument rien ici
-                        break;
-                    case "Références bancaires":
-                        # on ne fait absolument rien ici
-                        break;
-                    default:
-                        $newChamps[] = $champ;
-                        break;
-                }
-            }
+        
+        if ($oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]) {
+            $this->addChampToRemove("compteBancaire");
+            $this->addChampToRemove("Références bancaires");
         }
-        return $newChamps;
+
+        return $champs;
     }
 }

@@ -67,7 +67,6 @@ abstract class JSPanelBuilder
                     $this->crud,
                     $this->adminUrlGenerator
                 );
-                // dd("Ici", $this->champs);
                 break;
             case Crud::PAGE_EDIT || Crud::PAGE_NEW:
                 $this->champs = $this->buildFormPanel(
@@ -79,6 +78,7 @@ abstract class JSPanelBuilder
                     $this->crud,
                     $this->adminUrlGenerator
                 );
+                // dd("Ici:", $this->pageName, $this->champs);
                 break;
         }
         // dd("Ici", $this->champs);

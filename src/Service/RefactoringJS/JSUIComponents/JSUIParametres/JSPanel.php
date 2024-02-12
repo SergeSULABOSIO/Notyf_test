@@ -29,6 +29,8 @@ interface JSPanel
     public function addChampEditeurTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10);
     public function init();
     public function render();
+    public function addChampToRemove(?string $nomAttribut);
+    public function addChampToDeactivate(?string $nomAttribut);
     public function getChamps():?array;
     public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null):?array;
 }

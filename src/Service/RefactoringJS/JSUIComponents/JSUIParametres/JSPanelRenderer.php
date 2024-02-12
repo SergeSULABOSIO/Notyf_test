@@ -2,7 +2,10 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\JSUIParametres;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -24,6 +27,8 @@ abstract class JSPanelRenderer implements JSPanel
     public ?string $twig_template_status_tranche = "admin/segment/index_tranche_status.html.twig";
     public ?string $css_class_bage_ordinaire = "badge badge-light text-bold";
     private ?array $champsPanel = [];
+    private ?Collection $champsPanelToRemove = null;
+    private ?Collection $champsPanelToDeactivate = null;
     private ?int $type;
     private ?string $pageName;
     private $objetInstance;
@@ -42,9 +47,50 @@ abstract class JSPanelRenderer implements JSPanel
     public abstract function design();
     public abstract function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array;
 
+    public function addChampToRemove(?string $nomAttribut)
+    {
+        if (!$this->champsPanelToRemove->contains($nomAttribut)) {
+            $this->champsPanelToRemove->add($nomAttribut);
+        }
+        return $this;
+    }
+
+    public function addChampToDeactivate(?string $nomAttribut)
+    {
+        if (!$this->champsPanelToDeactivate->contains($nomAttribut)) {
+            $this->champsPanelToDeactivate->add($nomAttribut);
+        }
+        return $this;
+    }
+
     public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        return $this->batchActions($this->champsPanel, $type, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+
+        /**
+         * Gestion des champs à afficher et
+         * ceux à désactiver.
+         */
+        $champsATraiterEnMasse = $this->batchActions($this->champsPanel, $type, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        $tabChampsFinaux = [];
+        foreach ($champsATraiterEnMasse as $champ) {
+            $propertName = null;
+            if ($champ instanceof FormField) {
+                $propertName = $champ->getAsDto()->getLabel();
+            } else {
+                $propertName = $champ->getAsDto()->getProperty();
+            }
+            // dd("Traitement en masse:", $this->champsPanelToRemove, $this->champsPanelToDeactivate);
+            //On ne prends que les champs qui sont affichables
+            if (!$this->champsPanelToRemove->contains($propertName)) {
+                $tabChampsFinaux[] = $champ;
+            }
+            //On désactive les champs qui doivent être désactivés.
+            if ($this->champsPanelToDeactivate->contains($propertName)) {
+                $tabChampsFinaux[] = $champ->setDisabled(true);
+            }
+        }
+        // dd($tabChampsFinaux);
+        return $tabChampsFinaux;
     }
 
     public function render()
@@ -54,11 +100,14 @@ abstract class JSPanelRenderer implements JSPanel
         $this->design();
         $this->appliquerType();
         $this->champsPanel = $this->runBatchActions($this->type, $this->pageName, $this->objetInstance, $this->crud, $this->adminUrlGenerator);
+        // dd("Tempo...", $this->champsPanel);
     }
 
     public function init()
     {
         $this->champsPanel = [];
+        $this->champsPanelToDeactivate = new ArrayCollection();
+        $this->champsPanelToRemove = new ArrayCollection();
     }
 
     private function appliquerType()
@@ -85,13 +134,13 @@ abstract class JSPanelRenderer implements JSPanel
     public function addSection(?string $titre, ?string $icone, ?string $helpMessage, ?int $colonne)
     {
         $champTempo = FormField::addPanel($titre);
-        if($icone != null){
+        if ($icone != null) {
             $champTempo->setIcon($icone);
         }
-        if($helpMessage != null){
+        if ($helpMessage != null) {
             $champTempo->setHelp($helpMessage);
         }
-        if($colonne != null){
+        if ($colonne != null) {
             $champTempo->setColumns($colonne);
         }
         $this->champsPanel[] = $champTempo;
@@ -210,7 +259,7 @@ abstract class JSPanelRenderer implements JSPanel
         if ($formatValue != null) {
             $champTempo->formatValue($formatValue);
         }
-        if($decimals != 2){
+        if ($decimals != 2) {
             $champTempo->setNumDecimals($decimals);
         }
         $this->champsPanel[] = $champTempo;
@@ -390,5 +439,21 @@ abstract class JSPanelRenderer implements JSPanel
     {
         $this->render();
         return $this->champsPanel;
+    }
+
+    /**
+     * Get the value of champsPanelToRemove
+     */ 
+    public function getChampsPanelToRemove()
+    {
+        return $this->champsPanelToRemove;
+    }
+
+    /**
+     * Get the value of champsPanelToDeactivate
+     */ 
+    public function getChampsPanelToDeactivate()
+    {
+        return $this->champsPanelToDeactivate;
     }
 }

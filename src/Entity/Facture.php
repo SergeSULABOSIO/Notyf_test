@@ -47,7 +47,7 @@ class Facture
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?DocPiece $piece = null;
 
-    #[ORM\Column(nullable: true)]
+    // #[ORM\Column(nullable: true)]
     private ?float $totalDu = null;
 
     #[ORM\Column(nullable: true)]
@@ -231,15 +231,20 @@ class Facture
     public function getTotalDu(): ?float
     {
         // dd($this->totalDu);
+        $this->totalDu = 0;
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $ef) {
+            $this->totalDu = $this->totalDu + $ef->getMontant();
+        }
         return round($this->totalDu, 0);
     }
 
-    public function setTotalDu(?float $totalDu): self
-    {
-        $this->totalDu = $totalDu;
+    // public function setTotalDu(?float $totalDu): self
+    // {
+    //     $this->totalDu = $totalDu;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getTotalRecu(): ?float
     {

@@ -115,10 +115,10 @@ class FactureComReassuranceInit implements FactureInit
         dd("Cette fonction n'est pas définie.");
         return [];
     }
-    public function setTotalDu(?float $montantDu)
-    {
-        $this->facture->setTotalDu($montantDu);
-    }
+    // public function setTotalDu(?float $montantDu)
+    // {
+    //     $this->facture->setTotalDu($montantDu);
+    // }
     public function addElementsFacture(?array $TabElementsFactures)
     {
         foreach ($TabElementsFactures as $ef) {
@@ -172,7 +172,7 @@ class FactureComReassuranceInit implements FactureInit
         $this->setUpdatedAt($this->tranche->getUpdatedAt());
         //Element facture / article de la facture
         $elementFacture = $this->produireElementFacture();
-        $this->setTotalDu($elementFacture->getMontant());
+        // $this->setTotalDu($elementFacture->getMontant());
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
         return $this->facture;

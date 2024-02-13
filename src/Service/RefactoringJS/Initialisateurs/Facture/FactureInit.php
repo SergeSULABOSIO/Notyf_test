@@ -38,7 +38,7 @@ interface FactureInit
     public function setUpdatedAt(?DateTimeImmutable $dateModification);
     public function produireElementsFacture():array;
     public function produireElementFacture():?ElementFacture;
-    public function setTotalDu(?float $montantDu);
+    // public function setTotalDu(?float $montantDu);
     public function addElementFacture(?ElementFacture $elementFacture);
     public function addElementsFacture(?array $TabElementsFactures);
     public function generateDescriptionFacture(): string;

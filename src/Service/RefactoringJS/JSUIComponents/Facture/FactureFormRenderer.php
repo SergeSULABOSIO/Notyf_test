@@ -224,14 +224,17 @@ class FactureFormRenderer extends JSPanelRenderer
          * Le comportement du formulaire doit varier en fonction du type de facture que l'on paie.
          */
         // dd($adminUrlGenerator);
-        if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
-            $this->addChampToDeactivate("reference");
-            $this->addChampToDeactivate("type");
-            $this->addChampToDeactivate("partenaire");
-            $this->addChampToRemove("compteBancaires");
-            $this->addChampToRemove("autreTiers");
-            $this->addChampToRemove("assureur");
+        if ($adminUrlGenerator->get("donnees") != null) {
+            if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
+                $this->addChampToDeactivate("reference");
+                $this->addChampToDeactivate("type");
+                $this->addChampToDeactivate("partenaire");
+                $this->addChampToRemove("compteBancaires");
+                $this->addChampToRemove("autreTiers");
+                $this->addChampToRemove("assureur");
+            }
         }
+
         return $champs;
     }
 }

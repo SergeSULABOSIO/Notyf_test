@@ -104,7 +104,15 @@ class FactureRetroCommissionInit implements FactureInit
         $elementFacture->setCreatedAt($this->tranche->getCreatedAt());
         $elementFacture->setUpdatedAt($this->tranche->getUpdatedAt());
         
+        /**
+         * Ici il ne faut facturer que le montant non encore facturée
+         * Pas le montant total dû pour ce type de revenu/charge
+         * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
+         */
+        
         $totDu = $this->tranche->getRetroCommissionTotale();
+        dd("Récherche du montant déjà facturé afin de facturer UNIQUEMENT le reste", $this->tranche);
+        
         $totPaye = 0;
         foreach ($this->tranche->getElementFactures() as $ef) {
             if ($ef->getFacture() != null) {
@@ -129,10 +137,7 @@ class FactureRetroCommissionInit implements FactureInit
         dd("Cette fonction n'est pas définie.");
         return [];
     }
-    public function setTotalDu(?float $montantDu)
-    {
-        $this->facture->setTotalDu($montantDu);
-    }
+    
     public function addElementsFacture(?array $TabElementsFactures)
     {
         foreach ($TabElementsFactures as $ef) {
@@ -187,7 +192,7 @@ class FactureRetroCommissionInit implements FactureInit
         $this->setUpdatedAt($this->tranche->getUpdatedAt());
         //Element facture / article de la facture
         $elementFacture = $this->produireElementFacture();
-        $this->setTotalDu($elementFacture->getMontant());
+        // $this->setTotalDu($elementFacture->getMontant());
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
         // dd("Facture: ", $this->facture);

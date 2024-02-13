@@ -190,6 +190,7 @@ class FactureRetroCommissionInit implements FactureInit
         $this->setTotalDu($elementFacture->getMontant());
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
+        // dd("Facture: ", $this->facture);
         return $this->facture;
     }
 

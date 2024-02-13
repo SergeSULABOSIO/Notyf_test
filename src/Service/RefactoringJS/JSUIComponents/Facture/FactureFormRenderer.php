@@ -11,6 +11,7 @@ use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
 use App\Controller\Admin\ElementFactureCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -216,6 +217,21 @@ class FactureFormRenderer extends JSPanelRenderer
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
+        /**
+         * L'objectif de ce traitement de masse c'est de pouvoir ne pas afficher certains champs
+         * du formulaire en fonction du type de facture que l'on est en train
+         * de payer.
+         * Le comportement du formulaire doit varier en fonction du type de facture que l'on paie.
+         */
+        // dd($adminUrlGenerator);
+        if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
+            $this->addChampToDeactivate("reference");
+            $this->addChampToDeactivate("type");
+            $this->addChampToDeactivate("partenaire");
+            $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("autreTiers");
+            $this->addChampToRemove("assureur");
+        }
         return $champs;
     }
 }

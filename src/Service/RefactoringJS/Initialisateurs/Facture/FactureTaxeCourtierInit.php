@@ -119,14 +119,6 @@ class FactureTaxeCourtierInit implements FactureInit
     {
         $this->facture->setTotalDu($montantDu);
     }
-    public function setTotalRecu()
-    {
-        $this->facture->setTotalRecu(0);
-    }
-    public function setTotalSolde()
-    {
-        $this->facture->setTotalSolde(0);
-    }
     public function addElementsFacture(?array $TabElementsFactures)
     {
         foreach ($TabElementsFactures as $ef) {
@@ -183,8 +175,6 @@ class FactureTaxeCourtierInit implements FactureInit
         $this->setTotalDu($elementFacture->getMontant());
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
-        $this->setTotalRecu();
-        $this->setTotalSolde();
         return $this->facture;
     }
 

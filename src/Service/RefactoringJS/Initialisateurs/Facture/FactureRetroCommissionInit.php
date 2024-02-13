@@ -103,7 +103,21 @@ class FactureRetroCommissionInit implements FactureInit
         $elementFacture->setUtilisateur($this->tranche->getUtilisateur());
         $elementFacture->setCreatedAt($this->tranche->getCreatedAt());
         $elementFacture->setUpdatedAt($this->tranche->getUpdatedAt());
-        $elementFacture->setMontant($this->tranche->getRetroCommissionTotale());
+        
+        $totDu = $this->tranche->getRetroCommissionTotale();
+        $totPaye = 0;
+        foreach ($this->tranche->getElementFactures() as $ef) {
+            if ($ef->getFacture() != null) {
+                if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
+                    foreach ($ef->getFacture()->getPaiements() as $paiement) {
+                        $totPaye = $totPaye + $paiement->getMontant();
+                    }
+                }
+            }
+        }
+        $totSolde = $totDu - $totPaye;
+        $elementFacture->setMontant($totSolde);
+        
         $elementFacture->setTranche($this->tranche);
         $elementFacture->setTypeavenant($this->tranche->getPolice()->getTypeavenant());
         $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($this->tranche->getPolice()));
@@ -118,28 +132,6 @@ class FactureRetroCommissionInit implements FactureInit
     public function setTotalDu(?float $montantDu)
     {
         $this->facture->setTotalDu($montantDu);
-    }
-    public function setTotalRecu()
-    {
-        // Ici
-        $totRecu = 0;
-        $tabPaiementsRecus = [];
-        foreach ($this->tranche->getElementFactures() as $ef) {
-            if ($ef->getFacture() != null) {
-                if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
-                    foreach ($ef->getFacture()->getPaiements() as $paiement) {
-                        $totRecu = $totRecu + $paiement->getMontant();
-                        $tabPaiementsRecus[] = $paiement;
-                    }
-                }
-            }
-        }
-        dd($this->tranche, $tabPaiementsRecus, $totRecu);
-        $this->facture->setTotalRecu(0);
-    }
-    public function setTotalSolde()
-    {
-        $this->facture->setTotalSolde(0);
     }
     public function addElementsFacture(?array $TabElementsFactures)
     {
@@ -198,8 +190,6 @@ class FactureRetroCommissionInit implements FactureInit
         $this->setTotalDu($elementFacture->getMontant());
         $this->addElementFacture($elementFacture);
         $this->setComptesBancaires();
-        $this->setTotalRecu();
-        $this->setTotalSolde();
         return $this->facture;
     }
 
@@ -304,11 +294,11 @@ class FactureRetroCommissionInit implements FactureInit
                             $testEquality[self::PARAM_DIFFERENCES][self::PARAM_SAME_MONTANT]
                         );
                     $this->facture->setDescription("Ajustement (" . $this->serviceDates->getTexte($this->serviceDates->aujourdhui()) . ") - " . $this->facture->getDescription());
-                    // dd("Facture à ajouter", $this->facture);
                     $this->entityManager->persist($this->facture);
                 } else {
                     $this->entityManager->persist($this->facture);
                 }
+                // dd("Facture à ajouter", $this->facture);
                 $this->entityManager->flush();
             }
         }

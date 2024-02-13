@@ -39,8 +39,6 @@ interface FactureInit
     public function produireElementsFacture():array;
     public function produireElementFacture():?ElementFacture;
     public function setTotalDu(?float $montantDu);
-    public function setTotalRecu();
-    public function setTotalSolde();
     public function addElementFacture(?ElementFacture $elementFacture);
     public function addElementsFacture(?array $TabElementsFactures);
     public function generateDescriptionFacture(): string;

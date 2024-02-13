@@ -79,17 +79,17 @@ class FactureFormRenderer extends JSPanelRenderer
             null,
             null
         );
-        //Pièces justificatives
-        $this->addChampAssociation(
-            null,
-            "piece",
-            "Pièces justificatives",
-            false,
-            false,
-            10,
-            null,
-            null
-        );
+        // //Pièces justificatives
+        // $this->addChampAssociation(
+        //     null,
+        //     "piece",
+        //     "Pièces justificatives",
+        //     false,
+        //     false,
+        //     10,
+        //     null,
+        //     null
+        // );
         //Type
         $this->addChampChoix(
             null,
@@ -118,7 +118,7 @@ class FactureFormRenderer extends JSPanelRenderer
             }
         );
         //Description
-        $this->addChampTexte(
+        $this->addChampEditeurTexte(
             null,
             "description",
             "Description",
@@ -159,8 +159,8 @@ class FactureFormRenderer extends JSPanelRenderer
         //Montant TTC
         $this->addChampArgent(
             null,
-            "montantTTC",
-            "Total à payer",
+            "totalSolde",
+            "Solde à payer",
             false,
             true,
             10,

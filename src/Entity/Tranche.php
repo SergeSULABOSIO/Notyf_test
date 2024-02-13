@@ -83,6 +83,8 @@ class Tranche
     public const FACTURE = "facture";
     public const PAIEMENTS = "paiements";
     public const MONTANT_DU = "montantDu";
+    public const MONTANT_INVOICED = "montantInvoiced";
+    public const MONTANT_TO_BE_INVOICED = "montantToBeInvoiced";
     public const MONTANT_PAYE = "montantPaye";
     public const TARGET = "target";
     public const MESSAGE = "message";
@@ -113,6 +115,19 @@ class Tranche
         $this->elementFactures = new ArrayCollection();
     }
 
+    public function getTotalInvoiced(?int $typeFacture): ?float
+    {
+        $montantInvoiced = 0;
+        /** @var ElementFacture */
+        foreach ($this->getElementFactures() as $ef) {
+            if ($ef->getFacture() != null) {
+                if ($typeFacture == $ef->getFacture()->getType()) {
+                    $montantInvoiced = $montantInvoiced + $ef->getMontant();
+                }
+            }
+        }
+        return $montantInvoiced;
+    }
 
     public function getId(): ?int
     {
@@ -748,12 +763,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]);
+        $mntToBeInvoiced = round($this->getPrimeTotaleTranche(), 0) - $mntInvoiced;
         $this->premiumInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => $this->getPrimeTotaleTranche(),
+            self::TARGET => round($this->getPrimeTotaleTranche(), 0),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -806,12 +825,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]);
+        $mntToBeInvoiced = round($this->getComFraisGestion(), 0) - $mntInvoiced;
         $this->fraisGestionInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => $this->getComFraisGestion(),
+            self::TARGET => round($this->getComFraisGestion(), 0),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -848,12 +871,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+        $mntToBeInvoiced = round($this->getRetroCommissionTotale(), 0) - $mntInvoiced;
         $this->retrocomInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => ($this->getRetroCommissionTotale() / 100) * 100,
+            self::TARGET => round($this->getRetroCommissionTotale(), 0),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -890,12 +917,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]);
+        $mntToBeInvoiced = $this->getTaxeCourtierTotale() - $mntInvoiced;
         $this->taxCourtierInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getTaxeCourtierTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -931,12 +962,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]);
+        $mntToBeInvoiced = $this->getTaxeAssureurTotale() - $mntInvoiced;
         $this->taxAssureurInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getTaxeAssureurTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -972,12 +1007,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]);
+        $mntToBeInvoiced = $this->getComLocale() - $mntInvoiced;
         $this->comLocaleInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComLocale(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -1015,12 +1054,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = round($this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]), 0);
+        $mntToBeInvoiced = round($this->getComReassurance(), 0) - $mntInvoiced;
         $this->comReassuranceInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => round($this->getComReassurance(),0),
+            self::TARGET => round($this->getComReassurance(), 0),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,
@@ -1057,12 +1100,16 @@ class Tranche
                 }
             }
         }
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]);
+        $mntToBeInvoiced = $this->getComFronting() - $mntInvoiced;
         $this->comFrontingInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
             self::TARGET => $this->getComFronting(),
             self::FACTURE => [
                 self::DATA => $invoices,
-                self::MONTANT_DU => $invoice_amount
+                self::MONTANT_DU => $invoice_amount,
+                self::MONTANT_INVOICED => $mntInvoiced,
+                self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
                 self::DATA => $payments,

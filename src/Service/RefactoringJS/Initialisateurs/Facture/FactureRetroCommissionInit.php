@@ -111,7 +111,8 @@ class FactureRetroCommissionInit implements FactureInit
          */
         
         $totDu = $this->tranche->getRetroCommissionTotale();
-        dd("Récherche du montant déjà facturé afin de facturer UNIQUEMENT le reste", $this->tranche);
+        $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+        // dd("Montant Invoiced: ", $totInvoiced);
         
         $totPaye = 0;
         foreach ($this->tranche->getElementFactures() as $ef) {
@@ -123,7 +124,7 @@ class FactureRetroCommissionInit implements FactureInit
                 }
             }
         }
-        $totSolde = $totDu - $totPaye;
+        $totSolde = $totDu - $totInvoiced;
         $elementFacture->setMontant($totSolde);
         
         $elementFacture->setTranche($this->tranche);

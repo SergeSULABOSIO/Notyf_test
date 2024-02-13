@@ -7,9 +7,11 @@
         {% if field.value is not empty %}
             {% set monnaie = field.value["monnaie"] %}
             <span class="badge badge-primary text-right mb-3 p-2">
-                Total : {{ (field.value['target'] / 100)|format_currency(monnaie)}}<br/>  
-                Paiements : {{ (field.value['paiements']['montantPaye'] / 100)|format_currency(monnaie)}}<br/>    
-                Solde : {{ (field.value['solde'] / 100)|format_currency(monnaie)}}<br/> 
+                Montant dû : {{ (field.value['target'] / 100)|format_currency(monnaie)}}<br/>  
+                Montant facturé : {{ (field.value['facture']['montantInvoiced'] / 100)|format_currency(monnaie)}}<br/>  
+                Montant payé : {{ (field.value['paiements']['montantPaye'] / 100)|format_currency(monnaie)}}<br/>    
+                Solde dû : {{ (field.value['solde'] / 100)|format_currency(monnaie)}}<br/> 
+                Solde à facturer : {{ (field.value['facture']['montantToBeInvoiced'] / 100)|format_currency(monnaie)}}<br/> 
                 {% if (field.value['produire'] == true) %}
                     <span class="badge bg-warning text-white text-wrap">
                         {{field.value['message']}}

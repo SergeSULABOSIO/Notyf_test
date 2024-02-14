@@ -788,15 +788,17 @@ class Tranche
     private function editMessage(array $tab): array
     {
         $target = $tab[self::TARGET];
-        $montantDu = $tab[self::FACTURE][self::MONTANT_DU];
-        $montantPaye = $tab[self::PAIEMENTS][self::MONTANT_PAYE];
+        $montantDue = $tab[self::FACTURE][self::MONTANT_DU];
+        $montantPaid = $tab[self::PAIEMENTS][self::MONTANT_PAYE];
+        $montantInvoiced = $tab[self::FACTURE][self::MONTANT_INVOICED];
+        $montantToBeInvoiced = $tab[self::FACTURE][self::MONTANT_TO_BE_INVOICED];
 
         if ($target == 0) {
             $tab[self::MESSAGE] = "Ne pas facturer, car pas un revenu";
-        } else if ($target == $montantDu) {
-            $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaye / $montantDu) * 100, 0, ',', '.') . "%";
+        } else if ($montantPaid != 0 || $montantDue == $montantInvoiced) {
+            $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaid / $montantDue) * 100, 0, ',', '.') . "%";
         } else {
-            $tab[self::MESSAGE] = "Vous pouvez émettre la note";
+            $tab[self::MESSAGE] = "Vous pouvez émettre la note pour " . number_format($montantToBeInvoiced / 100, 2, ',', '.');
         }
         // dd($tab);
         return $tab;
@@ -813,7 +815,7 @@ class Tranche
             self::TARGET => $total_du,
             self::FACTURE => [
                 self::DATA => $this->getFacturesEmises($type),
-                self::MONTANT_DU => $mntInvoiced,
+                self::MONTANT_DU => $total_du,
                 self::MONTANT_INVOICED => $mntInvoiced,
                 self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],

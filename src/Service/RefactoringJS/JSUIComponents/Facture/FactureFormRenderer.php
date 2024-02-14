@@ -80,17 +80,6 @@ class FactureFormRenderer extends JSPanelRenderer
             null,
             null
         );
-        // //Pièces justificatives
-        // $this->addChampAssociation(
-        //     null,
-        //     "piece",
-        //     "Pièces justificatives",
-        //     false,
-        //     false,
-        //     10,
-        //     null,
-        //     null
-        // );
         //Type
         $this->addChampChoix(
             null,

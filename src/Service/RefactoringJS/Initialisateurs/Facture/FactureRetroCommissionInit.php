@@ -103,7 +103,6 @@ class FactureRetroCommissionInit implements FactureInit
         $elementFacture->setUtilisateur($this->tranche->getUtilisateur());
         $elementFacture->setCreatedAt($this->tranche->getCreatedAt());
         $elementFacture->setUpdatedAt($this->tranche->getUpdatedAt());
-        
         /**
          * Ici il ne faut facturer que le montant non encore facturée
          * Pas le montant total dû.
@@ -111,20 +110,7 @@ class FactureRetroCommissionInit implements FactureInit
          */
         $totDu = $this->tranche->getRetroCommissionTotale();
         $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
-        // dd("Montant Invoiced: ", $totInvoiced);
-        $totPaye = $this->tranche->getTotalPaid(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
-        // foreach ($this->tranche->getElementFactures() as $ef) {
-        //     if ($ef->getFacture() != null) {
-        //         if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
-        //             foreach ($ef->getFacture()->getPaiements() as $paiement) {
-        //                 $totPaye = $totPaye + $paiement->getMontant();
-        //             }
-        //         }
-        //     }
-        // }
-        $totSolde = $totDu - $totInvoiced;
-        $elementFacture->setMontant($totSolde);
-        
+        $elementFacture->setMontant($totDu - $totInvoiced);
         $elementFacture->setTranche($this->tranche);
         $elementFacture->setTypeavenant($this->tranche->getPolice()->getTypeavenant());
         $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($this->tranche->getPolice()));

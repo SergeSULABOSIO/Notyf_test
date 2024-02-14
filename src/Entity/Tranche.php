@@ -798,7 +798,7 @@ class Tranche
         } else if ($montantPaid != 0 || $montantDue == $montantInvoiced) {
             $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaid / $montantDue) * 100, 0, ',', '.') . "%";
         } else {
-            $tab[self::MESSAGE] = "Vous pouvez émettre la note pour " . number_format($montantToBeInvoiced / 100, 2, ',', '.');
+            $tab[self::MESSAGE] = "Vous pouvez émettre la note pour " . $this->getCodeMonnaieAffichage() ." " . number_format($montantToBeInvoiced / 100, 2, ',', '.');
         }
         // dd($tab);
         return $tab;

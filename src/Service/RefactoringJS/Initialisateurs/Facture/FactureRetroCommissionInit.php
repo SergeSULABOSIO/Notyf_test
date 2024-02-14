@@ -106,24 +106,22 @@ class FactureRetroCommissionInit implements FactureInit
         
         /**
          * Ici il ne faut facturer que le montant non encore facturée
-         * Pas le montant total dû pour ce type de revenu/charge
+         * Pas le montant total dû.
          * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
          */
-        
         $totDu = $this->tranche->getRetroCommissionTotale();
         $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
         // dd("Montant Invoiced: ", $totInvoiced);
-        
-        $totPaye = 0;
-        foreach ($this->tranche->getElementFactures() as $ef) {
-            if ($ef->getFacture() != null) {
-                if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
-                    foreach ($ef->getFacture()->getPaiements() as $paiement) {
-                        $totPaye = $totPaye + $paiement->getMontant();
-                    }
-                }
-            }
-        }
+        $totPaye = $this->tranche->getTotalPaid(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+        // foreach ($this->tranche->getElementFactures() as $ef) {
+        //     if ($ef->getFacture() != null) {
+        //         if ($ef->getFacture()->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
+        //             foreach ($ef->getFacture()->getPaiements() as $paiement) {
+        //                 $totPaye = $totPaye + $paiement->getMontant();
+        //             }
+        //         }
+        //     }
+        // }
         $totSolde = $totDu - $totInvoiced;
         $elementFacture->setMontant($totSolde);
         

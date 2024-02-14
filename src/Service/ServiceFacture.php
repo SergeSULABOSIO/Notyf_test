@@ -15,17 +15,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePrimeInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
+// use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 
 class ServiceFacture
 {
@@ -122,6 +123,7 @@ class ServiceFacture
                             $ffg = new FactureTaxeCourtierInit(
                                 $this->serviceAvenant,
                                 $this->serviceDates,
+                                $this->serviceTaxes,
                                 $this->serviceEntreprise,
                                 $this->entityManager,
                                 $this->serviceCompteBancaire
@@ -139,6 +141,7 @@ class ServiceFacture
                             $ffg = new FactureTaxeAssureurInit(
                                 $this->serviceAvenant,
                                 $this->serviceDates,
+                                $this->serviceTaxes,
                                 $this->serviceEntreprise,
                                 $this->entityManager,
                                 $this->serviceCompteBancaire

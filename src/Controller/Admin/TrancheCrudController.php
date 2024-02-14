@@ -11,21 +11,17 @@ use App\Entity\Tranche;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceCompteBancaire;
 use App\Service\ServiceFiltresNonMappes;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,12 +42,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
-use App\Service\RefactoringJS\Initisateurs\Facture\FacturePrimeInit;
-use App\Service\RefactoringJS\JSUIComponents\Paiement\TrancheUIBuilder;
-use App\Service\ServiceAvenant;
-use App\Service\ServiceCompteBancaire;
-use App\Service\ServiceMonnaie;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePrimeInit;
+use App\Service\RefactoringJS\JSUIComponents\Paiement\TrancheUIBuilder;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -696,6 +696,7 @@ class TrancheCrudController extends AbstractCrudController
                 $ffg = new FactureTaxeCourtierInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
+                    $this->serviceTaxes,
                     $this->serviceEntreprise,
                     $this->entityManager,
                     $this->serviceCompteBancaire
@@ -707,6 +708,7 @@ class TrancheCrudController extends AbstractCrudController
                 $ffg = new FactureTaxeAssureurInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
+                    $this->serviceTaxes,
                     $this->serviceEntreprise,
                     $this->entityManager,
                     $this->serviceCompteBancaire

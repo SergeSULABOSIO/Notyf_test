@@ -160,13 +160,6 @@ class FactureCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        // if ($pageName == Crud::PAGE_EDIT) {
-        //     /** @var Facture */
-        //     $this->facture = $this->getContext()->getEntity()->getInstance();
-        // }
-        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->facture);
-        // return $this->servicePreferences->getChamps(new Facture(), $this->crud, $this->adminUrlGenerator);
-
         /** @var Facture */
         $this->facture = $this->getContext()->getEntity()->getInstance();
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->facture);

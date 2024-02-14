@@ -38,7 +38,7 @@ class ServiceTaxes
     }
 
 
-    public function getTaxe(bool $payableParCourtier)
+    public function getTaxe(bool $payableParCourtier):?Taxe
     {
         foreach ($this->taxes as $taxe) {
             //dd($fonction);

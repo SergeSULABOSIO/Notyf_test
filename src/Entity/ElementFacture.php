@@ -122,7 +122,7 @@ class ElementFacture
 
     public function __toString()
     {
-        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . ($this->getMontant()/100). "";
+        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . round(($this->getMontant()/100), 2). "";
     }
 
     public function getFacture(): ?Facture

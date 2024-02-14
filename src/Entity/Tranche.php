@@ -126,7 +126,7 @@ class Tranche
                 }
             }
         }
-        return $montantInvoiced;
+        return round($montantInvoiced);
     }
 
     public function getId(): ?int
@@ -311,7 +311,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->retroCommissionTotale;
+        return round($this->retroCommissionTotale);
     }
 
     /**
@@ -328,7 +328,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->taxeCourtierTotale;
+        return round($this->taxeCourtierTotale);
     }
 
     /**
@@ -345,7 +345,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->taxeAssureurTotale;
+        return round($this->taxeAssureurTotale);
     }
 
     /**
@@ -615,7 +615,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->reserve;
+        return round($this->reserve);
     }
 
     /**
@@ -627,7 +627,7 @@ class Tranche
             ->setCotation($this->getCotation())
             ->getPrimeTotale(null, $this);
         // dd($this->primeTotaleTranche);
-        return $this->primeTotaleTranche;
+        return round($this->primeTotaleTranche);
     }
 
     /**
@@ -645,7 +645,7 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->comReassurance);
-        return $this->comReassurance;
+        return round($this->comReassurance);
     }
 
     /**
@@ -663,7 +663,7 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_locale);
-        return $this->comLocale;
+        return round($this->comLocale);
     }
 
     /**
@@ -681,7 +681,7 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_fronting);
-        return $this->comFronting;
+        return round($this->comFronting);
     }
 
     /**
@@ -699,7 +699,7 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         // dd($this->com_frais_gestion);
-        return $this->comFraisGestion;
+        return round($this->comFraisGestion);
     }
 
     /**
@@ -716,7 +716,7 @@ class Tranche
                 null,
                 Calculateur::Param_from_tranche
             ) * 100;
-        return $this->comAutreChargement;
+        return round($this->comAutreChargement);
     }
 
     /**
@@ -734,7 +734,7 @@ class Tranche
                 Calculateur::Param_from_tranche
             ) * 100;
         //dd($this->revenuTotal);
-        return $this->revenuTotal;
+        return round($this->revenuTotal);
     }
 
     /**
@@ -764,10 +764,10 @@ class Tranche
             }
         }
         $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]);
-        $mntToBeInvoiced = round($this->getPrimeTotaleTranche(), 0) - $mntInvoiced;
+        $mntToBeInvoiced = $this->getPrimeTotaleTranche() - $mntInvoiced;
         $this->premiumInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => round($this->getPrimeTotaleTranche(), 0),
+            self::TARGET => $this->getPrimeTotaleTranche(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount,
@@ -793,7 +793,7 @@ class Tranche
         if ($target == 0) {
             $tab[self::MESSAGE] = "Ne pas facturer, car pas un revenu";
         } else if ($target == $montantDu) {
-            $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaye / $montantDu) * 100, 2, ',', '.') . "%";
+            $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaye / $montantDu) * 100, 0, ',', '.') . "%";
         } else {
             $tab[self::MESSAGE] = "Vous pouvez émettre la note";
         }
@@ -817,7 +817,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -826,10 +826,10 @@ class Tranche
             }
         }
         $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]);
-        $mntToBeInvoiced = round($this->getComFraisGestion(), 0) - $mntInvoiced;
+        $mntToBeInvoiced = $this->getComFraisGestion() - $mntInvoiced;
         $this->fraisGestionInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => round($this->getComFraisGestion(), 0),
+            self::TARGET => $this->getComFraisGestion(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount,
@@ -861,9 +861,8 @@ class Tranche
             $facture = $ef->getFacture();
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]) {
                 //Facture
-                // dd($facture->getTotalDu() * 1000000);
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + (($facture->getTotalDu() / 100) * 100);
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -872,10 +871,10 @@ class Tranche
             }
         }
         $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
-        $mntToBeInvoiced = round($this->getRetroCommissionTotale(), 0) - $mntInvoiced;
+        $mntToBeInvoiced = $this->getRetroCommissionTotale() - $mntInvoiced;
         $this->retrocomInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => round($this->getRetroCommissionTotale(), 0),
+            self::TARGET => $this->getRetroCommissionTotale(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount,
@@ -886,10 +885,10 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT_PAYE => $payments_amount
             ],
-            self::SOLDE_DU => (($this->getRetroCommissionTotale() / 100) * 100) - $payments_amount,
-            self::PRODUIRE_FACTURE => (($this->getRetroCommissionTotale() / 100) * 100) !== $invoice_amount
+            self::SOLDE_DU => $this->getRetroCommissionTotale() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getRetroCommissionTotale() !== $invoice_amount
         ];
-        // dd(($this->getRetroCommissionTotale()) - ($invoice_amount));
+        // dd(round($this->getRetroCommissionTotale()), round($invoice_amount));
         return $this->editMessage($this->retrocomInvoiceDetails);
     }
 
@@ -909,7 +908,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -954,7 +953,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -999,7 +998,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -1046,7 +1045,7 @@ class Tranche
                 //Facture
                 // dd($facture->getTotalDu());
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {
@@ -1054,11 +1053,11 @@ class Tranche
                 }
             }
         }
-        $mntInvoiced = round($this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]), 0);
-        $mntToBeInvoiced = round($this->getComReassurance(), 0) - $mntInvoiced;
+        $mntInvoiced = $this->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]);
+        $mntToBeInvoiced = $this->getComReassurance() - $mntInvoiced;
         $this->comReassuranceInvoiceDetails = [
             self::MONNAIE => $this->getCodeMonnaieAffichage(),
-            self::TARGET => round($this->getComReassurance(), 0),
+            self::TARGET => $this->getComReassurance(),
             self::FACTURE => [
                 self::DATA => $invoices,
                 self::MONTANT_DU => $invoice_amount,
@@ -1069,8 +1068,8 @@ class Tranche
                 self::DATA => $payments,
                 self::MONTANT_PAYE => $payments_amount
             ],
-            self::SOLDE_DU => round($this->getComReassurance(), 0) - round($payments_amount, 0),
-            self::PRODUIRE_FACTURE => round($this->getComReassurance(), 0) != round($invoice_amount, 0)
+            self::SOLDE_DU => $this->getComReassurance() - $payments_amount,
+            self::PRODUIRE_FACTURE => $this->getComReassurance() != $invoice_amount
         ];
         // dd($this->getComReassurance(), $invoice_amount);
         return $this->editMessage($this->comReassuranceInvoiceDetails);
@@ -1092,7 +1091,7 @@ class Tranche
             if ($facture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]) {
                 //Facture
                 $invoices[] = $facture;
-                $invoice_amount = $invoice_amount + ($facture->getTotalDu());
+                $invoice_amount = $invoice_amount + $facture->getTotalDu();
                 //Paiements
                 $payments[] = $facture->getPaiements();
                 foreach ($facture->getPaiements() as $paiement) {

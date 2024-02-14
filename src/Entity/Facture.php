@@ -236,7 +236,7 @@ class Facture
         foreach ($this->elementFactures as $ef) {
             $this->totalDu = $this->totalDu + $ef->getMontant();
         }
-        return round($this->totalDu, 0);
+        return round($this->totalDu);
     }
 
     // public function setTotalDu(?float $totalDu): self

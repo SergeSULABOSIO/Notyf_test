@@ -65,9 +65,9 @@ class FactureCrudController extends AbstractCrudController
     public const STATUS_FACTURE_SOLDEE      = "Soldée";
 
     public const TAB_STATUS_FACTURE = [
-        self::STATUS_FACTURE_IMPAYEE    => 0,
+        self::STATUS_FACTURE_IMPAYEE    => 2,
         self::STATUS_FACTURE_ENCOURS    => 1,
-        self::STATUS_FACTURE_SOLDEE     => 2,
+        self::STATUS_FACTURE_SOLDEE     => 0,
     ];
 
     public ?Crud $crud = null;

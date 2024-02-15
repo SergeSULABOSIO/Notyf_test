@@ -237,7 +237,6 @@ class FactureFormRenderer extends JSPanelRenderer
                 $this->addChampToDeactivate("assureur", 3);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("autreTiers");
-                // $this->addChampToRemove("assureur");
             }
         }
 

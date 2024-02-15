@@ -215,9 +215,9 @@ class FactureFormRenderer extends JSPanelRenderer
         // dd($adminUrlGenerator);
         if ($adminUrlGenerator->get("donnees") != null) {
             if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("reference");
-                $this->addChampToDeactivate("type");
-                $this->addChampToDeactivate("partenaire");
+                $this->addChampToDeactivate("reference", 4);
+                $this->addChampToDeactivate("type", 3);
+                $this->addChampToDeactivate("partenaire", 3);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("autreTiers");
                 $this->addChampToRemove("assureur");

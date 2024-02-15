@@ -30,7 +30,7 @@ interface JSPanel
     public function init();
     public function render();
     public function addChampToRemove(?string $nomAttribut);
-    public function addChampToDeactivate(?string $nomAttribut);
+    public function addChampToDeactivate(?string $nomAttribut, ?int $columns = null);
     public function getChamps():?array;
     public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null):?array;
 }

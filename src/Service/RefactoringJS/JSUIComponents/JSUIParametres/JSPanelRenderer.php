@@ -55,11 +55,12 @@ abstract class JSPanelRenderer implements JSPanel
         return $this;
     }
 
-    public function addChampToDeactivate(?string $nomAttribut)
+    public function addChampToDeactivate(?string $nomAttribut, ?int $columns = null)
     {
-        if (!$this->champsPanelToDeactivate->contains($nomAttribut)) {
-            $this->champsPanelToDeactivate->add($nomAttribut);
+        if (!$this->champsPanelToDeactivate->contains($nomAttribut, $columns)) {
+            $this->champsPanelToDeactivate->set($nomAttribut, $columns);
         }
+        // dd($this->champsPanelToDeactivate);
         return $this;
     }
 
@@ -79,14 +80,24 @@ abstract class JSPanelRenderer implements JSPanel
             } else {
                 $propertName = $champ->getAsDto()->getProperty();
             }
-            // dd("Traitement en masse:", $this->champsPanelToRemove, $this->champsPanelToDeactivate);
-            //On ne prends que les champs qui sont affichables
+            //On cache d'autres champs
             if (!$this->champsPanelToRemove->contains($propertName)) {
                 $tabChampsFinaux[] = $champ;
             }
-            //On désactive les champs qui doivent être désactivés.
+            //On applique la désactivation des champs
             if ($this->champsPanelToDeactivate->contains($propertName)) {
                 $tabChampsFinaux[] = $champ->setDisabled(true);
+            }
+            if (isset($this->champsPanelToDeactivate[$propertName])) {
+                foreach ($this->champsPanelToDeactivate as $attribut => $columns) {
+                    if ($attribut == $propertName) {
+                        $champ->setDisabled(true);
+                        if ($columns != null) {
+                            $champ->setColumns($columns);
+                        }
+                    }
+                    $tabChampsFinaux[] = $champ;
+                }
             }
         }
         // dd($tabChampsFinaux);
@@ -443,7 +454,7 @@ abstract class JSPanelRenderer implements JSPanel
 
     /**
      * Get the value of champsPanelToRemove
-     */ 
+     */
     public function getChampsPanelToRemove()
     {
         return $this->champsPanelToRemove;
@@ -451,7 +462,7 @@ abstract class JSPanelRenderer implements JSPanel
 
     /**
      * Get the value of champsPanelToDeactivate
-     */ 
+     */
     public function getChampsPanelToDeactivate()
     {
         return $this->champsPanelToDeactivate;

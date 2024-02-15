@@ -2,15 +2,8 @@
 
 namespace App\Service\RefactoringJS\Initialisateurs\Facture;
 
-use DateTimeImmutable;
-use App\Entity\Facture;
 use App\Entity\Tranche;
-use App\Entity\Assureur;
-use App\Entity\Entreprise;
-use App\Entity\Partenaire;
-use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
-use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCompteBancaire;

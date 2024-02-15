@@ -48,7 +48,13 @@ abstract class AbstractFacture implements FactureInit
         $this->setPosteSignedBy($this->getPosteSignedBy());
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         $this->setType(FactureCrudController::TAB_TYPE_FACTURE[$this->getTypeFacture()]);
-        $this->setAutreTiers($tranche->getPolice()->getClient()->getNom());
+        if($this->getTypeFacture() == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA){
+            $this->setAutreTiers($tranche->getCotation()->getTaxeCourtier()->getOrganisation());
+        }else if($this->getTypeFacture() == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA){
+            $this->setAutreTiers($tranche->getCotation()->getTaxeAssureur()->getOrganisation());
+        }else{
+            $this->setAutreTiers($tranche->getPolice()->getClient());
+        }        
         $this->setPartenaire($tranche->getPolice()->getPartenaire());
         $this->setAssureur($tranche->getPolice()->getAssureur());
         $this->setDescription($this->generateDescriptionFacture());

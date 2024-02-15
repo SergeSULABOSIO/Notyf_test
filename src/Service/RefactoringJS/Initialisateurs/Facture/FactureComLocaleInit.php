@@ -38,10 +38,6 @@ class FactureComLocaleInit extends AbstractFacture
     {
         return $tranche->getComLocale();
     }
-    public function getSignedBy(): ?string
-    {
-        return "Pour " . $this->serviceEntreprise->getEntreprise()->getNom();
-    }
     public function getPosteSignedBy(): ?string
     {
         return "Direction financière";

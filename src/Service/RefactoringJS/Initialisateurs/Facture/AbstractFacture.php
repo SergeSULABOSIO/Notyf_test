@@ -35,7 +35,7 @@ abstract class AbstractFacture implements FactureInit
     }
 
     public abstract function getNomAbstract():?string;
-    public abstract function getSignedBy():?string;
+    // public abstract function getSignedBy():?string;
     public abstract function getPosteSignedBy():?string;
     public abstract function getTypeFacture():?string;
 
@@ -43,7 +43,8 @@ abstract class AbstractFacture implements FactureInit
     {
         // dd($this->facture);
         $this->setTranche($tranche);
-        $this->setSignedBy($this->getSignedBy());
+        // $this->setSignedBy($this->getSignedBy());
+        $this->setSignedBy($this->serviceEntreprise->getUtilisateur());
         $this->setPosteSignedBy($this->getPosteSignedBy());
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         $this->setType(FactureCrudController::TAB_TYPE_FACTURE[$this->getTypeFacture()]);

@@ -41,10 +41,6 @@ class FactureTaxeAssureurInit extends AbstractFacture
     {
         return $tranche->getTaxeAssureurTotale();
     }
-    public function getSignedBy(): ?string
-    {
-        return "Pour " . $this->serviceEntreprise->getEntreprise()->getNom();
-    }
     public function getPosteSignedBy(): ?string
     {
         return "Direction financière";

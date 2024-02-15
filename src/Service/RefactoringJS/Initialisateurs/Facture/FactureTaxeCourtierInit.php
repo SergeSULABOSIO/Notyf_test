@@ -41,10 +41,6 @@ class FactureTaxeCourtierInit extends AbstractFacture
     {
         return $tranche->getTaxeCourtierTotale();
     }
-    public function getSignedBy(): ?string
-    {
-        return "Pour " . $this->serviceEntreprise->getEntreprise()->getNom();
-    }
     public function getPosteSignedBy(): ?string
     {
         return "Direction financière";

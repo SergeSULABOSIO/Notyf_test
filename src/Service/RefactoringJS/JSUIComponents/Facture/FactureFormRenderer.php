@@ -135,7 +135,7 @@ class FactureFormRenderer extends JSPanelRenderer
             "Signé par",
             true,
             false,
-            5,
+            3,
             function ($value, Facture $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
@@ -143,6 +143,15 @@ class FactureFormRenderer extends JSPanelRenderer
                     ->outputHtml();
                 return $formatedHtml;
             }
+        );
+        $this->addChampTexte(
+            null,
+            "posteSignedBy",
+            "Fonction",
+            true,
+            false,
+            3,
+            null
         );
         //Onglet Article
         $this->addOnglet(" Articles facturés", "fas fa-handshake", "Les articles de la facture.");
@@ -215,12 +224,20 @@ class FactureFormRenderer extends JSPanelRenderer
         // dd($adminUrlGenerator);
         if ($adminUrlGenerator->get("donnees") != null) {
             if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("reference", 4);
                 $this->addChampToDeactivate("type", 3);
+                $this->addChampToDeactivate("reference", 4);
                 $this->addChampToDeactivate("partenaire", 3);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("autreTiers");
                 $this->addChampToRemove("assureur");
+            }else if (FactureCrudController::TYPE_FACTURE_PRIME == $adminUrlGenerator->get("donnees")["type"]) {
+                $this->addChampToDeactivate("type", 2);
+                $this->addChampToDeactivate("reference", 3);
+                $this->addChampToDeactivate("partenaire", 2);
+                $this->addChampToDeactivate("assureur", 3);
+                $this->addChampToRemove("compteBancaires");
+                $this->addChampToRemove("autreTiers");
+                // $this->addChampToRemove("assureur");
             }
         }
 

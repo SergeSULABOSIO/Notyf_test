@@ -38,10 +38,6 @@ class FactureComReassuranceInit extends AbstractFacture
     {
         return $tranche->getComReassurance();
     }
-    public function getSignedBy(): ?string
-    {
-        return "Pour " . $this->serviceEntreprise->getEntreprise()->getNom();
-    }
     public function getPosteSignedBy(): ?string
     {
         return "Direction financière";

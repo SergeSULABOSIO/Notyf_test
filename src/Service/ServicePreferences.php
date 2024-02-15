@@ -1629,6 +1629,7 @@ class ServicePreferences
 
     public function setFIN_Fields_Element_Facture_form($tabAttributs)
     {
+        // dd($this->adminUrlGenerator->get("donnees"));
         $tabAttributs[] = MoneyField::new('montant', PreferenceCrudController::PREF_FIN_ELEMENT_FACTURE_MONTANT)
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()

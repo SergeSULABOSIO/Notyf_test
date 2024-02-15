@@ -23,7 +23,7 @@ interface FactureInit
     //Fonctions de creation de la Facture
     public function setComptesBancaires();
     public function setTranche(?Tranche $tranche);
-    public function setSignedBy(?string $signataire);
+    // public function setSignedBy(?string $signataire);
     public function setPosteSignedBy(?string $posteSignataire);
     public function setStatus(?int $status);
     public function setAutreTiers(?string $autreTiers);

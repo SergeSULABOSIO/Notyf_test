@@ -31,10 +31,6 @@ class FactureRetroCommissionInit extends AbstractFacture
     {
         return $tranche->getRetroCommissionTotale();
     }
-    public function getSignedBy(): ?string
-    {
-        return "Pour " . $this->serviceEntreprise->getEntreprise()->getNom();
-    }
     public function getPosteSignedBy(): ?string
     {
         return "Direction financière";

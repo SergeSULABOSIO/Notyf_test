@@ -2,16 +2,8 @@
 
 namespace App\Service\RefactoringJS\Initialisateurs\Paiement;
 
-use DateTimeImmutable;
-use App\Entity\Facture;
-use App\Entity\DocPiece;
-use App\Entity\Paiement;
-use App\Entity\Entreprise;
-use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
-use App\Entity\CompteBancaire;
 use App\Service\ServiceAvenant;
-use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;

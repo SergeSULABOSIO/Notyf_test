@@ -21,7 +21,6 @@ abstract class AbstractFacture implements FactureInit
 {
     private ?Tranche $tranche;
     private ?Facture $facture;
-    private ?string $nom;
 
     public function __construct(
         private ServiceAvenant $serviceAvenant,
@@ -35,7 +34,6 @@ abstract class AbstractFacture implements FactureInit
     }
 
     public abstract function getNomAbstract():?string;
-    // public abstract function getSignedBy():?string;
     public abstract function getPosteSignedBy():?string;
     public abstract function getTypeFacture():?string;
 

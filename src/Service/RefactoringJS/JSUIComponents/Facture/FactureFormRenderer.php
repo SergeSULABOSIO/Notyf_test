@@ -273,9 +273,15 @@ class FactureFormRenderer extends JSPanelRenderer
                 $this->addChampToDeactivate("assureur", 2);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
+            }else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $adminUrlGenerator->get("donnees")["type"]) {
+                $this->addChampToDeactivate("type", 3);
+                $this->addChampToDeactivate("reference", 3);
+                $this->addChampToDeactivate("autreTiers", 2);
+                $this->addChampToDeactivate("assureur", 2);
+                $this->addChampToRemove("compteBancaires");
+                $this->addChampToRemove("partenaire");
             }
         }
-
         return $champs;
     }
 }

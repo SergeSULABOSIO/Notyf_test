@@ -1,21 +1,15 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
+namespace App\Service\RefactoringJS\JSUIComponents\Facture;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuListeRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureListeRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Facture\FactureFormRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Facture\FactureListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuDetailsRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureDetailsRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheDetailsRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Facture\FactureDetailsRenderer;
 
 class FactureUIBuilder extends JSPanelBuilder
 {

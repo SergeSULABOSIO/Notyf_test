@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
+namespace App\Service\RefactoringJS\JSUIComponents\Revenu;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuListeRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Revenu\RevenuFormRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Revenu\RevenuListeRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Revenu\RevenuDetailsRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\RevenuDetailsRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheDetailsRenderer;
 
 class RevenuUIBuilder extends JSPanelBuilder
 {

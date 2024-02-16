@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Facture;
+namespace App\Service\RefactoringJS\JSUIComponents\ElementFacture;
 
 use App\Entity\Revenu;
 use App\Entity\Facture;
@@ -17,7 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class FactureListeRenderer extends JSPanelRenderer
+class ElementFactureListeRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,

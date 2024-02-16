@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
+namespace App\Service\RefactoringJS\JSUIComponents\Tranche;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
+namespace App\Service\RefactoringJS\JSUIComponents\ElementFacture;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Taxe\TaxeFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Taxe\TaxeListeRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Taxe\TaxeDetailsRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureFormRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureDetailsRenderer;
 
-class TaxeUIBuilder extends JSPanelBuilder
+class ElementFactureUIBuilder extends JSPanelBuilder
 {
-    private ?TaxeListeRenderer $listeRendere = null;
-    private ?TaxeDetailsRenderer $detailsRendere = null;
-    private ?TaxeFormRenderer $formRendere = null;
+    private ?ElementFactureListeRenderer $listeRendere = null;
+    private ?ElementFactureDetailsRenderer $detailsRendere = null;
+    private ?ElementFactureFormRenderer $formRendere = null;
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class TaxeUIBuilder extends JSPanelBuilder
 
     public function buildListPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->listeRendere = new TaxeListeRenderer(
+        $this->listeRendere = new ElementFactureListeRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,
@@ -38,7 +38,7 @@ class TaxeUIBuilder extends JSPanelBuilder
 
     public function buildFormPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->formRendere = new TaxeFormRenderer(
+        $this->formRendere = new ElementFactureFormRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,
@@ -52,7 +52,7 @@ class TaxeUIBuilder extends JSPanelBuilder
 
     public function buildDetailsPanel(?EntityManager $entityManager = null, ?ServiceMonnaie $serviceMonnaie = null, ?ServiceTaxes $serviceTaxes = null, ?string $pageName = null, $objetInstance = null, $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
     {
-        $this->detailsRendere = new TaxeDetailsRenderer(
+        $this->detailsRendere = new ElementFactureDetailsRenderer(
             $entityManager,
             $serviceMonnaie,
             $serviceTaxes,

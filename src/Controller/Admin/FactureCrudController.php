@@ -6,7 +6,6 @@ namespace App\Controller\Admin;
 use App\Entity\Facture;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
-use App\Service\RefactoringJS\JSUIComponents\Paiement\FactureUIBuilder;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -31,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Facture\FactureUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class FactureCrudController extends AbstractCrudController

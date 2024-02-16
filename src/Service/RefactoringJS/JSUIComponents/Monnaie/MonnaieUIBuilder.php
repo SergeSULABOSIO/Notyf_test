@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
+namespace App\Service\RefactoringJS\JSUIComponents\Monnaie;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\MonnaieFormRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Monnaie\MonnaieFormRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\MonnaieListeRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Monnaie\MonnaieListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\MonnaieDetailsRenderer;
+use App\Service\RefactoringJS\JSUIComponents\Monnaie\MonnaieDetailsRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheDetailsRenderer;
 
 class MonnaieUIBuilder extends JSPanelBuilder

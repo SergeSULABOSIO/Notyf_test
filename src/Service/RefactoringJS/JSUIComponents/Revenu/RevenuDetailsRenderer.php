@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Tranche;
+namespace App\Service\RefactoringJS\JSUIComponents\Revenu;
 
 use App\Entity\Tranche;
 use App\Service\ServiceTaxes;

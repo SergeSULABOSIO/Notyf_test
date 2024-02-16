@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Monnaie;
+namespace App\Service\RefactoringJS\JSUIComponents\ElementFacture;
 
-use App\Entity\Monnaie;
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use App\Controller\Admin\MonnaieCrudController;
-use App\Controller\Admin\PaiementCrudController;
+use App\Controller\Admin\FactureCrudController;
+use App\Entity\ElementFacture;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Controller\Admin\UtilisateurCrudController;
+use App\Entity\Facture;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class MonnaieListeRenderer extends JSPanelRenderer
+class ElementFactureDetailsRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -26,84 +24,69 @@ class MonnaieListeRenderer extends JSPanelRenderer
         $crud,
         AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
-        //Nom
-        $this->addChampTexte(
+        //Tranche
+        $this->addChampAssociation(
             null,
-            "nom",
-            "Intitulé",
+            "tranche",
+            "Tranche",
             false,
             false,
             10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Code
-        $this->addChampTexte(
             null,
-            "code",
-            "Code",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Fonction
-        $this->addChampChoix(
             null,
-            "fonction",
-            "Fonction Système",
-            false,
-            false,
-            10,
-            MonnaieCrudController::TAB_MONNAIE_FONCTIONS,
             null
         );
-        //Taux en USD
+        //Facture
+        $this->addChampAssociation(
+            null,
+            "facture",
+            "Facture",
+            false,
+            false,
+            10,
+            null,
+            null,
+            null
+        );
+        //Montant
         $this->addChampArgent(
             null,
-            "tauxusd",
-            "Taux (en USD)",
+            "montant",
+            "Montant à payer",
             false,
             false,
             10,
             $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Monnaie $objet) {
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Created At
+        $this->addChampDate(
+            null,
+            "createdAt",
+            "D. Création",
+            false,
+            false,
+            10,
+            function ($value, ElementFacture $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
-            },
-            4
+            }
         );
-        //Is locale?
-        $this->addChampChoix(
-            null,
-            "islocale",
-            "Monnaie locale?",
-            false,
-            false,
-            10,
-            MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE,
-            null
-        );
-        //Date modification
+        //Edited At
         $this->addChampDate(
             null,
             "updatedAt",
@@ -111,13 +94,25 @@ class MonnaieListeRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Monnaie $objet) {
+            function ($value, ElementFacture $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
             }
+        );
+        //Entreprise
+        $this->addChampAssociation(
+            null,
+            "entreprise",
+            "Entreprise",
+            false,
+            false,
+            10,
+            null,
+            null,
+            null
         );
     }
 

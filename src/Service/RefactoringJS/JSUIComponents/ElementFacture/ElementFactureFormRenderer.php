@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service\RefactoringJS\JSUIComponents\Facture;
+namespace App\Service\RefactoringJS\JSUIComponents\ElementFacture;
 
 use App\Entity\Facture;
 use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
+use App\Entity\ElementFacture;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\FactureCrudController;
@@ -18,7 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class FactureFormRenderer extends JSPanelRenderer
+class ElementFactureFormRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -34,182 +35,153 @@ class FactureFormRenderer extends JSPanelRenderer
 
     public function design()
     {
-        //Onglet Article
-        $this->addOnglet(
-            " Informations générales",
-            "fas fa-handshake",
-            "Les articles de la facture."
-        );
-        //Section - Principale
-        $this->addSection(
-            "Section principale",
-            "fas fa-location-crosshairs",
-            null,
-            10
-        );
-        //Assureur
-        $this->addChampAssociation(
-            null,
-            "assureur",
-            "Assureur",
-            false,
-            false,
-            5,
-            null,
-            null
-        );
-        //Partenaire
-        $this->addChampAssociation(
-            null,
-            "partenaire",
-            "Partenaire",
-            false,
-            false,
-            5,
-            null,
-            null
-        );
-        //Autres tiers
-        $this->addChampTexte(
-            null,
-            "autreTiers",
-            "Tiers Concerné",
-            false,
-            false,
-            5,
-            null,
-            null
-        );
-        //Type
-        $this->addChampChoix(
-            null,
-            "type",
-            "Type de facture",
-            false,
-            false,
-            10,
-            FactureCrudController::TAB_TYPE_FACTURE,
-            null
-        );
-        //Rférence de la facture
-        $this->addChampTexte(
-            null,
-            "reference",
-            "Référence",
-            false,
-            false,
-            10,
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Description
-        $this->addChampEditeurTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            false,
-            10,
-            null
-        );
-        //Comptes Bancaires
-        $this->addChampAssociation(
-            null,
-            "compteBancaires",
-            "Comptes bancaires",
-            false,
-            false,
-            10,
-            null,
-            null
-        );
-        //Signed By
-        $this->addChampTexte(
-            null,
-            "signedBy",
-            "Signé par",
-            true,
-            false,
-            3,
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        $this->addChampTexte(
-            null,
-            "posteSignedBy",
-            "Fonction",
-            true,
-            false,
-            3,
-            null
-        );
-        //Onglet Article
-        $this->addOnglet(" Articles facturés", "fas fa-handshake", "Les articles de la facture.");
-        //Montant TTC
+        //Montant
         $this->addChampArgent(
             null,
-            "totalSolde",
-            "Solde à payer",
-            false,
-            true,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontantTTC())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Panel Articles facturées
-        $this->addSection(
-            "Articles facturés",
-            "fa-solid fa-layer-group",
-            "Elements constitutifs de la facture ou de la note de débit/crédit.",
-            10
-        );
-        //Elements facturés
-        $this->addChampCollection(
-            null,
-            "elementFactures",
-            "Eléments facturés",
-            false,
-            false,
-            10,
-            null,
-            ElementFactureCrudController::class,
-            true,
-            true
-        );
-        //Onglet Documents
-        $this->addOnglet(
-            "Documents ou pièces jointes",
-            "fa-solid fa-paperclip",
-            "Merci d'attacher vos pièces justificatives par ici."
-        );
-        //Documents
-        $this->addChampCollection(
-            null,
-            "documents",
-            "Documents",
+            "montant",
+            "Montant à payer",
             false,
             false,
             12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Prime totale
+        $this->addChampArgent(
             null,
-            DocPieceCrudController::class,
+            "primeTotale",
+            "Prime d'assurance",
             true,
-            true
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getPrimeTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Commission totale
+        $this->addChampArgent(
+            null,
+            "commissionTotale",
+            "Commission",
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Frais de gestion
+        $this->addChampArgent(
+            null,
+            "fraisGestionTotale",
+            "Frais de gestion",
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getFraisGestionTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Revenu Total
+        $this->addChampArgent(
+            null,
+            "revenuTotal",
+            "Revenu Total",
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotal())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Rétrocommission Total
+        $this->addChampArgent(
+            null,
+            "retroCommissionTotale",
+            "Rétro-commission",
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRetroCommissionTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Taxe courtier
+        $this->addChampArgent(
+            null,
+            "taxeCourtierTotale",
+            "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()),
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeCourtierTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Taxe assureur
+        $this->addChampArgent(
+            null,
+            "taxeAssureurTotale",
+            ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()),
+            true,
+            false,
+            12,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureurTotale())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Tranche
+        $this->addChampAssociation(
+            null,
+            "tranche",
+            "Tranche",
+            true,
+            false,
+            12,
+            null,
+            null,
+            null
         );
     }
 
@@ -224,6 +196,8 @@ class FactureFormRenderer extends JSPanelRenderer
         // dd($adminUrlGenerator);
         if ($adminUrlGenerator->get("donnees") != null) {
             if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
+                Ici
+                
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 4);
                 $this->addChampToDeactivate("partenaire", 3);

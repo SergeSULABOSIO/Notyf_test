@@ -3,16 +3,12 @@
 namespace App\Service\RefactoringJS\JSUIComponents\Facture;
 
 use App\Entity\Facture;
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\DocPieceCrudController;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use App\Controller\Admin\UtilisateurCrudController;
 use App\Controller\Admin\ElementFactureCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;

@@ -414,30 +414,20 @@ abstract class JSPanelRenderer implements JSPanel
         if ($permission != null) {
             $champTempo->setPermission($permission);
         }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
         if ($helpMessage != null) {
             $champTempo->setHelp($helpMessage);
         }
         if ($crudControllerFqcn != null) {
             $champTempo->useEntryCrudForm($crudControllerFqcn);
         }
-        if ($allowAdd != null) {
-            $champTempo->allowAdd($allowAdd);
-        }
-        if ($allowDelete != null) {
-            $champTempo->allowDelete($allowDelete);
-        }
         if ($templatePath != null) {
             $champTempo->setTemplatePath($templatePath);
         }
+        $champTempo->setColumns($columns);
+        $champTempo->setDisabled($desabled);
+        $champTempo->setRequired($required);
+        $champTempo->allowAdd($allowAdd);
+        $champTempo->allowDelete($allowDelete);
         $this->champsPanel[] = $champTempo;
     }
 

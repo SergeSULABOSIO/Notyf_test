@@ -6,6 +6,7 @@ use App\Entity\Revenu;
 use App\Entity\Facture;
 use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
+use App\Entity\ElementFacture;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\RevenuCrudController;
@@ -33,30 +34,56 @@ class ElementFactureListeRenderer extends JSPanelRenderer
 
     public function design()
     {
-        //Status
-        $this->addChampChoix(
+        //Police
+        $this->addChampAssociation(
             null,
-            "status",
-            "Status",
+            "police",
+            "Police",
             false,
             false,
             10,
-            FactureCrudController::TAB_STATUS_FACTURE,
-            [
-                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE] => 'success', //info
-                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE] => 'danger', //info
-                FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS] => 'info', //info
-            ]
+            null,
+            null,
+            null
         );
-        //Rférence de la facture
-        $this->addChampTexte(
+        //Facture
+        $this->addChampAssociation(
             null,
-            "reference",
-            "Référence",
+            "facture",
+            "Facture",
             false,
             false,
             10,
-            function ($value, Facture $objet) {
+            null,
+            null,
+            null
+        );
+        //Montant
+        $this->addChampArgent(
+            null,
+            "montant",
+            "Montant à payer",
+            false,
+            false,
+            10,
+            $this->serviceMonnaie->getCodeAffichage(),
+            function ($value, ElementFacture $objet) {
+                /** @var JSCssHtmlDecoration */
+                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                    ->outputHtml();
+                return $formatedHtml;
+            }
+        );
+        //Created At
+        $this->addChampDate(
+            null,
+            "createdAt",
+            "D. Création",
+            false,
+            false,
+            10,
+            function ($value, ElementFacture $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
@@ -64,92 +91,7 @@ class ElementFactureListeRenderer extends JSPanelRenderer
                 return $formatedHtml;
             }
         );
-        //Type
-        $this->addChampChoix(
-            null,
-            "type",
-            "Type de facture",
-            false,
-            false,
-            10,
-            FactureCrudController::TAB_TYPE_FACTURE,
-            null
-        );
-        //Elements facture
-        $this->addChampAssociation(
-            null,
-            "elementFactures",
-            "Eléments facturés",
-            false,
-            false,
-            10,
-            null,
-            function ($value, Facture $entity) {
-                return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
-            }
-        );
-        //Description
-        $this->addChampTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            false,
-            10,
-            null
-        );
-        //Total Du
-        $this->addChampArgent(
-            null,
-            "totalDu",
-            "Total Dû",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalDu())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Total Recu
-        $this->addChampArgent(
-            null,
-            "totalRecu",
-            "Total Reçu",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalRecu())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Total Solde
-        $this->addChampArgent(
-            null,
-            "totalSolde",
-            "Total Solde",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalSolde())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
-        );
-        //Dernière modification
+        //Edited At
         $this->addChampDate(
             null,
             "updatedAt",
@@ -157,13 +99,37 @@ class ElementFactureListeRenderer extends JSPanelRenderer
             false,
             false,
             10,
-            function ($value, Facture $objet) {
+            function ($value, ElementFacture $objet) {
                 /** @var JSCssHtmlDecoration */
                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
                     ->outputHtml();
                 return $formatedHtml;
             }
+        );
+        //Utilisateur
+        $this->addChampAssociation(
+            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
+            "utilisateur",
+            "Utilisateur",
+            false,
+            false,
+            10,
+            null,
+            null,
+            null
+        );
+        //Entreprise
+        $this->addChampAssociation(
+            null,
+            "entreprise",
+            "Entreprise",
+            false,
+            false,
+            10,
+            null,
+            null,
+            null
         );
     }
 

@@ -4,12 +4,14 @@ namespace App\Controller\Admin;
 
 use App\Service\ServiceTaxes;
 use App\Entity\ElementFacture;
+use App\Service\RefactoringJS\JSUIComponents\ElementFacture\ElementFactureUIBuilder;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
 use App\Service\ServiceDates;
+use App\Service\ServiceMonnaie;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +31,8 @@ class ElementFactureCrudController extends AbstractCrudController
 {
 
     public ?Crud $crud = null;
+    public ?ElementFacture $elementFacture = null;
+    public ?ElementFactureUIBuilder $uiBuilder = null;
 
     public function __construct(
         private ServiceDates $serviceDates,
@@ -39,9 +43,11 @@ class ElementFactureCrudController extends AbstractCrudController
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator,
-        private ServiceTaxes $serviceTaxes
+        private ServiceTaxes $serviceTaxes,
+        private ServiceMonnaie $serviceMonnaie
     ) {
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
+        $this->uiBuilder = new ElementFactureUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -116,10 +122,26 @@ class ElementFactureCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        if($this->crud){
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        $this->elementFacture = $this->getContext()->getEntity()->getInstance();
+        if($this->crud != null){
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->elementFacture);
         }
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new ElementFacture(), $this->crud, $this->adminUrlGenerator);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $this->elementFacture,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
+
+
+        // if($this->crud){
+        //     $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // }
+        // //Actualisation des attributs calculables - Merci Seigneur Jésus !
+        // return $this->servicePreferences->getChamps(new ElementFacture(), $this->crud, $this->adminUrlGenerator);
     }
 }

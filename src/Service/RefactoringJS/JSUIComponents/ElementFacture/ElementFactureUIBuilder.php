@@ -6,10 +6,7 @@ use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureFormRenderer;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
-use App\Service\RefactoringJS\JSUIComponents\Tranche\FactureDetailsRenderer;
 
 class ElementFactureUIBuilder extends JSPanelBuilder
 {

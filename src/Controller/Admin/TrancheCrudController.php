@@ -42,9 +42,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
+use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePrimeInit;
-use App\Service\RefactoringJS\JSUIComponents\Paiement\TrancheUIBuilder;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
@@ -272,33 +272,6 @@ class TrancheCrudController extends AbstractCrudController
             $this->crud,
             $this->adminUrlGenerator
         );
-
-
-        // $instance = $this->getContext()->getEntity()->getInstance();
-        // if ($this->crud != null) {
-        //     $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
-        // }
-        // // $this->adminUrlGenerator->set("champsACacher", [
-        // //PreferenceCrudController::PREF_CRM_COTATION_REVENUS,
-        // //PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT,
-        // //PreferenceCrudController::PREF_CRM_COTATION_MISSIONS,
-        // //PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
-        // //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
-        // //PreferenceCrudController::PREF_CRM_MISSION_PISTE,
-        // // ]);
-
-        // if ($instance != null) {
-        //     if ($instance instanceof Piste) {
-        //         //On envoie ces paramètres à tous les formulaires
-        //         /** @var Piste */
-        //         if ($instance->getProduit()) {
-        //             $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
-        //         }
-        //         if ($instance->getClient()) {
-        //             $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
-        //         }
-        //     }
-        // }
     }
 
     public function configureActions(Actions $actions): Actions

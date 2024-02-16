@@ -10,9 +10,10 @@ use App\Entity\Produit;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
-use App\Service\RefactoringJS\JSUIComponents\Paiement\RevenuUIBuilder;
 use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceMonnaie;
 use Doctrine\ORM\Query\Expr\Func;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
@@ -20,8 +21,6 @@ use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use App\Service\ServiceFiltresNonMappes;
-use App\Service\ServiceMonnaie;
-use App\Service\ServiceTaxes;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -30,13 +29,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Revenu\RevenuUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 
 class RevenuCrudController extends AbstractCrudController
 {

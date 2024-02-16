@@ -31,7 +31,7 @@ class ElementFactureCrudController extends AbstractCrudController
 {
 
     public ?Crud $crud = null;
-    public ?ElementFacture $elementFacture = null;
+    public $instance = null;
     public ?ElementFactureUIBuilder $uiBuilder = null;
 
     public function __construct(
@@ -122,17 +122,16 @@ class ElementFactureCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $this->elementFacture = $this->getContext()->getEntity()->getInstance();
+        $this->instance = $this->getContext()->getEntity()->getInstance();
         if($this->crud != null){
-            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->elementFacture);
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->instance);
         }
-
         return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,
             $this->serviceTaxes,
-            $pageName,
-            $this->elementFacture,
+            $this->instance,
+            $this->instance,
             $this->crud,
             $this->adminUrlGenerator
         );

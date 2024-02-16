@@ -46,6 +46,10 @@ abstract class JSPanelRenderer implements JSPanel
     public abstract function design();
     public abstract function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array;
 
+    public function addChamp($champ){
+        $this->champsPanel[] = $champ;
+    }
+
     public function addChampToRemove(?string $nomAttribut)
     {
         if (!$this->champsPanelToRemove->contains($nomAttribut)) {

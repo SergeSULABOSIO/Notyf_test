@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use App\Controller\Admin\UtilisateurCrudController;
 use App\Controller\Admin\ElementFactureCrudController;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
@@ -36,22 +37,38 @@ class ElementFactureFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Montant
-        $this->addChampArgent(
-            null,
-            "montant",
-            "Montant à payer",
-            false,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("montant", "Montant à payer")
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        // $this->addChampArgent(
+        //     null,
+        //     "montant",
+        //     "Montant à payer",
+        //     false,
+        //     false,
+        //     12,
+        //     $this->serviceMonnaie->getCodeAffichage(),
+        //     function ($value, ElementFacture $objet) {
+        //         /** @var JSCssHtmlDecoration */
+        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
+        //             ->outputHtml();
+        //         return $formatedHtml;
+        //     }
+        // );
         //Prime totale
         $this->addChampArgent(
             null,

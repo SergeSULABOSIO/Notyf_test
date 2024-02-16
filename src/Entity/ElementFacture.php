@@ -48,6 +48,9 @@ class ElementFacture
     
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
+    private ?float $commissionLocale = 0;
+    private ?float $commissionFronting = 0;
+    private ?float $commissionReassurance = 0;
     private ?float $fraisGestionTotale = 0;
     private ?float $revenuTotal = 0;
     private ?float $retroCommissionTotale = 0;
@@ -251,5 +254,32 @@ class ElementFacture
         $this->tranche = $tranche;
 
         return $this;
+    }
+
+    /**
+     * Get the value of commissionLocale
+     */ 
+    public function getCommissionLocale()
+    {
+        $this->commissionLocale = $this->getTranche()->getComLocale();
+        return $this->commissionLocale;
+    }
+
+    /**
+     * Get the value of commissionFronting
+     */ 
+    public function getCommissionFronting()
+    {
+        $this->commissionFronting = $this->getTranche()->getComFronting();
+        return $this->commissionFronting;
+    }
+
+    /**
+     * Get the value of commissionReassurance
+     */ 
+    public function getCommissionReassurance()
+    {
+        $this->commissionReassurance = $this->getTranche()->getComReassurance();
+        return $this->commissionReassurance;
     }
 }

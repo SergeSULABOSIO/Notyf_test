@@ -185,8 +185,8 @@ class FactureFormRenderer extends JSPanelRenderer
             10,
             null,
             ElementFactureCrudController::class,
-            true,
-            true
+            false,
+            false
         );
         //Onglet Documents
         $this->addOnglet(

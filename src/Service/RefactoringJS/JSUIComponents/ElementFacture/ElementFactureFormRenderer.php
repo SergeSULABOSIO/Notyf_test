@@ -42,7 +42,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 ->createArgent("montant", "Montant à payer")
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setFormValue(
+                ->setFormatValue(
                     function ($value, ElementFacture $objet) {
                         /** @var JSCssHtmlDecoration */
                         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
@@ -53,204 +53,204 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
-        // $this->addChampArgent(
-        //     null,
-        //     "montant",
-        //     "Montant à payer",
-        //     false,
-        //     false,
-        //     12,
-        //     $this->serviceMonnaie->getCodeAffichage(),
-        //     function ($value, ElementFacture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+
         //Prime totale
-        $this->addChampArgent(
-            null,
-            "primeTotale",
-            "Prime d'assurance",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getPrimeTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("primeTotale", "Prime d'assurance")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getPrimeTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Commission locale
-        $this->addChampArgent(
-            null,
-            "commissionLocale",
-            "Commission locale",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionLocale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("commissionLocale", "Commission locale")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionLocale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Commission de réassurance
-        $this->addChampArgent(
-            null,
-            "commissionReassurance",
-            "Commission de réa.",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionReassurance())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("commissionReassurance", "Commission de réa.")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionReassurance())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Commission de céssion / fronting
-        $this->addChampArgent(
-            null,
-            "commissionFronting",
-            "Commission sur fronting.",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionFronting())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("commissionFronting", "Commission sur fronting.")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionFronting())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Commission totale
-        $this->addChampArgent(
-            null,
-            "commissionTotale",
-            "Commission",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("commissionTotale", "Commission")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getCommissionTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Frais de gestion
-        $this->addChampArgent(
-            null,
-            "fraisGestionTotale",
-            "Frais de gestion",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getFraisGestionTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("fraisGestionTotale", "Frais de gestion")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getFraisGestionTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Revenu Total
-        $this->addChampArgent(
-            null,
-            "revenuTotal",
-            "Revenu Total",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotal())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("revenuTotal", "Revenu Total")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotal())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Rétrocommission Total
-        $this->addChampArgent(
-            null,
-            "retroCommissionTotale",
-            "Rétro-commission",
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRetroCommissionTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("retroCommissionTotale", "Rétro-commission")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRetroCommissionTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Taxe courtier
-        $this->addChampArgent(
-            null,
-            "taxeCourtierTotale",
-            "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()),
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeCourtierTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("taxeCourtierTotale", "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeCourtierTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
-        //Taxe assureur
-        $this->addChampArgent(
-            null,
-            "taxeAssureurTotale",
-            ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()),
-            true,
-            false,
-            12,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, ElementFacture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureurTotale())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+
+        //Taxe Assureur
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("taxeAssureurTotale", ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
+                ->setRequired(true)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureurTotale())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Tranche
-        $this->addChampAssociation(
-            null,
-            "tranche",
-            "Tranche",
-            true,
-            false,
-            12,
-            null,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("tranche", "Tranche")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->getChamp()
         );
     }
 

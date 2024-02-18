@@ -87,7 +87,7 @@ class JSChamp
         return $this;
     }
 
-    public function setFormValue(?callable $formatValue)
+    public function setFormatValue(?callable $formatValue)
     {
         /** @var FormField */
         $this->champ->formatValue($formatValue);

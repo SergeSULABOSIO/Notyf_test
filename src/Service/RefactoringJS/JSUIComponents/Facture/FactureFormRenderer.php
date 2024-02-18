@@ -10,6 +10,7 @@ use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\ElementFactureCrudController;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
@@ -31,78 +32,73 @@ class FactureFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Onglet Article
-        $this->addOnglet(
-            " Informations générales",
-            "fas fa-handshake",
-            "Les articles de la facture."
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet(" Informations générales")
+                ->setIcon("fas fa-handshake")
+                ->setHelp("Les articles de la facture.")
+                ->getChamp()
         );
+
         //Section - Principale
-        $this->addSection(
-            "Section principale",
-            "fas fa-location-crosshairs",
-            null,
-            10
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Section principale")
+                ->setIcon("fas fa-location-crosshairs")
+                ->getChamp()
         );
+
         //Assureur
-        $this->addChampAssociation(
-            null,
-            "assureur",
-            "Assureur",
-            false,
-            false,
-            5,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("assureur", "Assureur")
+                ->setColumns(5)
+                ->getChamp()
         );
+
         //Partenaire
-        $this->addChampAssociation(
-            null,
-            "partenaire",
-            "Partenaire",
-            false,
-            false,
-            5,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("partenaire", "Partenaire")
+                ->setColumns(5)
+                ->getChamp()
         );
+
         //Autres tiers
-        $this->addChampTexte(
-            null,
-            "autreTiers",
-            "Tiers Concerné",
-            false,
-            false,
-            5,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("autreTiers", "Tiers Concerné")
+                ->setColumns(5)
+                ->getChamp()
         );
+
         //Type
-        $this->addChampChoix(
-            null,
-            "type",
-            "Type de facture",
-            false,
-            false,
-            10,
-            FactureCrudController::TAB_TYPE_FACTURE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("type", "Type de facture")
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+                ->getChamp()
         );
+
         //Rférence de la facture
-        $this->addChampTexte(
-            null,
-            "reference",
-            "Référence",
-            false,
-            false,
-            10,
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("reference", "Référence")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Facture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        Ici
+        // Ici, voir en bas, c'est à partir de là qu'il faut continuer en se basant sur le modèle d'en haut.
         //Description
         $this->addChampEditeurTexte(
             null,
@@ -226,7 +222,7 @@ class FactureFormRenderer extends JSPanelRenderer
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("autreTiers");
                 $this->addChampToRemove("assureur");
-            }else if (FactureCrudController::TYPE_FACTURE_PRIME == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_PRIME == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 2);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("assureur", 3);
@@ -234,42 +230,42 @@ class FactureFormRenderer extends JSPanelRenderer
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("autreTiers");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 2);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 3);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
                 $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
-            }else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $adminUrlGenerator->get("donnees")["type"]) {
+            } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);

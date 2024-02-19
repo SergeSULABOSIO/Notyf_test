@@ -14,6 +14,7 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
+use Doctrine\ORM\Query\AST\NewObjectExpression;
 
 class FactureFormRenderer extends JSPanelRenderer
 {
@@ -97,111 +98,110 @@ class FactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        Ici
+
         // Ici, voir en bas, c'est à partir de là qu'il faut continuer en se basant sur le modèle d'en haut.
         //Description
-        $this->addChampEditeurTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            false,
-            10,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createEditeurTexte("description", "Description")
+                ->setColumns(10)
+                ->getChamp()
         );
+
         //Comptes Bancaires
-        $this->addChampAssociation(
-            null,
-            "compteBancaires",
-            "Comptes bancaires",
-            false,
-            false,
-            10,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("compteBancaires", "Comptes bancaires")
+                ->setColumns(10)
+                ->getChamp()
         );
+
         //Signed By
-        $this->addChampTexte(
-            null,
-            "signedBy",
-            "Signé par",
-            true,
-            false,
-            3,
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("signedBy", "Signé par")
+                ->setRequired(true)
+                ->setColumns(3)
+                ->getChamp()
+
         );
-        $this->addChampTexte(
-            null,
-            "posteSignedBy",
-            "Fonction",
-            true,
-            false,
-            3,
-            null
+
+        //Poste Signed by
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("posteSignedBy", "Fonction")
+                ->setRequired(true)
+                ->setColumns(3)
+                ->getChamp()
         );
+
         //Onglet Article
-        $this->addOnglet(" Articles facturés", "fas fa-handshake", "Les articles de la facture.");
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet(" Articles facturés")
+                ->setIcon("fas fa-handshake")
+                ->setHelp("Les articles de la facture.")
+                ->getChamp()
+        );
+
         //Montant TTC
-        $this->addChampArgent(
-            null,
-            "totalSolde",
-            "Solde à payer",
-            false,
-            true,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Facture $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontantTTC())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("totalSolde", "Solde à payer")
+                ->setDisabled(true)
+                ->setColumns(10)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Facture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontantTTC())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Panel Articles facturées
-        $this->addSection(
-            "Articles facturés",
-            "fa-solid fa-layer-group",
-            "Elements constitutifs de la facture ou de la note de débit/crédit.",
-            10
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Articles facturés")
+                ->setIcon("fa-solid fa-layer-group")
+                ->setHelp("Elements constitutifs de la facture ou de la note de débit/crédit.")
+                ->setColumns(10)
+                ->getChamp()
         );
+
         //Elements facturés
-        $this->addChampCollection(
-            null,
-            "elementFactures",
-            "Eléments facturés",
-            false,
-            false,
-            10,
-            null,
-            ElementFactureCrudController::class,
-            false,
-            false
+        $this->addChamp(
+            (new JSChamp())
+                ->createCollection("elementFactures", "Eléments facturés")
+                ->setColumns(10)
+                ->useEntryCrudForm(ElementFactureCrudController::class)
+                ->allowAdd(false)
+                ->allowDelete(false)
+                ->getChamp()
         );
+
         //Onglet Documents
-        $this->addOnglet(
-            "Documents ou pièces jointes",
-            "fa-solid fa-paperclip",
-            "Merci d'attacher vos pièces justificatives par ici."
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet("Documents ou pièces jointes")
+                ->setIcon("fa-solid fa-paperclip")
+                ->setHelp("Merci d'attacher vos pièces justificatives par ici.")
+                ->getChamp()
         );
+        
         //Documents
-        $this->addChampCollection(
-            null,
-            "documents",
-            "Documents",
-            false,
-            false,
-            12,
-            null,
-            DocPieceCrudController::class,
-            true,
-            true
+        $this->addChamp(
+            (new JSChamp())
+            ->createCollection("documents", "Documents")
+            ->setColumns(12)
+            ->useEntryCrudForm(DocPieceCrudController::class)
+            ->allowAdd(true)
+            ->allowDelete(true)
+            ->getChamp()
         );
     }
 
@@ -235,28 +235,28 @@ class FactureFormRenderer extends JSPanelRenderer
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 3);
-                $this->addChampToRemove("compteBancaires");
+                // $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
             } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
-                $this->addChampToRemove("compteBancaires");
+                // $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
             } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
-                $this->addChampToRemove("compteBancaires");
+                // $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
             } else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);
                 $this->addChampToDeactivate("reference", 3);
                 $this->addChampToDeactivate("autreTiers", 2);
                 $this->addChampToDeactivate("assureur", 2);
-                $this->addChampToRemove("compteBancaires");
+                // $this->addChampToRemove("compteBancaires");
                 $this->addChampToRemove("partenaire");
             } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToDeactivate("type", 3);

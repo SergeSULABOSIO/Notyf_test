@@ -51,7 +51,8 @@ class TrancheDetailsRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createBoolean("validated", "Validée")
-                ->renderAsSwitch(false)
+                // ->renderAsSwitch(false)
+                ->setDisabled(true)
                 ->getChamp()
         );
         

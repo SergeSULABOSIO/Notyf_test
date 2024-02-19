@@ -6,7 +6,6 @@ use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\UtilisateurCrudController;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;

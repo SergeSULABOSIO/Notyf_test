@@ -104,7 +104,7 @@ class JSChamp
     public function setDecimals($decimals)
     {
         /** @var FormField */
-        $this->champ->setDecimals($decimals);
+        $this->champ->setNumDecimals($decimals);
         return $this;
     }
 

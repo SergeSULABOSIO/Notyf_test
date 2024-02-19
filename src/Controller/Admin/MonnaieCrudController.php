@@ -2,16 +2,15 @@
 
 namespace App\Controller\Admin;
 
+use DateTimeImmutable;
 use App\Entity\Monnaie;
-use App\Service\RefactoringJS\JSUIComponents\Paiement\MonnaieUIBuilder;
-use App\Service\ServiceCrossCanal;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
-use App\Service\ServiceEntreprise;
 use App\Service\ServiceMonnaie;
+use App\Service\ServiceCrossCanal;
+use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use App\Service\ServiceTaxes;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -37,6 +36,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Monnaie\MonnaieUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\MoneyConfigurator;
 

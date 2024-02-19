@@ -2,18 +2,14 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Monnaie;
 
-use App\Entity\Monnaie;
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\MonnaieCrudController;
-use App\Controller\Admin\PaiementCrudController;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
-use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class MonnaieFormRenderer extends JSPanelRenderer
 {
@@ -32,55 +28,40 @@ class MonnaieFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Code
-        $this->addChampChoix(
-            null,
-            "code",
-            "Code",
-            false,
-            false,
-            6,
-            MonnaieCrudController::TAB_MONNAIES,
-            null
+        $this->addChamp(
+            (new JSChamp())
+            ->createChoix("code", "Code")
+            ->setColumns(6)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIES)
+            ->getChamp()
         );
+        
         //Fonction
-        $this->addChampChoix(
-            null,
-            "fonction",
-            "Fonction Système",
-            false,
-            false,
-            2,
-            MonnaieCrudController::TAB_MONNAIE_FONCTIONS,
-            null
+        $this->addChamp(
+            (new JSChamp())
+            ->createChoix("fonction", "Fonction Système")
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
+            ->getChamp()
         );
+        
         //Taux en USD
-        $this->addChampArgent(
-            null,
-            "tauxusd",
-            "Taux (en USD)",
-            false,
-            false,
-            2,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            },
-            4
+        $this->addChamp(
+            (new JSChamp())
+            ->createArgent("tauxusd", "Taux (en USD)")
+            ->setColumns(2)
+            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+            ->setDecimals(4)
+            ->getChamp()
         );
+        
         //Is locale?
-        $this->addChampChoix(
-            null,
-            "islocale",
-            "Monnaie locale?",
-            false,
-            false,
-            2,
-            MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+            ->createChoix("islocale", "Monnaie locale?")
+            ->setColumns(2)
+            ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+            ->getChamp()
         );
     }
 

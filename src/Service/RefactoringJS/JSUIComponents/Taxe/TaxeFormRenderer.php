@@ -11,6 +11,7 @@ use App\Controller\Admin\TaxeCrudController;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\UtilisateurCrudController;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
@@ -32,55 +33,43 @@ class TaxeFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Nom
-        $this->addChampTexte(
-            null,
-            "nom",
-            "Intitulé",
-            false,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("nom", "Intitulé")
+                ->setColumns(12)
+                ->getChamp()
         );
+
         //taux IARD
-        $this->addChampPourcentage(
-            null,
-            "tauxIARD",
-            "Taux (IARD/Non-Vie)",
-            false,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("tauxIARD", "Taux (IARD/Non-Vie)")
+                ->setColumns(12)
+                ->getChamp()
         );
+
         //taux VIE
-        $this->addChampPourcentage(
-            null,
-            "tauxVIE",
-            "Taux (IARD/Non-Vie)",
-            false,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("tauxVIE", "Taux (IARD/Non-Vie)")
+                ->getChamp()
         );
+
         //Description
-        $this->addChampEditeurTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createEditeurTexte("description", "Description")
+                ->setColumns(12)
+                ->getChamp()
         );
+        
         //Payable par courtier?
-        $this->addChampChoix(
-            null,
-            "payableparcourtier",
-            "Par courtier?",
-            false,
-            false,
-            12,
-            TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("payableparcourtier", "Par courtier?")
+                ->setColumns(12)
+                ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
+                ->getChamp()
         );
     }
 

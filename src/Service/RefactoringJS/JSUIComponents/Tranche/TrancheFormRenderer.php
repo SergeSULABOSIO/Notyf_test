@@ -2,16 +2,13 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Tranche;
 
-use App\Entity\Tranche;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
-use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class TrancheFormRenderer extends JSPanelRenderer
 {
@@ -30,24 +27,20 @@ class TrancheFormRenderer extends JSPanelRenderer
     public function design()
     {
         //Nom
-        $this->addChampTexte(
-            null,
-            "nom",
-            "Intitulé",
-            true,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("nom", "Intitulé")
+                ->setRequired(true)
+                ->setColumns(12)
+                ->getChamp()
         );
+
         //Taux
-        $this->addChampPourcentage(
-            null,
-            "taux",
-            "Portion",
-            false,
-            false,
-            12,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("taux", "Portion")
+                ->setColumns(12)
+                ->getChamp()
         );
     }
 

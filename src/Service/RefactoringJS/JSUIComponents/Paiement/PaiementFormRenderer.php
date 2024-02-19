@@ -5,13 +5,12 @@ namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 use App\Entity\Facture;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use App\Service\ServiceCrossCanal;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\DocPieceCrudController;
 use App\Controller\Admin\PaiementCrudController;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
@@ -33,93 +32,89 @@ class PaiementFormRenderer extends JSPanelRenderer
 
     public function design()
     {
-        $this->addOnglet(
-            "Informations générales",
-            "fa-solid fa-cash-register",
-            "Veuillez saisir les informations relatives au paiement."
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet("Informations générales")
+                ->setIcon("fa-solid fa-cash-register")
+                ->setHelp("Veuillez saisir les informations relatives au paiement.")
+                ->getChamp()
         );
-        $this->addSection(
-            "Section principale",
-            "fas fa-location-crosshairs",
-            null,
-            10
+
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Section principale")
+                ->setIcon("fas fa-location-crosshairs")
+                ->setColumns(10)
+                ->getChamp()
         );
-        $this->addChampAssociation(
-            null,
-            "facture",
-            "Facture",
-            false,
-            false,
-            10,
-            null
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("facture", "Facture")
+                ->setColumns(10)
+                ->getChamp()
         );
-        $this->addChampChoix(
-            null,
-            "type",
-            "Tye de facture",
-            null,
-            true,
-            6,
-            PaiementCrudController::TAB_TYPE_PAIEMENT,
-            null
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("type", "Tye de facture")
+                ->setColumns(6)
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+                ->getChamp()
         );
-        $this->addChampArgent(
-            null,
-            "montant",
-            "Montant",
-            null,
-            null,
-            2,
-            $this->serviceMonnaie->getCodeSaisie()
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("montant", "Montant")
+                ->setColumns(2)
+                ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                ->getChamp()
         );
-        $this->addChampDate(
-            null,
-            "paidAt",
-            "Date",
-            true,
-            null,
-            2
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("paidAt", "Date")
+                ->setRequired(true)
+                ->setColumns(2)
+                ->getChamp()
         );
-        $this->addChampEditeurTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            null,
-            10
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createEditeurTexte("description", "Description")
+                ->setColumns(10)
+                ->getChamp()
         );
-        $this->addSection(
-            "Références bancaires",
-            "fa-solid fa-piggy-bank",
-            null,
-            10
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Références bancaires")
+                ->setIcon("fa-solid fa-piggy-bank")
+                ->setColumns(10)
+                ->getChamp()
         );
-        $this->addChampAssociation(
-            null,
-            "compteBancaire",
-            "Comptes bancaires",
-            false,
-            null,
-            10,
-            null
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("compteBancaire", "Comptes bancaires")
+                ->setColumns(10)
+                ->getChamp()
         );
-        $this->addSection(
-            "Pièces jointes",
-            "fa-solid fa-paperclip",
-            null,
-            10
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Pièces jointes")
+                ->setColumns(10)
+                ->setIcon("fa-solid fa-paperclip")
+                ->getChamp()
         );
-        $this->addChampCollection(
-            null,
-            "documents",
-            "Documents",
-            false,
-            null,
-            10,
-            null,
-            DocPieceCrudController::class,
-            true,
-            true
+        
+        $this->addChamp(
+            (new JSChamp())
+                ->createCollection("documents", "Documents")
+                ->useEntryCrudForm(DocPieceCrudController::class)
+                ->setColumns(10)
+                ->getChamp()
         );
     }
 

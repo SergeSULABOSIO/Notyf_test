@@ -2,15 +2,12 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Revenu;
 
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\RevenuCrudController;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Entity\Monnaie;
 use App\Entity\Revenu;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;

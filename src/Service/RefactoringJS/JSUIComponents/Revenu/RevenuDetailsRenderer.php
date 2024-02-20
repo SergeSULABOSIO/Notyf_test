@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\UtilisateurCrudController;
 use App\Entity\Monnaie;
 use App\Entity\Revenu;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
@@ -33,353 +34,398 @@ class RevenuDetailsRenderer extends JSPanelRenderer
     public function design()
     {
         //Validee?
-        $this->addChampBooleen(
-            null,
-            "validated",
-            "Validée",
-            false,
-            false,
-            false
+        $this->addChamp(
+            (new JSChamp())
+                ->createBoolean("validated", "Validée")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->renderAsSwitch(false)
+                ->getChamp()
         );
+        
         //Type
-        $this->addChampChoix(
-            null,
-            "type",
-            "Type de revenu",
-            false,
-            false,
-            10,
-            RevenuCrudController::TAB_TYPE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("type", "Type de revenu")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setChoices(RevenuCrudController::TAB_TYPE)
+                ->getChamp()
         );
+        
         //Police
-        $this->addChampTexte(
-            null,
-            "police",
-            "Police d'assurance",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getPolice()->getReference()))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("police", "Police d'assurance")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getPolice()->getReference()))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Client
-        $this->addChampTexte(
-            null,
-            "client",
-            "Assuré(e)",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getClient()))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("client", "Assuré(e)")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getClient()))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Assureur
-        $this->addChampTexte(
-            null,
-            "assureur",
-            "Assureur",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getAssureur()))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("assureur", "Assureur")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getAssureur()))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Assureur
-        $this->addChampTexte(
-            null,
-            "partenaire",
-            "Partenaire",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getPartenaire()))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("partenaire", "Partenaire")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getPartenaire()))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Produit
-        $this->addChampTexte(
-            null,
-            "produit",
-            "Couverture",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getProduit()))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("produit", "Couverture")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $objet->getProduit()))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Date effet
-        $this->addChampDate(
-            null,
-            "dateEffet",
-            "Date d'effet",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("dateEffet", "Date d'effet")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Date expiration
-        $this->addChampDate(
-            null,
-            "dateExpiration",
-            "Echéance",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("dateExpiration", "Echéance")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Date d'opération
-        $this->addChampDate(
-            null,
-            "dateOperation",
-            "Date d'opération",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("dateOperation", "Date d'opération")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+       
         //Date d'émition
-        $this->addChampDate(
-            null,
-            "dateEmition",
-            "Date d'émition",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("dateEmition", "Date d'émition")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Cotation
-        $this->addChampAssociation(
-            null,
-            "cotation",
-            "Cotation",
-            false,
-            false,
-            10,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("cotation", "Cotation")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->getChamp()
         );
+        
         //Partageable?
-        $this->addChampChoix(
-            null,
-            "partageable",
-            "Partageable?",
-            false,
-            false,
-            10,
-            RevenuCrudController::TAB_PARTAGEABLE,
-            [
-                RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON] => 'dark',
-                RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI] => 'success',
-            ]
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("partageable", "Partageable?")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setChoices(RevenuCrudController::TAB_PARTAGEABLE)
+                ->renderAsBadges(
+                    [
+                        RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_NON] => 'dark',
+                        RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI] => 'success',
+                    ]
+                )
+                ->getChamp()
         );
+        
         //Taxable?
-        $this->addChampChoix(
-            null,
-            "taxable",
-            "Partageable?",
-            false,
-            false,
-            10,
-            RevenuCrudController::TAB_TAXABLE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("taxable", "Taxable?")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setChoices(RevenuCrudController::TAB_TAXABLE)
+                ->getChamp()
         );
+        
         //Taxable?
-        $this->addChampChoix(
-            null,
-            "base",
-            "Formuale",
-            false,
-            false,
-            10,
-            RevenuCrudController::TAB_BASE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("base", "Formuale")
+                ->setColumns(12)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setChoices(RevenuCrudController::TAB_BASE)
+                ->getChamp()
         );
+        
         //Taux
-        $this->addChampPourcentage(
-            null,
-            "taux",
-            "Taux",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("taux", "Taux")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Revenu Pure
-        $this->addChampArgent(
-            null,
-            "revenuPure",
-            "Revenu pure",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuPure() * 100)))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("revenuPure", "Revenu pure")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuPure() * 100)))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Revenu Net
-        $this->addChampArgent(
-            null,
-            "revenuNet",
-            "Revenu net",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuNet() * 100)))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("revenuNet", "Revenu net")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuNet() * 100)))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Taxe assureur
-        $this->addChampArgent(
-            null,
-            "taxeAssureur",
-            ucfirst($this->serviceTaxes->getNomTaxeAssureur()),
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureur() * 100)))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("taxeAssureur", ucfirst($this->serviceTaxes->getNomTaxeAssureur()))
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTaxeAssureur() * 100)))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Revenu totale
-        $this->addChampArgent(
-            null,
-            "revenuTotale",
-            "Revenu TTC",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotale() * 100)))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("revenuTotale", "Revenu TTC")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getRevenuTotale() * 100)))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Utilisateur
-        $this->addChampAssociation(
-            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
-            "utilisateur",
-            "Utilisateur",
-            false,
-            false,
-            10,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("utilisateur", "Utilisateur")
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->getChamp()
         );
+        
         //Date de création
-        $this->addChampDate(
-            null,
-            "createdAt",
-            "D. création",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("createdAt", "D. Création")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Dernière modification
-        $this->addChampDate(
-            null,
-            "updatedAt",
-            "D. Modification",
-            false,
-            false,
-            10,
-            function ($value, Revenu $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("updatedAt", "D. Modification")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Revenu $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Entreprise
-        $this->addChampAssociation(
-            null,
-            "entreprise",
-            "Entreprise",
-            false,
-            false,
-            10,
-            null,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("entreprise", "Entreprise")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->getChamp()
         );
     }
 

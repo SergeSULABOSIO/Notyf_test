@@ -3,14 +3,13 @@
 namespace App\Service\RefactoringJS\JSUIComponents\Taxe;
 
 use App\Entity\Taxe;
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\TaxeCrudController;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
@@ -31,111 +30,114 @@ class TaxeListeRenderer extends JSPanelRenderer
     public function design()
     {
         //Nom
-        $this->addChampTexte(
-            null,
-            "nom",
-            "Intitulé",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("nom", "Intitulé")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //taux IARD
-        $this->addChampPourcentage(
-            null,
-            "tauxIARD",
-            "Taux (IARD/Non-Vie)",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("tauxIARD", "Taux (IARD/Non-Vie)")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //taux VIE
-        $this->addChampPourcentage(
-            null,
-            "tauxVIE",
-            "Taux (IARD/Non-Vie)",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createPourcentage("tauxVIE", "Taux (Vie)")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Description
-        $this->addChampTexte(
-            null,
-            "description",
-            "Description",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("description", "Description")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Organisation
-        $this->addChampTexte(
-            null,
-            "organisation",
-            "Organisation",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("organisation", "Organisation")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Payable par
-        $this->addChampChoix(
-            null,
-            "payableparcourtier",
-            "Par courtier?",
-            false,
-            false,
-            10,
-            TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("payableparcourtier", "Par courtier?")
+                ->setColumns(10)
+                ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
+                ->getChamp()
         );
+        
         //Date modification
-        $this->addChampDate(
-            null,
-            "updatedAt",
-            "D. Modification",
-            false,
-            false,
-            10,
-            function ($value, Taxe $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("updatedAt", "D. Modification")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Taxe $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
     }
 

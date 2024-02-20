@@ -2,14 +2,15 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Paiement;
 
-use App\Controller\Admin\FactureCrudController;
 use App\Entity\Paiement;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PaiementCrudController;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
@@ -28,92 +29,101 @@ class PaiementListeRenderer extends JSPanelRenderer
 
     public function design()
     {
-        // $this->addOnglet(
-        //     "Informations générales",
-        //     "fa-solid fa-cash-register",
-        //     "Veuillez saisir les informations relatives au paiement."
-        // );
-        $this->addChampChoix(
-            null,
-            "type",
-            "Mouvement",
-            true,
-            true,
-            10,
-            PaiementCrudController::TAB_TYPE_PAIEMENT,
-            [
-                PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE] => 'success', //info
-                PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE] => 'danger', //info
-                PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_AUCUN] => 'dark', //info
-            ]
+        //Type
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("type", "Mouvement")
+                ->setRequired(true)
+                ->setDisabled(true)
+                ->setColumns(10)
+                ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
+                ->renderAsBadges(
+                    [
+                        PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE] => 'success', //info
+                        PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE] => 'danger', //info
+                        PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_AUCUN] => 'dark', //info
+                    ]
+                )
+                ->getChamp()
         );
-        $this->addChampChoix(
-            null,
-            "typeFacture",
-            "Type",
-            true,
-            true,
-            10,
-            FactureCrudController::TAB_TYPE_FACTURE,
-            null
+        
+        //Type Facture
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("typeFacture", "Type")
+                ->setRequired(true)
+                ->setDisabled(true)
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+                ->getChamp()
         );
-        $this->addChampArgent(
-            null,
-            "montant",
-            "Montant",
-            true,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Paiement $paiement) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant())))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        
+        //Montant
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("montant", "Montant")
+                ->setColumns(12)
+                ->setRequired(true)
+                ->setDisabled(false)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Paiement $paiement) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($paiement->getMontant())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
-        $this->addChampDate(
-            null,
-            "paidAt",
-            "Date de paiement",
-            false,
-            false,
-            10,
-            function ($value, Paiement $paiement) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        
+        //Paid at
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("paidAt", "Date de paiement")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Paiement $paiement) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
-        $this->addChampAssociation(
-            null,
-            "facture",
-            "Facture",
-            false,
-            false,
-            10,
-            null
+        
+        //Facture
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("facture", "Facture")
+                ->setColumns(12)
+                ->getChamp()
         );
-        $this->addChampAssociation(
-            null,
-            "utilisateur",
-            "Utilisateur",
-            false,
-            false,
-            10,
-            null
+        
+        //Utilisateur
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("utilisateur", "Utilisateur")
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->getChamp()
         );
-        $this->addChampAssociation(
-            null,
-            "entreprise",
-            "Entreprise",
-            false,
-            false,
-            10,
-            null
+        
+        //Entreprise
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("entreprise", "Entreprise")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(12)
+                ->getChamp()
         );
     }
 

@@ -145,294 +145,294 @@ abstract class JSPanelRenderer implements JSPanel
         }
     }
 
-    public function addSection(?string $titre, ?string $icone, ?string $helpMessage, ?int $colonne)
-    {
-        $champTempo = FormField::addPanel($titre);
-        if ($icone != null) {
-            $champTempo->setIcon($icone);
-        }
-        if ($helpMessage != null) {
-            $champTempo->setHelp($helpMessage);
-        }
-        if ($colonne != null) {
-            $champTempo->setColumns($colonne);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addSection(?string $titre, ?string $icone, ?string $helpMessage, ?int $colonne)
+    // {
+    //     $champTempo = FormField::addPanel($titre);
+    //     if ($icone != null) {
+    //         $champTempo->setIcon($icone);
+    //     }
+    //     if ($helpMessage != null) {
+    //         $champTempo->setHelp($helpMessage);
+    //     }
+    //     if ($colonne != null) {
+    //         $champTempo->setColumns($colonne);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addOnglet(?string $titre, ?string $icone, ?string $helpMessage)
-    {
-        $champTempo = FormField::addTab(' ' . $titre);
-        if ($helpMessage != null) {
-            $champTempo->setHelp($helpMessage);
-        }
-        if ($icone != null) {
-            $champTempo->setIcon($icone);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addOnglet(?string $titre, ?string $icone, ?string $helpMessage)
+    // {
+    //     $champTempo = FormField::addTab(' ' . $titre);
+    //     if ($helpMessage != null) {
+    //         $champTempo->setHelp($helpMessage);
+    //     }
+    //     if ($icone != null) {
+    //         $champTempo->setIcon($icone);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampZoneTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
-    {
-        $champTempo = TextareaField::new($attribut, $titre)
-            ->renderAsHtml();
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampZoneTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
+    // {
+    //     $champTempo = TextareaField::new($attribut, $titre)
+    //         ->renderAsHtml();
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampBooleen(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?bool $renderAsSwitch = false)
-    {
-        $champTempo = BooleanField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($renderAsSwitch != null) {
-            $champTempo->renderAsSwitch($renderAsSwitch);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampBooleen(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?bool $renderAsSwitch = false)
+    // {
+    //     $champTempo = BooleanField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($renderAsSwitch != null) {
+    //         $champTempo->renderAsSwitch($renderAsSwitch);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampEditeurTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
-    {
-        $champTempo = TextEditorField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampEditeurTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10)
+    // {
+    //     $champTempo = TextEditorField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampAssociation(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formTypeOption, ?callable $formatValue = null)
-    {
-        $champTempo = AssociationField::new($attribut, $titre);
-        if ($formTypeOption != null) {
-            $champTempo->setFormTypeOption('query_builder', $formTypeOption);
-        }
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampAssociation(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formTypeOption, ?callable $formatValue = null)
+    // {
+    //     $champTempo = AssociationField::new($attribut, $titre);
+    //     if ($formTypeOption != null) {
+    //         $champTempo->setFormTypeOption('query_builder', $formTypeOption);
+    //     }
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null, $decimals = 2)
-    {
-        $champTempo = MoneyField::new($attribut, $titre)
-            ->setStoredAsCents();
-        if ($currency != null) {
-            $champTempo->setCurrency($currency);
-        }
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        if ($decimals != 2) {
-            $champTempo->setNumDecimals($decimals);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampArgent(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?string $currency, ?callable $formatValue = null, $decimals = 2)
+    // {
+    //     $champTempo = MoneyField::new($attribut, $titre)
+    //         ->setStoredAsCents();
+    //     if ($currency != null) {
+    //         $champTempo->setCurrency($currency);
+    //     }
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     if ($decimals != 2) {
+    //         $champTempo->setNumDecimals($decimals);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badges)
-    {
-        $champTempo = ChoiceField::new($attribut, $titre);
-        if ($choices != null) {
-            $champTempo->setChoices($choices);
-        }
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($badges != null) {
-            $champTempo->renderAsBadges($badges);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampChoix(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?array $choices, ?array $badges)
+    // {
+    //     $champTempo = ChoiceField::new($attribut, $titre);
+    //     if ($choices != null) {
+    //         $champTempo->setChoices($choices);
+    //     }
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($badges != null) {
+    //         $champTempo->renderAsBadges($badges);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampDate(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
-    {
-        $champTempo = DateTimeField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampDate(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
+    // {
+    //     $champTempo = DateTimeField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
-    {
-        $champTempo = TextField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        $champTempo->renderAsHtml(true);
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampTexte(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
+    // {
+    //     $champTempo = TextField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     $champTempo->renderAsHtml(true);
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampNombre(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
-    {
-        $champTempo = NumberField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampNombre(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
+    // {
+    //     $champTempo = NumberField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampPourcentage(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
-    {
-        $champTempo = PercentField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($formatValue != null) {
-            $champTempo->formatValue($formatValue);
-        }
-        $champTempo->setNumDecimals(2);
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampPourcentage(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required, ?bool $desabled, ?int $columns, ?callable $formatValue = null)
+    // {
+    //     $champTempo = PercentField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($formatValue != null) {
+    //         $champTempo->formatValue($formatValue);
+    //     }
+    //     $champTempo->setNumDecimals(2);
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampTableau(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = null, ?string $templatePath = null)
-    {
-        $champTempo = ArrayField::new($attribut, $titre);
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($columns != null) {
-            $champTempo->setColumns($columns);
-        }
-        if ($desabled != null) {
-            $champTempo->setDisabled($desabled);
-        }
-        if ($required != null) {
-            $champTempo->setRequired($required);
-        }
-        if ($templatePath != null) {
-            $champTempo->setTemplatePath($templatePath);
-        }
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampTableau(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = null, ?string $templatePath = null)
+    // {
+    //     $champTempo = ArrayField::new($attribut, $titre);
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($columns != null) {
+    //         $champTempo->setColumns($columns);
+    //     }
+    //     if ($desabled != null) {
+    //         $champTempo->setDisabled($desabled);
+    //     }
+    //     if ($required != null) {
+    //         $champTempo->setRequired($required);
+    //     }
+    //     if ($templatePath != null) {
+    //         $champTempo->setTemplatePath($templatePath);
+    //     }
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
-    public function addChampCollection(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10, ?string $helpMessage = "Une Collection d'objets.", ?string $crudControllerFqcn, ?bool $allowAdd = true, ?bool $allowDelete = true, ?string $templatePath = null)
-    {
-        $champTempo = CollectionField::new($attribut, $titre)
-            ->setEntryIsComplex();
-        if ($permission != null) {
-            $champTempo->setPermission($permission);
-        }
-        if ($helpMessage != null) {
-            $champTempo->setHelp($helpMessage);
-        }
-        if ($crudControllerFqcn != null) {
-            $champTempo->useEntryCrudForm($crudControllerFqcn);
-        }
-        if ($templatePath != null) {
-            $champTempo->setTemplatePath($templatePath);
-        }
-        $champTempo->setColumns($columns);
-        $champTempo->setDisabled($desabled);
-        $champTempo->setRequired($required);
-        $champTempo->allowAdd($allowAdd);
-        $champTempo->allowDelete($allowDelete);
-        $this->champsPanel[] = $champTempo;
-    }
+    // public function addChampCollection(?string $permission = null, ?string $attribut, ?string $titre, ?bool $required = false, ?bool $desabled = false, ?int $columns = 10, ?string $helpMessage = "Une Collection d'objets.", ?string $crudControllerFqcn, ?bool $allowAdd = true, ?bool $allowDelete = true, ?string $templatePath = null)
+    // {
+    //     $champTempo = CollectionField::new($attribut, $titre)
+    //         ->setEntryIsComplex();
+    //     if ($permission != null) {
+    //         $champTempo->setPermission($permission);
+    //     }
+    //     if ($helpMessage != null) {
+    //         $champTempo->setHelp($helpMessage);
+    //     }
+    //     if ($crudControllerFqcn != null) {
+    //         $champTempo->useEntryCrudForm($crudControllerFqcn);
+    //     }
+    //     if ($templatePath != null) {
+    //         $champTempo->setTemplatePath($templatePath);
+    //     }
+    //     $champTempo->setColumns($columns);
+    //     $champTempo->setDisabled($desabled);
+    //     $champTempo->setRequired($required);
+    //     $champTempo->allowAdd($allowAdd);
+    //     $champTempo->allowDelete($allowDelete);
+    //     $this->champsPanel[] = $champTempo;
+    // }
 
     public function reset()
     {

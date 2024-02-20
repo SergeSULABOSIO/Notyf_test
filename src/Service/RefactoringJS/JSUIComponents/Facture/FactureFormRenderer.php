@@ -154,7 +154,7 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->setFormatValue(
                     function ($value, Facture $objet) {
                         /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontantTTC())))
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalSolde())))
                             ->ajouterClasseCss($this->css_class_bage_ordinaire)
                             ->outputHtml();
                         return $formatedHtml;

@@ -37,12 +37,10 @@ class RevenuDetailsRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createBoolean("validated", "Validée")
-                ->setRequired(false)
-                ->setDisabled(false)
-                ->renderAsSwitch(false)
+                ->setDisabled(true)
                 ->getChamp()
         );
-        
+
         //Type
         $this->addChamp(
             (new JSChamp())
@@ -53,7 +51,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 ->setChoices(RevenuCrudController::TAB_TYPE)
                 ->getChamp()
         );
-        
+
         //Police
         $this->addChamp(
             (new JSChamp())
@@ -72,7 +70,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Client
         $this->addChamp(
             (new JSChamp())
@@ -91,7 +89,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Assureur
         $this->addChamp(
             (new JSChamp())
@@ -110,7 +108,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Assureur
         $this->addChamp(
             (new JSChamp())
@@ -129,7 +127,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Produit
         $this->addChamp(
             (new JSChamp())
@@ -148,7 +146,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Date effet
         $this->addChamp(
             (new JSChamp())
@@ -167,7 +165,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Date expiration
         $this->addChamp(
             (new JSChamp())
@@ -186,7 +184,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Date d'opération
         $this->addChamp(
             (new JSChamp())
@@ -205,7 +203,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-       
+
         //Date d'émition
         $this->addChamp(
             (new JSChamp())
@@ -224,7 +222,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Cotation
         $this->addChamp(
             (new JSChamp())
@@ -234,7 +232,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 ->setDisabled(false)
                 ->getChamp()
         );
-        
+
         //Partageable?
         $this->addChamp(
             (new JSChamp())
@@ -251,7 +249,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Taxable?
         $this->addChamp(
             (new JSChamp())
@@ -260,9 +258,15 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 ->setRequired(false)
                 ->setDisabled(false)
                 ->setChoices(RevenuCrudController::TAB_TAXABLE)
+                ->renderAsBadges(
+                    [
+                        RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'danger',
+                        RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI] => 'success',
+                    ]
+                )
                 ->getChamp()
         );
-        
+
         //Taxable?
         $this->addChamp(
             (new JSChamp())
@@ -273,7 +277,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 ->setChoices(RevenuCrudController::TAB_BASE)
                 ->getChamp()
         );
-        
+
         //Taux
         $this->addChamp(
             (new JSChamp())
@@ -292,7 +296,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Revenu Pure
         $this->addChamp(
             (new JSChamp())
@@ -312,7 +316,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Revenu Net
         $this->addChamp(
             (new JSChamp())
@@ -332,7 +336,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Taxe assureur
         $this->addChamp(
             (new JSChamp())
@@ -352,7 +356,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Revenu totale
         $this->addChamp(
             (new JSChamp())
@@ -372,7 +376,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Utilisateur
         $this->addChamp(
             (new JSChamp())
@@ -383,7 +387,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 ->setColumns(12)
                 ->getChamp()
         );
-        
+
         //Date de création
         $this->addChamp(
             (new JSChamp())
@@ -400,7 +404,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Dernière modification
         $this->addChamp(
             (new JSChamp())
@@ -417,7 +421,7 @@ class RevenuDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Entreprise
         $this->addChamp(
             (new JSChamp())

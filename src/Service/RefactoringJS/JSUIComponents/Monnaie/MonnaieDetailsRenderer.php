@@ -12,6 +12,7 @@ use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\UtilisateurCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
@@ -32,140 +33,128 @@ class MonnaieDetailsRenderer extends JSPanelRenderer
     public function design()
     {
         //Nom
-        $this->addChampTexte(
-            null,
-            "nom",
-            "Intitulé",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("nom", "Intitulé")
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Monnaie $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Code
-        $this->addChampTexte(
-            null,
-            "code",
-            "Code",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("code", "Code")
+                ->setColumns(6)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Monnaie $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Fonction
-        $this->addChampChoix(
-            null,
-            "fonction",
-            "Fonction Système",
-            false,
-            false,
-            10,
-            MonnaieCrudController::TAB_MONNAIE_FONCTIONS,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("fonction", "Fonction Système")
+                ->setColumns(2)
+                ->setChoices(MonnaieCrudController::TAB_MONNAIE_FONCTIONS)
+                ->getChamp()
         );
+        
         //Taux en USD
-        $this->addChampArgent(
-            null,
-            "tauxusd",
-            "Taux (en USD)",
-            false,
-            false,
-            10,
-            $this->serviceMonnaie->getCodeAffichage(),
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            },
-            4
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("tauxusd", "Taux (en USD)")
+                ->setColumns(2)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Monnaie $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->setDecimals(4)
+                ->getChamp()
         );
+        
         //Is locale?
-        $this->addChampChoix(
-            null,
-            "islocale",
-            "Monnaie locale?",
-            false,
-            false,
-            10,
-            MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE,
-            null
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("islocale", "Monnaie locale?")
+                ->setColumns(2)
+                ->setChoices(MonnaieCrudController::TAB_MONNAIE_MONNAIE_LOCALE)
+                ->getChamp()
         );
+        
         //Utilisateur
-        $this->addChampAssociation(
-            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
-            "utilisateur",
-            "Utilisateur",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("utilisateur", "Utilisateur")
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->getChamp()
         );
+        
         //Date creation
-        $this->addChampDate(
-            null,
-            "createdAt",
-            "D. Création",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("createdAt", "D. Création")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Monnaie $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Date modification
-        $this->addChampDate(
-            null,
-            "updatedAt",
-            "D. Modification",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("updatedAt", "D. Modification")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Monnaie $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+        
         //Entreprise
-        $this->addChampAssociation(
-            UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE],
-            "entreprise",
-            "Entreprise",
-            false,
-            false,
-            10,
-            function ($value, Monnaie $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("entreprise", "Entreprise")
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->getChamp()
         );
     }
 

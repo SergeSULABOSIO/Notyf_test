@@ -37,17 +37,7 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 ->setColumns(10)
                 ->getChamp()
         );
-        // $this->addChampAssociation(
-        //     null,
-        //     "tranche",
-        //     "Tranche",
-        //     false,
-        //     false,
-        //     10,
-        //     null,
-        //     null,
-        //     null
-        // );
+        
         //Facture
         $this->addChamp(
             (new JSChamp())
@@ -57,17 +47,7 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 ->setColumns(10)
                 ->getChamp()
         );
-        // $this->addChampAssociation(
-        //     null,
-        //     "facture",
-        //     "Facture",
-        //     false,
-        //     false,
-        //     10,
-        //     null,
-        //     null,
-        //     null
-        // );
+        
         //Montant
         $this->addChamp(
             (new JSChamp())
@@ -87,22 +67,7 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampArgent(
-        //     null,
-        //     "montant",
-        //     "Montant à payer",
-        //     false,
-        //     false,
-        //     10,
-        //     $this->serviceMonnaie->getCodeAffichage(),
-        //     function ($value, ElementFacture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Created At
         $this->addChamp(
             (new JSChamp())
@@ -121,21 +86,7 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampDate(
-        //     null,
-        //     "createdAt",
-        //     "D. Création",
-        //     false,
-        //     false,
-        //     10,
-        //     function ($value, ElementFacture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Edited At
         $this->addChamp(
             (new JSChamp())
@@ -154,21 +105,7 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampDate(
-        //     null,
-        //     "updatedAt",
-        //     "D. Modification",
-        //     false,
-        //     false,
-        //     10,
-        //     function ($value, ElementFacture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Entreprise
         $this->addChamp(
             (new JSChamp())
@@ -178,17 +115,6 @@ class ElementFactureDetailsRenderer extends JSPanelRenderer
                 ->setColumns(10)
                 ->getChamp()
         );
-        // $this->addChampAssociation(
-        //     null,
-        //     "entreprise",
-        //     "Entreprise",
-        //     false,
-        //     false,
-        //     10,
-        //     null,
-        //     null,
-        //     null
-        // );
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

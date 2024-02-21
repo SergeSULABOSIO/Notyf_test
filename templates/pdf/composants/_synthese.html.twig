@@ -1,6 +1,6 @@
 
-{% set montant_ht = (facture.totalDu / 100) / (taxe_assureur.taux + 1) %}
-{% set montant_taxe = (montant_ht * taxe_assureur.taux) %}
+{% set montant_ht = (facture.totalDu / 100) / (taxe_assureur.tauxIARD + 1) %}
+{% set montant_taxe = (montant_ht * taxe_assureur.tauxIARD) %}
 {% set montant_ttc = montant_ht + montant_taxe %}
 
 {% if facture.type == 1 %}
@@ -46,7 +46,7 @@
             <td class="tab-ligne-valeur">{{com_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Taxes ({{taxe_assureur.nom}} @{{ taxe_assureur.taux * 100}}%)</td>
+            <td class="tab-ligne-label"> - Taxes ({{taxe_assureur.nom}} @{{ taxe_assureur.tauxIARD * 100}}%)</td>
             <td class="tab-ligne-valeur">-{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
@@ -92,10 +92,10 @@
     {% set montant_pret_a_payer = 0 %}
 
     {% for i in 0..facture.elementFactures|length - 1 %}
-        {% set police = facture.elementFactures[i].police %}
-        {% set primes_totale = primes_totale + (police.primetotale / 100) %}
-        {% set primes_nettes = primes_nettes + (police.primenette / 100) %}
-        {% set com_ht = com_ht + (police.calc_revenu_ht / 100) %}
+        {% set tranche = facture.elementFactures[i].tranche %}
+        {% set primes_totale = primes_totale + (tranche.primeTotaleTranche / 100) %}
+        {% set primes_nettes = primes_nettes + (tranche.primeNetteTranche / 100) %}
+        {% set com_ht = com_ht + (tranche.comLocale / 100) %}
         {% if facture.type == 3 %} {# ARCA #}
             {% set montant_taxe_courtier = montant_taxe_courtier + (police.calc_taxes_courtier / 100) %}
             {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (police.calc_taxes_courtier_payees / 100) %}
@@ -151,7 +151,7 @@
             </tr>
         {% elseif facture.type == 2 %} {# TVA #}
             <tr>
-                <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.taux * 100)|number_format(0, ',', '.')}}%)</td>
+                <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)</td>
                 <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
             <tr class="texte-rouge">
@@ -185,7 +185,7 @@
             <td class="tab-ligne-valeur">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.taux * 100)|number_format(0, ',', '.')}}%)</td>
+            <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)</td>
             <td class="tab-ligne-valeur">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">

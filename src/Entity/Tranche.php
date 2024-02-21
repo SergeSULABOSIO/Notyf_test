@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\ChargementCrudController;
 use DateInterval;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
@@ -44,6 +45,7 @@ class Tranche
     private ?string $codeMonnaieAffichage = "";
     //valeurs monnétaires caculables
     private ?float $primeTotaleTranche = 0;
+    private ?float $primeNetteTranche = 0;
     //les type de revenu
     private ?float $comReassurance = 0;
     private ?float $comLocale = 0;
@@ -922,5 +924,16 @@ class Tranche
             $this->getComFronting(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]
         );
+    }
+
+    /**
+     * Get the value of primeNetteTranche
+     */ 
+    public function getPrimeNetteTranche()
+    {
+        $this->primeNetteTranche = (new Calculateur())
+            ->setCotation($this->getCotation())
+            ->getPrimeTotale(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE], $this);
+        return $this->primeNetteTranche;
     }
 }

@@ -43,6 +43,25 @@ class FactureDetailsRenderer extends JSPanelRenderer
                 ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
                 ->getChamp()
         );
+
+        //Description
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("description", "Description")
+                ->setColumns(10)
+                ->setRequired(false)
+                ->setDisabled(false)
+                ->setFormatValue(
+                    function ($value, Facture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
+        );
         // $this->addChampChoix(
         //     null,
         //     "type",

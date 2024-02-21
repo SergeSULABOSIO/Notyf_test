@@ -257,7 +257,7 @@ class TrancheCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         $this->tranche = $this->getContext()->getEntity()->getInstance();
-        if($this->crud != null){
+        if ($this->crud != null) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->tranche);
         }
 
@@ -294,7 +294,7 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
 
-        $factureMultiCommissions = Action::new("Exécuter Pronema")
+        $factureMultiCommissions = Action::new("Produire les notes")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
                 $okFPrime = $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
@@ -364,14 +364,20 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('facturerRetroCommission');
 
-        $exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
+        $batch_exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
+
+        $batch_pronema = Action::new("produire_notes_lot", "Produire les notes")
+            ->linkToCrudAction('produireLotNotes')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
 
         return $actions
             //Sur la page Index - Selection
-            ->addBatchAction($exporter_ms_excels)
+            ->addBatchAction($batch_exporter_ms_excels)
+            ->addBatchAction($batch_pronema)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -458,6 +464,22 @@ class TrancheCrudController extends AbstractCrudController
         }
         $entityManager->flush();
         return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function produirelotNotes(BatchActionDto $batchActionDto)
+    {
+        dd("Je reste ici");
+        // $className = $batchActionDto->getEntityFqcn();
+        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        // dd($batchActionDto->getEntityIds());
+
+        // foreach ($batchActionDto->getEntityIds() as $id) {
+        //     $user = $entityManager->find($className, $id);
+        //     $user->approve();
+        // }
+        // $entityManager->flush();
+        // return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
@@ -687,7 +709,7 @@ class TrancheCrudController extends AbstractCrudController
                 $facture = $ffg->buildFacture(1, $tranche);
                 $ffg->saveFacture();
             }
-            
+
             //On se redirige vers la page des facture
             //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement
             $url = $adminUrlGenerator

@@ -278,6 +278,43 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
+        $creerNotePourClient = Action::new("Note pour Client")
+            ->setIcon('fas fa-person-shelter')
+            ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
+                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                return true;
+            })
+            ->linkToCrudAction('creerNotePourClient');
+
+        $creerNotePourAssureur = Action::new("Note pour Assureur")
+            ->setIcon('fas fa-umbrella')
+            ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
+                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                return true;
+            })
+            ->linkToCrudAction('creerNotePourAssureur');
+
+        $creerNotePourDGI = Action::new("Note pour Autorité fiscale")
+            ->setIcon('fas fa-landmark-dome')
+            ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
+                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                return true;
+            })
+            ->linkToCrudAction('creerNotePourDGI');
+
+        $creerNotePourARCA = Action::new("Note pour Régulateur")
+            ->setIcon('fas fa-landmark-dome')
+            ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
+                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                return true;
+            })
+            ->linkToCrudAction('creerNotePourARCA');
+
+
         $facturePrime = Action::new("Facturer Prime")
             ->setIcon('fa-solid fa-receipt')
             ->displayIf(static function (Tranche $tranche) {
@@ -368,16 +405,40 @@ class TrancheCrudController extends AbstractCrudController
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
-        
-        $batch_produire_lot_notes = Action::new("produire_lot_notes", "Produire un lot des notes")
-            ->linkToCrudAction('produireLotNotes')
+
+        $batch_creerNotePourClient = Action::new("produire_note_client", "+ Note pour Client")
+            ->linkToCrudAction('creerNotePourClient')
             ->addCssClass('btn btn-primary')
-            ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
+            ->setIcon('fas fa-person-shelter');
+
+        $batch_creerNotePourAssureur = Action::new("produire_note_assureur", "Note pour Assureur")
+            ->linkToCrudAction('creerNotePourAssureur')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fas fa-umbrella');
+
+        $batch_creerNotePourDGI = Action::new("produire_note_dgi", "Note pour Autorité fiscale")
+            ->linkToCrudAction('creerNotePourDGI')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fas fa-landmark-dome');
+
+        $batch_creerNotePourARCA = Action::new("produire_note_arca", "Note pour Régulateur")
+            ->linkToCrudAction('creerNotePourARCA')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fas fa-landmark-dome');
+
+        $batch_creerNotePourPartenaire = Action::new("produire_note_partenaire", "Note pour Partenaire")
+            ->linkToCrudAction('creerNotePourPartenaire')
+            ->addCssClass('btn btn-primary')
+            ->setIcon('fas fa-handshake');
 
         return $actions
             //Sur la page Index - Selection
             ->addBatchAction($batch_exporter_ms_excels)
-            ->addBatchAction($batch_produire_lot_notes)
+            ->addBatchAction($batch_creerNotePourARCA)
+            ->addBatchAction($batch_creerNotePourDGI)
+            ->addBatchAction($batch_creerNotePourPartenaire)
+            ->addBatchAction($batch_creerNotePourClient)
+            ->addBatchAction($batch_creerNotePourAssureur)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -424,6 +485,12 @@ class TrancheCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $factureCommissionFronting)
             ->add(Crud::PAGE_INDEX, $factureFraisGestion)
             ->add(Crud::PAGE_INDEX, $facturePrime)
+
+            ->add(Crud::PAGE_INDEX, $creerNotePourARCA)
+            ->add(Crud::PAGE_INDEX, $creerNotePourDGI)
+            ->add(Crud::PAGE_INDEX, $creerNotePourClient)
+            ->add(Crud::PAGE_INDEX, $creerNotePourAssureur)
+
             ->add(Crud::PAGE_INDEX, $factureMultiCommissions)
 
             //Action ouvrir
@@ -466,7 +533,7 @@ class TrancheCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    public function produireLotNotes(BatchActionDto $batchActionDto)
+    public function creerNotePourClient(BatchActionDto $batchActionDto)
     {
         dd("Je reste ici");
         // $className = $batchActionDto->getEntityFqcn();

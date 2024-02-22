@@ -407,27 +407,27 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
 
         $batch_creerNotePourClient = Action::new("produire_note_client", "+ Note pour Client")
-            ->linkToCrudAction('creerNotePourClient')
+            ->linkToCrudAction('batchCreerNotePourClient')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-person-shelter');
 
         $batch_creerNotePourAssureur = Action::new("produire_note_assureur", "Note pour Assureur")
-            ->linkToCrudAction('creerNotePourAssureur')
+            ->linkToCrudAction('batchCreerNotePourAssureur')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-umbrella');
 
         $batch_creerNotePourDGI = Action::new("produire_note_dgi", "Note pour Autorité fiscale")
-            ->linkToCrudAction('creerNotePourDGI')
+            ->linkToCrudAction('batchCreerNotePourDGI')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-landmark-dome');
 
         $batch_creerNotePourARCA = Action::new("produire_note_arca", "Note pour Régulateur")
-            ->linkToCrudAction('creerNotePourARCA')
+            ->linkToCrudAction('batchCreerNotePourARCA')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-landmark-dome');
 
         $batch_creerNotePourPartenaire = Action::new("produire_note_partenaire", "Note pour Partenaire")
-            ->linkToCrudAction('creerNotePourPartenaire')
+            ->linkToCrudAction('batchCreerNotePourPartenaire')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-handshake');
 
@@ -533,7 +533,10 @@ class TrancheCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    public function creerNotePourClient(BatchActionDto $batchActionDto)
+
+
+    //ACTION POUR DESTINATION PAR LOT DES TRANCHES
+    public function batchCreerNotePourClient(BatchActionDto $batchActionDto)
     {
         dd("Je reste ici");
         // $className = $batchActionDto->getEntityFqcn();
@@ -549,6 +552,124 @@ class TrancheCrudController extends AbstractCrudController
         // return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
+    public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto)
+    {
+        dd("Je reste ici");
+        // $className = $batchActionDto->getEntityFqcn();
+        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        // dd($batchActionDto->getEntityIds());
+
+        // foreach ($batchActionDto->getEntityIds() as $id) {
+        //     $user = $entityManager->find($className, $id);
+        //     $user->approve();
+        // }
+        // $entityManager->flush();
+        // return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function batchCreerNotePourPartenaire(BatchActionDto $batchActionDto)
+    {
+        dd("Je reste ici");
+        // $className = $batchActionDto->getEntityFqcn();
+        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        // dd($batchActionDto->getEntityIds());
+
+        // foreach ($batchActionDto->getEntityIds() as $id) {
+        //     $user = $entityManager->find($className, $id);
+        //     $user->approve();
+        // }
+        // $entityManager->flush();
+        // return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function batchCreerNotePourDGI(BatchActionDto $batchActionDto)
+    {
+        dd("Je reste ici");
+        // $className = $batchActionDto->getEntityFqcn();
+        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        // dd($batchActionDto->getEntityIds());
+
+        // foreach ($batchActionDto->getEntityIds() as $id) {
+        //     $user = $entityManager->find($className, $id);
+        //     $user->approve();
+        // }
+        // $entityManager->flush();
+        // return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    public function batchCreerNotePourARCA(BatchActionDto $batchActionDto)
+    {
+        dd("Je reste ici");
+        // $className = $batchActionDto->getEntityFqcn();
+        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        // dd($batchActionDto->getEntityIds());
+
+        // foreach ($batchActionDto->getEntityIds() as $id) {
+        //     $user = $entityManager->find($className, $id);
+        //     $user->approve();
+        // }
+        // $entityManager->flush();
+        // return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+
+    //ACTION POUR DESTINATION TRANCHE INDIVIDUELLE
+    public function creerNotePourClient(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFactureDestination(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::DESTINATION_CLIENT,
+                $adminUrlGenerator
+            )
+        );
+    }
+    public function creerNotePourAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFactureDestination(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::DESTINATION_ASSUREUR,
+                $adminUrlGenerator
+            )
+        );
+    }
+    public function creerNotePourPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFactureDestination(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::DESTINATION_PARTENAIRE,
+                $adminUrlGenerator
+            )
+        );
+    }
+    public function creerNotePourDGI(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFactureDestination(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::DESTINATION_DGI,
+                $adminUrlGenerator
+            )
+        );
+    }
+    public function creerNotePourARCA(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    {
+        return $this->redirect(
+            $this->editFactureDestination(
+                [($context->getEntity()->getInstance())->getId()],
+                FactureCrudController::DESTINATION_ARCA,
+                $adminUrlGenerator
+            )
+        );
+    }
+
+
     public function ouvrirEntite(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         /** @var Tranche */
@@ -563,27 +684,27 @@ class TrancheCrudController extends AbstractCrudController
         return $this->redirect($url);
     }
 
-    public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_PRIME,
-                $adminUrlGenerator
-            )
-        );
-    }
+    // public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_PRIME,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
 
-    public function facturerCommissionLocale(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE,
-                $adminUrlGenerator
-            )
-        );
-    }
+    // public function facturerCommissionLocale(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
 
     // Pas besoin ce décorateur pour l'instant.
     #[Route('/multiCom', name: 'multiCom')]
@@ -797,80 +918,80 @@ class TrancheCrudController extends AbstractCrudController
         );
     }
 
-    public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em): Response
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE,
-                $adminUrlGenerator
-            )
-        );
-    }
+    // public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em): Response
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
 
-    public function facturerCommissionFronting(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING,
-                $adminUrlGenerator
-            )
-        );
-    }
+    // public function facturerCommissionFronting(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
 
-    public function facturerFraisGestion(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION,
-                $adminUrlGenerator
-            )
-        );
-    }
-
-
-    public function facturerRetroCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS,
-                $adminUrlGenerator
-            )
-        );
-    }
-
-    public function facturerTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA,
-                $adminUrlGenerator
-            )
-        );
-    }
-
-    public function facturerTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    {
-        return $this->redirect(
-            $this->editFacture(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA,
-                $adminUrlGenerator
-            )
-        );
-    }
+    // public function facturerFraisGestion(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
 
 
-    private function editFacture(?array $tabIdTranches, ?string $typeFacture, AdminUrlGenerator $adminUrlGenerator): ?string
+    // public function facturerRetroCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
+
+    // public function facturerTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
+
+    // public function facturerTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
+    // {
+    //     return $this->redirect(
+    //         $this->editFacture(
+    //             [($context->getEntity()->getInstance())->getId()],
+    //             FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA,
+    //             $adminUrlGenerator
+    //         )
+    //     );
+    // }
+
+
+    private function editFactureDestination(?array $tabIdTranches, ?string $destination, AdminUrlGenerator $adminUrlGenerator): ?string
     {
         return $this->serviceCrossCanal->crossCanal_creer_facture(
             $adminUrlGenerator,
             $tabIdTranches,
-            $typeFacture
+            $destination
         );
     }
 }

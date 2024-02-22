@@ -38,6 +38,19 @@ class FactureCrudController extends AbstractCrudController
     public ?Facture $facture = null;
     public ?FactureUIBuilder $uiBuilder = null;
 
+    public const DESTINATION_ASSUREUR           = "Pour l'attention de l'Assureur";
+    public const DESTINATION_CLIENT             = "Pour l'attention du client";
+    public const DESTINATION_DGI                = "Pour l'attention de l'autorité fiscale";
+    public const DESTINATION_ARCA               = "Pour l'attention du régulateur";
+    public const DESTINATION_PARTENAIRE         = "Pour l'attention du parténaire";
+
+    public const TAB_DESINATION = [
+        self::DESTINATION_ARCA          => 0,
+        self::DESTINATION_ASSUREUR      => 1,
+        self::DESTINATION_CLIENT        => 2,
+        self::DESTINATION_DGI           => 3,
+        self::DESTINATION_PARTENAIRE    => 4,
+    ];
 
     public const TYPE_FACTURE_PRIME                     = "PRIME D'ASSURANCE";
     public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";

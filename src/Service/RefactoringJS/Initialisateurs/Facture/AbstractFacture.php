@@ -28,14 +28,13 @@ abstract class AbstractFacture implements FactureInit
         private ServiceEntreprise $serviceEntreprise,
         private EntityManagerInterface $entityManager,
         private ServiceCompteBancaire $serviceCompteBancaire
-    )
-    {
+    ) {
         $this->facture = new Facture();
     }
 
-    public abstract function getNomAbstract():?string;
-    public abstract function getPosteSignedBy():?string;
-    public abstract function getDestinationFacture():?string;
+    public abstract function getNomAbstract(): ?string;
+    public abstract function getPosteSignedBy(): ?string;
+    public abstract function getDestinationFacture(): ?string;
 
     public function buildFacture(?array $tranches): ?Facture
     {
@@ -46,15 +45,17 @@ abstract class AbstractFacture implements FactureInit
         $this->setPosteSignedBy($this->getPosteSignedBy());
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         $this->setDestination(FactureCrudController::TAB_DESTINATION[$this->getDestinationFacture()]);
-        if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA){
+        if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA) {
             $this->setAutreTiers($tranches[0]->getCotation()->getTaxeCourtier()->getOrganisation());
-        }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI){
+        } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI) {
             $this->setAutreTiers($tranches[0]->getCotation()->getTaxeAssureur()->getOrganisation());
-        }else{
+        } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_CLIENT) {
             $this->setAutreTiers($tranches[0]->getPolice()->getClient());
+        } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_ASSUREUR) {
+            $this->setAssureur($tranches[0]->getPolice()->getAssureur());
+        } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE) {
+            $this->setPartenaire($tranches[0]->getPolice()->getPartenaire());
         }
-        $this->setPartenaire($tranches[0]->getPolice()->getPartenaire());
-        $this->setAssureur($tranches[0]->getPolice()->getAssureur());
         $this->setDescription($this->generateDescriptionFacture());
         $this->setReference($this->generateInvoiceReference());
         $this->setEntreprise($this->tranches[0]->getEntreprise());
@@ -62,9 +63,9 @@ abstract class AbstractFacture implements FactureInit
         $this->setCreatedAt($this->tranches[0]->getCreatedAt());
         $this->setUpdatedAt($this->tranches[0]->getUpdatedAt());
         //Element facture / article de la facture
-        $elementFacture = $this->produireElementFacture();
+        $elementsFacture = $this->produireElementsFacture();
         // $this->setTotalDu($elementFacture->getMontant());
-        $this->addElementFacture($elementFacture);
+        $this->addElementsFacture($elementsFacture);
         $this->setComptesBancaires();
         // dd("Facture: ", $this->facture);
         return $this->facture;
@@ -135,35 +136,40 @@ abstract class AbstractFacture implements FactureInit
     }
     public function produireElementFacture(): ?ElementFacture
     {
-        $elementFacture = new ElementFacture();
-        $elementFacture->setFacture($this->facture);
-        $elementFacture->setEntreprise($this->tranche->getEntreprise());
-        $elementFacture->setUtilisateur($this->tranche->getUtilisateur());
-        $elementFacture->setCreatedAt($this->tranche->getCreatedAt());
-        $elementFacture->setUpdatedAt($this->tranche->getUpdatedAt());
-        /**
-         * Ici il ne faut facturer que le montant non encore facturée
-         * Pas le montant total dû.
-         * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
-         */
-        $totDu = $this->getTotalDu($this->tranche);
-        // $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
-        $totInvoiced = $this->tranche->getTotalInvoiced($this->facture->getType());
-        $elementFacture->setMontant($totDu - $totInvoiced);
-        $elementFacture->setTranche($this->tranche);
-        $elementFacture->setTypeavenant($this->tranche->getPolice()->getTypeavenant());
-        $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($this->tranche->getPolice()));
-        return $elementFacture;
+        dd("Fonction non définie.");
+        return null;
     }
 
-    public abstract function getTotalDu(?Tranche $tranche):?float;
+    public abstract function getTotalDu(?Tranche $tranche): ?float;
 
     public function produireElementsFacture(): array
     {
-        dd("Cette fonction n'est pas définie.");
-        return [];
+        $totDu = 0;
+        $elementsFacture = [];
+        foreach ($this->tranches as $tranche) {
+            $elementFacture = new ElementFacture();
+            $elementFacture->setFacture($this->facture);
+            $elementFacture->setEntreprise($tranche->getEntreprise());
+            $elementFacture->setUtilisateur($tranche->getUtilisateur());
+            $elementFacture->setCreatedAt($tranche->getCreatedAt());
+            $elementFacture->setUpdatedAt($tranche->getUpdatedAt());
+            /**
+             * Ici il ne faut facturer que le montant non encore facturée
+             * Pas le montant total dû.
+             * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
+             */
+            $totDu = $totDu + $this->getTotalDu($tranche);
+            // $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+            $totInvoiced = $tranche->getTotalInvoiced($this->facture->getType());
+            $elementFacture->setMontant($totDu - $totInvoiced);
+            $elementFacture->setTranche($tranche);
+            $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
+            $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
+            $elementsFacture[] = $elementFacture;
+        }
+        return $elementsFacture;
     }
-    
+
     public function addElementsFacture(?array $TabElementsFactures)
     {
         foreach ($TabElementsFactures as $ef) {

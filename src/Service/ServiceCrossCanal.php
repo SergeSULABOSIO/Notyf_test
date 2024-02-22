@@ -1634,13 +1634,14 @@ class ServiceCrossCanal
 
     public function crossCanal_creer_facture(AdminUrlGenerator $adminUrlGenerator, array $tabIdTranches, ?string $destination)
     {
+        // dd("Ici");
         //$entite = $context->getEntity()->getInstance();
-        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        // $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::NEW)
-            // ->set("titre", "EDITION FACTURE - " . $typeFacture)
-            ->set("donnees[type]", $typeFacture)
+            ->set("titre", "NOTE - Mode édition - " . $destination)
+            ->set("donnees[destination]", $destination)
             ->set("donnees[action]", "facture")
             ->set("donnees[tabTranches]", $tabIdTranches)
             ->setEntityId(null)

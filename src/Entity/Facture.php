@@ -282,7 +282,7 @@ class Facture
                 //$tiers = ".";
                 break;
         }
-        return $this->reference . " du " . $this->createdAt->format('d-m-Y') . "" . $tiers; // . $this->description;
+        return $this->reference . ($this->createdAt != null ? " du " . $this->createdAt->format('d-m-Y') : "") . "" . $tiers; // . $this->description;
     }
 
     /**

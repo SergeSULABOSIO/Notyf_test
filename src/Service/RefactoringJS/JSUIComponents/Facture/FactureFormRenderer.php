@@ -215,7 +215,7 @@ class FactureFormRenderer extends JSPanelRenderer
          */
         // dd($type);
         $type = null;
-        // dd($adminUrlGenerator->get("donnees"));
+        dd($adminUrlGenerator->get("donnees"));
         if ($adminUrlGenerator->get("donnees") != null) {
             $type = $adminUrlGenerator->get("donnees")["type"];
         } else if ($objetInstance != null) {

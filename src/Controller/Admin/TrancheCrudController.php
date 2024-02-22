@@ -536,84 +536,64 @@ class TrancheCrudController extends AbstractCrudController
 
 
     //ACTION POUR DESTINATION PAR LOT DES TRANCHES
-    public function batchCreerNotePourClient(BatchActionDto $batchActionDto)
+    public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd("Je reste ici");
-        // $className = $batchActionDto->getEntityFqcn();
-        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         // dd($batchActionDto->getEntityIds());
-
-        // foreach ($batchActionDto->getEntityIds() as $id) {
-        //     $user = $entityManager->find($className, $id);
-        //     $user->approve();
-        // }
-        // $entityManager->flush();
-        // return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->redirect(
+            $this->editFactureDestination(
+                $batchActionDto->getEntityIds(),
+                FactureCrudController::DESTINATION_CLIENT,
+                $adminUrlGenerator
+            )
+        );
     }
 
-    public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto)
+    public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd("Je reste ici");
-        // $className = $batchActionDto->getEntityFqcn();
-        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         // dd($batchActionDto->getEntityIds());
-
-        // foreach ($batchActionDto->getEntityIds() as $id) {
-        //     $user = $entityManager->find($className, $id);
-        //     $user->approve();
-        // }
-        // $entityManager->flush();
-        // return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->redirect(
+            $this->editFactureDestination(
+                $batchActionDto->getEntityIds(),
+                FactureCrudController::DESTINATION_ASSUREUR,
+                $adminUrlGenerator
+            )
+        );
     }
 
-    public function batchCreerNotePourPartenaire(BatchActionDto $batchActionDto)
+    public function batchCreerNotePourPartenaire(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd("Je reste ici");
-        // $className = $batchActionDto->getEntityFqcn();
-        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         // dd($batchActionDto->getEntityIds());
-
-        // foreach ($batchActionDto->getEntityIds() as $id) {
-        //     $user = $entityManager->find($className, $id);
-        //     $user->approve();
-        // }
-        // $entityManager->flush();
-        // return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->redirect(
+            $this->editFactureDestination(
+                $batchActionDto->getEntityIds(),
+                FactureCrudController::DESTINATION_PARTENAIRE,
+                $adminUrlGenerator
+            )
+        );
     }
 
-    public function batchCreerNotePourDGI(BatchActionDto $batchActionDto)
+    public function batchCreerNotePourDGI(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd("Je reste ici");
-        // $className = $batchActionDto->getEntityFqcn();
-        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         // dd($batchActionDto->getEntityIds());
-
-        // foreach ($batchActionDto->getEntityIds() as $id) {
-        //     $user = $entityManager->find($className, $id);
-        //     $user->approve();
-        // }
-        // $entityManager->flush();
-        // return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->redirect(
+            $this->editFactureDestination(
+                $batchActionDto->getEntityIds(),
+                FactureCrudController::DESTINATION_DGI,
+                $adminUrlGenerator
+            )
+        );
     }
 
-    public function batchCreerNotePourARCA(BatchActionDto $batchActionDto)
+    public function batchCreerNotePourARCA(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd("Je reste ici");
-        // $className = $batchActionDto->getEntityFqcn();
-        // $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         // dd($batchActionDto->getEntityIds());
-
-        // foreach ($batchActionDto->getEntityIds() as $id) {
-        //     $user = $entityManager->find($className, $id);
-        //     $user->approve();
-        // }
-        // $entityManager->flush();
-        // return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->redirect(
+            $this->editFactureDestination(
+                $batchActionDto->getEntityIds(),
+                FactureCrudController::DESTINATION_ARCA,
+                $adminUrlGenerator
+            )
+        );
     }
 
 

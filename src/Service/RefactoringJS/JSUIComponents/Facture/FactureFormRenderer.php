@@ -179,8 +179,8 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->createCollection("elementFactures", "Eléments facturés")
                 ->setColumns(10)
                 ->useEntryCrudForm(ElementFactureCrudController::class)
-                ->allowAdd(false)
-                ->allowDelete(false)
+                ->allowAdd(true)
+                ->allowDelete(true)
                 ->getChamp()
         );
 

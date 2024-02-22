@@ -262,7 +262,8 @@ class ElementFactureFormRenderer extends JSPanelRenderer
          * de payer.
          * Le comportement du formulaire doit varier en fonction du type de facture que l'on paie.
          */
-        // dd($adminUrlGenerator);
+        dd($objetInstance);
+        // dd($adminUrlGenerator->get("donnees"));
         if ($adminUrlGenerator->get("donnees") != null) {
             if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
                 $this->addChampToRemove("primeTotale");

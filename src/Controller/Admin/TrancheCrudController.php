@@ -368,8 +368,8 @@ class TrancheCrudController extends AbstractCrudController
             ->linkToCrudAction('exporterMSExcels')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
-
-        $batch_pronema = Action::new("produire_notes_lot", "Produire les notes")
+        
+        $batch_produire_lot_notes = Action::new("produire_lot_notes", "Produire un lot des notes")
             ->linkToCrudAction('produireLotNotes')
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
@@ -377,7 +377,7 @@ class TrancheCrudController extends AbstractCrudController
         return $actions
             //Sur la page Index - Selection
             ->addBatchAction($batch_exporter_ms_excels)
-            ->addBatchAction($batch_pronema)
+            ->addBatchAction($batch_produire_lot_notes)
             //les Updates sur la page détail
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-trash')->setLabel(DashboardController::ACTION_SUPPRIMER);
@@ -466,7 +466,7 @@ class TrancheCrudController extends AbstractCrudController
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
-    public function produirelotNotes(BatchActionDto $batchActionDto)
+    public function produireLotNotes(BatchActionDto $batchActionDto)
     {
         dd("Je reste ici");
         // $className = $batchActionDto->getEntityFqcn();

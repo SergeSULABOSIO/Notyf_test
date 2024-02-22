@@ -35,6 +35,15 @@ class TrancheFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
+        //Durée
+        $this->addChamp(
+            (new JSChamp())
+            ->createNombre("duree", "Durée (en mois)")
+            ->setColumns(12)
+            ->setRequired(true)
+            ->getChamp()
+        );
+
         //Taux
         $this->addChamp(
             (new JSChamp())

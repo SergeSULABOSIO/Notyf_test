@@ -281,15 +281,15 @@ class Tranche
         if ($this->getCotation()) {
             $strMonnaie = $this->getCodeMonnaieAffichage();
             // dd("Ici", $strMonnaie);
-            $strPeriode = " pour durée de " . $this->getDuree() . " mois. ";
+            $strPeriode = " pour " . $this->getDuree() . " mois. ";
             if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
-                $strPeriode = ". Cette tranche est valide du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
+                $strPeriode = " du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
             }
             $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
             // dd($this->getNom() . ": " . $strMont);
-            return $this->getNom() . ": " . $strMont;
+            return "Pol.: " . $this->getPolice()->getReference() . " / " . $this->getNom() . ": " . $strMont;
         } else {
-            return "RAS";
+            return $this->getNom() . " : Cotation introuvable!";
         }
     }
 

@@ -252,6 +252,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 ->setColumns(12)
                 ->getChamp()
         );
+        // dd("Ici");
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array
@@ -316,7 +317,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             $this->addChampToRemove("revenuTotal");
             $this->addChampToRemove("taxeAssureurTotale");
             $this->addChampToRemove("taxeCourtierTotale");
-            $this->addChampToRemove("tranche");
+            // $this->addChampToRemove("tranche");
         } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $type) {
             $this->addChampToRemove("primeTotale");
             $this->addChampToRemove("fraisGestionTotale");

@@ -192,16 +192,16 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->setHelp("Merci d'attacher vos pièces justificatives par ici.")
                 ->getChamp()
         );
-        
+
         //Documents
         $this->addChamp(
             (new JSChamp())
-            ->createCollection("documents", "Documents")
-            ->setColumns(12)
-            ->useEntryCrudForm(DocPieceCrudController::class)
-            ->allowAdd(true)
-            ->allowDelete(true)
-            ->getChamp()
+                ->createCollection("documents", "Documents")
+                ->setColumns(12)
+                ->useEntryCrudForm(DocPieceCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->getChamp()
         );
     }
 
@@ -213,66 +213,81 @@ class FactureFormRenderer extends JSPanelRenderer
          * de payer.
          * Le comportement du formulaire doit varier en fonction du type de facture que l'on paie.
          */
-        // dd($adminUrlGenerator);
+        // dd($type);
+        $type = null;
+        // dd($adminUrlGenerator->get("donnees"));
         if ($adminUrlGenerator->get("donnees") != null) {
-            if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 4);
-                $this->addChampToDeactivate("partenaire", 3);
-                $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("autreTiers");
-                $this->addChampToRemove("assureur");
-            } else if (FactureCrudController::TYPE_FACTURE_PRIME == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 2);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("assureur", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("autreTiers");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 2);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 3);
-                // $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 2);
-                // $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 2);
-                // $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 2);
-                // $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 2);
-                $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
-            } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $adminUrlGenerator->get("donnees")["type"]) {
-                $this->addChampToDeactivate("type", 3);
-                $this->addChampToDeactivate("reference", 3);
-                $this->addChampToDeactivate("autreTiers", 2);
-                $this->addChampToDeactivate("assureur", 2);
-                $this->addChampToRemove("compteBancaires");
-                $this->addChampToRemove("partenaire");
+            $type = $adminUrlGenerator->get("donnees")["type"];
+        } else if ($objetInstance != null) {
+            if ($objetInstance instanceof Facture) {
+                foreach (FactureCrudController::TAB_TYPE_FACTURE as $nomType => $codeType) {
+                    /** @var Facture  */
+                    if ($codeType == $objetInstance->getType()) {
+                        // dd($codeType, $nomType, $objetInstance->getType());
+                        $type = $nomType;
+                    }
+                }
+                // dd($objetInstance);
             }
+        }
+        // dd("Ici", $type);
+        if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 4);
+            $this->addChampToDeactivate("partenaire", 3);
+            $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("autreTiers");
+            $this->addChampToRemove("assureur");
+        } else if (FactureCrudController::TYPE_FACTURE_PRIME == $type) {
+            $this->addChampToDeactivate("type", 2);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("assureur", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("autreTiers");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE == $type) {
+            $this->addChampToDeactivate("type", 2);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 3);
+            // $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 2);
+            // $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 2);
+            // $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 2);
+            // $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 2);
+            $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
+        } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $type) {
+            $this->addChampToDeactivate("type", 3);
+            $this->addChampToDeactivate("reference", 3);
+            $this->addChampToDeactivate("autreTiers", 2);
+            $this->addChampToDeactivate("assureur", 2);
+            $this->addChampToRemove("compteBancaires");
+            $this->addChampToRemove("partenaire");
         }
         return $champs;
     }

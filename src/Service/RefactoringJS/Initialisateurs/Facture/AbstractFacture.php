@@ -19,7 +19,7 @@ use App\Controller\Admin\FactureCrudController;
 
 abstract class AbstractFacture implements FactureInit
 {
-    private ?Tranche $tranche;
+    private ?array $tranches;
     private ?Facture $facture;
 
     public function __construct(
@@ -35,32 +35,32 @@ abstract class AbstractFacture implements FactureInit
 
     public abstract function getNomAbstract():?string;
     public abstract function getPosteSignedBy():?string;
-    public abstract function getTypeFacture():?string;
+    public abstract function getDestinationFacture():?string;
 
-    public function buildFacture(?int $indice, ?Tranche $tranche): ?Facture
+    public function buildFacture(?array $tranches): ?Facture
     {
         // dd($this->facture);
-        $this->setTranche($tranche);
+        $this->setTranches($tranches);
         // $this->setSignedBy($this->getSignedBy());
         $this->setSignedBy($this->serviceEntreprise->getUtilisateur());
         $this->setPosteSignedBy($this->getPosteSignedBy());
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
-        $this->setType(FactureCrudController::TAB_TYPE_FACTURE[$this->getTypeFacture()]);
-        if($this->getTypeFacture() == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA){
-            $this->setAutreTiers($tranche->getCotation()->getTaxeCourtier()->getOrganisation());
-        }else if($this->getTypeFacture() == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA){
-            $this->setAutreTiers($tranche->getCotation()->getTaxeAssureur()->getOrganisation());
+        $this->setDestination(FactureCrudController::TAB_DESTINATION[$this->getDestinationFacture()]);
+        if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA){
+            $this->setAutreTiers($tranches[0]->getCotation()->getTaxeCourtier()->getOrganisation());
+        }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI){
+            $this->setAutreTiers($tranches[0]->getCotation()->getTaxeAssureur()->getOrganisation());
         }else{
-            $this->setAutreTiers($tranche->getPolice()->getClient());
-        }        
-        $this->setPartenaire($tranche->getPolice()->getPartenaire());
-        $this->setAssureur($tranche->getPolice()->getAssureur());
+            $this->setAutreTiers($tranches[0]->getPolice()->getClient());
+        }
+        $this->setPartenaire($tranches[0]->getPolice()->getPartenaire());
+        $this->setAssureur($tranches[0]->getPolice()->getAssureur());
         $this->setDescription($this->generateDescriptionFacture());
-        $this->setReference($this->generateInvoiceReference($indice));
-        $this->setEntreprise($this->tranche->getEntreprise());
-        $this->setUtilisateur($this->tranche->getUtilisateur());
-        $this->setCreatedAt($this->tranche->getCreatedAt());
-        $this->setUpdatedAt($this->tranche->getUpdatedAt());
+        $this->setReference($this->generateInvoiceReference());
+        $this->setEntreprise($this->tranches[0]->getEntreprise());
+        $this->setUtilisateur($this->tranches[0]->getUtilisateur());
+        $this->setCreatedAt($this->tranches[0]->getCreatedAt());
+        $this->setUpdatedAt($this->tranches[0]->getUpdatedAt());
         //Element facture / article de la facture
         $elementFacture = $this->produireElementFacture();
         // $this->setTotalDu($elementFacture->getMontant());
@@ -92,9 +92,9 @@ abstract class AbstractFacture implements FactureInit
     {
         $this->facture->setReference($reference);
     }
-    public function setTranche(?Tranche $tranche)
+    public function setTranches(?array $tranches)
     {
-        $this->tranche = $tranche;
+        $this->tranches = $tranches;
     }
     public function setSignedBy(?string $signataire)
     {
@@ -113,9 +113,9 @@ abstract class AbstractFacture implements FactureInit
     {
         $this->facture->setAutreTiers($autreTiers);
     }
-    public function setType(?int $typeFacture)
+    public function setDestination(?int $destinationFacture)
     {
-        $this->facture->setType($typeFacture);
+        $this->facture->setDestination($destinationFacture);
     }
     public function setEntreprise(?Entreprise $entreprise)
     {
@@ -174,9 +174,9 @@ abstract class AbstractFacture implements FactureInit
     {
         $this->facture->addElementFacture($elementFacture);
     }
-    public function generateInvoiceReference(?int $indice): ?string
+    public function generateInvoiceReference(): ?string
     {
-        return strtoupper(str_replace(" ", "", "ND" . $indice . "/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
+        return strtoupper(str_replace(" ", "", "ND/" . Date("dmYHis") . "/" . $this->serviceEntreprise->getEntreprise()->getNom() . "/" . Date("Y")));
     }
 
     public function generateDescriptionFacture(): string

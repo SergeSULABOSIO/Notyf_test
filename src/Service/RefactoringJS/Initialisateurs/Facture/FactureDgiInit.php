@@ -2,22 +2,15 @@
 
 namespace App\Service\RefactoringJS\Initialisateurs\Facture;
 
-use DateTimeImmutable;
-use App\Entity\Facture;
 use App\Entity\Tranche;
-use App\Entity\Assureur;
-use App\Entity\Entreprise;
-use App\Entity\Partenaire;
-use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
-use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 
-class FactureComLocaleInit extends AbstractFacture
+class FactureDgiInit extends AbstractFacture
 {
     public function __construct(
         private ServiceAvenant $serviceAvenant,
@@ -36,7 +29,7 @@ class FactureComLocaleInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComLocale();
+        return $tranche->getComFronting();
     }
     public function getPosteSignedBy(): ?string
     {
@@ -44,10 +37,10 @@ class FactureComLocaleInit extends AbstractFacture
     }
     public function getNomAbstract(): ?string
     {
-        return "Commission locale (ordinaire)";
+        return "Commission sur Fronting (ou de cession)";
     }
-    public function getTypeFacture(): ?string
+    public function getDestinationFacture(): ?string
     {
-        return FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE;
+        return FactureCrudController::DESTINATION_DGI;
     }
 }

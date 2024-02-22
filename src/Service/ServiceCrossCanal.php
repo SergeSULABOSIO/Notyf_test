@@ -1640,7 +1640,7 @@ class ServiceCrossCanal
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::NEW)
-            ->set("titre", "NOTE - Mode édition - " . $destination)
+            ->set("titre", "Note - Mode édition - " . $destination)
             ->set("donnees[destination]", $destination)
             ->set("donnees[action]", "facture")
             ->set("donnees[tabTranches]", $tabIdTranches)

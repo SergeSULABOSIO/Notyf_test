@@ -22,7 +22,7 @@ interface FactureInit
     public const PARAM_SAME_TRANCHE = "sameTranche";
     //Fonctions de creation de la Facture
     public function setComptesBancaires();
-    public function setTranche(?Tranche $tranche);
+    public function setTranches(?array $tranches);
     // public function setSignedBy(?string $signataire);
     public function setPosteSignedBy(?string $posteSignataire);
     public function setStatus(?int $status);
@@ -31,7 +31,7 @@ interface FactureInit
     public function setAssureur(?Assureur $assureur);
     public function setDescription(?string $description);
     public function setReference(?string $reference);
-    public function setType(?int $typeFacture);
+    public function setDestination(?int $destinationFacture);
     public function setEntreprise(?Entreprise $entreprise);
     public function setUtilisateur(?Utilisateur $utilisateur);
     public function setCreatedAt(?DateTimeImmutable $dateCreation);
@@ -42,9 +42,9 @@ interface FactureInit
     public function addElementFacture(?ElementFacture $elementFacture);
     public function addElementsFacture(?array $TabElementsFactures);
     public function generateDescriptionFacture(): string;
-    public function generateInvoiceReference(?int $indice):?string;
+    public function generateInvoiceReference():?string;
     //Production de la facture
-    public function buildFacture(?int $indice, ?Tranche $tranche):?Facture;
+    public function buildFacture(?array $tranches):?Facture;
     public function loadSavedFactures(?Tranche $tranche):?array;
     public function areEqual(?array $anciennesFactures, ?Facture $nouvelleFacture);
     public function saveFacture();

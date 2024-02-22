@@ -10,7 +10,7 @@ use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 
-class FactureComFrontingInit extends AbstractFacture
+class FactureArcaInit extends AbstractFacture
 {
     public function __construct(
         private ServiceAvenant $serviceAvenant,
@@ -39,8 +39,8 @@ class FactureComFrontingInit extends AbstractFacture
     {
         return "Commission sur Fronting (ou de cession)";
     }
-    public function getTypeFacture(): ?string
+    public function getDestinationFacture(): ?string
     {
-        return FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING;
+        return FactureCrudController::DESTINATION_ARCA;
     }
 }

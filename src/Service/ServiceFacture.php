@@ -15,6 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureArcaInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureAssureurInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureClientInit;
 use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -25,6 +28,8 @@ use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureDgiInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePartenaireInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 // use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 
@@ -62,148 +67,67 @@ class ServiceFacture
         if ($adminUrlGenerator->get("donnees")) {
             $donnees = $adminUrlGenerator->get("donnees");
             // dd($donnees["tabTranches"]);
-            if (isset($donnees["type"])) {
-                switch ($donnees["type"]) {
-                    case FactureCrudController::TYPE_FACTURE_PRIME:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FacturePrimeInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureFraisGestionInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureRetroCommissionInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureTaxeCourtierInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceTaxes,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureTaxeAssureurInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceTaxes,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
+            if (isset($donnees["destination"])) {
+                $tabTranches = [];
+                foreach ($donnees["destination"] as $idTranche) {
+                    $tabTranches[] = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+                }
+                switch ($donnees["destination"]) {
+                    case FactureCrudController::DESTINATION_CLIENT:
+                        $ffg = new FactureClientInit(
+                            $this->serviceAvenant,
+                            $this->serviceDates,
+                            $this->serviceEntreprise,
+                            $this->entityManager,
+                            $this->serviceCompteBancaire
+                        );
+                        $facture = $ffg->buildFacture($tabTranches);
                         break;
 
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureComLocaleInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
+                    case FactureCrudController::DESTINATION_ASSUREUR:
+                        $ffg = new FactureAssureurInit(
+                            $this->serviceAvenant,
+                            $this->serviceDates,
+                            $this->serviceEntreprise,
+                            $this->entityManager,
+                            $this->serviceCompteBancaire
+                        );
+                        $facture = $ffg->buildFacture($tabTranches);
                         break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            /** @var Tranche */
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureComReassuranceInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture->getMontantTTC() == $oTranche->getComReassurance());
-                        }
+
+                    case FactureCrudController::DESTINATION_PARTENAIRE:
+                        $ffg = new FacturePartenaireInit(
+                            $this->serviceAvenant,
+                            $this->serviceDates,
+                            $this->serviceEntreprise,
+                            $this->entityManager,
+                            $this->serviceCompteBancaire
+                        );
+                        $facture = $ffg->buildFacture($tabTranches);
                         break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
-                        $indice = 1;
-                        foreach ($donnees["tabTranches"] as $idTranche) {
-                            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-                            // dd($oTranche . "");
-                            $ffg = new FactureComFrontingInit(
-                                $this->serviceAvenant,
-                                $this->serviceDates,
-                                $this->serviceEntreprise,
-                                $this->entityManager,
-                                $this->serviceCompteBancaire
-                            );
-                            $facture = $ffg->buildFacture($indice, $oTranche);
-                            $indice = $indice + 1;
-                            // dd($facture);
-                        }
+
+                    case FactureCrudController::DESTINATION_ARCA:
+                        $ffg = new FactureArcaInit(
+                            $this->serviceAvenant,
+                            $this->serviceDates,
+                            $this->serviceEntreprise,
+                            $this->entityManager,
+                            $this->serviceCompteBancaire
+                        );
+                        $facture = $ffg->buildFacture($tabTranches);
                         break;
+
+                    case FactureCrudController::DESTINATION_DGI:
+                        $ffg = new FactureDgiInit(
+                            $this->serviceAvenant,
+                            $this->serviceDates,
+                            $this->serviceEntreprise,
+                            $this->entityManager,
+                            $this->serviceCompteBancaire
+                        );
+                        $facture = $ffg->buildFacture($tabTranches);
+                        break;
+
                     default:
                         dd("Type de facture non pris en compte pour l'instant");
                         break;
@@ -228,16 +152,16 @@ class ServiceFacture
             /** @var Tranche */
             foreach ($police->getTranches() as $tranche) {
                 // dd($indice, $tranche);
-                $facturePrimeInit = new FacturePrimeInit(
+                $factureClientInit = new FactureClientInit(
                     $this->serviceAvenant,
                     $this->serviceDates,
                     $this->serviceEntreprise,
                     $this->entityManager,
                     $this->serviceCompteBancaire
                 );
-                $newPremiumInvoice = $facturePrimeInit->buildFacture($indice, $tranche);
+                $factureClient = $factureClientInit->buildFacture([$tranche]);
                 // //Enregistrement de la facture
-                $facturePrimeInit->saveFacture();
+                $factureClientInit->saveFacture();
                 $indice = $indice + 1;
             }
         }

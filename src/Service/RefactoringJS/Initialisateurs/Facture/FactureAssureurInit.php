@@ -10,7 +10,7 @@ use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
 
-class FacturePrimeInit extends  AbstractFacture
+class FactureAssureurInit extends AbstractFacture
 {
     public function __construct(
         private ServiceAvenant $serviceAvenant,
@@ -29,7 +29,7 @@ class FacturePrimeInit extends  AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getPrimeTotaleTranche();
+        return $tranche->getComFronting();
     }
     public function getPosteSignedBy(): ?string
     {
@@ -37,10 +37,10 @@ class FacturePrimeInit extends  AbstractFacture
     }
     public function getNomAbstract(): ?string
     {
-        return "Prime d'assurance";
+        return "Commission sur Fronting (ou de cession)";
     }
-    public function getTypeFacture(): ?string
+    public function getDestinationFacture(): ?string
     {
-        return FactureCrudController::TYPE_FACTURE_PRIME;
+        return FactureCrudController::DESTINATION_ASSUREUR;
     }
 }

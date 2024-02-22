@@ -140,7 +140,7 @@ class FactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createTexte("posteSignedBy", "Fonction")
                 ->setRequired(true)
-                ->setColumns(3)
+                ->setColumns(4)
                 ->getChamp()
         );
 
@@ -242,8 +242,8 @@ class FactureFormRenderer extends JSPanelRenderer
         // dd("Ici", $type);
         if (FactureCrudController::DESTINATION_DGI == $destination || FactureCrudController::DESTINATION_ARCA == $destination) {
             $this->addChampToDeactivate("destination", 4);
-            $this->addChampToDeactivate("autreTiers");
-            $this->addChampToDeactivate("reference", 4);
+            $this->addChampToDeactivate("autreTiers", 3);
+            $this->addChampToDeactivate("reference", 3);
             $this->addChampToRemove("type");
             $this->addChampToRemove("partenaire");
             $this->addChampToRemove("compteBancaires");

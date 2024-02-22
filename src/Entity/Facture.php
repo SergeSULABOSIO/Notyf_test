@@ -35,6 +35,9 @@ class Facture
     #[ORM\Column]
     private ?int $type = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $destination = null;
+
     #[ORM\ManyToOne(inversedBy: 'factures')]
     private ?Partenaire $partenaire = null;
 
@@ -481,5 +484,25 @@ class Facture
         }
         $this->montantTTC = $total;
         return $this->montantTTC;
+    }
+
+    /**
+     * Get the value of destination
+     */ 
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * Set the value of destination
+     *
+     * @return  self
+     */ 
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+
+        return $this;
     }
 }

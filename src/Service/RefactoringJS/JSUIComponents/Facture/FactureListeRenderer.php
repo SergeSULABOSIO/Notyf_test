@@ -49,21 +49,14 @@ class FactureListeRenderer extends JSPanelRenderer
                 ])
                 ->getChamp()
         );
-        // $this->addChampChoix(
-        //     null,
-        //     "status",
-        //     "Status",
-        //     false,
-        //     false,
-        //     10,
-        //     FactureCrudController::TAB_STATUS_FACTURE,
-        //     [
-        //         FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE] => 'success', //info
-        //         FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE] => 'danger', //info
-        //         FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS] => 'info', //info
-        //     ]
-        // );
-
+        //Destination
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("destination", "Destination")
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_DESTINATION)
+                ->getChamp()
+        );
         //Rférence de la facture
         $this->addChamp(
             (new JSChamp())

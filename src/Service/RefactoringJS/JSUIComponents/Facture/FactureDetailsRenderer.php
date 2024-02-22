@@ -35,6 +35,15 @@ class FactureDetailsRenderer extends JSPanelRenderer
 
     public function design()
     {
+        //Destination
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("destination", "Destination")
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_DESTINATION)
+                ->getChamp()
+        );
+        
         //Type
         $this->addChamp(
             (new JSChamp())

@@ -44,7 +44,7 @@ class FactureCrudController extends AbstractCrudController
     public const DESTINATION_ARCA               = "Pour l'attention du régulateur";
     public const DESTINATION_PARTENAIRE         = "Pour l'attention du parténaire";
 
-    public const TAB_DESINATION = [
+    public const TAB_DESTINATION = [
         self::DESTINATION_ARCA          => 0,
         self::DESTINATION_ASSUREUR      => 1,
         self::DESTINATION_CLIENT        => 2,

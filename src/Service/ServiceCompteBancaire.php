@@ -70,13 +70,10 @@ class ServiceCompteBancaire
     public function setComptes(?Facture $facture, $codeMonnaie)
     {
         $add = false;
-        switch ($this->getTypeFacture($facture->getType())) {
-            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
-                $add = true;
-                break;
-            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                $add = true;
-                break;
+        if($facture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]){
+            $add = true;
+        }else if($facture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+            $add = true;
         }
         if($add == true){
             foreach ($this->getComptesBancaireByMonnaie($codeMonnaie) as $cb) {

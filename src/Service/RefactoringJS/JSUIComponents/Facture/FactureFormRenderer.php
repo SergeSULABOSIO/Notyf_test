@@ -49,6 +49,15 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
+        //Destination
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("destination", "Destination")
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_DESTINATION)
+                ->getChamp()
+        );
+
         //Assureur
         $this->addChamp(
             (new JSChamp())
@@ -82,14 +91,7 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
-        //Destination
-        $this->addChamp(
-            (new JSChamp())
-                ->createChoix("destination", "Destination")
-                ->setColumns(10)
-                ->setChoices(FactureCrudController::TAB_DESTINATION)
-                ->getChamp()
-        );
+        
 
         //Rférence de la facture
         $this->addChamp(
@@ -249,24 +251,24 @@ class FactureFormRenderer extends JSPanelRenderer
             $this->addChampToRemove("compteBancaires");
             $this->addChampToRemove("assureur");
         } else if (FactureCrudController::DESTINATION_ASSUREUR == $destination) {
-            $this->addChampToDeactivate("destination", 4);
-            $this->addChampToDeactivate("assureur", 4);
+            $this->addChampToDeactivate("destination", 3);
+            $this->addChampToDeactivate("assureur", 3);
             $this->addChampToDeactivate("reference", 4);
-            $this->addChampToDeactivate("compteBancaires", 4);
+            $this->addChampToRemove("compteBancaires");
             $this->addChampToRemove("type");
             $this->addChampToRemove("autreTiers");
             $this->addChampToRemove("partenaire");
         } else if (FactureCrudController::DESTINATION_CLIENT == $destination) {
-            $this->addChampToDeactivate("destination", 4);
-            $this->addChampToDeactivate("autreTiers", 4);
+            $this->addChampToDeactivate("destination", 3);
+            $this->addChampToDeactivate("autreTiers", 3);
             $this->addChampToDeactivate("reference", 4);
-            $this->addChampToDeactivate("compteBancaires", 4);
+            $this->addChampToRemove("compteBancaires");
             $this->addChampToRemove("type");
             $this->addChampToRemove("partenaire");
             $this->addChampToRemove("assureur");
         } else if (FactureCrudController::DESTINATION_PARTENAIRE == $destination) {
-            $this->addChampToDeactivate("destination", 4);
-            $this->addChampToDeactivate("partenaire", 4);
+            $this->addChampToDeactivate("destination", 3);
+            $this->addChampToDeactivate("partenaire", 3);
             $this->addChampToDeactivate("reference", 4);
             $this->addChampToRemove("compteBancaires");
             $this->addChampToRemove("type");

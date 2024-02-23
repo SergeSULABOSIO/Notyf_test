@@ -69,7 +69,7 @@ class ServiceFacture
             // dd($donnees["tabTranches"]);
             if (isset($donnees["destination"])) {
                 $tabTranches = [];
-                foreach ($donnees["destination"] as $idTranche) {
+                foreach ($donnees["tabTranches"] as $idTranche) {
                     $tabTranches[] = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
                 }
                 switch ($donnees["destination"]) {

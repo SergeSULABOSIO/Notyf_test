@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class AbstractFacture implements FactureInit
 {
-    private ?array $tranches;
+    private $tranches;
     private ?Facture $facture;
 
     public function __construct(

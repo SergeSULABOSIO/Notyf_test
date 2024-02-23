@@ -460,4 +460,12 @@ abstract class JSPanelRenderer implements JSPanel
     {
         return $this->champsPanelToDeactivate;
     }
+
+    /**
+     * Get the value of objetInstance
+     */ 
+    public function getObjetInstance()
+    {
+        return $this->objetInstance;
+    }
 }

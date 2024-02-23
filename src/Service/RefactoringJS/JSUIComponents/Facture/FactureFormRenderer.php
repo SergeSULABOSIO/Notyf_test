@@ -142,7 +142,7 @@ class FactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createTexte("posteSignedBy", "Fonction")
                 ->setRequired(true)
-                ->setColumns(4)
+                ->setColumns(3)
                 ->getChamp()
         );
 

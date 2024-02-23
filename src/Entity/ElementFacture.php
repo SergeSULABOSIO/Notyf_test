@@ -15,9 +15,6 @@ class ElementFacture
     #[ORM\Column]
     private ?int $id = null;
 
-    // #[ORM\OneToOne(inversedBy: 'elementFacture', cascade: ['persist', 'remove'])]
-    // private ?Tranche $tranche = null;
-
     #[ORM\ManyToOne(inversedBy: 'elementFactures')]//, cascade: ['persist', 'remove'])]
     private ?Tranche $tranche = null;
 
@@ -45,6 +42,24 @@ class ElementFacture
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeavenant = null;
 
+    //Variables pour des questions des case à cocher
+    #[ORM\Column(nullable: true)]
+    private ?bool $includePrime = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeComLocale = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeComFronting = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeComReassurance = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeFraisGestion = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeRetroCom = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeTaxeCourtier = null;
+    #[ORM\Column(nullable: true)]
+    private ?bool $includeTaxeAssureur = null;
+
     
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
@@ -56,6 +71,7 @@ class ElementFacture
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
+    
 
     
     public function getId(): ?int
@@ -281,5 +297,165 @@ class ElementFacture
     {
         $this->commissionReassurance = $this->getTranche()->getComReassurance();
         return $this->commissionReassurance;
+    }
+
+    /**
+     * Get the value of includePrime
+     */ 
+    public function getIncludePrime()
+    {
+        return $this->includePrime;
+    }
+
+    /**
+     * Set the value of includePrime
+     *
+     * @return  self
+     */ 
+    public function setIncludePrime($includePrime)
+    {
+        $this->includePrime = $includePrime;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeComLocale
+     */ 
+    public function getIncludeComLocale()
+    {
+        return $this->includeComLocale;
+    }
+
+    /**
+     * Set the value of includeComLocale
+     *
+     * @return  self
+     */ 
+    public function setIncludeComLocale($includeComLocale)
+    {
+        $this->includeComLocale = $includeComLocale;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeComFronting
+     */ 
+    public function getIncludeComFronting()
+    {
+        return $this->includeComFronting;
+    }
+
+    /**
+     * Set the value of includeComFronting
+     *
+     * @return  self
+     */ 
+    public function setIncludeComFronting($includeComFronting)
+    {
+        $this->includeComFronting = $includeComFronting;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeComReassurance
+     */ 
+    public function getIncludeComReassurance()
+    {
+        return $this->includeComReassurance;
+    }
+
+    /**
+     * Set the value of includeComReassurance
+     *
+     * @return  self
+     */ 
+    public function setIncludeComReassurance($includeComReassurance)
+    {
+        $this->includeComReassurance = $includeComReassurance;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeFraisGestion
+     */ 
+    public function getIncludeFraisGestion()
+    {
+        return $this->includeFraisGestion;
+    }
+
+    /**
+     * Set the value of includeFraisGestion
+     *
+     * @return  self
+     */ 
+    public function setIncludeFraisGestion($includeFraisGestion)
+    {
+        $this->includeFraisGestion = $includeFraisGestion;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeRetroCom
+     */ 
+    public function getIncludeRetroCom()
+    {
+        return $this->includeRetroCom;
+    }
+
+    /**
+     * Set the value of includeRetroCom
+     *
+     * @return  self
+     */ 
+    public function setIncludeRetroCom($includeRetroCom)
+    {
+        $this->includeRetroCom = $includeRetroCom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeTaxeCourtier
+     */ 
+    public function getIncludeTaxeCourtier()
+    {
+        return $this->includeTaxeCourtier;
+    }
+
+    /**
+     * Set the value of includeTaxeCourtier
+     *
+     * @return  self
+     */ 
+    public function setIncludeTaxeCourtier($includeTaxeCourtier)
+    {
+        $this->includeTaxeCourtier = $includeTaxeCourtier;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of includeTaxeAssureur
+     */ 
+    public function getIncludeTaxeAssureur()
+    {
+        return $this->includeTaxeAssureur;
+    }
+
+    /**
+     * Set the value of includeTaxeAssureur
+     *
+     * @return  self
+     */ 
+    public function setIncludeTaxeAssureur($includeTaxeAssureur)
+    {
+        $this->includeTaxeAssureur = $includeTaxeAssureur;
+
+        return $this;
     }
 }

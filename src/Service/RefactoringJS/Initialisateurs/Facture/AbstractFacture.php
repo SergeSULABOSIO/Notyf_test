@@ -39,7 +39,7 @@ abstract class AbstractFacture implements FactureInit
 
     public function buildFacture(?array $tranches): ?Facture
     {
-        // dd($this->facture);
+        // dd($tranches);
         $this->setTranches($tranches);
         $this->setSignedBy($this->serviceEntreprise->getUtilisateur());
         $this->setPosteSignedBy($this->getPosteSignedBy());
@@ -144,6 +144,7 @@ abstract class AbstractFacture implements FactureInit
         $totDu = 0;
         $elementsFacture = [];
         /** @var Tranche */
+        // dd($this->tranches);
         foreach ($this->tranches as $tranche) {
             $elementFacture = new ElementFacture();
             $elementFacture->setFacture($this->facture);
@@ -164,7 +165,9 @@ abstract class AbstractFacture implements FactureInit
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
             $elementsFacture[] = $elementFacture;
+
         }
+        // dd($elementsFacture);
         return $elementsFacture;
     }
 

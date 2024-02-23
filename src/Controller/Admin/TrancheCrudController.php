@@ -787,96 +787,96 @@ class TrancheCrudController extends AbstractCrudController
             /** @var ObjetMultiCom */
             $objetReponse = $formulaire->getData();
             // dd("Réponse de l'utilisateur:", $objetReponse);
-            if ($objetReponse->getProduireNDPrime() == true) {
-                $ffg = new FacturePrimeInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNDFraisGestion() == true) {
-                $ffg = new FactureFraisGestionInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNDComLocale() == true) {
-                $ffg = new FactureComLocaleInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNDComReassurance() == true) {
-                $ffg = new FactureComReassuranceInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNDComFronting() == true) {
-                $ffg = new FactureComFrontingInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNCRetrocommission() == true) {
-                $ffg = new FactureRetroCommissionInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNCTaxeCourtier() == true) {
-                $ffg = new FactureTaxeCourtierInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceTaxes,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
-            if ($objetReponse->getProduireNCTaxeAssureur() == true) {
-                $ffg = new FactureTaxeAssureurInit(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceTaxes,
-                    $this->serviceEntreprise,
-                    $this->entityManager,
-                    $this->serviceCompteBancaire
-                );
-                $facture = $ffg->buildFacture(1, $tranche);
-                $ffg->saveFacture();
-            }
+            // if ($objetReponse->getProduireNDPrime() == true) {
+            //     $ffg = new FacturePrimeInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNDFraisGestion() == true) {
+            //     $ffg = new FactureFraisGestionInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNDComLocale() == true) {
+            //     $ffg = new FactureComLocaleInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNDComReassurance() == true) {
+            //     $ffg = new FactureComReassuranceInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNDComFronting() == true) {
+            //     $ffg = new FactureComFrontingInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNCRetrocommission() == true) {
+            //     $ffg = new FactureRetroCommissionInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNCTaxeCourtier() == true) {
+            //     $ffg = new FactureTaxeCourtierInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceTaxes,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
+            // if ($objetReponse->getProduireNCTaxeAssureur() == true) {
+            //     $ffg = new FactureTaxeAssureurInit(
+            //         $this->serviceAvenant,
+            //         $this->serviceDates,
+            //         $this->serviceTaxes,
+            //         $this->serviceEntreprise,
+            //         $this->entityManager,
+            //         $this->serviceCompteBancaire
+            //     );
+            //     $facture = $ffg->buildFacture(1, $tranche);
+            //     $ffg->saveFacture();
+            // }
 
             //On se redirige vers la page des facture
             //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement

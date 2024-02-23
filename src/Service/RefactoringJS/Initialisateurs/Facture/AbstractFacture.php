@@ -16,6 +16,7 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Controller\Admin\FactureCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class AbstractFacture implements FactureInit
 {
@@ -29,9 +30,9 @@ abstract class AbstractFacture implements FactureInit
         private EntityManagerInterface $entityManager,
         private ServiceCompteBancaire $serviceCompteBancaire
     ) {
+        $this->tranches = new ArrayCollection();
         $this->facture = new Facture();
     }
-
     public abstract function getNomAbstract(): ?string;
     public abstract function getPosteSignedBy(): ?string;
     public abstract function getDestinationFacture(): ?string;
@@ -40,11 +41,24 @@ abstract class AbstractFacture implements FactureInit
     {
         // dd($this->facture);
         $this->setTranches($tranches);
-        // $this->setSignedBy($this->getSignedBy());
         $this->setSignedBy($this->serviceEntreprise->getUtilisateur());
         $this->setPosteSignedBy($this->getPosteSignedBy());
         $this->setStatus(FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE]);
         $this->setDestination(FactureCrudController::TAB_DESTINATION[$this->getDestinationFacture()]);
+        $this->appliquerDestination($tranches);
+        $this->setDescription($this->generateDescriptionFacture());
+        $this->setReference($this->generateInvoiceReference());
+        $this->setEntreprise($this->tranches[0]->getEntreprise());
+        $this->setUtilisateur($this->tranches[0]->getUtilisateur());
+        $this->setCreatedAt($this->tranches[0]->getCreatedAt());
+        $this->setUpdatedAt($this->tranches[0]->getUpdatedAt());
+        $this->addElementsFacture($this->produireElementsFacture());
+        $this->setComptesBancaires();
+        // dd("Facture: ", $this->facture);
+        return $this->facture;
+    }
+    private function appliquerDestination(?array $tranches)
+    {
         if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA) {
             $this->setAutreTiers($tranches[0]->getCotation()->getTaxeCourtier()->getOrganisation());
         } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI) {
@@ -56,31 +70,15 @@ abstract class AbstractFacture implements FactureInit
         } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE) {
             $this->setPartenaire($tranches[0]->getPolice()->getPartenaire());
         }
-        $this->setDescription($this->generateDescriptionFacture());
-        $this->setReference($this->generateInvoiceReference());
-        $this->setEntreprise($this->tranches[0]->getEntreprise());
-        $this->setUtilisateur($this->tranches[0]->getUtilisateur());
-        $this->setCreatedAt($this->tranches[0]->getCreatedAt());
-        $this->setUpdatedAt($this->tranches[0]->getUpdatedAt());
-        //Element facture / article de la facture
-        $elementsFacture = $this->produireElementsFacture();
-        // $this->setTotalDu($elementFacture->getMontant());
-        $this->addElementsFacture($elementsFacture);
-        $this->setComptesBancaires();
-        // dd("Facture: ", $this->facture);
-        return $this->facture;
     }
-
     public function setComptesBancaires()
     {
         $this->serviceCompteBancaire->setComptes($this->facture, "");
     }
-
     public function setPartenaire(?Partenaire $partenaire)
     {
         $this->facture->setPartenaire($partenaire);
     }
-
     public function setAssureur(?Assureur $assureur)
     {
         $this->facture->setAssureur($assureur);
@@ -105,7 +103,6 @@ abstract class AbstractFacture implements FactureInit
     {
         $this->facture->setPosteSignedBy($posteSignataire);
     }
-
     public function setStatus(?int $status)
     {
         $this->facture->setStatus($status);
@@ -146,6 +143,7 @@ abstract class AbstractFacture implements FactureInit
     {
         $totDu = 0;
         $elementsFacture = [];
+        /** @var Tranche */
         foreach ($this->tranches as $tranche) {
             $elementFacture = new ElementFacture();
             $elementFacture->setFacture($this->facture);
@@ -188,37 +186,35 @@ abstract class AbstractFacture implements FactureInit
     public function generateDescriptionFacture(): string
     {
         return $this->getNomAbstract() . " - " .
-            $this->tranche->getNom() .
-            " : Ref. police: " .
-            $this->tranche->getPolice()->getReference() . " / " .
-            $this->tranche->getPolice()->getProduit() . " / " .
-            $this->tranche->getPolice()->getClient() . " / " .
-            $this->tranche->getPolice()->getPartenaire() . " / " .
-            $this->tranche->getPolice()->getAssureur() .
+            count($this->tranches) . " Tranches" .
+            " : " . $this->getDestinationFacture() .
             " / Du " .
             $this->serviceDates->getTexteSimple(
-                $this->tranche->getPolice()->getDateeffet()
+                $this->tranches[0]->getPolice()->getDateeffet()
             ) .
             " au " .
             $this->serviceDates->getTexteSimple(
-                $this->tranche->getPolice()->getDateexpiration()
+                $this->tranches[0]->getPolice()->getDateexpiration()
             );
+
+
     }
 
-    public function loadSavedFactures(?Tranche $tranche): ?array
+    public function loadSavedFactures(?array $tranches): ?array
     {
-        $tabFactures = [];
-        if (count($tranche->getElementFactures()) != 0) {
-            // dd("Liste des elements Factures de la tranche: " . $tranche, $tranche->getElementFactures());
-            /** @var ElementFacture */
-            foreach ($tranche->getElementFactures() as $elementFacture) {
-                $factureEnregistree = $this->entityManager->getRepository(Facture::class)->find($elementFacture->getFacture()->getId());
-                if ($factureEnregistree != null) {
-                    $tabFactures[] = $factureEnregistree;
-                }
-            }
-        }
-        return $tabFactures;
+        dd("Fonction non définie pour l'instant.");
+        // $tabFactures = [];
+        // if (count($tranches->getElementFactures()) != 0) {
+        //     // dd("Liste des elements Factures de la tranche: " . $tranche, $tranche->getElementFactures());
+        //     /** @var ElementFacture */
+        //     foreach ($this->setTranches()->getElementFactures() as $elementFacture) {
+        //         $factureEnregistree = $this->entityManager->getRepository(Facture::class)->find($elementFacture->getFacture()->getId());
+        //         if ($factureEnregistree != null) {
+        //             $tabFactures[] = $factureEnregistree;
+        //         }
+        //     }
+        // }
+        return null;
     }
 
     public function areEqual(?array $anciennesFactures, ?Facture $nouvelleFacture)
@@ -286,7 +282,7 @@ abstract class AbstractFacture implements FactureInit
     {
         // dd("Cette fonction n'est pas encore définie.");
         if ($this->facture != null) {
-            $ancienneFacture = $this->loadSavedFactures($this->tranche);
+            $ancienneFacture = $this->loadSavedFactures($this->tranches);
             $testEquality = $this->areEqual($ancienneFacture, $this->facture);
             // dd("Ici", $testEquality);
             if ($testEquality[self::PARAM_FINAL] == false) {

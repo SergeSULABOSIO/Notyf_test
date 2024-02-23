@@ -45,7 +45,7 @@ interface FactureInit
     public function generateInvoiceReference():?string;
     //Production de la facture
     public function buildFacture(?array $tranches):?Facture;
-    public function loadSavedFactures(?Tranche $tranche):?array;
+    public function loadSavedFactures(?array $tranches):?array;
     public function areEqual(?array $anciennesFactures, ?Facture $nouvelleFacture);
     public function saveFacture();
     public function reset();

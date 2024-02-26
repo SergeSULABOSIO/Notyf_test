@@ -10,11 +10,12 @@ use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
-class Tranche
+class Tranche extends JSAbstractFinances
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -247,6 +248,11 @@ class Tranche
         return $this;
     }
 
+    public function initEntreprise(): ?Entreprise
+    {
+        return $this->getEntreprise();
+    }
+
     public function __toString()
     {
         $texte = $this->generateDescription();
@@ -277,43 +283,16 @@ class Tranche
 
     private function generateDescription()
     {
-        // dd($this->getCotation()==null);
         if ($this->getCotation()) {
-            $strMonnaie = $this->getCodeMonnaieAffichage();
-            // dd("Ici", $strMonnaie);
             $strPeriode = " pour " . $this->getDuree() . " mois. ";
             if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
                 $strPeriode = " du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
             }
-            $strMont = " " . number_format($this->getPrimeTotaleTranche() / 100, 2, ",", ".") . $strMonnaie . " soit " . ($this->getTaux() * 100) . "% de " . number_format(($this->getCotation()->getPrimeTotale() / 100), 2, ",", ".") . $strMonnaie . $strPeriode;
-            // dd($this->getNom() . ": " . $strMont);
-            return "Pol.: " . $this->getPolice()->getReference() . " / " . $this->getNom() . ": " . $strMont;
+            $strMont = " " . $this->getMontantEnMonnaieAffichage($this->getPrimeTotaleTranche()) . " soit " . ($this->getTaux() * 100) . "% de " . $this->getMontantEnMonnaieAffichage($this->getCotation()->getPrimeTotale()) . $strPeriode;
+            return $this->getNom() . " / Police: " . $this->getPolice()->getReference() . ": " . $strMont;
         } else {
             return $this->getNom() . " : Cotation introuvable!";
         }
-    }
-
-    /**
-     * Get the value of codeMonnaieAffichage
-     */
-    public function getCodeMonnaieAffichage()
-    {
-        $this->codeMonnaieAffichage = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getCodeMonnaie();
-        // dd($code);
-        return $this->codeMonnaieAffichage;
-    }
-
-    /**
-     * Get the value of monnaie_Affichage
-     */
-    public function getMonnaie_Affichage()
-    {
-        $this->monnaie_Affichage = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getMonnaie();
-        return $this->monnaie_Affichage;
     }
 
     /**
@@ -800,7 +779,7 @@ class Tranche
         } else if ($montantPaid != 0 || $montantDue == $montantInvoiced) {
             $tab[self::MESSAGE] = "Note émise et reglée à " . number_format(($montantPaid / $montantDue) * 100, 0, ',', '.') . "%";
         } else {
-            $tab[self::MESSAGE] = "Vous pouvez émettre la note pour " . $this->getCodeMonnaieAffichage() ." " . number_format($montantToBeInvoiced / 100, 2, ',', '.');
+            $tab[self::MESSAGE] = "Vous pouvez émettre la note pour " . $this->getMontantEnMonnaieAffichage($montantToBeInvoiced);
         }
         // dd($tab);
         return $tab;
@@ -813,7 +792,7 @@ class Tranche
         $mntInvoiced = $this->getTotalInvoiced($type);
         $mntToBeInvoiced = $total_du - $mntInvoiced;
         return $this->editMessage([
-            self::MONNAIE => $this->getCodeMonnaieAffichage(),
+            self::MONNAIE => $this->getMonnaie_Affichage()->getCode(),
             self::TARGET => $total_du,
             self::FACTURE => [
                 self::DATA => $this->getFacturesEmises($type),

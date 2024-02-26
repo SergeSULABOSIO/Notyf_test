@@ -9,11 +9,12 @@ use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
-class Police
+class Police extends JSAbstractFinances
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -180,6 +181,11 @@ class Police
         return $this;
     }
 
+    public function initEntreprise(): ?Entreprise
+    {
+        return $this->getEntreprise();
+    }
+
     public function __toString()
     {
         $strAutreData = "";
@@ -188,40 +194,11 @@ class Police
         }
         $txtPrime = "";
         if ($this->getMonnaie_Affichage()) {
-            $txtPrime = " | Prime totale: " . ($this->getPrimeTotale() / 100) . " " . $this->getCodeMonnaieAffichage();
+            $txtPrime = " | Prime totale: " . $this->getMontantEnMonnaieAffichage($this->getPrimeTotale());
         }
         return "Réf.: " . $this->getReference() . " / " . $strAutreData . $txtPrime; // . " / " . $this->getPrimetotale()/100 . " / " . $this->client->getNom() . " / " . $this->getAssureur()->getNom() . " / " . $this->getProduit()->getNom();
     }
 
-    private function getCodeMonnaieAffichage(): string
-    {
-        $strMonnaie = "";
-        $monnaieAff = $this->getMonnaie_Affichage();
-        if ($monnaieAff != null) {
-            $strMonnaie = " " . $this->getMonnaie_Affichage()->getCode();
-        }
-        return $strMonnaie;
-    }
-
-    // private function getMonnaie_Affichage()
-    // {
-    //     $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-    //     if ($this->monnaie_Affichage == null) {
-    //         $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-    //     }
-    //     return $this->monnaie_Affichage;
-    // }
-
-    private function getMonnaie($fonction)
-    {
-        $tabMonnaies = $this->getEntreprise()->getMonnaies();
-        foreach ($tabMonnaies as $monnaie) {
-            if ($monnaie->getFonction() == $fonction) {
-                return $monnaie;
-            }
-        }
-        return null;
-    }
 
     /**
      * Get the value of assistant
@@ -604,18 +581,6 @@ class Police
         }
 
         return $this;
-    }
-
-    /**
-     * Get the value of monnaie_Affichage
-     */ 
-    public function getMonnaie_Affichage()
-    {
-        $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if ($this->monnaie_Affichage == null) {
-            $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-        }
-        return $this->monnaie_Affichage;
     }
 
     /**

@@ -36,17 +36,18 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
     public function design()
     {
-        // dd(parent::getObjetInstance());
         //Questions - Prime
         $this->addChamp(
             (new JSChamp())
                 ->createBoolean("includePrime", "Inclure la prime d'assurance")
+                // ->setHelp("Vous pouvez modifier ce montant au besoin.")
                 ->setColumns(12)
                 ->getChamp()
         );
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("primeTotale", "Prime d'assurance")
+                ->setHelp("Vous pouvez modifier ce montant au besoin.")
                 ->setRequired(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())

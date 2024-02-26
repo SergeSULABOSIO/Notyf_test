@@ -3,19 +3,20 @@
 namespace App\Entity;
 
 use App\Entity\Facture;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ElementFactureRepository;
+use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 
 #[ORM\Entity(repositoryClass: ElementFactureRepository::class)]
-class ElementFacture
+class ElementFacture extends JSAbstractFinances
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures')]//, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'elementFactures')] //, cascade: ['persist', 'remove'])]
     private ?Tranche $tranche = null;
 
     #[ORM\Column(nullable: true)]
@@ -33,7 +34,7 @@ class ElementFacture
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade:['remove', 'persist', 'refresh'])]
+    #[ORM\ManyToOne(inversedBy: 'elementFactures', cascade: ['remove', 'persist', 'refresh'])]
     private ?Facture $facture = null;
 
     #[ORM\Column(nullable: true)]
@@ -60,7 +61,7 @@ class ElementFacture
     #[ORM\Column(nullable: true)]
     private ?bool $includeTaxeAssureur = null;
 
-    
+
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
     private ?float $commissionLocale = 0;
@@ -71,9 +72,7 @@ class ElementFacture
     private ?float $retroCommissionTotale = 0;
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
-    
 
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -139,9 +138,39 @@ class ElementFacture
         return $this;
     }
 
+    public function initEntreprise(): ?Entreprise
+    {
+        return $this->getEntreprise();
+    }
+
     public function __toString()
     {
-        return "Id: " . $this->getId() . " | Article: " . $this->getTranche() . " | Mnt: " . round(($this->getMontant()/100), 2). "";
+        $str = "";
+        $nom = $this->getTranche()->getNom();
+        $produit = $this->getTranche()->getPolice()->getProduit()->getCode();
+        $assureur = $this->getTranche()->getPolice()->getAssureur()->getNom();
+        $client = $this->getTranche()->getPolice()->getClient()->getNom();
+        $reference = $this->getTranche()->getPolice()->getReference();
+        if ($this->getFacture() != null) {
+            $destination = $this->getFacture()->getDestination();
+            if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
+                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeCourtierTotale());
+                $str = "Montant " . ucfirst($this->getNomTaxeCourtier()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ARCA;
+            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
+                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeAssureurTotale());
+                $str = "Montant " . ucfirst($this->getNomTaxeAssureur()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_DGI;
+            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
+                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getCommissionTotale());
+                $str = "Totale Commission dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ASSUREUR;
+            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
+                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getFraisGestionTotale() + $this->getPrimeTotale());
+                $str = "Totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_CLIENT;
+            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
+                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getRetroCommissionTotale());
+                $str = $this->getTranche()->getPolice()->getPartenaire() . " / Rétro-com. totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_PARTENAIRE;
+            }
+        }
+        return $nom . "@" . $reference . " / " . $produit . " / " . $client . " / " . $assureur . " / " . $str;
     }
 
     public function getFacture(): ?Facture
@@ -194,7 +223,7 @@ class ElementFacture
 
     /**
      * Get the value of primeTotale
-     */ 
+     */
     public function getPrimeTotale()
     {
         $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
@@ -203,21 +232,20 @@ class ElementFacture
 
     /**
      * Get the value of commissionTotale
-     */ 
+     */
     public function getCommissionTotale()
     {
-        $this->commissionTotale = 
-        $this->getTranche()->getComLocale() + 
-        $this->getTranche()->getComFronting() + 
-        $this->getTranche()->getComReassurance() +
-        $this->getTranche()->getComAutreChargement()
-        ;
+        $this->commissionTotale =
+            $this->getTranche()->getComLocale() +
+            $this->getTranche()->getComFronting() +
+            $this->getTranche()->getComReassurance() +
+            $this->getTranche()->getComAutreChargement();
         return $this->commissionTotale;
     }
 
     /**
      * Get the value of fraisGestionTotale
-     */ 
+     */
     public function getFraisGestionTotale()
     {
         $this->fraisGestionTotale = $this->getTranche()->getComFraisGestion();
@@ -226,7 +254,7 @@ class ElementFacture
 
     /**
      * Get the value of revenuTotal
-     */ 
+     */
     public function getRevenuTotal()
     {
         $this->revenuTotal = $this->getTranche()->getRevenuTotal();
@@ -235,7 +263,7 @@ class ElementFacture
 
     /**
      * Get the value of retroCommissionTotale
-     */ 
+     */
     public function getRetroCommissionTotale()
     {
         $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale();
@@ -244,7 +272,7 @@ class ElementFacture
 
     /**
      * Get the value of taxeCourtierTotale
-     */ 
+     */
     public function getTaxeCourtierTotale()
     {
         $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale();
@@ -253,7 +281,7 @@ class ElementFacture
 
     /**
      * Get the value of taxeAssureurTotale
-     */ 
+     */
     public function getTaxeAssureurTotale()
     {
         $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale();
@@ -274,7 +302,7 @@ class ElementFacture
 
     /**
      * Get the value of commissionLocale
-     */ 
+     */
     public function getCommissionLocale()
     {
         $this->commissionLocale = $this->getTranche()->getComLocale();
@@ -283,7 +311,7 @@ class ElementFacture
 
     /**
      * Get the value of commissionFronting
-     */ 
+     */
     public function getCommissionFronting()
     {
         $this->commissionFronting = $this->getTranche()->getComFronting();
@@ -292,7 +320,7 @@ class ElementFacture
 
     /**
      * Get the value of commissionReassurance
-     */ 
+     */
     public function getCommissionReassurance()
     {
         $this->commissionReassurance = $this->getTranche()->getComReassurance();
@@ -301,7 +329,7 @@ class ElementFacture
 
     /**
      * Get the value of includePrime
-     */ 
+     */
     public function getIncludePrime()
     {
         return $this->includePrime;
@@ -311,7 +339,7 @@ class ElementFacture
      * Set the value of includePrime
      *
      * @return  self
-     */ 
+     */
     public function setIncludePrime($includePrime)
     {
         $this->includePrime = $includePrime;
@@ -321,7 +349,7 @@ class ElementFacture
 
     /**
      * Get the value of includeComLocale
-     */ 
+     */
     public function getIncludeComLocale()
     {
         return $this->includeComLocale;
@@ -331,7 +359,7 @@ class ElementFacture
      * Set the value of includeComLocale
      *
      * @return  self
-     */ 
+     */
     public function setIncludeComLocale($includeComLocale)
     {
         $this->includeComLocale = $includeComLocale;
@@ -341,7 +369,7 @@ class ElementFacture
 
     /**
      * Get the value of includeComFronting
-     */ 
+     */
     public function getIncludeComFronting()
     {
         return $this->includeComFronting;
@@ -351,7 +379,7 @@ class ElementFacture
      * Set the value of includeComFronting
      *
      * @return  self
-     */ 
+     */
     public function setIncludeComFronting($includeComFronting)
     {
         $this->includeComFronting = $includeComFronting;
@@ -361,7 +389,7 @@ class ElementFacture
 
     /**
      * Get the value of includeComReassurance
-     */ 
+     */
     public function getIncludeComReassurance()
     {
         return $this->includeComReassurance;
@@ -371,7 +399,7 @@ class ElementFacture
      * Set the value of includeComReassurance
      *
      * @return  self
-     */ 
+     */
     public function setIncludeComReassurance($includeComReassurance)
     {
         $this->includeComReassurance = $includeComReassurance;
@@ -381,7 +409,7 @@ class ElementFacture
 
     /**
      * Get the value of includeFraisGestion
-     */ 
+     */
     public function getIncludeFraisGestion()
     {
         return $this->includeFraisGestion;
@@ -391,7 +419,7 @@ class ElementFacture
      * Set the value of includeFraisGestion
      *
      * @return  self
-     */ 
+     */
     public function setIncludeFraisGestion($includeFraisGestion)
     {
         $this->includeFraisGestion = $includeFraisGestion;
@@ -401,7 +429,7 @@ class ElementFacture
 
     /**
      * Get the value of includeRetroCom
-     */ 
+     */
     public function getIncludeRetroCom()
     {
         return $this->includeRetroCom;
@@ -411,7 +439,7 @@ class ElementFacture
      * Set the value of includeRetroCom
      *
      * @return  self
-     */ 
+     */
     public function setIncludeRetroCom($includeRetroCom)
     {
         $this->includeRetroCom = $includeRetroCom;
@@ -421,7 +449,7 @@ class ElementFacture
 
     /**
      * Get the value of includeTaxeCourtier
-     */ 
+     */
     public function getIncludeTaxeCourtier()
     {
         return $this->includeTaxeCourtier;
@@ -431,7 +459,7 @@ class ElementFacture
      * Set the value of includeTaxeCourtier
      *
      * @return  self
-     */ 
+     */
     public function setIncludeTaxeCourtier($includeTaxeCourtier)
     {
         $this->includeTaxeCourtier = $includeTaxeCourtier;
@@ -441,7 +469,7 @@ class ElementFacture
 
     /**
      * Get the value of includeTaxeAssureur
-     */ 
+     */
     public function getIncludeTaxeAssureur()
     {
         return $this->includeTaxeAssureur;
@@ -451,7 +479,7 @@ class ElementFacture
      * Set the value of includeTaxeAssureur
      *
      * @return  self
-     */ 
+     */
     public function setIncludeTaxeAssureur($includeTaxeAssureur)
     {
         $this->includeTaxeAssureur = $includeTaxeAssureur;

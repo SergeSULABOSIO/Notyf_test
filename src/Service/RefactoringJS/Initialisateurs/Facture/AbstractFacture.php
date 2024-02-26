@@ -144,7 +144,7 @@ abstract class AbstractFacture implements FactureInit
         $totDu = 0;
         $elementsFacture = [];
         /** @var Tranche */
-        // dd($this->tranches);
+        // dd("Suis ici....");
         foreach ($this->tranches as $tranche) {
             $elementFacture = new ElementFacture();
             $elementFacture->setFacture($this->facture);
@@ -164,6 +164,22 @@ abstract class AbstractFacture implements FactureInit
             $elementFacture->setTranche($tranche);
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
+            
+            if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
+                $elementFacture->setIncludeTaxeCourtier(true);
+            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+                $elementFacture->setIncludeComFronting(true);
+                $elementFacture->setIncludeComLocale(true);
+                $elementFacture->setIncludeComReassurance(true);
+            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]){
+                $elementFacture->setIncludePrime(true);
+                $elementFacture->setIncludeFraisGestion(true);
+            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
+                $elementFacture->setIncludeTaxeAssureur(true);
+            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]){
+                $elementFacture->setIncludeRetroCom(true);
+            }
+            
             $elementsFacture[] = $elementFacture;
 
         }

@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\PaiementRepository;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
-class Paiement
+class Paiement extends JSAbstractFinances
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -134,13 +135,18 @@ class Paiement
         return $this;
     }
 
+    public function initEntreprise(): ?Entreprise
+    {
+        return $this->getEntreprise();
+    }
+
     public function __toString()
     {
         $ref = "Null";
         if($this->facture != null){
             $ref = $this->facture->getReference();
         }
-        return "Paiement du " . $this->paidAt->format('d-m-Y') . " | Mont.: " . ($this->montant/100) . " | Réf. ND: " . $ref . " | Desc.: " . $this->description;
+        return "Paiement du " . $this->paidAt->format('d-m-Y') . " | Mont.: " . $this->getMontantEnMonnaieAffichage($this->montant) . " | Réf. ND: " . $ref . " | Desc.: " . $this->description;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

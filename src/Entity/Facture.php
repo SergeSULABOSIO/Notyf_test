@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\FactureCrudController;
-use App\Repository\FactureRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use NumberFormatter;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Nullable;
+use App\Repository\FactureRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\Admin\FactureCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
 class Facture
@@ -241,13 +241,6 @@ class Facture
         }
         return round($this->totalDu);
     }
-
-    // public function setTotalDu(?float $totalDu): self
-    // {
-    //     $this->totalDu = $totalDu;
-
-    //     return $this;
-    // }
 
     public function getTotalRecu(): ?float
     {

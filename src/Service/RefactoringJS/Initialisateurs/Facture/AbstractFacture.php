@@ -165,23 +165,22 @@ abstract class AbstractFacture implements FactureInit
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
             
-            if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
+            if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA){
                 $elementFacture->setIncludeTaxeCourtier(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ASSUREUR){
                 $elementFacture->setIncludeComFronting(true);
                 $elementFacture->setIncludeComLocale(true);
                 $elementFacture->setIncludeComReassurance(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]){
+            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_CLIENT){
                 $elementFacture->setIncludePrime(true);
                 $elementFacture->setIncludeFraisGestion(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
+            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI){
                 $elementFacture->setIncludeTaxeAssureur(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]){
+            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE){
                 $elementFacture->setIncludeRetroCom(true);
             }
-            
+            // dd("Destination:", $this->getDestinationFacture(), $elementFacture->getIncludeTaxeAssureur(), $elementFacture);
             $elementsFacture[] = $elementFacture;
-
         }
         // dd($elementsFacture);
         return $elementsFacture;

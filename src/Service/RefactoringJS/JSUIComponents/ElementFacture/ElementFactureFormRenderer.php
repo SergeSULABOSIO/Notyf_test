@@ -36,13 +36,38 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
     public function design()
     {
-        //Questions - Prime
         $this->addChamp(
-            (new JSChamp())
-                ->createBoolean("includePrime", "Inclure la prime d'assurance")
-                ->setColumns(12)
+            (new JSChamp()) //<i class="fa-solid fa-tag"></i>
+                ->createOnglet("Montant total")
+                ->setIcon("fa-solid fa-circle-dollar-to-slot")
                 ->getChamp()
         );
+        // //Montant
+        $this->addChamp(
+            (new JSChamp()) //<i class="fa-solid fa-circle-dollar-to-slot"></i>
+                ->createArgent("montant", "Montant total à payer")
+                ->setColumns(12)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, ElementFacture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
+        );
+
+
+        $this->addChamp(
+            (new JSChamp()) //<i class="fa-brands fa-stack-overflow"></i>
+                ->createOnglet("Détails sur le motant total")
+                ->setIcon("fa-brands fa-stack-overflow")
+                ->getChamp()
+        );
+        //Questions - Prime
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("primeTotale", "Prime d'assurance")
@@ -61,14 +86,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Com locale
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComLocale", "Inclure la commission locale")
+                ->createBoolean("includePrime", "Inclure la prime d'assurance")
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Com locale
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("commissionLocale", "Commission locale")
@@ -86,14 +111,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Com fronting
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComFronting", "Inclure la commission fronting / de céssion")
+                ->createBoolean("includeComLocale", "Inclure la commission locale")
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Com fronting
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("commissionFronting", "Commission sur fronting.")
@@ -111,17 +136,17 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        $this->addChamp(
+            (new JSChamp())
+                ->createBoolean("includeComFronting", "Inclure la commission fronting / de céssion")
+                ->setColumns(12)
+                ->getChamp()
+        );
 
         //Question Com réassurance
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComReassurance", "Inclure la commission de réassurance")
-                ->setColumns(12)
-                ->getChamp()
-        );
-        $this->addChamp(
-            (new JSChamp())
-                ->createArgent("commissionReassurance", "Commission de réa.")
+                ->createArgent("commissionReassurance", "Commission de réassurance")
                 ->setRequired(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
@@ -136,14 +161,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Frais de gestion
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeFraisGestion", "Inclure Frais de gestion")
+                ->createBoolean("includeComReassurance", "Inclure la commission de réassurance")
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Frais de gestion
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("fraisGestionTotale", "Frais de gestion")
@@ -161,14 +186,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeRetroCom", "Inclure la rétro-commission")
+                ->createBoolean("includeFraisGestion", "Inclure Frais de gestion")
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("retroCommissionTotale", "Rétro-commission")
@@ -186,14 +211,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeTaxeCourtier", "Inclure le Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
+                ->createBoolean("includeRetroCom", "Inclure la rétro-commission")
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("taxeCourtierTotale", "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
@@ -211,14 +236,14 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeTaxeAssureur", "Inclure la " . ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
+                ->createBoolean("includeTaxeCourtier", "Inclure le Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
                 ->setColumns(12)
                 ->getChamp()
         );
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("taxeAssureurTotale", ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
@@ -236,28 +261,28 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
-        // //Montant
         $this->addChamp(
             (new JSChamp())
-                ->createArgent("montant", "Montant à payer")
+                ->createBoolean("includeTaxeAssureur", "Inclure la " . ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
                 ->setColumns(12)
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setFormatValue(
-                    function ($value, ElementFacture $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getMontant())))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
+                ->getChamp()
+        );
+
+        // $this->addChamp(
+        //     (new JSChamp())
+        //         ->createSection("Total")
+        //         ->getChamp()
+        // );
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet("Lien avec la tranche concernée.")
+                ->setIcon("fa-solid fa-layer-group")
                 ->getChamp()
         );
 
         //Tranche
         $this->addChamp(
-            (new JSChamp())
+            (new JSChamp()) //fa-solid fa-layer-group
                 ->createAssociation("tranche", "Tranche")
                 ->setRequired(true)
                 ->setColumns(12)
@@ -293,149 +318,141 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             }
         }
         if (FactureCrudController::DESTINATION_DGI == $destination) {
-            // $this->addChampToRemove("includePrime");
-            // $this->addChampToRemove("includeComLocale");
-            // $this->addChampToRemove("includeComFronting");
-            // $this->addChampToRemove("includeComReassurance");
-            // $this->addChampToRemove("includeFraisGestion");
-            // $this->addChampToRemove("includeRetroCom");
-            // $this->addChampToRemove("includeTaxeCourtier");
+            $this->addChampToRemove("includePrime");
+            $this->addChampToRemove("primeTotale");
+
+            $this->addChampToRemove("includeComLocale");
+            $this->addChampToRemove("commissionLocale");
+
+            $this->addChampToRemove("includeComFronting");
+            $this->addChampToRemove("commissionFronting");
+
+            $this->addChampToRemove("includeComReassurance");
+            $this->addChampToRemove("commissionReassurance");
+
+            $this->addChampToRemove("includeFraisGestion");
+            $this->addChampToRemove("fraisGestionTotale");
+
+            $this->addChampToRemove("includeRetroCom");
+            $this->addChampToRemove("retroCommissionTotale");
+
+            $this->addChampToRemove("includeTaxeCourtier");
+            $this->addChampToRemove("taxeCourtierTotale");
+
             // $this->addChampToRemove("includeTaxeAssureur");
+            // $this->addChampToRemove("taxeAssureurTotale");
+
             $this->addChampToDeactivate("montant", 12);
-            $this->addChampToDeactivate("tranche", 12);
-        }else if (FactureCrudController::DESTINATION_ARCA == $destination) {
-            // $this->addChampToRemove("includePrime");
-            // $this->addChampToRemove("includeComLocale");
-            // $this->addChampToRemove("includeComFronting");
-            // $this->addChampToRemove("includeComReassurance");
-            // $this->addChampToRemove("includeFraisGestion");
-            // $this->addChampToRemove("includeRetroCom");
+            // $this->addChampToDeactivate("tranche", 12);
+        } else if (FactureCrudController::DESTINATION_ARCA == $destination) {
+            $this->addChampToRemove("includePrime");
+            $this->addChampToRemove("primeTotale");
+
+            $this->addChampToRemove("includeComLocale");
+            $this->addChampToRemove("commissionLocale");
+
+            $this->addChampToRemove("includeComFronting");
+            $this->addChampToRemove("commissionFronting");
+
+            $this->addChampToRemove("includeComReassurance");
+            $this->addChampToRemove("commissionReassurance");
+
+            $this->addChampToRemove("includeFraisGestion");
+            $this->addChampToRemove("fraisGestionTotale");
+
+            $this->addChampToRemove("includeRetroCom");
+            $this->addChampToRemove("retroCommissionTotale");
+
             // $this->addChampToRemove("includeTaxeCourtier");
-            // $this->addChampToRemove("includeTaxeAssureur");
-            $this->addChampToDeactivate("tranche", 12);
+            // $this->addChampToRemove("taxeCourtierTotale");
+
+            $this->addChampToRemove("includeTaxeAssureur");
+            $this->addChampToRemove("taxeAssureurTotale");
+
+            $this->addChampToDeactivate("montant", 12);
+            // $this->addChampToDeactivate("tranche", 12);
         } else if (FactureCrudController::DESTINATION_ASSUREUR == $destination) {
-            // $this->addChampToDeactivate("destination", 4);
-            // $this->addChampToDeactivate("assureur", 4);
-            // $this->addChampToDeactivate("reference", 4);
-            // $this->addChampToDeactivate("compteBancaires", 4);
-            // $this->addChampToRemove("type");
-            // $this->addChampToRemove("autreTiers");
-            // $this->addChampToRemove("partenaire");
+            $this->addChampToRemove("includePrime");
+            $this->addChampToRemove("primeTotale");
+
+            // $this->addChampToRemove("includeComLocale");
+            // $this->addChampToRemove("commissionLocale");
+
+            // $this->addChampToRemove("includeComFronting");
+            // $this->addChampToRemove("commissionFronting");
+
+            // $this->addChampToRemove("includeComReassurance");
+            // $this->addChampToRemove("commissionReassurance");
+
+            $this->addChampToRemove("includeFraisGestion");
+            $this->addChampToRemove("fraisGestionTotale");
+
+            $this->addChampToRemove("includeRetroCom");
+            $this->addChampToRemove("retroCommissionTotale");
+
+            $this->addChampToRemove("includeTaxeCourtier");
+            $this->addChampToRemove("taxeCourtierTotale");
+
+            $this->addChampToRemove("includeTaxeAssureur");
+            $this->addChampToRemove("taxeAssureurTotale");
+
+            $this->addChampToDeactivate("montant", 12);
+            // $this->addChampToDeactivate("tranche", 12);
         } else if (FactureCrudController::DESTINATION_CLIENT == $destination) {
-            // $this->addChampToDeactivate("destination", 4);
-            // $this->addChampToDeactivate("autreTiers", 4);
-            // $this->addChampToDeactivate("reference", 4);
-            // $this->addChampToDeactivate("compteBancaires", 4);
-            // $this->addChampToRemove("type");
-            // $this->addChampToRemove("partenaire");
-            // $this->addChampToRemove("assureur");
+            // $this->addChampToRemove("includePrime");
+            // $this->addChampToRemove("primeTotale");
+
+            $this->addChampToRemove("includeComLocale");
+            $this->addChampToRemove("commissionLocale");
+
+            $this->addChampToRemove("includeComFronting");
+            $this->addChampToRemove("commissionFronting");
+
+            $this->addChampToRemove("includeComReassurance");
+            $this->addChampToRemove("commissionReassurance");
+
+            // $this->addChampToRemove("includeFraisGestion");
+            // $this->addChampToRemove("fraisGestionTotale");
+
+            $this->addChampToRemove("includeRetroCom");
+            $this->addChampToRemove("retroCommissionTotale");
+
+            $this->addChampToRemove("includeTaxeCourtier");
+            $this->addChampToRemove("taxeCourtierTotale");
+
+            $this->addChampToRemove("includeTaxeAssureur");
+            $this->addChampToRemove("taxeAssureurTotale");
+
+            $this->addChampToDeactivate("montant", 12);
+            // $this->addChampToDeactivate("tranche", 12);
         } else if (FactureCrudController::DESTINATION_PARTENAIRE == $destination) {
-            // $this->addChampToDeactivate("destination", 4);
-            // $this->addChampToDeactivate("partenaire", 4);
-            // $this->addChampToDeactivate("reference", 4);
-            // $this->addChampToRemove("compteBancaires");
-            // $this->addChampToRemove("type");
-            // $this->addChampToRemove("assureur");
-            // $this->addChampToRemove("autreTiers");
+            $this->addChampToRemove("includePrime");
+            $this->addChampToRemove("primeTotale");
+
+            $this->addChampToRemove("includeComLocale");
+            $this->addChampToRemove("commissionLocale");
+
+            $this->addChampToRemove("includeComFronting");
+            $this->addChampToRemove("commissionFronting");
+
+            $this->addChampToRemove("includeComReassurance");
+            $this->addChampToRemove("commissionReassurance");
+
+            $this->addChampToRemove("includeFraisGestion");
+            $this->addChampToRemove("fraisGestionTotale");
+
+            // $this->addChampToRemove("includeRetroCom");
+            // $this->addChampToRemove("retroCommissionTotale");
+
+            $this->addChampToRemove("includeTaxeCourtier");
+            $this->addChampToRemove("taxeCourtierTotale");
+
+            $this->addChampToRemove("includeTaxeAssureur");
+            $this->addChampToRemove("taxeAssureurTotale");
+
+            $this->addChampToDeactivate("montant", 12);
+            // $this->addChampToDeactivate("tranche", 12);
         }
-        // dd("Ici", $type);
-        // if (FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToDeactivate("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // } else if (FactureCrudController::TYPE_FACTURE_PRIME == $type) {
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        //     $this->addChampToDeactivate("primeTotale");
-        // } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToDeactivate("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToDeactivate("commissionReassurance");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // } else if (FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        //     $this->addChampToDeactivate("commissionFronting");
-        // } else if (FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToDeactivate("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToRemove("taxeAssureurTotale");
-        //     $this->addChampToDeactivate("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // } else if (FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA == $type) {
-        //     $this->addChampToRemove("primeTotale");
-        //     $this->addChampToRemove("fraisGestionTotale");
-        //     $this->addChampToRemove("commissionFronting");
-        //     $this->addChampToRemove("commissionLocale");
-        //     $this->addChampToRemove("commissionReassurance");
-        //     $this->addChampToRemove("retroCommissionTotale");
-        //     $this->addChampToRemove("commissionTotale");
-        //     $this->addChampToRemove("revenuTotal");
-        //     $this->addChampToDeactivate("taxeAssureurTotale");
-        //     $this->addChampToRemove("taxeCourtierTotale");
-        //     $this->addChampToRemove("tranche");
-        // }
         return $champs;
     }
 }

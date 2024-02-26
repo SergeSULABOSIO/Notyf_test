@@ -45,21 +45,21 @@ class ElementFacture extends JSAbstractFinances
 
     //Variables pour des questions des case à cocher
     #[ORM\Column(nullable: true)]
-    private ?bool $includePrime = null;
+    private ?bool $includePrime = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeComLocale = null;
+    private ?bool $includeComLocale = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeComFronting = null;
+    private ?bool $includeComFronting = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeComReassurance = null;
+    private ?bool $includeComReassurance = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeFraisGestion = null;
+    private ?bool $includeFraisGestion = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeRetroCom = null;
+    private ?bool $includeRetroCom = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeTaxeCourtier = null;
+    private ?bool $includeTaxeCourtier = false;
     #[ORM\Column(nullable: true)]
-    private ?bool $includeTaxeAssureur = null;
+    private ?bool $includeTaxeAssureur = false;
 
 
     private ?float $primeTotale = 0;

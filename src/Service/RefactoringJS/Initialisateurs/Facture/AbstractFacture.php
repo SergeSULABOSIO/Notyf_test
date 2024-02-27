@@ -158,7 +158,7 @@ abstract class AbstractFacture implements FactureInit
              * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
              */
             $totDu = $this->getTotalDu($tranche);
-            $totInvoiced = $tranche->getTotalInvoiced($this->facture->getType());
+            $totInvoiced = $tranche->getTotalInvoiced($this->facture->getDestination());
             $elementFacture->setMontant($totDu - $totInvoiced);
 
             $elementFacture->setTranche($tranche);
@@ -250,7 +250,7 @@ abstract class AbstractFacture implements FactureInit
             $cumulMontantAncienneFactures = 0;
             /** @var Facture */
             foreach ($anciennesFactures as $ancienneFacture) {
-                if ($ancienneFacture->getType() == $nouvelleFacture->getType()) {
+                if ($ancienneFacture->getDestination() == $nouvelleFacture->getDestination()) {
                     $cumulMontantAncienneFactures = $cumulMontantAncienneFactures + $ancienneFacture->getMontantTTC();
                     // $sameMontantTempo = $ancienneFacture->getMontantTTC() == $nouvelleFacture->getMontantTTC();
                     $sameClientTempo = $ancienneFacture->getAutreTiers() == $nouvelleFacture->getAutreTiers();

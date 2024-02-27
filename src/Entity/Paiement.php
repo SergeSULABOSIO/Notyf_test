@@ -49,9 +49,11 @@ class Paiement extends JSAbstractFinances
     #[ORM\Column]
     private ?int $type = null;
 
-    // #[ORM\Column]
+    // #[ORM\Column(nullable: true)]
+    // private ?int $typeFacture = null;
+
     #[ORM\Column(nullable: true)]
-    private ?int $typeFacture = null;
+    private ?int $destinationFacture = null;
 
     public function __construct()
     {
@@ -227,14 +229,22 @@ class Paiement extends JSAbstractFinances
         return $this;
     }
 
-    public function getTypeFacture(): ?int
+    /**
+     * Get the value of destinationFacture
+     */ 
+    public function getDestinationFacture()
     {
-        return $this->typeFacture;
+        return $this->destinationFacture;
     }
 
-    public function setTypeFacture(int $typeFacture): self
+    /**
+     * Set the value of destinationFacture
+     *
+     * @return  self
+     */ 
+    public function setDestinationFacture($destinationFacture)
     {
-        $this->typeFacture = $typeFacture;
+        $this->destinationFacture = $destinationFacture;
 
         return $this;
     }

@@ -99,7 +99,7 @@ class Facture
         $this->totalRecu = 0;
         /** @var Paiement */
         foreach ($this->paiements as $paiement) {
-            if ($this->getType() == $paiement->getTypeFacture()) {
+            if ($this->getDestination() == $paiement->getDestinationFacture()) {
                 $tabPaiements[] = $paiement;
                 $this->totalRecu = $this->totalRecu + round($paiement->getMontant(), 0);
             }

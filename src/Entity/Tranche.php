@@ -118,13 +118,13 @@ class Tranche extends JSAbstractFinances
         $this->elementFactures = new ArrayCollection();
     }
 
-    public function getTotalInvoiced(?int $typeFacture): ?float
+    public function getTotalInvoiced(?int $destinationFacture): ?float
     {
         $montantInvoiced = 0;
         /** @var ElementFacture */
         foreach ($this->getElementFactures() as $ef) {
             if ($ef->getFacture() != null) {
-                if ($typeFacture == $ef->getFacture()->getType()) {
+                if ($destinationFacture == $ef->getFacture()->getDestination()) {
                     $montantInvoiced = $montantInvoiced + $ef->getMontant();
                 }
             }
@@ -132,13 +132,13 @@ class Tranche extends JSAbstractFinances
         return round($montantInvoiced);
     }
 
-    public function getTotalPaid(?int $typeFacture): ?float
+    public function getTotalPaid(?int $destinationFacture): ?float
     {
         $montantPaid = 0;
         /** @var ElementFacture */
         foreach ($this->getElementFactures() as $ef) {
             if ($ef->getFacture() != null) {
-                if ($typeFacture == $ef->getFacture()->getType()) {
+                if ($destinationFacture == $ef->getFacture()->getDestination()) {
                     /** @var Paiement */
                     foreach ($ef->getFacture()->getPaiements() as $paiement) {
                         $montantPaid = $montantPaid + $paiement->getMontant();
@@ -734,12 +734,12 @@ class Tranche extends JSAbstractFinances
         return round($this->revenuTotal);
     }
 
-    public function getFacturesEmises(?int $typeFacture): ?ArrayCollection
+    public function getFacturesEmises(?int $destinationFacture): ?ArrayCollection
     {
         $invoices = new ArrayCollection();
         foreach ($this->getElementFactures() as $ef) {
             if ($ef->getFacture() != null) {
-                if ($ef->getFacture()->getType() == $typeFacture) {
+                if ($ef->getFacture()->getDestination() == $destinationFacture) {
                     if (!$invoices->contains($ef->getFacture())) {
                         $invoices->add($ef->getFacture());
                     }
@@ -749,12 +749,12 @@ class Tranche extends JSAbstractFinances
         return $invoices;
     }
 
-    public function getPaiementsRecus(?int $typeFacture): ?ArrayCollection
+    public function getPaiementsRecus(?int $destinationFacture): ?ArrayCollection
     {
         $payments = new ArrayCollection();
         foreach ($this->getElementFactures() as $ef) {
             if ($ef->getFacture() != null) {
-                if ($ef->getFacture()->getType() == $typeFacture) {
+                if ($ef->getFacture()->getDestination() == $destinationFacture) {
                     foreach ($ef->getFacture()->getPaiements() as $paiement) {
                         if (!$payments->contains($paiement)) {
                             $payments->add($paiement);

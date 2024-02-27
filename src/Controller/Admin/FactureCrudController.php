@@ -394,27 +394,24 @@ class FactureCrudController extends AbstractCrudController
 
     private function getPour(?Facture $facture)
     {
-        switch ($this->serviceFacture->getType($facture->getType())) {
-            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+        switch ($this->serviceFacture->getDestination($facture->getDestination())) {
+            case FactureCrudController::DESTINATION_ASSUREUR:
                 /** @var Assureur */
                 $assureur = $facture->getAssureur();
                 return "<span class = 'texte-gras'>" . $assureur->getNom() . ",</span></br>" . $assureur->getTelephone() . ", " . $assureur->getAdresse();
                 break;
-            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+            case FactureCrudController::DESTINATION_CLIENT:
                 return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
-            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
-                break;
-            case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+            case FactureCrudController::DESTINATION_PARTENAIRE:
                 /** @var Partenaire */
                 $partenaire = $facture->getPartenaire();
                 return "<span class = 'texte-gras'>" . $partenaire->getNom() . ",</span></br>" . $partenaire->getEmail() . ", " . $partenaire->getAdresse();
                 break;
-            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+            case FactureCrudController::DESTINATION_ARCA:
                 return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
-            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+            case FactureCrudController::DESTINATION_DGI:
                 return "<span class = 'texte-gras'>" . $facture->getAutreTiers() . "</span>";
                 break;
             default:

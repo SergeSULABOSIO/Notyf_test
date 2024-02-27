@@ -29,7 +29,7 @@ class FactureArcaInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComFronting();
+        return $tranche->getTaxeCourtierTotale();
     }
     public function getPosteSignedBy(): ?string
     {

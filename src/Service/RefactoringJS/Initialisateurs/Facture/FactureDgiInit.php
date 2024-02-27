@@ -29,7 +29,9 @@ class FactureDgiInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComFronting();
+        return (
+            $tranche->getTaxeAssureurTotale()
+        );
     }
     public function getPosteSignedBy(): ?string
     {

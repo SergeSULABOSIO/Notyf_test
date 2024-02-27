@@ -29,7 +29,10 @@ class FactureClientInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComFronting();
+        return (
+            $tranche->getPrimeTotaleTranche() +
+            $tranche->getComFraisGestion()
+        );
     }
     public function getPosteSignedBy(): ?string
     {

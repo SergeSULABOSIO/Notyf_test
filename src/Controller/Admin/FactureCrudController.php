@@ -381,7 +381,7 @@ class FactureCrudController extends AbstractCrudController
         $data = [
             'imageSrc'      => $this->serviceFacture->imageToBase64($lienImage),
             'facture'       => $facture,
-            'nature'        => $this->serviceFacture->getType($facture->getType()),
+            'nature'        => $this->serviceFacture->getDestination($facture->getDestination()),
             'pour'          => $this->getPour($facture),
             'monnaie'       => $this->serviceMonnaie->getMonnaie_Affichage(),
             'taxe_courtier' => $this->serviceTaxes->getTaxe(true),

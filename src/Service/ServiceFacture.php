@@ -322,10 +322,20 @@ class ServiceFacture
         return $isSameData;
     }
 
-    public function getType(int $typeFacture)
+    // public function getType(int $typeFacture)
+    // {
+    //     foreach (FactureCrudController::TAB_TYPE_FACTURE as $key => $value) {
+    //         if ($typeFacture === $value) {
+    //             return $key;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    public function getDestination(int $destinationFacture)
     {
-        foreach (FactureCrudController::TAB_TYPE_FACTURE as $key => $value) {
-            if ($typeFacture === $value) {
+        foreach (FactureCrudController::TAB_DESTINATION as $key => $value) {
+            if ($destinationFacture === $value) {
                 return $key;
             }
         }

@@ -32,8 +32,8 @@ class Facture
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column]
-    private ?int $type = null;
+    // #[ORM\Column]
+    // private ?int $type = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $destination = null;
@@ -171,17 +171,17 @@ class Facture
         return $this;
     }
 
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
+    // public function getType(): ?int
+    // {
+    //     return $this->type;
+    // }
 
-    public function setType(int $type): self
-    {
-        $this->type = $type;
+    // public function setType(int $type): self
+    // {
+    //     $this->type = $type;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getPartenaire(): ?Partenaire
     {
@@ -258,20 +258,20 @@ class Facture
     public function __toString()
     {
         $tiers = " à nous.";
-        switch ($this->type) {
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
+        switch ($this->destination) {
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
                 $tiers = ", dû à " . $this->assureur . " par " . $this->autreTiers;
                 break;
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING] || FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE] || FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]:
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]:
                 $tiers = ", dû par " . $this->assureur;
                 break;
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]:
                 $tiers =  " dû à " . $this->partenaire;
                 break;
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]:
                 $tiers = " venant de l'Autorité de régulation";
                 break;
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]:
                 $tiers = " venant de l'Autorité fiscale";
                 break;
             default:

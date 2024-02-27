@@ -29,7 +29,11 @@ class FactureAssureurInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComFronting();
+        return (
+            $tranche->getComReassurance() +
+            $tranche->getComLocale() +
+            $tranche->getComFronting()
+        );
     }
     public function getPosteSignedBy(): ?string
     {

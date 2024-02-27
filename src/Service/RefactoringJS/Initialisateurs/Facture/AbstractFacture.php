@@ -157,10 +157,10 @@ abstract class AbstractFacture implements FactureInit
              * Pas le montant total dû.
              * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
              */
-            $totDu = $totDu + $this->getTotalDu($tranche);
-            // $totInvoiced = $this->tranche->getTotalInvoiced(FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]);
+            $totDu = $this->getTotalDu($tranche);
             $totInvoiced = $tranche->getTotalInvoiced($this->facture->getType());
             $elementFacture->setMontant($totDu - $totInvoiced);
+
             $elementFacture->setTranche($tranche);
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
@@ -179,6 +179,8 @@ abstract class AbstractFacture implements FactureInit
             }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE){
                 $elementFacture->setIncludeRetroCom(true);
             }
+
+
             // dd("Destination:", $this->getDestinationFacture(), $elementFacture->getIncludeTaxeAssureur(), $elementFacture);
             $elementsFacture[] = $elementFacture;
         }

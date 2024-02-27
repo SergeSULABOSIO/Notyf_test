@@ -38,7 +38,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
     {
         $this->addChamp(
             (new JSChamp()) //<i class="fa-solid fa-tag"></i>
-                ->createOnglet("Montant total")
+                ->createSection("Montant total")
                 ->setIcon("fa-solid fa-circle-dollar-to-slot")
                 ->getChamp()
         );
@@ -63,7 +63,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
         $this->addChamp(
             (new JSChamp()) //<i class="fa-brands fa-stack-overflow"></i>
-                ->createOnglet("Détails sur le motant total")
+                ->createSection("Détails sur le motant total")
                 ->setIcon("fa-brands fa-stack-overflow")
                 ->getChamp()
         );
@@ -275,7 +275,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
         // );
         $this->addChamp(
             (new JSChamp())
-                ->createOnglet("Lien avec la tranche concernée.")
+                ->createSection("Connexion à la tranche concernée.")
                 ->setIcon("fa-solid fa-layer-group")
                 ->getChamp()
         );

@@ -42,7 +42,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 ->setIcon("fa-solid fa-circle-dollar-to-slot")
                 ->getChamp()
         );
-        // //Montant
+        //Montant
         $this->addChamp(
             (new JSChamp()) //<i class="fa-solid fa-circle-dollar-to-slot"></i>
                 ->createArgent("montant", "Montant total à payer")
@@ -268,18 +268,13 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createSection("Total")
-        //         ->getChamp()
-        // );
+        //Dernière section
         $this->addChamp(
             (new JSChamp())
                 ->createSection("Connexion à la tranche concernée.")
                 ->setIcon("fa-solid fa-layer-group")
                 ->getChamp()
         );
-
         //Tranche
         $this->addChamp(
             (new JSChamp()) //fa-solid fa-layer-group

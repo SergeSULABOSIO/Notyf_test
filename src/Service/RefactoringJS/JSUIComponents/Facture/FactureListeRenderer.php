@@ -75,42 +75,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampTexte(
-        //     null,
-        //     "reference",
-        //     "Référence",
-        //     false,
-        //     false,
-        //     10,
-        //     function ($value, Facture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
 
-        //Type
-        $this->addChamp(
-            (new JSChamp())
-                ->createChoix("type", "Type de facture")
-                ->setRequired(false)
-                ->setDisabled(false)
-                ->setColumns(10)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-                ->getChamp()
-        );
-        // $this->addChampChoix(
-        //     null,
-        //     "type",
-        //     "Type de facture",
-        //     false,
-        //     false,
-        //     10,
-        //     FactureCrudController::TAB_TYPE_FACTURE,
-        //     null
-        // );
 
         //Elements facture
         $this->addChamp(
@@ -126,18 +91,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampAssociation(
-        //     null,
-        //     "elementFactures",
-        //     "Eléments facturés",
-        //     false,
-        //     false,
-        //     10,
-        //     null,
-        //     function ($value, Facture $entity) {
-        //         return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
-        //     }
-        // );
+        
 
         //Description
         $this->addChamp(
@@ -157,15 +111,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampTexte(
-        //     null,
-        //     "description",
-        //     "Description",
-        //     false,
-        //     false,
-        //     10,
-        //     null
-        // );
+        
         //Total Du
         $this->addChamp(
             (new JSChamp())
@@ -185,22 +131,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampArgent(
-        //     null,
-        //     "totalDu",
-        //     "Total Dû",
-        //     false,
-        //     false,
-        //     10,
-        //     $this->serviceMonnaie->getCodeAffichage(),
-        //     function ($value, Facture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalDu())))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Total Recu
         $this->addChamp(
             (new JSChamp())
@@ -220,22 +151,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampArgent(
-        //     null,
-        //     "totalRecu",
-        //     "Total Reçu",
-        //     false,
-        //     false,
-        //     10,
-        //     $this->serviceMonnaie->getCodeAffichage(),
-        //     function ($value, Facture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalRecu())))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Total Solde
         $this->addChamp(
             (new JSChamp())
@@ -255,22 +171,7 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampArgent(
-        //     null,
-        //     "totalSolde",
-        //     "Total Solde",
-        //     false,
-        //     false,
-        //     10,
-        //     $this->serviceMonnaie->getCodeAffichage(),
-        //     function ($value, Facture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalSolde())))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
+        
         //Dernière modification
         $this->addChamp(
             (new JSChamp())
@@ -289,21 +190,6 @@ class FactureListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        // $this->addChampDate(
-        //     null,
-        //     "updatedAt",
-        //     "D. Modification",
-        //     false,
-        //     false,
-        //     10,
-        //     function ($value, Facture $objet) {
-        //         /** @var JSCssHtmlDecoration */
-        //         $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //             ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //             ->outputHtml();
-        //         return $formatedHtml;
-        //     }
-        // );
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

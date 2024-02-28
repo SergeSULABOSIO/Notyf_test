@@ -81,17 +81,11 @@ class ElementFacture extends JSAbstractFinances
     public function getMontantInvoicedPerTypeNote(?int $typeNote): ?float
     {
         if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
-            if ($this->getIncludeComFronting() == true) {
-                return $this->getCommissionFronting();
-            }
+            return ($this->getIncludeComFronting() == true) ? $this->getCommissionFronting() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
-            if ($this->getIncludeComLocale() == true) {
-                return $this->getCommissionLocale();
-            }
+            return ($this->getIncludeComLocale() == true) ? $this->getCommissionLocale() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
-            if ($this->getIncludeComReassurance() == true) {
-                return $this->getCommissionReassurance();
-            }
+            return ($this->getIncludeComReassurance() == true) ? $this->getCommissionReassurance() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
             return ($this->getIncludeFraisGestion() == true) ? $this->getFraisGestionTotale() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {

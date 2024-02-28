@@ -47,13 +47,10 @@ class Paiement extends JSAbstractFinances
     private Collection $documents;
 
     #[ORM\Column]
-    private ?int $type = null;
+    private ?int $destination = null;
 
     // #[ORM\Column(nullable: true)]
     // private ?int $typeFacture = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $destinationFacture = null;
 
     public function __construct()
     {
@@ -217,34 +214,22 @@ class Paiement extends JSAbstractFinances
         return $this;
     }
 
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     /**
-     * Get the value of destinationFacture
+     * Get the value of destination
      */ 
-    public function getDestinationFacture()
+    public function getDestination()
     {
-        return $this->destinationFacture;
+        return $this->destination;
     }
 
     /**
-     * Set the value of destinationFacture
+     * Set the value of destination
      *
      * @return  self
      */ 
-    public function setDestinationFacture($destinationFacture)
+    public function setDestination($destination)
     {
-        $this->destinationFacture = $destinationFacture;
+        $this->destination = $destination;
 
         return $this;
     }

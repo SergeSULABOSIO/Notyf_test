@@ -225,8 +225,9 @@ class PaiementCrudController extends AbstractCrudController
         if ($paramIDFacture != null) {
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
         }
-        switch ($objetFacture->getType()) {
-            case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]:
+        /** @var Facture*/
+        switch ($objetFacture->getDestination()) {
+            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
                 $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
                 break;
             case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:

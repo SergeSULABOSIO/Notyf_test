@@ -287,6 +287,16 @@ class TrancheCrudController extends AbstractCrudController
             })
             ->linkToCrudAction('creerNotePourClient');
 
+        $creerNotePourPartenaire = Action::new("Note pour Partenaire")
+            ->setIcon('fas fa-handshake')
+            ->displayIf(static function (Tranche $tranche) {
+                // dd($tranche->getPremiumInvoiceDetails());
+                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+                return true;
+            })
+            ->linkToCrudAction('creerNotePourPartenaire');
+
+
         $creerNotePourAssureur = Action::new("Note pour Assureur")
             ->setIcon('fas fa-umbrella')
             ->displayIf(static function (Tranche $tranche) {
@@ -315,91 +325,91 @@ class TrancheCrudController extends AbstractCrudController
             ->linkToCrudAction('creerNotePourARCA');
 
 
-        $facturePrime = Action::new("Facturer Prime")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
+        // $facturePrime = Action::new("Facturer Prime")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getPremiumInvoiceDetails());
+        //         return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerPrime'); //<i class="fa-solid fa-eye"></i>
 
-        $factureCommissionLocale = Action::new("Facturer Com. locale")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getComLocaleInvoiceDetails());
-                return $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
+        // $factureCommissionLocale = Action::new("Facturer Com. locale")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getComLocaleInvoiceDetails());
+        //         return $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerCommissionLocale'); //<i class="fa-solid fa-eye"></i>
 
-        $factureMultiCommissions = Action::new("Produire les notes")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                $okFPrime = $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                $okComLocal = $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                $okComFronting = $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                $okComFraisGest = $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                $okTaxeCourtier = $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                $okTaxeAssureur = $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        // $factureMultiCommissions = Action::new("Produire les notes")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         $okFPrime = $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //         $okComLocal = $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //         $okComFronting = $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //         $okComFraisGest = $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //         $okTaxeCourtier = $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //         $okTaxeAssureur = $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
 
-                // dd(
-                //     $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
-                //     $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
-                //     $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
-                //     $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
-                //     $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
-                //     $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE]
-                // );
+        //         // dd(
+        //         //     $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+        //         //     $tranche->getComLocaleInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+        //         //     $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+        //         //     $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+        //         //     $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE],
+        //         //     $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE]
+        //         // );
 
-                return $okFPrime || $okComLocal || $okComFronting || $okComFraisGest || $okTaxeCourtier || $okTaxeAssureur;
-            })
-            ->linkToCrudAction('facturerMultiCommissions');
+        //         return $okFPrime || $okComLocal || $okComFronting || $okComFraisGest || $okTaxeCourtier || $okTaxeAssureur;
+        //     })
+        //     ->linkToCrudAction('facturerMultiCommissions');
 
-        $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getComReassuranceInvoiceDetails());
-                return $tranche->getComReassuranceInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerCommissionReassurance');
+        // $factureCommissionReassurance = Action::new("Facturer Com. de réa.")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getComReassuranceInvoiceDetails());
+        //         return $tranche->getComReassuranceInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerCommissionReassurance');
 
-        $factureCommissionFronting = Action::new("Facturer Com. fronting.")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getComFrontingInvoiceDetails());
-                return $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerCommissionFronting');
+        // $factureCommissionFronting = Action::new("Facturer Com. fronting.")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getComFrontingInvoiceDetails());
+        //         return $tranche->getComFrontingInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerCommissionFronting');
 
-        $factureFraisGestion = Action::new("Facturer Frais de Gestion")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                return $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
+        // $factureFraisGestion = Action::new("Facturer Frais de Gestion")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         return $tranche->getFraisGestionInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerFraisGestion'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeCourtier = Action::new("Note de crédit - Taxe Courtier")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getTaxCourtierInvoiceDetails());
-                return $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
+        // $factureTaxeCourtier = Action::new("Note de crédit - Taxe Courtier")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getTaxCourtierInvoiceDetails());
+        //         return $tranche->getTaxCourtierInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerTaxeCourtier'); //<i class="fa-solid fa-eye"></i>
 
-        $factureTaxeAssureur = Action::new("Note de crédit - Taxe Assureur")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getTaxAssureurInvoiceDetails());
-                return $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerTaxeAssureur');
+        // $factureTaxeAssureur = Action::new("Note de crédit - Taxe Assureur")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getTaxAssureurInvoiceDetails());
+        //         return $tranche->getTaxAssureurInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerTaxeAssureur');
 
-        $factureRetroCom = Action::new("Note de crédit - Rétro-com")
-            ->setIcon('fa-solid fa-receipt')
-            ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getRetrocomInvoiceDetails());
-                return $tranche->getRetrocomInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-            })
-            ->linkToCrudAction('facturerRetroCommission');
+        // $factureRetroCom = Action::new("Note de crédit - Rétro-com")
+        //     ->setIcon('fa-solid fa-receipt')
+        //     ->displayIf(static function (Tranche $tranche) {
+        //         // dd($tranche->getRetrocomInvoiceDetails());
+        //         return $tranche->getRetrocomInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
+        //     })
+        //     ->linkToCrudAction('facturerRetroCommission');
 
         $batch_exporter_ms_excels = Action::new("exporter_ms_excels", DashboardController::ACTION_EXPORTER_EXCELS)
             ->linkToCrudAction('exporterMSExcels')
@@ -477,21 +487,22 @@ class TrancheCrudController extends AbstractCrudController
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
 
-            ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
-            ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
-            ->add(Crud::PAGE_INDEX, $factureRetroCom)
-            ->add(Crud::PAGE_INDEX, $factureCommissionLocale)
-            ->add(Crud::PAGE_INDEX, $factureCommissionReassurance)
-            ->add(Crud::PAGE_INDEX, $factureCommissionFronting)
-            ->add(Crud::PAGE_INDEX, $factureFraisGestion)
-            ->add(Crud::PAGE_INDEX, $facturePrime)
+            // ->add(Crud::PAGE_INDEX, $factureTaxeAssureur)
+            // ->add(Crud::PAGE_INDEX, $factureTaxeCourtier)
+            // ->add(Crud::PAGE_INDEX, $factureRetroCom)
+            // ->add(Crud::PAGE_INDEX, $factureCommissionLocale)
+            // ->add(Crud::PAGE_INDEX, $factureCommissionReassurance)
+            // ->add(Crud::PAGE_INDEX, $factureCommissionFronting)
+            // ->add(Crud::PAGE_INDEX, $factureFraisGestion)
+            // ->add(Crud::PAGE_INDEX, $facturePrime)
 
             ->add(Crud::PAGE_INDEX, $creerNotePourARCA)
             ->add(Crud::PAGE_INDEX, $creerNotePourDGI)
+            ->add(Crud::PAGE_INDEX, $creerNotePourPartenaire)
             ->add(Crud::PAGE_INDEX, $creerNotePourClient)
             ->add(Crud::PAGE_INDEX, $creerNotePourAssureur)
 
-            ->add(Crud::PAGE_INDEX, $factureMultiCommissions)
+            // ->add(Crud::PAGE_INDEX, $factureMultiCommissions)
 
             //Action ouvrir
             ->add(Crud::PAGE_EDIT, $ouvrir)

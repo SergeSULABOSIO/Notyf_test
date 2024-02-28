@@ -158,7 +158,7 @@ abstract class AbstractFacture implements FactureInit
              * D'oû il faut savoir combien avons-nous déjà facturé au client/tiers.
              */
             $totDu = $this->getTotalDu($tranche);
-            $totInvoiced = $tranche->getTotalInvoiced($this->facture->getDestination());
+            $totInvoiced = $tranche->getTotalInvoiced_destination($this->facture->getDestination());
             $elementFacture->setMontant($totDu - $totInvoiced);
 
             $elementFacture->setTranche($tranche);

@@ -78,6 +78,30 @@ class ElementFacture extends JSAbstractFinances
         return $this->id;
     }
 
+    public function getMontantInvoicedPerTypeNote(?int $typeNote): ?float
+    {
+        if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
+            if ($this->getIncludeComFronting() == true) {
+                return $this->getCommissionFronting();
+            }
+        } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
+            if ($this->getIncludeComLocale() == true) {
+                return $this->getCommissionLocale();
+            }
+        } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
+            if ($this->getIncludeComReassurance() == true) {
+                return $this->getCommissionReassurance();
+            }
+        } else if ($typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
+            return ($this->getIncludeFraisGestion() == true) ? $this->getFraisGestionTotale() : 0;
+        } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
+            return ($this->getIncludeTaxeCourtier() == true) ? $this->getTaxeCourtierTotale() : 0;
+        } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
+            return ($this->getIncludeTaxeAssureur() == true) ? $this->getTaxeAssureurTotale() : 0;
+        }
+        return 0;
+    }
+
     public function getMontant(): ?float
     {
         return $this->montant;
@@ -156,16 +180,16 @@ class ElementFacture extends JSAbstractFinances
             if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
                 $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeCourtierTotale());
                 $str = "Montant " . ucfirst($this->getNomTaxeCourtier()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ARCA;
-            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
+            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
                 $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeAssureurTotale());
                 $str = "Montant " . ucfirst($this->getNomTaxeAssureur()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_DGI;
-            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
+            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
                 $mntantDu = $this->getMontantEnMonnaieAffichage($this->getCommissionTotale());
                 $str = "Totale Commission dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ASSUREUR;
-            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
+            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
                 $mntantDu = $this->getMontantEnMonnaieAffichage($this->getFraisGestionTotale() + $this->getPrimeTotale());
                 $str = "Totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_CLIENT;
-            }else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
+            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
                 $mntantDu = $this->getMontantEnMonnaieAffichage($this->getRetroCommissionTotale());
                 $str = $this->getTranche()->getPolice()->getPartenaire() . " / Rétro-com. totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_PARTENAIRE;
             }
@@ -208,18 +232,6 @@ class ElementFacture extends JSAbstractFinances
 
         return $this;
     }
-
-    // public function getTranche(): ?Tranche
-    // {
-    //     return $this->tranche;
-    // }
-
-    // public function setTranche(?Tranche $tranche): self
-    // {
-    //     $this->tranche = $tranche;
-
-    //     return $this;
-    // }
 
     /**
      * Get the value of primeTotale

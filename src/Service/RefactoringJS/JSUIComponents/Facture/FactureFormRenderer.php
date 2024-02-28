@@ -82,14 +82,14 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
-        //Type
-        $this->addChamp(
-            (new JSChamp())
-                ->createChoix("type", "Type de facture")
-                ->setColumns(10)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-                ->getChamp()
-        );
+        // //Type
+        // $this->addChamp(
+        //     (new JSChamp())
+        //         ->createChoix("type", "Type de facture")
+        //         ->setColumns(10)
+        //         ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+        //         ->getChamp()
+        // );
 
         
 

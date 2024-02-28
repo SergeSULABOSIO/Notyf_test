@@ -65,14 +65,14 @@ class Tranche extends JSAbstractFinances
     private ?string $autoriteTaxeAssureur;
     private ?bool $validated;
 
-    private ?array $premiumInvoiceDetails;
-    private ?array $retrocomInvoiceDetails;
-    private ?array $comLocaleInvoiceDetails;
-    private ?array $comReassuranceInvoiceDetails;
-    private ?array $comFrontingInvoiceDetails;
-    private ?array $taxCourtierInvoiceDetails;
-    private ?array $taxAssureurInvoiceDetails;
-    private ?array $fraisGestionInvoiceDetails;
+    // private ?array $premiumInvoiceDetails;
+    // private ?array $retrocomInvoiceDetails;
+    // private ?array $comLocaleInvoiceDetails;
+    // private ?array $comReassuranceInvoiceDetails;
+    // private ?array $comFrontingInvoiceDetails;
+    // private ?array $taxCourtierInvoiceDetails;
+    // private ?array $taxAssureurInvoiceDetails;
+    // private ?array $fraisGestionInvoiceDetails;
 
     //Les objets
     private ?Monnaie $monnaie_Affichage;
@@ -118,7 +118,7 @@ class Tranche extends JSAbstractFinances
         $this->elementFactures = new ArrayCollection();
     }
 
-    public function getTotalInvoiced(?int $destinationFacture): ?float
+    public function getTotalInvoiced_destination(?int $destinationFacture): ?float
     {
         $montantInvoiced = 0;
         /** @var ElementFacture */
@@ -132,7 +132,7 @@ class Tranche extends JSAbstractFinances
         return round($montantInvoiced);
     }
 
-    public function getTotalPaid(?int $destinationFacture): ?float
+    public function getTotalPaid_destination(?int $destinationFacture): ?float
     {
         $montantPaid = 0;
         /** @var ElementFacture */
@@ -147,6 +147,25 @@ class Tranche extends JSAbstractFinances
             }
         }
         return round($montantPaid);
+    }
+
+    public function getTotalPaid_type_note(?int $typeNote): ?float
+    {
+        dd("Je suis ici");
+        // $montantPaid = 0;
+        // /** @var ElementFacture */
+        // foreach ($this->getElementFactures() as $ef) {
+        //     if ($ef->getFacture() != null) {
+        //         if ($typeNote == FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING) {
+        //             /** @var Paiement */
+        //             foreach ($ef->getFacture()->getPaiements() as $paiement) {
+        //                 $montantPaid = $montantPaid + $paiement->getMontant();
+        //             }
+        //         }
+        //     }
+        // }
+        // return round($montantPaid);
+        return 0;
     }
 
     public function getId(): ?int
@@ -785,11 +804,11 @@ class Tranche extends JSAbstractFinances
         return $tab;
     }
 
-    private function calculerDetails($total_du, $type): ?array
+    private function calculerDetails_type_note($total_du, $type_note): ?array
     {
-        $payments_amount = $this->getTotalPaid($type);
+        $payments_amount = $this->getTotalPaid_type_note($type_note);
         $solde_du = $total_du - $payments_amount;
-        $mntInvoiced = $this->getTotalInvoiced($type);
+        $mntInvoiced = $this->getTotalInvoiced_destination($type);
         $mntToBeInvoiced = $total_du - $mntInvoiced;
         return $this->editMessage([
             self::MONNAIE => $this->getMonnaie_Affichage()->getCode(),
@@ -815,7 +834,7 @@ class Tranche extends JSAbstractFinances
     public function getFraisGestionInvoiceDetails(): ?array
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getComFraisGestion(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]
         );
@@ -827,7 +846,7 @@ class Tranche extends JSAbstractFinances
     public function getPremiumInvoiceDetails(): ?array
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getPrimeTotaleTranche(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]
         );
@@ -839,7 +858,7 @@ class Tranche extends JSAbstractFinances
     public function getRetrocomInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getRetroCommissionTotale(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]
         );
@@ -851,7 +870,7 @@ class Tranche extends JSAbstractFinances
     public function getTaxCourtierInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getTaxeCourtierTotale(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]
         );
@@ -863,7 +882,7 @@ class Tranche extends JSAbstractFinances
     public function getTaxAssureurInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getTaxeAssureurTotale(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]
         );
@@ -875,7 +894,7 @@ class Tranche extends JSAbstractFinances
     public function getComLocaleInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getComLocale(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]
         );
@@ -887,7 +906,7 @@ class Tranche extends JSAbstractFinances
     public function getComReassuranceInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getComReassurance(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]
         );
@@ -899,7 +918,7 @@ class Tranche extends JSAbstractFinances
     public function getComFrontingInvoiceDetails()
     {
         //les paramètres
-        return $this->calculerDetails(
+        return $this->calculerDetails_type_note(
             $this->getComFronting(),
             FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]
         );

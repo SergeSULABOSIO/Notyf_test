@@ -52,25 +52,25 @@ class FactureCrudController extends AbstractCrudController
         self::DESTINATION_PARTENAIRE    => 4,
     ];
 
-    public const TYPE_FACTURE_PRIME                     = "PRIME D'ASSURANCE";
-    public const TYPE_FACTURE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
-    public const TYPE_FACTURE_COMMISSION_LOCALE         = "COMMISSION LOCALE";
-    public const TYPE_FACTURE_COMMISSION_REASSURANCE    = "COMMISSION DE REASSURANCE";
-    public const TYPE_FACTURE_COMMISSION_FRONTING       = "COMMISSION SUR FRONTING / CESSION";
-    public const TYPE_FACTURE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
-    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA    = "TAXES SUR VALEUR AJOUTEE (TVA)";
-    public const TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA   = "FRAIS DE SURVEILLANCE (REGULATION)";
+    public const TYPE_NOTE_PRIME                     = "PRIME D'ASSURANCE";
+    public const TYPE_NOTE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
+    public const TYPE_NOTE_COMMISSION_LOCALE         = "COMMISSION LOCALE";
+    public const TYPE_NOTE_COMMISSION_REASSURANCE    = "COMMISSION DE REASSURANCE";
+    public const TYPE_NOTE_COMMISSION_FRONTING       = "COMMISSION SUR FRONTING / CESSION";
+    public const TYPE_NOTE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
+    public const TYPE_NOTE_NOTE_DE_PERCEPTION_TVA    = "TAXES SUR VALEUR AJOUTEE (TVA)";
+    public const TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA   = "FRAIS DE SURVEILLANCE (REGULATION)";
 
-    public const TAB_TYPE_FACTURE = [
-        self::TYPE_FACTURE_COMMISSION_LOCALE        => 0,
-        self::TYPE_FACTURE_RETROCOMMISSIONS         => 1,
-        self::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA   => 2,
-        self::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA  => 3,
-        self::TYPE_FACTURE_FRAIS_DE_GESTION         => 4,
-        self::TYPE_FACTURE_PRIME                    => 5,
-        self::TYPE_FACTURE_COMMISSION_LOCALE        => 6,
-        self::TYPE_FACTURE_COMMISSION_FRONTING      => 7,
-        self::TYPE_FACTURE_COMMISSION_REASSURANCE   => 8
+    public const TAB_TYPE_NOTE = [
+        self::TYPE_NOTE_COMMISSION_LOCALE        => 0,
+        self::TYPE_NOTE_RETROCOMMISSIONS         => 1,
+        self::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA   => 2,
+        self::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA  => 3,
+        self::TYPE_NOTE_FRAIS_DE_GESTION         => 4,
+        self::TYPE_NOTE_PRIME                    => 5,
+        self::TYPE_NOTE_COMMISSION_LOCALE        => 6,
+        self::TYPE_NOTE_COMMISSION_FRONTING      => 7,
+        self::TYPE_NOTE_COMMISSION_REASSURANCE   => 8
     ];
 
     public const STATUS_FACTURE_IMPAYEE     = "Impayée";
@@ -150,7 +150,7 @@ class FactureCrudController extends AbstractCrudController
             $filters->add('utilisateur');
         }
         return $filters
-            ->add(ChoiceFilter::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)->setChoices(self::TAB_TYPE_FACTURE))
+            ->add(ChoiceFilter::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)->setChoices(self::TAB_TYPE_NOTE))
             ->add(ChoiceFilter::new('status', PreferenceCrudController::PREF_FIN_FACTURE_STATUS)->setChoices(self::TAB_STATUS_FACTURE))
             ->add('paiements')
             ->add('partenaire')

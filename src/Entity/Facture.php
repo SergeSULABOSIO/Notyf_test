@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use NumberFormatter;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FactureRepository;
 use Doctrine\Common\Collections\Collection;
@@ -99,7 +98,7 @@ class Facture
         $this->totalRecu = 0;
         /** @var Paiement */
         foreach ($this->paiements as $paiement) {
-            if ($this->getDestination() == $paiement->getDestinationFacture()) {
+            if ($this->getDestination() == $paiement->getDestination()) {
                 $tabPaiements[] = $paiement;
                 $this->totalRecu = $this->totalRecu + round($paiement->getMontant(), 0);
             }

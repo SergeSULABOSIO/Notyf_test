@@ -1563,12 +1563,12 @@ class ServiceCrossCanal
     }
 
 
-    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, ?string $typeFacture)
+    public function initChampsFacture(AdminUrlGenerator $adminUrlGenerator, ?string $destinationFacture)
     {
         // dd("ici:", $typeFacture);
-        if ($typeFacture == FactureCrudController::TYPE_FACTURE_PRIME) {
+        if ($destinationFacture == FactureCrudController::DESTINATION_CLIENT) {
             $adminUrlGenerator
-                ->set("titre", "EDITION: FACTURE - " . $typeFacture)
+                ->set("titre", "EDITION: FACTURE - " . $destinationFacture)
                 ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                 ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
@@ -1576,28 +1576,18 @@ class ServiceCrossCanal
                 ->set("champsACacher[4]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
-        } else if ($typeFacture == FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || $typeFacture == FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE || $typeFacture == FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING) {
+        } else if ($destinationFacture == FactureCrudController::DESTINATION_ASSUREUR) {
             $adminUrlGenerator
-                ->set("titre", "EDITION: NOTE DE DEBIT - " . $typeFacture)
+                ->set("titre", "EDITION: NOTE DE DEBIT - " . $destinationFacture)
                 ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
                 ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
                 ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR);
-        } else if ($typeFacture == FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION) {
-            // dd("ici");
+        } else if ($destinationFacture == FactureCrudController::DESTINATION_PARTENAIRE) {
             $adminUrlGenerator
-                ->set("titre", "EDITION: NOTE DE DEBIT - " . $typeFacture)
-                ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
-                ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
-                ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
-                ->set("champsACacher[3]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-                ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
-                ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
-        } else if ($typeFacture == FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS) {
-            $adminUrlGenerator
-                ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
+                ->set("titre", "EDITION: NOTE DE CREDIT - " . $destinationFacture)
                 ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS)
                 ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                 ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
@@ -1605,9 +1595,9 @@ class ServiceCrossCanal
                 ->set("champsACacher[4]", PreferenceCrudController::PREF_FIN_FACTURE_COMPTES_BANCIARES)
                 ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE);
-        } else if ($typeFacture == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA) {
+        } else if ($destinationFacture == FactureCrudController::DESTINATION_ARCA) {
             $adminUrlGenerator
-                ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
+                ->set("titre", "EDITION: NOTE DE CREDIT - " . $destinationFacture)
                 ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                 ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
@@ -1615,9 +1605,9 @@ class ServiceCrossCanal
                 ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
-        } else if ($typeFacture == FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA) {
+        } else if ($destinationFacture == FactureCrudController::DESTINATION_DGI) {
             $adminUrlGenerator
-                ->set("titre", "EDITION: NOTE DE CREDIT - " . $typeFacture)
+                ->set("titre", "EDITION: NOTE DE CREDIT - " . $destinationFacture)
                 ->set("champsACacher[0]", PreferenceCrudController::PREF_FIN_FACTURE_ASSUREUR)
                 ->set("champsACacher[1]", PreferenceCrudController::PREF_FIN_FACTURE_PARTENAIRE)
                 ->set("champsACacher[2]", PreferenceCrudController::PREF_FIN_FACTURE_PIECE)
@@ -1671,9 +1661,9 @@ class ServiceCrossCanal
     public function crossCanal_modifier_facture(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
     {
         //$entite = $context->getEntity()->getInstance();
-        $typeFacture = $this->serviceFacture->getType($facture->getType());
+        $destinationFacture = $this->serviceFacture->getDestination($facture->getDestination());
 
-        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $destinationFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::EDIT)
@@ -1718,8 +1708,8 @@ class ServiceCrossCanal
 
     public function crossCanal_ouvrir_facture(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
     {
-        $typeFacture = $this->serviceFacture->getType($facture->getType());
-        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $typeFacture);
+        $destinationFacture = $this->serviceFacture->getDestination($facture->getDestination());
+        $adminUrlGenerator = $this->initChampsFacture($adminUrlGenerator, $destinationFacture);
         $url = $adminUrlGenerator
             ->setController(FactureCrudController::class)
             ->setAction(Action::DETAIL)
@@ -1743,7 +1733,7 @@ class ServiceCrossCanal
 
     public function crossCanal_ouvrir_facture_pdf(AdminUrlGenerator $adminUrlGenerator, Facture $facture)
     {
-        $typeFacture = $this->serviceFacture->getType($facture->getType());
+        $destinationFacture = $this->serviceFacture->getDestination($facture->getDestination());
 
         //dd("ici");
 
@@ -1820,21 +1810,22 @@ class ServiceCrossCanal
             if ($objetFacture != null) {
                 $paiement->setFacture($objetFacture);
                 $paiement->setMontant($objetFacture->getTotalDu() - $objetFacture->getTotalRecu());
-                switch ($objetFacture->getType()) {
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE] || FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE] || FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]:
-                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                
+                switch ($objetFacture->getDestination()) {
+                    case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]:
+                        $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]:
-                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
+                    case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
+                        $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]:
-                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]:
+                        $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]:
-                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::DESTINATION_ARCA]:
+                        $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]:
-                        $paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
+                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::DESTINATION_DGI]:
+                        $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
                     default:
                         # code...

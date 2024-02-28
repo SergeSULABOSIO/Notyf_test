@@ -6,6 +6,7 @@ use App\Entity\Facture;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ElementFactureRepository;
 use App\Controller\Admin\FactureCrudController;
+use Symfony\Component\Validator\Constraints\Collection;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 
 #[ORM\Entity(repositoryClass: ElementFactureRepository::class)]
@@ -61,7 +62,6 @@ class ElementFacture extends JSAbstractFinances
     #[ORM\Column(nullable: true)]
     private ?bool $includeTaxeAssureur = false;
 
-
     private ?float $primeTotale = 0;
     private ?float $commissionTotale = 0;
     private ?float $commissionLocale = 0;
@@ -73,27 +73,90 @@ class ElementFacture extends JSAbstractFinances
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
 
+    private ?float $montantReceivedPerDestination = 0;
+    private ?float $montantReceivedPerTypeNote = 0;
+    private ?float $montantInvoicedPerDestination = 0;
+    private ?float $montantInvoicedPerTypeNote = 0;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    
     public function getMontantInvoicedPerTypeNote(?int $typeNote): ?float
     {
         if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
-            return ($this->getIncludeComFronting() == true) ? $this->getCommissionFronting() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeComFronting() == true) ? $this->getCommissionFronting() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
-            return ($this->getIncludeComLocale() == true) ? $this->getCommissionLocale() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeComLocale() == true) ? $this->getCommissionLocale() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
-            return ($this->getIncludeComReassurance() == true) ? $this->getCommissionReassurance() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeComReassurance() == true) ? $this->getCommissionReassurance() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
-            return ($this->getIncludeFraisGestion() == true) ? $this->getFraisGestionTotale() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeFraisGestion() == true) ? $this->getFraisGestionTotale() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
-            return ($this->getIncludeTaxeCourtier() == true) ? $this->getTaxeCourtierTotale() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeTaxeCourtier() == true) ? $this->getTaxeCourtierTotale() : 0;
         } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
-            return ($this->getIncludeTaxeAssureur() == true) ? $this->getTaxeAssureurTotale() : 0;
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeTaxeAssureur() == true) ? $this->getTaxeAssureurTotale() : 0;
         }
-        return 0;
+        return $this->montantInvoicedPerTypeNote;
+    }
+
+    public function getMontantInvoicedPerDestination(?int $destination): ?float
+    {
+        if ($destination == FactureCrudController::DESTINATION_ARCA) {
+            $this->montantInvoicedPerDestination = $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA);
+        } else if ($destination == FactureCrudController::DESTINATION_DGI) {
+            $this->montantInvoicedPerDestination = $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA);
+        } else if ($destination == FactureCrudController::DESTINATION_ASSUREUR) {
+            $this->montantInvoicedPerDestination =
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) +
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) +
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE);
+        } else if ($destination == FactureCrudController::DESTINATION_CLIENT) {
+            $this->montantInvoicedPerDestination =
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) +
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_PRIME);
+        } else if ($destination == FactureCrudController::DESTINATION_PARTENAIRE) {
+            $this->montantInvoicedPerDestination =
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS) +
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_PRIME);
+        }
+        return $this->montantInvoicedPerDestination;
+    }
+
+    
+    public function getMontantReceivedPerDestination(?int $destination): ?float
+    {
+        if ($this->facture != null) {
+            $this->montantReceivedPerDestination = round($this->getProportionPaiementFacture() * $this->getMontantInvoicedPerDestination($destination));
+        }
+        return $this->montantReceivedPerDestination;
+    }
+
+    public function getMontantReceivedPerTypeNote(?int $typeNote): ?float
+    {
+        if ($this->facture != null) {
+            $this->montantReceivedPerTypeNote = round($this->getProportionPaiementFacture() * $this->getMontantInvoicedPerTypeNote($typeNote));
+        }
+        return $this->montantReceivedPerTypeNote;
+    }
+
+    private function getProportionPaiementFacture(): ?float
+    {
+        return $this->getTotalPaiementsFacture() / $this->facture->getMontantTTC();
+    }
+
+    private function getTotalPaiementsFacture(): ?float
+    {
+        $montantFacturePaid = 0;
+        if ($this->facture) {
+            foreach ($this->facture->getPaiements() as $paiement) {
+                /** @var Paiement */
+                $montantFacturePaid = $montantFacturePaid + $paiement->getMontant();
+            }
+        }
+        return $montantFacturePaid;
     }
 
     public function getMontant(): ?float

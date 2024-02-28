@@ -31,9 +31,6 @@ class Facture
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    // #[ORM\Column]
-    // private ?int $type = null;
-
     #[ORM\Column(nullable: true)]
     private ?int $destination = null;
 
@@ -83,6 +80,12 @@ class Facture
     private Collection $documents;
 
     private ?float $montantTTC;
+
+    private ?float $montantReceivedPerDestination = 0;
+    private ?float $montantReceivedPerTypeNote = 0;
+    private ?float $montantInvoicedPerDestination = 0;
+    private ?float $montantInvoicedPerTypeNote = 0;
+
 
     public function __construct()
     {
@@ -496,5 +499,55 @@ class Facture
         $this->destination = $destination;
 
         return $this;
+    }
+
+
+
+    /**
+     * Get the value of montantReceivedPerDestination
+     */ 
+    public function getMontantReceivedPerDestination(?int $destination)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantReceivedPerDestination = $this->montantReceivedPerDestination + $elementFacture->getMontantReceivedPerDestination($destination);
+        }
+        return round($this->montantReceivedPerDestination);
+    }
+
+    /**
+     * Get the value of montantReceivedPerTypeNote
+     */ 
+    public function getMontantReceivedPerTypeNote(?int $typeNote)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantReceivedPerTypeNote = $this->montantReceivedPerTypeNote + $elementFacture->getMontantReceivedPerTypeNote($typeNote);
+        }
+        return round($this->montantReceivedPerTypeNote);
+    }
+
+    /**
+     * Get the value of montantInvoicedPerDestination
+     */ 
+    public function getMontantInvoicedPerDestination(?int $destination)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantInvoicedPerDestination = $this->montantInvoicedPerDestination + $elementFacture->getMontantInvoicedPerDestination($destination);
+        }
+        return round($this->montantInvoicedPerDestination);
+    }
+
+    /**
+     * Get the value of montantInvoicedPerTypeNote
+     */ 
+    public function getMontantInvoicedPerTypeNote(?int $typeNote)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantInvoicedPerTypeNote = $this->montantInvoicedPerTypeNote + $elementFacture->getMontantInvoicedPerTypeNote($typeNote);
+        }
+        return round($this->montantInvoicedPerTypeNote);
     }
 }

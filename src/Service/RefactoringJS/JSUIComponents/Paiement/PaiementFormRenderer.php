@@ -51,7 +51,15 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createAssociation("facture", "Facture")
-                ->setColumns(10)
+                ->setColumns(5)
+                ->getChamp()
+        );
+
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("destination", "Destination")
+                ->setColumns(5)
+                ->setChoices(FactureCrudController::TAB_DESTINATION)
                 ->getChamp()
         );
         
@@ -62,6 +70,8 @@ class PaiementFormRenderer extends JSPanelRenderer
                 ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
                 ->getChamp()
         );
+
+        
         
         $this->addChamp(
             (new JSChamp())
@@ -135,15 +145,15 @@ class PaiementFormRenderer extends JSPanelRenderer
                     $adminUrlGenerator->get("donnees")["facture"]
                 );
             $this->addChampToDeactivate("facture");
+            $this->addChampToDeactivate("destination");
         } else {
             $oFacture = $objetInstance->getFacture();
         }
 
         if (
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA]
+            $oFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] ||
+            $oFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA] ||
+            $oFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]
         ) {
             $this->addChampToRemove("compteBancaire");
             $this->addChampToRemove("Références bancaires");

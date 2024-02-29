@@ -6,10 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FactureRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
-class Facture
+class Facture extends JSAbstractFinances
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -81,11 +82,6 @@ class Facture
 
     private ?float $montantTTC;
 
-    private ?float $montantReceivedPerDestination = 0;
-    private ?float $montantReceivedPerTypeNote = 0;
-    private ?float $montantInvoicedPerDestination = 0;
-    private ?float $montantInvoicedPerTypeNote = 0;
-
 
     public function __construct()
     {
@@ -93,6 +89,11 @@ class Facture
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
         $this->documents = new ArrayCollection();
+    }
+
+    public function initEntreprise(): ?Entreprise
+    {
+        return $this->getEntreprise();
     }
 
     private function initMontantsPayes()

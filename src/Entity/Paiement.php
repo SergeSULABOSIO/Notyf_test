@@ -67,6 +67,26 @@ class Paiement extends JSAbstractFinances
         return $this->paidAt;
     }
 
+    public function getMontantInvoicedPerDestination(?int $destination)
+    {
+        return 0;
+    }
+
+    public function getMontantInvoicedPerTypeNote(?int $typeNote)
+    {
+        return 0;
+    }
+
+    public function getMontantReceivedPerTypeNote(?int $typeNote)
+    {
+        return 0;
+    }
+
+    public function getMontantReceivedPerDestination(?int $destination)
+    {
+        return 0;
+    }
+
     public function setPaidAt(\DateTimeImmutable $paidAt): self
     {
         $this->paidAt = $paidAt;

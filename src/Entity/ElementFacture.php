@@ -73,10 +73,10 @@ class ElementFacture extends JSAbstractFinances
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeAssureurTotale = 0;
 
-    private ?float $montantReceivedPerDestination = 0;
-    private ?float $montantReceivedPerTypeNote = 0;
-    private ?float $montantInvoicedPerDestination = 0;
-    private ?float $montantInvoicedPerTypeNote = 0;
+    // private ?float $montantReceivedPerDestination = 0;
+    // private ?float $montantReceivedPerTypeNote = 0;
+    // private ?float $montantInvoicedPerDestination = 0;
+    // private ?float $montantInvoicedPerTypeNote = 0;
 
     public function getId(): ?int
     {

@@ -90,13 +90,30 @@ class Police extends JSAbstractFinances
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    private ?Monnaie $monnaie_Affichage;
-
-
 
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+    }
+
+    public function getMontantInvoicedPerDestination(?int $destination)
+    {
+        return 0;
+    }
+
+    public function getMontantInvoicedPerTypeNote(?int $typeNote)
+    {
+        return 0;
+    }
+
+    public function getMontantReceivedPerDestination(?int $destination)
+    {
+        return 0;
+    }
+
+    public function getMontantReceivedPerTypeNote(?int $typeNote)
+    {
+        return 0;
     }
 
     public function getId(): ?int

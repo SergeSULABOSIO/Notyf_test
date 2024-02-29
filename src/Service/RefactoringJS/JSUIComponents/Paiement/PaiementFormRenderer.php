@@ -57,7 +57,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         
         $this->addChamp(
             (new JSChamp())
-                ->createChoix("type", "Tye de facture")
+                ->createChoix("type", "Type")
                 ->setColumns(6)
                 ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
                 ->getChamp()
@@ -140,10 +140,10 @@ class PaiementFormRenderer extends JSPanelRenderer
         }
 
         if (
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA] ||
-            $oFacture->getType() == FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA] ||
+            $oFacture->getType() == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA]
         ) {
             $this->addChampToRemove("compteBancaire");
             $this->addChampToRemove("Références bancaires");

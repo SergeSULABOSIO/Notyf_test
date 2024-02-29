@@ -3,16 +3,13 @@
 namespace App\Entity;
 
 use App\Controller\Admin\ChargementCrudController;
-use DateInterval;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche extends JSAbstractFinances
@@ -64,15 +61,6 @@ class Tranche extends JSAbstractFinances
     private ?string $autoriteTaxeCourtier;
     private ?string $autoriteTaxeAssureur;
     private ?bool $validated;
-
-    // private ?array $premiumInvoiceDetails;
-    // private ?array $retrocomInvoiceDetails;
-    // private ?array $comLocaleInvoiceDetails;
-    // private ?array $comReassuranceInvoiceDetails;
-    // private ?array $comFrontingInvoiceDetails;
-    // private ?array $taxCourtierInvoiceDetails;
-    // private ?array $taxAssureurInvoiceDetails;
-    // private ?array $fraisGestionInvoiceDetails;
 
     //Les objets
     private ?Monnaie $monnaie_Affichage;
@@ -753,15 +741,31 @@ class Tranche extends JSAbstractFinances
         return round($this->revenuTotal);
     }
 
-    public function getFacturesEmises(?int $destinationFacture): ?ArrayCollection
+    public function getFacturesEmisesPerTypeNote(?int $typeNote): ?ArrayCollection
     {
         $invoices = new ArrayCollection();
         foreach ($this->getElementFactures() as $ef) {
-            if ($ef->getFacture() != null) {
-                if ($ef->getFacture()->getDestination() == $destinationFacture) {
-                    if (!$invoices->contains($ef->getFacture())) {
-                        $invoices->add($ef->getFacture());
-                    }
+            $isTrue = false;
+            if ($ef->getIncludeComFronting() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
+                $isTrue = true;
+            }else if ($ef->getIncludeComLocale() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
+                $isTrue = true;
+            }else if ($ef->getIncludeComReassurance() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
+                $isTrue = true;
+            }else if ($ef->getIncludeFraisGestion() == true && $typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
+                $isTrue = true;
+            }else if ($ef->getIncludePrime() == true && $typeNote == FactureCrudController::TYPE_NOTE_PRIME) {
+                $isTrue = true;
+            }else if ($ef->getIncludeRetroCom() == true && $typeNote == FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS) {
+                $isTrue = true;
+            }else if ($ef->getIncludeTaxeAssureur() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
+                $isTrue = true;
+            }else if ($ef->getIncludeTaxeCourtier() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
+                $isTrue = true;
+            }
+            if ($isTrue == true) {
+                if (!$invoices->contains($ef->getFacture())) {
+                    $invoices->add($ef->getFacture());
                 }
             }
         }
@@ -806,21 +810,24 @@ class Tranche extends JSAbstractFinances
 
     private function calculerDetails_type_note($total_du, $type_note): ?array
     {
-        $payments_amount = $this->getTotalPaid_type_note($type_note);
+        // $payments_amount = $this->getTotalPaid_type_note($type_note);
+        $payments_amount = $this->getMontantReceivedPerTypeNote($type_note);
         $solde_du = $total_du - $payments_amount;
-        $mntInvoiced = $this->getTotalInvoiced_destination($type);
+        dd($solde_du);
+        // $mntInvoiced = $this->getTotalInvoiced_destination($type);
+        $mntInvoiced = $this->getMontantInvoicedPerTypeNote($type_note);
         $mntToBeInvoiced = $total_du - $mntInvoiced;
         return $this->editMessage([
             self::MONNAIE => $this->getMonnaie_Affichage()->getCode(),
             self::TARGET => $total_du,
             self::FACTURE => [
-                self::DATA => $this->getFacturesEmises($type),
+                self::DATA => $this->getFacturesEmisesPerTypeNote($type_note),
                 self::MONTANT_DU => $total_du,
                 self::MONTANT_INVOICED => $mntInvoiced,
                 self::MONTANT_TO_BE_INVOICED => $mntToBeInvoiced
             ],
             self::PAIEMENTS => [
-                self::DATA => $this->getPaiementsRecus($type),
+                self::DATA => $this->getPaiementsRecus($type_note),
                 self::MONTANT_PAYE => $payments_amount
             ],
             self::SOLDE_DU => $solde_du,
@@ -836,7 +843,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getComFraisGestion(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]
         );
     }
 
@@ -848,7 +855,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getPrimeTotaleTranche(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_PRIME]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]
         );
     }
 
@@ -860,7 +867,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getRetroCommissionTotale(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS]
         );
     }
 
@@ -872,7 +879,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getTaxeCourtierTotale(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA]
         );
     }
 
@@ -884,7 +891,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getTaxeAssureurTotale(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA]
         );
     }
 
@@ -896,7 +903,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getComLocale(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE]
         );
     }
 
@@ -908,7 +915,7 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getComReassurance(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE]
         );
     }
 
@@ -920,18 +927,66 @@ class Tranche extends JSAbstractFinances
         //les paramètres
         return $this->calculerDetails_type_note(
             $this->getComFronting(),
-            FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING]
+            FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING]
         );
     }
 
     /**
      * Get the value of primeNetteTranche
-     */ 
+     */
     public function getPrimeNetteTranche()
     {
         $this->primeNetteTranche = (new Calculateur())
             ->setCotation($this->getCotation())
             ->getPrimeTotale(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE], $this);
         return $this->primeNetteTranche;
+    }
+
+    /**
+     * Get the value of montantReceivedPerDestination
+     */
+    public function getMontantReceivedPerDestination(?int $destination)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantReceivedPerDestination = $this->montantReceivedPerDestination + $elementFacture->getMontantReceivedPerDestination($destination);
+        }
+        return $this->montantReceivedPerDestination;
+    }
+
+    /**
+     * Get the value of montantReceivedPerTypeNote
+     */
+    public function getMontantReceivedPerTypeNote(?int $typeNote)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantReceivedPerTypeNote = $this->montantReceivedPerTypeNote + $elementFacture->getMontantReceivedPerTypeNote($typeNote);
+        }
+        return $this->montantReceivedPerTypeNote;
+    }
+
+    /**
+     * Get the value of montantInvoicedPerDestination
+     */
+    public function getMontantInvoicedPerDestination(?int $destination)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantInvoicedPerDestination = $this->montantInvoicedPerDestination + $elementFacture->getMontantInvoicedPerDestination($destination);
+        }
+        return $this->montantInvoicedPerDestination;
+    }
+
+    /**
+     * Get the value of montantInvoicedPerTypeNote
+     */
+    public function getMontantInvoicedPerTypeNote(?int $typeNote)
+    {
+        /** @var ElementFacture */
+        foreach ($this->elementFactures as $elementFacture) {
+            $this->montantInvoicedPerTypeNote = $this->montantInvoicedPerTypeNote + $elementFacture->getMontantInvoicedPerTypeNote($typeNote);
+        }
+        return $this->montantInvoicedPerTypeNote;
     }
 }

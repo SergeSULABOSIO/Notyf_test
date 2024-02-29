@@ -1821,10 +1821,10 @@ class ServiceCrossCanal
                     case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]:
                         $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::DESTINATION_ARCA]:
+                    case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::DESTINATION_ARCA]:
                         $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
-                    case FactureCrudController::TAB_TYPE_FACTURE[FactureCrudController::DESTINATION_DGI]:
+                    case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::DESTINATION_DGI]:
                         $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_SORTIE]);
                         break;
                     default:

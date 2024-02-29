@@ -46,15 +46,26 @@ class PaiementListeRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+
+        //Destination
+        $this->addChamp(
+            (new JSChamp())
+                ->createChoix("destination", "Destination")
+                ->setRequired(true)
+                ->setDisabled(true)
+                ->setColumns(10)
+                ->setChoices(FactureCrudController::TAB_DESTINATION)
+                ->getChamp()
+        );
         
         //Type Facture
         $this->addChamp(
             (new JSChamp())
-                ->createChoix("typeFacture", "Type")
+                ->createChoix("typeFacture", "Type de note")
                 ->setRequired(true)
                 ->setDisabled(true)
                 ->setColumns(10)
-                ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+                ->setChoices(FactureCrudController::TAB_TYPE_NOTE)
                 ->getChamp()
         );
         

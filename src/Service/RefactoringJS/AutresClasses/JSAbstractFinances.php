@@ -9,6 +9,11 @@ use App\Controller\Admin\MonnaieCrudController;
 
 abstract class JSAbstractFinances
 {
+    public ?float $montantReceivedPerDestination = 0;
+    public ?float $montantReceivedPerTypeNote = 0;
+    public ?float $montantInvoicedPerDestination = 0;
+    public ?float $montantInvoicedPerTypeNote = 0;
+
     public abstract function initEntreprise():?Entreprise;
 
     private function getMonnaie($fonction)
@@ -103,4 +108,24 @@ abstract class JSAbstractFinances
         $txt = $taxe != null ? strtolower($taxe->getNom() . "") : "Tx Assureur";
         return $txt;
     }
+
+    /**
+     * Get the value of montantReceivedPerDestination
+     */ 
+    public abstract function getMontantReceivedPerDestination(?int $destination);
+
+    /**
+     * Get the value of montantReceivedPerTypeNote
+     */ 
+    public abstract function getMontantReceivedPerTypeNote(?int $typeNote);
+
+    /**
+     * Get the value of montantInvoicedPerDestination
+     */ 
+    public abstract function getMontantInvoicedPerDestination(?int $destination);
+
+    /**
+     * Get the value of montantInvoicedPerTypeNote
+     */ 
+    public abstract function getMontantInvoicedPerTypeNote(?int $typeNote);
 }

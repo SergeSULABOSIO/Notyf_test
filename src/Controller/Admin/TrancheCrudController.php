@@ -319,12 +319,12 @@ class TrancheCrudController extends AbstractCrudController
             ->addCssClass('btn btn-primary')
             ->setIcon('fa-solid fa-file-excel'); //<i class="fa-solid fa-file-excel"></i>
 
-        $batch_creerNotePourClient = Action::new("produire_note_client", "+ Note pour Client")
+        $batch_creerNotePourClient = Action::new("produire_note_client", "Facture pour Client")
             ->linkToCrudAction('batchCreerNotePourClient')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-person-shelter');
 
-        $batch_creerNotePourAssureur = Action::new("produire_note_assureur", "Note pour Assureur")
+        $batch_creerNotePourAssureur = Action::new("produire_note_assureur", "Facture pour Assureur")
             ->linkToCrudAction('batchCreerNotePourAssureur')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-umbrella');
@@ -339,7 +339,7 @@ class TrancheCrudController extends AbstractCrudController
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-landmark-dome');
 
-        $batch_creerNotePourPartenaire = Action::new("produire_note_partenaire", "Note pour Partenaire")
+        $batch_creerNotePourPartenaire = Action::new("produire_note_partenaire", "Note de crédit pour Partenaire")
             ->linkToCrudAction('batchCreerNotePourPartenaire')
             ->addCssClass('btn btn-primary')
             ->setIcon('fas fa-handshake');
@@ -452,7 +452,7 @@ class TrancheCrudController extends AbstractCrudController
     //ACTION POUR DESTINATION PAR LOT DES TRANCHES
     public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        // dd($batchActionDto->getEntityIds());
+        dd($batchActionDto->getEntityIds());
         return $this->redirect(
             $this->editFactureDestination(
                 $batchActionDto->getEntityIds(),

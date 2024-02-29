@@ -219,7 +219,7 @@ class TrancheListeRenderer extends JSPanelRenderer
                 ->setFormatValue(
                     function ($value, Tranche $tranche) {
                         /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getPolice()))
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getPolice()->getReference()))
                             ->ajouterClasseCss($this->css_class_bage_ordinaire)
                             ->outputHtml();
                         return $formatedHtml;
@@ -253,7 +253,7 @@ class TrancheListeRenderer extends JSPanelRenderer
                 ->setFormatValue(
                     function ($value, Tranche $tranche) {
                         /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getProduit()->getNom()))
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $tranche->getProduit()->getCode()))
                             ->ajouterClasseCss($this->css_class_bage_ordinaire)
                             ->outputHtml();
                         return $formatedHtml;

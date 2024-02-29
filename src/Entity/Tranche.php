@@ -810,11 +810,8 @@ class Tranche extends JSAbstractFinances
 
     private function calculerDetails_type_note($total_du, $type_note): ?array
     {
-        // $payments_amount = $this->getTotalPaid_type_note($type_note);
         $payments_amount = $this->getMontantReceivedPerTypeNote($type_note);
         $solde_du = $total_du - $payments_amount;
-        dd($solde_du);
-        // $mntInvoiced = $this->getTotalInvoiced_destination($type);
         $mntInvoiced = $this->getMontantInvoicedPerTypeNote($type_note);
         $mntToBeInvoiced = $total_du - $mntInvoiced;
         return $this->editMessage([
@@ -947,6 +944,7 @@ class Tranche extends JSAbstractFinances
      */
     public function getMontantReceivedPerDestination(?int $destination)
     {
+        $this->montantReceivedPerDestination = 0;
         /** @var ElementFacture */
         foreach ($this->elementFactures as $elementFacture) {
             $this->montantReceivedPerDestination = $this->montantReceivedPerDestination + $elementFacture->getMontantReceivedPerDestination($destination);
@@ -959,6 +957,7 @@ class Tranche extends JSAbstractFinances
      */
     public function getMontantReceivedPerTypeNote(?int $typeNote)
     {
+        $this->montantReceivedPerTypeNote = 0;
         /** @var ElementFacture */
         foreach ($this->elementFactures as $elementFacture) {
             $this->montantReceivedPerTypeNote = $this->montantReceivedPerTypeNote + $elementFacture->getMontantReceivedPerTypeNote($typeNote);
@@ -971,6 +970,7 @@ class Tranche extends JSAbstractFinances
      */
     public function getMontantInvoicedPerDestination(?int $destination)
     {
+        $this->montantInvoicedPerDestination = 0;
         /** @var ElementFacture */
         foreach ($this->elementFactures as $elementFacture) {
             $this->montantInvoicedPerDestination = $this->montantInvoicedPerDestination + $elementFacture->getMontantInvoicedPerDestination($destination);
@@ -983,6 +983,7 @@ class Tranche extends JSAbstractFinances
      */
     public function getMontantInvoicedPerTypeNote(?int $typeNote)
     {
+        $this->montantInvoicedPerTypeNote = 0;
         /** @var ElementFacture */
         foreach ($this->elementFactures as $elementFacture) {
             $this->montantInvoicedPerTypeNote = $this->montantInvoicedPerTypeNote + $elementFacture->getMontantInvoicedPerTypeNote($typeNote);

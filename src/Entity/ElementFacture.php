@@ -83,49 +83,53 @@ class ElementFacture extends JSAbstractFinances
         return $this->id;
     }
 
-    
+
     public function getMontantInvoicedPerTypeNote(?int $typeNote): ?float
     {
-        if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
+        if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeComFronting() == true) ? $this->getCommissionFronting() : 0;
-        } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeComLocale() == true) ? $this->getCommissionLocale() : 0;
-        } else if ($typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeComReassurance() == true) ? $this->getCommissionReassurance() : 0;
-        } else if ($typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeFraisGestion() == true) ? $this->getFraisGestionTotale() : 0;
-        } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeTaxeCourtier() == true) ? $this->getTaxeCourtierTotale() : 0;
-        } else if ($typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA]) {
             $this->montantInvoicedPerTypeNote = ($this->getIncludeTaxeAssureur() == true) ? $this->getTaxeAssureurTotale() : 0;
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]) {
+            $this->montantInvoicedPerTypeNote = ($this->getIncludePrime() == true) ? $this->getPrimeTotale() : 0;
+        } else if ($typeNote == FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS]) {
+            $this->montantInvoicedPerTypeNote = ($this->getIncludeRetroCom() == true) ? $this->getRetroCommissionTotale() : 0;
         }
+        // dd($typeNote, $this->montantInvoicedPerTypeNote);
         return $this->montantInvoicedPerTypeNote;
     }
 
     public function getMontantInvoicedPerDestination(?int $destination): ?float
     {
-        if ($destination == FactureCrudController::DESTINATION_ARCA) {
+        if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
             $this->montantInvoicedPerDestination = $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA);
-        } else if ($destination == FactureCrudController::DESTINATION_DGI) {
+        } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
             $this->montantInvoicedPerDestination = $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA);
-        } else if ($destination == FactureCrudController::DESTINATION_ASSUREUR) {
+        } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
             $this->montantInvoicedPerDestination =
                 $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) +
                 $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) +
                 $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE);
-        } else if ($destination == FactureCrudController::DESTINATION_CLIENT) {
+        } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
             $this->montantInvoicedPerDestination =
                 $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) +
                 $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_PRIME);
-        } else if ($destination == FactureCrudController::DESTINATION_PARTENAIRE) {
+        } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
             $this->montantInvoicedPerDestination =
-                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS) +
-                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_PRIME);
+                $this->getMontantInvoicedPerTypeNote(FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS);
         }
         return $this->montantInvoicedPerDestination;
     }
 
-    
+
     public function getMontantReceivedPerDestination(?int $destination): ?float
     {
         if ($this->facture != null) {

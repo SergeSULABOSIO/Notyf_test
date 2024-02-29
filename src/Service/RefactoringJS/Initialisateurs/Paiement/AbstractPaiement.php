@@ -57,7 +57,7 @@ abstract class AbstractPaiement implements PaiementInit
             $this->paiement->setMontant($facture->getTotalSolde());
         }
         $this->paiement->setType(PaiementCrudController::TAB_TYPE_PAIEMENT[$this->getTypePaiement()]);
-        $this->paiement->setTypeFacture($facture->getType());
+        $this->paiement->setDestination($facture->getDestination());
         $this->paiement->setDescription($this->getNomAbstract() . " Facture n°" . $facture . ". Versement effectué le " . $this->serviceDates->getTexte($dateOfPayment));
         $this->paiement->setEntreprise($facture->getEntreprise());
         $this->paiement->setUtilisateur($facture->getUtilisateur());
@@ -74,6 +74,11 @@ abstract class AbstractPaiement implements PaiementInit
     public function setMontant(?float $paidAmount)
     {
         $this->paiement->setMontant($paidAmount);
+    }
+
+    public function setDestination(?int $destination)
+    {
+        $this->paiement->setDestination($destination);
     }
 
     public function setDescription(?string $description)
@@ -119,11 +124,6 @@ abstract class AbstractPaiement implements PaiementInit
     public function setType(?int $typePaiement)
     {
         $this->paiement->setType($typePaiement);
-    }
-
-    public function setTypeFacture(?int $typeFacture)
-    {
-        $this->paiement->setTypeFacture($typeFacture);
     }
 
     public function reset()
@@ -184,7 +184,7 @@ abstract class AbstractPaiement implements PaiementInit
             $cumulMontantAnciennePaiements = 0;
             /** @var Paiement */
             foreach ($anciennesPaiements as $anciennePaiement) {
-                if ($anciennePaiement->getTypeFacture() == $nouveauPaiement->getTypeFacture()) {
+                if ($anciennePaiement->getDestination() == $nouveauPaiement->getDestination()) {
                     $cumulMontantAnciennePaiements = $cumulMontantAnciennePaiements + $nouveauPaiement->getMontant();
                     $sameFactureTempo = $anciennePaiement->getFacture() == $nouveauPaiement->getFacture();
                     if ($sameFactureTempo == true) {

@@ -21,7 +21,7 @@ interface PaiementInit
     public function setPaidAt(?DateTimeImmutable $paidAt);
     public function setMontant(?float $paidAmount);
     public function setType(?int $typePaiement);
-    public function setTypeFacture(?int $typeFacture);
+    public function setDestination(?int $destination);
     public function setDescription(?string $description);
     public function setEntreprise(?Entreprise $entreprise);
     public function setUtilisateur(?Utilisateur $utilisateur);

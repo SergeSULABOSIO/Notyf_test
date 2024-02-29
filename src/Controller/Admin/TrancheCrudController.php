@@ -448,18 +448,35 @@ class TrancheCrudController extends AbstractCrudController
     }
 
 
+    private function canInvoiceClient(?array $tabTranches): ?Bool
+    {
+
+        return false;
+    }
 
     //ACTION POUR DESTINATION PAR LOT DES TRANCHES
     public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        dd($batchActionDto->getEntityIds());
-        return $this->redirect(
-            $this->editFactureDestination(
-                $batchActionDto->getEntityIds(),
-                FactureCrudController::DESTINATION_CLIENT,
-                $adminUrlGenerator
-            )
-        );
+        $className = $batchActionDto->getEntityFqcn();
+        $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
+
+        $tabTranches = [];
+        foreach ($batchActionDto->getEntityIds() as $id) {
+            /** @var Tranche */
+            $tabTranches[] = $entityManager->find($className, $id);
+        }
+        dd($tabTranches, $this->canInvoiceClient($tabTranches));
+
+        if ($this->canInvoiceClient($tabTranches)) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $batchActionDto->getEntityIds(),
+                    FactureCrudController::DESTINATION_CLIENT,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)

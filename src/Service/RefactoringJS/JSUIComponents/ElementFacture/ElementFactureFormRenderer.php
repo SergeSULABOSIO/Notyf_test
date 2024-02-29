@@ -334,9 +334,6 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             $this->addChampToRemove("includeTaxeCourtier");
             $this->addChampToRemove("taxeCourtierTotale");
 
-            // $this->addChampToRemove("includeTaxeAssureur");
-            // $this->addChampToRemove("taxeAssureurTotale");
-
             $this->addChampToDeactivate("montant", 12);
             // $this->addChampToDeactivate("tranche", 12);
         } else if (FactureCrudController::DESTINATION_ARCA == $destination) {
@@ -358,9 +355,6 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             $this->addChampToRemove("includeRetroCom");
             $this->addChampToRemove("retroCommissionTotale");
 
-            // $this->addChampToRemove("includeTaxeCourtier");
-            // $this->addChampToRemove("taxeCourtierTotale");
-
             $this->addChampToRemove("includeTaxeAssureur");
             $this->addChampToRemove("taxeAssureurTotale");
 
@@ -369,15 +363,6 @@ class ElementFactureFormRenderer extends JSPanelRenderer
         } else if (FactureCrudController::DESTINATION_ASSUREUR == $destination) {
             $this->addChampToRemove("includePrime");
             $this->addChampToRemove("primeTotale");
-
-            // $this->addChampToRemove("includeComLocale");
-            // $this->addChampToRemove("commissionLocale");
-
-            // $this->addChampToRemove("includeComFronting");
-            // $this->addChampToRemove("commissionFronting");
-
-            // $this->addChampToRemove("includeComReassurance");
-            // $this->addChampToRemove("commissionReassurance");
 
             $this->addChampToRemove("includeFraisGestion");
             $this->addChampToRemove("fraisGestionTotale");
@@ -394,9 +379,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             $this->addChampToDeactivate("montant", 12);
             // $this->addChampToDeactivate("tranche", 12);
         } else if (FactureCrudController::DESTINATION_CLIENT == $destination) {
-            // $this->addChampToRemove("includePrime");
-            // $this->addChampToRemove("primeTotale");
-
+            
             $this->addChampToRemove("includeComLocale");
             $this->addChampToRemove("commissionLocale");
 
@@ -405,9 +388,6 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
             $this->addChampToRemove("includeComReassurance");
             $this->addChampToRemove("commissionReassurance");
-
-            // $this->addChampToRemove("includeFraisGestion");
-            // $this->addChampToRemove("fraisGestionTotale");
 
             $this->addChampToRemove("includeRetroCom");
             $this->addChampToRemove("retroCommissionTotale");
@@ -435,9 +415,6 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
             $this->addChampToRemove("includeFraisGestion");
             $this->addChampToRemove("fraisGestionTotale");
-
-            // $this->addChampToRemove("includeRetroCom");
-            // $this->addChampToRemove("retroCommissionTotale");
 
             $this->addChampToRemove("includeTaxeCourtier");
             $this->addChampToRemove("taxeCourtierTotale");

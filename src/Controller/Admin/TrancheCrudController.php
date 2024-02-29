@@ -278,49 +278,39 @@ class TrancheCrudController extends AbstractCrudController
             ->setIcon('fa-solid fa-eye')
             ->linkToCrudAction('ouvrirEntite'); //<i class="fa-solid fa-eye"></i>
 
-        $creerNotePourClient = Action::new("Note pour Client")
+        $creerNotePourClient = Action::new("Facture pour Client")
             ->setIcon('fas fa-person-shelter')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                return true;
+                return $tranche->canInvoiceClient();
             })
             ->linkToCrudAction('creerNotePourClient');
 
-        $creerNotePourPartenaire = Action::new("Note pour Partenaire")
+        $creerNotePourPartenaire = Action::new("Note crédit pour Partenaire")
             ->setIcon('fas fa-handshake')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                return true;
+                return $tranche->canInvoicePartenaire();
             })
             ->linkToCrudAction('creerNotePourPartenaire');
 
 
-        $creerNotePourAssureur = Action::new("Note pour Assureur")
+        $creerNotePourAssureur = Action::new("Facture pour Assureur")
             ->setIcon('fas fa-umbrella')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                return true;
+                return $tranche->canInvoiceAssureur();
             })
             ->linkToCrudAction('creerNotePourAssureur');
 
         $creerNotePourDGI = Action::new("Note pour Autorité fiscale")
             ->setIcon('fas fa-landmark-dome')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                return true;
+                return $tranche->canInvoiceDGI();
             })
             ->linkToCrudAction('creerNotePourDGI');
 
         $creerNotePourARCA = Action::new("Note pour Régulateur")
             ->setIcon('fas fa-landmark-dome')
             ->displayIf(static function (Tranche $tranche) {
-                // dd($tranche->getPremiumInvoiceDetails());
-                // return $tranche->getPremiumInvoiceDetails()[Tranche::PRODUIRE_FACTURE];
-                return true;
+                return $tranche->canInvoiceARCA();
             })
             ->linkToCrudAction('creerNotePourARCA');
 

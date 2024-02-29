@@ -29,7 +29,7 @@ class FacturePartenaireInit extends AbstractFacture
     }
     public function getTotalDu(?Tranche $tranche): ?float
     {
-        return $tranche->getComFronting();
+        return $tranche->getRetroCommissionTotale();
     }
     public function getPosteSignedBy(): ?string
     {
@@ -37,7 +37,7 @@ class FacturePartenaireInit extends AbstractFacture
     }
     public function getNomAbstract(): ?string
     {
-        return "Commission sur Fronting (ou de cession)";
+        return "Note de crédit pour rétrocéssion de la commission du partenaire";
     }
     public function getDestinationFacture(): ?string
     {

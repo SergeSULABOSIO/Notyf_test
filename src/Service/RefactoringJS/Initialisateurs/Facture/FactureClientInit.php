@@ -40,7 +40,7 @@ class FactureClientInit extends AbstractFacture
     }
     public function getNomAbstract(): ?string
     {
-        return "Commission sur Fronting (ou de cession)";
+        return "Note de débit pour collecte de la prime et/ou autres frais de gestion";
     }
     public function getDestinationFacture(): ?string
     {

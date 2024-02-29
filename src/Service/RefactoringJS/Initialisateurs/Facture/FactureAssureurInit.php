@@ -41,7 +41,7 @@ class FactureAssureurInit extends AbstractFacture
     }
     public function getNomAbstract(): ?string
     {
-        return "Commission sur Fronting (ou de cession)";
+        return "Note de débit pour collecte des commissions de courtage";
     }
     public function getDestinationFacture(): ?string
     {

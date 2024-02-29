@@ -748,19 +748,19 @@ class Tranche extends JSAbstractFinances
             $isTrue = false;
             if ($ef->getIncludeComFronting() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING) {
                 $isTrue = true;
-            }else if ($ef->getIncludeComLocale() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
+            } else if ($ef->getIncludeComLocale() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE) {
                 $isTrue = true;
-            }else if ($ef->getIncludeComReassurance() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
+            } else if ($ef->getIncludeComReassurance() == true && $typeNote == FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE) {
                 $isTrue = true;
-            }else if ($ef->getIncludeFraisGestion() == true && $typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
+            } else if ($ef->getIncludeFraisGestion() == true && $typeNote == FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION) {
                 $isTrue = true;
-            }else if ($ef->getIncludePrime() == true && $typeNote == FactureCrudController::TYPE_NOTE_PRIME) {
+            } else if ($ef->getIncludePrime() == true && $typeNote == FactureCrudController::TYPE_NOTE_PRIME) {
                 $isTrue = true;
-            }else if ($ef->getIncludeRetroCom() == true && $typeNote == FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS) {
+            } else if ($ef->getIncludeRetroCom() == true && $typeNote == FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS) {
                 $isTrue = true;
-            }else if ($ef->getIncludeTaxeAssureur() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
+            } else if ($ef->getIncludeTaxeAssureur() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA) {
                 $isTrue = true;
-            }else if ($ef->getIncludeTaxeCourtier() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
+            } else if ($ef->getIncludeTaxeCourtier() == true && $typeNote == FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA) {
                 $isTrue = true;
             }
             if ($isTrue == true) {
@@ -854,6 +854,41 @@ class Tranche extends JSAbstractFinances
             $this->getPrimeTotaleTranche(),
             FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]
         );
+    }
+
+    public function canInvoiceClient(): ?Bool
+    {
+        $rep =
+            $this->getPremiumInvoiceDetails()[self::PRODUIRE_FACTURE] ||
+            $this->getFraisGestionInvoiceDetails()[self::PRODUIRE_FACTURE];
+        return $rep;
+    }
+
+    public function canInvoiceAssureur(): ?Bool
+    {
+        $rep =
+            $this->getComLocaleInvoiceDetails()[self::PRODUIRE_FACTURE] ||
+            $this->getComFrontingInvoiceDetails()[self::PRODUIRE_FACTURE] ||
+            $this->getComReassuranceInvoiceDetails()[self::PRODUIRE_FACTURE];
+        return $rep;
+    }
+
+    public function canInvoicePartenaire(): ?Bool
+    {
+        $rep = $this->getRetrocomInvoiceDetails()[self::PRODUIRE_FACTURE];
+        return $rep;
+    }
+
+    public function canInvoiceARCA(): ?Bool
+    {
+        $rep = $this->getTaxCourtierInvoiceDetails()[self::PRODUIRE_FACTURE];
+        return $rep;
+    }
+
+    public function canInvoiceDGI(): ?Bool
+    {
+        $rep = $this->getTaxAssureurInvoiceDetails()[self::PRODUIRE_FACTURE];
+        return $rep;
     }
 
     /**

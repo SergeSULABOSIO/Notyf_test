@@ -110,6 +110,7 @@ class ServiceFacture
                         $ffg = new FactureArcaInit(
                             $this->serviceAvenant,
                             $this->serviceDates,
+                            $this->serviceTaxes,
                             $this->serviceEntreprise,
                             $this->entityManager,
                             $this->serviceCompteBancaire
@@ -121,6 +122,7 @@ class ServiceFacture
                         $ffg = new FactureDgiInit(
                             $this->serviceAvenant,
                             $this->serviceDates,
+                            $this->serviceTaxes,
                             $this->serviceEntreprise,
                             $this->entityManager,
                             $this->serviceCompteBancaire
@@ -186,21 +188,21 @@ class ServiceFacture
             //$this->serviceCalculateur->updatePoliceCalculableFileds($police);
             //il faut switcher ici : On agit différemment selon le type de facture
             switch ($typeFacture) {
-                case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+                case FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE || FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING || FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE:
                     $soldeComNull = ($tranche->getPrimeTotaleTranche() == 0);
                     if (!$tabTiers->contains($tranche->getAssureur())) {
                         $tabTiers_str = $tabTiers_str  . $tranche->getAssureur()->getNom() . ", ";
                     }
                     $tabTiers->add($tranche->getAssureur());
                     break;
-                case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+                case FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION:
                     $soldeComNull = ($tranche->getComFraisGestion() == 0);
                     if (!$tabTiers->contains($tranche->getClient())) {
                         $tabTiers_str = $tabTiers_str  . $tranche->getClient()->getNom() . ", ";
                     }
                     $tabTiers->add($tranche->getClient());
                     break;
-                case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+                case FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS:
                     $soldeComNull = ($tranche->getRetroCommissionTotale() == 0);
                     if ($tranche->getPartenaire()) {
                         if (!$tabTiers->contains($tranche->getPartenaire())) {
@@ -209,13 +211,13 @@ class ServiceFacture
                         $tabTiers->add($tranche->getPartenaire());
                     }
                     break;
-                case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+                case FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA:
                     $soldeComNull = ($tranche->getTaxeAssureurTotale() == 0);
                     if ($this->serviceTaxes->getTaxe(false)) {
                         $tabTiers->add($this->serviceTaxes->getTaxe(false)->getOrganisation());
                     }
                     break;
-                case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+                case FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA:
                     $soldeComNull = ($tranche->getTaxeCourtierTotale() == 0);
                     if ($this->serviceTaxes->getTaxe(false)) {
                         $tabTiers->add($this->serviceTaxes->getTaxe(true)->getOrganisation());
@@ -238,7 +240,7 @@ class ServiceFacture
         }
         //Construction des messages / réponses
         switch ($typeFacture) {
-            case FactureCrudController::TYPE_FACTURE_PRIME:
+            case FactureCrudController::TYPE_NOTE_PRIME:
                 if ($this->hasUniqueData($tabTiers) == false) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs assureurs différents (nous avons trouvé " . $tabTiers_str . "). Elle ne devrait conerner qu'un seul assureur à la fois. ";
@@ -248,7 +250,7 @@ class ServiceFacture
                     $reponses["Messages"] = $reponses["Messages"] . "La prime totale due est nulle, donc rien à collecter.";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE || FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING || FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+            case FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE || FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING || FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE:
                 if ($this->hasUniqueData($tabTiers) == false) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs assureurs différents (nous avons trouvé " . $tabTiers_str . "). Elle ne devrait conerner qu'un seul assureur à la fois. ";
@@ -258,7 +260,7 @@ class ServiceFacture
                     $reponses["Messages"] = $reponses["Messages"] . "La commission due est nulle, donc rien à collecter.";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+            case FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION:
                 if ($this->hasUniqueData($tabTiers) == false) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs assurés différents (nous avons trouvé " . $tabTiers_str . "). Elle ne devrait conerner qu'un seul assuré à la fois. ";
@@ -268,7 +270,7 @@ class ServiceFacture
                     $reponses["Messages"] = $reponses["Messages"] . "Le montant du est nul, donc rien à facturer.";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+            case FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS:
                 if ($this->hasUniqueData($tabTiers) == false) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La séléction que vous venez de faire concerne plusieurs partenaires différents (" . $tabTiers_str . "). Elle ne devrait conerner qu'un seul partenaire à la fois. ";
@@ -278,13 +280,13 @@ class ServiceFacture
                     $reponses["Messages"] = $reponses["Messages"] . "La retro-commission due est nulle, donc rien à retrocéder.";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+            case FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA:
                 if ($soldeComNull) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". La " . $taxeTva->getNom() . " due est nulle, donc rien à payer à " . $taxeTva->getOrganisation() . ". ";
                 }
                 break;
-            case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+            case FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA:
                 if ($soldeComNull) {
                     $reponses["status"] = false;
                     $reponses["Messages"] = "Salut " . $this->serviceEntreprise->getUtilisateur() . ". " . $taxeTva->getNom() . " due est nulle, donc rien à payer à " . $taxeArca->getOrganisation() . ". ";
@@ -372,87 +374,87 @@ class ServiceFacture
         return $tranche->getTaxeCourtierTotale() != 0;
     }
 
-    private function chargerElementFactures(Facture $facture, $typeFacture, array $tabIdTranches)
-    {
-        $total = 0;
-        foreach ($tabIdTranches as $idTranche) {
-            /** @var Tranche */
-            $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
-            if ($oTranche) {
-                //$this->serviceCalculateur->updatePoliceCalculableFileds($oPolice);
-                switch ($typeFacture) {
-                    case FactureCrudController::TYPE_FACTURE_PRIME:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getPrimeTotaleTranche());
-                        $facture->setAssureur($oTranche->getAssureur());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getComLocale() * 100);
-                        $facture->setAssureur($oTranche->getAssureur());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getComReassurance() * 100);
-                        $facture->setAssureur($oTranche->getAssureur());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getComFronting() * 100);
-                        $facture->setAssureur($oTranche->getAssureur());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getComFraisGestion() * 100);
-                        $facture->setAutreTiers($oTranche->getClient());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getRetroCommissionTotale() * 100);
-                        $facture->setPartenaire($oTranche->getPartenaire());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
-                        /** @var Taxe */
-                        $taxe = $this->serviceTaxes->getTaxe(false);
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getTaxeAssureurTotale() * 100);
-                        $facture->setAutreTiers($taxe->getOrganisation());
-                        break;
-                    case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
-                        /** @var Taxe */
-                        $taxe = $this->serviceTaxes->getTaxe(true);
-                        /** @var ElementFacture */
-                        $ef = new ElementFacture();
-                        $ef->setTranche($oTranche);
-                        $ef->setMontant($oTranche->getTaxeCourtierTotale() * 100);
-                        $facture->setAutreTiers($taxe->getOrganisation());
-                        break;
-                    default:
-                        # code...
-                        break;
-                }
-                $total += $ef->getMontant();
-            }
-            if ($ef->getMontant() != 0) {
-                $this->setAutresAttributs($facture, $ef);
-            }
-        }
-        return $total;
-    }
+    // private function chargerElementFactures(Facture $facture, $typeFacture, array $tabIdTranches)
+    // {
+    //     $total = 0;
+    //     foreach ($tabIdTranches as $idTranche) {
+    //         /** @var Tranche */
+    //         $oTranche = $this->entityManager->getRepository(Tranche::class)->find($idTranche);
+    //         if ($oTranche) {
+    //             //$this->serviceCalculateur->updatePoliceCalculableFileds($oPolice);
+    //             switch ($typeFacture) {
+    //                 case FactureCrudController::TYPE_FACTURE_PRIME:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getPrimeTotaleTranche());
+    //                     $facture->setAssureur($oTranche->getAssureur());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getComLocale() * 100);
+    //                     $facture->setAssureur($oTranche->getAssureur());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getComReassurance() * 100);
+    //                     $facture->setAssureur($oTranche->getAssureur());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getComFronting() * 100);
+    //                     $facture->setAssureur($oTranche->getAssureur());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getComFraisGestion() * 100);
+    //                     $facture->setAutreTiers($oTranche->getClient());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS:
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getRetroCommissionTotale() * 100);
+    //                     $facture->setPartenaire($oTranche->getPartenaire());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA:
+    //                     /** @var Taxe */
+    //                     $taxe = $this->serviceTaxes->getTaxe(false);
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getTaxeAssureurTotale() * 100);
+    //                     $facture->setAutreTiers($taxe->getOrganisation());
+    //                     break;
+    //                 case FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA:
+    //                     /** @var Taxe */
+    //                     $taxe = $this->serviceTaxes->getTaxe(true);
+    //                     /** @var ElementFacture */
+    //                     $ef = new ElementFacture();
+    //                     $ef->setTranche($oTranche);
+    //                     $ef->setMontant($oTranche->getTaxeCourtierTotale() * 100);
+    //                     $facture->setAutreTiers($taxe->getOrganisation());
+    //                     break;
+    //                 default:
+    //                     # code...
+    //                     break;
+    //             }
+    //             $total += $ef->getMontant();
+    //         }
+    //         if ($ef->getMontant() != 0) {
+    //             $this->setAutresAttributs($facture, $ef);
+    //         }
+    //     }
+    //     return $total;
+    // }
 
     private function setAutresAttributs(Facture $facture, ElementFacture $ef)
     {

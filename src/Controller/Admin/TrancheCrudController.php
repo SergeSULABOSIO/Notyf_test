@@ -57,6 +57,7 @@ use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -491,7 +492,7 @@ class TrancheCrudController extends AbstractCrudController
             $reponse["Ids"] = $ecouteur->getEntityIdsAfterCanInvoiceFilter();
             // dd($reponse["Ids"]);
             if (count($reponse["Ids"]) == 0) {
-                $reponse["Message"] = $user . ", Désolé car il n'est pas possible d'émettre de note de débit (ou de crédit). Soit puisqu'il n'y a rien collecter (ou payer), soit puisque les notes ont déjà été émises.";
+                $reponse["Message"] = $user . ", Désolé car il n'est pas possible d'émettre de note de débit (ou de crédit) soit puisqu'il n'y a rien collecter (ou payer), soit puisque les notes ont déjà été émises.";
                 $reponse["Action"] = false;
             }
         }
@@ -514,18 +515,7 @@ class TrancheCrudController extends AbstractCrudController
     //ACTION POUR DESTINATION PAR LOT DES TRANCHES
     public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->canBatchInvoice(new ConditionClient($this->retrieveTabTranches($batchActionDto)));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_CLIENT,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->invoiceClient($this->retrieveTabTranches($batchActionDto), $adminUrlGenerator, $batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
@@ -596,53 +586,104 @@ class TrancheCrudController extends AbstractCrudController
     //ACTION POUR DESTINATION TRANCHE INDIVIDUELLE
     public function creerNotePourClient(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect(
-            $this->editFactureDestination(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::DESTINATION_CLIENT,
-                $adminUrlGenerator
-            )
-        );
+        return $this->invoiceClient([($context->getEntity()->getInstance())], $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
+
     public function creerNotePourAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect(
-            $this->editFactureDestination(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::DESTINATION_ASSUREUR,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionAssureur([($context->getEntity()->getInstance())->getId()]));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_ASSUREUR,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($adminUrlGenerator->generateUrl());
     }
+
     public function creerNotePourPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect(
-            $this->editFactureDestination(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::DESTINATION_PARTENAIRE,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionPartenaire([($context->getEntity()->getInstance())->getId()]));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_PARTENAIRE,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($adminUrlGenerator->generateUrl());
     }
+
     public function creerNotePourDGI(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect(
-            $this->editFactureDestination(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::DESTINATION_DGI,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionDgi([($context->getEntity()->getInstance())->getId()]));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_DGI,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($adminUrlGenerator->generateUrl());
     }
+
     public function creerNotePourARCA(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        return $this->redirect(
-            $this->editFactureDestination(
-                [($context->getEntity()->getInstance())->getId()],
-                FactureCrudController::DESTINATION_ARCA,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionArca([($context->getEntity()->getInstance())->getId()]));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_ARCA,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($adminUrlGenerator->generateUrl());
+    }
+
+    private function invoiceClient(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
+    {
+        $reponse = $this->canBatchInvoice(new ConditionClient($tabTranches));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_CLIENT,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($url);
+    }
+
+    private function invoiceAssureur(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
+    {
+        ICI
+        $reponse = $this->canBatchInvoice(new ConditionAssureur($tabTranches));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_ASSUREUR,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($url);
     }
 
 
@@ -659,28 +700,6 @@ class TrancheCrudController extends AbstractCrudController
 
         return $this->redirect($url);
     }
-
-    // public function facturerPrime(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_PRIME,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-    // public function facturerCommissionLocale(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_COMMISSION_LOCALE,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
 
     // Pas besoin ce décorateur pour l'instant.
     #[Route('/multiCom', name: 'multiCom')]
@@ -893,74 +912,6 @@ class TrancheCrudController extends AbstractCrudController
             ]
         );
     }
-
-    // public function facturerCommissionReassurance(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em): Response
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_COMMISSION_REASSURANCE,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-    // public function facturerCommissionFronting(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_COMMISSION_FRONTING,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-    // public function facturerFraisGestion(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-
-    // public function facturerRetroCommission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-    // public function facturerTaxeCourtier(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
-    // public function facturerTaxeAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
-    // {
-    //     return $this->redirect(
-    //         $this->editFacture(
-    //             [($context->getEntity()->getInstance())->getId()],
-    //             FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA,
-    //             $adminUrlGenerator
-    //         )
-    //     );
-    // }
-
 
     private function editFactureDestination(?array $tabIdTranches, ?string $destination, AdminUrlGenerator $adminUrlGenerator): ?string
     {

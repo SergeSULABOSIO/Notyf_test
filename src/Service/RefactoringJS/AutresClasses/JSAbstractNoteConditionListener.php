@@ -16,5 +16,6 @@ abstract class JSAbstractNoteConditionListener
     }
     public abstract function getCible();
     public abstract function getTabTranches();
+    public abstract function filtrerCanInvoice():?array;
     public abstract function isSameCible($cible, ?Tranche $trancheEncours);
 }

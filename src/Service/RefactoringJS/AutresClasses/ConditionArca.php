@@ -23,6 +23,14 @@ class ConditionArca extends JSAbstractNoteConditionListener
         return ($objCible === $trancheEncours->getTaxe(true)->getOrganisation());
     }
 
+    public function canInvoice(?Tranche $tranche): ?bool
+    {
+        return 
+        (
+            $tranche->canInvoiceARCA()
+        );
+    }
+
     public function getCible()
     {
         return $this->getTabTranches()[0]->getTaxe(true)->getOrganisation();

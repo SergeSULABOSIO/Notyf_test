@@ -461,27 +461,34 @@ class TrancheCrudController extends AbstractCrudController
         $reponse = [
             "Message"   => $user . ", Ok pour production de la facture.",
             "Cible"     => $ecouteur->getCible(),
+            "Ids"       => [],
             "Action"    => true
         ];
         if ($ecouteur->isVide()) {
             $reponse = [
                 "Message"   => $user . ", Impossible d'effectuer cette opération car vous n'avez séléctionné aucune tranche.",
                 "Cible"     => $ecouteur->getCible(),
+                "Ids"       => [],
                 "Action"    => false
             ];
         } else {
             /** @var Tranche */
             foreach ($ecouteur->getTabTranches() as $tranche) {
-                if ($ecouteur->isSameCible($ecouteur->getCible(), $tranche) == false) {
+                if (
+                    //Les conditions afin que la facturation soit possible
+                    $ecouteur->isSameCible($ecouteur->getCible(), $tranche) == false
+                ) {
                     $reponse = [
                         "Message"  => $user . ", Toutes ces " . (count($ecouteur->getTabTranches())) . " tranche(s) ne concerne pas seul(e) " . $ecouteur->getCible() . ". Veuillez vous assurer, en se servant de filtres, que toutes ces tranches ne puissent concerner que " . $ecouteur->getCible() . ".",
                         "Cible"    => $ecouteur->getCible(),
+                        "Ids"       => [],
                         "Action"   => false
                     ];
                     // dd("Ici");
                     break;
                 }
             }
+            $reponse["Ids"] = $ecouteur->getEntityIdsAfterCanInvoiceFilter();
         }
         // dd($reponse);
         return $reponse;
@@ -506,7 +513,8 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    $batchActionDto->getEntityIds(),
+                    // $batchActionDto->getEntityIds(),
+                    $reponse["Ids"],
                     FactureCrudController::DESTINATION_CLIENT,
                     $adminUrlGenerator
                 )
@@ -522,7 +530,8 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    $batchActionDto->getEntityIds(),
+                    // $batchActionDto->getEntityIds(),
+                    $reponse["Ids"],
                     FactureCrudController::DESTINATION_ASSUREUR,
                     $adminUrlGenerator
                 )
@@ -538,7 +547,8 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    $batchActionDto->getEntityIds(),
+                    // $batchActionDto->getEntityIds(),
+                    $reponse["Ids"],
                     FactureCrudController::DESTINATION_PARTENAIRE,
                     $adminUrlGenerator
                 )
@@ -554,7 +564,8 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    $batchActionDto->getEntityIds(),
+                    // $batchActionDto->getEntityIds(),
+                    $reponse["Ids"],
                     FactureCrudController::DESTINATION_DGI,
                     $adminUrlGenerator
                 )
@@ -570,7 +581,8 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    $batchActionDto->getEntityIds(),
+                    // $batchActionDto->getEntityIds(),
+                    $reponse["Ids"],
                     FactureCrudController::DESTINATION_ARCA,
                     $adminUrlGenerator
                 )

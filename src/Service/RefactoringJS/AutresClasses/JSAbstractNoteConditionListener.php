@@ -16,6 +16,17 @@ abstract class JSAbstractNoteConditionListener
     }
     public abstract function getCible();
     public abstract function getTabTranches();
-    public abstract function filtrerCanInvoice():?array;
+    public function getEntityIdsAfterCanInvoiceFilter():?array{
+        $tab = [];
+        /** @var Tranche */
+        foreach ($this->getTabTranches() as $tranche) {
+            if($this->canInvoice($tranche)){
+                $tab[] = $tranche->getId();
+            }
+        }
+        return $tab;
+    }
+
+    public abstract function canInvoice(?Tranche $tranche):?Bool;
     public abstract function isSameCible($cible, ?Tranche $trancheEncours);
 }

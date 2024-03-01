@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SinistreRepository::class)]
-class Sinistre extends CalculableEntity
+class Sinistre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -309,7 +309,7 @@ class Sinistre extends CalculableEntity
     {
         if (!$this->docPieces->contains($docPiece)) {
             $this->docPieces->add($docPiece);
-            $docPiece->setSinistre($this);
+            // $docPiece->setSinistre($this);
         }
 
         return $this;
@@ -319,9 +319,9 @@ class Sinistre extends CalculableEntity
     {
         if ($this->docPieces->removeElement($docPiece)) {
             // set the owning side to null (unless already changed)
-            if ($docPiece->getSinistre() === $this) {
-                $docPiece->setSinistre(null);
-            }
+            // if ($docPiece->getSinistre() === $this) {
+            //     $docPiece->setSinistre(null);
+            // }
         }
 
         return $this;
@@ -339,7 +339,7 @@ class Sinistre extends CalculableEntity
     {
         if (!$this->actionCRMs->contains($actionCRM)) {
             $this->actionCRMs->add($actionCRM);
-            $actionCRM->setSinistre($this);
+            // $actionCRM->setSinistre($this);
         }
 
         return $this;
@@ -349,9 +349,9 @@ class Sinistre extends CalculableEntity
     {
         if ($this->actionCRMs->removeElement($actionCRM)) {
             // set the owning side to null (unless already changed)
-            if ($actionCRM->getSinistre() === $this) {
-                $actionCRM->setSinistre(null);
-            }
+            // if ($actionCRM->getSinistre() === $this) {
+            //     $actionCRM->setSinistre(null);
+            // }
         }
 
         return $this;

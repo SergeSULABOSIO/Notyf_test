@@ -10,7 +10,7 @@ use App\Repository\AssureurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AssureurRepository::class)]
-class Assureur extends CalculableEntity
+class Assureur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

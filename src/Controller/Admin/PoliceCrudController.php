@@ -623,7 +623,7 @@ class PoliceCrudController extends AbstractCrudController
 
     public function facture_frais_de_gestion(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_FRAIS_DE_GESTION);
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION);
     }
 
     public function facture_commissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
@@ -634,17 +634,17 @@ class PoliceCrudController extends AbstractCrudController
 
     public function facture_retrocommissions(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_RETROCOMMISSIONS);
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS);
     }
 
     public function facture_arca(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_ARCA);
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA);
     }
 
     public function facture_tva(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_FACTURE_NOTE_DE_PERCEPTION_TVA);
+        return $this->construireFacture($batchActionDto, $adminUrlGenerator, FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA);
     }
 
     public function creerFacture(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator, $type)

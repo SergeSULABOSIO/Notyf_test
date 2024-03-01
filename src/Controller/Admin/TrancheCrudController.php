@@ -11,6 +11,12 @@ use App\Entity\Tranche;
 use App\Entity\Assureur;
 use App\Entity\Partenaire;
 use App\Entity\Utilisateur;
+use App\Service\RefactoringJS\AutresClasses\ConditionArca;
+use App\Service\RefactoringJS\AutresClasses\ConditionAssureur;
+use App\Service\RefactoringJS\AutresClasses\ConditionClient;
+use App\Service\RefactoringJS\AutresClasses\ConditionDgi;
+use App\Service\RefactoringJS\AutresClasses\ConditionPartenaire;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractNoteConditionListener;
 use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
@@ -50,6 +56,7 @@ use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
 use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class TrancheCrudController extends AbstractCrudController
 {
@@ -448,26 +455,60 @@ class TrancheCrudController extends AbstractCrudController
     }
 
 
-    private function canInvoiceClient(?array $tabTranches): ?Bool
+    private function canBatchInvoice(?JSAbstractNoteConditionListener $ecouteur): ?array
     {
-
-        return false;
+        /**
+         * Facture Client - lot des tâches
+         * Principe: toutes les tâches doivent pointer vers le même client.
+         */
+        // dd($tabTranches);
+        $user = $this->serviceEntreprise->getUtilisateur()->getNom();
+        $reponse = [
+            "Message"   => $user . ", Ok pour production de la facture.",
+            "Cible"     => $ecouteur->getCible(),
+            "Action"    => true
+        ];
+        if ($ecouteur->isVide()) {
+            $reponse = [
+                "Message"   => $user . ", Impossible d'effectuer cette opération car vous n'avez séléctionné aucune tranche.",
+                "Cible"     => $ecouteur->getCible(),
+                "Action"    => false
+            ];
+        } else {
+            /** @var Tranche */
+            foreach ($ecouteur->getTabTranches() as $tranche) {
+                if ($ecouteur->isSameCible($ecouteur->getCible(), $tranche) == false) {
+                    $reponse = [
+                        "Message"  => $user . ", Toutes ces " . (count($ecouteur->getTabTranches())) . " tranche(s) ne concerne pas seul(e) " . $ecouteur->getCible() . ". Veuillez vous assurer, en se servant de filtres, que toutes ces tranches ne puissent concerner que " . $ecouteur->getCible() . ".",
+                        "Cible"    => $ecouteur->getCible(),
+                        "Action"   => false
+                    ];
+                    // dd("Ici");
+                    break;
+                }
+            }
+        }
+        // dd($reponse);
+        return $reponse;
     }
 
-    //ACTION POUR DESTINATION PAR LOT DES TRANCHES
-    public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    private function retrieveTabTranches(BatchActionDto $batchActionDto): ?array
     {
         $className = $batchActionDto->getEntityFqcn();
         $entityManager = $this->container->get('doctrine')->getManagerForClass($className);
-
         $tabTranches = [];
         foreach ($batchActionDto->getEntityIds() as $id) {
             /** @var Tranche */
             $tabTranches[] = $entityManager->find($className, $id);
         }
-        dd($tabTranches, $this->canInvoiceClient($tabTranches));
+        return $tabTranches;
+    }
 
-        if ($this->canInvoiceClient($tabTranches)) {
+    //ACTION POUR DESTINATION PAR LOT DES TRANCHES
+    public function batchCreerNotePourClient(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
+    {
+        $reponse = $this->canBatchInvoice(new ConditionClient($this->retrieveTabTranches($batchActionDto)));
+        if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
                     $batchActionDto->getEntityIds(),
@@ -476,55 +517,72 @@ class TrancheCrudController extends AbstractCrudController
                 )
             );
         }
+        $this->addFlash("danger", $reponse["Message"]);
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        // dd($batchActionDto->getEntityIds());
-        return $this->redirect(
-            $this->editFactureDestination(
-                $batchActionDto->getEntityIds(),
-                FactureCrudController::DESTINATION_ASSUREUR,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionAssureur($this->retrieveTabTranches($batchActionDto)));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $batchActionDto->getEntityIds(),
+                    FactureCrudController::DESTINATION_ASSUREUR,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourPartenaire(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        // dd($batchActionDto->getEntityIds());
-        return $this->redirect(
-            $this->editFactureDestination(
-                $batchActionDto->getEntityIds(),
-                FactureCrudController::DESTINATION_PARTENAIRE,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionPartenaire($this->retrieveTabTranches($batchActionDto)));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $batchActionDto->getEntityIds(),
+                    FactureCrudController::DESTINATION_PARTENAIRE,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourDGI(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        // dd($batchActionDto->getEntityIds());
-        return $this->redirect(
-            $this->editFactureDestination(
-                $batchActionDto->getEntityIds(),
-                FactureCrudController::DESTINATION_DGI,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionDgi($this->retrieveTabTranches($batchActionDto)));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $batchActionDto->getEntityIds(),
+                    FactureCrudController::DESTINATION_DGI,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
     public function batchCreerNotePourARCA(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        // dd($batchActionDto->getEntityIds());
-        return $this->redirect(
-            $this->editFactureDestination(
-                $batchActionDto->getEntityIds(),
-                FactureCrudController::DESTINATION_ARCA,
-                $adminUrlGenerator
-            )
-        );
+        $reponse = $this->canBatchInvoice(new ConditionArca($this->retrieveTabTranches($batchActionDto)));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $batchActionDto->getEntityIds(),
+                    FactureCrudController::DESTINATION_ARCA,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 
 

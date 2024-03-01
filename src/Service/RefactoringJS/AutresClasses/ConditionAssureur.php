@@ -15,6 +15,13 @@ class ConditionAssureur extends JSAbstractNoteConditionListener
         $this->tabTranches = $tabTranches;
     }
 
+    public function canInvoice(?Tranche $tranche): ?bool
+    {
+        return (
+            $tranche->canInvoiceAssureur()
+        );
+    }
+
     public function isSameCible($cible, ?Tranche $trancheEncours)
     {
         /** @var Assureur */
@@ -29,7 +36,7 @@ class ConditionAssureur extends JSAbstractNoteConditionListener
 
     /**
      * Get the value of tabTranches
-     */ 
+     */
     public function getTabTranches()
     {
         return $this->tabTranches;

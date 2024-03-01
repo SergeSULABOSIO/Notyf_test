@@ -14,6 +14,13 @@ class ConditionClient extends JSAbstractNoteConditionListener
         $this->tabTranches = $tabTranches;
     }
 
+    public function canInvoice(?Tranche $tranche): ?bool
+    {
+        return (
+            $tranche->canInvoiceClient()
+        );
+    }
+
     public function isSameCible($cible, ?Tranche $trancheEncours)
     {
         /** @var Client */
@@ -28,7 +35,7 @@ class ConditionClient extends JSAbstractNoteConditionListener
 
     /**
      * Get the value of tabTranches
-     */ 
+     */
     public function getTabTranches()
     {
         return $this->tabTranches;

@@ -14,6 +14,13 @@ class ConditionDgi extends JSAbstractNoteConditionListener
         $this->tabTranches = $tabTranches;
     }
 
+    public function canInvoice(?Tranche $tranche): ?bool
+    {
+        return (
+            $tranche->canInvoiceDGI()
+        );
+    }
+
     public function isSameCible($cible, ?Tranche $trancheEncours)
     {
         /** @var Partenaire */
@@ -28,7 +35,7 @@ class ConditionDgi extends JSAbstractNoteConditionListener
 
     /**
      * Get the value of tabTranches
-     */ 
+     */
     public function getTabTranches()
     {
         return $this->tabTranches;

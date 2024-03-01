@@ -489,6 +489,11 @@ class TrancheCrudController extends AbstractCrudController
                 }
             }
             $reponse["Ids"] = $ecouteur->getEntityIdsAfterCanInvoiceFilter();
+            // dd($reponse["Ids"]);
+            if (count($reponse["Ids"]) == 0) {
+                $reponse["Message"] = $user . ", Désolé car il n'est pas possible d'émettre de note de débit (ou de crédit). Soit puisqu'il n'y a rien collecter (ou payer), soit puisque les notes ont déjà été émises.";
+                $reponse["Action"] = false;
+            }
         }
         // dd($reponse);
         return $reponse;

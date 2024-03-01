@@ -457,11 +457,6 @@ class TrancheCrudController extends AbstractCrudController
 
     private function canBatchInvoice(?JSAbstractNoteConditionListener $ecouteur): ?array
     {
-        /**
-         * Facture Client - lot des tâches
-         * Principe: toutes les tâches doivent pointer vers le même client.
-         */
-        // dd($tabTranches);
         $user = $this->serviceEntreprise->getUtilisateur()->getNom();
         $reponse = [
             "Message"   => $user . ", Ok pour production de la facture.",

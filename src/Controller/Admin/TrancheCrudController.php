@@ -518,7 +518,6 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    // $batchActionDto->getEntityIds(),
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_CLIENT,
                     $adminUrlGenerator
@@ -535,7 +534,6 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    // $batchActionDto->getEntityIds(),
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_ASSUREUR,
                     $adminUrlGenerator
@@ -552,7 +550,6 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    // $batchActionDto->getEntityIds(),
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_PARTENAIRE,
                     $adminUrlGenerator
@@ -569,7 +566,6 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    // $batchActionDto->getEntityIds(),
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_DGI,
                     $adminUrlGenerator
@@ -586,7 +582,6 @@ class TrancheCrudController extends AbstractCrudController
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
-                    // $batchActionDto->getEntityIds(),
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_ARCA,
                     $adminUrlGenerator

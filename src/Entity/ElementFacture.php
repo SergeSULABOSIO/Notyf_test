@@ -378,7 +378,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getCommissionLocale()
     {
-        $this->commissionLocale = $this->getTranche()->getComLocale();
+        if ($this->getTranche() != null) {
+            $this->commissionLocale = $this->getTranche()->getComLocale();
+        }
         return $this->commissionLocale;
     }
 
@@ -387,7 +389,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getCommissionFronting()
     {
-        $this->commissionFronting = $this->getTranche()->getComFronting();
+        if ($this->getTranche() != null) {
+            $this->commissionFronting = $this->getTranche()->getComFronting();
+        }
         return $this->commissionFronting;
     }
 
@@ -396,7 +400,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getCommissionReassurance()
     {
-        $this->commissionReassurance = $this->getTranche()->getComReassurance();
+        if ($this->getTranche() != null) {
+            $this->commissionReassurance = $this->getTranche()->getComReassurance();
+        }
         return $this->commissionReassurance;
     }
 
@@ -556,6 +562,42 @@ class ElementFacture extends JSAbstractFinances
     public function setIncludeTaxeAssureur($includeTaxeAssureur)
     {
         $this->includeTaxeAssureur = $includeTaxeAssureur;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of commissionLocale
+     *
+     * @return  self
+     */ 
+    public function setCommissionLocale($commissionLocale)
+    {
+        $this->commissionLocale = $commissionLocale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of commissionFronting
+     *
+     * @return  self
+     */ 
+    public function setCommissionFronting($commissionFronting)
+    {
+        $this->commissionFronting = $commissionFronting;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of commissionReassurance
+     *
+     * @return  self
+     */ 
+    public function setCommissionReassurance($commissionReassurance)
+    {
+        $this->commissionReassurance = $commissionReassurance;
 
         return $this;
     }

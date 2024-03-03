@@ -69,11 +69,11 @@ class LoeilDeDieu implements EventSubscriberInterface
     public function setCreatedAt(BeforeEntityPersistedEvent $event)
     {
         $entityInstance = $event->getEntityInstance();
-        //dd($entityInstance);
+        // dd($entityInstance);
+
         if ($entityInstance instanceof Monnaie) {
             $entityInstance = $this->updateNomMonnaie($entityInstance);
         }
-
         if ($entityInstance instanceof Utilisateur) {
             $newpassword = $entityInstance->getPlainPassword();
             if ($newpassword !== "") {
@@ -109,6 +109,10 @@ class LoeilDeDieu implements EventSubscriberInterface
             //dd($facture->getElementFactures());
         }
 
+        if ($entityInstance instanceof Facture) {
+            dd("Ici il faut appeler la fonction d'initialisation de l'élementFacture:", $entityInstance);
+        }
+
         $this->updateCollectionsPourPiste($entityInstance, true);
 
         $entityInstance->setUtilisateur($this->serviceEntreprise->getUtilisateur());
@@ -116,6 +120,7 @@ class LoeilDeDieu implements EventSubscriberInterface
         $entityInstance->setCreatedAt(new \DateTimeImmutable());
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
         //$this->cleanElementFacture();
+        // dd($entityInstance);
     }
 
     private function updateCollectionsPourPiste($entityInstance, bool $isCreate)
@@ -353,7 +358,7 @@ class LoeilDeDieu implements EventSubscriberInterface
         }
     }
 
-    
+
 
 
     /**

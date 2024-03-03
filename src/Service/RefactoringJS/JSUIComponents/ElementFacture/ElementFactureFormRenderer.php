@@ -36,8 +36,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
 
     public function design()
     {
-        dd("Objet Instance:", $this->getObjetInstance());
-
+        // dd("Objet Instance:", $this->getObjetInstance());
         $this->addChamp(
             (new JSChamp()) //<i class="fa-solid fa-tag"></i>
                 ->createSection("Montant total")

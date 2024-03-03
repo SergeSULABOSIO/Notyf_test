@@ -35,7 +35,56 @@ class FactureFormRenderer extends JSPanelRenderer
         //Onglet Article
         $this->addChamp(
             (new JSChamp())
-                ->createOnglet(" Informations générales")
+                ->createOnglet(" Articles facturés")
+                ->setIcon("fas fa-handshake")
+                ->setHelp("Les articles de la facture.")
+                ->getChamp()
+        );
+
+        //Montant TTC
+        $this->addChamp(
+            (new JSChamp())
+                ->createArgent("totalSolde", "Solde à payer")
+                ->setDisabled(true)
+                ->setColumns(10)
+                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                ->setFormatValue(
+                    function ($value, Facture $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalSolde())))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
+        );
+
+        //Panel Articles facturées
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Articles facturés")
+                ->setIcon("fa-solid fa-layer-group")
+                ->setHelp("Elements constitutifs de la facture ou de la note de débit/crédit.")
+                ->setColumns(10)
+                ->getChamp()
+        );
+
+        //Elements facturés
+        $this->addChamp(
+            (new JSChamp())
+                ->createCollection("elementFactures", "Eléments facturés")
+                ->setColumns(10)
+                ->useEntryCrudForm(ElementFactureCrudController::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->getChamp()
+        );
+
+        //Onglet Informations générales
+        $this->addChamp(
+            (new JSChamp())
+                ->createOnglet(" Autres générales")
                 ->setIcon("fas fa-handshake")
                 ->setHelp("Les articles de la facture.")
                 ->getChamp()
@@ -81,17 +130,6 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->setColumns(5)
                 ->getChamp()
         );
-
-        // //Type
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createChoix("type", "Type de facture")
-        //         ->setColumns(10)
-        //         ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
-        //         ->getChamp()
-        // );
-
-        
 
         //Rférence de la facture
         $this->addChamp(
@@ -143,55 +181,6 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->createTexte("posteSignedBy", "Fonction")
                 ->setRequired(true)
                 ->setColumns(3)
-                ->getChamp()
-        );
-
-        //Onglet Article
-        $this->addChamp(
-            (new JSChamp())
-                ->createOnglet(" Articles facturés")
-                ->setIcon("fas fa-handshake")
-                ->setHelp("Les articles de la facture.")
-                ->getChamp()
-        );
-
-        //Montant TTC
-        $this->addChamp(
-            (new JSChamp())
-                ->createArgent("totalSolde", "Solde à payer")
-                ->setDisabled(true)
-                ->setColumns(10)
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setFormatValue(
-                    function ($value, Facture $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $this->serviceMonnaie->getMonantEnMonnaieAffichage($objet->getTotalSolde())))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
-                ->getChamp()
-        );
-
-        //Panel Articles facturées
-        $this->addChamp(
-            (new JSChamp())
-                ->createSection("Articles facturés")
-                ->setIcon("fa-solid fa-layer-group")
-                ->setHelp("Elements constitutifs de la facture ou de la note de débit/crédit.")
-                ->setColumns(10)
-                ->getChamp()
-        );
-
-        //Elements facturés
-        $this->addChamp(
-            (new JSChamp())
-                ->createCollection("elementFactures", "Eléments facturés")
-                ->setColumns(10)
-                ->useEntryCrudForm(ElementFactureCrudController::class)
-                ->allowAdd(false)
-                ->allowDelete(true)
                 ->getChamp()
         );
 

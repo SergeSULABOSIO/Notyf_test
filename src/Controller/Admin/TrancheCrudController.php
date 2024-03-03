@@ -520,66 +520,22 @@ class TrancheCrudController extends AbstractCrudController
 
     public function batchCreerNotePourAssureur(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->canBatchInvoice(new ConditionAssureur($this->retrieveTabTranches($batchActionDto)));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_ASSUREUR,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->invoiceAssureur($this->retrieveTabTranches($batchActionDto), $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function batchCreerNotePourPartenaire(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->canBatchInvoice(new ConditionPartenaire($this->retrieveTabTranches($batchActionDto)));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_PARTENAIRE,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->invoicePartenaire($this->retrieveTabTranches($batchActionDto), $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function batchCreerNotePourDGI(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->canBatchInvoice(new ConditionDgi($this->retrieveTabTranches($batchActionDto)));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_DGI,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->invoiceDGI($this->retrieveTabTranches($batchActionDto), $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function batchCreerNotePourARCA(BatchActionDto $batchActionDto, AdminUrlGenerator $adminUrlGenerator)
     {
-        $reponse = $this->canBatchInvoice(new ConditionArca($this->retrieveTabTranches($batchActionDto)));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_ARCA,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($batchActionDto->getReferrerUrl());
+        return $this->invoiceARCA($this->retrieveTabTranches($batchActionDto), $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
 
@@ -591,66 +547,22 @@ class TrancheCrudController extends AbstractCrudController
 
     public function creerNotePourAssureur(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $reponse = $this->canBatchInvoice(new ConditionAssureur([($context->getEntity()->getInstance())->getId()]));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_ASSUREUR,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($adminUrlGenerator->generateUrl());
+        return $this->invoiceAssureur([($context->getEntity()->getInstance())], $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function creerNotePourPartenaire(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $reponse = $this->canBatchInvoice(new ConditionPartenaire([($context->getEntity()->getInstance())->getId()]));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_PARTENAIRE,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($adminUrlGenerator->generateUrl());
+        return $this->invoicePartenaire([($context->getEntity()->getInstance())], $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function creerNotePourDGI(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $reponse = $this->canBatchInvoice(new ConditionDgi([($context->getEntity()->getInstance())->getId()]));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_DGI,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($adminUrlGenerator->generateUrl());
+        return $this->invoiceDGI([($context->getEntity()->getInstance())], $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     public function creerNotePourARCA(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
-        $reponse = $this->canBatchInvoice(new ConditionArca([($context->getEntity()->getInstance())->getId()]));
-        if ($reponse["Action"] == true) {
-            return $this->redirect(
-                $this->editFactureDestination(
-                    $reponse["Ids"],
-                    FactureCrudController::DESTINATION_ARCA,
-                    $adminUrlGenerator
-                )
-            );
-        }
-        $this->addFlash("danger", $reponse["Message"]);
-        return $this->redirect($adminUrlGenerator->generateUrl());
+        return $this->invoiceARCA([($context->getEntity()->getInstance())], $adminUrlGenerator, $adminUrlGenerator->generateUrl());
     }
 
     private function invoiceClient(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
@@ -671,13 +583,60 @@ class TrancheCrudController extends AbstractCrudController
 
     private function invoiceAssureur(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
     {
-        ICI
         $reponse = $this->canBatchInvoice(new ConditionAssureur($tabTranches));
         if ($reponse["Action"] == true) {
             return $this->redirect(
                 $this->editFactureDestination(
                     $reponse["Ids"],
                     FactureCrudController::DESTINATION_ASSUREUR,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($url);
+    }
+
+    private function invoicePartenaire(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
+    {
+        $reponse = $this->canBatchInvoice(new ConditionPartenaire($tabTranches));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_PARTENAIRE,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($url);
+    }
+
+    private function invoiceDGI(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
+    {
+        $reponse = $this->canBatchInvoice(new ConditionDgi($tabTranches));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_DGI,
+                    $adminUrlGenerator
+                )
+            );
+        }
+        $this->addFlash("danger", $reponse["Message"]);
+        return $this->redirect($url);
+    }
+
+    private function invoiceARCA(?array $tabTranches, AdminUrlGenerator $adminUrlGenerator, $url): RedirectResponse
+    {
+        $reponse = $this->canBatchInvoice(new ConditionArca($tabTranches));
+        if ($reponse["Action"] == true) {
+            return $this->redirect(
+                $this->editFactureDestination(
+                    $reponse["Ids"],
+                    FactureCrudController::DESTINATION_ARCA,
                     $adminUrlGenerator
                 )
             );
@@ -802,96 +761,6 @@ class TrancheCrudController extends AbstractCrudController
             /** @var ObjetMultiCom */
             $objetReponse = $formulaire->getData();
             // dd("Réponse de l'utilisateur:", $objetReponse);
-            // if ($objetReponse->getProduireNDPrime() == true) {
-            //     $ffg = new FacturePrimeInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNDFraisGestion() == true) {
-            //     $ffg = new FactureFraisGestionInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNDComLocale() == true) {
-            //     $ffg = new FactureComLocaleInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNDComReassurance() == true) {
-            //     $ffg = new FactureComReassuranceInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNDComFronting() == true) {
-            //     $ffg = new FactureComFrontingInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNCRetrocommission() == true) {
-            //     $ffg = new FactureRetroCommissionInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNCTaxeCourtier() == true) {
-            //     $ffg = new FactureTaxeCourtierInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceTaxes,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
-            // if ($objetReponse->getProduireNCTaxeAssureur() == true) {
-            //     $ffg = new FactureTaxeAssureurInit(
-            //         $this->serviceAvenant,
-            //         $this->serviceDates,
-            //         $this->serviceTaxes,
-            //         $this->serviceEntreprise,
-            //         $this->entityManager,
-            //         $this->serviceCompteBancaire
-            //     );
-            //     $facture = $ffg->buildFacture(1, $tranche);
-            //     $ffg->saveFacture();
-            // }
 
             //On se redirige vers la page des facture
             //Mais l'idéal c'est de filtrer les factures de cette tranche uniquement

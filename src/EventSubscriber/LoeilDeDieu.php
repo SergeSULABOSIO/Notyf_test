@@ -111,19 +111,10 @@ class LoeilDeDieu implements EventSubscriberInterface
             //dd($facture->getElementFactures());
         }
 
+
         /** @var Facture */
-        $facture = null;
         if ($entityInstance instanceof Facture) {
-            if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
-                $modificateurFactureAssureur = new FactureAssureurModif(
-                    $this->serviceAvenant,
-                    $this->serviceDates,
-                    $this->serviceEntreprise,
-                    $this->entityManager
-                );
-                $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
-            }
-            dd("Ajout identifié: ", $entityInstance);
+            $this->editFacture($entityInstance);
         }
 
         $this->updateCollectionsPourPiste($entityInstance, true);
@@ -134,6 +125,19 @@ class LoeilDeDieu implements EventSubscriberInterface
         $entityInstance->setUpdatedAt(new \DateTimeImmutable());
         //$this->cleanElementFacture();
         // dd($entityInstance);
+    }
+
+    private function editFacture($entityInstance)
+    {
+        if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
+            $modificateurFactureAssureur = new FactureAssureurModif(
+                $this->serviceAvenant,
+                $this->serviceDates,
+                $this->serviceEntreprise,
+                $this->entityManager
+            );
+            $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
+        }
     }
 
     private function updateCollectionsPourPiste($entityInstance, bool $isCreate)
@@ -634,7 +638,11 @@ class LoeilDeDieu implements EventSubscriberInterface
         }
         if ($entityInstance instanceof Facture) {
             $this->serviceFacture->cleanElementFacture($entityInstance);
+            $this->editFacture($entityInstance);
         }
+
+        // dd("Ajout identifié: ", $entityInstance);
+
 
         $this->updateCollectionsPourPiste($entityInstance, false);
 

@@ -24,6 +24,7 @@ abstract class AbstractModificateurFacture implements FactureModif
     ) {
     }
 
+    public abstract function OnGetMontant(?ElementFacture $elementFacture):?float;
     public abstract function OnCheckCritereIdentification(?ElementFacture $elementFacture): ?bool;
     public abstract function OnSetNotesToInclude(?ElementFacture $elementFacture): ?ElementFacture;
 
@@ -42,6 +43,7 @@ abstract class AbstractModificateurFacture implements FactureModif
                 $newElementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($police));
             }
             $newElementFacture = $this->OnSetNotesToInclude($newElementFacture);
+            $newElementFacture->setMontant($this->OnGetMontant($newElementFacture));
         }
         return $this;
     }

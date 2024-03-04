@@ -52,4 +52,13 @@ class FactureAssureurModif extends AbstractModificateurFacture
         }
         return $elementFacture;
     }
+
+    public function OnGetMontant(?ElementFacture $elementFacture): ?float
+    {
+        return (
+            $elementFacture->getCommissionReassurance() +
+            $elementFacture->getCommissionFronting() +
+            $elementFacture->getCommissionLocale()
+        );
+    }
 }

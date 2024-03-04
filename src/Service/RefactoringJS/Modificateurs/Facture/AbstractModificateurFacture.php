@@ -32,7 +32,6 @@ abstract class AbstractModificateurFacture implements FactureModif
     {
         foreach ($this->getNewElementsFacture() as $newElementFacture) {
             //Actualisation des attributs clés
-            // dd($newElementFacture);
             $newElementFacture->setCreatedAt(new \DateTimeImmutable());
             $newElementFacture->setUpdatedAt(new \DateTimeImmutable());
             $newElementFacture->setEntreprise($this->facture->getEntreprise());

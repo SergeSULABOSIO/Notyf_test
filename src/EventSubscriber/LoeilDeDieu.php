@@ -130,6 +130,7 @@ class LoeilDeDieu implements EventSubscriberInterface
     private function editFacture($entityInstance)
     {
         if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
+            //Destination Assureur
             $modificateurFactureAssureur = new FactureAssureurModif(
                 $this->serviceAvenant,
                 $this->serviceDates,
@@ -137,6 +138,9 @@ class LoeilDeDieu implements EventSubscriberInterface
                 $this->entityManager
             );
             $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
+        }else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
+            //Destination Client
+            Ici
         }
     }
 

@@ -25,6 +25,7 @@ use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\ChargementCrudController;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Chargement;
@@ -34,6 +35,7 @@ use App\Entity\DocPiece;
 use App\Entity\Partenaire;
 use App\Entity\Revenu;
 use App\Entity\Tranche;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureAssureurModif;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -112,31 +114,16 @@ class LoeilDeDieu implements EventSubscriberInterface
         /** @var Facture */
         $facture = null;
         if ($entityInstance instanceof Facture) {
-            $facture = $entityInstance;
-            // dd("Tab Elements factures:", $entityInstance->getElementFactures(), $facture);
-            /** @var ElementFacture */
-            foreach ($entityInstance->getElementFactures() as $elementFacture) {
-                if (
-                    //Condition pour identifier les nouveaux ajouts
-                    $elementFacture->getCreatedAt() == null &&
-                    $elementFacture->getEntreprise() == null &&
-                    $elementFacture->getUtilisateur() == null
-                ) {
-                    //Actualisation des attributs clés
-                    $elementFacture->setCreatedAt(new \DateTimeImmutable());
-                    $elementFacture->setUpdatedAt(new \DateTimeImmutable());
-                    $elementFacture->setEntreprise($facture->getEntreprise());
-                    $elementFacture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-                    /** @var Police */
-                    $police = $elementFacture->getTranche()->getPolice();
-                    if ($police != null) {
-                        $elementFacture->setTypeavenant($police->getTypeavenant());
-                        $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($police));
-                    }
-
-                    dd("Coupable actualisé:", $entityInstance->getElementFactures(), $facture);
-                }
+            if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+                $modificateurFactureAssureur = new FactureAssureurModif(
+                    $this->serviceAvenant,
+                    $this->serviceDates,
+                    $this->serviceEntreprise,
+                    $this->entityManager
+                );
+                $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
             }
+            dd("Ajout identifié: ", $entityInstance);
         }
 
         $this->updateCollectionsPourPiste($entityInstance, true);

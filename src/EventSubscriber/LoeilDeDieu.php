@@ -109,8 +109,34 @@ class LoeilDeDieu implements EventSubscriberInterface
             //dd($facture->getElementFactures());
         }
 
+        /** @var Facture */
+        $facture = null;
         if ($entityInstance instanceof Facture) {
-            dd("Ici il faut appeler la fonction d'initialisation de l'élementFacture:", $entityInstance);
+            $facture = $entityInstance;
+            // dd("Tab Elements factures:", $entityInstance->getElementFactures(), $facture);
+            /** @var ElementFacture */
+            foreach ($entityInstance->getElementFactures() as $elementFacture) {
+                if (
+                    //Condition pour identifier les nouveaux ajouts
+                    $elementFacture->getCreatedAt() == null &&
+                    $elementFacture->getEntreprise() == null &&
+                    $elementFacture->getUtilisateur() == null
+                ) {
+                    //Actualisation des attributs clés
+                    $elementFacture->setCreatedAt(new \DateTimeImmutable());
+                    $elementFacture->setUpdatedAt(new \DateTimeImmutable());
+                    $elementFacture->setEntreprise($facture->getEntreprise());
+                    $elementFacture->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+                    /** @var Police */
+                    $police = $elementFacture->getTranche()->getPolice();
+                    if ($police != null) {
+                        $elementFacture->setTypeavenant($police->getTypeavenant());
+                        $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($police));
+                    }
+
+                    dd("Coupable actualisé:", $entityInstance->getElementFactures(), $facture);
+                }
+            }
         }
 
         $this->updateCollectionsPourPiste($entityInstance, true);

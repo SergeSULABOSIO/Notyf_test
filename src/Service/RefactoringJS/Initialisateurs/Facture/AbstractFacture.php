@@ -160,7 +160,7 @@ abstract class AbstractFacture implements FactureInit
             $totDu = $this->getTotalDu($tranche);
             $totInvoiced = $tranche->getTotalInvoiced_destination($this->facture->getDestination());
             $elementFacture->setMontant($totDu - $totInvoiced);
-
+            
             $elementFacture->setTranche($tranche);
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));

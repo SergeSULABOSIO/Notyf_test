@@ -140,7 +140,7 @@ class LoeilDeDieu implements EventSubscriberInterface
             $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
         }else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
             // Destination Client
-            // Ici
+            // Serge SULA
         }else if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
             // Destination DGI
 

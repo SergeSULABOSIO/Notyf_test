@@ -2,16 +2,12 @@
 
 namespace App\Service\RefactoringJS\Initialisateurs\Facture;
 
-use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
-use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Controller\Admin\FactureCrudController;
 use App\Entity\ElementFacture;
 use App\Service\RefactoringJS\Modificateurs\Facture\AbstractModificateurFacture;
-use phpDocumentor\Reflection\Types\Null_;
 
 class FactureAssureurModif extends AbstractModificateurFacture
 {

@@ -17,7 +17,6 @@ use App\Entity\ElementFacture;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceFacture;
 use App\Service\ServiceEntreprise;
-use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;

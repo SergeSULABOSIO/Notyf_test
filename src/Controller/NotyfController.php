@@ -13,7 +13,6 @@ class NotyfController extends AbstractController
     //#[IsGranted('ROLE_USER')]
     public function index(?string $notyf = null): Response
     {
-
         if ($notyf != null) {
             $this->addFlash($notyf, "Ceci est un message " . $notyf);
         }

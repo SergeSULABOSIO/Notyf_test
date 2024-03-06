@@ -53,6 +53,12 @@ class FactureAssureurModif extends AbstractModificateurFacture
         return $elementFacture;
     }
 
+    /**
+     * Quand on demande le montant de l'elementFacture
+     *
+     * @param ElementFacture|null $elementFacture
+     * @return float|null
+     */
     public function OnGetMontant(?ElementFacture $elementFacture): ?float
     {
         return (

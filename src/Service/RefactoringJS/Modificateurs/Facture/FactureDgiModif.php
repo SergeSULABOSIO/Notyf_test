@@ -38,6 +38,7 @@ class FactureDgiModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             //Com sur Fronting
             $elementFacture->setIncludeTaxeAssureur(true);
+            $elementFacture->setTaxeAssureurTotale($elementFacture->getTranche()->getTaxeAssureurTotale());
         }
         return $elementFacture;
     }

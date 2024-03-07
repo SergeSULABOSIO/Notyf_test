@@ -38,7 +38,7 @@ class FacturePartenaireModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             //Rétrocommissions
             $elementFacture->setIncludeRetroCom(true);
-            // $elementFacture->setCommissionFronting($elementFacture->getTranche()->getRetroCommissionTotale());
+            $elementFacture->setRetroCommissionTotale($elementFacture->getTranche()->getRetroCommissionTotale());
         }
         return $elementFacture;
     }

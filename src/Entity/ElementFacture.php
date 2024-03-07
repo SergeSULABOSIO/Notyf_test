@@ -601,4 +601,76 @@ class ElementFacture extends JSAbstractFinances
 
         return $this;
     }
+
+    /**
+     * Set the value of fraisGestionTotale
+     *
+     * @return  self
+     */ 
+    public function setFraisGestionTotale($fraisGestionTotale)
+    {
+        $this->fraisGestionTotale = $fraisGestionTotale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of primeTotale
+     *
+     * @return  self
+     */ 
+    public function setPrimeTotale($primeTotale)
+    {
+        $this->primeTotale = $primeTotale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of commissionTotale
+     *
+     * @return  self
+     */ 
+    public function setCommissionTotale($commissionTotale)
+    {
+        $this->commissionTotale = $commissionTotale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of retroCommissionTotale
+     *
+     * @return  self
+     */ 
+    public function setRetroCommissionTotale($retroCommissionTotale)
+    {
+        $this->retroCommissionTotale = $retroCommissionTotale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of taxeCourtierTotale
+     *
+     * @return  self
+     */ 
+    public function setTaxeCourtierTotale($taxeCourtierTotale)
+    {
+        $this->taxeCourtierTotale = $taxeCourtierTotale;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of taxeAssureurTotale
+     *
+     * @return  self
+     */ 
+    public function setTaxeAssureurTotale($taxeAssureurTotale)
+    {
+        $this->taxeAssureurTotale = $taxeAssureurTotale;
+
+        return $this;
+    }
 }

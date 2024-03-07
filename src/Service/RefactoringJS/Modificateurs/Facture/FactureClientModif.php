@@ -38,8 +38,10 @@ class FactureClientModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             // Frais de gestion
             $elementFacture->setIncludeFraisGestion(true);
+            $elementFacture->setFraisGestionTotale($elementFacture->getTranche()->getComFraisGestion());
             // Prime d'assurance
             $elementFacture->setIncludePrime(true);
+            $elementFacture->setPrimeTotale($elementFacture->getTranche()->getPrimeTotaleTranche());
         }
         return $elementFacture;
     }

@@ -38,6 +38,7 @@ class FactureArcaModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             //Taxe courtier
             $elementFacture->setIncludeTaxeCourtier(true);
+            $elementFacture->setTaxeCourtierTotale($elementFacture->getTranche()->getTaxeCourtierTotale());
         }
         return $elementFacture;
     }

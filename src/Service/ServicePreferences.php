@@ -1082,7 +1082,7 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
             ->onlyOnIndex()
-            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE);
+            ->setChoices(FactureCrudController::TAB_TYPE_NOTE);
         $tabAttributs[] = AssociationField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)
             ->formatValue(function ($value, Facture $entity) {
                 return count($entity->getElementFactures()) == 0 ? "Aucun élément" : count($entity->getElementFactures()) . " élement(s).";
@@ -1709,7 +1709,7 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_FIN_FACTURE_ID)->onlyOnDetail();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->setChoices(FactureCrudController::TAB_TYPE_NOTE)
             ->onlyOnDetail();
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('elementFactures', PreferenceCrudController::PREF_FIN_FACTURE_ELEMENTS)->onlyOnDetail();
@@ -1765,7 +1765,7 @@ class ServicePreferences
             ->setColumns(10)
             ->onlyOnForms();
         $tabAttributs[] = ChoiceField::new('type', PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
-            ->setChoices(FactureCrudController::TAB_TYPE_FACTURE)
+            ->setChoices(FactureCrudController::TAB_TYPE_NOTE)
             ->onlyOnForms()
             ->setColumns(5);
         $tabAttributs[] = TextField::new('reference', PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
@@ -3749,423 +3749,423 @@ class ServicePreferences
         return $tabAttributs;
     }
 
-    public function setAttributs_Calculables_Index($isPolice, array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
-    {
-        //LES CHAMPS CALCULABLES
-        if ($isPolice == false) {
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_nette])) {
-                $tabAttributs[] = MoneyField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
-                    ->formatValue(function ($value, CalculableEntity $entity) {
-                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_nette);
-                    })
-                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                    ->setStoredAsCents()
-                    ->onlyOnIndex();
-            }
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_fronting])) {
-                $tabAttributs[] = MoneyField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
-                    ->formatValue(function ($value, CalculableEntity $entity) {
-                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_fronting);
-                    })
-                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                    ->setStoredAsCents()
-                    ->onlyOnIndex();
-            }
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_accessoire])) {
-                $tabAttributs[] = MoneyField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
-                    ->formatValue(function ($value, CalculableEntity $entity) {
-                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_accessoire);
-                    })
-                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                    ->setStoredAsCents()
-                    ->onlyOnIndex();
-            }
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tva])) {
-                $tabAttributs[] = MoneyField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
-                    ->formatValue(function ($value, CalculableEntity $entity) {
-                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_tva);
-                    })
-                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                    ->setStoredAsCents()
-                    ->onlyOnIndex();
-            }
-            if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_totale])) {
-                $tabAttributs[] = MoneyField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
-                    ->formatValue(function ($value, CalculableEntity $entity) {
-                        return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_totale);
-                    })
-                    ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                    ->setStoredAsCents()
-                    ->onlyOnIndex();
-            }
-        }
+    // public function setAttributs_Calculables_Index($isPolice, array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
+    // {
+    //     //LES CHAMPS CALCULABLES
+    //     if ($isPolice == false) {
+    //         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_nette])) {
+    //             $tabAttributs[] = MoneyField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
+    //                 ->formatValue(function ($value, CalculableEntity $entity) {
+    //                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_nette);
+    //                 })
+    //                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //                 ->setStoredAsCents()
+    //                 ->onlyOnIndex();
+    //         }
+    //         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_fronting])) {
+    //             $tabAttributs[] = MoneyField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
+    //                 ->formatValue(function ($value, CalculableEntity $entity) {
+    //                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_fronting);
+    //                 })
+    //                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //                 ->setStoredAsCents()
+    //                 ->onlyOnIndex();
+    //         }
+    //         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_accessoire])) {
+    //             $tabAttributs[] = MoneyField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
+    //                 ->formatValue(function ($value, CalculableEntity $entity) {
+    //                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_accessoire);
+    //                 })
+    //                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //                 ->setStoredAsCents()
+    //                 ->onlyOnIndex();
+    //         }
+    //         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_tva])) {
+    //             $tabAttributs[] = MoneyField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
+    //                 ->formatValue(function ($value, CalculableEntity $entity) {
+    //                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_tva);
+    //                 })
+    //                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //                 ->setStoredAsCents()
+    //                 ->onlyOnIndex();
+    //         }
+    //         if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_polices_primes_totale])) {
+    //             $tabAttributs[] = MoneyField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
+    //                 ->formatValue(function ($value, CalculableEntity $entity) {
+    //                     return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_totale);
+    //                 })
+    //                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //                 ->setStoredAsCents()
+    //                 ->onlyOnIndex();
+    //         }
+    //     }
 
-        //SINISTRE
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_dommage_total])) {
-            $tabAttributs[] = MoneyField::new('calc_sinistre_dommage_total', PreferenceCrudController::PREF_calc_sinistre_dommage_total)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_dommage_total);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indemnisation_total])) {
-            $tabAttributs[] = MoneyField::new('calc_sinistre_indemnisation_total', PreferenceCrudController::PREF_calc_sinistre_indemnisation_total)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_indemnisation_total);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indice_SP])) {
-            $tabAttributs[] = PercentField::new('calc_sinistre_indice_SP', PreferenceCrudController::PREF_calc_sinistre_indice_SP)
-                ->setNumDecimals(2)
-                ->onlyOnIndex();
-        }
+    //     //SINISTRE
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_dommage_total])) {
+    //         $tabAttributs[] = MoneyField::new('calc_sinistre_dommage_total', PreferenceCrudController::PREF_calc_sinistre_dommage_total)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_dommage_total);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indemnisation_total])) {
+    //         $tabAttributs[] = MoneyField::new('calc_sinistre_indemnisation_total', PreferenceCrudController::PREF_calc_sinistre_indemnisation_total)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_indemnisation_total);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_sinistre_indice_SP])) {
+    //         $tabAttributs[] = PercentField::new('calc_sinistre_indice_SP', PreferenceCrudController::PREF_calc_sinistre_indice_SP)
+    //             ->setNumDecimals(2)
+    //             ->onlyOnIndex();
+    //     }
 
-        //SECTION REVENU
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_reserve])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_reserve);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_partageable])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_partageable);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ht])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ht);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_encaisse);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])) {
-            $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_solde_restant_du);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        //SECTION PARTENAIRES
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom])) {
-            $tabAttributs[] = MoneyField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_payees])) {
-            $tabAttributs[] = MoneyField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_payees);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_solde])) {
-            $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_solde);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        //SECTION - TAXES
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab)) //
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_payees);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_solde);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        //SECTION - TAXES
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_tab])) {
-            $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Desc", PreferenceCrudController::PREF_calc_taxes_assureurs_tab))
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_payees);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
-            $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_solde);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnIndex();
-        }
-        return $tabAttributs;
-    }
+    //     //SECTION REVENU
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_reserve])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_reserve);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_partageable])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_partageable);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ht])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ht);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_encaisse])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_encaisse);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du])) {
+    //         $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_solde_restant_du);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     //SECTION PARTENAIRES
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom])) {
+    //         $tabAttributs[] = MoneyField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_payees])) {
+    //         $tabAttributs[] = MoneyField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_payees);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_retrocom_solde])) {
+    //         $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_solde);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     //SECTION - TAXES
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_tab])) {
+    //         $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab)) //
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_payees])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_payees);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_courtier_solde])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_solde);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     //SECTION - TAXES
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_tab])) {
+    //         $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Desc", PreferenceCrudController::PREF_calc_taxes_assureurs_tab))
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_payees])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_payees);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     if ($this->canShow($tabPreferences, $tabIndiceAttribut[PreferenceCrudController::PREF_calc_taxes_assureurs_solde])) {
+    //         $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_solde);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnIndex();
+    //     }
+    //     return $tabAttributs;
+    // }
 
-    public function setAttributs_Calculables_details($isPolice, array $tabAttributs)
-    {
-        //LES CHAMPS CALCULABLES
-        $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail();
-        if ($isPolice == false) {
-            $tabAttributs[] = FormField::addPanel('Primes')
-                ->setIcon('fa-solid fa-toggle-off')
-                ->onlyOnDetail();
-            $tabAttributs[] = MoneyField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_nette);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-            $tabAttributs[] = MoneyField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_fronting);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-            $tabAttributs[] = MoneyField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_accessoire);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-            $tabAttributs[] = MoneyField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_tva);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-            $tabAttributs[] = MoneyField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
-                ->formatValue(function ($value, CalculableEntity $entity) {
-                    return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_totale);
-                })
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setStoredAsCents()
-                ->onlyOnDetail();
-        }
+    // public function setAttributs_Calculables_details($isPolice, array $tabAttributs)
+    // {
+    //     //LES CHAMPS CALCULABLES
+    //     $tabAttributs[] = FormField::addTab(' Attributs calculés')->setIcon('fa-solid fa-temperature-high')->onlyOnDetail();
+    //     if ($isPolice == false) {
+    //         $tabAttributs[] = FormField::addPanel('Primes')
+    //             ->setIcon('fa-solid fa-toggle-off')
+    //             ->onlyOnDetail();
+    //         $tabAttributs[] = MoneyField::new('calc_polices_primes_nette', PreferenceCrudController::PREF_calc_polices_primes_nette)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_nette);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnDetail();
+    //         $tabAttributs[] = MoneyField::new('calc_polices_fronting', PreferenceCrudController::PREF_calc_polices_fronting)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_fronting);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnDetail();
+    //         $tabAttributs[] = MoneyField::new('calc_polices_accessoire', PreferenceCrudController::PREF_calc_polices_accessoire)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_accessoire);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnDetail();
+    //         $tabAttributs[] = MoneyField::new('calc_polices_tva', PreferenceCrudController::PREF_calc_polices_tva)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_tva);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnDetail();
+    //         $tabAttributs[] = MoneyField::new('calc_polices_primes_totale', PreferenceCrudController::PREF_calc_polices_primes_totale)
+    //             ->formatValue(function ($value, CalculableEntity $entity) {
+    //                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_polices_primes_totale);
+    //             })
+    //             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //             ->setStoredAsCents()
+    //             ->onlyOnDetail();
+    //     }
 
-        //SINISTRE
-        $tabAttributs[] = FormField::addPanel('Sinistre')
-            ->setIcon('fa-solid fa-toggle-off')
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_sinistre_dommage_total', PreferenceCrudController::PREF_calc_sinistre_dommage_total)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_dommage_total);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_sinistre_indemnisation_total', PreferenceCrudController::PREF_calc_sinistre_indemnisation_total)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_indemnisation_total);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = PercentField::new('calc_sinistre_indice_SP', PreferenceCrudController::PREF_calc_sinistre_indice_SP)
-            ->onlyOnDetail();
+    //     //SINISTRE
+    //     $tabAttributs[] = FormField::addPanel('Sinistre')
+    //         ->setIcon('fa-solid fa-toggle-off')
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_sinistre_dommage_total', PreferenceCrudController::PREF_calc_sinistre_dommage_total)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_dommage_total);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_sinistre_indemnisation_total', PreferenceCrudController::PREF_calc_sinistre_indemnisation_total)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_sinistre_indemnisation_total);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = PercentField::new('calc_sinistre_indice_SP', PreferenceCrudController::PREF_calc_sinistre_indice_SP)
+    //         ->onlyOnDetail();
 
-        //SECTION REVENU
-        $tabAttributs[] = FormField::addPanel('Commissions')
-            ->setIcon('fa-solid fa-toggle-off')
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_reserve);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_partageable);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ht);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_encaisse);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_solde_restant_du);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        //SECTION PARTENAIRES
-        $tabAttributs[] = FormField::addPanel('Retrocommossions')
-            ->setIcon('fa-solid fa-toggle-off')
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_payees);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_solde);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        //SECTION - TAXES
-        $tabAttributs[] = FormField::addPanel('Impôts et Taxes')
-            ->setIcon('fa-solid fa-toggle-off')
-            ->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab)) //
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_payees);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_solde);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        //SECTION - TAXES
-        $tabAttributs[] = FormField::addPanel()->onlyOnDetail();
-        $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Desc", PreferenceCrudController::PREF_calc_taxes_assureurs_tab))
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_payees);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
-            ->formatValue(function ($value, CalculableEntity $entity) {
-                return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_solde);
-            })
-            ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-            ->setStoredAsCents()
-            ->onlyOnDetail();
-        return $tabAttributs;
-    }
+    //     //SECTION REVENU
+    //     $tabAttributs[] = FormField::addPanel('Commissions')
+    //         ->setIcon('fa-solid fa-toggle-off')
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_reserve', PreferenceCrudController::PREF_calc_revenu_reserve)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_reserve);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_partageable', PreferenceCrudController::PREF_calc_revenu_partageable)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_partageable);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_ht', PreferenceCrudController::PREF_calc_revenu_ht)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ht);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_ttc', PreferenceCrudController::PREF_calc_revenu_ttc)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_ttc_encaisse', PreferenceCrudController::PREF_calc_revenu_ttc_encaisse)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_encaisse);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_revenu_ttc_solde_restant_du', PreferenceCrudController::PREF_calc_revenu_ttc_solde_restant_du)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_revenu_ttc_solde_restant_du);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     //SECTION PARTENAIRES
+    //     $tabAttributs[] = FormField::addPanel('Retrocommossions')
+    //         ->setIcon('fa-solid fa-toggle-off')
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_retrocom', PreferenceCrudController::PREF_calc_retrocom)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_retrocom_payees', PreferenceCrudController::PREF_calc_retrocom_payees)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_payees);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_retrocom_solde', PreferenceCrudController::PREF_calc_retrocom_solde)
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_retrocom_solde);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     //SECTION - TAXES
+    //     $tabAttributs[] = FormField::addPanel('Impôts et Taxes')
+    //         ->setIcon('fa-solid fa-toggle-off')
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = ArrayField::new('calc_taxes_courtier_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Desc", PreferenceCrudController::PREF_calc_taxes_courtier_tab)) //
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_courtier', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_courtier))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_courtier_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Pymnt", PreferenceCrudController::PREF_calc_taxes_courtier_payees))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_payees);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_courtier_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_COURTIER, "Solde", PreferenceCrudController::PREF_calc_taxes_courtier_solde))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_courtier_solde);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     //SECTION - TAXES
+    //     $tabAttributs[] = FormField::addPanel()->onlyOnDetail();
+    //     $tabAttributs[] = ArrayField::new('calc_taxes_assureurs_tab', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Desc", PreferenceCrudController::PREF_calc_taxes_assureurs_tab))
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_assureurs', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Mnt dû", PreferenceCrudController::PREF_calc_taxes_assureurs))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_payees', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Pymnt", PreferenceCrudController::PREF_calc_taxes_assureurs_payees))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_payees);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     $tabAttributs[] = MoneyField::new('calc_taxes_assureurs_solde', $this->getTitreAttributTaxe(self::INDICE_TAXE_ASSUREUR, "Solde", PreferenceCrudController::PREF_calc_taxes_assureurs_solde))
+    //         ->formatValue(function ($value, CalculableEntity $entity) {
+    //             return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->calc_taxes_assureurs_solde);
+    //         })
+    //         ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+    //         ->setStoredAsCents()
+    //         ->onlyOnDetail();
+    //     return $tabAttributs;
+    // }
 
     public function setAttributs_CalculablesTaxes_Index(array $tabAttributs, array $tabPreferences, array $tabIndiceAttribut)
     {

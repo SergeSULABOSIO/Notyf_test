@@ -199,7 +199,7 @@ class Assureur
 
     public function __toString()
     {
-        return $this->nom;
+        return $this->nom != null ? $this->nom : "";
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable

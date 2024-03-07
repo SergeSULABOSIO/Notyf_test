@@ -119,14 +119,21 @@ class AssureurCrudController extends AbstractCrudController
         $objet = new Assureur();
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        //$objet->setClos(0);
+        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
+        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
+        // dd($objet);
         return $objet;
     }
 
 
     public function configureFields(string $pageName): iterable
     {
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        // dd($this->getContext()->getEntity()->getInstance());
+        if($this->crud){
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
+        }else{
+
+        }
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
         return $this->servicePreferences->getChamps(new Assureur(), $this->crud, $this->adminUrlGenerator);
     }

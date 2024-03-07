@@ -2148,7 +2148,7 @@ class ServiceCrossCanal
 
     public function crossCanal_setTitrePage(Crud $crud, AdminUrlGenerator $adminUrlGenerator, $entite): Crud
     {
-
+        // dd($entite);
         if ($adminUrlGenerator->get("titre")) {
             $crud->setPageTitle(Crud::PAGE_INDEX, $adminUrlGenerator->get("titre"));
             $crud->setPageTitle(Crud::PAGE_DETAIL, $adminUrlGenerator->get("titre"));

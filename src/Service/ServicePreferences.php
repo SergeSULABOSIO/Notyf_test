@@ -3681,13 +3681,13 @@ class ServicePreferences
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_PRO_ASSUREUR_EMAIL)
             ->onlyOnForms()
             ->setColumns(6);
-        $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
-            ->onlyOnForms()
-            ->setColumns(6)
-            ->setChoices([
-                'Réassureur' => 1,
-                'Assureur' => 0
-            ]);
+        // $tabAttributs[] = ChoiceField::new('isreassureur', PreferenceCrudController::PREF_PRO_ASSUREUR_IS_REASSUREUR)
+        //     ->onlyOnForms()
+        //     ->setColumns(6)
+        //     ->setChoices([
+        //         'Réassureur' => 1,
+        //         'Assureur' => 0
+        //     ]);
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_PRO_ASSUREUR_SITE_WEB)
             ->onlyOnForms()
             ->setColumns(6);

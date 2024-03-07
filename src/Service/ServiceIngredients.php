@@ -71,33 +71,37 @@ class ServiceIngredients
                 "setObligatoire" => false,
                 "setTauxarca" => 0.10,
                 "setAbonnement" => false,
-                "setIARD" => true
+                "setIARD" => true,
+                "setCategorie" => 0
             ],
             [
                 "setNom" => "INCENDIE ET RISQUES DIVERS / ASSET / FAP",
                 "setCode" => "IMR",
                 "setDescription" => "Une assurance incendie est avant tout une {assurance de choses}. Ce qui veut dire qu'elle indemnise les dommages causés à vos biens matériels, plus particulièrement à l'habitation et son contenu. Mais elle couvre dans certaines circonstances également votre responsabilité civile à l'égard d'autrui.",
-                "setIsobligatoire" => true,
+                "setObligatoire" => true,
                 "setTauxarca" => 0.10,
-                "setIsabonnement" => false,
+                "setAbonnement" => false,
+                "setIARD" => true,
                 "setCategorie" => 0
             ],
             [
                 "setNom" => "RC AUTOMOBILE / MOTOR TPL",
                 "setCode" => "RCA",
                 "setDescription" => "La garantie responsabilité civile de votre assurance automobile couvre les dommages causés aux tiers par vous ou par les personnes vivant avec vous (enfants, concubin, époux....).",
-                "setIsobligatoire" => true,
+                "setObligatoire" => true,
                 "setTauxarca" => 0.10,
-                "setIsabonnement" => false,
+                "setAbonnement" => false,
+                "setIARD" => true,
                 "setCategorie" => 0
             ],
             [
                 "setNom" => "TOUS RISQUES AUTOMOBILES / MOTOR COMP.",
                 "setCode" => "TRA",
                 "setDescription" => "La garantie tous risques vous permet d'être indemnisé pour tous les dommages subis par votre véhicule, quel que soit le type d'accident et quelle que soit votre responsabilité en tant que conducteur.",
-                "setIsobligatoire" => false,
+                "setObligatoire" => false,
                 "setTauxarca" => 0.15,
-                "setIsabonnement" => false,
+                "setAbonnement" => false,
+                "setIARD" => true,
                 "setCategorie" => 0
             ]
         ];
@@ -200,6 +204,7 @@ class ServiceIngredients
             $this->entityManager->persist($etapeCRM);
         }
 
+        // dd($tabProduits);
         //PRODUIT
         foreach ($tabProduits as $O_produit) {
             $produit = new Produit();

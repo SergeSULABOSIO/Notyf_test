@@ -434,14 +434,6 @@ class ElementFacture extends JSAbstractFinances
         return $this->includeComLocale;
     }
 
-
-    public function setFraisGestionTotale($fraisGestion)
-    {
-        $this->fraisGestionTotale = $fraisGestion;
-        
-        return $this;
-    }
-
     /**
      * Set the value of includeComLocale
      *

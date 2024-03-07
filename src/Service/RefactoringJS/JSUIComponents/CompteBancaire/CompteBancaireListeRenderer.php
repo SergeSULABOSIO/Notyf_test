@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
@@ -30,100 +31,105 @@ class CompteBancaireListeRenderer extends JSPanelRenderer
     public function design()
     {
         //Intitulé du compte
-        $this->addChampTexte(
-            null,
-            "intitule",
-            "Intitulé",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("intitule", "Intitulé")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Numéro du compte
-        $this->addChampTexte(
-            null,
-            "numero",
-            "Numéro du compte",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("numero", "Numéro du compte")
+                ->setColumns(6)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Banque
-        $this->addChampTexte(
-            null,
-            "banque",
-            "Banque",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("banque", "Banque")
+                ->setColumns(3)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Code Swift
-        $this->addChampTexte(
-            null,
-            "codeSwift",
-            "Code Swift",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("codeSwift", "Code Swift")
+                ->setColumns(3)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Code monnaie
-        $this->addChampTexte(
-            null,
-            "codeMonnaie",
-            "Devise",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("codeMonnaie", "Devise")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
+
         //Dernière modification
-        $this->addChampDate(
-            null,
-            "updatedAt",
-            "D. Modification",
-            false,
-            false,
-            10,
-            function ($value, CompteBancaire $objet) {
-                /** @var JSCssHtmlDecoration */
-                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                    ->outputHtml();
-                return $formatedHtml;
-            }
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("updatedAt", "D. Modification")
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, CompteBancaire $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
         );
     }
 

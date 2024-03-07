@@ -434,6 +434,14 @@ class ElementFacture extends JSAbstractFinances
         return $this->includeComLocale;
     }
 
+
+    public function setFraisGestionTotale($fraisGestion)
+    {
+        $this->fraisGestionTotale = $fraisGestion;
+        
+        return $this;
+    }
+
     /**
      * Set the value of includeComLocale
      *
@@ -570,7 +578,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of commissionLocale
      *
      * @return  self
-     */ 
+     */
     public function setCommissionLocale($commissionLocale)
     {
         $this->commissionLocale = $commissionLocale;
@@ -582,7 +590,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of commissionFronting
      *
      * @return  self
-     */ 
+     */
     public function setCommissionFronting($commissionFronting)
     {
         $this->commissionFronting = $commissionFronting;
@@ -594,7 +602,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of commissionReassurance
      *
      * @return  self
-     */ 
+     */
     public function setCommissionReassurance($commissionReassurance)
     {
         $this->commissionReassurance = $commissionReassurance;

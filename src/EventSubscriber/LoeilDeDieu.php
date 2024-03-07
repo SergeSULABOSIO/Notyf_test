@@ -3,13 +3,20 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Piste;
+use App\Entity\Client;
 use App\Entity\Police;
+use App\Entity\Revenu;
 use DateTimeImmutable;
+use App\Entity\Contact;
 use App\Entity\Facture;
 use App\Entity\Monnaie;
+use App\Entity\Tranche;
 use App\Entity\Cotation;
+use App\Entity\DocPiece;
 use App\Entity\Paiement;
 use App\Entity\ActionCRM;
+use App\Entity\Chargement;
+use App\Entity\Partenaire;
 use App\Entity\FeedbackCRM;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
@@ -20,26 +27,24 @@ use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\PoliceCrudController;
+use App\Controller\Admin\RevenuCrudController;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Controller\Admin\ActionCRMCrudController;
 use App\Controller\Admin\ChargementCrudController;
-use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\PisteCrudController;
-use App\Controller\Admin\RevenuCrudController;
-use App\Entity\Chargement;
-use App\Entity\Client;
-use App\Entity\Contact;
-use App\Entity\DocPiece;
-use App\Entity\Partenaire;
-use App\Entity\Revenu;
-use App\Entity\Tranche;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureAssureurModif;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureDgiModif;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureArcaModif;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureClientModif;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FactureAssureurModif;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePartenaireInit;
+use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePartenaireModif;
 
 class LoeilDeDieu implements EventSubscriberInterface
 {
@@ -130,25 +135,49 @@ class LoeilDeDieu implements EventSubscriberInterface
     {
         if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
             // Destination Assureur
-            $modificateurFactureAssureur = new FactureAssureurModif(
+            $modificateurFacture = new FactureAssureurModif(
                 $this->serviceAvenant,
                 $this->serviceDates,
                 $this->serviceEntreprise,
                 $this->entityManager
             );
-            $entityInstance = $modificateurFactureAssureur->getUpdatedFacture($entityInstance);
-        }else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
+            $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
+        } else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
             // Destination Client
-            // Serge SULA
-        }else if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
+            $modificateurFacture = new FactureClientModif(
+                $this->serviceAvenant,
+                $this->serviceDates,
+                $this->serviceEntreprise,
+                $this->entityManager
+            );
+            $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
+        } else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
             // Destination DGI
-
-        }else if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
+            $modificateurFacture = new FactureDgiModif(
+                $this->serviceAvenant,
+                $this->serviceDates,
+                $this->serviceEntreprise,
+                $this->entityManager
+            );
+            $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
+        } else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
             // Destination ARCA
-
-        }else if($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]){
+            $modificateurFacture = new FactureArcaModif(
+                $this->serviceAvenant,
+                $this->serviceDates,
+                $this->serviceEntreprise,
+                $this->entityManager
+            );
+            $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
+        } else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
             // Destination PARTENAIRE
-            
+            $modificateurFacture = new FacturePartenaireModif(
+                $this->serviceAvenant,
+                $this->serviceDates,
+                $this->serviceEntreprise,
+                $this->entityManager
+            );
+            $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
         }
     }
 

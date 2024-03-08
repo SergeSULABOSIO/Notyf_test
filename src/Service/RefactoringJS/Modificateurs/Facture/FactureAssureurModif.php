@@ -38,13 +38,13 @@ class FactureAssureurModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             //Com sur Fronting
             $elementFacture->setIncludeComFronting(true);
-            $elementFacture->setCommissionFronting($elementFacture->getTranche()->getComFronting());
+            // $elementFacture->setCommissionFronting($elementFacture->getTranche()->getComFronting());
             //Com Locale
             $elementFacture->setIncludeComLocale(true);
-            $elementFacture->setCommissionLocale($elementFacture->getTranche()->getComLocale());
+            // $elementFacture->setCommissionLocale($elementFacture->getTranche()->getComLocale());
             //Com de Reassurance
             $elementFacture->setIncludeComReassurance(true);
-            $elementFacture->setCommissionReassurance($elementFacture->getTranche()->getComReassurance());
+            // $elementFacture->setCommissionReassurance($elementFacture->getTranche()->getComReassurance());
         }
         return $elementFacture;
     }
@@ -57,10 +57,16 @@ class FactureAssureurModif extends AbstractModificateurFacture
      */
     public function OnGetMontant(?ElementFacture $elementFacture): ?float
     {
-        return (
-            $elementFacture->getCommissionReassurance() +
-            $elementFacture->getCommissionFronting() +
-            $elementFacture->getCommissionLocale()
-        );
+        $cumul_montant = 0;
+        if ($elementFacture->getIncludeComReassurance() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionReassurance();
+        }
+        if ($elementFacture->getIncludeComFronting() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionFronting();
+        }
+        if ($elementFacture->getIncludeComLocale() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionLocale();
+        }
+        return ($cumul_montant);
     }
 }

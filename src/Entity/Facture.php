@@ -242,6 +242,7 @@ class Facture extends JSAbstractFinances
         foreach ($this->elementFactures as $ef) {
             $this->totalDu = $this->totalDu + $ef->getMontant();
         }
+        // dd($this->elementFactures);
         return round($this->totalDu);
     }
 

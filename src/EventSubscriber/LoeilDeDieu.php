@@ -402,7 +402,7 @@ class LoeilDeDieu implements EventSubscriberInterface
                     //On marque la cotation retenue
                     $this->updateValidatedQuote($piste, $policeRetenue);
                     //On génère ou actualise la/les facture(s) payables par le client
-                    $this->serviceFacture->processFacturePrime($policeRetenue);
+                    // $this->serviceFacture->processFacturePrime($policeRetenue);
                 }
             }
 

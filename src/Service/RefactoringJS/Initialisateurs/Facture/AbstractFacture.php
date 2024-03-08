@@ -160,23 +160,23 @@ abstract class AbstractFacture implements FactureInit
             $totDu = $this->getTotalDu($tranche);
             $totInvoiced = $tranche->getTotalInvoiced_destination($this->facture->getDestination());
             $elementFacture->setMontant($totDu - $totInvoiced);
-            
+
             $elementFacture->setTranche($tranche);
             $elementFacture->setTypeavenant($tranche->getPolice()->getTypeavenant());
             $elementFacture->setIdavenant($this->serviceAvenant->generateIdAvenant($tranche->getPolice()));
-            
-            if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA){
+
+            if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_ARCA) {
                 $elementFacture->setIncludeTaxeCourtier(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_ASSUREUR){
+            } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_ASSUREUR) {
                 $elementFacture->setIncludeComFronting(true);
                 $elementFacture->setIncludeComLocale(true);
                 $elementFacture->setIncludeComReassurance(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_CLIENT){
+            } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_CLIENT) {
                 $elementFacture->setIncludePrime(true);
                 $elementFacture->setIncludeFraisGestion(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI){
+            } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_DGI) {
                 $elementFacture->setIncludeTaxeAssureur(true);
-            }else if($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE){
+            } else if ($this->getDestinationFacture() == FactureCrudController::DESTINATION_PARTENAIRE) {
                 $elementFacture->setIncludeRetroCom(true);
             }
 
@@ -216,11 +216,9 @@ abstract class AbstractFacture implements FactureInit
             $this->serviceDates->getTexteSimple(
                 $this->tranches[0]->getPolice()->getDateexpiration()
             );
-
-
     }
 
-    public function loadSavedFactures(?array $tranches): ?array
+    public function loadSavedFactures(?array $tranche): ?array
     {
         dd("Fonction non définie pour l'instant.");
         // $tabFactures = [];
@@ -234,6 +232,14 @@ abstract class AbstractFacture implements FactureInit
         //         }
         //     }
         // }
+        return null;
+    }
+
+    public function loadSavedFacture(?Tranche $tranche): ?Facture
+    {
+        $tranche->getElementFactures()[0]->getFacture();
+        if (count($tranche->getElementFactures())) {
+        }
         return null;
     }
 
@@ -302,33 +308,8 @@ abstract class AbstractFacture implements FactureInit
     {
         // dd("Cette fonction n'est pas encore définie.");
         if ($this->facture != null) {
-            $ancienneFacture = $this->loadSavedFactures($this->tranches);
-            $testEquality = $this->areEqual($ancienneFacture, $this->facture);
-            // dd("Ici", $testEquality);
-            if ($testEquality[self::PARAM_FINAL] == false) {
-                //Enregistrement de la facture
-                if (
-                    $testEquality[self::PARAM_SAME_MONTANT] == false &&
-                    $testEquality[self::PARAM_SAME_PARTENAIRE] == false &&
-                    $testEquality[self::PARAM_SAME_CLIENT] == true &&
-                    $testEquality[self::PARAM_SAME_ASSUREUR] == true &&
-                    $testEquality[self::PARAM_SAME_TRANCHE] == true
-                ) {
-                    //On y ajoute la différence
-                    /** @var ElementFacture  */
-                    $elementFacture = $this->facture->getElementFactures()[0];
-                    $elementFacture
-                        ->setMontant(
-                            $testEquality[self::PARAM_DIFFERENCES][self::PARAM_SAME_MONTANT]
-                        );
-                    $this->facture->setDescription("Ajustement (" . $this->serviceDates->getTexte($this->serviceDates->aujourdhui()) . ") - " . $this->facture->getDescription());
-                    $this->entityManager->persist($this->facture);
-                } else {
-                    $this->entityManager->persist($this->facture);
-                }
-                // dd("Facture à ajouter", $this->facture);
-                $this->entityManager->flush();
-            }
+            $this->entityManager->persist($this->facture);
+            $this->entityManager->flush();
         }
     }
 }

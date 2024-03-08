@@ -178,7 +178,16 @@ class Tranche extends JSAbstractFinances
      */
     public function getPolice()
     {
-        $this->police = (new Calculateur())->setCotation($this->getCotation())->getPolice();
+        if ($this->getCotation() != null) {
+            if ($this->getCotation()->getPolices()) {
+                if (count($this->getCotation()->getPolices()) != 0) {
+                    $this->police = (new Calculateur())
+                    ->setCotation($this->getCotation())
+                    ->getPolice();
+                }
+            }
+        }
+        // dd($this->police);
         return $this->police;
     }
 
@@ -291,9 +300,10 @@ class Tranche extends JSAbstractFinances
     private function generateDescription()
     {
         $str_police_reference = "Inconnue";
-        if($this->getPolice()){
+        if ($this->getPolice() !== null) {
             $str_police_reference = $this->getPolice()->getReference();
         }
+        // dd($this->getCotation()->getId());
         if ($this->getCotation()) {
             $strPeriode = " pour " . $this->getDuree() . " mois. ";
             if ($this->getStartedAt() != null & $this->getEndedAt() != null) {

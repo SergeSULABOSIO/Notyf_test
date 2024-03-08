@@ -299,7 +299,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
+        if ($this->getTranche()) {
+            $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
+        }
         return $this->primeTotale;
     }
 
@@ -321,7 +323,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getFraisGestionTotale()
     {
-        $this->fraisGestionTotale = $this->getTranche()->getComFraisGestion();
+        if ($this->getTranche()) {
+            $this->fraisGestionTotale = $this->getTranche()->getComFraisGestion();
+        }
         return $this->fraisGestionTotale;
     }
 
@@ -330,7 +334,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getRevenuTotal()
     {
-        $this->revenuTotal = $this->getTranche()->getRevenuTotal();
+        if ($this->getTranche()) {
+            $this->revenuTotal = $this->getTranche()->getRevenuTotal();
+        }
         return $this->revenuTotal;
     }
 
@@ -339,7 +345,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getRetroCommissionTotale()
     {
-        $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale();
+        if ($this->getTranche()) {
+            $this->retroCommissionTotale = $this->getTranche()->getRetroCommissionTotale();
+        }
         return $this->retroCommissionTotale;
     }
 
@@ -348,7 +356,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getTaxeCourtierTotale()
     {
-        $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale();
+        if ($this->getTranche()) {
+            $this->taxeCourtierTotale = $this->getTranche()->getTaxeCourtierTotale();
+        }
         return $this->taxeCourtierTotale;
     }
 
@@ -357,7 +367,9 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getTaxeAssureurTotale()
     {
-        $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale();
+        if ($this->getTranche()) {
+            $this->taxeAssureurTotale = $this->getTranche()->getTaxeAssureurTotale();
+        }
         return $this->taxeAssureurTotale;
     }
 
@@ -606,7 +618,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of fraisGestionTotale
      *
      * @return  self
-     */ 
+     */
     public function setFraisGestionTotale($fraisGestionTotale)
     {
         $this->fraisGestionTotale = $fraisGestionTotale;
@@ -618,7 +630,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of primeTotale
      *
      * @return  self
-     */ 
+     */
     public function setPrimeTotale($primeTotale)
     {
         $this->primeTotale = $primeTotale;
@@ -630,7 +642,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of commissionTotale
      *
      * @return  self
-     */ 
+     */
     public function setCommissionTotale($commissionTotale)
     {
         $this->commissionTotale = $commissionTotale;
@@ -642,7 +654,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of retroCommissionTotale
      *
      * @return  self
-     */ 
+     */
     public function setRetroCommissionTotale($retroCommissionTotale)
     {
         $this->retroCommissionTotale = $retroCommissionTotale;
@@ -654,7 +666,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of taxeCourtierTotale
      *
      * @return  self
-     */ 
+     */
     public function setTaxeCourtierTotale($taxeCourtierTotale)
     {
         $this->taxeCourtierTotale = $taxeCourtierTotale;
@@ -666,7 +678,7 @@ class ElementFacture extends JSAbstractFinances
      * Set the value of taxeAssureurTotale
      *
      * @return  self
-     */ 
+     */
     public function setTaxeAssureurTotale($taxeAssureurTotale)
     {
         $this->taxeAssureurTotale = $taxeAssureurTotale;

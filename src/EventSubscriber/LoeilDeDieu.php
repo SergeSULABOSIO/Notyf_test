@@ -144,6 +144,7 @@ class LoeilDeDieu implements EventSubscriberInterface
             $entityInstance = $modificateurFacture->getUpdatedFacture($entityInstance);
         } else if ($entityInstance->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
             // Destination Client
+            // Résultat du test: Tout fonctionne très bien!
             $modificateurFacture = new FactureClientModif(
                 $this->serviceAvenant,
                 $this->serviceDates,

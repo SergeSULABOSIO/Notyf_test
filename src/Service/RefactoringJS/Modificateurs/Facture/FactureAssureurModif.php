@@ -38,13 +38,13 @@ class FactureAssureurModif extends AbstractModificateurFacture
         if ($elementFacture != Null) {
             //Com sur Fronting
             $elementFacture->setIncludeComFronting(true);
-            // $elementFacture->setCommissionFronting($elementFacture->getTranche()->getComFronting());
+            $elementFacture->setCommissionFronting($elementFacture->getTranche()->getComFronting());
             //Com Locale
             $elementFacture->setIncludeComLocale(true);
-            // $elementFacture->setCommissionLocale($elementFacture->getTranche()->getComLocale());
+            $elementFacture->setCommissionLocale($elementFacture->getTranche()->getComLocale());
             //Com de Reassurance
             $elementFacture->setIncludeComReassurance(true);
-            // $elementFacture->setCommissionReassurance($elementFacture->getTranche()->getComReassurance());
+            $elementFacture->setCommissionReassurance($elementFacture->getTranche()->getComReassurance());
         }
         return $elementFacture;
     }

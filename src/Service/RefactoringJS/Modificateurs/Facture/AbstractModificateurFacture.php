@@ -48,6 +48,12 @@ abstract class AbstractModificateurFacture implements FactureModif
         return $this;
     }
 
+    public function applyChoiceOfNotesIncluded()
+    {
+        Je suis ici
+        
+    }
+
     public function setFacture(?Facture $facture): FactureModif
     {
         $this->facture = $facture;

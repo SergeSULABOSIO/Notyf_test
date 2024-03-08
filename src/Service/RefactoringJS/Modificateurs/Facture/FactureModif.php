@@ -14,6 +14,7 @@ interface FactureModif
     public function OnCheckCritereIdentification(?ElementFacture $elementFacture):?bool;
     public function getNewElementsFacture():array;
     public function editNewElementsFacture():self;
+    public function applyChoiceOfNotesIncluded();
     //Production de la facture
     public function getUpdatedFacture(?Facture $oldFacture):?Facture;
 }

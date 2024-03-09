@@ -15,6 +15,7 @@ interface FactureModif
     public function getNewElementsFacture():array;
     public function editNewElementsFacture():self;
     public function applyChoiceOfNotesIncluded():self;
+    public function isSameDestination($existingTabElementsFacture, ?ElementFacture $elementFacture):?bool;
     //Production de la facture
     public function getUpdatedFacture(?Facture $oldFacture):?Facture;
 }

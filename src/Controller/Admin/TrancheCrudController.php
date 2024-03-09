@@ -48,15 +48,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use App\Service\RefactoringJS\Initialisateurs\Facture\ObjetMultiCom;
 use App\Service\RefactoringJS\JSUIComponents\Tranche\TrancheUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FacturePrimeInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComLocaleInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComFrontingInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureFraisGestionInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeAssureurInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureTaxeCourtierInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureComReassuranceInit;
-use App\Service\RefactoringJS\Initialisateurs\Facture\FactureRetroCommissionInit;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TrancheCrudController extends AbstractCrudController

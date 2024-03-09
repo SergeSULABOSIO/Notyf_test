@@ -172,10 +172,18 @@ abstract class AbstractModificateurFacture implements FactureModif
         $tabResultat = [];
         foreach ($this->getFacture()->getElementFactures() as $elementFacture) {
             if ($this->OnCheckCritereIdentification($elementFacture) == true) {
-                $tabResultat[] = $elementFacture;
+                if($this->isSameDestination($this->getFacture()->getElementFactures(), $elementFacture)){
+                    $tabResultat[] = $elementFacture;
+                }
             }
         }
         return $tabResultat;
+    }
+
+    public function isSameDestination($existingTabElementsFacture, ?ElementFacture $elementFacture): ?bool
+    {
+        Ici
+        return true;
     }
 
     public function getUpdatedFacture(?Facture $oldFacture): ?Facture

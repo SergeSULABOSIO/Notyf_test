@@ -178,7 +178,13 @@ class Tranche extends JSAbstractFinances
      */
     public function getPolice()
     {
-        $this->police = (new Calculateur())->setCotation($this->getCotation())->getPolice();
+        if ($this->getCotation() != null) {
+            if ($this->getCotation()->getPolices()[0]) {
+                $this->police = (new Calculateur())
+                    ->setCotation($this->getCotation())
+                    ->getPolice();
+            }
+        }
         return $this->police;
     }
 
@@ -290,13 +296,17 @@ class Tranche extends JSAbstractFinances
 
     private function generateDescription()
     {
+        $str_police_reference = "Inconnue";
+        if ($this->getPolice()) {
+            $str_police_reference = $this->getPolice()->getReference();
+        }
         if ($this->getCotation()) {
             $strPeriode = " pour " . $this->getDuree() . " mois. ";
             if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
                 $strPeriode = " du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";
             }
             $strMont = " " . $this->getMontantEnMonnaieAffichage($this->getPrimeTotaleTranche()) . " soit " . ($this->getTaux() * 100) . "% de " . $this->getMontantEnMonnaieAffichage($this->getCotation()->getPrimeTotale()) . $strPeriode;
-            return $this->getNom() . " / Police: " . $this->getPolice()->getReference() . ": " . $strMont;
+            return $this->getNom() . " / Police: " . $str_police_reference . ": " . $strMont;
         } else {
             return $this->getNom() . " : Cotation introuvable!";
         }

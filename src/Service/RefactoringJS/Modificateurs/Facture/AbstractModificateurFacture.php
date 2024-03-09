@@ -5,6 +5,7 @@ namespace App\Service\RefactoringJS\Modificateurs\Facture;
 use App\Entity\ElementFacture;
 use App\Entity\Facture;
 use App\Entity\Police;
+use App\Entity\Tranche;
 use App\Service\ServiceDates;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
@@ -24,7 +25,7 @@ abstract class AbstractModificateurFacture implements FactureModif
     ) {
     }
 
-    public abstract function OnGetMontant(?ElementFacture $elementFacture):?float;
+    public abstract function OnGetMontant(?ElementFacture $elementFacture): ?float;
     public abstract function OnCheckCritereIdentification(?ElementFacture $elementFacture): ?bool;
     public abstract function OnSetNotesToInclude(?ElementFacture $elementFacture): ?ElementFacture;
 
@@ -50,12 +51,103 @@ abstract class AbstractModificateurFacture implements FactureModif
 
     public function applyChoiceOfNotesIncluded(): FactureModif
     {
-         /**
-         * Je suis ici. On ne prends pas en compte les montants 
-         * des notes qui n'ont pas cochées par l'utilisateur
-         */
+        $totMontantFacture = 0; 
+        foreach ($this->getFacture()->getElementFactures() as $elementFacture) {
+            $totMontant = 0; 
+            /** @var Tranche */
+            $tranche = $elementFacture->getTranche();
 
-        dd("On fait la vérification par ici...","On ne prends en compte que les montants des notes que le USER a cochées.");
+            //On ecoute la moindre modification de réassurance
+            if ($elementFacture->getIncludeComReassurance() == true) {
+                $mnt = $tranche->getComReassurance();
+                $elementFacture->setCommissionReassurance($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setCommissionReassurance($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+            
+            //On ecoute la moindre modification de la com surfronting
+            if ($elementFacture->getIncludeComFronting() == true) {
+                $mnt = $tranche->getComFronting();
+                $elementFacture->setCommissionFronting($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setCommissionFronting($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+
+            //On ecoute la moindre modification de la com locale
+            if ($elementFacture->getIncludeComLocale() == true) {
+                $mnt = $tranche->getComLocale();
+                $elementFacture->setCommissionLocale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setCommissionLocale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+
+            //On ecoute la moindre modification des frais de gestion
+            if ($elementFacture->getIncludeFraisGestion() == true) {
+                $mnt = $tranche->getComFraisGestion();
+                $elementFacture->setFraisGestionTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setFraisGestionTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+
+            //On ecoute la moindre modification des rétrocommissions
+            if ($elementFacture->getIncludeRetroCom() == true) {
+                $mnt = $tranche->getRetroCommissionTotale();
+                $elementFacture->setRetroCommissionTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setRetroCommissionTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+            
+            //On ecoute la moindre modification des taxes courtiers @ARCA
+            if ($elementFacture->getIncludeTaxeCourtier() == true) {
+                $mnt = $tranche->getTaxeCourtierTotale();
+                $elementFacture->setTaxeCourtierTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setTaxeCourtierTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+
+            //On ecoute la moindre modification des taxes assureurs @TVA
+            if ($elementFacture->getIncludeTaxeAssureur() == true) {
+                $mnt = $tranche->getTaxeAssureurTotale();
+                $elementFacture->setTaxeAssureurTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setTaxeAssureurTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+
+            //On ecoute la moindre modification de la prime d'assurance
+            if ($elementFacture->getIncludePrime() == true) {
+                $mnt = $tranche->getPrimeTotaleTranche();
+                $elementFacture->setPrimeTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            } else {
+                $mnt = 0;
+                $elementFacture->setPrimeTotale($mnt);
+                $totMontant = $totMontant + $mnt;
+            }
+            $elementFacture->setMontant(round($totMontant));
+            $totMontantFacture = $totMontantFacture + $totMontant;
+        }
+        // dd($this->getFacture()->getTotalDu(), $this->getFacture()->getMontantTTC(), $totMontantFacture);
         return $this;
     }
 

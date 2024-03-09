@@ -300,7 +300,9 @@ class ElementFacture extends JSAbstractFinances
     public function getPrimeTotale()
     {
         if ($this->getTranche()) {
-            $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
+            if ($this->getIncludePrime()) {
+                $this->primeTotale = $this->getTranche()->getPrimeTotaleTranche();
+            }
         }
         return $this->primeTotale;
     }
@@ -310,11 +312,17 @@ class ElementFacture extends JSAbstractFinances
      */
     public function getCommissionTotale()
     {
+        // $this->commissionTotale =
+        //     $this->getTranche()->getComLocale() +
+        //     $this->getTranche()->getComFronting() +
+        //     $this->getTranche()->getComReassurance() +
+        //     $this->getTranche()->getComAutreChargement();
+
         $this->commissionTotale =
-            $this->getTranche()->getComLocale() +
-            $this->getTranche()->getComFronting() +
-            $this->getTranche()->getComReassurance() +
-            $this->getTranche()->getComAutreChargement();
+            ($this->getIncludeComReassurance() == true ? $this->getCommissionReassurance() : 0) +
+            ($this->getIncludeComFronting() == true ? $this->getCommissionFronting() : 0) +
+            ($this->getIncludeComLocale() == true ? $this->getCommissionLocale() : 0) +
+            ($this->getIncludeFraisGestion() == true ? $this->getFraisGestionTotale() : 0);
         return $this->commissionTotale;
     }
 

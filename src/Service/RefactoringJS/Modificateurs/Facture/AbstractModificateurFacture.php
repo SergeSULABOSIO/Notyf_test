@@ -48,6 +48,17 @@ abstract class AbstractModificateurFacture implements FactureModif
         return $this;
     }
 
+    public function applyChoiceOfNotesIncluded(): FactureModif
+    {
+         /**
+         * Je suis ici. On ne prends pas en compte les montants 
+         * des notes qui n'ont pas cochées par l'utilisateur
+         */
+
+        dd("On fait la vérification par ici...","On ne prends en compte que les montants des notes que le USER a cochées.");
+        return $this;
+    }
+
     public function setFacture(?Facture $facture): FactureModif
     {
         $this->facture = $facture;
@@ -80,6 +91,7 @@ abstract class AbstractModificateurFacture implements FactureModif
         return $this
             ->setFacture($oldFacture)
             ->editNewElementsFacture()
+            ->applyChoiceOfNotesIncluded()
             ->getFacture();
     }
 }

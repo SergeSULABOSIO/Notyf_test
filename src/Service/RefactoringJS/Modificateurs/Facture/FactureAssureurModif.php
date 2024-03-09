@@ -57,10 +57,16 @@ class FactureAssureurModif extends AbstractModificateurFacture
      */
     public function OnGetMontant(?ElementFacture $elementFacture): ?float
     {
-        return (
-            $elementFacture->getCommissionReassurance() +
-            $elementFacture->getCommissionFronting() +
-            $elementFacture->getCommissionLocale()
-        );
+        $cumul_montant = 0;
+        if ($elementFacture->getIncludeComReassurance() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionReassurance();
+        }
+        if ($elementFacture->getIncludeComFronting() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionFronting();
+        }
+        if ($elementFacture->getIncludeComLocale() == true) {
+            $cumul_montant = $cumul_montant + $elementFacture->getCommissionLocale();
+        }
+        return ($cumul_montant);
     }
 }

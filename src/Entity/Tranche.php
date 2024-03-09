@@ -180,11 +180,20 @@ class Tranche extends JSAbstractFinances
     {
         if ($this->getCotation() != null) {
             if ($this->getCotation()->getPolices()[0]) {
-                $this->police = (new Calculateur())
+                if ($this->getCotation() != null) {
+            if ($this->getCotation()->getPolices()) {
+                if (count($this->getCotation()->getPolices()) != 0) {
+                    $this->police = (new Calculateur())
+                    
                     ->setCotation($this->getCotation())
+                    
                     ->getPolice();
             }
         }
+                }
+            }
+        }
+        // dd($this->police);
         return $this->police;
     }
 
@@ -296,11 +305,11 @@ class Tranche extends JSAbstractFinances
 
     private function generateDescription()
     {
-        $str_police_reference = "Inconnue";
-        if ($this->getPolice()) {
-            $str_police_reference = $this->getPolice()->getReference();
-        }
         if ($this->getCotation()) {
+            $str_police_reference = "Inconnue";
+            if($this->getCotation()->getPolice() != null){
+                $str_police_reference = $this->getCotation()->getPolice()->getReference();
+            }
             $strPeriode = " pour " . $this->getDuree() . " mois. ";
             if ($this->getStartedAt() != null & $this->getEndedAt() != null) {
                 $strPeriode = " du " . (($this->startedAt)->format('d-m-Y')) . " au " . (($this->endedAt)->format('d-m-Y')) . ".";

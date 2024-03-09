@@ -71,6 +71,12 @@ class ElementFactureFormRenderer extends JSPanelRenderer
         //Questions - Prime
         $this->addChamp(
             (new JSChamp())
+                ->createBoolean("includePrime", "Inclure la prime d'assurance")
+                ->setColumns(12)
+                ->getChamp()
+        );
+        $this->addChamp(
+            (new JSChamp())
                 ->createArgent("primeTotale", "Prime d'assurance")
                 ->setHelp("Vous pouvez modifier ce montant au besoin.")
                 ->setRequired(true)
@@ -87,14 +93,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Com locale
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includePrime", "Inclure la prime d'assurance")
+                ->createBoolean("includeComLocale", "Inclure la commission locale")
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Com locale
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("commissionLocale", "Commission locale")
@@ -112,14 +119,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Com fronting
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComLocale", "Inclure la commission locale")
+                ->createBoolean("includeComFronting", "Inclure la commission fronting / de céssion")
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Com fronting
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("commissionFronting", "Commission sur fronting.")
@@ -137,14 +145,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Com réassurance
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComFronting", "Inclure la commission fronting / de céssion")
+                ->createBoolean("includeComReassurance", "Inclure la commission de réassurance")
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Com réassurance
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("commissionReassurance", "Commission de réassurance")
@@ -162,14 +171,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Frais de gestion
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeComReassurance", "Inclure la commission de réassurance")
+                ->createBoolean("includeFraisGestion", "Inclure Frais de gestion")
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Frais de gestion
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("fraisGestionTotale", "Frais de gestion")
@@ -187,14 +197,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeFraisGestion", "Inclure Frais de gestion")
+                ->createBoolean("includeRetroCom", "Inclure la rétro-commission")
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("retroCommissionTotale", "Rétro-commission")
@@ -212,14 +223,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeRetroCom", "Inclure la rétro-commission")
+                ->createBoolean("includeTaxeCourtier", "Inclure le Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("taxeCourtierTotale", "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
@@ -237,14 +249,15 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
+        
+
+        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
-                ->createBoolean("includeTaxeCourtier", "Inclure le Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
+                ->createBoolean("includeTaxeAssureur", "Inclure la " . ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
                 ->setColumns(12)
                 ->getChamp()
         );
-
-        //Question Rétro commission
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("taxeAssureurTotale", ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
@@ -262,12 +275,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        $this->addChamp(
-            (new JSChamp())
-                ->createBoolean("includeTaxeAssureur", "Inclure la " . ucfirst("" . $this->serviceTaxes->getTaxe(false)->getNom()))
-                ->setColumns(12)
-                ->getChamp()
-        );
+        
 
         //Dernière section
         $this->addChamp(

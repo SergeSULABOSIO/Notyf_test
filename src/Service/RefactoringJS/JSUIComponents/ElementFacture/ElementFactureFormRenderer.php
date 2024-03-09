@@ -3,18 +3,12 @@
 namespace App\Service\RefactoringJS\JSUIComponents\ElementFacture;
 
 use App\Entity\Facture;
-use App\Entity\Tranche;
 use App\Service\ServiceTaxes;
 use App\Entity\ElementFacture;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\DocPieceCrudController;
-use App\Controller\Admin\PaiementCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use App\Controller\Admin\UtilisateurCrudController;
-use App\Controller\Admin\ElementFactureCrudController;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
@@ -80,6 +74,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
                 ->createArgent("primeTotale", "Prime d'assurance")
                 ->setHelp("Vous pouvez modifier ce montant au besoin.")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -106,6 +101,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("commissionLocale", "Commission locale")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -132,6 +128,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("commissionFronting", "Commission sur fronting.")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -158,6 +155,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("commissionReassurance", "Commission de réassurance")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -184,6 +182,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("fraisGestionTotale", "Frais de gestion")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -210,6 +209,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("retroCommissionTotale", "Rétro-commission")
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
@@ -236,6 +236,7 @@ class ElementFactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createArgent("taxeCourtierTotale", "Frais " . ucfirst("" . $this->serviceTaxes->getTaxe(true)->getNom()))
                 ->setRequired(true)
+                ->setDisabled(true)
                 ->setColumns(12)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(

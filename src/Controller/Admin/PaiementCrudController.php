@@ -26,9 +26,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Service\RefactoringJS\Builders\PaiementPrimeBuilder;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementARCAInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComFrontingInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComLocaleInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComReaInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementDGIInit;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -46,14 +48,8 @@ class PaiementCrudController extends AbstractCrudController
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
 
-    public ?PaiementPrimeInit $paiementPrimeInit = null;
-    public ?PaiementFraisGestionInit $paiementFraisGestionInit = null;
-    public ?PaiementComLocaleInit $paiementComLocalInit = null;
-    public ?PaiementComFrontingInit $paiementComFrontingInit = null;
-    public ?PaiementRetroComInit $paiementRetroComInit = null;
-    public ?PaiementTaxeCourtierInit $paiementTaxeCourtierInit = null;
-    public ?PaiementTaxeAssureurInit $paiementTaxeAssureurInit = null;
-    public ?PaiementComReaInit $paiementComReaInit = null;
+    public ?PaiementARCAInit $paiementArcaInit = null;
+    public ?PaiementDGIInit $paiementDgiInit = null;
     public ?PaiementUIBuilder $uiBuilder = null;
 
     public const TAB_TYPE_PAIEMENT = [
@@ -224,10 +220,10 @@ class PaiementCrudController extends AbstractCrudController
             /** @var Facture */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
             if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
-                dd("On paiera ARCA ici");
+                $objetFacture = $this->paiementArcaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
             }
             if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
-                dd("On paiera DGI ici");
+                $objetFacture = $this->paiementDgiInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
             }
             if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
                 dd("On paiera Assureur ici");
@@ -239,16 +235,6 @@ class PaiementCrudController extends AbstractCrudController
                 dd("On paiera Partenaire ici");
             }
         }
-        // /** @var Facture*/
-        // switch ($objetFacture->getDestination()) {
-        //     case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
-        //         $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-        //         break;
-        //     default:
-        //         dd("Cette fonction n'est pas prise en compte.");
-        //         break;
-        // }
-        //dd($objet);
         return $objet;
     }
 

@@ -34,8 +34,9 @@ abstract class AbstractPaiement implements PaiementInit
         $this->paiement = new Paiement();
     }
 
-    public abstract function getNomAbstract():?string;
-    public abstract function getTypePaiement():?string;
+    public abstract function getNomAbstract(): ?string;
+    public abstract function getTypePaiement(): ?string;
+    public abstract function getDestination(): ?string;
 
     public function buildPaiement(?Facture $facture, ?DateTimeImmutable $dateOfPayment, ?Utilisateur $utilisateur, ?float $paidAmount): ?Paiement
     {
@@ -47,7 +48,7 @@ abstract class AbstractPaiement implements PaiementInit
                     $this->entityManager->getRepository(Facture::class)->find($paramIDFacture)
                 );
             }
-        }else{
+        } else {
             $this->paiement->setFacture($facture);
         }
         $this->paiement->setPaidAt($dateOfPayment);
@@ -76,10 +77,6 @@ abstract class AbstractPaiement implements PaiementInit
         $this->paiement->setMontant($paidAmount);
     }
 
-    public function setDestination(?int $destination)
-    {
-        $this->paiement->setDestination($destination);
-    }
 
     public function setDescription(?string $description)
     {

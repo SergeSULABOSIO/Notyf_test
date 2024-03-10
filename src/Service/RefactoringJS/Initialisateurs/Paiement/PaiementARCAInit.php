@@ -19,7 +19,7 @@ use App\Controller\Admin\PaiementCrudController;
 use App\Service\ServiceTaxes;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
-class PaiementTaxeCourtierInit extends AbstractPaiement
+class PaiementARCAInit extends AbstractPaiement
 {
     public function __construct(
         private AdminUrlGenerator $adminUrlGenerator,
@@ -44,9 +44,15 @@ class PaiementTaxeCourtierInit extends AbstractPaiement
     {
         return PaiementCrudController::TYPE_PAIEMENT_SORTIE;
     }
+    
+    public function getDestination(): ?string
+    {
+        return FactureCrudController::DESTINATION_ARCA;
+    }
 
     public function getNomAbstract(): ?string
     {
-        return "Reglèment de ".$this->serviceTaxes->getNomTaxeCourtier()." (dû à " . $this->serviceTaxes->getTaxe(true)->getOrganisation() . ").";
+        $taxe = $this->serviceTaxes->getTaxe(true);
+        return "Reglèment de " .$taxe->getNom() . " pour " . $taxe->getOrganisation() . ".";
     }
 }

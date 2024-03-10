@@ -219,43 +219,35 @@ class PaiementCrudController extends AbstractCrudController
     {
         // dd($this->paiementFraisGestionInit);
         $objet = new Paiement();
-        /** @var Facture*/
-        $objetFacture = null;
         $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
         if ($paramIDFacture != null) {
+            /** @var Facture */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
+            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
+                dd("On paiera ARCA ici");
+            }
+            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
+                dd("On paiera DGI ici");
+            }
+            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+                dd("On paiera Assureur ici");
+            }
+            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]){
+                dd("On paiera Client ici");
+            }
+            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]){
+                dd("On paiera Partenaire ici");
+            }
         }
-        /** @var Facture*/
-        switch ($objetFacture->getDestination()) {
-            case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
-                $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]:
-                $objet = $this->paiementFraisGestionInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_LOCALE]:
-                $objet = $this->paiementComLocalInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_REASSURANCE]:
-                $objet = $this->paiementComReaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_COMMISSION_FRONTING]:
-                $objet = $this->paiementComFrontingInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS]:
-                $objet = $this->paiementRetroComInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_TVA]:
-                $objet = $this->paiementTaxeAssureurInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-            case FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA]:
-                $objet = $this->paiementTaxeCourtierInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                break;
-
-            default:
-                dd("Cette fonction n'est pas prise en compte.");
-                break;
-        }
+        // /** @var Facture*/
+        // switch ($objetFacture->getDestination()) {
+        //     case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]:
+        //         $objet = $this->paiementPrimeInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+        //         break;
+        //     default:
+        //         dd("Cette fonction n'est pas prise en compte.");
+        //         break;
+        // }
         //dd($objet);
         return $objet;
     }

@@ -31,6 +31,7 @@ use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComFrontingInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComLocaleInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementComReaInit;
 use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementDGIInit;
+use App\Service\RefactoringJS\Initialisateurs\Paiement\PaiementFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -48,7 +49,7 @@ class PaiementCrudController extends AbstractCrudController
     public const TYPE_PAIEMENT_ENTREE  = "Entrée des fonds";
     public const TYPE_PAIEMENT_SORTIE  = "Sortie des fonds";
 
-    public ?PaiementARCAInit $paiementArcaInit = null;
+    public ?PaiementFactory $paiementFactory = null;
     public ?PaiementDGIInit $paiementDgiInit = null;
     public ?PaiementUIBuilder $uiBuilder = null;
 
@@ -74,56 +75,7 @@ class PaiementCrudController extends AbstractCrudController
         private ServiceCompteBancaire $serviceCompteBancaire,
         private ServiceTaxes $serviceTaxes
     ) {
-        //$this->dompdf = new Dompdf();
-        $this->paiementPrimeInit = new PaiementPrimeInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementFraisGestionInit = new PaiementFraisGestionInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementComLocalInit = new PaiementComLocaleInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementComReaInit = new PaiementComReaInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementComFrontingInit = new PaiementComFrontingInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementRetroComInit = new PaiementRetroComInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
-        $this->paiementTaxeAssureurInit = new PaiementTaxeAssureurInit(
+        $this->paiementFactory = new PaiementFactory(
             $this->adminUrlGenerator,
             $this->serviceAvenant,
             $this->serviceDates,
@@ -132,15 +84,7 @@ class PaiementCrudController extends AbstractCrudController
             $this->entityManager,
             $this->serviceCompteBancaire
         );
-        $this->paiementTaxeCourtierInit = new PaiementTaxeCourtierInit(
-            $this->adminUrlGenerator,
-            $this->serviceAvenant,
-            $this->serviceDates,
-            $this->serviceTaxes,
-            $this->serviceEntreprise,
-            $this->entityManager,
-            $this->serviceCompteBancaire
-        );
+
         // dd($this->paiementFraisGestionInit);
         $this->uiBuilder = new PaiementUIBuilder();
     }
@@ -216,22 +160,38 @@ class PaiementCrudController extends AbstractCrudController
         // dd($this->paiementFraisGestionInit);
         $objet = new Paiement();
         $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
+        dd($paramIDFacture);
         if ($paramIDFacture != null) {
             /** @var Facture */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
-            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]){
-                $objetFacture = $this->paiementArcaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+            if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
+                // $objetFacture = $this->paiementArcaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+                $objetFacture = $this->paiementFactory
+                    ->createPaiementARCA()
+                    ->buildPaiement(
+                        $objetFacture,
+                        $this->serviceDates->aujourdhui(),
+                        $this->serviceEntreprise->getUtilisateur(),
+                        0
+                    );
             }
-            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]){
-                $objetFacture = $this->paiementDgiInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
+            if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
+                $objetFacture = $this->paiementFactory
+                    ->createPaiementDGI()
+                    ->buildPaiement(
+                        $objetFacture,
+                        $this->serviceDates->aujourdhui(),
+                        $this->serviceEntreprise->getUtilisateur(),
+                        0
+                    );
             }
-            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]){
+            if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
                 dd("On paiera Assureur ici");
             }
-            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]){
+            if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
                 dd("On paiera Client ici");
             }
-            if($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]){
+            if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
                 dd("On paiera Partenaire ici");
             }
         }

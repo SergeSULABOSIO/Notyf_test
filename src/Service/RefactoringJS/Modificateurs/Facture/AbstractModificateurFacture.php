@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\Modificateurs\Facture;
 
+use App\Controller\Admin\FactureCrudController;
 use App\Entity\ElementFacture;
 use App\Entity\Facture;
 use App\Entity\Police;
@@ -51,9 +52,9 @@ abstract class AbstractModificateurFacture implements FactureModif
 
     public function applyChoiceOfNotesIncluded(): FactureModif
     {
-        $totMontantFacture = 0; 
+        $totMontantFacture = 0;
         foreach ($this->getFacture()->getElementFactures() as $elementFacture) {
-            $totMontant = 0; 
+            $totMontant = 0;
             /** @var Tranche */
             $tranche = $elementFacture->getTranche();
 
@@ -67,7 +68,7 @@ abstract class AbstractModificateurFacture implements FactureModif
                 $elementFacture->setCommissionReassurance($mnt);
                 $totMontant = $totMontant + $mnt;
             }
-            
+
             //On ecoute la moindre modification de la com surfronting
             if ($elementFacture->getIncludeComFronting() == true) {
                 $mnt = $tranche->getComFronting();
@@ -111,7 +112,7 @@ abstract class AbstractModificateurFacture implements FactureModif
                 $elementFacture->setRetroCommissionTotale($mnt);
                 $totMontant = $totMontant + $mnt;
             }
-            
+
             //On ecoute la moindre modification des taxes courtiers @ARCA
             if ($elementFacture->getIncludeTaxeCourtier() == true) {
                 $mnt = $tranche->getTaxeCourtierTotale();
@@ -172,7 +173,8 @@ abstract class AbstractModificateurFacture implements FactureModif
         $tabResultat = [];
         foreach ($this->getFacture()->getElementFactures() as $elementFacture) {
             if ($this->OnCheckCritereIdentification($elementFacture) == true) {
-                if($this->isSameDestination($this->getFacture()->getElementFactures(), $elementFacture)){
+                $isSameDestination = $this->isSameDestination($this->getFacture()->getElementFactures(), $elementFacture);
+                if ($isSameDestination == true) {
                     $tabResultat[] = $elementFacture;
                 }
             }
@@ -182,7 +184,39 @@ abstract class AbstractModificateurFacture implements FactureModif
 
     public function isSameDestination($existingTabElementsFacture, ?ElementFacture $elementFacture): ?bool
     {
-        Ici
+        /** @var ElementFacture */
+        foreach ($existingTabElementsFacture as $existingEF) {
+            if ($elementFacture->getId() == null) {
+                /** @var Facture */
+                $facture = $elementFacture->getFacture();
+                if ($facture->getDestination() == FactureCrudController::DESTINATION_ARCA) {
+                    if ($existingEF->getNomTaxeCourtier() != $elementFacture->getNomTaxeCourtier()) {
+                        return false;
+                    }
+                }
+                if ($facture->getDestination() == FactureCrudController::DESTINATION_DGI) {
+                    if ($existingEF->getNomTaxeAssureur() != $elementFacture->getNomTaxeAssureur()) {
+                        return false;
+                    }
+                }
+                if ($facture->getDestination() == FactureCrudController::DESTINATION_ASSUREUR) {
+                    if ($existingEF->getFacture()->getAssureur() != $elementFacture->getFacture()->getAssureur()) {
+                        return false;
+                    }
+                }
+                if ($facture->getDestination() == FactureCrudController::DESTINATION_CLIENT) {
+                    if ($existingEF->getTranche()->getCotation()->getClient() != $elementFacture->getTranche()->getCotation()->getClient()) {
+                        return false;
+                    }
+                }
+                if ($facture->getDestination() == FactureCrudController::DESTINATION_PARTENAIRE) {
+                    if ($existingEF->getTranche()->getCotation()->getPartenaire() != $elementFacture->getTranche()->getCotation()->getPartenaire()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        // dd("J'ai trouvé le nouveau ElementFacture!!!!", $elementFacture);
         return true;
     }
 

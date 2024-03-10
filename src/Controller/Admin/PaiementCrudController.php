@@ -160,10 +160,11 @@ class PaiementCrudController extends AbstractCrudController
         // dd($this->paiementFraisGestionInit);
         $objet = new Paiement();
         $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
-        dd($paramIDFacture);
+        // dd($paramIDFacture);
         if ($paramIDFacture != null) {
             /** @var Facture */
             $objetFacture = $this->entityManager->getRepository(Facture::class)->find($paramIDFacture);
+            // dd($objetFacture->getDestination());
             if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
                 // $objetFacture = $this->paiementArcaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
                 $objetFacture = $this->paiementFactory

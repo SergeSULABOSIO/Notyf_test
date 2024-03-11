@@ -158,7 +158,7 @@ class PaiementCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         // dd($this->paiementFraisGestionInit);
-        $objet = new Paiement();
+        $newPaiement = new Paiement();
         $paramIDFacture = $this->adminUrlGenerator->get(ServiceCrossCanal::CROSSED_ENTITY_FACTURE);
         // dd($paramIDFacture);
         if ($paramIDFacture != null) {
@@ -167,7 +167,7 @@ class PaiementCrudController extends AbstractCrudController
             // dd($objetFacture->getDestination());
             if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
                 // $objetFacture = $this->paiementArcaInit->buildPaiement($objetFacture, $this->serviceDates->aujourdhui(), $this->serviceEntreprise->getUtilisateur(), 0);
-                $objetFacture = $this->paiementFactory
+                $newPaiement = $this->paiementFactory
                     ->createPaiementARCA()
                     ->buildPaiement(
                         $objetFacture,
@@ -177,7 +177,7 @@ class PaiementCrudController extends AbstractCrudController
                     );
             }
             if ($objetFacture->getDestination() == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
-                $objetFacture = $this->paiementFactory
+                $newPaiement = $this->paiementFactory
                     ->createPaiementDGI()
                     ->buildPaiement(
                         $objetFacture,
@@ -196,17 +196,19 @@ class PaiementCrudController extends AbstractCrudController
                 dd("On paiera Partenaire ici");
             }
         }
-        return $objet;
+        return $newPaiement;
     }
 
     public function configureFields(string $pageName): iterable
     {
+        /** @var Paiement */
+        $this->paiement = $this->getContext()->getEntity()->getInstance();
+        
+        // dd($pageName, $this->paiement);
         if ($pageName == Crud::PAGE_EDIT) {
-            /** @var Paiement */
-            $this->paiement = $this->getContext()->getEntity()->getInstance();
+            //
         }
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        // dd($pageName);
+        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->paiement);
         return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,

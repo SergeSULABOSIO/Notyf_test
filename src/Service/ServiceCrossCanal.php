@@ -1615,7 +1615,7 @@ class ServiceCrossCanal
                 ->set("champsADesactiver[0]", PreferenceCrudController::PREF_FIN_FACTURE_REFERENCE)
                 ->set("champsADesactiver[1]", PreferenceCrudController::PREF_FIN_FACTURE_TYPE)
                 ->set("champsADesactiver[2]", PreferenceCrudController::PREF_FIN_FACTURE_AUTRE_TIERS);
-        } else{
+        } else {
             dd("Type de facture non reconnu!");
         }
         // dd($typeFacture);
@@ -1810,7 +1810,7 @@ class ServiceCrossCanal
             if ($objetFacture != null) {
                 $paiement->setFacture($objetFacture);
                 $paiement->setMontant($objetFacture->getTotalDu() - $objetFacture->getTotalRecu());
-                
+
                 switch ($objetFacture->getDestination()) {
                     case FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]:
                         $paiement->setDestination(PaiementCrudController::TAB_TYPE_PAIEMENT[PaiementCrudController::TYPE_PAIEMENT_ENTREE]);

@@ -56,4 +56,40 @@ class PaiementFactory
             $this->serviceCompteBancaire
         );
     }
+
+    public function createPaiementClient():PaiementClientInit{
+        return new PaiementClientInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceTaxes,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+    }
+
+    public function createPaiementPartenaire():PaiementPartenaireInit{
+        return new PaiementPartenaireInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceTaxes,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+    }
+
+    public function createPaiementAssureur():PaiementAssureurInit{
+        return new PaiementAssureurInit(
+            $this->adminUrlGenerator,
+            $this->serviceAvenant,
+            $this->serviceDates,
+            $this->serviceTaxes,
+            $this->serviceEntreprise,
+            $this->entityManager,
+            $this->serviceCompteBancaire
+        );
+    }
 }

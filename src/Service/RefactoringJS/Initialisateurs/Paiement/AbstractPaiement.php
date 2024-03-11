@@ -206,4 +206,14 @@ abstract class AbstractPaiement implements PaiementInit
         // dd("Anciennes factures: ", count($anciennesFactures), $anciennesFactures, $reponse);
         return $reponse;
     }
+
+    /**
+     * Get the value of facture
+     *
+     * @return ?Facture
+     */
+    public function getFacture(): ?Facture
+    {
+        return $this->facture;
+    }
 }

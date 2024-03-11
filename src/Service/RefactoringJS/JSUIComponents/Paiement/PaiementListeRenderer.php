@@ -59,15 +59,15 @@ class PaiementListeRenderer extends JSPanelRenderer
         );
         
         //Type Facture
-        $this->addChamp(
-            (new JSChamp())
-                ->createChoix("typeFacture", "Type de note")
-                ->setRequired(true)
-                ->setDisabled(true)
-                ->setColumns(10)
-                ->setChoices(FactureCrudController::TAB_TYPE_NOTE)
-                ->getChamp()
-        );
+        // $this->addChamp(
+        //     (new JSChamp())
+        //         ->createChoix("typeFacture", "Type de note")
+        //         ->setRequired(true)
+        //         ->setDisabled(true)
+        //         ->setColumns(10)
+        //         ->setChoices(FactureCrudController::TAB_TYPE_NOTE)
+        //         ->getChamp()
+        // );
         
         //Montant
         $this->addChamp(

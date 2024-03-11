@@ -9,14 +9,15 @@ use App\Entity\Paiement;
 use App\Entity\Entreprise;
 use App\Entity\Utilisateur;
 use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use App\Entity\CompteBancaire;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCompteBancaire;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\PaiementCrudController;
-use App\Service\ServiceTaxes;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class PaiementDGIInit extends AbstractPaiement

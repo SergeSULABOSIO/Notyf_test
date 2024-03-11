@@ -54,6 +54,6 @@ class PaiementDGIInit extends AbstractPaiement
     public function getNomAbstract(): ?string
     {
         $taxe = $this->serviceTaxes->getTaxe(false);
-        return "Reglèment de " .$taxe->getNom() . " pour " . $taxe->getOrganisation() . ".";
+        return "Reglèment de la taxes " .$taxe->getNom() . " pour " . $taxe->getOrganisation() . ".";
     }
 }

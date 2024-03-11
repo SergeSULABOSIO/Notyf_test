@@ -54,6 +54,6 @@ class PaiementARCAInit extends AbstractPaiement
     public function getNomAbstract(): ?string
     {
         $taxe = $this->serviceTaxes->getTaxe(true);
-        return "Reglèment de " .$taxe->getNom() . " pour " . $taxe->getOrganisation() . ".";
+        return "Reglèment des frais " .$taxe->getNom() . " pour " . $taxe->getOrganisation() . ".";
     }
 }

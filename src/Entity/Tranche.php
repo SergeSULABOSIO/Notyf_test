@@ -53,8 +53,16 @@ class Tranche extends JSAbstractFinances
     private ?float $revenuTotal = 0;
 
     private ?float $retroCommissionTotale = 0;
+    //Taxe Courtier
     private ?float $taxeCourtierTotale = 0;
+    private ?float $taxeCourtierPayee = 0;
+    private ?float $taxeCourtierSolde = 0;
+
+    //Taxe Assureur
     private ?float $taxeAssureurTotale = 0;
+    private ?float $taxeAssureurPayee = 0;
+    private ?float $taxeAssureurSolde = 0;
+
     private ?float $reserve = 0;
     //Autres champs
     private ?string $periodeValidite;
@@ -100,6 +108,8 @@ class Tranche extends JSAbstractFinances
 
     #[ORM\OneToMany(mappedBy: 'tranche', targetEntity: ElementFacture::class)]
     private Collection $elementFactures;
+
+
 
     public function __construct()
     {

@@ -51,14 +51,14 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createAssociation("facture", "Facture")
-                ->setColumns(5)
+                ->setColumns(10)
                 ->getChamp()
         );
 
         $this->addChamp(
             (new JSChamp())
                 ->createChoix("destination", "Destination")
-                ->setColumns(5)
+                ->setColumns(3)
                 ->setChoices(FactureCrudController::TAB_DESTINATION)
                 ->getChamp()
         );
@@ -66,7 +66,7 @@ class PaiementFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createChoix("type", "Type")
-                ->setColumns(6)
+                ->setColumns(3)
                 ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
                 ->getChamp()
         );
@@ -146,6 +146,7 @@ class PaiementFormRenderer extends JSPanelRenderer
                 );
             $this->addChampToDeactivate("facture");
             $this->addChampToDeactivate("destination");
+            $this->addChampToDeactivate("type");
         } else {
             $oFacture = $objetInstance->getFacture();
         }

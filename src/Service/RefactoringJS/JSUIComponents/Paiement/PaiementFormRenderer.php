@@ -70,8 +70,6 @@ class PaiementFormRenderer extends JSPanelRenderer
                 ->setChoices(PaiementCrudController::TAB_TYPE_PAIEMENT)
                 ->getChamp()
         );
-
-        
         
         $this->addChamp(
             (new JSChamp())

@@ -12,16 +12,16 @@
         <tr>
             <td>
                 <div>
-                    {% if facture.type == 0 %}
+                    {% if facture.destination == 0 %}
+                        NOTE DE CREDIT
+                    {% elseif facture.destination == 1 %}
                         NOTE DE DEBIT
-                    {% elseif facture.type == 1 %}
-                        NOTE DE CREDIT
-                    {% elseif facture.type == 2 %}
-                        NOTE DE CREDIT
-                    {% elseif facture.type == 3 %}
-                        NOTE DE CREDIT
-                    {% elseif facture.type == 4 %}
+                    {% elseif facture.destination == 2 %}
                         NOTE DE DEBIT
+                    {% elseif facture.destination == 3 %}
+                        NOTE DE CREDIT
+                    {% elseif facture.destination == 4 %}
+                        NOTE DE CREDIT
                     {% endif %}
                 </div>
             </td>
@@ -40,13 +40,13 @@
         <tr>
             <td><span class="texte-bleu">ID. NAT:</span> {{facture.entreprise.idnat}}</td>
             <td class="texte-droite"><span class="texte-bleu">NATURE:</span> 
-                {% if facture.type == 0 %}
+                {% if facture.destination == 1 %}
                     COMMISSION DE COURTAGE
-                {% elseif facture.type == 1 %}
+                {% elseif facture.destination == 4 %}
                     RETROCOMMISSION DUE A {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)
-                {% elseif facture.type == 2  or facture.type == 3 %}
+                {% elseif facture.destination == 0  or facture.type == 3 %}
                     NOTE DE CREDIT
-                {% elseif facture.type == 4 %}
+                {% elseif facture.destination == 2 %}
                     FRAIS DE GESTION
                 {% endif %}
             </td>

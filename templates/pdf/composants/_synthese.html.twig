@@ -3,7 +3,7 @@
 {% set montant_taxe = (montant_ht * taxe_assureur.tauxIARD) %}
 {% set montant_ttc = montant_ht + montant_taxe %}
 
-{% if facture.type == 1 %}
+{% if facture.destination == 4 %}
     {% set com_ttc = 0 %}
     {% set com_ttc_payee = 0 %}
     {% set com_ttc_solde = 0 %}
@@ -78,7 +78,7 @@
             <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
-{% elseif facture.type == 3 or facture.type == 2 %}
+{% elseif facture.destination == 3 or facture.destination == 0 %}
     {% set nb_avenant = facture.elementFactures|length %}
     {% set primes_totale = 0 %}
     {% set primes_nettes = 0 %}
@@ -96,12 +96,12 @@
         {% set primes_totale = primes_totale + (tranche.primeTotaleTranche / 100) %}
         {% set primes_nettes = primes_nettes + (tranche.primeNetteTranche / 100) %}
         {% set com_ht = com_ht + (tranche.comLocale / 100) %}
-        {% if facture.type == 3 %} {# ARCA #}
-            {% set montant_taxe_courtier = montant_taxe_courtier + (police.calc_taxes_courtier / 100) %}
+        {% if facture.destination == 0 %} {# ARCA #}
+            {% set montant_taxe_courtier = montant_taxe_courtier + (tranche.taxeCourtierTotale / 100) %}
             {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (police.calc_taxes_courtier_payees / 100) %}
             {% set montant_taxe_courtier_solde = montant_taxe_courtier_solde + (police.calc_taxes_courtier_solde / 100) %}
-        {% elseif facture.type == 2 %} {# TVA #}
-            {% set montant_taxe_assureur = montant_taxe_assureur + (police.calc_taxes_assureurs / 100) %}
+        {% elseif facture.destination == 3 %} {# TVA #}
+            {% set montant_taxe_assureur = montant_taxe_assureur + (tranche.taxeAssureurTotale / 100) %}
             {% set montant_taxe_assureur_payee = montant_taxe_assureur_payee + (police.calc_taxes_assureurs_payees / 100) %}
             {% set montant_taxe_assureur_solde = montant_taxe_assureur_solde + (police.calc_taxes_assureurs_solde / 100) %}
         {% endif %}
@@ -169,7 +169,7 @@
         {% endif %}
         
     </table>
-{% elseif facture.type == 4 or facture.type == 0 %}
+{% elseif facture.destination == 1 or facture.destination == 2 %}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
     {# Synthèse des totaux #}
     <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale">

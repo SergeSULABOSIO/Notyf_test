@@ -191,15 +191,15 @@ class Tranche extends JSAbstractFinances
         if ($this->getCotation() != null) {
             if ($this->getCotation()->getPolices()[0]) {
                 if ($this->getCotation() != null) {
-            if ($this->getCotation()->getPolices()) {
-                if (count($this->getCotation()->getPolices()) != 0) {
-                    $this->police = (new Calculateur())
-                    
-                    ->setCotation($this->getCotation())
-                    
-                    ->getPolice();
-            }
-        }
+                    if ($this->getCotation()->getPolices()) {
+                        if (count($this->getCotation()->getPolices()) != 0) {
+                            $this->police = (new Calculateur())
+
+                                ->setCotation($this->getCotation())
+
+                                ->getPolice();
+                        }
+                    }
                 }
             }
         }
@@ -317,7 +317,7 @@ class Tranche extends JSAbstractFinances
     {
         if ($this->getCotation()) {
             $str_police_reference = "Inconnue";
-            if($this->getCotation()->getPolice() != null){
+            if ($this->getCotation()->getPolice() != null) {
                 $str_police_reference = $this->getCotation()->getPolice()->getReference();
             }
             $strPeriode = " pour " . $this->getDuree() . " mois. ";
@@ -1053,5 +1053,28 @@ class Tranche extends JSAbstractFinances
             $this->montantInvoicedPerTypeNote = $this->montantInvoicedPerTypeNote + $elementFacture->getMontantInvoicedPerTypeNote($typeNote);
         }
         return $this->montantInvoicedPerTypeNote;
+    }
+
+    public function getTaxeCourtierPayee()
+    {
+        $this->taxeCourtierPayee = $this->getTaxCourtierInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        // dd($this->taxeCourtierPayee);
+        return round($this->taxeCourtierPayee);
+    }
+
+    public function getTaxeCourtierSolde(){
+        $this->taxeCourtierSolde = $this->getTaxCourtierInvoiceDetails()[self::SOLDE_DU];
+        return round($this->taxeCourtierSolde);
+    }
+
+    public function getTaxeAssureurPayee()
+    {
+        $this->taxeAssureurPayee = $this->getTaxAssureurInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return round($this->taxeAssureurPayee);
+    }
+
+    public function getTaxeAssureurSolde(){
+        $this->taxeAssureurSolde = $this->getTaxAssureurInvoiceDetails()[self::SOLDE_DU];
+        return round($this->taxeAssureurSolde);
     }
 }

@@ -98,12 +98,12 @@
         {% set com_ht = com_ht + (tranche.comLocale / 100) %}
         {% if facture.destination == 0 %} {# ARCA #}
             {% set montant_taxe_courtier = montant_taxe_courtier + (tranche.taxeCourtierTotale / 100) %}
-            {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (police.calc_taxes_courtier_payees / 100) %}
-            {% set montant_taxe_courtier_solde = montant_taxe_courtier_solde + (police.calc_taxes_courtier_solde / 100) %}
+            {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (tranche.taxeCourtierPayee / 100) %}
+            {% set montant_taxe_courtier_solde = montant_taxe_courtier_solde + (tranche.taxeCourtierSolde / 100) %}
         {% elseif facture.destination == 3 %} {# TVA #}
             {% set montant_taxe_assureur = montant_taxe_assureur + (tranche.taxeAssureurTotale / 100) %}
-            {% set montant_taxe_assureur_payee = montant_taxe_assureur_payee + (police.calc_taxes_assureurs_payees / 100) %}
-            {% set montant_taxe_assureur_solde = montant_taxe_assureur_solde + (police.calc_taxes_assureurs_solde / 100) %}
+            {% set montant_taxe_assureur_payee = montant_taxe_assureur_payee + (tranche.taxeAssureurPayee / 100) %}
+            {% set montant_taxe_assureur_solde = montant_taxe_assureur_solde + (tranche.taxeAssureurSolde / 100) %}
         {% endif %}
         {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
     {% endfor %}

@@ -1077,4 +1077,5 @@ class Tranche extends JSAbstractFinances
         $this->taxeAssureurSolde = $this->getTaxAssureurInvoiceDetails()[self::SOLDE_DU];
         return round($this->taxeAssureurSolde);
     }
+    
 }

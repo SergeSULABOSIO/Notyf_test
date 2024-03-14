@@ -12,9 +12,9 @@
         <td class="tab-titre-valeur">Prime nette</td>
         <td class="tab-titre-valeur">Com. nette</td>
         {% if facture.destination == 0 %}
-            <td class="tab-titre-valeur">{{taxe_courtier.nom}}@IARD:{{taxe_courtier.tauxIARD * 100|number_format(0, ',', '.')}}%, VIE:{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
+            <td class="tab-titre-valeur">{{taxe_courtier.nom}}@{{taxe_courtier.tauxIARD * 100|number_format(0, ',', '.')}}-{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
         {% elseif facture.destination == 3 %}
-            <td class="tab-titre-valeur">{{taxe_assureur.nom}}@IARD:{{taxe_assureur.tauxIARD * 100|number_format(0, ',', '.')}}%, VIE:{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
+            <td class="tab-titre-valeur">{{taxe_assureur.nom}}@{{taxe_assureur.tauxIARD * 100|number_format(0, ',', '.')}}-{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
         {% endif %}
         <td class="tab-titre-valeur">Mnt. payé</td>
         <td class="tab-titre-valeur">Solde dû</td>
@@ -42,6 +42,9 @@
     {# fin - Les variables à cumuler #}
     {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
         {% if (pg == currentPage) %}
+            {% set art_taxes_courtier = 0 %}
+            {% set art_taxes_courtier_payees = 0 %}
+            {% set art_taxes_courtier_solde = 0 %}
             <tr class="texte-centre">
                 {# Les variables textes #}
                 {% set art_numero = x  %}
@@ -51,7 +54,7 @@
                 
                 {% set art_prime_totale = (facture.elementFactures[i - 1].tranche.police.primetotale / 100) %}
                 {% set art_prime_nette = (facture.elementFactures[i - 1].tranche.police.primeNetteTotale / 100) %}
-                {% set art_revenu_ht = (facture.elementFactures[i - 1].tranche.police.calc_revenu_ht / 100) %} 
+                {% set art_revenu_ht = (facture.elementFactures[i - 1].tranche.police.revenuNetTotal / 100) %} 
                 {% if facture.destination == 3 %}
                     {% set art_taxes_courtier = (facture.elementFactures[i - 1].tranche.police.calc_taxes_courtier / 100) %}
                     {% set art_taxes_courtier_payees = (facture.elementFactures[i - 1].tranche.police.calc_taxes_courtier_payees / 100) %}
@@ -79,11 +82,11 @@
                 <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 <td class="tab-ligne-valeur" style="width: 65px;">{{art_revenu_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 
-                {% if facture.type == 3 %}
+                {% if facture.destination == 0 %}
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur texte-rouge" style="width: 65px;">-{{art_taxes_courtier_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes_courtier_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                {% elseif facture.type == 2 %}
+                {% elseif facture.destination == 3 %}
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur texte-rouge" style="width: 65px;">-{{art_taxes_assureur_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes_assureur_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
@@ -96,11 +99,11 @@
         {% set tot_prime_totale = tot_prime_totale + art_prime_totale %}
         {% set tot_prime_nette = tot_prime_nette + art_prime_nette %}
         {% set tot_revenu_ht = tot_revenu_ht + art_revenu_ht %}
-        {% if facture.type == 3 %}
+        {% if facture.destination == 0 %}
             {% set tot_taxes_courtier = tot_taxes_courtier + art_taxes_courtier %}
             {% set tot_taxes_courtier_payees = tot_taxes_courtier_payees + art_taxes_courtier_payees %} 
             {% set tot_taxes_courtier_solde = tot_taxes_courtier_solde + art_taxes_courtier_solde %}
-        {% elseif facture.type == 2 %}
+        {% elseif facture.destination == 3 %}
             {% set tot_taxes_assureur = tot_taxes_assureur + art_taxes_assureur %}
             {% set tot_taxes_assureur_payees = tot_taxes_assureur_payees + art_taxes_assureur_payees %} 
             {% set tot_taxes_assureur_solde = tot_taxes_assureur_solde + art_taxes_assureur_solde %}
@@ -118,11 +121,11 @@
         <td class = "tab-ligne-valeur">{{tot_prime_totale|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur">{{tot_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur">{{tot_revenu_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        {% if facture.type == 3 %}
+        {% if facture.destination == 0 %}
             <td class = "tab-ligne-valeur">{{tot_taxes_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
             <td class = "tab-ligne-valeur texte-rouge">-{{tot_taxes_courtier_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
             <td class = "tab-ligne-valeur">{{tot_taxes_courtier_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        {% elseif facture.type == 2 %}
+        {% elseif facture.destination == 3 %}
             <td class = "tab-ligne-valeur">{{tot_taxes_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
             <td class = "tab-ligne-valeur texte-rouge">-{{tot_taxes_assureur_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
             <td class = "tab-ligne-valeur">{{tot_taxes_assureur_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>

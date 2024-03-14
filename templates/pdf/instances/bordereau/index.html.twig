@@ -24,11 +24,11 @@
         {# Titre #}
         {% include 'pdf/composants/_titre.html.twig' %}
         {# ici liste d'articles #}
-        {% if facture.type == 0 or facture.type == 4 %}{# COMMISSION DE COURTAGE ou FRAIS DE GESTION #}
+        {% if facture.destination == 1 or facture.destination == 2 %}{# Destination Assureur ou Client #}
             {% include 'pdf/composants/_articlescommissions.html.twig' with {'currentPage': currentPage} %}
-        {% elseif facture.type == 1 %}{# RETROCOMMISSION AU PARTENAIRE #}
+        {% elseif facture.destination == 4 %}{# Destination Partenaire #}
             {% include 'pdf/composants/_articlesretrocommissions.html.twig' with {'currentPage': currentPage} %}
-        {% elseif facture.type == 2  or facture.type == 3 %} {# NOTE DE CREDIT POUR TVA ET ARCA #}
+        {% elseif facture.destination == 0  or facture.destination == 3 %} {# Destination ARCA ou DGI #}
             {% include 'pdf/composants/_articlesfiscalite.html.twig' with {'currentPage': currentPage} %}
         {% endif %}
         {# Fin liste des avenants #}

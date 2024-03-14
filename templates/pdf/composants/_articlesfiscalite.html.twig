@@ -30,10 +30,12 @@
     {% set tot_prime_nette = 0 %}
     {% set tot_revenu_ht = 0 %} 
     {% if facture.destination == 0 %}
+        {# Destination ARCA #}
         {% set tot_taxes_courtier = 0 %}
         {% set tot_taxes_courtier_payees = 0 %}
         {% set tot_taxes_courtier_solde = 0 %}
-    {% elseif facture.type == 3 %}
+    {% elseif facture.destination == 3 %}
+        {# Destination DGI #}
         {% set tot_taxes_assureur = 0 %}
         {% set tot_taxes_assureur_payees = 0 %}
         {% set tot_taxes_assureur_solde = 0 %}

@@ -41,13 +41,17 @@
             <td><span class="texte-bleu">ID. NAT:</span> {{facture.entreprise.idnat}}</td>
             <td class="texte-droite"><span class="texte-bleu">NATURE:</span> 
                 {% if facture.destination == 1 %}
+                    {# Destination Assureur #}
                     COMMISSION DE COURTAGE
                 {% elseif facture.destination == 4 %}
+                    {# Destination Partenaire #}
                     RETROCOMMISSION DUE A {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)
-                {% elseif facture.destination == 0  or facture.type == 3 %}
+                {% elseif facture.destination == 0  or facture.destination == 3 %}
+                    {# Destination ARCA et DGI #}
                     NOTE DE CREDIT
                 {% elseif facture.destination == 2 %}
-                    FRAIS DE GESTION
+                    {# Destination Client #}
+                    FRAIS DE GESTION ET/OU PRIME D'ASSURANCE
                 {% endif %}
             </td>
         </tr>

@@ -132,9 +132,9 @@
             <td class="tab-ligne-label">Commissions totales hors taxes</td>
             <td class="tab-ligne-valeur">{{com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
-        {% if facture.type == 3 %} {# ARCA #}
+        {% if facture.destination == 0 %} {# Destination ARCA #}
             <tr>
-                <td class="tab-ligne-label">Frais {{taxe_courtier.nom}} ({{(taxe_courtier.taux * 100)|number_format(0, ',', '.')}}%)</td>
+                <td class="tab-ligne-label">Frais {{taxe_courtier.nom}} (IARD: {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}%, VIE:{{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}%)</td>
                 <td class="tab-ligne-valeur">{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
             <tr class="texte-rouge">
@@ -149,7 +149,7 @@
                 <td class="tab-ligne-label">Total à payer à {{taxe_courtier.organisation}}</td>
                 <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
             </tr>
-        {% elseif facture.type == 2 %} {# TVA #}
+        {% elseif facture.destination == 3 %} {# Destination DGI #}
             <tr>
                 <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)</td>
                 <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
@@ -170,6 +170,7 @@
         
     </table>
 {% elseif facture.destination == 1 or facture.destination == 2 %}
+    {# Destintion Assureur ou Client #}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}
     {# Synthèse des totaux #}
     <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale">

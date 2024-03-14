@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\ChargementCrudController;
 use DateInterval;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,6 +54,7 @@ class Police extends JSAbstractFinances
     private ?string $typeavenant = null;
     private ?Collection $chargements = null;
     private ?float $primeTotale;
+    private ?float $primeNetteTotale;
     private ?Collection $tranches = null;
     private ?Collection $revenus = null;
     private ?float $commissionTotaleHT;
@@ -602,7 +604,7 @@ class Police extends JSAbstractFinances
 
     /**
      * Get the value of reserve
-     */ 
+     */
     public function getReserve()
     {
         $this->reserve = (new Calculateur())
@@ -615,5 +617,19 @@ class Police extends JSAbstractFinances
                 Calculateur::Param_from_cotation
             ) * 100;
         return $this->reserve;
+    }
+
+    public function getPrimeNetteTotale(): ?float
+    {
+        $typeRecherche = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE];
+        $this->primeNetteTotale = 0;
+        // dd("Les chargements de la police:", $this->getChargements());
+        /** @var Chargement */
+        foreach ($this->getChargements() as $chargement) {
+            if ($chargement->getType() == $typeRecherche) {
+                $this->primeNetteTotale = $this->primeNetteTotale + $chargement->getMontant();
+            }
+        }
+        return round($this->primeNetteTotale);
     }
 }

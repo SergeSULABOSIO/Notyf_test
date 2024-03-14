@@ -1,7 +1,7 @@
 {# Liste des avenants concernés par cette note de débit #}
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
-        <td colspan="11">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% (en Iard) ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% (en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% (en Iard) et {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% (en Vie) {% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+        <td colspan="11">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
         <td class="tab-titre-valeur">N°</td>

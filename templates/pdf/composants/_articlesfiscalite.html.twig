@@ -1,7 +1,7 @@
 {# Liste des avenants concernés par cette note de débit #}
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
-        <td colspan="11">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%{% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+        <td colspan="11">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% (en Iard) ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% (en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% (en Iard) et {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% (en Vie) {% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
         <td class="tab-titre-valeur">N°</td>
@@ -12,9 +12,9 @@
         <td class="tab-titre-valeur">Prime nette</td>
         <td class="tab-titre-valeur">Com. nette</td>
         {% if facture.destination == 0 %}
-            <td class="tab-titre-valeur">{{taxe_courtier.nom}}@{{taxe_courtier.tauxIARD * 100|number_format(0, ',', '.')}}-{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
+            <td class="tab-titre-valeur">{{taxe_courtier.nom}}</td>
         {% elseif facture.destination == 3 %}
-            <td class="tab-titre-valeur">{{taxe_assureur.nom}}@{{taxe_assureur.tauxIARD * 100|number_format(0, ',', '.')}}-{{taxe_courtier.tauxVIE * 100|number_format(0, ',', '.')}}%</td>
+            <td class="tab-titre-valeur">{{taxe_assureur.nom}}</td>
         {% endif %}
         <td class="tab-titre-valeur">Mnt. payé</td>
         <td class="tab-titre-valeur">Solde dû</td>
@@ -57,14 +57,14 @@
                 {% set art_prime_totale = (facture.elementFactures[i - 1].tranche.police.primetotale / 100) %}
                 {% set art_prime_nette = (facture.elementFactures[i - 1].tranche.police.primeNetteTotale / 100) %}
                 {% set art_revenu_ht = (facture.elementFactures[i - 1].tranche.police.revenuNetTotal / 100) %} 
-                {% if facture.destination == 3 %}
-                    {% set art_taxes_courtier = (facture.elementFactures[i - 1].tranche.police.calc_taxes_courtier / 100) %}
-                    {% set art_taxes_courtier_payees = (facture.elementFactures[i - 1].tranche.police.calc_taxes_courtier_payees / 100) %}
-                    {% set art_taxes_courtier_solde = (facture.elementFactures[i - 1].tranche.police.calc_taxes_courtier_solde / 100) %}
+                {% if facture.destination == 0 %}
+                    {% set art_taxes_courtier = (facture.elementFactures[i - 1].tranche.taxeCourtierTotale / 100) %}
+                    {% set art_taxes_courtier_payees = (facture.elementFactures[i - 1].tranche.taxeCourtierPayee / 100) %}
+                    {% set art_taxes_courtier_solde = (facture.elementFactures[i - 1].tranche.taxeCourtierSolde / 100) %}
                 {% elseif facture.destination == 3 %}
-                    {% set art_taxes_assureur = (facture.elementFactures[i - 1].tranche.police.calc_taxes_assureurs / 100) %}
-                    {% set art_taxes_assureur_payees = (facture.elementFactures[i - 1].tranche.police.calc_taxes_assureurs_payees / 100) %}
-                    {% set art_taxes_assureur_solde = (facture.elementFactures[i - 1].tranche.police.calc_taxes_assureurs_solde / 100) %}
+                    {% set art_taxes_assureur = (facture.elementFactures[i - 1].tranche.taxeAssureurTotale / 100) %}
+                    {% set art_taxes_assureur_payees = (facture.elementFactures[i - 1].tranche.taxeAssureurPayee / 100) %}
+                    {% set art_taxes_assureur_solde = (facture.elementFactures[i - 1].tranche.taxeAssureurSolde / 100) %}
                 {% endif %}
                 {% set art_mont_a_payer = (facture.elementFactures[i - 1].montant / 100) %}
                 

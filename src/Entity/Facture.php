@@ -605,7 +605,9 @@ class Facture extends JSAbstractFinances
                             $primeTTC = $elementFacture->getTranche()->getPrimeTotaleTranche();
                             $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
                             $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
-                            $taxeCourtier = $elementFacture->getTranche()->getTaxeCourtierTotale();
+                            /** @var Taxe */
+                            $taxeC = $elementFacture->getTranche()->getTaxe(true);
+                            $taxeCourtier = $mntTTC / (1 + $taxeC->getTauxIARD());
                             $mntHT = $mntTTC - $taxeCourtier;
                             $this->notesElementsFactures[] =
                                 [
@@ -621,8 +623,8 @@ class Facture extends JSAbstractFinances
                                     "Taxe_Assureur" => $taxeAssureur / 100,
                                     "Taux" => ($mntHT / $primeHt) * 100,
                                     "Montant" => $mntHT / 100,
-                                    "Taxes" => $taxeAssureur / 100,
-                                    "Total_Dû" => $primeTTC / 100
+                                    "Taxes" => $taxeCourtier / 100,
+                                    "Total_Dû" => $mntTTC / 100
                                 ];
                             $indexLigne = $indexLigne + 1;
                         }
@@ -630,6 +632,7 @@ class Facture extends JSAbstractFinances
                 }
             }
         }
+        // dd($this->notesElementsFactures);
         return $this->notesElementsFactures;
     }
 }

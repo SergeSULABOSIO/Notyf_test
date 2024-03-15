@@ -566,9 +566,46 @@ class Facture extends JSAbstractFinances
             if (count($this->getElementFactures()) != 0) {
                 /** @var ElementFacture */
                 foreach ($this->getElementFactures() as $elementFacture) {
-                    //Destination: Client
+                    /**
+                     * DESTINATION CLIENT
+                     */
                     if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT] == $this->getDestination()) {
+                        /**
+                         * PRIME D'ASSURANCE
+                         */
                         if ($elementFacture->getIncludePrime() == true) {
+                            $primeTTC = $elementFacture->getTranche()->getPrimeTotaleTranche();
+                            $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
+                            $taxeAssureur = $elementFacture->getTranche()->getTaxeAssureurTotale();
+                            $mntHT = $primeHt;
+
+                            $this->notesElementsFactures[] = 
+                            [
+                                "No" => $indexLigne
+                            
+                            ];
+                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
+                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
+                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
+                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
+                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
+                            
+                            
+                            $this->notesElementsFactures["Prime TTC"] = $primeTTC;
+                            $this->notesElementsFactures["Prime HT"] = $primeHt;
+                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getFrontingTranche();
+                            $this->notesElementsFactures["Taxe Assureur"] = $taxeAssureur;
+                            $this->notesElementsFactures["Montant"] = $mntHT;
+                            $this->notesElementsFactures["Taux"] = ($mntHT / $primeHt) * 100;
+                            $this->notesElementsFactures["Taxes"] = $taxeAssureur;
+                            $this->notesElementsFactures["Total dû"] = $primeTTC;
+                            $indexLigne = $indexLigne + 1;
+                        }
+                        
+                        /**
+                         * FRAIS DE GESTION
+                         */
+                        if ($elementFacture->getIncludeFraisGestion() == true) {
                             $this->notesElementsFactures["No"] = $indexLigne;
                             $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
                             $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
@@ -578,36 +615,17 @@ class Facture extends JSAbstractFinances
                             
                             $primeTTC = $elementFacture->getTranche()->getPrimeTotaleTranche();
                             $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
-                            $taxeAssureur = $elementFacture->getTranche()->getTaxeAssureurTotale();
+                            $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
+                            $taxeCourtier = $elementFacture->getTranche()->getTaxeCourtierTotale();
+                            $mntHT = $mntTTC - $taxeCourtier;
                             
                             $this->notesElementsFactures["Prime TTC"] = $primeTTC;
                             $this->notesElementsFactures["Prime HT"] = $primeHt;
                             $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getFrontingTranche();
-                            $this->notesElementsFactures["Taxe Assureur"] = $taxeAssureur;
-                            $this->notesElementsFactures["Montant"] = $primeHt;
-                            $this->notesElementsFactures["Taxes"] = $taxeAssureur;
-                            $this->notesElementsFactures["Total dû"] = $primeTTC;
-                            $indexLigne = $indexLigne + 1;
-                        }
-                        if ($elementFacture->getIncludeFraisGestion() == true) {
-                            $this->notesElementsFactures["No"] = $indexLigne;
-                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
-                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
-                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
-                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
-                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
-                            $this->notesElementsFactures["Prime TTC"] = $elementFacture->getTranche()->getPrimeTotaleTranche();
-                            $this->notesElementsFactures["Prime HT"] = $elementFacture->getTranche()->getPrimeNetteTranche();
-                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getPrimeNette;
-
-
-
-                            $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]);
-                            $mntTX = $elementFacture->getTranche()->getTaxeAssureurTotale();
-                            $mntHT = $mntTTC - $mntTX;
-
+                            $this->notesElementsFactures["Taxe Assureur"] = $elementFacture->getTranche()->getTaxeAssureurTotale();
                             $this->notesElementsFactures["Montant"] = $mntHT;
-                            $this->notesElementsFactures["Taxes"] = $mntTX;
+                            $this->notesElementsFactures["Taux"] = ($mntHT / $primeHt) * 100;
+                            $this->notesElementsFactures["Taxes"] = $taxeCourtier;
                             $this->notesElementsFactures["Total dû"] = $mntTTC;
                             $indexLigne = $indexLigne + 1;
                         }

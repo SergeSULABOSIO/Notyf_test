@@ -32,7 +32,7 @@
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
 
-    {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
+    {% for i in 0..pg_volumeDonnees %} {# pg_tableauMax #}
             {% if (pg == currentPage) %}
                 {% if (x % 2) == 0 %}
                     <tr class="texte-centre">  {# bg-pair #}
@@ -40,7 +40,7 @@
                     <tr class="texte-centre">
                 {% endif %}
                     {# Les variables textes #}
-                    {% set art_numero = x  %}
+                    {% set art_numero = facture.notesElementsFactures[i]  %}
                     {% set art_reference = facture.elementFactures[i - 1].tranche.police.reference %} {# '12005-33002-0012-13001-00004352-2022' #}
                     {% set art_avenant = facture.elementFactures[i - 1].tranche.police.typeavenant %} {# 'Type@220/id@230' #} {# 'Type@' ~ facture.elementFactures[i - 1].tranche.police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].tranche.police.id #}
                     {% set art_code_produit = facture.elementFactures[i - 1].tranche.police.produit.code %} {# 'CDDK' #}

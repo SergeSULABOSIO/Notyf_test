@@ -586,14 +586,14 @@ class Facture extends JSAbstractFinances
                                     "Risque" => $elementFacture->getTranche()->getPolice()->getProduit()->getCode(),
                                     "Tranche" => $elementFacture->getTranche()->getNom(),
                                     "Note" => FactureCrudController::TYPE_NOTE_PRIME,
-                                    "Prime_TTC" => $primeTTC,
-                                    "Prime_HT" => $primeHt,
-                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche(),
-                                    "Taxe_Assureur" => $taxeAssureur,
+                                    "Prime_TTC" => $primeTTC / 100,
+                                    "Prime_HT" => $primeHt / 100,
+                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche() / 100,
+                                    "Taxe_Assureur" => $taxeAssureur / 100,
                                     "Taux" => ($mntHT / $primeHt) * 100,
-                                    "Montant" => $mntHT,
-                                    "Taxes" => $taxeAssureur,
-                                    "Total_Dû" => $primeTTC
+                                    "Montant" => $mntHT / 100,
+                                    "Taxes" => $taxeAssureur / 100,
+                                    "Total_Dû" => $primeTTC / 100
                                 ];
                             $indexLigne = $indexLigne + 1;
                         }
@@ -615,14 +615,14 @@ class Facture extends JSAbstractFinances
                                     "Risque" => $elementFacture->getTranche()->getPolice()->getProduit()->getCode(),
                                     "Tranche" => $elementFacture->getTranche()->getNom(),
                                     "Note" => FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION,
-                                    "Prime_TTC" => $primeTTC,
-                                    "Prime_HT" => $primeHt,
-                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche(),
-                                    "Taxe_Assureur" => $taxeAssureur,
+                                    "Prime_TTC" => $primeTTC / 100,
+                                    "Prime_HT" => $primeHt / 100,
+                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche() / 100,
+                                    "Taxe_Assureur" => $taxeAssureur / 100,
                                     "Taux" => ($mntHT / $primeHt) * 100,
-                                    "Montant" => $mntHT,
-                                    "Taxes" => $taxeAssureur,
-                                    "Total_Dû" => $primeTTC
+                                    "Montant" => $mntHT / 100,
+                                    "Taxes" => $taxeAssureur / 100,
+                                    "Total_Dû" => $primeTTC / 100
                                 ];
                             $indexLigne = $indexLigne + 1;
                         }

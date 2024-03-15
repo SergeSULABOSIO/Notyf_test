@@ -44,6 +44,8 @@ class Tranche extends JSAbstractFinances
     //valeurs monnétaires caculables
     private ?float $primeTotaleTranche = 0;
     private ?float $primeNetteTranche = 0;
+    private ?float $frontingTranche = 0;
+
     //les type de revenu
     private ?float $comReassurance = 0;
     private ?float $comLocale = 0;
@@ -1078,4 +1080,24 @@ class Tranche extends JSAbstractFinances
         return round($this->taxeAssureurSolde);
     }
     
+
+    /**
+     * Get the value of fontingTranche
+     *
+     * @return ?float
+     */
+    public function getFrontingTranche(): ?float
+    {
+        $this->frontingTranche = 0;
+        if ($this->getPolice() != null) {
+            /** @var Chargement */
+            foreach ($this->getPolice()->getChargements() as $chargement) {
+                if ($chargement->getType() == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) {
+                    $this->frontingTranche = $this->frontingTranche + ($chargement->getMontant());
+                }
+            }
+            $this->frontingTranche = round(($this->frontingTranche * $this->getTaux()) / 100);
+        }
+        return $this->frontingTranche;
+    }
 }

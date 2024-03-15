@@ -1,6 +1,9 @@
 {# Liste des avenants concernés par cette note de débit #}
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
+        <td colspan="5">Client: <b>{{facture.autreTiers}}</b> </td>
+    </tr>
+    <tr>
         <td colspan="5">Liste détailée de {{pg_volumeDonnees}} article(s) concernés par la note de débit / facture. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
@@ -8,12 +11,12 @@
         <td class="tab-titre-label" style="width: 100px;">Police</td>
         <td class="tab-titre-label">Avenant</td>
         <td class="tab-titre-label">Risque</td>
-        <td class="tab-titre-label" style="width: 100px;">Client</td>
+        <td class="tab-titre-label" style="width: 100px;">Note</td>
         <td class="tab-titre-valeur">Prime nette</td>
         <td class="tab-titre-valeur">Fronting</td>
         <td class="tab-titre-valeur">Taux</td>
         <td class="tab-titre-valeur">Com (ht)</td>
-        <td class="tab-titre-valeur">{{taxe_assureur.nom}} ({{(taxe_assureur.taux * 100)|number_format(0, ',', '.')}}%)</td>
+        <td class="tab-titre-valeur">{{taxe_assureur.nom}}{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
         <td class="tab-titre-valeur">Total dû</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
@@ -38,15 +41,15 @@
                 {% endif %}
                     {# Les variables textes #}
                     {% set art_numero = x  %}
-                    {% set art_reference = facture.elementFactures[i - 1].police.reference %} {# '12005-33002-0012-13001-00004352-2022' #}
-                    {% set art_avenant = 'Type@' ~ facture.elementFactures[i - 1].police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].police.id %} {# 'Type@220/id@230' #}
-                    {% set art_code_produit = facture.elementFactures[i - 1].police.produit.code %} {# 'CDDK' #}
-                    {% set art_cient = facture.elementFactures[i - 1].police.client.nom %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_prime_nette = facture.elementFactures[i - 1].police.primenette / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_com_ht = (facture.elementFactures[i - 1].montant / 100) / (taxe_assureur.taux + 1) %} {# (facture.elementFactures[i - 1].montant / 100) / (taxe.taux + 1) #}
-                    {% set art_fronting = facture.elementFactures[i - 1].police.fronting / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_reference = facture.elementFactures[i - 1].tranche.police.reference %} {# '12005-33002-0012-13001-00004352-2022' #}
+                    {% set art_avenant = facture.elementFactures[i - 1].tranche.police.typeavenant %} {# 'Type@220/id@230' #} {# 'Type@' ~ facture.elementFactures[i - 1].tranche.police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].tranche.police.id #}
+                    {% set art_code_produit = facture.elementFactures[i - 1].tranche.police.produit.code %} {# 'CDDK' #}
+                    {% set art_cient = facture.elementFactures[i - 1].tranche.police.client.nom %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_prime_nette = facture.elementFactures[i - 1].tranche.primeNetteTranche / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
+                    {% set art_com_ht = facture.elementFactures[i - 1].tranche.revenuTotal / 100 %} {# (facture.elementFactures[i - 1].montant / 100) / (taxe_assureur.taux + 1) #}
+                    {% set art_fronting = facture.elementFactures[i - 1].tranche.frontingTranche %} {# 'Allied Insurance Brokers RDC SA' #}
                     {% set art_taux = (art_com_ht / art_prime_nette) * 100 %}
-                    {% set art_taxes = (art_com_ht * taxe_assureur.taux) %}
+                    {% set art_taxes = facture.elementFactures[i - 1].tranche.taxeAssureurTotale / 100 %}
                     {% set art_com_ttc = art_taxes + art_com_ht %}
                         
                     <td class="tab-ligne-valeur" style="width: 25px;">

@@ -81,6 +81,7 @@ class Facture extends JSAbstractFinances
     private Collection $documents;
 
     private ?float $montantTTC;
+    private ?array $notesElementsFactures = [];
 
 
     public function __construct()
@@ -422,11 +423,11 @@ class Facture extends JSAbstractFinances
     public function getStatus(): ?int
     {
         $solde = $this->getTotalSolde();
-        if($solde == 0){
+        if ($solde == 0) {
             $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_SOLDEE];
-        }else if($this->getTotalRecu() == 0){
+        } else if ($this->getTotalRecu() == 0) {
             $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_IMPAYEE];
-        }else{
+        } else {
             $this->status = FactureCrudController::TAB_STATUS_FACTURE[FactureCrudController::STATUS_FACTURE_ENCOURS];
         }
         return $this->status;
@@ -485,7 +486,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of destination
-     */ 
+     */
     public function getDestination()
     {
         return $this->destination;
@@ -495,7 +496,7 @@ class Facture extends JSAbstractFinances
      * Set the value of destination
      *
      * @return  self
-     */ 
+     */
     public function setDestination($destination)
     {
         $this->destination = $destination;
@@ -507,7 +508,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of montantReceivedPerDestination
-     */ 
+     */
     public function getMontantReceivedPerDestination(?int $destination)
     {
         /** @var ElementFacture */
@@ -519,7 +520,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of montantReceivedPerTypeNote
-     */ 
+     */
     public function getMontantReceivedPerTypeNote(?int $typeNote)
     {
         /** @var ElementFacture */
@@ -531,7 +532,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of montantInvoicedPerDestination
-     */ 
+     */
     public function getMontantInvoicedPerDestination(?int $destination)
     {
         /** @var ElementFacture */
@@ -543,7 +544,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of montantInvoicedPerTypeNote
-     */ 
+     */
     public function getMontantInvoicedPerTypeNote(?int $typeNote)
     {
         /** @var ElementFacture */
@@ -551,5 +552,48 @@ class Facture extends JSAbstractFinances
             $this->montantInvoicedPerTypeNote = $this->montantInvoicedPerTypeNote + $elementFacture->getMontantInvoicedPerTypeNote($typeNote);
         }
         return round($this->montantInvoicedPerTypeNote);
+    }
+
+    /**
+     * Get the value of notesElementsFactures
+     *
+     * @return ?array
+     */
+    public function getNotesElementsFactures(): ?array
+    {
+        $indexLigne = 1;
+        if ($this->getElementFactures() != null) {
+            if (count($this->getElementFactures()) != 0) {
+                /** @var ElementFacture */
+                foreach ($this->getElementFactures() as $elementFacture) {
+                    if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT] == $this->getDestination()) {
+                        if ($elementFacture->getIncludePrime() == true) {
+                            $this->notesElementsFactures["No"] = $indexLigne;
+                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
+                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
+                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
+                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
+                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
+
+                            
+
+                            $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]);
+                            $mntTX = $elementFacture->getTranche()->getTaxeAssureurTotale();
+                            $mntHT = $mntTTC - $mntTX;
+
+                            $this->notesElementsFactures["Montant"] = $mntHT;
+                            $this->notesElementsFactures["Taxes"] = $mntTX;
+                            $this->notesElementsFactures["Total dû"] = $mntTTC;
+                        }
+                        if ($elementFacture->getIncludeFraisGestion() == true) {
+                        }
+                    }
+
+
+                    $indexLigne = $indexLigne + 1;
+                }
+            }
+        }
+        return $this->notesElementsFactures;
     }
 }

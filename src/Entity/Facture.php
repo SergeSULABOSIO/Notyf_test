@@ -566,6 +566,7 @@ class Facture extends JSAbstractFinances
             if (count($this->getElementFactures()) != 0) {
                 /** @var ElementFacture */
                 foreach ($this->getElementFactures() as $elementFacture) {
+                    //Destination: Client
                     if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT] == $this->getDestination()) {
                         if ($elementFacture->getIncludePrime() == true) {
                             $this->notesElementsFactures["No"] = $indexLigne;
@@ -574,8 +575,32 @@ class Facture extends JSAbstractFinances
                             $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
                             $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
                             $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
-
                             
+                            $primeTTC = $elementFacture->getTranche()->getPrimeTotaleTranche();
+                            $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
+                            $taxeAssureur = $elementFacture->getTranche()->getTaxeAssureurTotale();
+                            
+                            $this->notesElementsFactures["Prime TTC"] = $primeTTC;
+                            $this->notesElementsFactures["Prime HT"] = $primeHt;
+                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getFrontingTranche();
+                            $this->notesElementsFactures["Taxe Assureur"] = $taxeAssureur;
+                            $this->notesElementsFactures["Montant"] = $primeHt;
+                            $this->notesElementsFactures["Taxes"] = $taxeAssureur;
+                            $this->notesElementsFactures["Total dû"] = $primeTTC;
+                            $indexLigne = $indexLigne + 1;
+                        }
+                        if ($elementFacture->getIncludeFraisGestion() == true) {
+                            $this->notesElementsFactures["No"] = $indexLigne;
+                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
+                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
+                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
+                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
+                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
+                            $this->notesElementsFactures["Prime TTC"] = $elementFacture->getTranche()->getPrimeTotaleTranche();
+                            $this->notesElementsFactures["Prime HT"] = $elementFacture->getTranche()->getPrimeNetteTranche();
+                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getPrimeNette;
+
+
 
                             $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_PRIME]);
                             $mntTX = $elementFacture->getTranche()->getTaxeAssureurTotale();
@@ -584,13 +609,9 @@ class Facture extends JSAbstractFinances
                             $this->notesElementsFactures["Montant"] = $mntHT;
                             $this->notesElementsFactures["Taxes"] = $mntTX;
                             $this->notesElementsFactures["Total dû"] = $mntTTC;
-                        }
-                        if ($elementFacture->getIncludeFraisGestion() == true) {
+                            $indexLigne = $indexLigne + 1;
                         }
                     }
-
-
-                    $indexLigne = $indexLigne + 1;
                 }
             }
         }

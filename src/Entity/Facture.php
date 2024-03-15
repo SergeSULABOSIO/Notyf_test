@@ -578,55 +578,52 @@ class Facture extends JSAbstractFinances
                             $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
                             $taxeAssureur = $elementFacture->getTranche()->getTaxeAssureurTotale();
                             $mntHT = $primeHt;
-
-                            $this->notesElementsFactures[] = 
-                            [
-                                "No" => $indexLigne
-                            
-                            ];
-                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
-                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
-                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
-                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
-                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
-                            
-                            
-                            $this->notesElementsFactures["Prime TTC"] = $primeTTC;
-                            $this->notesElementsFactures["Prime HT"] = $primeHt;
-                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getFrontingTranche();
-                            $this->notesElementsFactures["Taxe Assureur"] = $taxeAssureur;
-                            $this->notesElementsFactures["Montant"] = $mntHT;
-                            $this->notesElementsFactures["Taux"] = ($mntHT / $primeHt) * 100;
-                            $this->notesElementsFactures["Taxes"] = $taxeAssureur;
-                            $this->notesElementsFactures["Total dû"] = $primeTTC;
+                            $this->notesElementsFactures[] =
+                                [
+                                    "No" => $indexLigne,
+                                    "Reference_Police" => $elementFacture->getTranche()->getPolice()->getReference(),
+                                    "Avenant" => $elementFacture->getTranche()->getPolice()->getTypeavenant(),
+                                    "Risque" => $elementFacture->getTranche()->getPolice()->getProduit()->getCode(),
+                                    "Tranche" => $elementFacture->getTranche()->getNom(),
+                                    "Note" => FactureCrudController::TYPE_NOTE_PRIME,
+                                    "Prime_TTC" => $primeTTC,
+                                    "Prime_HT" => $primeHt,
+                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche(),
+                                    "Taxe_Assureur" => $taxeAssureur,
+                                    "Taux" => ($mntHT / $primeHt) * 100,
+                                    "Montant" => $mntHT,
+                                    "Taxes" => $taxeAssureur,
+                                    "Total_Dû" => $primeTTC
+                                ];
                             $indexLigne = $indexLigne + 1;
                         }
-                        
+
                         /**
                          * FRAIS DE GESTION
                          */
                         if ($elementFacture->getIncludeFraisGestion() == true) {
-                            $this->notesElementsFactures["No"] = $indexLigne;
-                            $this->notesElementsFactures["Police"] = $elementFacture->getTranche()->getPolice()->getReference();
-                            $this->notesElementsFactures["Avenant"] = $elementFacture->getTranche()->getPolice()->getTypeavenant();
-                            $this->notesElementsFactures["Risque"] = $elementFacture->getTranche()->getPolice()->getProduit()->getCode();
-                            $this->notesElementsFactures["Tranche"] = $elementFacture->getTranche()->getNom();
-                            $this->notesElementsFactures["Note"] = FactureCrudController::TYPE_NOTE_PRIME;
-                            
                             $primeTTC = $elementFacture->getTranche()->getPrimeTotaleTranche();
                             $primeHt = $elementFacture->getTranche()->getPrimeNetteTranche();
                             $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
                             $taxeCourtier = $elementFacture->getTranche()->getTaxeCourtierTotale();
                             $mntHT = $mntTTC - $taxeCourtier;
-                            
-                            $this->notesElementsFactures["Prime TTC"] = $primeTTC;
-                            $this->notesElementsFactures["Prime HT"] = $primeHt;
-                            $this->notesElementsFactures["Fronting"] = $elementFacture->getTranche()->getFrontingTranche();
-                            $this->notesElementsFactures["Taxe Assureur"] = $elementFacture->getTranche()->getTaxeAssureurTotale();
-                            $this->notesElementsFactures["Montant"] = $mntHT;
-                            $this->notesElementsFactures["Taux"] = ($mntHT / $primeHt) * 100;
-                            $this->notesElementsFactures["Taxes"] = $taxeCourtier;
-                            $this->notesElementsFactures["Total dû"] = $mntTTC;
+                            $this->notesElementsFactures[] =
+                                [
+                                    "No" => $indexLigne,
+                                    "Reference_Police" => $elementFacture->getTranche()->getPolice()->getReference(),
+                                    "Avenant" => $elementFacture->getTranche()->getPolice()->getTypeavenant(),
+                                    "Risque" => $elementFacture->getTranche()->getPolice()->getProduit()->getCode(),
+                                    "Tranche" => $elementFacture->getTranche()->getNom(),
+                                    "Note" => FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION,
+                                    "Prime_TTC" => $primeTTC,
+                                    "Prime_HT" => $primeHt,
+                                    "Fronting" => $elementFacture->getTranche()->getFrontingTranche(),
+                                    "Taxe_Assureur" => $taxeAssureur,
+                                    "Taux" => ($mntHT / $primeHt) * 100,
+                                    "Montant" => $mntHT,
+                                    "Taxes" => $taxeAssureur,
+                                    "Total_Dû" => $primeTTC
+                                ];
                             $indexLigne = $indexLigne + 1;
                         }
                     }

@@ -32,7 +32,7 @@
     {% set total_montant_ttc = 0 %}
     {# fin - Les variables à cumuler #}
 
-    {% for i in 0..pg_volumeDonnees %} {# pg_tableauMax #}
+    {% for i in 0..pg_volumeDonnees %} {# facture.notesElementsFactures|length #} {# pg_tableauMax #} 
             {% if (pg == currentPage) %}
                 {% if (x % 2) == 0 %}
                     <tr class="texte-centre">  {# bg-pair #}
@@ -40,18 +40,21 @@
                     <tr class="texte-centre">
                 {% endif %}
                     {# Les variables textes #}
-                    {% set art_numero = facture.notesElementsFactures[i]  %}
-                    {% set art_reference = facture.elementFactures[i - 1].tranche.police.reference %} {# '12005-33002-0012-13001-00004352-2022' #}
-                    {% set art_avenant = facture.elementFactures[i - 1].tranche.police.typeavenant %} {# 'Type@220/id@230' #} {# 'Type@' ~ facture.elementFactures[i - 1].tranche.police.typeavenant ~ '/Id@' ~ facture.elementFactures[i - 1].tranche.police.id #}
-                    {% set art_code_produit = facture.elementFactures[i - 1].tranche.police.produit.code %} {# 'CDDK' #}
-                    {% set art_cient = facture.elementFactures[i - 1].tranche.police.client.nom %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_prime_nette = facture.elementFactures[i - 1].tranche.primeNetteTranche / 100 %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_com_ht = facture.elementFactures[i - 1].tranche.revenuTotal / 100 %} {# (facture.elementFactures[i - 1].montant / 100) / (taxe_assureur.taux + 1) #}
-                    {% set art_fronting = facture.elementFactures[i - 1].tranche.frontingTranche %} {# 'Allied Insurance Brokers RDC SA' #}
-                    {% set art_taux = (art_com_ht / art_prime_nette) * 100 %}
-                    {% set art_taxes = facture.elementFactures[i - 1].tranche.taxeAssureurTotale / 100 %}
-                    {% set art_com_ttc = art_taxes + art_com_ht %}
-                        
+                    {% set art_numero = facture.notesElementsFactures["No"]  %}
+                    {% set art_reference = facture.notesElementsFactures["Reference_Police"]  %}
+                    {% set art_avenant = facture.notesElementsFactures["Avenant"]  %}
+                    {% set art_risque = facture.notesElementsFactures["Risque"]  %}
+                    {% set art_tranche = facture.notesElementsFactures["Tranche"]  %}
+                    {% set art_note = facture.notesElementsFactures["Note"]  %}
+                    {% set art_prime_ttc = facture.notesElementsFactures["Prime_TTC"]  %}
+                    {% set art_prime_ht = facture.notesElementsFactures["Prime_HT"]  %}
+                    {% set art_fronting = facture.notesElementsFactures["Fronting"]  %}
+                    {% set art_taxe_assureur = facture.notesElementsFactures["Taxe_Assureur"]  %}
+                    {% set art_taux = facture.notesElementsFactures["Taux"]  %}
+                    {% set art_montant = facture.notesElementsFactures["Montant"]  %}
+                    {% set art_taxes = facture.notesElementsFactures["Taxes"]  %}
+                    {% set art_total_du = facture.notesElementsFactures["Total_Dû"]  %}
+                    
                     <td class="tab-ligne-valeur" style="width: 25px;">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
@@ -62,26 +65,33 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
                     </td>
                     <td class="tab-ligne-label" style="width: 35px;">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
-                    <td class="tab-ligne-label a-la-ligne-auto" style="width: 130px;">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_cient, 'txtLimitedLength_tailleMax': 31} %}
+                    <td class="tab-ligne-label" style="width: 70px;">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 15} %}
                     </td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-label" style="width: 70px;">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 15} %}
+                    </td>
+                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: 40px;">{{art_taux|number_format('2', ',', '.')}}%</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_com_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 </tr>
                 {% set y = y + 1 %}
             {% endif %}
         {# Ici on incrémente les variables numériques #}
-        {% set total_prime_nette = total_prime_nette + art_prime_nette %}
+        {% set total_prime_ttc = total_prime_ttc + art_prime_ttc %}
+        {% set total_prime_ht = total_prime_ht + art_prime_ht %}
         {% set total_fronting = total_fronting + art_fronting %}
-        {% set total_montant = total_montant + art_com_ht %}
-        {% set total_tva = total_tva + art_taxes %}
-        {% set total_montant_ttc = total_montant_ttc + art_com_ttc %}
+        {% set total_taxe_assureur = total_taxe_assureur + art_taxe_assureur %}
+        {% set total_montant = total_montant + art_montant %}
+        {% set total_taxes = total_taxes + art_taxes %}
+        {% set total_total_du = total_total_du + art_total_du %}
         
         {# S'il atteind le maximum du tableau, il fait un saut à la page suivante #}
         {% if (x % pg_tableauMax) == 0 %}
@@ -91,13 +101,15 @@
     {% endfor %}
     
     <tr class="bg-sombre">
-        <td colspan="5" class = "tab-ligne-label">Total général</td>
-        <td class = "tab-ligne-valeur">{{total_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td colspan="6" class = "tab-ligne-label">Total général</td>
+        <td class = "tab-ligne-valeur">{{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur">{{total_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur">{{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur"></td>
         <td class = "tab-ligne-valeur">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_tva|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur">{{total_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur">{{total_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
 </table>
 {# On insère le ressort ici pour ajouter ou supprimer les lignes manquantes #}

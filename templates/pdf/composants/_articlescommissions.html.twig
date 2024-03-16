@@ -1,4 +1,19 @@
 {# Liste des avenants concernés par cette note de débit #}
+    {% set width_no = "25px;" %}
+    {% set width_reference = "150px;" %}
+    {% set width_avenant = "70px;" %}
+    {% set width_risque = "35px;" %}
+    {% set width_tranche = "70px;" %}
+    {% set width_note = "110px;" %}
+    {% set width_prime_ttc = "65px;" %}
+    {% set width_prime_nette = "65px;" %}
+    {% set width_fronting = "65px;" %}
+    {% set width_taxe_assureur = "65px;" %}
+    {% set width_taux = "40px;" %}
+    {% set width_montant = "65px;" %}
+    {% set width_taxe = "65px;" %}
+    {% set width_total_du = "65px;" %}
+
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
         <td colspan="5">Client: <b>{{facture.autreTiers}}</b> </td>
@@ -7,20 +22,20 @@
         <td colspan="5">Liste détailée de {{pg_volumeDonnees}} article(s) concernés par la note de débit / facture. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
-        <td class="tab-titre-label">N°</td>
-        <td class="tab-titre-label" style="width: 80px;">Police</td>
-        <td class="tab-titre-label">Avenant</td>
-        <td class="tab-titre-label">Risque</td>
-        <td class="tab-titre-label" style="width: 50px;">Tranche</td>
-        <td class="tab-titre-label" style="width: 100px;">Note</td>
-        <td class="tab-titre-valeur">Prime TTC</td>
-        <td class="tab-titre-valeur">Prime HT</td>
-        <td class="tab-titre-valeur">Fronting</td>
-        <td class="tab-titre-valeur">{{taxe_assureur.nom}}</td>
-        <td class="tab-titre-valeur">Taux</td>
-        <td class="tab-titre-valeur">Montant (ht)</td>
-        <td class="tab-titre-valeur">{{taxe_assureur.nom}}{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
-        <td class="tab-titre-valeur">Total dû</td>
+        <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
+        <td class="tab-titre-label" style="width: {{width_reference}}">Police</td>
+        <td class="tab-titre-label" style="width: {{width_avenant}}">Avenant</td>
+        <td class="tab-titre-label" style="width: {{width_risque}}">Risque</td>
+        <td class="tab-titre-label" style="width: {{width_tranche}}">Tranche</td>
+        <td class="tab-titre-label" style="width: {{width_note}}">Note</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_ttc}}">Prime TTC</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_nette}}">Prime HT</td>
+        <td class="tab-titre-valeur" style="width: {{width_fronting}}">Fronting</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_assureur}}">{{taxe_assureur.nom}}</td>
+        <td class="tab-titre-valeur" style="width: {{width_taux}}">Taux</td>
+        <td class="tab-titre-valeur" style="width: {{width_montant}}">Montant (ht)</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe}}">{{taxe_assureur.nom}}{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
+        <td class="tab-titre-valeur" style="width: {{width_total_du}}">Total dû</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
 
@@ -60,32 +75,32 @@
                     {% set art_taxes = facture.notesElementsFactures[i - 1]["Taxes"]  %}
                     {% set art_total_du = facture.notesElementsFactures[i - 1]["Total_Dû"]  %}
                     
-                    <td class="tab-ligne-valeur" style="width: 25px;">
+                    <td class="tab-ligne-valeur" style="width: {{width_no}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
-                    <td class="tab-ligne-label a-la-ligne-auto" style="width: 170px;">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 36} %}
+                    <td class="tab-ligne-label a-la-ligne-auto" style="width: {{width_reference}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 25} %}
                     </td>
-                    <td class="tab-ligne-label" style="width: 70px;">
+                    <td class="tab-ligne-label" style="width: {{width_avenant}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 15} %}
                     </td>
-                    <td class="tab-ligne-label" style="width: 35px;">
+                    <td class="tab-ligne-label" style="width: {{width_risque}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
-                    <td class="tab-ligne-label" style="width: 70px;">
+                    <td class="tab-ligne-label" style="width: {{width_tranche}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 15} %}
                     </td>
-                    <td class="tab-ligne-label" style="width: 70px;">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 15} %}
+                    <td class="tab-ligne-label" style="width: {{width_note}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 18} %}
                     </td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 40px;">{{art_taux|number_format('2', ',', '.')}}%</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: 65px;">{{art_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_nette}}">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_fronting}}">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_assureur}}">{{art_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taux}}">{{art_taux|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_montant}}">{{art_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe}}">{{art_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_total_du}}">{{art_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
                 </tr>
                 {% set y = y + 1 %}
             {% endif %}
@@ -107,14 +122,14 @@
     
     <tr class="bg-sombre">
         <td colspan="6" class = "tab-ligne-label">Total général</td>
-        <td class = "tab-ligne-valeur">{{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur"></td>
-        <td class = "tab-ligne-valeur">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{total_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_nette}}">{{total_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_fronting}}">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_assureur}}">{{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taux}}"></td>
+        <td class = "tab-ligne-valeur" style="width: {{width_montant}}">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe}}">{{total_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_total_du}}">{{total_total_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
 </table>
 {# On insère le ressort ici pour ajouter ou supprimer les lignes manquantes #}

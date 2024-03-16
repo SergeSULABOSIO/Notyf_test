@@ -562,8 +562,20 @@ class Facture extends JSAbstractFinances
      */
     public function getNotesElementsFactures(): ?array
     {
-        $com_produire_article_notes = new CommandeProduireArticlesGrouperSelonNotes($this);
-        $this->notesElementsFactures = $com_produire_article_notes->getNotesElementsFactures();
+        (new CommandeProduireArticlesGrouperSelonNotes($this))
+            ->executer();
         return $this->notesElementsFactures;
+    }
+
+    /**
+     * Set the value of notesElementsFactures
+     *
+     * @return  self
+     */
+    public function setNotesElementsFactures($notesElementsFactures)
+    {
+        $this->notesElementsFactures = $notesElementsFactures;
+
+        return $this;
     }
 }

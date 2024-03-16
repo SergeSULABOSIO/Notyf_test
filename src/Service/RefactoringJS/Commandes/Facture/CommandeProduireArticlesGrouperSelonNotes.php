@@ -88,10 +88,6 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                 }
             }
         }
-    }
-
-    public function getNotesElementsFactures(){
-        $this->executer();
-        return $this->notesElementsFactures;
+        $this->facture->setNotesElementsFactures($this->notesElementsFactures);
     }
 }

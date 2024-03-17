@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ChargementCrudController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrancheRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
-use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche extends JSAbstractFinances
@@ -45,6 +45,7 @@ class Tranche extends JSAbstractFinances
     private ?float $primeTotaleTranche = 0;
     private ?float $primeNetteTranche = 0;
     private ?float $frontingTranche = 0;
+    private ?float $tvaTranche = 0;
 
     //les type de revenu
     private ?float $comReassurance = 0;
@@ -658,11 +659,9 @@ class Tranche extends JSAbstractFinances
      */
     public function getPrimeTotaleTranche()
     {
-        $this->primeTotaleTranche = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getPrimeTotale(null, $this);
-        // dd($this->primeTotaleTranche);
-        return round($this->primeTotaleTranche);
+        $this->primeTotaleTranche = 0;
+        $this->primeTotaleTranche = round($this->getChargementPrime(null));
+        return $this->primeTotaleTranche;
     }
 
     /**
@@ -999,10 +998,28 @@ class Tranche extends JSAbstractFinances
      */
     public function getPrimeNetteTranche()
     {
-        $this->primeNetteTranche = (new Calculateur())
-            ->setCotation($this->getCotation())
-            ->getPrimeTotale(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE], $this);
+        $this->primeNetteTranche = 0;
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
+            ChargementCrudController::TYPE_PRIME_NETTE
+        ];
+        $this->primeNetteTranche = round($this->getChargementPrime($type));
+        // dd($this->primeNetteTranche);
         return $this->primeNetteTranche;
+    }
+
+    public function getChargementPrime(?int $type){
+        $montant = 0;
+        if ($this->getCotation()) {
+            /** @var Chargement */
+            foreach ($this->getCotation()->getChargements() as $chargement) {
+                if ($type === $chargement->getType()) {
+                    $montant = $montant + $chargement->getMontant();
+                }else if($type === null){
+                    $montant = $montant + $chargement->getMontant();
+                }
+            }
+        }
+        return $montant * $this->getTaux();
     }
 
     /**
@@ -1064,7 +1081,8 @@ class Tranche extends JSAbstractFinances
         return round($this->taxeCourtierPayee);
     }
 
-    public function getTaxeCourtierSolde(){
+    public function getTaxeCourtierSolde()
+    {
         $this->taxeCourtierSolde = $this->getTaxCourtierInvoiceDetails()[self::SOLDE_DU];
         return round($this->taxeCourtierSolde);
     }
@@ -1075,11 +1093,12 @@ class Tranche extends JSAbstractFinances
         return round($this->taxeAssureurPayee);
     }
 
-    public function getTaxeAssureurSolde(){
+    public function getTaxeAssureurSolde()
+    {
         $this->taxeAssureurSolde = $this->getTaxAssureurInvoiceDetails()[self::SOLDE_DU];
         return round($this->taxeAssureurSolde);
     }
-    
+
 
     /**
      * Get the value of fontingTranche
@@ -1089,15 +1108,23 @@ class Tranche extends JSAbstractFinances
     public function getFrontingTranche(): ?float
     {
         $this->frontingTranche = 0;
-        if ($this->getPolice() != null) {
-            /** @var Chargement */
-            foreach ($this->getPolice()->getChargements() as $chargement) {
-                if ($chargement->getType() == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) {
-                    $this->frontingTranche = $this->frontingTranche + ($chargement->getMontant());
-                }
-            }
-            $this->frontingTranche = round(($this->frontingTranche * $this->getTaux()) / 100);
-        }
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
+            ChargementCrudController::TYPE_FRONTING
+        ];
+        $this->frontingTranche = round($this->getChargementPrime($type));
         return $this->frontingTranche;
+    }
+
+    /**
+     * Get the value of tvaTranche
+     */ 
+    public function getTvaTranche()
+    {
+        $this->tvaTranche = 0;
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
+            ChargementCrudController::TYPE_TVA
+        ];
+        $this->tvaTranche = round($this->getChargementPrime($type));
+        return $this->tvaTranche;
     }
 }

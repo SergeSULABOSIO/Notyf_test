@@ -77,7 +77,6 @@ abstract class AbstractPaiement implements PaiementInit
         $this->paiement->setMontant($paidAmount);
     }
 
-
     public function setDescription(?string $description)
     {
         $this->paiement->setDescription($description);
@@ -205,15 +204,5 @@ abstract class AbstractPaiement implements PaiementInit
         ];
         // dd("Anciennes factures: ", count($anciennesFactures), $anciennesFactures, $reponse);
         return $reponse;
-    }
-
-    /**
-     * Get the value of facture
-     *
-     * @return ?Facture
-     */
-    public function getFacture(): ?Facture
-    {
-        return $this->facture;
     }
 }

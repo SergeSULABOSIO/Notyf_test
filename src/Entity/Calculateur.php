@@ -109,39 +109,39 @@ class Calculateur
     //     return $prime;
     // }
 
-    public function getPrimeTotale($type, ?Tranche $tranche): ?float
-    {
-        // dd($type);
-        if ($tranche != null && $type != null) {
-            $this->setCotation($tranche->getCotation());
-            return $this->getChargement($type) * $tranche->getTaux();
-        } else {
-            $montantTot = 0;
-            if ($tranche != null) {
-                /** @var Chargement */
-                foreach ($tranche->getCotation()->getChargements() as $chargement) {
-                    $montantTot = $montantTot + $chargement->getMontant();
-                }
-            }
-            return $montantTot;
-        }
-    }
+    // public function getPrimeTotale($type, ?Tranche $tranche): ?float
+    // {
+    //     // dd($type);
+    //     if ($tranche != null && $type != null) {
+    //         $this->setCotation($tranche->getCotation());
+    //         return $this->getChargement($type) * $tranche->getTaux();
+    //     } else {
+    //         $montantTot = 0;
+    //         if ($tranche != null) {
+    //             /** @var Chargement */
+    //             foreach ($tranche->getCotation()->getChargements() as $chargement) {
+    //                 $montantTot = $montantTot + $chargement->getMontant();
+    //             }
+    //         }
+    //         return $montantTot;
+    //     }
+    // }
 
-    public function getChargement(?int $typeChargement)
-    {
-        $tot = 0;
-        if ($this->cotation->getChargements()) {
-            /** @var Chargement */
-            foreach ($this->cotation->getChargements() as $chargement) {
-                if ($typeChargement != null) {
-                    if ($chargement->getType() == $typeChargement) {
-                        $tot = $tot + $chargement->getMontant();
-                    }
-                }
-            }
-        }
-        return $tot;
-    }
+    // public function getChargement(?int $typeChargement)
+    // {
+    //     $tot = 0;
+    //     if ($this->cotation->getChargements()) {
+    //         /** @var Chargement */
+    //         foreach ($this->cotation->getChargements() as $chargement) {
+    //             if ($typeChargement != null) {
+    //                 if ($chargement->getType() == $typeChargement) {
+    //                     $tot = $tot + $chargement->getMontant();
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return $tot;
+    // }
 
     public function getRevenuPureGlobalePartageable()
     {

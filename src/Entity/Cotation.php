@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Chargement;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CotationRepository;
-use Doctrine\Common\Collections\Collection;
-use App\Controller\Admin\MonnaieCrudController;
-use App\Controller\Admin\RevenuCrudController;
 use App\Repository\ChargementRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\Admin\RevenuCrudController;
+use App\Controller\Admin\MonnaieCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
@@ -194,15 +195,6 @@ class Cotation
         return $this;
     }
 
-
-
-    public function getChargement($type)
-    {
-        return (new Calculateur())
-            ->setCotation($this)
-            ->getChargement($type);
-    }
-
     public function __toString()
     {
         $strValidation = ($this->isValidated() == true ? " (offre validée)" : "");
@@ -262,6 +254,18 @@ class Cotation
         return $this;
     }
 
+    public function getChargement($type): ?float
+    {
+        $tot = 0;
+        /** @var Chargement */
+        foreach ($this->getChargements() as $chargement) {
+            if($type === $chargement->getType()){
+                $tot = $tot + $chargement->getMontant();
+            }
+        }
+        return round($tot);
+    }
+
     /**
      * @return Collection<int, Chargement>
      */
@@ -297,9 +301,12 @@ class Cotation
      */
     public function getPrimeTotale()
     {
-        $this->primeTotale = (new Calculateur())
-            ->setCotation($this)
-            ->getPrimeTotale(null, null);
+        $this->primeTotale = 0;
+        /** @var Tranche */
+        foreach ($this->getTranches() as $tranche) {
+            $this->primeTotale = $this->primeTotale + $tranche->getPrimeTotaleTranche();
+        }
+        $this->primeTotale = round($this->primeTotale);
         return $this->primeTotale;
     }
 

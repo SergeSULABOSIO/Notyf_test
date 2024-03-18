@@ -81,68 +81,6 @@ class Calculateur
         return $tot;
     }
 
-    // public function getPrimeNette(?Tranche $tranche): ?float
-    // {
-    //     $primeNette = 0;
-    //     $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE];
-    //     if ($tranche != null) {
-    //         $primeNette = $this->getPrime(
-    //             $tranche,
-    //             $type
-    //         );
-    //     }
-    //     dd($primeNette);
-    //     return $primeNette;
-    // }
-
-    // public function getPrime(?Tranche $tranche, $type_chargement): ?float
-    // {
-    //     $prime = 0;
-    //     if ($tranche != null && $type_chargement != null) {
-    //         /** @var Chargement */
-    //         foreach ($tranche->getCotation()->getChargements() as $chargement) {
-    //             if ($type_chargement == $chargement->getType()) {
-    //                 $prime = $prime + $chargement->getMontant();
-    //             }
-    //         }
-    //     }
-    //     return $prime;
-    // }
-
-    // public function getPrimeTotale($type, ?Tranche $tranche): ?float
-    // {
-    //     // dd($type);
-    //     if ($tranche != null && $type != null) {
-    //         $this->setCotation($tranche->getCotation());
-    //         return $this->getChargement($type) * $tranche->getTaux();
-    //     } else {
-    //         $montantTot = 0;
-    //         if ($tranche != null) {
-    //             /** @var Chargement */
-    //             foreach ($tranche->getCotation()->getChargements() as $chargement) {
-    //                 $montantTot = $montantTot + $chargement->getMontant();
-    //             }
-    //         }
-    //         return $montantTot;
-    //     }
-    // }
-
-    // public function getChargement(?int $typeChargement)
-    // {
-    //     $tot = 0;
-    //     if ($this->cotation->getChargements()) {
-    //         /** @var Chargement */
-    //         foreach ($this->cotation->getChargements() as $chargement) {
-    //             if ($typeChargement != null) {
-    //                 if ($chargement->getType() == $typeChargement) {
-    //                     $tot = $tot + $chargement->getMontant();
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return $tot;
-    // }
-
     public function getRevenuPureGlobalePartageable()
     {
         return $this->getRevenufinaleHTGlobale(true) - $this->getMontantTaxeGlobal(null, true);

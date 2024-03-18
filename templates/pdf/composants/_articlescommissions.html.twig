@@ -29,9 +29,9 @@
         <td class="tab-titre-label" style="width: {{width_tranche}}">Tranche</td>
         <td class="tab-titre-label" style="width: {{width_note}}">Note</td>
         <td class="tab-titre-valeur" style="width: {{width_prime_ttc}}">Prime TTC</td>
-        <td class="tab-titre-valeur" style="width: {{width_prime_nette}}">Prime Nette</td>
         <td class="tab-titre-valeur" style="width: {{width_fronting}}">Fronting</td>
         <td class="tab-titre-valeur" style="width: {{width_taxe_assureur}}">{{taxe_assureur.nom}}</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_nette}}">Prime Nette</td>
         <td class="tab-titre-valeur" style="width: {{width_taux}}">Taux</td>
         <td class="tab-titre-valeur" style="width: {{width_montant}}">Montant (ht)</td>
         <td class="tab-titre-valeur" style="width: {{width_taxe}}">{{taxe_assureur.nom}}{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
@@ -94,9 +94,9 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 18} %}
                     </td>
                     <td class="tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                    <td class="tab-ligne-valeur" style="width: {{width_prime_nette}}">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: {{width_fronting}}">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: {{width_taxe_assureur}}">{{art_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_nette}}">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: {{width_taux}}">{{art_taux|number_format('2', ',', '.')}}%</td>
                     <td class="tab-ligne-valeur" style="width: {{width_montant}}">{{art_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: {{width_taxe}}">{{art_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>
@@ -122,10 +122,10 @@
     
     <tr class="bg-sombre">
         <td colspan="6" class = "tab-ligne-label">Total général</td>
-        <td class = "tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur" style="width: {{width_prime_nette}}">{{total_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur" style="width: {{width_fronting}}">{{total_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur" style="width: {{width_taxe_assureur}}">{{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_ttc}}">{# {{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}} #}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_fronting}}"> {# {{total_fronting|format_currency(monnaie, {fraction_digit: 2})}} #} </td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_assureur}}"> {# {{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}} #} </td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_nette}}"> {# {{total_prime_ht|format_currency(monnaie, {fraction_digit: 2})}} #} </td>
         <td class = "tab-ligne-valeur" style="width: {{width_taux}}"></td>
         <td class = "tab-ligne-valeur" style="width: {{width_montant}}">{{total_montant|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur" style="width: {{width_taxe}}">{{total_taxes|format_currency(monnaie, {fraction_digit: 2})}}</td>

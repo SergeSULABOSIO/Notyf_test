@@ -41,7 +41,9 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
 
                                 $primeTTC = $tranche->getPrimeTotaleTranche();
                                 $primeHt = $tranche->getPrimeNetteTranche();
-                                $taxeAssureur = $tranche->getTvaTranche();
+                                $primeTva = $tranche->getTvaTranche();
+                                $primeFronting = $tranche->getFrontingTranche();
+
                                 $mntHT = $primeHt;
                                 $this->notesElementsFactures[] =
                                     [
@@ -53,11 +55,11 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                                         "Note" => FactureCrudController::TYPE_NOTE_PRIME,
                                         "Prime_TTC" => $primeTTC / 100,
                                         "Prime_HT" => $primeHt / 100,
-                                        "Fronting" => $tranche->getFrontingTranche() / 100,
-                                        "Taxe_Assureur" => $taxeAssureur / 100,
+                                        "Fronting" => $primeFronting / 100,
+                                        "Taxe_Assureur" => $primeTva / 100,
                                         "Taux" => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
                                         "Montant" => $mntHT / 100,
-                                        "Taxes" => $taxeAssureur / 100,
+                                        "Taxes" => $primeTva / 100,
                                         "Total_Dû" => $primeTTC / 100
                                     ];
                                 $indexLigne = $indexLigne + 1;
@@ -77,7 +79,8 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
 
                                 $primeTTC = $tranche->getPrimeTotaleTranche();
                                 $primeHt = $tranche->getPrimeNetteTranche();
-                                $taxeAssureur = $tranche->getTvaTranche();
+                                $primeTva = $tranche->getTvaTranche();
+                                $primeFronting = $tranche->getFrontingTranche();
                                 $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
                                 $tva = $tranche->getIndicaRevenuTaxeAssureur(RevenuCrudController::TAB_TYPE[
                                     RevenuCrudController::TYPE_FRAIS_DE_GESTION
@@ -94,8 +97,8 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                                         "Note" => FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION,
                                         "Prime_TTC" => $primeTTC / 100,
                                         "Prime_HT" => $primeHt / 100,
-                                        "Fronting" => $tranche->getFrontingTranche() / 100,
-                                        "Taxe_Assureur" => $taxeAssureur / 100,
+                                        "Fronting" => $primeFronting / 100,
+                                        "Taxe_Assureur" => $primeTva / 100,
                                         "Taux" => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
                                         "Montant" => $mntHT / 100,
                                         "Taxes" => $tva / 100,

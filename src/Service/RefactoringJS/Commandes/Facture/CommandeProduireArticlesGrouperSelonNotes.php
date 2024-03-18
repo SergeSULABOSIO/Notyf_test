@@ -74,6 +74,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
 
                                 $primeTTC = $tranche->getPrimeTotaleTranche();
                                 $primeHt = $tranche->getPrimeNetteTranche();
+                                $taxeAssureur = $tranche->getTvaTranche();
                                 $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
                                 $taxeCourtier = $tranche->getTaxeCourtierTotale();
                                 // dd($taxeCourtier);

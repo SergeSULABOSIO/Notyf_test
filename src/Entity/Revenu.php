@@ -796,6 +796,7 @@ class Revenu implements IndicateursJS
             $tauxPartenaire = $this->getCotation()->getPiste()->getPartenaire()->getPart();
         }
         return round($tauxPartenaire * $this->getIndicaRevenuPartageable());
+        
     }
 
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float

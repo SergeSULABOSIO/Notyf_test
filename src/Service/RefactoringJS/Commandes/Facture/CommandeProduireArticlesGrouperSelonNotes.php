@@ -4,6 +4,7 @@ namespace App\Service\RefactoringJS\Commandes\Facture;
 
 use App\Entity\Facture;
 use App\Controller\Admin\FactureCrudController;
+use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Police;
 use App\Entity\Tranche;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -76,7 +77,9 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                                 $primeHt = $tranche->getPrimeNetteTranche();
                                 $taxeAssureur = $tranche->getTvaTranche();
                                 $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION]);
-                                $taxeCourtier = $tranche->getTaxeCourtierTotale();
+                                $taxeCourtier = $tranche->getIndicaRevenuTaxeCourtier(RevenuCrudController::TAB_TYPE[
+                                    RevenuCrudController::TYPE_FRAIS_DE_GESTION
+                                ]);
                                 // dd($taxeCourtier);
                                 $mntHT = $mntTTC - $taxeCourtier;
                                 $this->notesElementsFactures[] =

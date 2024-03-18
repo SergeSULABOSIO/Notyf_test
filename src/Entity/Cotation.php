@@ -980,7 +980,7 @@ class Cotation implements IndicateursJS
             if ($typeRevenu !== null) {
                 if ($typeRevenu === $revenu->getType()) {
                     if ($client->isExoneree() === false) {
-                        if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                        if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                             $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeAssureur()->getTauxIARD() : $this->getTaxeAssureur()->getTauxVIE();
                             $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
                         }
@@ -988,7 +988,7 @@ class Cotation implements IndicateursJS
                 }
             } else {
                 if ($client->isExoneree() === false) {
-                    if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                    if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                         $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeAssureur()->getTauxIARD() : $this->getTaxeAssureur()->getTauxVIE();
                         $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
                     }

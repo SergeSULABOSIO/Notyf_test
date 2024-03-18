@@ -2,32 +2,48 @@
 
 namespace App\Service\RefactoringJS\AutresClasses;
 
+use App\Entity\Client;
+use App\Entity\Police;
+use App\Entity\Assureur;
+use App\Entity\Cotation;
+use App\Entity\Partenaire;
+use App\Entity\Produit;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 interface IndicateursJS
 {
     /**
      * Indicateurs relatifs au risque
      */
-    public function getIndicaRisquePrimeReassurance();
-    public function getIndicaRisquePrimeTotale();
-    public function getIndicaRisquePrimeNette();
-    public function getIndicaRisqueAccessoires();
-    public function getIndicaRisqueTaxeRegulateur();
-    public function getIndicaRisqueTaxeAssureur();
-    public function getIndicaRisqueFronting();
+    public function getIndicaRisquePolice():?Police;
+    public function getIndicaRisqueCotation():?Cotation;
+    public function getIndicaRisqueClient():?Client;
+    public function getIndicaRisque():?Produit;
+    public function getIndicaRisqueAssureur():?Assureur;
+    public function getIndicaRisqueContacts():?ArrayCollection;
+    public function getIndicaRisqueReferencePolice():?string;
+    public function getIndicaRisquePrimeReassurance():?float;
+    public function getIndicaRisquePrimeTotale():?float;
+    public function getIndicaRisquePrimeNette():?float;
+    public function getIndicaRisqueAccessoires():?float;
+    public function getIndicaRisqueTaxeRegulateur():?float;
+    public function getIndicaRisqueTaxeAssureur():?float;
+    public function getIndicaRisqueFronting():?float;
 
     /**
      * Indicateurs relatifs aux revenus
      */
-    public function getIndicaRevenuTotal(?int $typeRevenu);
-    public function getIndicaRevenuNet(?int $typeRevenu);
-    public function getIndicaRevenuPartageable(?int $typeRevenu);
-    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu);
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu);
-    public function getIndicaRevenuReserve(?int $typeRevenu);
+    public function getIndicaRevenuNet(?int $typeRevenu):?float;
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null):?float;
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null):?float;
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null):?float;
+    public function getIndicaRevenuTotal(?int $typeRevenu):?float;
+    public function getIndicaRevenuReserve(?int $typeRevenu = null):?float;
 
     /**
      * Indicateurs relatifs aux rétrocommissions
      */
-    public function getIndicaPartenaireRetrocom(?int $typeRevenu);
+    public function getIndicaPartenaireRetrocom(?int $typeRevenu = null):?float;
+    public function getIndicaPartenaire():?Partenaire;
 }

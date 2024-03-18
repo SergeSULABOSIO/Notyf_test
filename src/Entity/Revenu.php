@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\RevenuCrudController;
-use App\Repository\RevenuRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RevenuRepository;
+use App\Entity\Client;
+use App\Controller\Admin\RevenuCrudController;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
-class Revenu
+class Revenu implements IndicateursJS
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -520,14 +524,14 @@ class Revenu
     public function getTaxeAssureur()
     {
         $this->taxeAssureur = (new Calculateur())
-        ->getTaxePourAssureur(
-            null,
-            $this,
-            null,
-            null,
-            null,
-            Calculateur::Param_from_revenu
-        );
+            ->getTaxePourAssureur(
+                null,
+                $this,
+                null,
+                null,
+                null,
+                Calculateur::Param_from_revenu
+            );
         return $this->taxeAssureur;
     }
 
@@ -631,5 +635,171 @@ class Revenu
                 Calculateur::Param_from_revenu
             );
         return $this->reserve;
+    }
+
+
+    /**
+     * Les fonctions de l'interface
+     */
+    public function getIndicaRisquePolice(): ?Police
+    {
+        return $this->getCotation()->getPolice();
+    }
+
+    public function getIndicaRisqueCotation(): ?Cotation
+    {
+        return $this->getCotation();
+    }
+
+    public function getIndicaRisqueClient(): ?Client
+    {
+        return $this->getCotation()->getPiste()->getClient();
+    }
+
+    public function getIndicaRisqueAssureur(): ?Assureur
+    {
+        return $this->getCotation()->getPiste()->getAssureur();
+    }
+
+    public function getIndicaRisque(): ?Produit
+    {
+        return $this->getCotation()->getPiste()->getProduit();
+    }
+
+    public function getIndicaRisqueContacts(): ?ArrayCollection
+    {
+        return $this->getCotation()->getPiste()->getContacts();
+    }
+
+    public function getIndicaRisqueReferencePolice(): ?string
+    {
+        return $this->getCotation()->getPolice()->getReference();
+    }
+
+    public function getIndicaRisquePrimeReassurance(): ?float
+    {
+        return 0;
+    }
+
+    public function getIndicaRisquePrimeTotale(): ?float
+    {
+        return $this->getCotation()->getPrimeTotale();
+    }
+
+    public function getIndicaRisquePrimeNette(): ?float
+    {
+        return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]));
+    }
+
+    public function getIndicaRisqueAccessoires(): ?float
+    {
+        return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_ACCESSOIRES]));
+    }
+
+    public function getIndicaRisqueTaxeRegulateur(): ?float
+    {
+        return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRAIS_DE_SURVEILLANCE_ARCA]));
+    }
+
+    public function getIndicaRisqueTaxeAssureur(): ?float
+    {
+        return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_TVA]));
+    }
+
+    public function getIndicaRisqueFronting(): ?float
+    {
+        return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]));
+    }
+
+    public function getIndicaRevenuNet(?int $typeRevenu = null): ?float
+    {
+        $tot = 0;
+        // On récupère d'abord la base des calculs ou la formule.
+        $strBase = "";
+        foreach (RevenuCrudController::TAB_BASE as $key => $value) {
+            if ($value == $this->getBase()) {
+                $strBase = $key;
+            }
+        }
+        switch ($strBase) {
+            case RevenuCrudController::BASE_PRIME_NETTE:
+                $tot = ($this->getTaux() * $this->getIndicaRisquePrimeNette());
+                break;
+            case RevenuCrudController::BASE_FRONTING:
+                $tot = ($this->getTaux() * $this->getIndicaRisqueFronting());
+                break;
+            case RevenuCrudController::BASE_MONTANT_FIXE:
+                $tot = ($this->getMontantFlat() / 100);
+                break;
+            default:
+                # code...
+                break;
+        }
+        return round($tot);
+    }
+
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null): ?float
+    {
+        $tot = 0;
+        /** @var Client */
+        $client = $this->getIndicaRisqueClient();
+        /** @var Produit */
+        $produit = $this->getIndicaRisque();
+
+        if ($client->isExoneree() === false) {
+            if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeAssureur()->getTauxIARD() : $this->getCotation()->getTaxeAssureur()->getTauxVIE() ;
+                $tot = $tauxTaxe * $this->getIndicaRevenuNet();
+            }
+        }
+        return round($tot);
+    }
+
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null): ?float
+    {
+        $tot = 0;
+        /** @var Client */
+        $client = $this->getIndicaRisqueClient();
+        /** @var Produit */
+        $produit = $this->getIndicaRisque();
+
+        if ($client->isExoneree() === false) {
+            if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
+                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeCourtier()->getTauxIARD() : $this->getCotation()->getTaxeCourtier()->getTauxVIE() ;
+                $tot = $tauxTaxe * $this->getIndicaRevenuNet();
+            }
+        }
+        return round($tot);
+    }
+
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null): ?float
+    {
+        return round($this->getIndicaRevenuNet() - $this->getIndicaRevenuTaxeCourtier());
+    }
+
+    public function getIndicaRevenuTotal(?int $typeRevenu): ?float
+    {
+        return round($this->getIndicaRevenuNet() + $this->getIndicaRevenuTaxeAssureur());
+    }
+
+    public function getIndicaPartenaire(): ?Partenaire
+    {
+        return $this->getCotation()->getPiste()->getPartenaire();
+    }
+
+    public function getIndicaPartenaireRetrocom(?int $typeRevenu = null): ?float
+    {
+        $tauxPartenaire = 0;
+        if($this->getCotation()->getTauxretrocompartenaire() != 0){
+            $tauxPartenaire = $this->getCotation()->getTauxretrocompartenaire();
+        }else{
+            $tauxPartenaire = $this->getCotation()->getPiste()->getPartenaire()->getPart();
+        }
+        return round($tauxPartenaire * $this->getIndicaRevenuPartageable());
+    }
+
+    public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
+    {
+        return round($this->getIndicaRevenuPartageable() - $this->getIndicaPartenaireRetrocom());
     }
 }

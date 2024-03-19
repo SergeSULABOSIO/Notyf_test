@@ -42,12 +42,12 @@ class ServiceDates
 
     public function getTexte(DateTimeImmutable $date): string
     {
-        return $date->format('d-m-Y à H:i');
+        return $date->format('d/m/Y à H:i');
     }
 
     public function getTexteSimple(DateTimeImmutable $date): string
     {
-        return $date->format('d-m-Y');
+        return $date->format('d/m/Y');
     }
 
     public function aujourdhui(): DateTimeImmutable

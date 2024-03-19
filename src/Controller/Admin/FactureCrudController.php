@@ -56,7 +56,7 @@ class FactureCrudController extends AbstractCrudController
     public const TYPE_NOTE_FRAIS_DE_GESTION          = "FRAIS DE GEST.";
     public const TYPE_NOTE_COMMISSION_LOCALE         = "COM. LOC.";
     public const TYPE_NOTE_COMMISSION_REASSURANCE    = "COM. DE REA.";
-    public const TYPE_NOTE_COMMISSION_FRONTING       = "COM. SUR FRONTING";
+    public const TYPE_NOTE_COMMISSION_FRONTING       = "COM./FRONTING";
     public const TYPE_NOTE_RETROCOMMISSIONS          = "RETRO-COM.";
     public const TYPE_NOTE_NOTE_DE_PERCEPTION_TVA    = "TVA";
     public const TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA   = "REGULATION";

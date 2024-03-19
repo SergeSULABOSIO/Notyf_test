@@ -1,10 +1,11 @@
 {# Liste des avenants concernés par cette note de débit #}
-    {% set width_no = "25px;" %}
-    {% set width_reference = "150px;" %}
-    {% set width_avenant = "70px;" %}
+    {% set width_no = "11px;" %}
+    {% set width_reference = "110px;" %}
+    {% set width_avenant = "50px;" %}
     {% set width_risque = "35px;" %}
-    {% set width_tranche = "70px;" %}
-    {% set width_note = "110px;" %}
+    {% set width_tranche = "50px;" %}
+    {% set width_periode = "100px;" %}
+    {% set width_note = "100px;" %}
     {% set width_prime_ttc = "65px;" %}
     {% set width_prime_nette = "65px;" %}
     {% set width_fronting = "65px;" %}
@@ -16,10 +17,10 @@
 
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
-        <td colspan="5">Client: <b>{{facture.autreTiers}}</b> </td>
+        <td colspan="7">Client: <b>{{facture.autreTiers}}</b> </td>
     </tr>
     <tr>
-        <td colspan="5">Liste détailée de {{pg_volumeDonnees}} article(s) concernés par la note de débit / facture. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+        <td colspan="7">Liste détailée de {{pg_volumeDonnees}} article(s) concernés par la note de débit / facture. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
         <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
@@ -27,6 +28,7 @@
         <td class="tab-titre-label" style="width: {{width_avenant}}">Avenant</td>
         <td class="tab-titre-label" style="width: {{width_risque}}">Risque</td>
         <td class="tab-titre-label" style="width: {{width_tranche}}">Tranche</td>
+        <td class="tab-titre-label" style="width: {{width_periode}}">Période</td>
         <td class="tab-titre-label" style="width: {{width_note}}">Note</td>
         <td class="tab-titre-valeur" style="width: {{width_prime_ttc}}">Prime TTC</td>
         <td class="tab-titre-valeur" style="width: {{width_fronting}}">Fronting</td>
@@ -65,6 +67,7 @@
                     {% set art_avenant = facture.notesElementsFactures[i - 1]["Avenant"]  %}
                     {% set art_risque = facture.notesElementsFactures[i - 1]["Risque"]  %}
                     {% set art_tranche = facture.notesElementsFactures[i - 1]["Tranche"]  %}
+                    {% set art_periode = facture.notesElementsFactures[i - 1]["Période"]  %}
                     {% set art_note = facture.notesElementsFactures[i - 1]["Note"]  %}
                     {% set art_prime_ttc = facture.notesElementsFactures[i - 1]["Prime_TTC"]  %}
                     {% set art_prime_ht = facture.notesElementsFactures[i - 1]["Prime_HT"]  %}
@@ -79,19 +82,22 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
                     <td class="tab-ligne-label a-la-ligne-auto" style="width: {{width_reference}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 25} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 23} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_avenant}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 20} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 10} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_risque}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_tranche}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 15} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 12} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_periode}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_periode, 'txtLimitedLength_tailleMax': 23} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_note}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 18} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_note, 'txtLimitedLength_tailleMax': 16} %}
                     </td>
                     <td class="tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
                     <td class="tab-ligne-valeur" style="width: {{width_fronting}}">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
@@ -121,7 +127,7 @@
     {% endfor %}
     
     <tr class="bg-sombre">
-        <td colspan="6" class = "tab-ligne-label">Total général</td>
+        <td colspan="7" class = "tab-ligne-label">Total général</td>
         <td class = "tab-ligne-valeur" style="width: {{width_prime_ttc}}">{# {{total_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}} #}</td>
         <td class = "tab-ligne-valeur" style="width: {{width_fronting}}"> {# {{total_fronting|format_currency(monnaie, {fraction_digit: 2})}} #} </td>
         <td class = "tab-ligne-valeur" style="width: {{width_taxe_assureur}}"> {# {{total_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}} #} </td>

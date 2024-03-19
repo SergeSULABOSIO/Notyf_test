@@ -14,6 +14,7 @@ use App\Service\ServiceDates;
 class CommandeProduireArticlesGrouperSelonNotes implements Commande
 {
     private $notesElementsFactures = [];
+    private $indexLigne = 1;
     
 
     public function __construct(private ?Facture $facture)
@@ -22,7 +23,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
 
     public function executer()
     {
-        $indexLigne = 1;
+        $this->indexLigne = 1;
         if ($this->facture->getElementFactures() != null) {
             if (count($this->facture->getElementFactures()) != 0) {
                 /** @var ElementFacture */
@@ -34,12 +35,12 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                         /**
                          * PRIME D'ASSURANCE
                          */
-                        $this->addNotePourPrime($elementFacture, $indexLigne);
+                        $this->addNotePourPrime($elementFacture, $this->indexLigne);
 
                         /**
                          * FRAIS DE GESTION
                          */
-                        $this->addNotePourFraisDeGestion($elementFacture, $indexLigne);
+                        $this->addNotePourFraisDeGestion($elementFacture, $this->indexLigne);
                     }
                 }
             }
@@ -47,7 +48,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
         $this->facture->setNotesElementsFactures($this->notesElementsFactures);
     }
 
-    public function addNotePourPrime(?ElementFacture $elementFacture, $indexLigne)
+    public function addNotePourPrime(?ElementFacture $elementFacture)
     {
         if ($elementFacture->getIncludePrime() == true) {
             /** @var Tranche */
@@ -62,7 +63,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                 $mntHT = $primeHt;
                 $this->notesElementsFactures[] =
                     [
-                        self::NOTE_NO => $indexLigne,
+                        self::NOTE_NO => $this->indexLigne,
                         self::NOTE_REFERENCE_POLICE => $police->getReference(),
                         self::NOTE_AVENANT => $police->getTypeavenant(),
                         self::NOTE_RISQUE => $police->getProduit()->getCode(),
@@ -78,12 +79,12 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                         self::NOTE_TVA => $primeTva / 100,
                         self::NOTE_MONTANT_TTC => $primeTTC / 100
                     ];
-                $indexLigne = $indexLigne + 1;
+                $this->indexLigne = $this->indexLigne + 1;
             }
         }
     }
 
-    public function addNotePourFraisDeGestion(?ElementFacture $elementFacture, $indexLigne)
+    public function addNotePourFraisDeGestion(?ElementFacture $elementFacture)
     {
         if ($elementFacture->getIncludeFraisGestion() == true) {
             /** @var Tranche */
@@ -100,7 +101,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                 $mntHT = $mntTTC - $tva;
                 $this->notesElementsFactures[] =
                     [
-                        self::NOTE_NO => $indexLigne,
+                        self::NOTE_NO => $this->indexLigne,
                         self::NOTE_REFERENCE_POLICE => $police->getReference(),
                         self::NOTE_AVENANT => $police->getTypeavenant(),
                         self::NOTE_RISQUE => $police->getProduit()->getCode(),
@@ -116,7 +117,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                         self::NOTE_TVA => $tva / 100,
                         self::NOTE_MONTANT_TTC => $mntTTC / 100
                     ];
-                $indexLigne = $indexLigne + 1;
+                $indexLigne = $this->indexLigne + 1;
             }
         }
     }

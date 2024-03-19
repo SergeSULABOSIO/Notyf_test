@@ -52,14 +52,14 @@ class FactureCrudController extends AbstractCrudController
         self::DESTINATION_PARTENAIRE    => 4,
     ];
 
-    public const TYPE_NOTE_PRIME                     = "PRIME D'ASSURANCE";
-    public const TYPE_NOTE_FRAIS_DE_GESTION          = "FRAIS DE GESTION";
-    public const TYPE_NOTE_COMMISSION_LOCALE         = "COMMISSION LOCALE";
-    public const TYPE_NOTE_COMMISSION_REASSURANCE    = "COMMISSION DE REASSURANCE";
-    public const TYPE_NOTE_COMMISSION_FRONTING       = "COMMISSION SUR FRONTING / CESSION";
-    public const TYPE_NOTE_RETROCOMMISSIONS          = "RETRO-COMMISSION";
-    public const TYPE_NOTE_NOTE_DE_PERCEPTION_TVA    = "TAXES SUR VALEUR AJOUTEE (TVA)";
-    public const TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA   = "FRAIS DE SURVEILLANCE (REGULATION)";
+    public const TYPE_NOTE_PRIME                     = "PRIME D'ASS.";
+    public const TYPE_NOTE_FRAIS_DE_GESTION          = "FRAIS DE GEST.";
+    public const TYPE_NOTE_COMMISSION_LOCALE         = "COM. LOC.";
+    public const TYPE_NOTE_COMMISSION_REASSURANCE    = "COM. DE REA.";
+    public const TYPE_NOTE_COMMISSION_FRONTING       = "COM. SUR FRONTING";
+    public const TYPE_NOTE_RETROCOMMISSIONS          = "RETRO-COM.";
+    public const TYPE_NOTE_NOTE_DE_PERCEPTION_TVA    = "TVA";
+    public const TYPE_NOTE_NOTE_DE_PERCEPTION_ARCA   = "REGULATION";
 
     public const TAB_TYPE_NOTE = [
         self::TYPE_NOTE_COMMISSION_LOCALE        => 0,

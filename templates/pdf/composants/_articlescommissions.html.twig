@@ -1,7 +1,7 @@
 {# Liste des avenants concernés par cette note de débit #}
     {% set width_no = "11px;" %}
     {% set width_reference = "110px;" %}
-    {% set width_avenant = "50px;" %}
+    {% set width_avenant = "60px;" %}
     {% set width_risque = "35px;" %}
     {% set width_tranche = "50px;" %}
     {% set width_periode = "100px;" %}
@@ -85,7 +85,7 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 23} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_avenant}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 10} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 14} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_risque}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}

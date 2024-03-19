@@ -70,6 +70,19 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                             );
                         }
                     }
+                    /**
+                     * DESTINATION PARTENAIRE
+                     */
+                    if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
+                        //RETRO-COMMISSION
+                        if ($elementFacture->getIncludeRetroCom() == true) {
+                            $this->addNotes(
+                                $elementFacture,
+                                FactureCrudController::TYPE_NOTE_RETROCOMMISSIONS,
+                                RevenuCrudController::TYPE_COM_REA
+                            );
+                        }
+                    }
                 }
             }
         }

@@ -16,7 +16,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
     private $notesElementsFactures = [];
     
 
-    public function __construct(private ?Facture $facture, private ?ServiceDates $serviceDates)
+    public function __construct(private ?Facture $facture)
     {
     }
 
@@ -67,7 +67,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                         self::NOTE_AVENANT => $police->getTypeavenant(),
                         self::NOTE_RISQUE => $police->getProduit()->getCode(),
                         self::NOTE_TRANCHE => $tranche->getNom(),
-                        self::NOTE_PERIODE => $this->serviceDates->getTexteSimple($tranche->getDateEffet()) . " - " . $this->serviceDates->getTexteSimple($tranche->getDateExpiration()),
+                        self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
                         self::NOTE_TYPE => FactureCrudController::TYPE_NOTE_PRIME,
                         self::NOTE_PRIME_TTC => $primeTTC / 100,
                         self::NOTE_PRIME_NETTE => $primeHt / 100,
@@ -105,7 +105,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                         self::NOTE_AVENANT => $police->getTypeavenant(),
                         self::NOTE_RISQUE => $police->getProduit()->getCode(),
                         self::NOTE_TRANCHE => $tranche->getNom(),
-                        self::NOTE_PERIODE => $this->serviceDates->getTexteSimple($tranche->getDateEffet()) . " - " . $this->serviceDates->getTexteSimple($tranche->getDateExpiration()),
+                        self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
                         self::NOTE_TYPE => FactureCrudController::TYPE_NOTE_FRAIS_DE_GESTION,
                         self::NOTE_PRIME_TTC => $primeTTC / 100,
                         self::NOTE_PRIME_NETTE => $primeHt / 100,

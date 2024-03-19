@@ -181,17 +181,12 @@
             <td class="tab-titre-label"><strong>Libellé</strong></td>
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
-        <tr>
-            <td class="tab-ligne-label">Montant total hors taxes</td>
-            <td class="tab-ligne-valeur">{{montant_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr>
-            <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)</td>
-            <td class="tab-ligne-valeur">{{montant_taxe|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
         <tr class="bg-sombre">
             <td class="tab-ligne-label">Total à payer</td>
             <td class="tab-ligne-valeur">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
+    <br>
+    <br>
+    <br>
 {% endif %}

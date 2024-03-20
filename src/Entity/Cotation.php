@@ -9,8 +9,9 @@ use App\Repository\ChargementRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\MonnaieCrudController;
-use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
 class Cotation implements IndicateursJS
@@ -1035,7 +1036,7 @@ class Cotation implements IndicateursJS
         return round($this->getIndicaRevenuNet($typeRevenu) - $this->getIndicaRevenuTaxeCourtier($typeRevenu));
     }
 
-    public function getIndicaRevenuTotal(?int $typeRevenu): ?float
+    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
     {
         return round($this->getIndicaRevenuNet($typeRevenu) + $this->getIndicaRevenuTaxeAssureur());
     }

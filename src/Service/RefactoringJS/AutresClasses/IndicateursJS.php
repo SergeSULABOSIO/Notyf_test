@@ -38,7 +38,7 @@ interface IndicateursJS
     public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null):?float;
     public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null):?float;
     public function getIndicaRevenuPartageable(?int $typeRevenu = null):?float;
-    public function getIndicaRevenuTotal(?int $typeRevenu):?float;
+    public function getIndicaRevenuTotal(?int $typeRevenu = null):?float;
     public function getIndicaRevenuReserve(?int $typeRevenu = null):?float;
 
     /**

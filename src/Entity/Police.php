@@ -2,20 +2,22 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ChargementCrudController;
 use DateInterval;
+use App\Entity\Cotation;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
-use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Controller\Admin\ChargementCrudController;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
-class Police extends JSAbstractFinances
+class Police extends JSAbstractFinances implements IndicateursJS
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -631,5 +633,122 @@ class Police extends JSAbstractFinances
             }
         }
         return round($this->primeNetteTotale);
+    }
+
+
+
+
+
+    /**
+     * Les fonctions de l'interface
+     */
+    public function getIndicaRisquePolice(): ?Police
+    {
+        return $this;
+    }
+
+    public function getIndicaRisqueCotation(): ?Cotation
+    {
+        return $this->getCotation()->getIndicaRisqueCotation();
+    }
+
+    public function getIndicaRisqueClient(): ?Client
+    {
+        return $this->getCotation()->getIndicaRisqueClient();
+    }
+
+    public function getIndicaRisqueAssureur(): ?Assureur
+    {
+        return $this->getCotation()->getIndicaRisqueAssureur();
+    }
+
+    public function getIndicaRisque(): ?Produit
+    {
+        return $this->getCotation()->getIndicaRisque();
+    }
+
+    public function getIndicaRisqueContacts(): ?ArrayCollection
+    {
+        return $this->getCotation()->getIndicaRisqueContacts();
+    }
+
+    public function getIndicaRisqueReferencePolice(): ?string
+    {
+        return $this->getCotation()->getIndicaRisqueReferencePolice();
+    }
+
+    public function getIndicaRisquePrimeReassurance(): ?float
+    {
+        return $this->getCotation()->getIndicaRisquePrimeReassurance();
+    }
+
+    public function getIndicaRisquePrimeTotale(): ?float
+    {
+        return $this->getCotation()->getIndicaRisquePrimeNette();
+    }
+
+    public function getIndicaRisquePrimeNette(): ?float
+    {
+        return $this->getCotation()->getIndicaRisquePrimeNette();
+    }
+
+    public function getIndicaRisqueAccessoires(): ?float
+    {
+        return $this->getCotation()->getIndicaRisqueAccessoires();
+    }
+
+    public function getIndicaRisqueTaxeRegulateur(): ?float
+    {
+        return $this->getCotation()->getIndicaRisqueTaxeRegulateur();
+    }
+
+    public function getIndicaRisqueTaxeAssureur(): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuTaxeAssureur();  
+    }
+
+    public function getIndicaRisqueFronting(): ?float
+    {
+        return $this->getCotation()->getIndicaRisqueFronting();
+    }
+
+    public function getIndicaRevenuNet(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuNet();
+    }
+
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuTaxeAssureur();
+    }
+
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuTaxeCourtier();
+    }
+
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuPartageable();
+    }
+
+    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuTotal();
+    }
+
+    public function getIndicaPartenaire(): ?Partenaire
+    {
+        return $this->getCotation()->getIndicaPartenaire();
+    }
+
+    public function getIndicaPartenaireRetrocom(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaPartenaireRetrocom();
+    }
+
+    public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
+    {
+        return $this->getCotation()->getIndicaRevenuReserve();
     }
 }

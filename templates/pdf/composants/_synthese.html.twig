@@ -17,8 +17,8 @@
     {% set montant_pret_a_payer = 0 %}
 
     {% for i in 0..facture.elementFactures|length - 1 %}
-        {% set police = facture.elementFactures[i].police %}
-        {% set com_ttc = com_ttc + (police.calc_revenu_ttc / 100) %}
+        {% set police = facture.elementFactures[i].tranche.police %}
+        {% set com_ttc = com_ttc + (police.indicaRevenuTotal / 100) %}
         {% set com_ttc_payee = com_ttc_payee + (police.calc_revenu_ttc_encaisse / 100) %}
         {% set com_ttc_solde = com_ttc_solde + (police.calc_revenu_ttc_solde_restant_du / 100) %}
         {% set com_ht = com_ht + (police.calc_revenu_ht / 100) %}

@@ -777,7 +777,7 @@ class Revenu implements IndicateursJS
         return round($this->getIndicaRevenuNet() - $this->getIndicaRevenuTaxeCourtier());
     }
 
-    public function getIndicaRevenuTotal(?int $typeRevenu): ?float
+    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
     {
         return round($this->getIndicaRevenuNet() + $this->getIndicaRevenuTaxeAssureur());
     }

@@ -17,7 +17,17 @@
 
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
-        <td colspan="7">Client: <b>{{facture.autreTiers}}</b> </td>
+        <td colspan="7">Client: 
+            {% if (facture.destination == 1) %} {# Assureur #}
+                <b>{{facture.assureur}}</b>
+            {% elseif (facture.destination == 2) %} {# Client #}
+                <b>{{facture.client}}</b>
+            {% elseif (facture.destination == 4) %} {# Partenaire #}
+                <b>{{facture.partenaire}}</b>
+            {% else %}
+                <b>{{facture.autreTiers}}</b>
+            {% endif %}
+        </td>
     </tr>
     <tr>
         <td colspan="7">Liste détailée de {{pg_volumeDonnees}} article(s) concernés par la note de débit / facture. [Page {{currentPage}}/{{pg_nb_pages}}]</td>

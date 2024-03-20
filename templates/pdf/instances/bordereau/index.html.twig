@@ -4,7 +4,7 @@
 
 {% block body %}
     {% set pg_tableauMax = 22 %}
-    {% set pg_volumeDonnees = facture.notesElementsFactures|length %}
+    {% set pg_volumeDonnees = facture.notesElementsFacturesND|length %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
     {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
     {% if pg_tableauMax > pg_volumeDonnees and pg_tableauMax != 0 %}

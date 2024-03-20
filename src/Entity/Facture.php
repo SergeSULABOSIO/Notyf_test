@@ -82,7 +82,12 @@ class Facture extends JSAbstractFinances
     private Collection $documents;
 
     private ?float $montantTTC;
-    private ?array $notesElementsFactures = [];
+    //Tableaux utiles pour les PDF
+    private ?array $synthseND = [];
+    private ?array $notesElementsFacturesND = [];
+    //Partenaire
+    private ?array $synthseNCPartenaire = [];
+    private ?array $notesElementsNCPartenaire = [];
 
 
     public function __construct()
@@ -560,11 +565,11 @@ class Facture extends JSAbstractFinances
      *
      * @return ?array
      */
-    public function getNotesElementsFactures(): ?array
+    public function getNotesElementsFacturesND(): ?array
     {
         (new CommandeProduireArticlesGrouperSelonNotes($this))
             ->executer();
-        return $this->notesElementsFactures;
+        return $this->notesElementsFacturesND;
     }
 
     /**
@@ -572,9 +577,9 @@ class Facture extends JSAbstractFinances
      *
      * @return  self
      */
-    public function setNotesElementsFactures($notesElementsFactures)
+    public function setNotesElementsFacturesND($notesElementsFacturesND)
     {
-        $this->notesElementsFactures = $notesElementsFactures;
+        $this->notesElementsFacturesND = $notesElementsFacturesND;
 
         return $this;
     }

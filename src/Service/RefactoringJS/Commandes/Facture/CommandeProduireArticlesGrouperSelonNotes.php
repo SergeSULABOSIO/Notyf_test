@@ -86,7 +86,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                 }
             }
         }
-        $this->facture->setNotesElementsFactures($this->notesElementsFactures);
+        $this->facture->setNotesElementsFacturesND($this->notesElementsFactures);
     }
 
     public function addNotePourPrime(?ElementFacture $elementFacture)

@@ -584,4 +584,13 @@ class Facture extends JSAbstractFinances
 
         return $this;
     }
+
+    /**
+     * Get the value of synthseNCPartenaire
+     */ 
+    public function getSynthseNCPartenaire()
+    {
+        
+        return $this->synthseNCPartenaire;
+    }
 }

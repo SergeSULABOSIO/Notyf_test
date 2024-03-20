@@ -50,13 +50,32 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
 
     //les type de revenu
     private ?float $comReassurance = 0;
-    private ?float $comLocale = 0;
-    private ?float $comFronting = 0;
-    private ?float $comFraisGestion = 0;
-    private ?float $comAutreChargement = 0;
-    private ?float $revenuTotal = 0;
+    private ?float $comReassurancePayee = 0;
+    private ?float $comReassuranceSolde = 0;
 
+    private ?float $comLocale = 0;
+    private ?float $comLocalePayee = 0;
+    private ?float $comLocaleSolde = 0;
+
+    private ?float $comFronting = 0;
+    private ?float $comFrontingPayee = 0;
+    private ?float $comFrontingSolde = 0;
+
+    private ?float $comFraisGestion = 0;
+    private ?float $comFraisGestionPayee = 0;
+    private ?float $comFraisGestionSolde = 0;
+
+    private ?float $comAutreChargement = 0;
+
+    private ?float $revenuTotal = 0;
+    private ?float $revenuTotalPayee = 0;
+    private ?float $revenuTotalSolde = 0;
+
+    //Partenaire
     private ?float $retroCommissionTotale = 0;
+    private ?float $retroCommissionTotalePayee = 0;
+    private ?float $retroCommissionTotaleSolde = 0;
+
     //Taxe Courtier
     private ?float $taxeCourtierTotale = 0;
     private ?float $taxeCourtierPayee = 0;
@@ -1000,22 +1019,21 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
     public function getPrimeNetteTranche()
     {
         $this->primeNetteTranche = 0;
-        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
-            ChargementCrudController::TYPE_PRIME_NETTE
-        ];
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE];
         $this->primeNetteTranche = round($this->getChargementPrime($type));
         // dd($this->primeNetteTranche);
         return $this->primeNetteTranche;
     }
 
-    public function getChargementPrime(?int $type){
+    public function getChargementPrime(?int $type)
+    {
         $montant = 0;
         if ($this->getCotation()) {
             /** @var Chargement */
             foreach ($this->getCotation()->getChargements() as $chargement) {
                 if ($type === $chargement->getType()) {
                     $montant = $montant + $chargement->getMontant();
-                }else if($type === null){
+                } else if ($type === null) {
                     $montant = $montant + $chargement->getMontant();
                 }
             }
@@ -1109,28 +1127,24 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
     public function getFrontingTranche(): ?float
     {
         $this->frontingTranche = 0;
-        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
-            ChargementCrudController::TYPE_FRONTING
-        ];
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING];
         $this->frontingTranche = round($this->getChargementPrime($type));
         return $this->frontingTranche;
     }
 
     /**
      * Get the value of tvaTranche
-     */ 
+     */
     public function getTvaTranche()
     {
         $this->tvaTranche = 0;
-        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[
-            ChargementCrudController::TYPE_TVA
-        ];
+        $type = ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_TVA];
         $this->tvaTranche = round($this->getChargementPrime($type));
         return $this->tvaTranche;
     }
 
 
-    
+
     /**
      * Les fonctions de l'interface
      */
@@ -1242,5 +1256,130 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
     {
         return round($this->getCotation()->getIndicaRevenuReserve($typeRevenu) * $this->getTaux());
+    }
+
+    /**
+     * Get the value of comReassurancePayee
+     */
+    public function getComReassurancePayee()
+    {
+        $this->comReassurancePayee = $this->getComReassuranceInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return $this->comReassurancePayee;
+    }
+
+    /**
+     * Get the value of comLocalePayee
+     */
+    public function getComLocalePayee()
+    {
+        $this->comLocalePayee = $this->getComLocaleInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return $this->comLocalePayee;
+    }
+
+    /**
+     * Get the value of comFrontingPayee
+     */
+    public function getComFrontingPayee()
+    {
+        $this->comFrontingPayee = $this->getComFrontingInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return $this->comFrontingPayee;
+    }
+
+    /**
+     * Get the value of comFraisGestionPayee
+     */
+    public function getComFraisGestionPayee()
+    {
+        $this->comFraisGestionPayee = $this->getFraisGestionInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return $this->comFraisGestionPayee;
+    }
+
+    /**
+     * Get the value of revenuTotalPayee
+     */
+    public function getRevenuTotalPayee()
+    {
+        $this->revenuTotalPayee = round(
+            $this->getComReassurancePayee() +
+                $this->getComFraisGestionPayee() +
+                $this->getComFrontingPayee() +
+                $this->getComLocalePayee()
+        );
+        return $this->revenuTotalPayee;
+    }
+
+    /**
+     * Get the value of comReassuranceSolde
+     */
+    public function getComReassuranceSolde()
+    {
+        $this->comReassuranceSolde = round(
+            $this->getComReassurance() - $this->getComReassurancePayee()
+        );
+        return $this->comReassuranceSolde;
+    }
+
+    /**
+     * Get the value of comLocaleSolde
+     */
+    public function getComLocaleSolde()
+    {
+        $this->comLocaleSolde = round(
+            $this->getComLocale() - $this->getComLocalePayee()
+        );
+        return $this->comLocaleSolde;
+    }
+
+    /**
+     * Get the value of comFrontingSolde
+     */
+    public function getComFrontingSolde()
+    {
+        $this->comFrontingSolde = round(
+            $this->getComFronting() - $this->getComFrontingPayee()
+        );
+        return $this->comFrontingSolde;
+    }
+
+    /**
+     * Get the value of comFraisGestionSolde
+     */
+    public function getComFraisGestionSolde()
+    {
+        $this->comFraisGestionSolde = round(
+            $this->getComFraisGestion() - $this->getComFraisGestionPayee()
+        );
+        return $this->comFraisGestionSolde;
+    }
+
+    /**
+     * Get the value of revenuTotalSolde
+     */
+    public function getRevenuTotalSolde()
+    {
+        $this->revenuTotalSolde = round(
+            $this->getRevenuTotal() - $this->getRevenuTotalPayee()
+        );
+        return $this->revenuTotalSolde;
+    }
+
+    /**
+     * Get the value of retroCommissionTotalePayee
+     */
+    public function getRetroCommissionTotalePayee()
+    {
+        $this->retroCommissionTotalePayee = $this->getRetrocomInvoiceDetails()[self::PAIEMENTS][self::MONTANT_PAYE];
+        return $this->retroCommissionTotalePayee;
+    }
+
+    /**
+     * Get the value of retroCommissionTotaleSolde
+     */
+    public function getRetroCommissionTotaleSolde()
+    {
+        $this->retroCommissionTotaleSolde = round(
+            $this->getRetroCommissionTotale() - $this->getRetroCommissionTotalePayee()
+        );
+        return $this->retroCommissionTotaleSolde;
     }
 }

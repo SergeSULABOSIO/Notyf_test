@@ -18,16 +18,17 @@
 
     {% for i in 0..facture.elementFactures|length - 1 %}
         {% set police = facture.elementFactures[i].tranche.police %}
+        {% set tranche = facture.elementFactures[i].tranche %}
         {% set com_ttc = com_ttc + (police.indicaRevenuTotal / 100) %}
-        {% set com_ttc_payee = com_ttc_payee + (police.calc_revenu_ttc_encaisse / 100) %}
-        {% set com_ttc_solde = com_ttc_solde + (police.calc_revenu_ttc_solde_restant_du / 100) %}
-        {% set com_ht = com_ht + (police.calc_revenu_ht / 100) %}
-        {% set montant_taxe_courtier = montant_taxe_courtier + (police.calc_taxes_courtier / 100) %}
-        {% set montant_taxe_assureur = montant_taxe_assureur + (police.calc_taxes_assureurs / 100) %}
-        {% set com_partageable = com_partageable + (police.calc_revenu_partageable / 100) %}
-        {% set com_partenaire = com_partenaire + (police.calc_retrocom / 100) %}
-        {% set com_partenaire_payee = com_partenaire_payee + (police.calc_retrocom_payees / 100) %}
-        {% set com_partenaire_solde = com_partenaire_solde + (police.calc_retrocom_solde / 100) %}
+        {% set com_ttc_payee = com_ttc_payee + (tranche.revenuTotalPayee / 100) %}
+        {% set com_ttc_solde = com_ttc_solde + (tranche.revenuTotalSolde / 100) %}
+        {% set com_ht = com_ht + (tranche.IndicaRevenuNet / 100) %}
+        {% set montant_taxe_courtier = montant_taxe_courtier + (tranche.indicaRevenuTaxeCourtier / 100) %}
+        {% set montant_taxe_assureur = montant_taxe_assureur + (tranche.indicaRevenuTaxeAssureur / 100) %}
+        {% set com_partageable = com_partageable + (tranche.indicaRevenuPartageable / 100) %}
+        {% set com_partenaire = com_partenaire + (tranche.indicaPartenaireRetrocom / 100) %}
+        {% set com_partenaire_payee = com_partenaire_payee + (tranche.retroCommissionTotalePayee / 100) %}
+        {% set com_partenaire_solde = com_partenaire_solde + (tranche.retroCommissionTotaleSolde / 100) %}
         {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
     {% endfor %}
     
@@ -54,7 +55,7 @@
             <td class="tab-ligne-valeur">{{com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.taux * 100}}%)</td>
+            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} {#  @{{ taxe_courtier.taux * 100}}% #})</td>
             <td class="tab-ligne-valeur">-{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>

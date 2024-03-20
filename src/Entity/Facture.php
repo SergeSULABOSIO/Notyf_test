@@ -83,9 +83,10 @@ class Facture extends JSAbstractFinances
 
     private ?float $montantTTC;
     //Tableaux utiles pour les PDF
+    //Client et Assureur | Notes de Débit
     private ?array $synthseND = [];
     private ?array $notesElementsFacturesND = [];
-    //Partenaire
+    //Partenaire | Notes de Crédit
     private ?array $synthseNCPartenaire = [];
     private ?array $notesElementsNCPartenaire = [];
 

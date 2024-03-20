@@ -21,7 +21,7 @@
             {% if (facture.destination == 1) %} {# Assureur #}
                 <b>{{facture.assureur}}</b>
             {% elseif (facture.destination == 2) %} {# Client #}
-                <b>{{facture.client}}</b>
+                <b>{{facture.autreTiers}}</b>
             {% elseif (facture.destination == 4) %} {# Partenaire #}
                 <b>{{facture.partenaire}}</b>
             {% else %}

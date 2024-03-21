@@ -30,16 +30,16 @@ class CommandeProduireSynthePartenaire implements Commande
                     if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
                         //PRIME D'ASSURANCE
                         if ($elementFacture->getIncludeRetroCom() == true) {
-                            $this->addNotePourPrime($elementFacture);
+                            $this->setSynthese($elementFacture);
                         }
                     }
                 }
             }
         }
-        $this->facture->setNotesElementsFacturesND($this->notesElementsFactures);
+        $this->facture->setSynthseNCPartenaire($this->data);
     }
 
-    public function addNotePourPrime(?ElementFacture $elementFacture)
+    public function setSynthese(?ElementFacture $elementFacture)
     {
         /** @var Tranche */
         $tranche = $elementFacture->getTranche();
@@ -68,42 +68,6 @@ class CommandeProduireSynthePartenaire implements Commande
                     self::NOTE_MONTANT_NET => $mntHT / 100,
                     self::NOTE_TVA => $primeTva / 100,
                     self::NOTE_MONTANT_TTC => $primeTTC / 100
-                ];
-            $this->indexLigne = $this->indexLigne + 1;
-        }
-    }
-
-    public function addNotes(?ElementFacture $elementFacture, ?string $typeFacture, ?string $typeRevenu)
-    {
-        /** @var Tranche */
-        $tranche = $elementFacture->getTranche();
-        if ($tranche != null) {
-            /** @var Police */
-            $police = $tranche->getPolice();
-            $primeTTC = $tranche->getPrimeTotaleTranche();
-            $primeHt = $tranche->getPrimeNetteTranche();
-            $primeTva = $tranche->getTvaTranche();
-            $primeFronting = $tranche->getFrontingTranche();
-            $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[$typeFacture]);
-            $tva = $tranche->getIndicaRevenuTaxeAssureur(RevenuCrudController::TAB_TYPE[$typeRevenu]);
-            $mntHT = $mntTTC - $tva;
-            $this->notesElementsFactures[] =
-                [
-                    self::NOTE_NO => $this->indexLigne,
-                    self::NOTE_REFERENCE_POLICE => $police->getReference(),
-                    self::NOTE_AVENANT => $police->getTypeavenant(),
-                    self::NOTE_RISQUE => $police->getProduit()->getCode(),
-                    self::NOTE_TRANCHE => $tranche->getNom(),
-                    self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
-                    self::NOTE_TYPE => $typeFacture,
-                    self::NOTE_PRIME_TTC => $primeTTC / 100,
-                    self::NOTE_PRIME_NETTE => $primeHt / 100,
-                    self::NOTE_PRIME_FRONTING => $primeFronting / 100,
-                    self::NOTE_PRIME_TVA => $primeTva / 100,
-                    self::NOTE_TAUX => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
-                    self::NOTE_MONTANT_NET => $mntHT / 100,
-                    self::NOTE_TVA => $tva / 100,
-                    self::NOTE_MONTANT_TTC => $mntTTC / 100
                 ];
             $this->indexLigne = $this->indexLigne + 1;
         }

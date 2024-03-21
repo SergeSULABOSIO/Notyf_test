@@ -11,6 +11,7 @@ use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperSelonNotes;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
 class Facture extends JSAbstractFinances
@@ -578,7 +579,7 @@ class Facture extends JSAbstractFinances
      * Set the value of notesElementsFacturesND
      *
      * @return  self
-     */ 
+     */
     public function setArticlesNDClientOuAssureur($notesElementsFacturesND)
     {
         $this->articlesNDClientOuAssureur = $notesElementsFacturesND;
@@ -591,17 +592,17 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNCPartenaire()
     {
-
+        $this->synthseNCPartenaire = (new CommandeProduireSynthePartenaire($this))->executer();
         return $this->synthseNCPartenaire;
     }
 
-    
+
 
     /**
      * Set the value of synthseNCPartenaire
      *
      * @return  self
-     */ 
+     */
     public function setSynthseNCPartenaire($synthseNCPartenaire)
     {
         $this->synthseNCPartenaire = $synthseNCPartenaire;
@@ -611,7 +612,7 @@ class Facture extends JSAbstractFinances
 
     /**
      * Get the value of synthseNDClientOuAssureur
-     */ 
+     */
     public function getSynthseNDClientOuAssureur()
     {
         return $this->synthseNDClientOuAssureur;
@@ -621,7 +622,7 @@ class Facture extends JSAbstractFinances
      * Set the value of synthseNDClientOuAssureur
      *
      * @return  self
-     */ 
+     */
     public function setSynthseNDClientOuAssureur($synthseNDClientOuAssureur)
     {
         $this->synthseNDClientOuAssureur = $synthseNDClientOuAssureur;

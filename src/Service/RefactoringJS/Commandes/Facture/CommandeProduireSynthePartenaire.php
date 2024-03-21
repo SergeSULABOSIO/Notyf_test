@@ -23,6 +23,7 @@ class CommandeProduireSynthePartenaire implements Commande
     private $partPartenaire = 0;    //en %
     private $revenuAssiettePartageable = 0;
     private $revenuRetrocommission = 0;
+    private $nbArticles = 0;
 
     public function __construct(private ?Facture $facture)
     {
@@ -40,12 +41,13 @@ class CommandeProduireSynthePartenaire implements Commande
         $this->revenuAssiettePartageable = 0;
         $this->partPartenaire = 0;
         $this->revenuRetrocommission = 0;
+        $this->nbArticles = 0;
     }
 
     private function calculerTaux()
     {
         $this->revenuTaux = round(($this->revenuAssiettePartageable / $this->risquePrimeNette) * 100);
-        $this->partPartenaire = round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100);
+        $this->partPartenaire = ($this->revenuAssiettePartageable != 0) ? round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100) : 0 ;
         $this->revenuAssiettePartageable = round(
             $this->revenuGrossPartageable -
                 $this->revenuTvaPartageable -
@@ -56,20 +58,21 @@ class CommandeProduireSynthePartenaire implements Commande
 
     private function chargerData()
     {
+        //Calcul des valeurs calculables
         $this->calculerTaux();
-        $this->data[] =
-            [
-                self::NOTE_PRIME_TTC => $this->risquePrimeGross / 100,
-                self::NOTE_PRIME_FRONTING => $this->risqueFronting / 100,
-                self::NOTE_PRIME_NETTE => $this->risquePrimeNette / 100,
-                self::NOTE_TAUX => $this->revenuTaux,
-                self::REVENU_GROSS_PARTAGEABLE => $this->revenuGrossPartageable / 100,
-                self::REVENU_TVA_PARTAGEABLE => $this->revenuTvaPartageable / 100,
-                self::REVENU_ARCA_PARTAGEABLE => $this->revenuArcaPartageable / 100,
-                self::REVENU_ASSIETTE_PARTAGEABLE => $this->revenuAssiettePartageable / 100,
-                self::PARTENAIRE_PART => $this->partPartenaire,
-                self::PARTENAIRE_RETRCOMMISSION => $this->revenuRetrocommission / 100,
-            ];
+        //Chargement des cellules du tableau
+        $this->data[self::NOMBRE_ARTICLE] = $this->nbArticles;
+        $this->data[self::NOTE_PRIME_TTC] = $this->risquePrimeGross / 100;
+        $this->data[self::NOTE_PRIME_FRONTING] = $this->risqueFronting / 100;
+        $this->data[self::NOTE_PRIME_NETTE] = $this->risquePrimeNette / 100;
+        $this->data[self::NOTE_TAUX] = $this->revenuTaux;
+        $this->data[self::REVENU_GROSS_PARTAGEABLE] = $this->revenuGrossPartageable / 100;
+        $this->data[self::REVENU_TVA_PARTAGEABLE] = $this->revenuTvaPartageable / 100;
+        $this->data[self::REVENU_ARCA_PARTAGEABLE] = $this->revenuArcaPartageable / 100;
+        $this->data[self::REVENU_ASSIETTE_PARTAGEABLE] = $this->revenuAssiettePartageable / 100;
+        $this->data[self::PARTENAIRE_PART] = $this->partPartenaire;
+        $this->data[self::PARTENAIRE_RETRCOMMISSION] = $this->revenuRetrocommission / 100;
+        //Chargement du tableau dans la facture
         $this->facture->setSynthseNCPartenaire($this->data);
     }
 
@@ -80,6 +83,7 @@ class CommandeProduireSynthePartenaire implements Commande
                 $this->setSynthese();
             }
         }
+        // dd($this->data);
     }
 
     public function setSynthese()
@@ -98,12 +102,14 @@ class CommandeProduireSynthePartenaire implements Commande
                     $tranche = $elementFacture->getTranche();
                     if ($tranche != null) {
                         $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
-                        $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getRisquePrimeNetteTranche();
+                        $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
                         $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
                         //A completer
                         $this->revenuGrossPartageable = $this->revenuGrossPartageable + 0;
                         $this->revenuTvaPartageable = $this->revenuTvaPartageable + 0;
                         $this->revenuArcaPartageable = $this->revenuArcaPartageable + 0;
+                        //Incrémente le compteur d'articles
+                        $this->nbArticles++;
                     }
                 }
             }

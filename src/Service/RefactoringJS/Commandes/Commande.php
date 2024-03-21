@@ -7,6 +7,7 @@ interface Commande
 {
     //COLONNES - ARTICLE
     public const NOTE_NO = "No";
+    public const NOMBRE_ARTICLE = "No_Articles";
     public const NOTE_REFERENCE_POLICE = "Reference_Police";
     public const NOTE_AVENANT = "Avenant";
     public const NOTE_RISQUE = "Risque";

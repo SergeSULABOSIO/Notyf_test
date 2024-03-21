@@ -22,25 +22,30 @@ class CommandeProduireSynthePartenaire implements Commande
     {
         if ($this->facture->getElementFactures() != null) {
             if (count($this->facture->getElementFactures()) != 0) {
-                /** @var ElementFacture */
-                foreach ($this->facture->getElementFactures() as $elementFacture) {
-                    /**
-                     * DESTINATION PARTENAIRE
-                     */
-                    if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
-                        //PRIME D'ASSURANCE
-                        if ($elementFacture->getIncludeRetroCom() == true) {
-                            $this->setSynthese($elementFacture);
-                        }
-                    }
-                }
+                $this->setSynthese();
             }
         }
         $this->facture->setSynthseNCPartenaire($this->data);
     }
 
-    public function setSynthese(?ElementFacture $elementFacture)
+    public function setSynthese()
     {
+        /** @var ElementFacture */
+        foreach ($this->facture->getElementFactures() as $elementFacture) {
+            /**
+             * DESTINATION PARTENAIRE
+             */
+            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
+                //POUR RETROCOMMISSION UNIQUEMENT
+                if ($elementFacture->getIncludeRetroCom() == true) {
+                    // On travaille ici dedans
+                    
+                }
+            }
+        }
+
+        // Données à supprimer
+
         /** @var Tranche */
         $tranche = $elementFacture->getTranche();
         if ($tranche != null) {
@@ -51,9 +56,8 @@ class CommandeProduireSynthePartenaire implements Commande
             $primeTva = $tranche->getTvaTranche();
             $primeFronting = $tranche->getFrontingTranche();
             $mntHT = $primeHt;
-            $this->notesElementsFactures[] =
+            $this->data[] =
                 [
-                    self::NOTE_NO => $this->indexLigne,
                     self::NOTE_REFERENCE_POLICE => $police->getReference(),
                     self::NOTE_AVENANT => $police->getTypeavenant(),
                     self::NOTE_RISQUE => $police->getProduit()->getCode(),
@@ -69,7 +73,6 @@ class CommandeProduireSynthePartenaire implements Commande
                     self::NOTE_TVA => $primeTva / 100,
                     self::NOTE_MONTANT_TTC => $primeTTC / 100
                 ];
-            $this->indexLigne = $this->indexLigne + 1;
         }
     }
 }

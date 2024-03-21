@@ -2,18 +2,18 @@
 
 namespace App\Service\RefactoringJS\Commandes\Facture;
 
-use App\Entity\Facture;
-use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\RevenuCrudController;
-use App\Entity\ElementFacture;
 use App\Entity\Police;
+use App\Entity\Facture;
 use App\Entity\Tranche;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\ServiceDates;
+use App\Entity\ElementFacture;
+use App\Controller\Admin\RevenuCrudController;
+use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\Commandes\Commande;
 
-class CommandeProduireArticlesGrouperSelonNotes implements Commande
+class CommandeProduireArticlesClientOuAssureur implements Commande
 {
-    private $notesElementsFactures = [];
+    private $data = [];
     private $indexLigne = 1;
 
 
@@ -86,7 +86,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
                 }
             }
         }
-        $this->facture->setNotesElementsFacturesND($this->notesElementsFactures);
+        $this->facture->setArticlesNDClientOuAssureur($this->data);
     }
 
     public function addNotePourPrime(?ElementFacture $elementFacture)
@@ -101,7 +101,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
             $primeTva = $tranche->getTvaTranche();
             $primeFronting = $tranche->getFrontingTranche();
             $mntHT = $primeHt;
-            $this->notesElementsFactures[] =
+            $this->data[] =
                 [
                     self::NOTE_NO => $this->indexLigne,
                     self::NOTE_REFERENCE_POLICE => $police->getReference(),
@@ -137,7 +137,7 @@ class CommandeProduireArticlesGrouperSelonNotes implements Commande
             $mntTTC = $elementFacture->getMontantInvoicedPerTypeNote(FactureCrudController::TAB_TYPE_NOTE[$typeFacture]);
             $tva = $tranche->getIndicaRevenuTaxeAssureur(RevenuCrudController::TAB_TYPE[$typeRevenu]);
             $mntHT = $mntTTC - $tva;
-            $this->notesElementsFactures[] =
+            $this->data[] =
                 [
                     self::NOTE_NO => $this->indexLigne,
                     self::NOTE_REFERENCE_POLICE => $police->getReference(),

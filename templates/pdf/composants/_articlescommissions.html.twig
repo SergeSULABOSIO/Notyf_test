@@ -72,21 +72,21 @@
                     <tr class="texte-centre">
                 {% endif %}
                     {# Les variables textes #}
-                    {% set art_numero = facture.notesElementsFacturesND[i - 1]["No"]  %}
-                    {% set art_reference = facture.notesElementsFacturesND[i - 1]["Reference_Police"]  %}
-                    {% set art_avenant = facture.notesElementsFacturesND[i - 1]["Avenant"]  %}
-                    {% set art_risque = facture.notesElementsFacturesND[i - 1]["Risque"]  %}
-                    {% set art_tranche = facture.notesElementsFacturesND[i - 1]["Tranche"]  %}
-                    {% set art_periode = facture.notesElementsFacturesND[i - 1]["Période"]  %}
-                    {% set art_note = facture.notesElementsFacturesND[i - 1]["Note"]  %}
-                    {% set art_prime_ttc = facture.notesElementsFacturesND[i - 1]["Prime_TTC"]  %}
-                    {% set art_prime_ht = facture.notesElementsFacturesND[i - 1]["Prime_HT"]  %}
-                    {% set art_fronting = facture.notesElementsFacturesND[i - 1]["Fronting"]  %}
-                    {% set art_taxe_assureur = facture.notesElementsFacturesND[i - 1]["Taxe_Assureur"]  %}
-                    {% set art_taux = facture.notesElementsFacturesND[i - 1]["Taux"]  %}
-                    {% set art_montant = facture.notesElementsFacturesND[i - 1]["Montant"]  %}
-                    {% set art_taxes = facture.notesElementsFacturesND[i - 1]["Taxes"]  %}
-                    {% set art_total_du = facture.notesElementsFacturesND[i - 1]["Total_Dû"]  %}
+                    {% set art_numero = facture.articlesNDClientOuAssureur[i - 1]["No"]  %}
+                    {% set art_reference = facture.articlesNDClientOuAssureur[i - 1]["Reference_Police"]  %}
+                    {% set art_avenant = facture.articlesNDClientOuAssureur[i - 1]["Avenant"]  %}
+                    {% set art_risque = facture.articlesNDClientOuAssureur[i - 1]["Risque"]  %}
+                    {% set art_tranche = facture.articlesNDClientOuAssureur[i - 1]["Tranche"]  %}
+                    {% set art_periode = facture.articlesNDClientOuAssureur[i - 1]["Période"]  %}
+                    {% set art_note = facture.articlesNDClientOuAssureur[i - 1]["Note"]  %}
+                    {% set art_prime_ttc = facture.articlesNDClientOuAssureur[i - 1]["Prime_TTC"]  %}
+                    {% set art_prime_ht = facture.articlesNDClientOuAssureur[i - 1]["Prime_HT"]  %}
+                    {% set art_fronting = facture.articlesNDClientOuAssureur[i - 1]["Fronting"]  %}
+                    {% set art_taxe_assureur = facture.articlesNDClientOuAssureur[i - 1]["Taxe_Assureur"]  %}
+                    {% set art_taux = facture.articlesNDClientOuAssureur[i - 1]["Taux"]  %}
+                    {% set art_montant = facture.articlesNDClientOuAssureur[i - 1]["Montant"]  %}
+                    {% set art_taxes = facture.articlesNDClientOuAssureur[i - 1]["Taxes"]  %}
+                    {% set art_total_du = facture.articlesNDClientOuAssureur[i - 1]["Total_Dû"]  %}
                     
                     <td class="tab-ligne-valeur" style="width: {{width_no}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}

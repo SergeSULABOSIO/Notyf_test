@@ -4,18 +4,73 @@ namespace App\Service\RefactoringJS\Commandes\Facture;
 
 use App\Entity\Facture;
 use App\Controller\Admin\FactureCrudController;
-use App\Controller\Admin\RevenuCrudController;
 use App\Entity\ElementFacture;
-use App\Entity\Police;
 use App\Entity\Tranche;
 use App\Service\RefactoringJS\Commandes\Commande;
 
 class CommandeProduireSynthePartenaire implements Commande
 {
     private $data = [];
+    //A trouver
+    private $risquePrimeGross = 0;
+    private $risquePrimeNette = 0;
+    private $risqueFronting = 0;
+    private $revenuGrossPartageable = 0;
+    private $revenuTvaPartageable = 0;
+    private $revenuArcaPartageable = 0;
+    //A calculer
+    private $revenuTaux = 0;    //en %
+    private $partPartenaire = 0;    //en %
+    private $revenuAssiettePartageable = 0;
+    private $revenuRetrocommission = 0;
 
     public function __construct(private ?Facture $facture)
     {
+    }
+
+    private function resetAggregats()
+    {
+        $this->risquePrimeGross = 0;
+        $this->risquePrimeNette = 0;
+        $this->risqueFronting = 0;
+        $this->revenuTaux = 0;
+        $this->revenuGrossPartageable = 0;
+        $this->revenuTvaPartageable = 0;
+        $this->revenuArcaPartageable = 0;
+        $this->revenuAssiettePartageable = 0;
+        $this->partPartenaire = 0;
+        $this->revenuRetrocommission = 0;
+    }
+
+    private function calculerTaux()
+    {
+        $this->revenuTaux = round(($this->revenuAssiettePartageable / $this->risquePrimeNette) * 100);
+        $this->partPartenaire = round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100);
+        $this->revenuAssiettePartageable = round(
+            $this->revenuGrossPartageable -
+                $this->revenuTvaPartageable -
+                $this->revenuArcaPartageable
+        );
+        $this->revenuRetrocommission = round(($this->partPartenaire * $this->revenuAssiettePartageable) * 100);
+    }
+
+    private function chargerData()
+    {
+        $this->calculerTaux();
+        $this->data[] =
+            [
+                self::NOTE_PRIME_TTC => $this->risquePrimeGross / 100,
+                self::NOTE_PRIME_FRONTING => $this->risqueFronting / 100,
+                self::NOTE_PRIME_NETTE => $this->risquePrimeNette / 100,
+                self::NOTE_TAUX => $this->revenuTaux,
+                self::REVENU_GROSS_PARTAGEABLE => $this->revenuGrossPartageable / 100,
+                self::REVENU_TVA_PARTAGEABLE => $this->revenuTvaPartageable / 100,
+                self::REVENU_ARCA_PARTAGEABLE => $this->revenuArcaPartageable / 100,
+                self::REVENU_ASSIETTE_PARTAGEABLE => $this->revenuAssiettePartageable / 100,
+                self::PARTENAIRE_PART => $this->partPartenaire,
+                self::PARTENAIRE_RETRCOMMISSION => $this->revenuRetrocommission / 100,
+            ];
+        $this->facture->setSynthseNCPartenaire($this->data);
     }
 
     public function executer()
@@ -25,11 +80,12 @@ class CommandeProduireSynthePartenaire implements Commande
                 $this->setSynthese();
             }
         }
-        $this->facture->setSynthseNCPartenaire($this->data);
     }
 
     public function setSynthese()
     {
+        $this->resetAggregats();
+
         /** @var ElementFacture */
         foreach ($this->facture->getElementFactures() as $elementFacture) {
             /**
@@ -38,41 +94,20 @@ class CommandeProduireSynthePartenaire implements Commande
             if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
                 //POUR RETROCOMMISSION UNIQUEMENT
                 if ($elementFacture->getIncludeRetroCom() == true) {
-                    // On travaille ici dedans
-                    
+                    /** @var Tranche */
+                    $tranche = $elementFacture->getTranche();
+                    if ($tranche != null) {
+                        $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
+                        $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getRisquePrimeNetteTranche();
+                        $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
+                        //A completer
+                        $this->revenuGrossPartageable = $this->revenuGrossPartageable + 0;
+                        $this->revenuTvaPartageable = $this->revenuTvaPartageable + 0;
+                        $this->revenuArcaPartageable = $this->revenuArcaPartageable + 0;
+                    }
                 }
             }
         }
-
-        // Données à supprimer
-
-        /** @var Tranche */
-        $tranche = $elementFacture->getTranche();
-        if ($tranche != null) {
-            /** @var Police */
-            $police = $tranche->getPolice();
-            $primeTTC = $tranche->getPrimeTotaleTranche();
-            $primeHt = $tranche->getPrimeNetteTranche();
-            $primeTva = $tranche->getTvaTranche();
-            $primeFronting = $tranche->getFrontingTranche();
-            $mntHT = $primeHt;
-            $this->data[] =
-                [
-                    self::NOTE_REFERENCE_POLICE => $police->getReference(),
-                    self::NOTE_AVENANT => $police->getTypeavenant(),
-                    self::NOTE_RISQUE => $police->getProduit()->getCode(),
-                    self::NOTE_TRANCHE => $tranche->getNom(),
-                    self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
-                    self::NOTE_TYPE => FactureCrudController::TYPE_NOTE_PRIME,
-                    self::NOTE_PRIME_TTC => $primeTTC / 100,
-                    self::NOTE_PRIME_NETTE => $primeHt / 100,
-                    self::NOTE_PRIME_FRONTING => $primeFronting / 100,
-                    self::NOTE_PRIME_TVA => $primeTva / 100,
-                    self::NOTE_TAUX => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
-                    self::NOTE_MONTANT_NET => $mntHT / 100,
-                    self::NOTE_TVA => $primeTva / 100,
-                    self::NOTE_MONTANT_TTC => $primeTTC / 100
-                ];
-        }
+        $this->chargerData();
     }
 }

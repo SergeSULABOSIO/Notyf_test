@@ -592,7 +592,7 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNCPartenaire()
     {
-        $this->synthseNCPartenaire = (new CommandeProduireSynthePartenaire($this))->executer();
+        (new CommandeProduireSynthePartenaire($this))->executer();
         return $this->synthseNCPartenaire;
     }
 

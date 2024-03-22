@@ -24,9 +24,13 @@ interface Commande
     public const NOTE_MONTANT_TTC = "Total_Dû";
     public const RISQUE_PRIME_TTC = "Prime totale";
     public const REVENU_NET_PARTAGEABLE = "Revenue_net_partageable";
+    public const REVENU_NET = "Revenue_net";
     public const REVENU_ASSIETTE_PARTAGEABLE = "Revenue_assiette_partageable";
     public const REVENU_TVA_PARTAGEABLE = "Revenue_tva_partageable";
     public const REVENU_ARCA_PARTAGEABLE = "Revenue_arca_partageable";
+    public const REVENU_TAXE_COURTIER = "Revenue_taxe_courtier";
+    public const REVENU_TAXE_COURTIER_PAYEE = "Revenue_taxe_courtier_payee";
+    public const REVENU_TAXE_COURTIER_SOLDE = "Revenue_taxe_courtier_solde";
     public const REVENU_TAUX = "Revenue_taux";
     public const PARTENAIRE_PART = "Partenaire_taux";
     public const PARTENAIRE_RETRCOMMISSION = "Partenaire_retrocom";

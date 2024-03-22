@@ -92,6 +92,12 @@ class Facture extends JSAbstractFinances
     //Partenaire | Notes de Crédit
     private ?array $synthseNCPartenaire = [];
     private ?array $notesElementsNCPartenaire = [];
+    //Arca | Notes de Crédit
+    private ?array $synthseNCArca = [];
+    private ?array $notesElementsNCArca = [];
+    //Dgi | Notes de Crédit
+    private ?array $synthseNCDgi = [];
+    private ?array $notesElementsNCDgi = [];
 
 
     public function __construct()

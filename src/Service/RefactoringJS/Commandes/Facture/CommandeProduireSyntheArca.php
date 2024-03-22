@@ -36,17 +36,17 @@ class CommandeProduireSyntheArca implements Commande
         $this->risqueFronting = 0;
         $this->revenuTaux = 0;
         $this->revenuNette = 0;
-        $this->revenuTaxeCourtierSolde = 0;
         $this->revenuTaxeCourtier = 0;
         $this->revenuTaxeCourtierPayee = 0;
         $this->revenuTaxeCourtierSolde = 0;
+        $this->revenuTaxeCourtierTaux = 0;
         $this->nbArticles = 0;
     }
 
     private function calculerTaux()
     {
         $this->revenuTaux = round(($this->revenuNette / $this->risquePrimeNette) * 100);
-        $this->revenuTaxeCourtierTaux = ($this->revenuTaxeCourtier != 0) ? round(($this->revenuTaxeCourtier / $this->revenuNette) * 100) : 0;
+        $this->revenuTaxeCourtierTaux = ($this->revenuTaxeCourtier !== 0) ? round(($this->revenuTaxeCourtier / $this->revenuNette) * 100) : 0;
     }
 
     private function chargerData()
@@ -59,13 +59,10 @@ class CommandeProduireSyntheArca implements Commande
         $this->data[self::NOTE_PRIME_FRONTING] = $this->risqueFronting / 100;
         $this->data[self::NOTE_PRIME_NETTE] = $this->risquePrimeNette / 100;
         $this->data[self::NOTE_TAUX] = $this->revenuTaux;
-        $this->data[self::REVENU_NET_PARTAGEABLE] = $this->revenuNetPartageable / 100;
-        $this->data[self::REVENU_ARCA_PARTAGEABLE] = $this->revenuArcaPartageable / 100;
-        $this->data[self::REVENU_ASSIETTE_PARTAGEABLE] = $this->revenuAssiettePartageable / 100;
-        $this->data[self::PARTENAIRE_PART] = $this->partPartenaire;
-        $this->data[self::PARTENAIRE_RETRCOMMISSION] = $this->revenuRetrocommission / 100;
-        $this->data[self::PARTENAIRE_RETRCOMMISSION_PAYEE] = $this->revenuRetrocommissionPayee / 100;
-        $this->data[self::PARTENAIRE_RETRCOMMISSION_SOLDE] = $this->revenuRetrocommissionSolde / 100;
+        $this->data[self::REVENU_NET] = $this->revenuNette / 100;
+        $this->data[self::REVENU_TAXE_COURTIER] = $this->revenuTaxeCourtier / 100;
+        $this->data[self::REVENU_TAXE_COURTIER_PAYEE] = $this->revenuTaxeCourtierPayee / 100;
+        $this->data[self::REVENU_TAXE_COURTIER_SOLDE] = $this->revenuTaxeCourtierSolde / 100;
         //Chargement du tableau dans la facture
         $this->facture->setSynthseNCPartenaire($this->data);
     }

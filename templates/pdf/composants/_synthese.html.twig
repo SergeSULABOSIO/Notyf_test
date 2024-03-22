@@ -76,7 +76,7 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCArca["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Revenu net</td>
+            <td class="tab-ligne-label">Revenu net ({{facture.synthseNCArca["Taux"]}}%)</td>
             <td class="tab-ligne-valeur">{{facture.synthseNCArca["Revenue_net"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
@@ -84,7 +84,7 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCArca["Revenue_taxe_courtier"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}}</td>
+            <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}} payés</td>
             <td class="tab-ligne-valeur">-{{facture.synthseNCArca["Revenue_taxe_courtier_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">

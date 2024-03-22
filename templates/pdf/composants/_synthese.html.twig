@@ -95,6 +95,7 @@
     <br>
     <br>
 {% elseif facture.destination == 3 %} {# Destination DGI #}
+    <br>
     <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
@@ -120,30 +121,24 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Commission nette ({{facture.synthseNCPartenaire["Taux"]}}% * Prime nette)</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_net_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.tauxIARD * 100}}%)</td>
-            <td class="tab-ligne-valeur">-{{facture.synthseNCDgi["Revenue_arca_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Revenu net ({{facture.synthseNCArca["Taux"]}}%)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_net"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Commission nette partageable avec {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_assiette_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr>
-            <td class="tab-ligne-label">Part dûe à {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Partenaire_retrocom"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{ taxe_assureur.tauxIARD * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_taxe_assureur"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">-{{facture.synthseNCDgi["Partenaire_retrocom_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label"> - {{taxe_assureur.nom}} payés</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCDgi["Revenue_taxe_assureur_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
-            <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Partenaire_retrocom_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Solde {{taxe_assureur.nom}} restant dû</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_taxe_assureur_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
+    <br>
+    <br>
 {% elseif facture.destination == 1 or facture.destination == 2 %}
     {# Destintion Assureur ou Client #}
     {# NOTE DE DEBIT POUR COMMISSION OU FRAIS DE GESTION #}

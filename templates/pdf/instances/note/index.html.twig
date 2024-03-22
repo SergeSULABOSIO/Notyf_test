@@ -15,7 +15,7 @@
         {# Signatiare de la facture #}
         {% include 'pdf/composants/_signataire.html.twig' %}
         {# Ressort #}
-        {% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 10, 'tailleBoucleMin': 3} %}
+        {% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': facture.compteBancaires|length, 'tailleTabMax': 9, 'tailleBoucleMin': 2} %}
         {# Comptes bancaires #}
         {% include 'pdf/composants/_comptesbancaires.html.twig' %}
         {# Footer etait ici #}

@@ -1235,7 +1235,7 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
 
     public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable): ?float
     {
-        return round($this->getCotation()->getIndicaRevenuPartageable($typeRevenu) * $this->getTaux());
+        return round($this->getCotation()->getIndicaRevenuNet($typeRevenu, $partageable) * $this->getTaux());
     }
 
     public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable): ?float

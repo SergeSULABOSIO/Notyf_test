@@ -23,7 +23,7 @@ interface Commande
     public const NOTE_TVA = "Taxes";
     public const NOTE_MONTANT_TTC = "Total_Dû";
     public const RISQUE_PRIME_TTC = "Prime totale";
-    public const REVENU_GROSS_PARTAGEABLE = "Revenue_gross_partageable";
+    public const REVENU_NET_PARTAGEABLE = "Revenue_net_partageable";
     public const REVENU_ASSIETTE_PARTAGEABLE = "Revenue_assiette_partageable";
     public const REVENU_TVA_PARTAGEABLE = "Revenue_tva_partageable";
     public const REVENU_ARCA_PARTAGEABLE = "Revenue_arca_partageable";

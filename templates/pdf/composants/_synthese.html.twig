@@ -24,24 +24,20 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Prime_TTC"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Prime nette</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr>
             <td class="tab-ligne-label">Fronting</td>
             <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Fronting"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Commission brutte ({{facture.synthseNCPartenaire["Taux"]}}%)</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Revenue_gross_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Prime nette</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
-        <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Taxes ({{taxe_assureur.nom}} {# @{{ taxe_assureur.tauxIARD * 100}}% #} )</td>
-            <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Revenue_tva_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <tr>
+            <td class="tab-ligne-label">Commission nette ({{facture.synthseNCPartenaire["Taux"]}}% * Prime nette)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Revenue_net_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} {#  @{{ taxe_courtier.taux * 100}}% #})</td>
-            <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Revenue_tva_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Revenue_arca_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Commission à partager avec {{facture.partenaire.nom}}</td>

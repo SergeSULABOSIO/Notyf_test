@@ -712,27 +712,27 @@ class Police extends JSAbstractFinances implements IndicateursJS
         return $this->getCotation()->getIndicaRisqueFronting();
     }
 
-    public function getIndicaRevenuNet(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuNet(?int $typeRevenu = null, ?int $patageable = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuNet();
     }
 
-    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null, ?int $patageable = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuTaxeAssureur();
     }
 
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $patageable = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuTaxeCourtier();
     }
 
-    public function getIndicaRevenuPartageable(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $patageable = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuPartageable();
     }
 
-    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $patageable = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuTotal();
     }

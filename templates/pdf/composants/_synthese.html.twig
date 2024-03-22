@@ -4,36 +4,9 @@
 {% set montant_ttc = montant_ht + montant_taxe %}
 
 {% if facture.destination == 4 %}
-    {% set com_ttc = 0 %}
-    {% set com_ttc_payee = 0 %}
-    {% set com_ttc_solde = 0 %}
-    {% set com_ht = 0 %}
-    {% set montant_taxe_courtier = 0 %}
-    {% set montant_taxe_assureur = 0 %}
-    {% set com_partageable = 0 %}
-    {% set com_partenaire = 0 %}
-    {% set com_partenaire_payee = 0 %}
-    {% set com_partenaire_solde = 0 %}
-    {% set montant_pret_a_payer = 0 %}
-
-    {% for i in 0..facture.elementFactures|length - 1 %}
-        {% set police = facture.elementFactures[i].tranche.police %}
-        {% set tranche = facture.elementFactures[i].tranche %}
-        {% set com_ttc = com_ttc + (police.indicaRevenuTotal / 100) %}
-        {% set com_ttc_payee = com_ttc_payee + (tranche.revenuTotalPayee / 100) %}
-        {% set com_ttc_solde = com_ttc_solde + (tranche.revenuTotalSolde / 100) %}
-        {% set com_ht = com_ht + (tranche.IndicaRevenuNet / 100) %}
-        {% set montant_taxe_courtier = montant_taxe_courtier + (tranche.indicaRevenuTaxeCourtier / 100) %}
-        {% set montant_taxe_assureur = montant_taxe_assureur + (tranche.indicaRevenuTaxeAssureur / 100) %}
-        {% set com_partageable = com_partageable + (tranche.indicaRevenuPartageable / 100) %}
-        {% set com_partenaire = com_partenaire + (tranche.indicaPartenaireRetrocom / 100) %}
-        {% set com_partenaire_payee = com_partenaire_payee + (tranche.retroCommissionTotalePayee / 100) %}
-        {% set com_partenaire_solde = com_partenaire_solde + (tranche.retroCommissionTotaleSolde / 100) %}
-        {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
-    {% endfor %}
-    
     {# NOTE DE CREDIT (RETROCOMMISSION) #}
     {# Synthèse des totaux #}
+    <br>
     <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
@@ -80,15 +53,11 @@
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">-{{com_partenaire_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        </tr>
-        <tr>
-            <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{com_partenaire_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Partenaire_retrocom_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="bg-sombre">
-            <td class="tab-ligne-label">Montant à payer à {{facture.partenaire.nom}}</td>
-            <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Partenaire_retrocom_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
 {% elseif facture.destination == 3 or facture.destination == 0 %}

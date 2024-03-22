@@ -30,6 +30,8 @@ interface Commande
     public const REVENU_TAUX = "Revenue_taux";
     public const PARTENAIRE_PART = "Partenaire_taux";
     public const PARTENAIRE_RETRCOMMISSION = "Partenaire_retrocom";
+    public const PARTENAIRE_RETRCOMMISSION_PAYEE = "Partenaire_retrocom_payee";
+    public const PARTENAIRE_RETRCOMMISSION_SOLDE = "Partenaire_retrocom_solde";
 
     //Production du paiement
     public function executer();

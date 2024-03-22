@@ -18,6 +18,8 @@ class CommandeProduireSynthePartenaire implements Commande
     private $revenuGrossPartageable = 0;
     private $revenuTvaPartageable = 0;
     private $revenuArcaPartageable = 0;
+    private $revenuRetrocommissionPayee = 0;
+    private $revenuRetrocommissionSolde = 0;
     //A calculer
     private $revenuTaux = 0;    //en %
     private $partPartenaire = 0;    //en %
@@ -41,6 +43,8 @@ class CommandeProduireSynthePartenaire implements Commande
         $this->revenuAssiettePartageable = 0;
         $this->partPartenaire = 0;
         $this->revenuRetrocommission = 0;
+        $this->revenuRetrocommissionPayee = 0;
+        $this->revenuRetrocommissionSolde = 0;
         $this->nbArticles = 0;
     }
 
@@ -72,6 +76,8 @@ class CommandeProduireSynthePartenaire implements Commande
         $this->data[self::REVENU_ASSIETTE_PARTAGEABLE] = $this->revenuAssiettePartageable / 100;
         $this->data[self::PARTENAIRE_PART] = $this->partPartenaire;
         $this->data[self::PARTENAIRE_RETRCOMMISSION] = $this->revenuRetrocommission / 100;
+        $this->data[self::PARTENAIRE_RETRCOMMISSION_PAYEE] = $this->revenuRetrocommissionPayee / 100;
+        $this->data[self::PARTENAIRE_RETRCOMMISSION_SOLDE] = $this->revenuRetrocommissionSolde / 100;
         //Chargement du tableau dans la facture
         $this->facture->setSynthseNCPartenaire($this->data);
     }
@@ -108,6 +114,8 @@ class CommandeProduireSynthePartenaire implements Commande
                         $this->revenuGrossPartageable = $this->revenuGrossPartageable + 0;
                         $this->revenuTvaPartageable = $this->revenuTvaPartageable + 0;
                         $this->revenuArcaPartageable = $this->revenuArcaPartageable + 0;
+                        $this->revenuRetrocommissionPayee = $this->revenuRetrocommissionPayee + $tranche->getRetroCommissionTotalePayee();
+                        $this->revenuRetrocommissionSolde = $this->revenuRetrocommissionSolde + $tranche->getRetroCommissionTotaleSolde();
                         //Incrémente le compteur d'articles
                         $this->nbArticles++;
                     }

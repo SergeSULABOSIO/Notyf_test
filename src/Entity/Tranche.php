@@ -1210,7 +1210,7 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
         return round($this->getCotation()->getIndicaRisqueFronting() * $this->getTaux());
     }
 
-    public function getIndicaRevenuNet(?int $typeRevenu = null, ?int $partageable): ?float
+    public function getIndicaRevenuNet(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         return round($this->getCotation()->getIndicaRevenuNet($typeRevenu, $partageable) * $this->getTaux());
     }
@@ -1220,7 +1220,7 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
         return round($this->getCotation()->getIndicaRevenuTaxeAssureur($typeRevenu, $partageable) * $this->getTaux());
     }
 
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable): ?float
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         return round($this->getCotation()->getIndicaRevenuTaxeCourtier($typeRevenu, $partageable) * $this->getTaux());
     }

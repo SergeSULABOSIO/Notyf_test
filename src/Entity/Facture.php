@@ -11,6 +11,7 @@ use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperSelonNotes;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
@@ -632,6 +633,29 @@ class Facture extends JSAbstractFinances
     public function setSynthseNDClientOuAssureur($synthseNDClientOuAssureur)
     {
         $this->synthseNDClientOuAssureur = $synthseNDClientOuAssureur;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of synthseNCArca
+     */
+    public function getSynthseNCArca()
+    {
+        (new CommandeProduireSyntheArca($this))->executer();
+        return $this->synthseNCArca;
+    }
+
+
+
+    /**
+     * Set the value of synthseNCPartenaire
+     *
+     * @return  self
+     */
+    public function setSynthseNCArca($synthseNCArca)
+    {
+        $this->synthseNCArca = $synthseNCArca;
 
         return $this;
     }

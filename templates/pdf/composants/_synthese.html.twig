@@ -1,11 +1,4 @@
-
-{% set montant_ht = (facture.totalDu / 100) / (taxe_assureur.tauxIARD + 1) %}
-{% set montant_taxe = (montant_ht * taxe_assureur.tauxIARD) %}
-{% set montant_ttc = montant_ht + montant_taxe %}
-
-{% if facture.destination == 4 %}
-    {# NOTE DE CREDIT (RETROCOMMISSION) #}
-    {# Synthèse des totaux #}
+{% if facture.destination == 4 %} {# DESTINATION PARTENAIRE #}
     <br>
     <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
         <tr>
@@ -56,96 +49,100 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Partenaire_retrocom_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
-{% elseif facture.destination == 3 or facture.destination == 0 %}
-    {% set nb_avenant = facture.elementFactures|length %}
-    {% set primes_totale = 0 %}
-    {% set primes_nettes = 0 %}
-    {% set com_ht = 0 %}
-    {% set montant_taxe_courtier = 0 %}
-    {% set montant_taxe_assureur = 0 %}
-    {% set montant_taxe_courtier_payee = 0 %}
-    {% set montant_taxe_courtier_solde = 0 %}
-    {% set montant_taxe_assureur_payee = 0 %}
-    {% set montant_taxe_assureur_solde = 0 %}
-    {% set montant_pret_a_payer = 0 %}
-
-    {% for i in 0..facture.elementFactures|length - 1 %}
-        {% set tranche = facture.elementFactures[i].tranche %}
-        {% set primes_totale = primes_totale + (tranche.primeTotaleTranche / 100) %}
-        {% set primes_nettes = primes_nettes + (tranche.primeNetteTranche / 100) %}
-        {% set com_ht = com_ht + (tranche.comLocale / 100) %}
-        {% if facture.destination == 0 %} {# ARCA #}
-            {% set montant_taxe_courtier = montant_taxe_courtier + (tranche.taxeCourtierTotale / 100) %}
-            {% set montant_taxe_courtier_payee = montant_taxe_courtier_payee + (tranche.taxeCourtierPayee / 100) %}
-            {% set montant_taxe_courtier_solde = montant_taxe_courtier_solde + (tranche.taxeCourtierSolde / 100) %}
-        {% elseif facture.destination == 3 %} {# TVA #}
-            {% set montant_taxe_assureur = montant_taxe_assureur + (tranche.taxeAssureurTotale / 100) %}
-            {% set montant_taxe_assureur_payee = montant_taxe_assureur_payee + (tranche.taxeAssureurPayee / 100) %}
-            {% set montant_taxe_assureur_solde = montant_taxe_assureur_solde + (tranche.taxeAssureurSolde / 100) %}
-        {% endif %}
-        {% set montant_pret_a_payer = montant_pret_a_payer + (facture.elementFactures[i].montant / 100) %}
-    {% endfor %}
-    {# NOTE DE CREDIT ARCA #}
-    <table class="tableau-bordure-zero centre marge-top-large texte-taille-normale">
+{% elseif facture.destination == 0 %} {# DESTINATION ARCA #}
+    <br>
+    <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
         <tr>
             <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
         </tr>
         <tr>
-            <td class="tab-titre-label"><strong>Libellé</strong></td>
+            <td class="tab-titre-label"><strong>Libellés</strong></td>
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Nombre total d'opérations / avénants</td>
-            <td class="tab-ligne-valeur">{{nb_avenant|number_format('0', ',', '.')}} avénant(s)</td>
+            <td class="tab-ligne-label">Nombre d'avenants (opérations)</td>
+            <td class="tab-ligne-valeur"> {{facture.synthseNCArca["No_Articles"]}} </td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Primes totales générées</td>
-            <td class="tab-ligne-valeur">{{primes_totale|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Prime brute</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Prime_TTC"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Primes nettes après deduction des taxes</td>
-            <td class="tab-ligne-valeur">{{primes_nettes|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Fronting</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Fronting"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Commissions totales hors taxes</td>
-            <td class="tab-ligne-valeur">{{com_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-label">Prime nette</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
-        {% if facture.destination == 0 %} {# Destination ARCA #}
-            <tr>
-                <td class="tab-ligne-label">Frais {{taxe_courtier.nom}} (IARD: {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}%, VIE:{{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}%)</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr class="texte-rouge">
-                <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}} déjà payés</td>
-                <td class="tab-ligne-valeur">-{{montant_taxe_courtier_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr>
-                <td class="tab-ligne-label">Solde restant dû</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_courtier_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr class="bg-sombre">
-                <td class="tab-ligne-label">Total à payer à {{taxe_courtier.organisation}}</td>
-                <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-        {% elseif facture.destination == 3 %} {# Destination DGI #}
-            <tr>
-                <td class="tab-ligne-label">{{taxe_assureur.nom}} ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_assureur|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr class="texte-rouge">
-                <td class="tab-ligne-label"> - {{taxe_assureur.nom}} déjà payés</td>
-                <td class="tab-ligne-valeur">-{{montant_taxe_assureur_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr>
-                <td class="tab-ligne-label">Solde restant dû</td>
-                <td class="tab-ligne-valeur">{{montant_taxe_assureur_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            <tr class="bg-sombre">
-                <td class="tab-ligne-label">Total à payer à {{taxe_assureur.organisation}}</td>
-                <td class="tab-ligne-valeur">{{montant_pret_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-        {% endif %}
-        
+        <tr>
+            <td class="tab-ligne-label">Revenu net</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Revenue_net"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Frais {{taxe_courtier.nom}} ({{ taxe_courtier.tauxIARD * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Revenue_taxe_courtier"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="texte-rouge">
+            <td class="tab-ligne-label"> - Frais {{taxe_courtier.nom}}</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCArca["Revenue_taxe_courtier_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="bg-sombre">
+            <td class="tab-ligne-label">Solde Frais {{taxe_courtier.nom}} restant dû</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCArca["Revenue_taxe_courtier_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+    </table>
+    <br>
+    <br>
+{% elseif facture.destination == 3 %} {# Destination DGI #}
+    <table class="tableau-bordure-zero centre marge-top-moyen texte-taille-normale">
+        <tr>
+            <td class="texte-centre texte-bleu" colspan="2">Synthèse</td>
+        </tr>
+        <tr>
+            <td class="tab-titre-label"><strong>Libellés</strong></td>
+            <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Nombre d'avenants (opérations)</td>
+            <td class="tab-ligne-valeur"> {{facture.synthseNCDgi["No_Articles"]}} </td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Prime brute</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Prime_TTC"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Fronting</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Fronting"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Prime nette</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Prime_HT"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Commission nette ({{facture.synthseNCPartenaire["Taux"]}}% * Prime nette)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_net_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="texte-rouge">
+            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.tauxIARD * 100}}%)</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCDgi["Revenue_arca_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Commission nette partageable avec {{facture.partenaire.nom}}</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Revenue_assiette_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr>
+            <td class="tab-ligne-label">Part dûe à {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Partenaire_retrocom"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="texte-rouge">
+            <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>
+            <td class="tab-ligne-valeur">-{{facture.synthseNCDgi["Partenaire_retrocom_payee"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
+        <tr class="bg-sombre">
+            <td class="tab-ligne-label">Solde restant dû à {{facture.partenaire.nom}}</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCDgi["Partenaire_retrocom_solde"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        </tr>
     </table>
 {% elseif facture.destination == 1 or facture.destination == 2 %}
     {# Destintion Assureur ou Client #}

@@ -45,7 +45,7 @@ class CommandeProduireSyntheArca implements Commande
 
     private function calculerTaux()
     {
-        $this->revenuTaux = round(($this->revenuNette / $this->risquePrimeNette) * 100);
+        $this->revenuTaux = ($this->risquePrimeNette !== 0) ? round(($this->revenuNette / $this->risquePrimeNette) * 100) : 0;
         $this->revenuTaxeCourtierTaux = ($this->revenuTaxeCourtier !== 0) ? round(($this->revenuTaxeCourtier / $this->revenuNette) * 100) : 0;
     }
 
@@ -64,7 +64,7 @@ class CommandeProduireSyntheArca implements Commande
         $this->data[self::REVENU_TAXE_COURTIER_PAYEE] = $this->revenuTaxeCourtierPayee / 100;
         $this->data[self::REVENU_TAXE_COURTIER_SOLDE] = $this->revenuTaxeCourtierSolde / 100;
         //Chargement du tableau dans la facture
-        $this->facture->setSynthseNCPartenaire($this->data);
+        $this->facture->setSynthseNCArca($this->data);
     }
 
     public function executer()
@@ -84,11 +84,11 @@ class CommandeProduireSyntheArca implements Commande
         /** @var ElementFacture */
         foreach ($this->facture->getElementFactures() as $elementFacture) {
             /**
-             * DESTINATION PARTENAIRE
+             * DESTINATION ARCA
              */
-            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE] == $this->facture->getDestination()) {
-                //POUR RETROCOMMISSION UNIQUEMENT
-                if ($elementFacture->getIncludeRetroCom() == true) {
+            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA] == $this->facture->getDestination()) {
+                //POUR TAXE COURTIER UNIQUEMENT
+                if ($elementFacture->getIncludeTaxeCourtier() == true) {
                     /** @var Tranche */
                     $tranche = $elementFacture->getTranche();
                     if ($tranche != null) {
@@ -99,12 +99,10 @@ class CommandeProduireSyntheArca implements Commande
                         $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
                         $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
                         //Calculs sur le revenu partageable
-                        $this->revenuNetPartageable = $this->revenuNetPartageable + $tranche->getIndicaRevenuPartageable($typeRevenu, $partageable_oui);
-                        $this->revenuArcaPartageable = $this->revenuArcaPartageable + $tranche->getIndicaRevenuTaxeCourtier($typeRevenu, $partageable_oui);
-                        //Calculs sur la rétrocommission
-                        $this->revenuRetrocommission = $this->revenuRetrocommission + $tranche->getRetroCommissionTotale();
-                        $this->revenuRetrocommissionSolde = $this->revenuRetrocommissionSolde + $tranche->getRetroCommissionTotaleSolde();
-                        $this->revenuRetrocommissionPayee = $this->revenuRetrocommissionPayee + $tranche->getRetroCommissionTotalePayee();
+                        $this->revenuNette = $this->revenuNette + $tranche->getIndicaRevenuNet();
+                        $this->revenuTaxeCourtier = $this->revenuTaxeCourtier + $tranche->getIndicaRevenuTaxeCourtier();
+                        $this->revenuTaxeCourtierPayee = $this->revenuTaxeCourtierPayee + $tranche->getTaxeCourtierPayee();
+                        $this->revenuTaxeCourtierSolde = $this->revenuTaxeCourtierSolde + $tranche->getTaxeCourtierSolde();
                         //Incrémente le compteur d'articles
                         $this->nbArticles++;
                     }

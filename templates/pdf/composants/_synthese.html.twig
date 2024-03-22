@@ -36,7 +36,7 @@
             <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Revenue_net_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
-            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} {#  @{{ taxe_courtier.taux * 100}}% #})</td>
+            <td class="tab-ligne-label"> - Autres Frais ({{taxe_courtier.nom}} @{{ taxe_courtier.tauxIARD * 100}}%)</td>
             <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Revenue_arca_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>

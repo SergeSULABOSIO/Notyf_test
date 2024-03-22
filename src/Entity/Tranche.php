@@ -359,15 +359,6 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
      */
     public function getRetroCommissionTotale(): float
     {
-        // $this->retroCommissionTotale = (new Calculateur())
-        //     ->getRetroCommissionTotale(
-        //         null,
-        //         null,
-        //         $this,
-        //         null,
-        //         null,
-        //         Calculateur::Param_from_tranche
-        //     ) * 100;
         $this->retroCommissionTotale = $this->getIndicaPartenaireRetrocom();
         return round($this->retroCommissionTotale);
     }

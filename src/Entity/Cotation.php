@@ -976,6 +976,7 @@ class Cotation implements IndicateursJS
                 }
             }
         }
+        // return round($tot);
         return round($tot);
     }
 
@@ -1081,8 +1082,8 @@ class Cotation implements IndicateursJS
         } else {
             $tauxPartenaire = $this->getPiste()->getPartenaire()->getPart();
         }
-        $revPartageable = $this->getIndicaRevenuNet($typeRevenu, RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]);
-        // dd($tauxPartenaire * $revPartageable);
+        $partageable_oui = RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI];
+        $revPartageable = $this->getIndicaRevenuNet($typeRevenu, $partageable_oui) - $this->getIndicaRevenuTaxeCourtier($typeRevenu, $partageable_oui);
         return round($tauxPartenaire * $revPartageable);
     }
 

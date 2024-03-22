@@ -52,7 +52,6 @@ class CommandeProduireSynthePartenaire implements Commande
         $this->revenuTaux = round(($this->revenuNetPartageable / $this->risquePrimeNette) * 100);
         $this->partPartenaire = ($this->revenuAssiettePartageable != 0) ? round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100) : 0 ;
         $this->revenuAssiettePartageable = round($this->revenuNetPartageable - $this->revenuArcaPartageable);
-        $this->revenuRetrocommission = round(($this->partPartenaire * $this->revenuAssiettePartageable) * 100);
     }
 
     private function chargerData()
@@ -103,14 +102,17 @@ class CommandeProduireSynthePartenaire implements Commande
                     if ($tranche != null) {
                         $partageable_oui = RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI];
                         $typeRevenu = null;
+                        //Calculs sur la prime d'assurance
                         $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
                         $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
                         $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
-                        //A completer
+                        //Calculs sur le revenu partageable
                         $this->revenuNetPartageable = $this->revenuNetPartageable + $tranche->getIndicaRevenuPartageable($typeRevenu, $partageable_oui);
-                        $this->revenuArcaPartageable = $this->revenuArcaPartageable + 0;
-                        $this->revenuRetrocommissionPayee = $this->revenuRetrocommissionPayee + $tranche->getRetroCommissionTotalePayee();
+                        $this->revenuArcaPartageable = $this->revenuArcaPartageable + $tranche->getIndicaRevenuTaxeCourtier($typeRevenu, $partageable_oui);
+                        //Calculs sur la rétrocommission
+                        $this->revenuRetrocommission = $this->revenuRetrocommission + $tranche->getRetroCommissionTotale();
                         $this->revenuRetrocommissionSolde = $this->revenuRetrocommissionSolde + $tranche->getRetroCommissionTotaleSolde();
+                        $this->revenuRetrocommissionPayee = $this->revenuRetrocommissionPayee + $tranche->getRetroCommissionTotalePayee();
                         //Incrémente le compteur d'articles
                         $this->nbArticles++;
                     }

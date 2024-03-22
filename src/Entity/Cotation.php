@@ -962,7 +962,7 @@ class Cotation implements IndicateursJS
                         if ($partageable === $revenu->getPartageable()) {
                             $tot = $tot + $revenu->getIndicaRevenuNet();
                         }
-                    }else{
+                    } else {
                         $tot = $tot + $revenu->getIndicaRevenuNet();
                     }
                 }
@@ -971,7 +971,7 @@ class Cotation implements IndicateursJS
                     if ($partageable === $revenu->getPartageable()) {
                         $tot = $tot + $revenu->getIndicaRevenuNet();
                     }
-                }else{
+                } else {
                     $tot = $tot + $revenu->getIndicaRevenuNet();
                 }
             }
@@ -1027,7 +1027,14 @@ class Cotation implements IndicateursJS
                     if ($client->isExoneree() === false) {
                         if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                             $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeCourtier()->getTauxIARD() : $this->getTaxeCourtier()->getTauxVIE();
-                            $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
+                            //On vérifie la partageabilité
+                            if ($partageable !== null) {
+                                if ($partageable === RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
+                                    $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
+                                }
+                            } else {
+                                $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
+                            }
                         }
                     }
                 }
@@ -1035,7 +1042,14 @@ class Cotation implements IndicateursJS
                 if ($client->isExoneree() === false) {
                     if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                         $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeCourtier()->getTauxIARD() : $this->getTaxeCourtier()->getTauxVIE();
-                        $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
+                        //On vérifie la partageabilité
+                        if ($partageable !== null) {
+                            if ($partageable === RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]) {
+                                $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
+                            }
+                        } else {
+                            $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
+                        }
                     }
                 }
             }
@@ -1045,12 +1059,13 @@ class Cotation implements IndicateursJS
 
     public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
-        return round($this->getIndicaRevenuTotal($typeRevenu) - $this->getIndicaRevenuTaxeCourtier($typeRevenu));
+        $partageable = RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI];
+        return round($this->getIndicaRevenuTotal($typeRevenu, $partageable) - $this->getIndicaRevenuTaxeCourtier($typeRevenu, $partageable));
     }
 
     public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
-        return round($this->getIndicaRevenuNet($typeRevenu) + $this->getIndicaRevenuTaxeAssureur($typeRevenu));
+        return round($this->getIndicaRevenuNet($typeRevenu, $partageable) + $this->getIndicaRevenuTaxeAssureur($typeRevenu, $partageable));
     }
 
     public function getIndicaPartenaire(): ?Partenaire
@@ -1066,7 +1081,9 @@ class Cotation implements IndicateursJS
         } else {
             $tauxPartenaire = $this->getPiste()->getPartenaire()->getPart();
         }
-        return round($tauxPartenaire * $this->getIndicaRevenuPartageable($typeRevenu));
+        $revPartageable = $this->getIndicaRevenuNet($typeRevenu, RevenuCrudController::TAB_PARTAGEABLE[RevenuCrudController::PARTAGEABLE_OUI]);
+        // dd($tauxPartenaire * $revPartageable);
+        return round($tauxPartenaire * $revPartageable);
     }
 
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float

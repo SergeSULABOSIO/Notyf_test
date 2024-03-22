@@ -40,12 +40,12 @@
             <td class="tab-ligne-valeur">-{{facture.synthseNCPartenaire["Revenue_arca_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Commission à partager avec {{facture.partenaire.nom}}</td>
+            <td class="tab-ligne-label">Commission nette partageable avec {{facture.partenaire.nom}}</td>
             <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Revenue_assiette_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr>
             <td class="tab-ligne-label">Part dûe à {{facture.partenaire.nom}} ({{facture.partenaire.part * 100}}%)</td>
-            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Revenue_assiette_partageable"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNCPartenaire["Partenaire_retrocom"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
         <tr class="texte-rouge">
             <td class="tab-ligne-label"> - Montant total déjà payé à {{facture.partenaire.nom}}</td>

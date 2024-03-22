@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesClientOu
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperSelonNotes;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheDgi;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
@@ -656,6 +657,29 @@ class Facture extends JSAbstractFinances
     public function setSynthseNCArca($synthseNCArca)
     {
         $this->synthseNCArca = $synthseNCArca;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of synthseNCDgi
+     */
+    public function getSynthseNCDgi()
+    {
+        (new CommandeProduireSyntheDgi($this))->executer();
+        return $this->synthseNCDgi;
+    }
+
+
+
+    /**
+     * Set the value of synthseNCDgi
+     *
+     * @return  self
+     */
+    public function setSynthseNCDgi($synthseNCDgi)
+    {
+        $this->synthseNCDgi = $synthseNCDgi;
 
         return $this;
     }

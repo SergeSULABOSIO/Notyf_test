@@ -9,7 +9,7 @@ use App\Entity\ElementFacture;
 use App\Entity\Tranche;
 use App\Service\RefactoringJS\Commandes\Commande;
 
-class CommandeProduireSyntheArca implements Commande
+class CommandeProduireSyntheDgi implements Commande
 {
     private $data = [];
     //A trouver
@@ -17,9 +17,9 @@ class CommandeProduireSyntheArca implements Commande
     private $risquePrimeNette = 0;
     private $risqueFronting = 0;
     private $revenuNette = 0;
-    private $revenuTaxeCourtier = 0;
-    private $revenuTaxeCourtierPayee = 0;
-    private $revenuTaxeCourtierSolde = 0;
+    private $revenuTaxeAssureur = 0;
+    private $revenuTaxeAssureurPayee = 0;
+    private $revenuTaxeAssureurSolde = 0;
     //A calculer
     private $revenuTaux = 0;
     private $nbArticles = 0;
@@ -35,9 +35,9 @@ class CommandeProduireSyntheArca implements Commande
         $this->risqueFronting = 0;
         $this->revenuTaux = 0;
         $this->revenuNette = 0;
-        $this->revenuTaxeCourtier = 0;
-        $this->revenuTaxeCourtierPayee = 0;
-        $this->revenuTaxeCourtierSolde = 0;
+        $this->revenuTaxeAssureur = 0;
+        $this->revenuTaxeAssureurPayee = 0;
+        $this->revenuTaxeAssureurSolde = 0;
         $this->nbArticles = 0;
     }
 
@@ -57,11 +57,11 @@ class CommandeProduireSyntheArca implements Commande
         $this->data[self::NOTE_PRIME_NETTE] = $this->risquePrimeNette / 100;
         $this->data[self::NOTE_TAUX] = $this->revenuTaux;
         $this->data[self::REVENU_NET] = $this->revenuNette / 100;
-        $this->data[self::REVENU_TAXE_COURTIER] = $this->revenuTaxeCourtier / 100;
-        $this->data[self::REVENU_TAXE_COURTIER_PAYEE] = $this->revenuTaxeCourtierPayee / 100;
-        $this->data[self::REVENU_TAXE_COURTIER_SOLDE] = $this->revenuTaxeCourtierSolde / 100;
+        $this->data[self::REVENU_TAXE_ASSUREUR] = $this->revenuTaxeAssureur / 100;
+        $this->data[self::REVENU_TAXE_ASSUREUR_PAYEE] = $this->revenuTaxeAssureurPayee / 100;
+        $this->data[self::REVENU_TAXE_ASSUREUR_SOLDE] = $this->revenuTaxeAssureurSolde / 100;
         //Chargement du tableau dans la facture
-        $this->facture->setSynthseNCArca($this->data);
+        $this->facture->setSynthseNCDgi($this->data);
     }
 
     public function executer()
@@ -83,9 +83,9 @@ class CommandeProduireSyntheArca implements Commande
             /**
              * DESTINATION ARCA
              */
-            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA] == $this->facture->getDestination()) {
-                //POUR TAXE COURTIER UNIQUEMENT
-                if ($elementFacture->getIncludeTaxeCourtier() == true) {
+            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI] == $this->facture->getDestination()) {
+                //POUR TAXE ASSUREUR UNIQUEMENT
+                if ($elementFacture->getIncludeTaxeAssureur() == true) {
                     /** @var Tranche */
                     $tranche = $elementFacture->getTranche();
                     if ($tranche != null) {
@@ -95,9 +95,9 @@ class CommandeProduireSyntheArca implements Commande
                         $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
                         //Calculs sur le revenu partageable
                         $this->revenuNette = $this->revenuNette + $tranche->getIndicaRevenuNet();
-                        $this->revenuTaxeCourtier = $this->revenuTaxeCourtier + $tranche->getIndicaRevenuTaxeCourtier();
-                        $this->revenuTaxeCourtierPayee = $this->revenuTaxeCourtierPayee + $tranche->getTaxeCourtierPayee();
-                        $this->revenuTaxeCourtierSolde = $this->revenuTaxeCourtierSolde + $tranche->getTaxeCourtierSolde();
+                        $this->revenuTaxeAssureur = $this->revenuTaxeAssureur + $tranche->getIndicaRevenuTaxeAssureur();
+                        $this->revenuTaxeAssureurPayee = $this->revenuTaxeAssureurPayee + $tranche->getTaxeAssureurPayee();
+                        $this->revenuTaxeAssureurSolde = $this->revenuTaxeAssureurSolde + $tranche->getTaxeAssureurSolde();
                         //Incrémente le compteur d'articles
                         $this->nbArticles++;
                     }

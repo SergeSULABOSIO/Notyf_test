@@ -29,8 +29,11 @@ interface Commande
     public const REVENU_TVA_PARTAGEABLE = "Revenue_tva_partageable";
     public const REVENU_ARCA_PARTAGEABLE = "Revenue_arca_partageable";
     public const REVENU_TAXE_COURTIER = "Revenue_taxe_courtier";
+    public const REVENU_TAXE_ASSUREUR = "Revenue_taxe_assureur";
     public const REVENU_TAXE_COURTIER_PAYEE = "Revenue_taxe_courtier_payee";
+    public const REVENU_TAXE_ASSUREUR_PAYEE = "Revenue_taxe_assureur_payee";
     public const REVENU_TAXE_COURTIER_SOLDE = "Revenue_taxe_courtier_solde";
+    public const REVENU_TAXE_ASSUREUR_SOLDE = "Revenue_taxe_assureur_solde";
     public const REVENU_TAUX = "Revenue_taux";
     public const PARTENAIRE_PART = "Partenaire_taux";
     public const PARTENAIRE_RETRCOMMISSION = "Partenaire_retrocom";

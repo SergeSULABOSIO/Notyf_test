@@ -951,23 +951,35 @@ class Cotation implements IndicateursJS
         return round($this->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]));
     }
 
-    public function getIndicaRevenuNet(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuNet(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         /** @var Revenu */
         foreach ($this->getRevenus() as $revenu) {
             if ($typeRevenu !== null) {
                 if ($typeRevenu === $revenu->getType()) {
-                    $tot = $tot + $revenu->getIndicaRevenuNet();
+                    if ($partageable !== null) {
+                        if ($partageable === $revenu->getPartageable()) {
+                            $tot = $tot + $revenu->getIndicaRevenuNet();
+                        }
+                    }else{
+                        $tot = $tot + $revenu->getIndicaRevenuNet();
+                    }
                 }
             } else {
-                $tot = $tot + $revenu->getIndicaRevenuNet();
+                if ($partageable !== null) {
+                    if ($partageable === $revenu->getPartageable()) {
+                        $tot = $tot + $revenu->getIndicaRevenuNet();
+                    }
+                }else{
+                    $tot = $tot + $revenu->getIndicaRevenuNet();
+                }
             }
         }
         return round($tot);
     }
 
-    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         /** @var Client */
@@ -983,7 +995,7 @@ class Cotation implements IndicateursJS
                     if ($client->isExoneree() === false) {
                         if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                             $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeAssureur()->getTauxIARD() : $this->getTaxeAssureur()->getTauxVIE();
-                            $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
+                            $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
                         }
                     }
                 }
@@ -991,7 +1003,7 @@ class Cotation implements IndicateursJS
                 if ($client->isExoneree() === false) {
                     if ($revenu->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
                         $tauxTaxe = ($produit->isIard() === true) ? $this->getTaxeAssureur()->getTauxIARD() : $this->getTaxeAssureur()->getTauxVIE();
-                        $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu);
+                        $tot = $tauxTaxe * $this->getIndicaRevenuNet($typeRevenu, $partageable);
                     }
                 }
             }
@@ -999,7 +1011,7 @@ class Cotation implements IndicateursJS
         return round($tot);
     }
 
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         /** @var Client */
@@ -1031,14 +1043,14 @@ class Cotation implements IndicateursJS
         return round($tot);
     }
 
-    public function getIndicaRevenuPartageable(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
-        return round($this->getIndicaRevenuNet($typeRevenu) - $this->getIndicaRevenuTaxeCourtier($typeRevenu));
+        return round($this->getIndicaRevenuTotal($typeRevenu) - $this->getIndicaRevenuTaxeCourtier($typeRevenu));
     }
 
-    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
-        return round($this->getIndicaRevenuNet($typeRevenu) + $this->getIndicaRevenuTaxeAssureur());
+        return round($this->getIndicaRevenuNet($typeRevenu) + $this->getIndicaRevenuTaxeAssureur($typeRevenu));
     }
 
     public function getIndicaPartenaire(): ?Partenaire

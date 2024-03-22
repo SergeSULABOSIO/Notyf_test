@@ -711,7 +711,7 @@ class Revenu implements IndicateursJS
         return round($this->getCotation()->getChargement(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]));
     }
 
-    public function getIndicaRevenuNet(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuNet(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         // On récupère d'abord la base des calculs ou la formule.
@@ -738,7 +738,7 @@ class Revenu implements IndicateursJS
         return round($tot);
     }
 
-    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         /** @var Client */
@@ -755,7 +755,7 @@ class Revenu implements IndicateursJS
         return round($tot);
     }
 
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         $tot = 0;
         /** @var Client */
@@ -772,12 +772,12 @@ class Revenu implements IndicateursJS
         return round($tot);
     }
 
-    public function getIndicaRevenuPartageable(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         return round($this->getIndicaRevenuNet() - $this->getIndicaRevenuTaxeCourtier());
     }
 
-    public function getIndicaRevenuTotal(?int $typeRevenu = null): ?float
+    public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable = null): ?float
     {
         return round($this->getIndicaRevenuNet() + $this->getIndicaRevenuTaxeAssureur());
     }

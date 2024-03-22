@@ -111,7 +111,7 @@ class CommandeProduireSynthePartenaire implements Commande
                         $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
                         $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
                         //A completer
-                        $this->revenuGrossPartageable = $this->revenuGrossPartageable + 0;
+                        $this->revenuGrossPartageable = $this->revenuGrossPartageable + $tranche->getIndicaRevenuPartageable();
                         $this->revenuTvaPartageable = $this->revenuTvaPartageable + 0;
                         $this->revenuArcaPartageable = $this->revenuArcaPartageable + 0;
                         $this->revenuRetrocommissionPayee = $this->revenuRetrocommissionPayee + $tranche->getRetroCommissionTotalePayee();

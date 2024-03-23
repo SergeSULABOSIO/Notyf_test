@@ -43,7 +43,7 @@ class CommandeProduireSyntheArca implements Commande
 
     private function calculerTaux()
     {
-        $this->revenuTaux = ($this->risquePrimeNette !== 0) ? round(($this->revenuNette / $this->risquePrimeNette) * 100) : 0;
+        $this->revenuTaux = ($this->risquePrimeNette !== 0) ? round(($this->revenuNette / $this->risquePrimeNette) * 100, 2) : 0;
     }
 
     private function chargerData()

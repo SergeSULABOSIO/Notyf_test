@@ -80,6 +80,45 @@ class CommandeProduireSyntheClientOuAssureur implements Commande
                 }
                 $this->totalApayer = $prime + $frais_de_gestion;
             }
+            /**
+             * DESTINATION ASSUREUR
+             */
+            if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR] == $this->facture->getDestination()) {
+                //POUR COMMISSION DE REASSURANCE
+                $commission_reassurance = 0;
+                if ($elementFacture->getIncludeComReassurance() == true) {
+                    /** @var Tranche */
+                    $tranche = $elementFacture->getTranche();
+                    if ($tranche != null) {
+                        $commission_reassurance = $commission_reassurance + $tranche->getComReassurance();
+                        //Incrémente le compteur d'articles
+                        $this->nbArticles++;
+                    }
+                }
+                //POUR COMMISSION LOCALE
+                $commission_locale = 0;
+                if ($elementFacture->getIncludeComLocale() == true) {
+                    /** @var Tranche */
+                    $tranche = $elementFacture->getTranche();
+                    if ($tranche != null) {
+                        $commission_locale = $commission_locale + $tranche->getComLocale();
+                        //Incrémente le compteur d'articles
+                        $this->nbArticles++;
+                    }
+                }
+                //POUR COMMISSION SUR FRONTING
+                $commission_fronting = 0;
+                if ($elementFacture->getIncludeComFronting() == true) {
+                    /** @var Tranche */
+                    $tranche = $elementFacture->getTranche();
+                    if ($tranche != null) {
+                        $commission_fronting = $commission_fronting + $tranche->getComFronting();
+                        //Incrémente le compteur d'articles
+                        $this->nbArticles++;
+                    }
+                }
+                $this->totalApayer = $commission_reassurance + $commission_locale + $commission_fronting;
+            }
         }
         $this->chargerData();
     }

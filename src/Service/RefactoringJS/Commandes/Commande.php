@@ -15,6 +15,7 @@ interface Commande
     public const NOTE_TRANCHE = "Tranche";
     public const NOTE_TYPE = "Note";
     public const NOTE_PRIME_TTC = "Prime_TTC";
+    public const NOTE_TOTAL_A_PAYER = "Total_a_payer";
     public const NOTE_PRIME_NETTE = "Prime_HT";
     public const NOTE_PRIME_FRONTING = "Fronting";
     public const NOTE_PRIME_TVA = "Taxe_Assureur";

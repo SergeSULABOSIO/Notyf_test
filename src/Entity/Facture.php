@@ -8,15 +8,19 @@ use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\FactureCrudController;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperSelonNotes;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClient;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheDgi;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
-class Facture extends JSAbstractFinances
+class Facture extends JSAbstractFinances implements CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -88,6 +92,7 @@ class Facture extends JSAbstractFinances
 
     private ?float $montantTTC;
     //Tableaux utiles pour les PDF
+
     //Client et Assureur | Notes de Débit
     private ?array $synthseNDClientOuAssureur = [];
     private ?array $articlesNDClientOuAssureur = [];
@@ -579,7 +584,7 @@ class Facture extends JSAbstractFinances
      */
     public function getArticlesNDClientOuAssureur(): ?array
     {
-        (new CommandeProduireArticlesClientOuAssureur($this))->executer();
+        $this->executer(new CommandeProduireArticlesClientOuAssureur($this));
         return $this->articlesNDClientOuAssureur;
     }
 
@@ -600,7 +605,7 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNCPartenaire()
     {
-        (new CommandeProduireSynthePartenaire($this))->executer();
+        $this->executer(new CommandeProduireSynthePartenaire($this));
         return $this->synthseNCPartenaire;
     }
 
@@ -623,6 +628,7 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNDClientOuAssureur()
     {
+        $this->executer(new CommandeProduireSyntheClientOuAssureur($this));
         return $this->synthseNDClientOuAssureur;
     }
 
@@ -643,7 +649,7 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNCArca()
     {
-        (new CommandeProduireSyntheArca($this))->executer();
+        $this->executer(new CommandeProduireSyntheArca($this));
         return $this->synthseNCArca;
     }
 
@@ -666,7 +672,7 @@ class Facture extends JSAbstractFinances
      */
     public function getSynthseNCDgi()
     {
-        (new CommandeProduireSyntheDgi($this))->executer();
+        $this->executer(new CommandeProduireSyntheDgi($this));
         return $this->synthseNCDgi;
     }
 
@@ -682,5 +688,12 @@ class Facture extends JSAbstractFinances
         $this->synthseNCDgi = $synthseNCDgi;
 
         return $this;
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

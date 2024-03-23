@@ -9,7 +9,7 @@
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Nombre d'avenants (opérations)</td>
+            <td class="tab-ligne-label">Nombre d'articles</td>
             <td class="tab-ligne-valeur"> {{facture.synthseNCPartenaire["No_Articles"]}} </td>
         </tr>
         <tr>
@@ -60,7 +60,7 @@
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Nombre d'avenants (opérations)</td>
+            <td class="tab-ligne-label">Nombre d'articles</td>
             <td class="tab-ligne-valeur"> {{facture.synthseNCArca["No_Articles"]}} </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
         <tr>
-            <td class="tab-ligne-label">Nombre d'avenants (opérations)</td>
+            <td class="tab-ligne-label">Nombre d'articles</td>
             <td class="tab-ligne-valeur"> {{facture.synthseNCDgi["No_Articles"]}} </td>
         </tr>
         <tr>
@@ -151,9 +151,13 @@
             <td class="tab-titre-label"><strong>Libellé</strong></td>
             <td class="tab-titre-valeur"><strong>Valeurs</strong></td>
         </tr>
+        <tr>
+            <td class="tab-ligne-label">Nombre d'articles</td>
+            <td class="tab-ligne-valeur"> {{facture.synthseNDClientOuAssureur["No_Articles"]}} </td>
+        </tr>
         <tr class="bg-sombre">
             <td class="tab-ligne-label">Total à payer</td>
-            <td class="tab-ligne-valeur">{{montant_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+            <td class="tab-ligne-valeur">{{facture.synthseNDClientOuAssureur["Total_a_payer"]|format_currency(monnaie, {fraction_digit: 2})}}</td>
         </tr>
     </table>
     <br>

@@ -155,7 +155,6 @@ class CommandeProduireSyntheDgi implements Commande
 
             $primeTTC = $tranche->getPrimeTotaleTranche();
             $primeHt = $tranche->getPrimeNetteTranche();
-            $primeTva = $tranche->getTvaTranche();
             $primeFronting = $tranche->getFrontingTranche();
             
             $revenuNet = $tranche->getIndicaRevenuNet();
@@ -175,7 +174,6 @@ class CommandeProduireSyntheDgi implements Commande
                     self::NOTE_PRIME_TTC => $primeTTC / 100,
                     self::NOTE_PRIME_NETTE => $primeHt / 100,
                     self::NOTE_PRIME_FRONTING => $primeFronting / 100,
-                    self::NOTE_PRIME_TVA => $primeTva / 100,
                     self::NOTE_TAUX => ($primeHt != 0) ? (($revenuNet / $primeHt) * 100) : 0,
                     self::REVENU_NET => $revenuNet / 100,
                     self::REVENU_TAXE_ASSUREUR_TAUX => ($revenuNet != 0) ? (($revenuTaxeAssureur / $revenuNet) * 100) : 0,

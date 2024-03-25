@@ -155,7 +155,7 @@ class CommandeProduireSyntheDgi implements Commande
             $primeTTC = $tranche->getPrimeTotaleTranche();
             $primeHt = $tranche->getPrimeNetteTranche();
             $primeFronting = $tranche->getFrontingTranche();
-            
+
             $revenuNet = $tranche->getIndicaRevenuNet();
             $revenuTaxeAssureur = $tranche->getIndicaRevenuTaxeAssureur();
             $revenuTaxeAssureurPayee = $tranche->getTaxeAssureurPayee();

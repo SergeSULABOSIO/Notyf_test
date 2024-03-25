@@ -605,7 +605,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      */
     public function getSynthseNCPartenaire()
     {
-        $this->executer(new CommandeProduireSynthePartenaire($this));
+        $this->executer(new CommandeProduireSynthePartenaire($this, CommandeProduireSynthePartenaire::MODE_SYNTHESE));
         return $this->synthseNCPartenaire;
     }
 
@@ -736,6 +736,27 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
     public function setNotesElementsNCArca($notesElementsNCArca)
     {
         $this->notesElementsNCArca = $notesElementsNCArca;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of notesElementsNCPartenaire
+     */ 
+    public function getNotesElementsNCPartenaire()
+    {
+        $this->executer(new CommandeProduireSynthePartenaire($this, CommandeProduireSynthePartenaire::MODE_BORDEREAU));
+        return $this->notesElementsNCPartenaire;
+    }
+
+    /**
+     * Set the value of notesElementsNCPartenaire
+     *
+     * @return  self
+     */ 
+    public function setNotesElementsNCPartenaire($notesElementsNCPartenaire)
+    {
+        $this->notesElementsNCPartenaire = $notesElementsNCPartenaire;
 
         return $this;
     }

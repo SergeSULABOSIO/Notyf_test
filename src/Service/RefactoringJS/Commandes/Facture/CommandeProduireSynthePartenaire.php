@@ -11,7 +11,13 @@ use App\Service\RefactoringJS\Commandes\Commande;
 
 class CommandeProduireSynthePartenaire implements Commande
 {
+    public const MODE_SYNTHSE = 0;
+    public const MODE_BORDEREAU = 1;
+    private ?int $mode = self::MODE_SYNTHSE;
+
+
     private $data = [];
+    private $dataDetails = [];
     //A trouver
     private $risquePrimeGross = 0;
     private $risquePrimeNette = 0;

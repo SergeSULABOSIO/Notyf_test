@@ -46,7 +46,7 @@ class CommandeProduireSyntheDgi implements Commande
         $this->revenuTaxeAssureur = 0;
         $this->revenuTaxeAssureurPayee = 0;
         $this->revenuTaxeAssureurSolde = 0;
-        $this->nbArticles = 0;
+        $this->nbArticles = 1;
     }
 
     private function calculerTaux()
@@ -76,7 +76,6 @@ class CommandeProduireSyntheDgi implements Commande
 
             case self::MODE_BORDEREAU:
                 //Chargement des cellules du tableau
-                dd("En cours de construction.");
                 $this->facture->setNotesElementsNCDgi($this->dataDetails);
                 break;
 

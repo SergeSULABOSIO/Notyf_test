@@ -703,7 +703,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
     public function getNotesElementsNCDgi()
     {
         $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_BORDEREAU));
-        dd($this->notesElementsNCDgi);
+        // dd($this->notesElementsNCDgi);
         return $this->notesElementsNCDgi;
     }
 

@@ -110,15 +110,27 @@ class CommandeProduireSyntheDgi implements Commande
                     /** @var Tranche */
                     $tranche = $elementFacture->getTranche();
                     if ($tranche != null) {
-                        //Calculs sur la prime d'assurance
-                        $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
-                        $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
-                        $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
-                        //Calculs sur le revenu partageable
-                        $this->revenuNette = $this->revenuNette + $tranche->getIndicaRevenuNet();
-                        $this->revenuTaxeAssureur = $this->revenuTaxeAssureur + $tranche->getIndicaRevenuTaxeAssureur();
-                        $this->revenuTaxeAssureurPayee = $this->revenuTaxeAssureurPayee + $tranche->getTaxeAssureurPayee();
-                        $this->revenuTaxeAssureurSolde = $this->revenuTaxeAssureurSolde + $tranche->getTaxeAssureurSolde();
+                        switch ($this->mode) {
+                            case self::MODE_SYNTHSE:
+                                //Calculs sur la prime d'assurance
+                                $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
+                                $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();
+                                $this->risqueFronting = $this->risqueFronting + $tranche->getFrontingTranche();
+
+                                $this->revenuNette = $this->revenuNette + $tranche->getIndicaRevenuNet();
+                                $this->revenuTaxeAssureur = $this->revenuTaxeAssureur + $tranche->getIndicaRevenuTaxeAssureur();
+                                $this->revenuTaxeAssureurPayee = $this->revenuTaxeAssureurPayee + $tranche->getTaxeAssureurPayee();
+                                $this->revenuTaxeAssureurSolde = $this->revenuTaxeAssureurSolde + $tranche->getTaxeAssureurSolde();
+                                break;
+
+                            case self::MODE_BORDEREAU:
+                                dd("Chargement des lignes...");
+                                break;
+
+                            default:
+                                # code...
+                                break;
+                        }
                         //Incrémente le compteur d'articles
                         $this->nbArticles++;
                     }
@@ -126,5 +138,47 @@ class CommandeProduireSyntheDgi implements Commande
             }
         }
         $this->chargerData();
+    }
+
+    public function addNotes(?ElementFacture $elementFacture, ?string $typeFacture, ?string $typeRevenu)
+    {
+        /** @var Tranche */
+        $tranche = $elementFacture->getTranche();
+        if ($tranche != null) {
+            /** @var Police */
+
+            $this->revenuTaxeAssureur = $this->revenuTaxeAssureur + $tranche->getIndicaRevenuTaxeAssureur();
+            $this->revenuTaxeAssureurPayee = $this->revenuTaxeAssureurPayee + $tranche->getTaxeAssureurPayee();
+            $this->revenuTaxeAssureurSolde = $this->revenuTaxeAssureurSolde + $tranche->getTaxeAssureurSolde();
+            
+            
+            $police = $tranche->getPolice();
+            $primeTTC = $tranche->getPrimeTotaleTranche();
+            $primeHt = $tranche->getPrimeNetteTranche();
+            $primeTva = $tranche->getTvaTranche();
+            $primeFronting = $tranche->getFrontingTranche();
+            
+            $revenuNet = $tranche->getIndicaRevenuNet();
+            
+
+            $this->data[] =
+                [
+                    self::NOTE_NO => $this->nbArticles,
+                    self::NOTE_REFERENCE_POLICE => $police->getReference(),
+                    self::NOTE_AVENANT => $police->getTypeavenant(),
+                    self::NOTE_RISQUE => $police->getProduit()->getCode(),
+                    self::NOTE_TRANCHE => $tranche->getNom(),
+                    self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
+                    self::NOTE_TYPE => $typeFacture,
+                    self::NOTE_PRIME_TTC => $primeTTC / 100,
+                    self::NOTE_PRIME_NETTE => $primeHt / 100,
+                    self::NOTE_PRIME_FRONTING => $primeFronting / 100,
+                    self::NOTE_PRIME_TVA => $primeTva / 100,
+                    self::NOTE_TAUX => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
+                    self::NOTE_MONTANT_NET => $mntHT / 100,
+                    self::NOTE_TVA => $tva / 100,
+                    self::NOTE_MONTANT_TTC => $mntTTC / 100
+                ];
+        }
     }
 }

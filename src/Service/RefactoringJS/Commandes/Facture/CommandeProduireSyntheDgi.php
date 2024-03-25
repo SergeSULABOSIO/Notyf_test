@@ -5,6 +5,7 @@ namespace App\Service\RefactoringJS\Commandes\Facture;
 use App\Entity\Facture;
 use App\Controller\Admin\FactureCrudController;
 use App\Controller\Admin\RevenuCrudController;
+use App\Entity\Client;
 use App\Entity\ElementFacture;
 use App\Entity\Tranche;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -125,7 +126,7 @@ class CommandeProduireSyntheDgi implements Commande
 
                             case self::MODE_BORDEREAU:
                                 // dd("Chargement des lignes...");
-                                $this->addNotes($elementFacture);
+                                $this->addNote($elementFacture);
                                 break;
 
                             default:
@@ -141,13 +142,17 @@ class CommandeProduireSyntheDgi implements Commande
         $this->chargerData();
     }
 
-    public function addNotes(?ElementFacture $elementFacture)
+    public function addNote(?ElementFacture $elementFacture)
     {
         /** @var Tranche */
         $tranche = $elementFacture->getTranche();
         if ($tranche != null) {
             /** @var Police */
             $police = $tranche->getPolice();
+
+            /** @var Client */
+            $client = $tranche->getClient();
+
             $primeTTC = $tranche->getPrimeTotaleTranche();
             $primeHt = $tranche->getPrimeNetteTranche();
             $primeTva = $tranche->getTvaTranche();
@@ -164,6 +169,7 @@ class CommandeProduireSyntheDgi implements Commande
                     self::NOTE_REFERENCE_POLICE => $police->getReference(),
                     self::NOTE_AVENANT => $police->getTypeavenant(),
                     self::NOTE_RISQUE => $police->getProduit()->getCode(),
+                    self::NOTE_CLIENT => $client->getNom(),
                     self::NOTE_TRANCHE => $tranche->getNom(),
                     self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
                     self::NOTE_PRIME_TTC => $primeTTC / 100,
@@ -171,9 +177,11 @@ class CommandeProduireSyntheDgi implements Commande
                     self::NOTE_PRIME_FRONTING => $primeFronting / 100,
                     self::NOTE_PRIME_TVA => $primeTva / 100,
                     self::NOTE_TAUX => ($primeHt != 0) ? (($revenuNet / $primeHt) * 100) : 0,
-                    self::NOTE_MONTANT_NET => $revenuNet / 100,
-                    self::NOTE_TVA => $revenuTaxeAssureur / 100,
-                    self::NOTE_MONTANT_TTC => $mntTTC / 100
+                    self::REVENU_NET => $revenuNet / 100,
+                    self::REVENU_TAXE_ASSUREUR_TAUX => ($revenuNet != 0) ? (($revenuTaxeAssureur / $revenuNet) * 100) : 0,
+                    self::REVENU_TAXE_ASSUREUR => $revenuTaxeAssureur / 100,
+                    self::REVENU_TAXE_ASSUREUR_PAYEE => $revenuTaxeAssureurPayee / 100,
+                    self::REVENU_TAXE_ASSUREUR_SOLDE => $revenuTaxeAssureurSolde / 100,
                 ];
         }
     }

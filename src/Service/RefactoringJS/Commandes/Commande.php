@@ -11,6 +11,7 @@ interface Commande
     public const NOTE_REFERENCE_POLICE = "Reference_Police";
     public const NOTE_AVENANT = "Avenant";
     public const NOTE_RISQUE = "Risque";
+    public const NOTE_CLIENT = "Client";
     public const NOTE_PERIODE = "Période";
     public const NOTE_TRANCHE = "Tranche";
     public const NOTE_TYPE = "Note";
@@ -31,6 +32,7 @@ interface Commande
     public const REVENU_ARCA_PARTAGEABLE = "Revenue_arca_partageable";
     public const REVENU_TAXE_COURTIER = "Revenue_taxe_courtier";
     public const REVENU_TAXE_ASSUREUR = "Revenue_taxe_assureur";
+    public const REVENU_TAXE_ASSUREUR_TAUX = "Revenue_taxe_assureur_taux";
     public const REVENU_TAXE_COURTIER_PAYEE = "Revenue_taxe_courtier_payee";
     public const REVENU_TAXE_ASSUREUR_PAYEE = "Revenue_taxe_assureur_payee";
     public const REVENU_TAXE_COURTIER_SOLDE = "Revenue_taxe_courtier_solde";

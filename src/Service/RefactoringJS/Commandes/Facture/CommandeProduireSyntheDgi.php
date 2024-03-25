@@ -124,7 +124,8 @@ class CommandeProduireSyntheDgi implements Commande
                                 break;
 
                             case self::MODE_BORDEREAU:
-                                dd("Chargement des lignes...");
+                                // dd("Chargement des lignes...");
+                                $this->addNotes($elementFacture);
                                 break;
 
                             default:
@@ -140,15 +141,12 @@ class CommandeProduireSyntheDgi implements Commande
         $this->chargerData();
     }
 
-    public function addNotes(?ElementFacture $elementFacture, ?string $typeFacture, ?string $typeRevenu)
+    public function addNotes(?ElementFacture $elementFacture)
     {
         /** @var Tranche */
         $tranche = $elementFacture->getTranche();
         if ($tranche != null) {
             /** @var Police */
-
-            
-            
             $police = $tranche->getPolice();
             $primeTTC = $tranche->getPrimeTotaleTranche();
             $primeHt = $tranche->getPrimeNetteTranche();
@@ -160,7 +158,7 @@ class CommandeProduireSyntheDgi implements Commande
             $revenuTaxeAssureurPayee = $tranche->getTaxeAssureurPayee();
             $revenuTaxeAssureurSolde = $tranche->getTaxeAssureurSolde();
 
-            $this->data[] =
+            $this->dataDetails[] =
                 [
                     self::NOTE_NO => $this->nbArticles,
                     self::NOTE_REFERENCE_POLICE => $police->getReference(),
@@ -168,7 +166,6 @@ class CommandeProduireSyntheDgi implements Commande
                     self::NOTE_RISQUE => $police->getProduit()->getCode(),
                     self::NOTE_TRANCHE => $tranche->getNom(),
                     self::NOTE_PERIODE => $tranche->getDateEffet()->format('d/m/Y') . " - " . $tranche->getDateExpiration()->format('d/m/Y'),
-                    self::NOTE_TYPE => $typeFacture,
                     self::NOTE_PRIME_TTC => $primeTTC / 100,
                     self::NOTE_PRIME_NETTE => $primeHt / 100,
                     self::NOTE_PRIME_FRONTING => $primeFronting / 100,

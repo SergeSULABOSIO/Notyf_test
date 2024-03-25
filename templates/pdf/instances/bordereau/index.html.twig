@@ -4,7 +4,12 @@
 
 {% block body %}
     {% set pg_tableauMax = 22 %}
-    {% set pg_volumeDonnees = facture.articlesNDClientOuAssureur|length %}
+    {% set pg_volumeDonnees = 0 %}
+    {% if (facture.destination == 1 or facture.destination == 2) %} {#  #}
+        {% set pg_volumeDonnees = facture.articlesNDClientOuAssureur|length %}
+    {% elseif (facture.destination == 0 or facture.destination == 3) %}
+        {% set pg_volumeDonnees = facture.notesElementsNCDgi|length %}
+    {% endif %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
     {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
     {% if pg_tableauMax > pg_volumeDonnees and pg_tableauMax != 0 %}

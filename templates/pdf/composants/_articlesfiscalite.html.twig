@@ -4,8 +4,8 @@
     {% set width_avenant = "60px;" %}
     {% set width_risque = "35px;" %}
     {% set width_client = "60px;" %}
-    {% set width_tranche = "50px;" %}
-    {% set width_periode = "100px;" %}
+    {% set width_tranche = "40px;" %}
+    {% set width_periode = "80px;" %}
     {% set width_prime_ttc = "65px;" %}
     {% set width_fronting = "65px;" %}
     {% set width_prime_nette = "65px;" %}
@@ -31,7 +31,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+        <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% endif %} du revenu hors taxe. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
         <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
@@ -74,22 +74,22 @@
                     <tr class="texte-centre">
                 {% endif %}
                     {# Les variables textes #}
-                    {% set art_numero = facture.notesElementsNCDgi[i - 1]["No"]  %}
-                    {% set art_reference = facture.notesElementsNCDgi[i - 1]["Reference_Police"]  %}
-                    {% set art_avenant = facture.notesElementsNCDgi[i - 1]["Avenant"]  %}
-                    {% set art_risque = facture.notesElementsNCDgi[i - 1]["Risque"]  %}
-                    {% set art_client = facture.notesElementsNCDgi[i - 1]["Client"]  %}
-                    {% set art_tranche = facture.notesElementsNCDgi[i - 1]["Tranche"]  %}
-                    {% set art_periode = facture.notesElementsNCDgi[i - 1]["Période"]  %}
-                    {% set art_prime_ttc = facture.notesElementsNCDgi[i - 1]["Prime_TTC"]  %}
-                    {% set art_fronting = facture.notesElementsNCDgi[i - 1]["Fronting"]  %}
-                    {% set art_prime_ht = facture.notesElementsNCDgi[i - 1]["Prime_HT"]  %}
-                    {% set art_taux = facture.notesElementsNCDgi[i - 1]["Taux"]  %}
-                    {% set art_revenu_net = facture.notesElementsNCDgi[i - 1]["Revenue_net"]  %}
-                    {% set art_taxe_assureur_taux = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_taux"]  %}
-                    {% set art_taxe_assureur = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur"]  %}
-                    {% set art_taxe_assureur_payee = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_payee"]  %}
-                    {% set art_taxe_assureur_solde = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_solde"]  %}
+                    {% set art_numero = facture.notesElementsNCDgi[i-1]["No"]  %}
+                    {% set art_reference = facture.notesElementsNCDgi[i-1]["Reference_Police"]  %}
+                    {% set art_avenant = facture.notesElementsNCDgi[i-1]["Avenant"]  %}
+                    {% set art_risque = facture.notesElementsNCDgi[i-1]["Risque"]  %}
+                    {% set art_client = facture.notesElementsNCDgi[i-1]["Client"]  %}
+                    {% set art_tranche = facture.notesElementsNCDgi[i-1]["Tranche"]  %}
+                    {% set art_periode = facture.notesElementsNCDgi[i-1]["Période"]  %}
+                    {% set art_prime_ttc = facture.notesElementsNCDgi[i-1]["Prime_TTC"]  %}
+                    {% set art_fronting = facture.notesElementsNCDgi[i-1]["Fronting"]  %}
+                    {% set art_prime_ht = facture.notesElementsNCDgi[i-1]["Prime_HT"]  %}
+                    {% set art_taux = facture.notesElementsNCDgi[i-1]["Taux"]  %}
+                    {% set art_revenu_net = facture.notesElementsNCDgi[i-1]["Revenue_net"]  %}
+                    {% set art_taxe_assureur_taux = facture.notesElementsNCDgi[i-1]["Revenue_taxe_assureur_taux"]  %}
+                    {% set art_taxe_assureur = facture.notesElementsNCDgi[i-1]["Revenue_taxe_assureur"]  %}
+                    {% set art_taxe_assureur_payee = facture.notesElementsNCDgi[i-1]["Revenue_taxe_assureur_payee"]  %}
+                    {% set art_taxe_assureur_solde = facture.notesElementsNCDgi[i-1]["Revenue_taxe_assureur_solde"]  %}
                     
                     <td class="tab-ligne-valeur" style="width: {{width_no}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
@@ -98,13 +98,13 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 23} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_avenant}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 14} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 18} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_risque}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_client}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 12} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 14} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_tranche}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 12} %}

@@ -3,7 +3,7 @@
 {% block title %}Bordereau - Note - {{facture.reference}}{% endblock %}
 
 {% block body %}
-    {% set pg_tableauMax = 22 %}
+    {% set pg_tableauMax = 25 %}
     {% set pg_volumeDonnees = 0 %}
     {% if (facture.destination == 1 or facture.destination == 2) %} {#  #}
         {% set pg_volumeDonnees = facture.articlesNDClientOuAssureur|length %}
@@ -20,11 +20,6 @@
         {% endif %}
     {% endif %}
     
-    {# Capacité du tableau: {{pg_tableauMax}}<br>
-    Volume des données: {{pg_volumeDonnees}}<br>
-    NB des pages: {{pg_nb_pages}}<br>
-    Reste dans la dernière page: {{pg_volumeDonnees % pg_tableauMax}}<br> #}
-
     {% for currentPage in 1..pg_nb_pages %}
         {# Titre #}
         {% include 'pdf/composants/_titre.html.twig' %}

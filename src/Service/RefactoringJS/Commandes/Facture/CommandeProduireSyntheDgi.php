@@ -170,9 +170,9 @@ class CommandeProduireSyntheDgi implements Commande
                     self::NOTE_PRIME_NETTE => $primeHt / 100,
                     self::NOTE_PRIME_FRONTING => $primeFronting / 100,
                     self::NOTE_PRIME_TVA => $primeTva / 100,
-                    self::NOTE_TAUX => ($primeHt != 0) ? (($mntHT / $primeHt) * 100) : 0,
-                    self::NOTE_MONTANT_NET => $mntHT / 100,
-                    self::NOTE_TVA => $tva / 100,
+                    self::NOTE_TAUX => ($primeHt != 0) ? (($revenuNet / $primeHt) * 100) : 0,
+                    self::NOTE_MONTANT_NET => $revenuNet / 100,
+                    self::NOTE_TVA => $revenuTaxeAssureur / 100,
                     self::NOTE_MONTANT_TTC => $mntTTC / 100
                 ];
         }

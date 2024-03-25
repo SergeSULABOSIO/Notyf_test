@@ -1,4 +1,20 @@
 {# Liste des avenants concernés par cette note de débit #}
+    {% set width_no = "11px;" %}
+    {% set width_reference = "110px;" %}
+    {% set width_avenant = "60px;" %}
+    {% set width_risque = "35px;" %}
+    {% set width_tranche = "50px;" %}
+    {% set width_periode = "100px;" %}
+    {% set width_note = "80px;" %}
+    {% set width_prime_ttc = "65px;" %}
+    {% set width_prime_nette = "65px;" %}
+    {% set width_fronting = "65px;" %}
+    {% set width_taxe_assureur = "65px;" %}
+    {% set width_taux = "40px;" %}
+    {% set width_montant = "65px;" %}
+    {% set width_taxe = "65px;" %}
+    {% set width_total_du = "65px;" %}
+
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
         <td colspan="11">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% endif %} de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
@@ -6,8 +22,10 @@
     <tr>
         <td class="tab-titre-valeur">N°</td>
         <td class="tab-titre-label" style="width: 100px;">Police</td>
+        <td class="tab-titre-label">Avenant</td>
         <td class="tab-titre-label">Risque</td>
         <td class="tab-titre-label" style="width: 100px;">Client</td>
+        <td class="tab-titre-label">Tranche</td>
         <td class="tab-titre-valeur">Prime nette</td>
         <td class="tab-titre-valeur">Com. nette</td>
         <td class="tab-titre-valeur">{{taxe_courtier.nom}}@{{taxe_courtier.taux * 100|number_format(0, ',', '.')}}%</td>

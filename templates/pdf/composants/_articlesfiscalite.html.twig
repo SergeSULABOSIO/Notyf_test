@@ -59,17 +59,12 @@
     {% set pg = 1 %}
     {% set cumul_prime_ttc = 0 %}
     {% set cumul_prime_nette = 0 %}
+    {% set cumul_fronting = 0 %}
     {% set cumul_revenu_ht = 0 %} 
-    {% if facture.destination == 0 %} {# Destination ARCA #}
-        {% set tot_taxes_courtier = 0 %}
-        {% set tot_taxes_courtier_payees = 0 %}
-        {% set tot_taxes_courtier_solde = 0 %}
-    {% elseif facture.destination == 3 %} {# Destination DGI #}
-        {% set tot_taxes_assureur = 0 %}
-        {% set tot_taxes_assureur_payees = 0 %}
-        {% set tot_taxes_assureur_solde = 0 %}
-    {% endif %}
-    {% set tot_mont_a_payer = 0 %}
+    {% set cumul_revenu_taxe_du = 0 %} 
+    {% set cumul_revenu_taxe_payee = 0 %} 
+    {% set cumul_revenu_taxe_solde = 0 %} 
+
     {# fin - Les variables à cumuler #}
     {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
         {% if (pg == currentPage) %}

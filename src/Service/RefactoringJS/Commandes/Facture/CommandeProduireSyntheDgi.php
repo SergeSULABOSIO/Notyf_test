@@ -147,9 +147,6 @@ class CommandeProduireSyntheDgi implements Commande
         if ($tranche != null) {
             /** @var Police */
 
-            $this->revenuTaxeAssureur = $this->revenuTaxeAssureur + $tranche->getIndicaRevenuTaxeAssureur();
-            $this->revenuTaxeAssureurPayee = $this->revenuTaxeAssureurPayee + $tranche->getTaxeAssureurPayee();
-            $this->revenuTaxeAssureurSolde = $this->revenuTaxeAssureurSolde + $tranche->getTaxeAssureurSolde();
             
             
             $police = $tranche->getPolice();
@@ -159,7 +156,9 @@ class CommandeProduireSyntheDgi implements Commande
             $primeFronting = $tranche->getFrontingTranche();
             
             $revenuNet = $tranche->getIndicaRevenuNet();
-            
+            $revenuTaxeAssureur = $tranche->getIndicaRevenuTaxeAssureur();
+            $revenuTaxeAssureurPayee = $tranche->getTaxeAssureurPayee();
+            $revenuTaxeAssureurSolde = $tranche->getTaxeAssureurSolde();
 
             $this->data[] =
                 [

@@ -34,11 +34,11 @@ interface IndicateursJS
     /**
      * Indicateurs relatifs aux revenus
      */
-    public function getIndicaRevenuNet(?int $typeRevenu, ?int $partageable):?float;
-    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable):?float;
-    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null, ?int $partageable):?float;
-    public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable):?float;
-    public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable):?float;
+    public function getIndicaRevenuNet(?int $typeRevenu, ?int $partageable = null):?float;
+    public function getIndicaRevenuTaxeCourtier(?int $typeRevenu = null, ?int $partageable = null):?float;
+    public function getIndicaRevenuTaxeAssureur(?int $typeRevenu = null, ?int $partageable = null):?float;
+    public function getIndicaRevenuPartageable(?int $typeRevenu = null, ?int $partageable = null):?float;
+    public function getIndicaRevenuTotal(?int $typeRevenu = null, ?int $partageable = null):?float;
     public function getIndicaRevenuReserve(?int $typeRevenu = null):?float;
 
     /**

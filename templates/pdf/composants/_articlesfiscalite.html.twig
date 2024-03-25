@@ -78,18 +78,18 @@
                     {% set art_reference = facture.notesElementsNCDgi[i - 1]["Reference_Police"]  %}
                     {% set art_avenant = facture.notesElementsNCDgi[i - 1]["Avenant"]  %}
                     {% set art_risque = facture.notesElementsNCDgi[i - 1]["Risque"]  %}
-                    {% set art_client = facture.notesElementsNCDgi[i - 1]["Tranche"]  %}
+                    {% set art_client = facture.notesElementsNCDgi[i - 1]["Client"]  %}
                     {% set art_tranche = facture.notesElementsNCDgi[i - 1]["Tranche"]  %}
                     {% set art_periode = facture.notesElementsNCDgi[i - 1]["Période"]  %}
                     {% set art_prime_ttc = facture.notesElementsNCDgi[i - 1]["Prime_TTC"]  %}
                     {% set art_fronting = facture.notesElementsNCDgi[i - 1]["Fronting"]  %}
                     {% set art_prime_ht = facture.notesElementsNCDgi[i - 1]["Prime_HT"]  %}
                     {% set art_taux = facture.notesElementsNCDgi[i - 1]["Taux"]  %}
-                    {% set art_revenu_net = facture.notesElementsNCDgi[i - 1]["Montant"]  %}
-                    {% set art_taxe_assureur_taux = facture.notesElementsNCDgi[i - 1]["Taxe_Assureur"]  %}
-                    {% set art_taxe_assureur = facture.notesElementsNCDgi[i - 1]["Taxes"]  %}
-                    {% set art_taxe_assureur_payee = facture.notesElementsNCDgi[i - 1]["Taxes"]  %}
-                    {% set art_taxe_assureur_solde = facture.notesElementsNCDgi[i - 1]["Total_Dû"]  %}
+                    {% set art_revenu_net = facture.notesElementsNCDgi[i - 1]["Revenue_net"]  %}
+                    {% set art_taxe_assureur_taux = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_taux"]  %}
+                    {% set art_taxe_assureur = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur"]  %}
+                    {% set art_taxe_assureur_payee = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_payee"]  %}
+                    {% set art_taxe_assureur_solde = facture.notesElementsNCDgi[i - 1]["Revenue_taxe_assureur_solde"]  %}
                     
                     <td class="tab-ligne-valeur" style="width: {{width_no}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}

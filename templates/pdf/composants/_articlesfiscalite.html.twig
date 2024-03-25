@@ -8,17 +8,14 @@
         <td class="tab-titre-label" style="width: 100px;">Police</td>
         <td class="tab-titre-label">Risque</td>
         <td class="tab-titre-label" style="width: 100px;">Client</td>
-        <td class="tab-titre-valeur">Prime totale</td>
         <td class="tab-titre-valeur">Prime nette</td>
         <td class="tab-titre-valeur">Com. nette</td>
-        {% if facture.destination == 0 %}
-            <td class="tab-titre-valeur">{{taxe_courtier.nom}}</td>
-        {% elseif facture.destination == 3 %}
-            <td class="tab-titre-valeur">{{taxe_assureur.nom}}</td>
-        {% endif %}
-        <td class="tab-titre-valeur">Mnt. payé</td>
+        <td class="tab-titre-valeur">{{taxe_courtier.nom}}@{{taxe_courtier.taux * 100|number_format(0, ',', '.')}}%</td>
+        <td class="tab-titre-valeur">Com. ht.</td>
+        <td class="tab-titre-valeur">Part.@{{(facture.partenaire.part * 100)|number_format(0, ',', '.')}}%</td>
+        <td class="tab-titre-valeur">Part payé</td>
         <td class="tab-titre-valeur">Solde dû</td>
-        <td class="tab-titre-valeur">Mnt. à Payer</td>
+        <td class="tab-titre-valeur">M. à Payer</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
 

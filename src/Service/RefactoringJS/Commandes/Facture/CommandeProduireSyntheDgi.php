@@ -11,7 +11,13 @@ use App\Service\RefactoringJS\Commandes\Commande;
 
 class CommandeProduireSyntheDgi implements Commande
 {
+    public const MODE_SYNTHSE = 0;
+    public const MODE_BORDEREAU = 1;
+    private ?int $mode = self::MODE_SYNTHSE;
+
+
     private $data = [];
+    private $dataDetails = [];
     //A trouver
     private $risquePrimeGross = 0;
     private $risquePrimeNette = 0;
@@ -24,8 +30,9 @@ class CommandeProduireSyntheDgi implements Commande
     private $revenuTaux = 0;
     private $nbArticles = 0;
 
-    public function __construct(private ?Facture $facture)
+    public function __construct(private ?Facture $facture, ?int $mode)
     {
+        $this->mode = $mode;
     }
 
     private function resetAggregats()
@@ -50,18 +57,32 @@ class CommandeProduireSyntheDgi implements Commande
     {
         //Calcul des valeurs calculables
         $this->calculerTaux();
-        //Chargement des cellules du tableau
-        $this->data[self::NOMBRE_ARTICLE] = $this->nbArticles;
-        $this->data[self::NOTE_PRIME_TTC] = $this->risquePrimeGross / 100;
-        $this->data[self::NOTE_PRIME_FRONTING] = $this->risqueFronting / 100;
-        $this->data[self::NOTE_PRIME_NETTE] = $this->risquePrimeNette / 100;
-        $this->data[self::NOTE_TAUX] = $this->revenuTaux;
-        $this->data[self::REVENU_NET] = $this->revenuNette / 100;
-        $this->data[self::REVENU_TAXE_ASSUREUR] = $this->revenuTaxeAssureur / 100;
-        $this->data[self::REVENU_TAXE_ASSUREUR_PAYEE] = $this->revenuTaxeAssureurPayee / 100;
-        $this->data[self::REVENU_TAXE_ASSUREUR_SOLDE] = $this->revenuTaxeAssureurSolde / 100;
-        //Chargement du tableau dans la facture
-        $this->facture->setSynthseNCDgi($this->data);
+        switch ($this->mode) {
+            case self::MODE_SYNTHSE:
+                //Chargement des cellules du tableau
+                $this->data[self::NOMBRE_ARTICLE] = $this->nbArticles;
+                $this->data[self::NOTE_PRIME_TTC] = $this->risquePrimeGross / 100;
+                $this->data[self::NOTE_PRIME_FRONTING] = $this->risqueFronting / 100;
+                $this->data[self::NOTE_PRIME_NETTE] = $this->risquePrimeNette / 100;
+                $this->data[self::NOTE_TAUX] = $this->revenuTaux;
+                $this->data[self::REVENU_NET] = $this->revenuNette / 100;
+                $this->data[self::REVENU_TAXE_ASSUREUR] = $this->revenuTaxeAssureur / 100;
+                $this->data[self::REVENU_TAXE_ASSUREUR_PAYEE] = $this->revenuTaxeAssureurPayee / 100;
+                $this->data[self::REVENU_TAXE_ASSUREUR_SOLDE] = $this->revenuTaxeAssureurSolde / 100;
+                //Chargement du tableau dans la facture
+                $this->facture->setSynthseNCDgi($this->data);
+                break;
+
+            case self::MODE_BORDEREAU:
+                //Chargement des cellules du tableau
+                dd("En cours de construction.");
+                $this->facture->setNotesElementsNCDgi($this->dataDetails);
+                break;
+
+            default:
+                dd("Mode non pris en compte par l'application.");
+                break;
+        }
     }
 
     public function executer()
@@ -81,7 +102,7 @@ class CommandeProduireSyntheDgi implements Commande
         /** @var ElementFacture */
         foreach ($this->facture->getElementFactures() as $elementFacture) {
             /**
-             * DESTINATION ARCA
+             * DESTINATION DGI
              */
             if (FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI] == $this->facture->getDestination()) {
                 //POUR TAXE ASSUREUR UNIQUEMENT

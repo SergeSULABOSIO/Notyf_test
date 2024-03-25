@@ -5,7 +5,6 @@ namespace App\Service\RefactoringJS\Commandes\Facture;
 use App\Entity\Police;
 use App\Entity\Facture;
 use App\Entity\Tranche;
-use App\Service\ServiceDates;
 use App\Entity\ElementFacture;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;

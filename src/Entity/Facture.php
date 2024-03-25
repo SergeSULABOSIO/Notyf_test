@@ -672,7 +672,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      */
     public function getSynthseNCDgi()
     {
-        $this->executer(new CommandeProduireSyntheDgi($this));
+        $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_SYNTHSE));
         return $this->synthseNCDgi;
     }
 
@@ -695,5 +695,26 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
         if ($commande != null) {
             $commande->executer();
         }
+    }
+
+    /**
+     * Get the value of notesElementsNCDgi
+     */ 
+    public function getNotesElementsNCDgi()
+    {
+        $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_BORDEREAU));
+        return $this->notesElementsNCDgi;
+    }
+
+    /**
+     * Set the value of notesElementsNCDgi
+     *
+     * @return  self
+     */ 
+    public function setNotesElementsNCDgi($notesElementsNCDgi)
+    {
+        $this->notesElementsNCDgi = $notesElementsNCDgi;
+
+        return $this;
     }
 }

@@ -1,0 +1,157 @@
+{# Liste des avenants concernés par cette note de débit #}
+    {% set width_no = "11px;" %}
+    {% set width_reference = "105px;" %}
+    {% set width_avenant = "60px;" %}
+    {% set width_risque = "35px;" %}
+    {% set width_client = "60px;" %}
+    {% set width_tranche = "40px;" %}
+    {% set width_periode = "80px;" %}
+    {% set width_prime_ttc = "65px;" %}
+    {% set width_fronting = "65px;" %}
+    {% set width_prime_nette = "65px;" %}
+    {% set width_taux = "45px;" %}
+    {% set width_revenu_net = "65px;" %}
+    {% set width_taxe_taux = "45px;" %}
+    {% set width_taxe_du = "65px;" %}
+    {% set width_taxe_payee = "65px;" %}
+    {% set width_taxe_solde = "65px;" %}
+
+<table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
+    <tr>
+        <td colspan="7">Organisation: 
+            {% if (facture.destination == 1) %} {# Assureur #}
+                <b>{{facture.assureur}}</b>
+            {% elseif (facture.destination == 2) %} {# Client #}
+                <b>{{facture.autreTiers}}</b>
+            {% elseif (facture.destination == 4) %} {# Partenaire #}
+                <b>{{facture.partenaire}}</b>
+            {% else %}
+                <b>{{facture.autreTiers}}</b>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit au profit de {% if facture.destination == 0 %}{{taxe_courtier.organisation}}  qui a droit à {{(taxe_courtier.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_courtier.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% elseif facture.destination == 3 %}{{taxe_assureur.organisation}}  qui a droit à {{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}% en Iard (ou {{(taxe_assureur.tauxVIE * 100)|number_format(0, ',', '.')}}% en Vie) {% endif %} du revenu hors taxe. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+    </tr>
+    <tr>
+        <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
+        <td class="tab-titre-label" style="width: {{width_reference}}">Police</td>
+        <td class="tab-titre-label" style="width: {{width_avenant}}">Avenant</td>
+        <td class="tab-titre-label" style="width: {{width_risque}}">Risque</td>
+        <td class="tab-titre-label" style="width: {{width_client}}">Client</td>
+        <td class="tab-titre-label" style="width: {{width_tranche}}">Tranche</td>
+        <td class="tab-titre-label" style="width: {{width_periode}}">Période</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_ttc}}">Prime TTC</td>
+        <td class="tab-titre-valeur" style="width: {{width_fronting}}">Fronting</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_nette}}">Prime Nette</td>
+        <td class="tab-titre-valeur" style="width: {{width_taux}}">Taux Rev.</td>
+        <td class="tab-titre-valeur" style="width: {{width_revenu_net}}">Revenu (ht)</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_taux}}">Taux Tx{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_du}}">{{taxe_courtier.nom}} dûe{#  ({{(taxe_assureur.tauxIARD * 100)|number_format(0, ',', '.')}}%)  #}</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_payee}}">{{taxe_courtier.nom}} payée</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_solde}}">Solde à payer</td>
+    </tr>
+    {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
+
+    {# Les variables à cumuler #}
+    {% set x = 1 %}
+    {% set y = 0 %}
+    {% set pg = 1 %}
+    {% set cumul_prime_ttc = 0 %}
+    {% set cumul_prime_nette = 0 %}
+    {% set cumul_fronting = 0 %}
+    {% set cumul_revenu_ht = 0 %} 
+    {% set cumul_revenu_taxe_du = 0 %} 
+    {% set cumul_revenu_taxe_payee = 0 %} 
+    {% set cumul_revenu_taxe_solde = 0 %} 
+
+    {# fin - Les variables à cumuler #}
+    {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
+        {% if (pg == currentPage) %}
+                {% if (x % 2) == 0 %}
+                    <tr class="texte-centre">  {# bg-pair #}
+                {% else %}
+                    <tr class="texte-centre">
+                {% endif %}
+                    {# Les variables textes #}
+                    {% set art_numero = facture.notesElementsNCArca[i-1]["No"]  %}
+                    {% set art_reference = facture.notesElementsNCArca[i-1]["Reference_Police"]  %}
+                    {% set art_avenant = facture.notesElementsNCArca[i-1]["Avenant"]  %}
+                    {% set art_risque = facture.notesElementsNCArca[i-1]["Risque"]  %}
+                    {% set art_client = facture.notesElementsNCArca[i-1]["Client"]  %}
+                    {% set art_tranche = facture.notesElementsNCArca[i-1]["Tranche"]  %}
+                    {% set art_periode = facture.notesElementsNCArca[i-1]["Période"]  %}
+                    {% set art_prime_ttc = facture.notesElementsNCArca[i-1]["Prime_TTC"]  %}
+                    {% set art_fronting = facture.notesElementsNCArca[i-1]["Fronting"]  %}
+                    {% set art_prime_ht = facture.notesElementsNCArca[i-1]["Prime_HT"]  %}
+                    {% set art_taux = facture.notesElementsNCArca[i-1]["Taux"]  %}
+                    {% set art_revenu_net = facture.notesElementsNCArca[i-1]["Revenue_net"]  %}
+                    {% set art_taxe_courtier_taux = facture.notesElementsNCArca[i-1]["Revenue_taxe_courtier_taux"]  %}
+                    {% set art_taxe_courtier = facture.notesElementsNCArca[i-1]["Revenue_taxe_courtier"]  %}
+                    {% set art_taxe_courtier_payee = facture.notesElementsNCArca[i-1]["Revenue_taxe_courtier_payee"]  %}
+                    {% set art_taxe_courtier_solde = facture.notesElementsNCArca[i-1]["Revenue_taxe_courtier_solde"]  %}
+                    
+                    <td class="tab-ligne-valeur" style="width: {{width_no}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_reference}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 23} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_avenant}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 18} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_risque}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_client}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 14} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_tranche}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 12} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_periode}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_periode, 'txtLimitedLength_tailleMax': 23} %}
+                    </td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_fronting}}">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_nette}}">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taux}}">{{art_taux|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_revenu_net}}">{{art_revenu_net|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_taux}}">{{art_taxe_courtier_taux|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_du}}">{{art_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_payee}}">{{art_taxe_courtier_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_solde}}">{{art_taxe_courtier_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+                {% set y = y + 1 %}
+            {% endif %}
+        {# Ici on incrémente les variables numériques #}
+        {% set cumul_prime_ttc = cumul_prime_ttc + art_prime_ttc %}
+        {% set cumul_prime_nette = cumul_prime_nette + art_prime_ht %}
+        {% set cumul_fronting = cumul_fronting + art_fronting %}
+        {% set cumul_revenu_ht = cumul_revenu_ht + art_revenu_net %}
+        {% set cumul_revenu_taxe_du = cumul_revenu_taxe_du + art_taxe_courtier %}
+        {% set cumul_revenu_taxe_payee = cumul_revenu_taxe_payee + art_taxe_courtier_payee %}
+        {% set cumul_revenu_taxe_solde = cumul_revenu_taxe_solde + art_taxe_courtier_solde %}
+        
+        {# S'il atteind le maximum du tableau, il fait un saut à la page suivante #}
+        {% if (x % pg_tableauMax) == 0 %}
+            {% set pg = pg + 1 %}
+        {% endif %}
+        {% set x = x + 1 %}
+    {% endfor %}
+    
+    <tr class="bg-sombre">
+        <td colspan="7" class = "tab-ligne-label">Total général</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{cumul_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_fronting}}">{{cumul_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_prime_nette}}">{{cumul_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taux}}"></td>
+        <td class = "tab-ligne-valeur" style="width: {{width_revenu_net}}">{{cumul_revenu_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_taux}}"></td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_du}}">{{cumul_revenu_taxe_du|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_payee}}">{{cumul_revenu_taxe_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur" style="width: {{width_taxe_solde}}">{{cumul_revenu_taxe_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+    </tr>
+</table>
+{# On insère le ressort ici pour ajouter ou supprimer les lignes manquantes #}
+{% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': y, 'tailleTabMax': pg_tableauMax, 'tailleBoucleMin': 3} %}

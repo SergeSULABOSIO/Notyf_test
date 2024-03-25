@@ -33,6 +33,7 @@ interface Commande
     public const REVENU_TAXE_COURTIER = "Revenue_taxe_courtier";
     public const REVENU_TAXE_ASSUREUR = "Revenue_taxe_assureur";
     public const REVENU_TAXE_ASSUREUR_TAUX = "Revenue_taxe_assureur_taux";
+    public const REVENU_TAXE_COURTIER_TAUX = "Revenue_taxe_courtier_taux";
     public const REVENU_TAXE_COURTIER_PAYEE = "Revenue_taxe_courtier_payee";
     public const REVENU_TAXE_ASSUREUR_PAYEE = "Revenue_taxe_assureur_payee";
     public const REVENU_TAXE_COURTIER_SOLDE = "Revenue_taxe_courtier_solde";

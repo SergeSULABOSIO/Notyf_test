@@ -7,8 +7,10 @@
     {% set pg_volumeDonnees = 0 %}
     {% if (facture.destination == 1 or facture.destination == 2) %} {#  #}
         {% set pg_volumeDonnees = facture.articlesNDClientOuAssureur|length %}
-    {% elseif (facture.destination == 0 or facture.destination == 3) %}
+    {% elseif (facture.destination == 3) %} {# Destination DGI #}
         {% set pg_volumeDonnees = facture.notesElementsNCDgi|length %}
+    {% elseif (facture.destination == 0) %} {# Destination ARCA #}
+        {% set pg_volumeDonnees = facture.notesElementsNCArca|length %}
     {% endif %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
     {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}
@@ -28,8 +30,10 @@
             {% include 'pdf/composants/_articlescommissions.html.twig' with {'currentPage': currentPage} %}
         {% elseif facture.destination == 4 %}{# Destination Partenaire #}
             {% include 'pdf/composants/_articlesretrocommissions.html.twig' with {'currentPage': currentPage} %}
-        {% elseif facture.destination == 0  or facture.destination == 3 %} {# Destination ARCA ou DGI #}
-            {% include 'pdf/composants/_articlesfiscalite.html.twig' with {'currentPage': currentPage} %}
+        {% elseif facture.destination == 0 %} {# Destination ARCA #}
+            {% include 'pdf/composants/_articlesfiscalitearca.html.twig' with {'currentPage': currentPage} %}
+        {% elseif facture.destination == 3 %} {# DGI #}
+            {% include 'pdf/composants/_articlesfiscalitedgi.html.twig' with {'currentPage': currentPage} %}
         {% endif %}
         {# Fin liste des avenants #}
         {% include 'pdf/composants/_footer.html.twig' with {'currentPage': currentPage, 'totalPage': pg_nb_pages} %}

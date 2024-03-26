@@ -649,7 +649,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      */
     public function getSynthseNCArca()
     {
-        $this->executer(new CommandeProduireSyntheArca($this, CommandeProduireSyntheArca::MODE_SYNTHSE));
+        $this->executer(new CommandeProduireSyntheArca($this, CommandeProduireSyntheArca::MODE_SYNTHESE));
         return $this->synthseNCArca;
     }
 
@@ -672,7 +672,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      */
     public function getSynthseNCDgi()
     {
-        $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_SYNTHSE));
+        $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_SYNTHESE));
         return $this->synthseNCDgi;
     }
 

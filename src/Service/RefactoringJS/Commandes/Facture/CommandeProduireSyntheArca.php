@@ -10,9 +10,9 @@ use App\Service\RefactoringJS\Commandes\Commande;
 
 class CommandeProduireSyntheArca implements Commande
 {
-    public const MODE_SYNTHSE = 0;
+    public const MODE_SYNTHESE = 0;
     public const MODE_BORDEREAU = 1;
-    private ?int $mode = self::MODE_SYNTHSE;
+    private ?int $mode = self::MODE_SYNTHESE;
 
 
     private $data = [];
@@ -57,7 +57,7 @@ class CommandeProduireSyntheArca implements Commande
         //Calcul des valeurs calculables
         $this->calculerTaux();
         switch ($this->mode) {
-            case self::MODE_SYNTHSE:
+            case self::MODE_SYNTHESE:
                 //Chargement des cellules du tableau
                 $this->data[self::NOMBRE_ARTICLE] = $this->nbArticles;
                 $this->data[self::NOTE_PRIME_TTC] = $this->risquePrimeGross / 100;
@@ -109,7 +109,7 @@ class CommandeProduireSyntheArca implements Commande
                     $tranche = $elementFacture->getTranche();
                     if ($tranche != null) {
                         switch ($this->mode) {
-                            case self::MODE_SYNTHSE:
+                            case self::MODE_SYNTHESE:
                                 //Calculs sur la prime d'assurance
                                 $this->risquePrimeGross = $this->risquePrimeGross + $tranche->getPrimeTotaleTranche();
                                 $this->risquePrimeNette = $this->risquePrimeNette + $tranche->getPrimeNetteTranche();

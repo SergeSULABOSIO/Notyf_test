@@ -11,9 +11,9 @@ use App\Service\RefactoringJS\Commandes\Commande;
 
 class CommandeProduireSynthePartenaire implements Commande
 {
-    public const MODE_SYNTHSE = 0;
+    public const MODE_SYNTHESE = 0;
     public const MODE_BORDEREAU = 1;
-    private ?int $mode = self::MODE_SYNTHSE;
+    private ?int $mode = self::MODE_SYNTHESE;
 
 
     private $data = [];
@@ -33,8 +33,9 @@ class CommandeProduireSynthePartenaire implements Commande
     private $revenuRetrocommission = 0;
     private $nbArticles = 0;
 
-    public function __construct(private ?Facture $facture)
+    public function __construct(private ?Facture $facture, ?int $mode)
     {
+        $this->mode = $mode;
     }
 
     private function resetAggregats()
@@ -56,7 +57,7 @@ class CommandeProduireSynthePartenaire implements Commande
     private function calculerTaux()
     {
         $this->revenuTaux = round(($this->revenuNetPartageable / $this->risquePrimeNette) * 100);
-        $this->partPartenaire = ($this->revenuAssiettePartageable != 0) ? round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100) : 0 ;
+        $this->partPartenaire = ($this->revenuAssiettePartageable != 0) ? round(($this->revenuRetrocommission / $this->revenuAssiettePartageable) * 100) : 0;
         $this->revenuAssiettePartageable = round($this->revenuNetPartageable - $this->revenuArcaPartageable);
     }
 
@@ -64,6 +65,21 @@ class CommandeProduireSynthePartenaire implements Commande
     {
         //Calcul des valeurs calculables
         $this->calculerTaux();
+        switch ($this->mode) {
+            case self::MODE_SYNTHESE:
+                # code...
+                break;
+
+            case self::MODE_BORDEREAU:
+                # code...
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+
         //Chargement des cellules du tableau
         $this->data[self::NOMBRE_ARTICLE] = $this->nbArticles;
         $this->data[self::NOTE_PRIME_TTC] = $this->risquePrimeGross / 100;

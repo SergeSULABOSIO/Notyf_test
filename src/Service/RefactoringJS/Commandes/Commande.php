@@ -21,6 +21,7 @@ interface Commande
     public const NOTE_PRIME_FRONTING = "Fronting";
     public const NOTE_PRIME_TVA = "Taxe_Assureur";
     public const NOTE_TAUX = "Taux";
+    public const PARTENAIRE_RETROCOM_PART = "Part";
     public const NOTE_MONTANT_NET = "Montant";
     public const NOTE_TVA = "Taxes";
     public const NOTE_MONTANT_TTC = "Total_Dû";
@@ -39,10 +40,10 @@ interface Commande
     public const REVENU_TAXE_COURTIER_SOLDE = "Revenue_taxe_courtier_solde";
     public const REVENU_TAXE_ASSUREUR_SOLDE = "Revenue_taxe_assureur_solde";
     public const REVENU_TAUX = "Revenue_taux";
-    public const PARTENAIRE_PART = "Partenaire_taux";
-    public const PARTENAIRE_RETRCOMMISSION = "Partenaire_retrocom";
-    public const PARTENAIRE_RETRCOMMISSION_PAYEE = "Partenaire_retrocom_payee";
-    public const PARTENAIRE_RETRCOMMISSION_SOLDE = "Partenaire_retrocom_solde";
+    public const PARTENAIRE_RETROCOMMISSION_PART = "Partenaire_taux";
+    public const PARTENAIRE_RETROCOMMISSION = "Partenaire_retrocom";
+    public const PARTENAIRE_RETROCOMMISSION_PAYEE = "Partenaire_retrocom_payee";
+    public const PARTENAIRE_RETROCOMMISSION_SOLDE = "Partenaire_retrocom_solde";
 
     //Production du paiement
     public function executer();

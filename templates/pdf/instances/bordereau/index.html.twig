@@ -3,14 +3,16 @@
 {% block title %}Bordereau - Note - {{facture.reference}}{% endblock %}
 
 {% block body %}
-    {% set pg_tableauMax = 25 %}
+    {% set pg_tableauMax = 28 %}
     {% set pg_volumeDonnees = 0 %}
-    {% if (facture.destination == 1 or facture.destination == 2) %} {#  #}
+    {% if (facture.destination == 1 or facture.destination == 2) %} {# CLIENT OU ASSUREUR #}
         {% set pg_volumeDonnees = facture.articlesNDClientOuAssureur|length %}
     {% elseif (facture.destination == 3) %} {# Destination DGI #}
         {% set pg_volumeDonnees = facture.notesElementsNCDgi|length %}
     {% elseif (facture.destination == 0) %} {# Destination ARCA #}
         {% set pg_volumeDonnees = facture.notesElementsNCArca|length %}
+    {% elseif (facture.destination == 4) %} {# Destination PARTENAIRE #}
+        {% set pg_volumeDonnees = facture.notesElementsNCPartenaire|length %}
     {% endif %}
     {% set pg_nb_pages = (pg_volumeDonnees / pg_tableauMax)|number_format(0, ',', '.') %}
     {% set pg_reste = pg_volumeDonnees % pg_tableauMax %}

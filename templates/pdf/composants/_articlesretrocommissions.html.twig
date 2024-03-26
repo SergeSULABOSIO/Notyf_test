@@ -1,21 +1,49 @@
 {# Liste des avenants concernés par cette note de débit #}
+    {% set width_no = "11px;" %}
+    {% set width_reference = "90px;" %}
+    {% set width_avenant = "60px;" %}
+    {% set width_risque = "30px;" %}
+    {% set width_client = "60px;" %}
+    {% set width_tranche = "40px;" %}
+    {% set width_periode = "80px;" %}
+    {% set width_prime_ttc = "60px;" %}
+    {# {% set width_fronting = "65px;" %} #}
+    {% set width_prime_nette = "60px;" %}
+    {% set width_taux = "35px;" %}
+    {% set width_revenu_net = "60px;" %}
+    {% set width_taxe_courtier_taux = "40px;" %}
+    {% set width_taxe_courtier = "50px;" %}
+    {% set width_assiette_partageable = "55px;" %}
+    {% set width_partenaire_part = "35px;" %}
+    {% set width_partenaire = "40px;" %}
+    {% set width_partenaire_payee = "60px;" %}
+    {% set width_partenaire_solde = "60px;" %}
+
+
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
         <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit pour le profit du partenaire {{facture.partenaire.nom}} qui a droit à {{(facture.partenaire.part * 100)|number_format(0, ',', '.')}}% de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
-        <td class="tab-titre-valeur">N°</td>
-        <td class="tab-titre-label" style="width: 100px;">Police</td>
-        <td class="tab-titre-label">Risque</td>
-        <td class="tab-titre-label" style="width: 100px;">Client</td>
-        <td class="tab-titre-valeur">Prime nette</td>
-        <td class="tab-titre-valeur">Com. nette</td>
-        <td class="tab-titre-valeur">{{taxe_courtier.nom}}@{{taxe_courtier.taux * 100|number_format(0, ',', '.')}}%</td>
-        <td class="tab-titre-valeur">Com. ht.</td>
-        <td class="tab-titre-valeur">Part.@{{(facture.partenaire.part * 100)|number_format(0, ',', '.')}}%</td>
-        <td class="tab-titre-valeur">Part payé</td>
-        <td class="tab-titre-valeur">Solde dû</td>
-        <td class="tab-titre-valeur">M. à Payer</td>
+        <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
+        <td class="tab-titre-label" style="width: {{width_reference}}">Police</td>
+        <td class="tab-titre-label" style="width: {{width_avenant}}">Avenant</td>
+        <td class="tab-titre-label" style="width: {{width_risque}}">Risque</td>
+        <td class="tab-titre-label" style="width: {{width_client}}">Client</td>
+        <td class="tab-titre-label" style="width: {{width_tranche}}">Tranche</td>
+        <td class="tab-titre-label" style="width: {{width_periode}}">Période</td>
+        <td class="tab-titre-valeur" style="width: {{width_prime_ttc}}">Prime TTC</td>
+        {# <td class="tab-titre-valeur" style="width: {{width_fronting}}">Fronting</td> #}
+        <td class="tab-titre-valeur" style="width: {{width_prime_nette}}">Prime Nette</td>
+        <td class="tab-titre-valeur" style="width: {{width_taux}}">Taux Rv.</td>
+        <td class="tab-titre-valeur" style="width: {{width_revenu_net}}">Revenu (ht)</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_courtier_taux}}">Taux Tx</td>
+        <td class="tab-titre-valeur" style="width: {{width_taxe_courtier}}">{{taxe_courtier.nom}}</td>
+        <td class="tab-titre-valeur" style="width: {{width_assiette_partageable}}">Assiette</td>
+        <td class="tab-titre-valeur" style="width: {{width_partenaire_part}}">Part</td>
+        <td class="tab-titre-valeur" style="width: {{width_partenaire}}">Rétrocom</td>
+        <td class="tab-titre-valeur" style="width: {{width_partenaire_payee}}">Rét. Payée</td>
+        <td class="tab-titre-valeur" style="width: {{width_partenaire_solde}}">Solde dû</td>
     </tr>
     {# C'est ici qu'il faut mettre la boucle pour parcourir tous les comptes bancaires #}
 
@@ -23,65 +51,88 @@
     {% set x = 1 %}
     {% set y = 0 %}
     {% set pg = 1 %}
+    {% set tot_prime_totale = 0 %}
     {% set tot_prime_nette = 0 %}
     {% set tot_revenu_ht = 0 %} 
     {% set tot_taxes_courtier = 0 %}
-    {% set tot_revenu_partageable = 0 %} 
+    {% set tot_assiette_partageable = 0 %}
     {% set tot_retrocom = 0 %}
     {% set tot_retrocom_payees = 0 %}
     {% set tot_retrocom_solde = 0 %}
-    {% set tot_mont_a_payer = 0 %}
     {# fin - Les variables à cumuler #}
     {% for i in 1..pg_volumeDonnees %} {# pg_tableauMax #}
         {% if (pg == currentPage) %}
-            <tr class="texte-centre">
-                {# Les variables textes #}
-                {% set art_numero = x  %}
-                {% set art_reference = facture.elementFactures[i - 1].police.reference %}
-                {% set art_code_produit = facture.elementFactures[i - 1].police.produit.code %} 
-                {% set art_client = facture.elementFactures[i - 1].police.client.nom %}
-                
-                {% set art_prime_nette = (facture.elementFactures[i - 1].police.primenette / 100) %}
-                {% set art_revenu_ht = (facture.elementFactures[i - 1].police.calc_revenu_ht / 100) %} 
-                {% set art_taxes_courtier = (facture.elementFactures[i - 1].police.calc_taxes_courtier / 100) %}
-                {% set art_revenu_partageable = (facture.elementFactures[i - 1].police.calc_revenu_partageable / 100) %} 
-                {% set art_retrocom = (facture.elementFactures[i - 1].police.calc_retrocom / 100) %}
-                {% set art_retrocom_payees = (facture.elementFactures[i - 1].police.calc_retrocom_payees / 100) %}
-                {% set art_retrocom_solde = (facture.elementFactures[i - 1].police.calc_retrocom_solde / 100) %}
-                {% set art_mont_a_payer = (facture.elementFactures[i - 1].montant / 100) %}
-                
-                <td class="tab-ligne-valeur" style="width: 25px;">
-                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
-                </td>
-                <td class="tab-ligne-label a-la-ligne-auto" style="width: 170px;">
-                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 30} %}
-                </td>
-                <td class="tab-ligne-label" style="width: 35px;">
-                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_code_produit, 'txtLimitedLength_tailleMax': 4} %}
-                </td>
-                <td class="tab-ligne-label a-la-ligne-auto" style="width: 130px;">
-                    {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 28} %}
-                </td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_revenu_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur texte-rouge" style="width: 40px;">-{{art_taxes_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_revenu_partageable|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_retrocom|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur texte-rouge" style="width: 65px;">-{{art_retrocom_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_retrocom_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-                <td class="tab-ligne-valeur" style="width: 65px;">{{art_mont_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
-            </tr>
-            {% set y = y + 1 %}
+            {% if (x % 2) == 0 %}
+                    <tr class="texte-centre">  {# bg-pair #}
+                {% else %}
+                    <tr class="texte-centre">
+                {% endif %}
+                    {# Les variables textes #}
+                    {% set art_numero = facture.notesElementsNCPartenaire[i-1]["No"]  %}
+                    {% set art_reference = facture.notesElementsNCPartenaire[i-1]["Reference_Police"]  %}
+                    {% set art_avenant = facture.notesElementsNCPartenaire[i-1]["Avenant"]  %}
+                    {% set art_risque = facture.notesElementsNCPartenaire[i-1]["Risque"]  %}
+                    {% set art_client = facture.notesElementsNCPartenaire[i-1]["Client"]  %}
+                    {% set art_tranche = facture.notesElementsNCPartenaire[i-1]["Tranche"]  %}
+                    {% set art_periode = facture.notesElementsNCPartenaire[i-1]["Période"]  %}
+                    {% set art_prime_ttc = facture.notesElementsNCPartenaire[i-1]["Prime_TTC"]  %}
+                    {# {% set art_fronting = facture.notesElementsNCPartenaire[i-1]["Fronting"]  %} #}
+                    {% set art_prime_ht = facture.notesElementsNCPartenaire[i-1]["Prime_HT"]  %}
+                    {% set art_taux = facture.notesElementsNCPartenaire[i-1]["Taux"]  %}
+                    {% set art_revenu_net = facture.notesElementsNCPartenaire[i-1]["Revenue_net"]  %}
+                    {% set art_taxe_courtier_taux = facture.notesElementsNCPartenaire[i-1]["Revenue_taxe_courtier_taux"]  %}
+                    {% set art_taxe_courtier = facture.notesElementsNCPartenaire[i-1]["Revenue_taxe_courtier"]  %}
+                    {% set art_assiette_partageable = facture.notesElementsNCPartenaire[i-1]["Revenue_assiette_partageable"]  %}
+                    {% set art_partenaire_part = facture.notesElementsNCPartenaire[i-1]["Partenaire_taux"]  %}
+                    {% set art_partenaire = facture.notesElementsNCPartenaire[i-1]["Partenaire_retrocom"]  %}
+                    {% set art_partenaire_payee = facture.notesElementsNCPartenaire[i-1]["Partenaire_retrocom_payee"]  %}
+                    {% set art_partenaire_solde = facture.notesElementsNCPartenaire[i-1]["Partenaire_retrocom_solde"]  %}
+                    
+                    <td class="tab-ligne-valeur" style="width: {{width_no}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_numero, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_reference}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_reference, 'txtLimitedLength_tailleMax': 23} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_avenant}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_avenant, 'txtLimitedLength_tailleMax': 18} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_risque}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_client}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 14} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_tranche}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 12} %}
+                    </td>
+                    <td class="tab-ligne-label" style="width: {{width_periode}}">
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_periode, 'txtLimitedLength_tailleMax': 23} %}
+                    </td>
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_ttc}}">{{art_prime_ttc|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    {# <td class="tab-ligne-valeur" style="width: {{width_fronting}}">{{art_fronting|format_currency(monnaie, {fraction_digit: 2})}}</td> #}
+                    <td class="tab-ligne-valeur" style="width: {{width_prime_nette}}">{{art_prime_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taux}}">{{art_taux|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_revenu_net}}">{{art_revenu_net|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_courtier_taux}}">{{art_taxe_courtier_taux|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_taxe_courtier}}">{{art_taxe_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_assiette_partageable}}">{{art_assiette_partageable|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_partenaire_part}}">{{art_partenaire_part|number_format('2', ',', '.')}}%</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_partenaire}}">{{art_partenaire|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur texte-rouge" style="width: {{width_partenaire_payee}}">-{{art_partenaire_payee|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                    <td class="tab-ligne-valeur" style="width: {{width_partenaire_solde}}">{{art_partenaire_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
+                </tr>
+                {% set y = y + 1 %}
         {% endif %}
         {# Ici on incrémente les variables numériques #}
-        {% set tot_prime_nette = tot_prime_nette + art_prime_nette %}
-        {% set tot_revenu_ht = tot_revenu_ht + art_revenu_ht %} 
-        {% set tot_taxes_courtier = tot_taxes_courtier + art_taxes_courtier %}
-        {% set tot_revenu_partageable = tot_revenu_partageable + art_revenu_partageable %} 
-        {% set tot_retrocom = tot_retrocom + art_retrocom %}
-        {% set tot_retrocom_payees = tot_retrocom_payees + art_retrocom_payees %}
-        {% set tot_retrocom_solde = tot_retrocom_solde + art_retrocom_solde %}
-        {% set tot_mont_a_payer = tot_mont_a_payer + art_mont_a_payer %}
+        {% set tot_prime_totale = tot_prime_totale + art_prime_ttc %}
+        {% set tot_prime_nette = tot_prime_nette + art_prime_ht %}
+        {% set tot_revenu_ht = tot_revenu_ht + art_revenu_net %} 
+        {% set tot_taxes_courtier = tot_taxes_courtier + art_taxe_courtier %}
+        {% set tot_assiette_partageable = tot_assiette_partageable + art_assiette_partageable %} 
+        {% set tot_retrocom = tot_retrocom + art_partenaire %}
+        {% set tot_retrocom_payees = tot_retrocom_payees + art_partenaire_payee %}
+        {% set tot_retrocom_solde = tot_retrocom_solde + art_partenaire_solde %}
         {# S'il atteind le maximum du tableau, il fait un saut à la page suivante #}
         {% if (x % pg_tableauMax) == 0 %}
             {% set pg = pg + 1 %}
@@ -90,16 +141,20 @@
     {% endfor %}
     
     <tr class="bg-sombre">
-        <td colspan="4" class = "tab-ligne-label">Total général</td>
+        <td colspan="7" class = "tab-ligne-label">Total général</td>
+        <td class = "tab-ligne-valeur">{{tot_prime_totale|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur">{{tot_prime_nette|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur"></td>
         <td class = "tab-ligne-valeur">{{tot_revenu_ht|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur texte-rouge">-{{tot_taxes_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{tot_revenu_partageable|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur"></td>
+        <td class = "tab-ligne-valeur">{{tot_taxes_courtier|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur">{{tot_assiette_partageable|format_currency(monnaie, {fraction_digit: 2})}}</td>
+        <td class = "tab-ligne-valeur"></td>
         <td class = "tab-ligne-valeur">{{tot_retrocom|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur texte-rouge">-{{tot_retrocom_payees|format_currency(monnaie, {fraction_digit: 2})}}</td>
         <td class = "tab-ligne-valeur">{{tot_retrocom_solde|format_currency(monnaie, {fraction_digit: 2})}}</td>
-        <td class = "tab-ligne-valeur">{{tot_mont_a_payer|format_currency(monnaie, {fraction_digit: 2})}}</td>
     </tr>
 </table>
+
 {# On insère le ressort ici pour ajouter ou supprimer les lignes manquantes #}
 {% include 'pdf/composants/_ressort.html.twig' with {'tailleTabActuel': y, 'tailleTabMax': pg_tableauMax, 'tailleBoucleMin': 2} %}

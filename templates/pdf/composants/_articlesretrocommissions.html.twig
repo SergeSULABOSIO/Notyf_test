@@ -3,12 +3,12 @@
     {% set width_reference = "90px;" %}
     {% set width_avenant = "60px;" %}
     {% set width_risque = "30px;" %}
-    {% set width_client = "60px;" %}
+    {% set width_client = "65px;" %}
     {% set width_tranche = "40px;" %}
     {% set width_periode = "80px;" %}
     {% set width_prime_ttc = "60px;" %}
     {# {% set width_fronting = "65px;" %} #}
-    {% set width_prime_nette = "60px;" %}
+    {% set width_prime_nette = "55px;" %}
     {% set width_taux = "35px;" %}
     {% set width_revenu_net = "60px;" %}
     {% set width_taxe_courtier_taux = "40px;" %}
@@ -22,7 +22,7 @@
 
 <table class="tableau-bordure-zero largeur-max marge-top-petit texte-taille-petit">
     <tr>
-        <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit pour le profit du partenaire {{facture.partenaire.nom}} qui a droit à {{(facture.partenaire.part * 100)|number_format(0, ',', '.')}}% de la commission hors taxes. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
+        <td colspan="12">Liste détailée d'articles ({{pg_volumeDonnees}}) concernés par la note de crédit pour le profit du partenaire {{facture.partenaire.nom}} qui a droit à {{(facture.partenaire.part * 100)|number_format(0, ',', '.')}}% du revenu hors taxe. [Page {{currentPage}}/{{pg_nb_pages}}]</td>
     </tr>
     <tr>
         <td class="tab-titre-label" style="width: {{width_no}}">N°</td>
@@ -101,7 +101,7 @@
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_risque, 'txtLimitedLength_tailleMax': 4} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_client}}">
-                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 14} %}
+                        {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_client, 'txtLimitedLength_tailleMax': 16} %}
                     </td>
                     <td class="tab-ligne-label" style="width: {{width_tranche}}">
                         {% include 'pdf/composants/_txtLimitedLength.html.twig' with {'txtLimitedLength_texte': art_tranche, 'txtLimitedLength_tailleMax': 12} %}

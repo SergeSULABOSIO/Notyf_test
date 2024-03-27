@@ -2,7 +2,7 @@
 namespace App\Service\RefactoringJS\Evenements;
 
 
-class EvenementSuppression extends EvenementConcret
+class EvenementConcretSuppression extends EvenementConcret
 {
     public function __construct()
     {

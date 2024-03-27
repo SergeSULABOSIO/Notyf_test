@@ -12,4 +12,5 @@ interface Sujet
     public function retirerObservateur(?Observateur $observateur);
     public function viderListeObservateurs();
     public function getListeObservateurs():?ArrayCollection;
+    public function notifierLesObservateurs(?Evenement $evenement);
 }

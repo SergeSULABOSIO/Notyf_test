@@ -11,5 +11,5 @@ interface Observateur
 
     public function getType():?int;
     public function setType(?int $typeObservateur);
-    public function ecouter(?Evenement $evenement); 
+    public function ecouter(?Evenement $evenement);
 }

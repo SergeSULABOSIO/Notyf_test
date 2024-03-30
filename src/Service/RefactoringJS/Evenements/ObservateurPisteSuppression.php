@@ -2,7 +2,7 @@
 
 namespace App\Service\RefactoringJS\Evenements;
 
-abstract class ObservateurPisteSuppression extends ObservateurAbstract
+class ObservateurPisteSuppression extends ObservateurAbstract
 {
     public function __construct()
     {

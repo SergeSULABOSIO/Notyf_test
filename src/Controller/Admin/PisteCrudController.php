@@ -4,10 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Piste;
 use DateTimeImmutable;
+use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
-use App\Service\ServiceDates;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,8 +21,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\Evenements\ObservateurPisteAjout;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\Evenements\ObservateurPisteEdition;
+use App\Service\RefactoringJS\Evenements\ObservateurPisteChargement;
+use App\Service\RefactoringJS\Evenements\ObservateurPisteSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class PisteCrudController extends AbstractCrudController
@@ -117,7 +121,14 @@ class PisteCrudController extends AbstractCrudController
 
     public function createEntity(string $entityFqcn)
     {
+        // dd("On est ici!");
         $objet = new Piste();
+        //Ecouteurs
+        $objet->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
+        $objet->ajouterObservateur(new ObservateurPisteChargement());
+        $objet->ajouterObservateur(new ObservateurPisteEdition());
+        $objet->ajouterObservateur(new ObservateurPisteSuppression());
+
         $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));

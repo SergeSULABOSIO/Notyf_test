@@ -15,6 +15,7 @@ interface Evenement
     public const CHAMP_UTILISATEUR = "Utilisateur";
     public const CHAMP_ENTREPRISE = "Entreprise";
     public const CHAMP_DONNEE = "Données";
+    public const CHAMP_MESSAGE = "Message";
 
     public function setType(?int $typeEvenement);
     public function getType():?int;
@@ -23,6 +24,7 @@ interface Evenement
         self::CHAMP_DATE => new DateTimeImmutable("now"),
         self::CHAMP_UTILISATEUR => null,
         self::CHAMP_ENTREPRISE => null,
-        self::CHAMP_DONNEE => null
+        self::CHAMP_DONNEE => null,
+        self::CHAMP_MESSAGE => ""
     ]);
 }

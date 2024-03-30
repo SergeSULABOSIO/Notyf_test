@@ -8,10 +8,22 @@ use Sabberworm\CSS\CSSList\Document;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
+use App\Service\RefactoringJS\Evenements\EvenementConcretChargement;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
+use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Contracts\EventDispatcher\Event;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
-class Piste
+class Piste implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -102,6 +114,12 @@ class Piste
     private ?float $duree = null;
     private ?Monnaie $monnaie_Affichage;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+    private ?EvenementConcretAjout $eAjout = null;
+    private ?EvenementConcretEdition $eEdition = null;
+    private ?EvenementConcretChargement $eChargement = null;
+    private ?EvenementConcretSuppression $eSuppression = null;
 
 
 
@@ -114,6 +132,13 @@ class Piste
         $this->newpartenaire = new ArrayCollection();
         $this->polices = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
+
+        //Evenemts
+        $this->eAjout = new EvenementConcretAjout();
+        $this->eEdition = new EvenementConcretEdition();
+        $this->eChargement = new EvenementConcretChargement();
+        $this->eSuppression = new EvenementConcretSuppression();
     }
 
     public function getId(): ?int
@@ -129,6 +154,13 @@ class Piste
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        //Ecouteur d'action
+        $this->eAjout->setDonnees([
+            Evenement::CHAMP_DONNEE => $this,
+            Evenement::CHAMP_MESSAGE => "Initialisation du nom de la piste: " . $nom,
+        ]);
+        $this->notifierLesObservateurs($this->eAjout);
 
         return $this;
     }
@@ -219,7 +251,7 @@ class Piste
 
     public function __toString()
     {
-        if($this->nom == null){
+        if ($this->nom == null) {
             $this->nom = "";
         }
         return $this->nom; // . ", ". ($this->updatedAt)->format('d/m/Y à H:m:s');
@@ -598,7 +630,7 @@ class Piste
 
     /**
      * Get the value of dateEffet
-     */ 
+     */
     public function getDateEffet()
     {
         if ($this->getPolices()) {
@@ -611,7 +643,7 @@ class Piste
 
     /**
      * Get the value of dateExpiration
-     */ 
+     */
     public function getDateExpiration()
     {
         if ($this->getPolices()) {
@@ -624,7 +656,7 @@ class Piste
 
     /**
      * Get the value of duree
-     */ 
+     */
     public function getDuree()
     {
         if ($this->getPolices()) {
@@ -637,12 +669,12 @@ class Piste
 
     /**
      * Get the value of nomEtape
-     */ 
+     */
     public function getNomEtape()
     {
         $this->nomEtape = "Inconnu";
         foreach (PisteCrudController::TAB_ETAPES as $nomEtape => $codeEtape) {
-            if($this->getEtape() == $codeEtape){
+            if ($this->getEtape() == $codeEtape) {
                 $this->nomEtape = $nomEtape;
             }
         }
@@ -654,7 +686,7 @@ class Piste
     {
         $tabMonnaies = $this->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
-            if($monnaie->getFonction() == $fonction){
+            if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;
             }
         }
@@ -663,13 +695,52 @@ class Piste
 
     /**
      * Get the value of monnaie_Affichage
-     */ 
+     */
     public function getMonnaie_Affichage()
     {
         $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-        if($this->monnaie_Affichage == null){
+        if ($this->monnaie_Affichage == null) {
             $this->monnaie_Affichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
         }
         return $this->monnaie_Affichage;
+    }
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

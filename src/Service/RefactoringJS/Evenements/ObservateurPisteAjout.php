@@ -23,13 +23,6 @@ class ObservateurPisteAjout extends ObservateurAbstract
         $evenement->setDonnees($donnees);
         
         
-        
-        
-        
-        
-        
-        
-        
         dd("Evenement Ajout:", $evenement);
     }
 }

@@ -126,7 +126,7 @@ class PisteCrudController extends AbstractCrudController
         //Ecouteurs
         $objet->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
         $objet->ajouterObservateur(new ObservateurPisteChargement());
-        $objet->ajouterObservateur(new ObservateurPisteEdition());
+        $objet->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
         $objet->ajouterObservateur(new ObservateurPisteSuppression());
 
         $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);

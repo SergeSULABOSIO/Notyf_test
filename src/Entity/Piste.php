@@ -153,14 +153,27 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setNom(string $nom): self
     {
-        $this->nom = $nom;
-
         //Ecouteur d'action
-        $this->eAjout->setDonnees([
-            Evenement::CHAMP_DONNEE => $this,
-            Evenement::CHAMP_MESSAGE => "Initialisation du nom de la piste: " . $nom,
-        ]);
-        $this->notifierLesObservateurs($this->eAjout);
+        //On vérifie d'abord si cette infors n'existe pas déjà
+        
+        $ancienneDonnee = $this->getNom();
+        $newDonnee = $nom;
+        
+        $this->nom = $nom;
+        
+        if ($ancienneDonnee == null && $newDonnee != null) {
+            $this->eAjout->setDonnees([
+                Evenement::CHAMP_DONNEE => $this,
+                Evenement::CHAMP_MESSAGE => "Définition Nom = " . $newDonnee,
+            ]);
+            $this->notifierLesObservateurs($this->eAjout);
+        }else if($ancienneDonnee != null && $newDonnee != null && $ancienneDonnee != $newDonnee){
+            $this->eEdition->setDonnees([
+                Evenement::CHAMP_DONNEE => $this,
+                Evenement::CHAMP_MESSAGE => "Modification Nom = " . $ancienneDonnee . " => " . $newDonnee,
+            ]);
+            $this->notifierLesObservateurs($this->eEdition);
+        }
 
         return $this;
     }

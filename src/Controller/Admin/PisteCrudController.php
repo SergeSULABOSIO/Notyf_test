@@ -149,6 +149,14 @@ class PisteCrudController extends AbstractCrudController
     {
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
+        //Ecouteurs
+        $piste->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
+        $piste->ajouterObservateur(new ObservateurPisteChargement());
+        $piste->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
+        $piste->ajouterObservateur(new ObservateurPisteSuppression());
+
+        
+        
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);

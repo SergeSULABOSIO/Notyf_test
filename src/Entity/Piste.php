@@ -363,7 +363,7 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->contacts->removeElement($contact)) {
             // set the owning side to null (unless already changed)
             if ($contact->getPiste() === $this) {
-
+                
                 $oldValue = $contact;
 
                 $contact->setPiste(null);

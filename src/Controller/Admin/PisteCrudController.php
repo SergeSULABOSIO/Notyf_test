@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Piste;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
 use DateTimeImmutable;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -29,7 +32,7 @@ use App\Service\RefactoringJS\Evenements\ObservateurPisteChargement;
 use App\Service\RefactoringJS\Evenements\ObservateurPisteSuppression;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class PisteCrudController extends AbstractCrudController
+class PisteCrudController extends AbstractCrudController implements CommandeExecuteur
 {
     public const ETAPE_CREATION             = "Creation";
     public const ETAPE_COLLECTE_DE_DONNEES  = "Collecte des données";
@@ -124,10 +127,11 @@ class PisteCrudController extends AbstractCrudController
         // dd("On est ici!");
         $objet = new Piste();
         //Ecouteurs
-        $objet->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
-        $objet->ajouterObservateur(new ObservateurPisteChargement());
-        $objet->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
-        $objet->ajouterObservateur(new ObservateurPisteSuppression());
+        $this->executer(new CommandePisteDefinirObservateursEvenements(
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
 
         $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
@@ -150,12 +154,11 @@ class PisteCrudController extends AbstractCrudController
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
-        $piste->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
-        $piste->ajouterObservateur(new ObservateurPisteChargement());
-        $piste->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
-        $piste->ajouterObservateur(new ObservateurPisteSuppression());
-
-        
+        $this->executer(new CommandePisteDefinirObservateursEvenements(
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $piste
+        ));
         
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
@@ -394,5 +397,12 @@ class PisteCrudController extends AbstractCrudController
             ->generateUrl();
         $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La piste " . $piste->getNom() .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
         return $this->redirect($url);
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

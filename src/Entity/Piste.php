@@ -150,9 +150,8 @@ class Piste implements Sujet, CommandeExecuteur
         $newDonnee = $nom;
         
         $this->nom = $nom;
+        
 
-        
-        
         if ($ancienneDonnee == null && $newDonnee != null) {
             $eAjout = new EvenementConcretAjout();
             $eAjout->setDonnees([
@@ -166,8 +165,14 @@ class Piste implements Sujet, CommandeExecuteur
                 Evenement::CHAMP_DONNEE => $this,
                 Evenement::CHAMP_MESSAGE => "Modification de Nom = " . $ancienneDonnee . " => " . $newDonnee,
             ]);
-            dd($eEdition);
             $this->notifierLesObservateurs($eEdition);
+        }else if (($ancienneDonnee != null) && $newDonnee === null || $newDonnee === "") {
+            $eSuppression = new EvenementConcretSuppression();
+            $eSuppression->setDonnees([
+                Evenement::CHAMP_DONNEE => $this,
+                Evenement::CHAMP_MESSAGE => "Suppression de Nom = " . $ancienneDonnee . " => " . $newDonnee,
+            ]);
+            $this->notifierLesObservateurs($eSuppression);
         }
         return $this;
     }

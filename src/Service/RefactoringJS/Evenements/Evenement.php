@@ -15,6 +15,8 @@ interface Evenement
     public const CHAMP_UTILISATEUR = "Utilisateur";
     public const CHAMP_ENTREPRISE = "Entreprise";
     public const CHAMP_DONNEE = "Données";
+    public const CHAMP_NEW_VALUE = "New_Value";
+    public const CHAMP_OLD_VALUE = "Old_Value";
     public const CHAMP_MESSAGE = "Message";
 
     public function setType(?int $typeEvenement);
@@ -25,6 +27,8 @@ interface Evenement
         self::CHAMP_UTILISATEUR => null,
         self::CHAMP_ENTREPRISE => null,
         self::CHAMP_DONNEE => null,
+        self::CHAMP_OLD_VALUE => null,
+        self::CHAMP_NEW_VALUE => null,
         self::CHAMP_MESSAGE => ""
     ]);
 }

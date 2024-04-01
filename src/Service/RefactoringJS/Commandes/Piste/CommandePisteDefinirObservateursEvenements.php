@@ -23,8 +23,8 @@ class CommandePisteDefinirObservateursEvenements implements Commande
     public function executer()
     {
         $this->piste->ajouterObservateur(new ObservateurPisteAjout($this->serviceEntreprise, $this->serviceDates));
-        $this->piste->ajouterObservateur(new ObservateurPisteChargement());
+        $this->piste->ajouterObservateur(new ObservateurPisteChargement($this->serviceEntreprise, $this->serviceDates));
         $this->piste->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
-        $this->piste->ajouterObservateur(new ObservateurPisteSuppression());
+        $this->piste->ajouterObservateur(new ObservateurPisteSuppression($this->serviceEntreprise, $this->serviceDates));
     }
 }

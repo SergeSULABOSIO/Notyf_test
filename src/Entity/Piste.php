@@ -116,10 +116,6 @@ class Piste implements Sujet, CommandeExecuteur
 
     //Evenements
     private ?ArrayCollection $listeObservateurs = null;
-    private ?EvenementConcretAjout $eAjout = null;
-    private ?EvenementConcretEdition $eEdition = null;
-    private ?EvenementConcretChargement $eChargement = null;
-    private ?EvenementConcretSuppression $eSuppression = null;
 
 
 
@@ -133,12 +129,6 @@ class Piste implements Sujet, CommandeExecuteur
         $this->polices = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->listeObservateurs = new ArrayCollection();
-
-        //Evenemts
-        $this->eAjout = new EvenementConcretAjout();
-        $this->eEdition = new EvenementConcretEdition();
-        $this->eChargement = new EvenementConcretChargement();
-        $this->eSuppression = new EvenementConcretSuppression();
     }
 
     public function getId(): ?int
@@ -160,21 +150,25 @@ class Piste implements Sujet, CommandeExecuteur
         $newDonnee = $nom;
         
         $this->nom = $nom;
+
+        
         
         if ($ancienneDonnee == null && $newDonnee != null) {
-            $this->eAjout->setDonnees([
+            $eAjout = new EvenementConcretAjout();
+            $eAjout->setDonnees([
                 Evenement::CHAMP_DONNEE => $this,
-                Evenement::CHAMP_MESSAGE => "Définition Nom = " . $newDonnee,
+                Evenement::CHAMP_MESSAGE => "Définition de Nom = " . $newDonnee,
             ]);
-            $this->notifierLesObservateurs($this->eAjout);
+            $this->notifierLesObservateurs($eAjout);
         }else if($ancienneDonnee != null && $newDonnee != null && $ancienneDonnee != $newDonnee){
-            $this->eEdition->setDonnees([
+            $eEdition = new EvenementConcretEdition();
+            $eEdition->setDonnees([
                 Evenement::CHAMP_DONNEE => $this,
-                Evenement::CHAMP_MESSAGE => "Modification Nom = " . $ancienneDonnee . " => " . $newDonnee,
+                Evenement::CHAMP_MESSAGE => "Modification de Nom = " . $ancienneDonnee . " => " . $newDonnee,
             ]);
-            $this->notifierLesObservateurs($this->eEdition);
+            dd($eEdition);
+            $this->notifierLesObservateurs($eEdition);
         }
-
         return $this;
     }
 
@@ -721,6 +715,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function ajouterObservateur(?Observateur $observateur)
     {
         // Ajout observateur
+        $this->initListeObservateurs();
         if (!$this->listeObservateurs->contains($observateur)) {
             $this->listeObservateurs->add($observateur);
         }
@@ -728,6 +723,7 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function retirerObservateur(?Observateur $observateur)
     {
+        $this->initListeObservateurs();
         if ($this->listeObservateurs->contains($observateur)) {
             $this->listeObservateurs->removeElement($observateur);
         }
@@ -735,6 +731,7 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function viderListeObservateurs()
     {
+        $this->initListeObservateurs();
         if (!$this->listeObservateurs->isEmpty()) {
             $this->listeObservateurs = new ArrayCollection([]);
         }
@@ -748,6 +745,13 @@ class Piste implements Sujet, CommandeExecuteur
     public function notifierLesObservateurs(?Evenement $evenement)
     {
         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if($this->listeObservateurs == null){
+            $this->listeObservateurs = new ArrayCollection();
+        }
     }
 
     public function executer(?Commande $commande)

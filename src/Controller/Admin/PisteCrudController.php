@@ -159,6 +159,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $this->serviceDates,
             $piste
         ));
+    
+        // dd($pageName, $piste);
         
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);

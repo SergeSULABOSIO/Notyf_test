@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Piste;
 use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
 use DateTimeImmutable;
@@ -139,14 +140,14 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
-        $objet->setCreatedAt($this->serviceDates->aujourdhui());
-        $objet->setUpdatedAt($this->serviceDates->aujourdhui());
-        $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
-        $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
-        //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
-        //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
-        //$objet->setClos(0);
+        $this->executer(
+            new CommandeDefinirEseUserDateCreationEtModification(
+                $objet,
+                $this->serviceEntreprise,
+                $this->serviceDates
+            )
+        );
         return $objet;
     }
 
@@ -160,9 +161,9 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $this->serviceDates,
             $piste
         ));
-    
+
         // dd($pageName, $piste);
-        
+
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);

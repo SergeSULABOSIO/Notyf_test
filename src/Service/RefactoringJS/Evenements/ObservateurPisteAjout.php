@@ -24,7 +24,6 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
         $donnees[Evenement::CHAMP_UTILISATEUR] = $this->serviceEntreprise->getUtilisateur();
         $donnees[Evenement::CHAMP_DATE] = $this->serviceDates->aujourdhui();
         $evenement->setDonnees($donnees);
-        
         /**
          * On définit directement l'entreprise, 
          * l'utilisateur, la date de créaton, et celle de modification

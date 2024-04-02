@@ -173,9 +173,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $oldValue = $this->getCreatedAt();
-
         $this->createdAt = $createdAt;
-
         //Ecouteur d'action
         $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date de création", $oldValue, $createdAt));
 
@@ -190,9 +188,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $oldValue = $this->getUpdatedAt();
-
         $this->updatedAt = $updatedAt;
-
         //Ecouteur d'action
         $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date de modification", $oldValue, $updatedAt));
 
@@ -243,9 +239,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function setExpiredAt(\DateTimeImmutable $expiredAt): self
     {
         $oldValue = $this->getExpiredAt();
-
         $this->expiredAt = $expiredAt;
-
         //Ecouteur d'action
         $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $expiredAt));
 
@@ -272,10 +266,8 @@ class Piste implements Sujet, CommandeExecuteur
     {
         if (!$this->cotations->contains($cotation)) {
             $oldValue = null;
-
             $this->cotations->add($cotation);
             $cotation->setPiste($this);
-
             //Ecouteur d'action
             $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des cotations", $oldValue, $cotation));
         }
@@ -287,11 +279,8 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->cotations->removeElement($cotation)) {
             // set the owning side to null (unless already changed)
             if ($cotation->getPiste() === $this) {
-
                 $oldValue = $this->$cotation;
-
                 $cotation->setPiste(null);
-
                 //Ecouteur d'action
                 $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des cotations", $oldValue, null));
             }
@@ -308,9 +297,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function setTypeavenant(?string $typeavenant): self
     {
         $oldValue = $this->getTypeavenant();
-
         $this->typeavenant = $typeavenant;
-
         //Ecouteur d'action
         $this->executer(new CommandePisteDetecterChangementAttribut($this, "Type d'avenant", $oldValue, $typeavenant));
 
@@ -325,9 +312,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function setPolice(?Police $police): self
     {
         $oldValue = $this->getPolice();
-
         $this->police = $police;
-
         //Ecouteur d'action
         $this->executer(new CommandePisteDetecterChangementAttribut($this, "Police", $oldValue, null));
 
@@ -345,12 +330,9 @@ class Piste implements Sujet, CommandeExecuteur
     public function addContact(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
-
             $oldValue = null;
-
             $this->contacts->add($contact);
             $contact->setPiste($this);
-
             //Ecouteur d'action
             $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, $contact));
         }
@@ -363,11 +345,8 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->contacts->removeElement($contact)) {
             // set the owning side to null (unless already changed)
             if ($contact->getPiste() === $this) {
-                
                 $oldValue = $contact;
-
                 $contact->setPiste(null);
-
                 //Ecouteur d'action
                 $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, null));
             }
@@ -387,8 +366,11 @@ class Piste implements Sujet, CommandeExecuteur
     public function addActionsCRM(ActionCRM $actionsCRM): self
     {
         if (!$this->actionsCRMs->contains($actionsCRM)) {
+            $oldValue = null;
             $this->actionsCRMs->add($actionsCRM);
             $actionsCRM->setPiste($this);
+            //Ecouteur d'action
+            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste d'actions", $oldValue, $actionsCRM));
         }
 
         return $this;
@@ -399,7 +381,10 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->actionsCRMs->removeElement($actionsCRM)) {
             // set the owning side to null (unless already changed)
             if ($actionsCRM->getPiste() === $this) {
+                $oldValue = $actionsCRM;
                 $actionsCRM->setPiste(null);
+                //Ecouteur d'action
+                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste d'actions", $oldValue, null));
             }
         }
 
@@ -413,7 +398,12 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setClient(?Client $client): self
     {
+        $oldValue = $this->getClient();
+        $newValue = $client;
         $this->client = $client;
+
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Client", $oldValue, $newValue));
 
         return $this;
     }
@@ -429,8 +419,11 @@ class Piste implements Sujet, CommandeExecuteur
     public function addProspect(Client $prospect): self
     {
         if (!$this->prospect->contains($prospect)) {
+            $oldValue = null;
             $this->prospect->add($prospect);
             $prospect->setPiste($this);
+            //Ecouteur d'action
+            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des prospects", $oldValue, $prospect));
         }
 
         return $this;
@@ -441,7 +434,10 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->prospect->removeElement($prospect)) {
             // set the owning side to null (unless already changed)
             if ($prospect->getPiste() === $this) {
+                $oldValue = $prospect;
                 $prospect->setPiste(null);
+                //Ecouteur d'action
+                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des prospects", $oldValue, null));
             }
         }
 
@@ -455,7 +451,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setProduit(?Produit $produit): self
     {
+        $oldValue = $this->getProduit();
+        $newValue = $produit;
         $this->produit = $produit;
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Produit", $oldValue, $newValue));
 
         return $this;
     }
@@ -467,7 +467,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setPartenaire(?Partenaire $partenaire): self
     {
+        $oldValue = $this->getPartenaire();
+        $newValue = $partenaire;
         $this->partenaire = $partenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue));
 
         return $this;
     }
@@ -483,8 +487,12 @@ class Piste implements Sujet, CommandeExecuteur
     public function addNewpartenaire(Partenaire $newpartenaire): self
     {
         if (!$this->newpartenaire->contains($newpartenaire)) {
+            $oldValue = null;
+            $newValue = $newpartenaire;
             $this->newpartenaire->add($newpartenaire);
             $newpartenaire->setPiste($this);
+            //Ecouteur d'action
+            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue));
         }
 
         return $this;
@@ -495,7 +503,11 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->newpartenaire->removeElement($newpartenaire)) {
             // set the owning side to null (unless already changed)
             if ($newpartenaire->getPiste() === $this) {
+                $oldValue = $newpartenaire;
+                $newValue = null;
                 $newpartenaire->setPiste(null);
+                //Ecouteur d'action
+                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue));
             }
         }
 
@@ -509,7 +521,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setGestionnaire(?Utilisateur $gestionnaire): self
     {
+        $oldValue = $this->getGestionnaire();
+        $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue));
 
         return $this;
     }
@@ -521,7 +537,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setAssistant(?Utilisateur $assistant): self
     {
+        $oldValue = $this->getAssistant();
+        $newValue = $assistant;
         $this->assistant = $assistant;
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue));
 
         return $this;
     }

@@ -3,11 +3,6 @@
 namespace App\Service\RefactoringJS\Commandes\Piste;
 
 use App\Entity\Piste;
-use App\Entity\Facture;
-use App\Entity\Tranche;
-use App\Entity\ElementFacture;
-use App\Controller\Admin\FactureCrudController;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;

@@ -226,8 +226,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setMontant(?float $montant): self
     {
+        $oldValue = $this->getMontant();
+        $newValue = $montant;
         $this->montant = $montant;
-
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Montant", $oldValue, $newValue));
         return $this;
     }
 
@@ -557,8 +560,12 @@ class Piste implements Sujet, CommandeExecuteur
     public function addPolice(Police $police): self
     {
         if (!$this->polices->contains($police)) {
+            $oldValue = null;
+            $newValue = $police;
             $this->polices->add($police);
             $police->setPiste($this);
+            //Ecouteur d'action
+            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue));
         }
 
         return $this;
@@ -569,7 +576,11 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->polices->removeElement($police)) {
             // set the owning side to null (unless already changed)
             if ($police->getPiste() === $this) {
+                $oldValue = $police;
+                $newValue = null;
                 $police->setPiste(null);
+                //Ecouteur d'action
+                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue));
             }
         }
 
@@ -587,8 +598,12 @@ class Piste implements Sujet, CommandeExecuteur
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setPiste($this);
+            //Ecouteur d'action
+            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue));
         }
 
         return $this;
@@ -599,7 +614,11 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getPiste() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setPiste(null);
+                //Ecouteur d'action
+                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue));
             }
         }
 
@@ -613,7 +632,11 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setEtape(?int $etape): self
     {
+        $oldValue = $this->getEtape();
+        $newValue = $etape;
         $this->etape = $etape;
+        //Ecouteur d'action
+        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Etape", $oldValue, $newValue));
 
         return $this;
     }

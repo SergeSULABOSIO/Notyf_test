@@ -22,7 +22,6 @@ class ObservateurPisteAjout extends ObservateurAbstract
         $donnees[Evenement::CHAMP_DATE] = $this->serviceDates->aujourdhui();
         $evenement->setDonnees($donnees);
         
-        
         dd("Evenement Ajout:", $evenement);
     }
 }

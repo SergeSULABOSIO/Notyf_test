@@ -34,7 +34,6 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
             $this->serviceDates
         ));
 
-
         dd("Evenement Ajout:", $evenement);
     }
 

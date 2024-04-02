@@ -57,6 +57,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        // dd("Hi there,", "On vient de lancer la rubrique Piste"); //C'est ici qu'il faut mettre l'observateur de chargement
     }
 
     public static function getEntityFqcn(): string

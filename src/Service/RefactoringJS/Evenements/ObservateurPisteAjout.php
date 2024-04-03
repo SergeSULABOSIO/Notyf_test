@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauClient;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauContact;
 use DateTimeImmutable;
 
 class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecuteur
@@ -44,6 +45,13 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
          * Commande d'ajout d'éventuel nouveau client
          */
         $this->executer(new CommandePisteAjouterNouveauClient(
+            $this->entityManager,
+            $evenement
+        ));
+        /**
+         * Commande d'ajout d'éventuels contacts
+         */
+        $this->executer(new CommandePisteAjouterNouveauContact(
             $this->entityManager,
             $evenement
         ));

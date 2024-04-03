@@ -146,6 +146,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         );
         //Exécuter - Ecouteurs d'évènements
         $this->executer(new CommandePisteDefinirObservateursEvenements(
+            $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,
             $objet
@@ -159,6 +160,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
         $this->executer(new CommandePisteDefinirObservateursEvenements(
+            $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,
             $piste

@@ -7,6 +7,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
+use App\Service\RefactoringJS\Evenements\Evenement;
 use DateTimeImmutable;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -143,6 +144,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
         $this->executer(
             new CommandeDefinirEseUserDateCreationEtModification(
+                Evenement::FORMAT_VALUE_ENTITY,
                 $objet,
                 $this->serviceEntreprise,
                 $this->serviceDates

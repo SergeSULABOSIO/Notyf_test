@@ -29,6 +29,7 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
          * l'utilisateur, la date de créaton, et celle de modification
          */
         $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+            $evenement->getValueFormat(),
             $donnees[Evenement::CHAMP_NEW_VALUE],
             $this->serviceEntreprise,
             $this->serviceDates

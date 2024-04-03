@@ -15,7 +15,8 @@ class CommandePisteDetecterChangementAttribut implements Commande
         private ?Piste $piste,
         private ?string $nomAttribut,
         private $oldValue,
-        private $newValue
+        private $newValue,
+        private ?string $formatValue
     ) {
     }
 
@@ -23,6 +24,7 @@ class CommandePisteDetecterChangementAttribut implements Commande
     {
         if ($this->oldValue == null && $this->newValue != null) {
             $eAjout = new EvenementConcretAjout();
+            $eAjout->setValueFormat($this->formatValue);
             $eAjout->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->piste,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,
@@ -32,6 +34,7 @@ class CommandePisteDetecterChangementAttribut implements Commande
             $this->piste->notifierLesObservateurs($eAjout);
         } else if ($this->oldValue != null && $this->newValue != null && $this->oldValue != $this->newValue) {
             $eEdition = new EvenementConcretEdition();
+            $eEdition->setValueFormat($this->formatValue);
             $eEdition->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->piste,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,
@@ -41,6 +44,7 @@ class CommandePisteDetecterChangementAttribut implements Commande
             $this->piste->notifierLesObservateurs($eEdition);
         } else if (($this->oldValue != null) && $this->newValue === null || $this->newValue === "") {
             $eSuppression = new EvenementConcretSuppression();
+            $eSuppression->setValueFormat($this->formatValue);
             $eSuppression->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->piste,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,

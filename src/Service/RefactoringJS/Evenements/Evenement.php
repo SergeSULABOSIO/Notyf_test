@@ -18,7 +18,11 @@ interface Evenement
     public const CHAMP_NEW_VALUE = "New_Value";
     public const CHAMP_OLD_VALUE = "Old_Value";
     public const CHAMP_MESSAGE = "Message";
+    public const FORMAT_VALUE_PRIMITIVE = "Primitive_value";
+    public const FORMAT_VALUE_ENTITY = "Entity_value";
 
+    public function getValueFormat():?string;
+    public function setValueFormat(?string $valueFormat);
     public function setType(?int $typeEvenement);
     public function getType():?int;
     public function getDonnees():?array;

@@ -8,9 +8,22 @@ class EvenementConcret implements Evenement
 {
     private ?int $type;
     private ?array $donnees;
+    private ?string $valueFormat;
+
 
     public function __construct(?int $type) {
         $this->type = $type;
+    }
+
+    public function getValueFormat(): ?string
+    {
+        return $this->valueFormat;
+    }
+
+
+    public function setValueFormat(?string $valueFormat)
+    {
+        $this->valueFormat = $valueFormat;
     }
 
     public function getType(): ?int

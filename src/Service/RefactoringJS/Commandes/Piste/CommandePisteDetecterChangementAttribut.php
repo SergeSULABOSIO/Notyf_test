@@ -8,6 +8,7 @@ use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
 use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
+use DateTimeImmutable;
 
 class CommandePisteDetecterChangementAttribut implements Commande
 {
@@ -22,6 +23,15 @@ class CommandePisteDetecterChangementAttribut implements Commande
 
     public function executer()
     {
+        //Transformation d'éventuelles dates en chaînes de caractères
+        if ($this->oldValue instanceof DateTimeImmutable) {
+            $this->oldValue = $this->oldValue->format("d/m/Y");
+        }
+        if ($this->newValue instanceof DateTimeImmutable) {
+            $this->newValue = $this->newValue->format("d/m/Y");
+        }        
+
+        //Création des évènements
         if ($this->oldValue == null && $this->newValue != null) {
             $eAjout = new EvenementConcretAjout();
             $eAjout->setValueFormat($this->formatValue);

@@ -129,19 +129,13 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
     {
         // dd("On est ici!");
         $objet = new Piste();
-        //Ecouteurs
-        $this->executer(new CommandePisteDefinirObservateursEvenements(
-            $this->serviceEntreprise,
-            $this->serviceDates,
-            $objet
-        ));
-
         $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
+        //Executer - Définition de l'entreprise, l'utilisateur et dates
         $this->executer(
             new CommandeDefinirEseUserDateCreationEtModification(
                 Evenement::FORMAT_VALUE_ENTITY,
@@ -150,6 +144,12 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
                 $this->serviceDates
             )
         );
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new CommandePisteDefinirObservateursEvenements(
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 

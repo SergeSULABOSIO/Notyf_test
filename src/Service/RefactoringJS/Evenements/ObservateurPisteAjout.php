@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\Evenements;
 
+use App\Controller\Admin\ClientCrudController;
 use App\Entity\Piste;
 use App\Entity\Client;
 use App\Service\ServiceDates;
@@ -10,6 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauClient;
+use DateTimeImmutable;
 
 class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecuteur
 {
@@ -37,27 +40,13 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
             $this->serviceEntreprise,
             $this->serviceDates
         ));
-
-        //Draft de la commande de récupération du client
-        if ($donnees[Evenement::CHAMP_DONNEE] instanceof Piste && $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Client) {
-            /** @var Piste */
-            $piste = $donnees[Evenement::CHAMP_DONNEE];
-            /** @var Client */
-            $client = $donnees[Evenement::CHAMP_NEW_VALUE];
-
-            //ici il faut actualiser la base de données
-            $this->entityManager->persist($client);
-            $this->entityManager->flush();
-
-            $piste->setClient($client);
-            // $client->addPiste($piste);          
-
-            //On vide la liste des prospects
-            $tabProspect = $piste->getProspect();
-            foreach ($tabProspect as $pros) {
-                $piste->removeProspect($pros);
-            }
-        }
+        /**
+         * Commande d'ajout d'éventuel nouveau client
+         */
+        $this->executer(new CommandePisteAjouterNouveauClient(
+            $this->entityManager,
+            $evenement
+        ));
         // dd("Evenement Ajout:", $evenement);
     }
 

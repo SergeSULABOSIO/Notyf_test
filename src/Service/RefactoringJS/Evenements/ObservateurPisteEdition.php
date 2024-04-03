@@ -36,7 +36,7 @@ class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExe
             $this->serviceEntreprise,
             $this->serviceDates
         ));
-        dd("Evenement Edition:", $evenement);
+        // dd("Evenement Edition:", $evenement);
     }
 
     public function executer(?Commande $commande)

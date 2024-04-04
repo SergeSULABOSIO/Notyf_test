@@ -783,6 +783,12 @@ class Piste implements Sujet, CommandeExecuteur
         return $this->monnaie_Affichage;
     }
 
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
     public function ajouterObservateur(?Observateur $observateur)
     {
         // Ajout observateur
@@ -830,5 +836,10 @@ class Piste implements Sujet, CommandeExecuteur
         if ($commande != null) {
             $commande->executer();
         }
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
     }
 }

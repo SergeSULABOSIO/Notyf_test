@@ -8,10 +8,17 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ActionRepository;
 use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
-class ActionCRM
+class ActionCRM implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -69,12 +76,16 @@ class ActionCRM
 
     private ?string $status;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
 
     public function __construct()
     {
         //$this->feedbackCRMs = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,6 +259,7 @@ class ActionCRM
 
     public function addFeedback(FeedbackCRM $feedback): self
     {
+        dd("C'est ici qu'il faut pieger l'écouter d'actions.");
         if (!$this->feedbacks->contains($feedback)) {
             $this->feedbacks->add($feedback);
             $feedback->setActionCRM($this);
@@ -297,11 +309,11 @@ class ActionCRM
 
     /**
      * Get the value of police
-     */ 
+     */
     public function getPolice()
     {
-        if($this->getPiste()){
-            if($this->getPiste()->getPolices()[0]){
+        if ($this->getPiste()) {
+            if ($this->getPiste()->getPolices()[0]) {
                 $this->police = $this->getPiste()->getPolices()[0];
             }
         }
@@ -310,11 +322,11 @@ class ActionCRM
 
     /**
      * Get the value of cotation
-     */ 
+     */
     public function getCotation()
     {
-        if($this->getPiste()){
-            if($this->getPiste()->getPolices()[0]){
+        if ($this->getPiste()) {
+            if ($this->getPiste()->getPolices()[0]) {
                 $this->cotation = $this->getPiste()->getPolices()[0]->getCotation();
             }
         }
@@ -323,14 +335,75 @@ class ActionCRM
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
-        if($this->getClosed()){
+        if ($this->getClosed()) {
             $this->status = "Achevé.";
-        }else{
+        } else {
             $this->status = "Encours.";
         }
         return $this->status;
+    }
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
     }
 }

@@ -2,26 +2,27 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
 use Sabberworm\CSS\CSSList\Document;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Contracts\EventDispatcher\Event;
 use App\Controller\Admin\PisteCrudController;
 use App\Controller\Admin\MonnaieCrudController;
-use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
-use App\Service\RefactoringJS\Evenements\Evenement;
-use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
-use App\Service\RefactoringJS\Evenements\EvenementConcretChargement;
-use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
-use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
-use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Evenements\Sujet;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Contracts\EventDispatcher\Event;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
+use App\Service\RefactoringJS\Evenements\EvenementConcretChargement;
+use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 class Piste implements Sujet, CommandeExecuteur
@@ -147,7 +148,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getNom();
         $this->nom = $nom;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Nom", $oldValue, $nom, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $nom, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -161,7 +162,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getObjectif();
         $this->objectif = $objectif;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Objectif", $oldValue, $objectif, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Objectif", $oldValue, $objectif, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -175,7 +176,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getCreatedAt();
         $this->createdAt = $createdAt;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date de création", $oldValue, $createdAt, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date de création", $oldValue, $createdAt, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -190,7 +191,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getUpdatedAt();
         $this->updatedAt = $updatedAt;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date de modification", $oldValue, $updatedAt, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date de modification", $oldValue, $updatedAt, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -230,7 +231,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $montant;
         $this->montant = $montant;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Montant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -244,7 +245,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getExpiredAt();
         $this->expiredAt = $expiredAt;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $expiredAt, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $expiredAt, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -272,7 +273,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->cotations->add($cotation);
             $cotation->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des cotations", $oldValue, $cotation, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des cotations", $oldValue, $cotation, Evenement::FORMAT_VALUE_ENTITY));
         }
         return $this;
     }
@@ -285,7 +286,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $oldValue = $this->$cotation;
                 $cotation->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des cotations", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des cotations", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -302,7 +303,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getTypeavenant();
         $this->typeavenant = $typeavenant;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Type d'avenant", $oldValue, $typeavenant, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Type d'avenant", $oldValue, $typeavenant, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -317,7 +318,7 @@ class Piste implements Sujet, CommandeExecuteur
         $oldValue = $this->getPolice();
         $this->police = $police;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Police", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -337,7 +338,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->contacts->add($contact);
             $contact->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, $contact, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, $contact, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -351,7 +352,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $oldValue = $contact;
                 $contact->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Contacts", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -373,7 +374,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->actionsCRMs->add($actionsCRM);
             $actionsCRM->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste d'actions", $oldValue, $actionsCRM, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste d'actions", $oldValue, $actionsCRM, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -387,7 +388,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $oldValue = $actionsCRM;
                 $actionsCRM->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste d'actions", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste d'actions", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -406,7 +407,7 @@ class Piste implements Sujet, CommandeExecuteur
         $this->client = $client;
 
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -426,7 +427,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->prospect->add($prospect);
             $prospect->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des prospects", $oldValue, $prospect, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des prospects", $oldValue, $prospect, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -440,7 +441,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $oldValue = $prospect;
                 $prospect->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des prospects", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des prospects", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -458,7 +459,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $produit;
         $this->produit = $produit;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -474,7 +475,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $partenaire;
         $this->partenaire = $partenaire;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -495,7 +496,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->newpartenaire->add($newpartenaire);
             $newpartenaire->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -510,7 +511,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $newpartenaire->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -528,7 +529,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -544,7 +545,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $assistant;
         $this->assistant = $assistant;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -565,7 +566,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->polices->add($police);
             $police->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -580,7 +581,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $police->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Polices", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -603,7 +604,7 @@ class Piste implements Sujet, CommandeExecuteur
             $this->documents->add($document);
             $document->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -618,7 +619,7 @@ class Piste implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $document->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandePisteDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des Documents", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -636,7 +637,7 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $etape;
         $this->etape = $etape;
         //Ecouteur d'action
-        $this->executer(new CommandePisteDetecterChangementAttribut($this, "Etape", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Etape", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }

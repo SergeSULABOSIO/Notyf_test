@@ -14,6 +14,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
@@ -259,10 +260,14 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function addFeedback(FeedbackCRM $feedback): self
     {
-        dd("C'est ici qu'il faut pieger l'écouter d'actions.");
+        // dd("C'est ici qu'il faut pieger l'écouter d'actions.");
         if (!$this->feedbacks->contains($feedback)) {
+            $oldValue = null;
+            $newValue = $feedback;
             $this->feedbacks->add($feedback);
             $feedback->setActionCRM($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Nouveau Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;

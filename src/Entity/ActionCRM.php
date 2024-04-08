@@ -421,6 +421,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
         return $this->listeObservateurs;
     }
 
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
     public function notifierLesObservateurs(?Evenement $evenement)
     {
         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
@@ -438,10 +443,5 @@ class ActionCRM implements Sujet, CommandeExecuteur
         if ($commande != null) {
             $commande->executer();
         }
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
     }
 }

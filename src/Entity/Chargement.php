@@ -103,7 +103,11 @@ class Chargement implements Sujet, CommandeExecuteur
 
     public function setMontant(float $montant): self
     {
+        $oldValue = $this->getMontant();
+        $newValue = $montant;
         $this->montant = $montant;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -163,7 +167,11 @@ class Chargement implements Sujet, CommandeExecuteur
 
     public function setCotation(?Cotation $cotation): self
     {
+        $oldValue = $this->getCotation();
+        $newValue = $cotation;
         $this->cotation = $cotation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }

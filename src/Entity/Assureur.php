@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\AssureurRepository;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AssureurRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: AssureurRepository::class)]
 class Assureur implements Sujet, CommandeExecuteur
@@ -68,10 +72,15 @@ class Assureur implements Sujet, CommandeExecuteur
     #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Facture::class)]
     private Collection $factures;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
         $this->factures = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -299,4 +308,64 @@ class Assureur implements Sujet, CommandeExecuteur
 
         return $this;
     }
+
+
+        /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+     public function ajouterObservateur(?Observateur $observateur)
+     {
+         // Ajout observateur
+         $this->initListeObservateurs();
+         if (!$this->listeObservateurs->contains($observateur)) {
+             $this->listeObservateurs->add($observateur);
+         }
+     }
+ 
+     public function retirerObservateur(?Observateur $observateur)
+     {
+         $this->initListeObservateurs();
+         if ($this->listeObservateurs->contains($observateur)) {
+             $this->listeObservateurs->removeElement($observateur);
+         }
+     }
+ 
+     public function viderListeObservateurs()
+     {
+         $this->initListeObservateurs();
+         if (!$this->listeObservateurs->isEmpty()) {
+             $this->listeObservateurs = new ArrayCollection([]);
+         }
+     }
+ 
+     public function getListeObservateurs(): ?ArrayCollection
+     {
+         return $this->listeObservateurs;
+     }
+ 
+     public function setListeObservateurs(ArrayCollection $listeObservateurs)
+     {
+         $this->listeObservateurs = $listeObservateurs;
+     }
+ 
+     public function notifierLesObservateurs(?Evenement $evenement)
+     {
+         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+     }
+ 
+     public function initListeObservateurs()
+     {
+         if ($this->listeObservateurs == null) {
+             $this->listeObservateurs = new ArrayCollection();
+         }
+     }
+ 
+     public function executer(?Commande $commande)
+     {
+         if ($commande != null) {
+             $commande->executer();
+         }
+     }
 }

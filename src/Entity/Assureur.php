@@ -13,6 +13,7 @@ use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: AssureurRepository::class)]
@@ -95,8 +96,11 @@ class Assureur implements Sujet, CommandeExecuteur
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -107,8 +111,11 @@ class Assureur implements Sujet, CommandeExecuteur
 
     public function setAdresse(string $adresse): self
     {
+        $oldValue = $this->getAdresse();
+        $newValue = $adresse;
         $this->adresse = $adresse;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 

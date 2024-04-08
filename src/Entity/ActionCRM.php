@@ -249,8 +249,12 @@ class ActionCRM implements Sujet, CommandeExecuteur
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setActionCRM($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -261,7 +265,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getActionCRM() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setActionCRM(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -285,7 +293,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
             $this->feedbacks->add($feedback);
             $feedback->setActionCRM($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Nouveau Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -296,7 +304,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
         if ($this->feedbacks->removeElement($feedback)) {
             // set the owning side to null (unless already changed)
             if ($feedback->getActionCRM() === $this) {
+                $oldValue = $feedback;
+                $newValue = null;
                 $feedback->setActionCRM(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -325,8 +337,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
      */
     public function setClosed($closed)
     {
+        $oldValue = $this->getClosed();
+        $newValue = $closed;
         $this->closed = $closed;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "is Closed?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 

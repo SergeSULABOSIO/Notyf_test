@@ -101,7 +101,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setMission(string $mission): self
     {
-        $oldValue = null;
+        $oldValue = $this->getMission();
         $newValue = $mission;
         $this->mission = $mission;
         //Ecouteur d'action
@@ -116,8 +116,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setObjectif(string $objectif): self
     {
+        $oldValue = $this->getObjectif();
+        $newValue = $objectif;
         $this->objectif = $objectif;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Objectif", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -128,8 +131,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setStartedAt(\DateTimeImmutable $startedAt): self
     {
+        $oldValue = $this->getStartedAt();
+        $newValue = $startedAt;
         $this->startedAt = $startedAt;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -140,8 +146,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setEndedAt(\DateTimeImmutable $endedAt): self
     {
+        $oldValue = $this->getEndedAt();
+        $newValue = $endedAt;
         $this->endedAt = $endedAt;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -206,8 +215,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setAttributedTo(?Utilisateur $attributedTo): self
     {
+        $oldValue = $this->getAttributedTo();
+        $newValue = $attributedTo;
         $this->attributedTo = $attributedTo;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Attribué à", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         return $this;
     }
 
@@ -218,8 +230,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setPiste(?Piste $piste): self
     {
+        $oldValue = $this->getPiste();
+        $newValue = $piste;
         $this->piste = $piste;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         return $this;
     }
 

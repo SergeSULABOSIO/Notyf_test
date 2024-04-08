@@ -105,7 +105,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $mission;
         $this->mission = $mission;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Mission", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 

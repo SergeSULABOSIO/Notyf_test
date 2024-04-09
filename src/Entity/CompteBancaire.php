@@ -264,7 +264,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
     public function removePaiement(Paiement $paiement): self
     {
         if ($this->paiements->removeElement($paiement)) {
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless already changed).
             if ($paiement->getCompteBancaire() === $this) {
                 $oldValue = $paiement;
                 $newValue = null;

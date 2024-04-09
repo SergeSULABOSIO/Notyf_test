@@ -116,6 +116,8 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setObjectif(string $objectif): self
     {
+        $oldValue = $this->getObjectif();
+        $newValue = $objectif;
         $this->objectif = $objectif;
         //Ecouteur d'action
         $this->executer(new CommandeDetecterChangementAttribut($this, "Objectif", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
@@ -129,6 +131,8 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setStartedAt(\DateTimeImmutable $startedAt): self
     {
+        $oldValue = $this->getStartedAt();
+        $newValue = $startedAt;
         $this->startedAt = $startedAt;
         //Ecouteur d'action
         $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));

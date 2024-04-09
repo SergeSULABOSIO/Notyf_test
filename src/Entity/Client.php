@@ -392,7 +392,11 @@ class Client implements Sujet, CommandeExecuteur
 
     public function setExoneree(?bool $exoneree): self
     {
+        $oldValue = $this->isExoneree();
+        $newValue = $exoneree;
         $this->exoneree = $exoneree;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Exoneré des taxes?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -423,6 +427,8 @@ class Client implements Sujet, CommandeExecuteur
         return $this->cotations;
     }
 
+
+    
     /**
      * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
      */

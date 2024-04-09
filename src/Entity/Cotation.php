@@ -779,7 +779,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setProduit($produit)
     {
+        $oldValue = $this->getProduit();
+        $newValue = $produit;
         $this->produit = $produit;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -799,7 +803,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateEffet($dateEffet)
     {
+        $oldValue = $this->getDateEffet();
+        $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -819,7 +827,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateExpiration($dateExpiration)
     {
+        $oldValue = $this->getDateExpiration();
+        $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -839,7 +851,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateOperation($dateOperation)
     {
+        $oldValue = $this->getDateOperation();
+        $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -860,7 +876,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateEmition($dateEmition)
     {
+        $oldValue = $this->getDateEmition();
+        $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'édition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }

@@ -110,7 +110,7 @@ class Contact implements Sujet, CommandeExecuteur
         $oldValue = $this->getTelephone();
         $newValue = $telephone;
         $this->telephone = $telephone;
-        //Ecouteur d'action
+        //Ecouteur d'action.
         $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro de téléphone", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;

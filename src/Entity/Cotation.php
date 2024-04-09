@@ -311,8 +311,12 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addChargement(Chargement $chargement): self
     {
         if (!$this->chargements->contains($chargement)) {
+            $oldValue = null;
+            $newValue = $chargement;
             $this->chargements->add($chargement);
             $chargement->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -323,7 +327,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         if ($this->chargements->removeElement($chargement)) {
             // set the owning side to null (unless already changed)
             if ($chargement->getCotation() === $this) {
+                $oldValue = null;
+                $newValue = $chargement;
                 $chargement->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -335,6 +343,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function getPrimeTotale()
     {
+
         $this->primeTotale = 0;
         /** @var Tranche */
         foreach ($this->getTranches() as $tranche) {
@@ -351,7 +360,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setPrimeTotale($primeTotale)
     {
+        $oldValue = $this->getPrimeTotale();
+        $newValue = $primeTotale;
         $this->primeTotale = $primeTotale;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Prime", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -367,8 +380,12 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addTranch(Tranche $tranch): self
     {
         if (!$this->tranches->contains($tranch)) {
+            $oldValue = null;
+            $newValue = $tranch;
             $this->tranches->add($tranch);
             $tranch->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -379,7 +396,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         if ($this->tranches->removeElement($tranch)) {
             // set the owning side to null (unless already changed)
             if ($tranch->getCotation() === $this) {
+                $oldValue = $tranch;
+                $newValue = null;
                 $tranch->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -393,7 +414,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setDureeCouverture(int $dureeCouverture): self
     {
+        $oldValue = $this->getDureeCouverture();
+        $newValue = $dureeCouverture;
         $this->dureeCouverture = $dureeCouverture;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Duré de couverture", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -405,7 +430,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setValidated(bool $validated): self
     {
+        $oldValue = $this->isValidated();
+        $newValue = $validated;
         $this->validated = $validated;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Validé?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -428,7 +457,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setTaxes($taxes)
     {
+        $oldValue = null;
+        $newValue = $taxes;
         $this->taxes = $taxes;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -486,7 +519,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setTauxretrocompartenaire(?float $tauxretrocompartenaire): self
     {
+        $oldValue = $this->getTauxretrocompartenaire();
+        $newValue = $tauxretrocompartenaire;
         $this->tauxretrocompartenaire = $tauxretrocompartenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux retrocom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -564,8 +601,12 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addPolice(Police $police): self
     {
         if (!$this->polices->contains($police)) {
+            $oldValue = null;
+            $newValue = $police;
             $this->polices->add($police);
             $police->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -576,7 +617,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         if ($this->polices->removeElement($police)) {
             // set the owning side to null (unless already changed)
             if ($police->getCotation() === $this) {
+                $oldValue = $police;
+                $newValue = null;
                 $police->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -594,8 +639,12 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -606,7 +655,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getCotation() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
         return $this;

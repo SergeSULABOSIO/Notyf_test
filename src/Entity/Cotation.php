@@ -918,7 +918,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setGestionnaire($gestionnaire)
     {
+        $oldValue = $this->getGestionnaire();
+        $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -938,7 +942,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setAssistant($assistant)
     {
+        $oldValue = $this->getAssistant();
+        $newValue = $assistant;
         $this->assistant = $assistant;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }

@@ -704,7 +704,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setPolice($police)
     {
+        $oldValue = $this->getPolice();
+        $newValue = $police;
         $this->police = $police;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -727,7 +731,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setPartenaire($partenaire)
     {
+        $oldValue = $this->getPartenaire();
+        $newValue = $partenaire;
         $this->partenaire = $partenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -747,7 +755,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setClient($client)
     {
+        $oldValue = $this->getClient();
+        $newValue = $client;
         $this->client = $client;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }

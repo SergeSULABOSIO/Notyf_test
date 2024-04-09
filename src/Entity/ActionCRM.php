@@ -116,8 +116,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setObjectif(string $objectif): self
     {
+        $oldValue = null;
+        $newValue = $objectif;
         $this->objectif = $objectif;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Objectif", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -128,8 +131,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     public function setStartedAt(\DateTimeImmutable $startedAt): self
     {
+        $oldValue = null;
+        $newValue = $startedAt;
         $this->startedAt = $startedAt;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -391,6 +397,11 @@ class ActionCRM implements Sujet, CommandeExecuteur
         return $this->listeObservateurs;
     }
 
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
     public function notifierLesObservateurs(?Evenement $evenement)
     {
         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
@@ -408,10 +419,5 @@ class ActionCRM implements Sujet, CommandeExecuteur
         if ($commande != null) {
             $commande->executer();
         }
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
     }
 }

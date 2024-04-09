@@ -2,13 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\CompteBancaireRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\CompteBancaireRepository;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: CompteBancaireRepository::class)]
-class CompteBancaire
+class CompteBancaire implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -48,10 +55,15 @@ class CompteBancaire
     #[ORM\OneToMany(mappedBy: 'compteBancaire', targetEntity: Paiement::class)]
     private Collection $paiements;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
     public function __construct()
     {
         $this->factures = new ArrayCollection();
         $this->paiements = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,7 +78,11 @@ class CompteBancaire
 
     public function setIntitule(string $intitule): self
     {
+        $oldValue = $this->getIntitule();
+        $newValue = $intitule;
         $this->intitule = $intitule;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Intitulé du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -78,7 +94,11 @@ class CompteBancaire
 
     public function setNumero(string $numero): self
     {
+        $oldValue = $this->getNumero();
+        $newValue = $numero;
         $this->numero = $numero;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -90,7 +110,11 @@ class CompteBancaire
 
     public function setBanque(string $banque): self
     {
+        $oldValue = $this->getBanque();
+        $newValue = $banque;
         $this->banque = $banque;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -102,7 +126,11 @@ class CompteBancaire
 
     public function setCodeSwift(string $codeSwift): self
     {
+        $oldValue = $this->getCodeSwift();
+        $newValue = $codeSwift;
         $this->codeSwift = $codeSwift;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Code Swift de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -167,7 +195,11 @@ class CompteBancaire
 
     public function setCodeMonnaie(string $codeMonnaie): self
     {
+        $oldValue = $this->getCodeMonnaie();
+        $newValue = $codeMonnaie;
         $this->codeMonnaie = $codeMonnaie;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Code de la monnaie", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -183,8 +215,12 @@ class CompteBancaire
     public function addFacture(Facture $facture): self
     {
         if (!$this->factures->contains($facture)) {
+            $oldValue = null;
+            $newValue = $facture;
             $this->factures->add($facture);
             $facture->addCompteBancaire($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -193,7 +229,11 @@ class CompteBancaire
     public function removeFacture(Facture $facture): self
     {
         if ($this->factures->removeElement($facture)) {
+            $oldValue = $facture;
+            $newValue = null;
             $facture->removeCompteBancaire($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -210,8 +250,12 @@ class CompteBancaire
     public function addPaiement(Paiement $paiement): self
     {
         if (!$this->paiements->contains($paiement)) {
+            $oldValue = null;
+            $newValue = $paiement;
             $this->paiements->add($paiement);
             $paiement->setCompteBancaire($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -220,12 +264,76 @@ class CompteBancaire
     public function removePaiement(Paiement $paiement): self
     {
         if ($this->paiements->removeElement($paiement)) {
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless already changed).
             if ($paiement->getCompteBancaire() === $this) {
+                $oldValue = $paiement;
+                $newValue = null;
                 $paiement->setCompteBancaire(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
         return $this;
+    }
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

@@ -7,13 +7,20 @@ use App\Repository\TrancheRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
-class Tranche extends JSAbstractFinances implements IndicateursJS
+class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -133,10 +140,14 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
     private Collection $elementFactures;
 
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
 
     public function __construct()
     {
         $this->elementFactures = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getTotalInvoiced_destination(?int $destinationFacture): ?float
@@ -201,7 +212,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
 
     public function setTaux(float $taux): self
     {
+        $oldValue = $this->getTaux();
+        $newValue = $taux;
         $this->taux = $taux;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -1373,5 +1388,69 @@ class Tranche extends JSAbstractFinances implements IndicateursJS
             $this->getRetroCommissionTotale() - $this->getRetroCommissionTotalePayee()
         );
         return $this->retroCommissionTotaleSolde;
+    }
+
+
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

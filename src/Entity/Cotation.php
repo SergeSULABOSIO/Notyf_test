@@ -9,12 +9,19 @@ use App\Repository\ChargementRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
-class Cotation implements IndicateursJS
+class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -121,6 +128,9 @@ class Cotation implements IndicateursJS
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
 
     public function __construct()
     {
@@ -129,6 +139,7 @@ class Cotation implements IndicateursJS
         $this->tranches = new ArrayCollection();
         $this->polices = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,7 +154,11 @@ class Cotation implements IndicateursJS
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -210,7 +225,11 @@ class Cotation implements IndicateursJS
 
     public function setPiste(?Piste $piste): self
     {
+        $oldValue = $this->getPiste();
+        $newValue = $piste;
         $this->piste = $piste;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -222,7 +241,12 @@ class Cotation implements IndicateursJS
 
     public function setAssureur(?Assureur $assureur): self
     {
+        $oldValue = $this->getAssureur();
+        $newValue = $assureur;
         $this->assureur = $assureur;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+
         return $this;
     }
 
@@ -237,8 +261,12 @@ class Cotation implements IndicateursJS
     public function addRevenu(Revenu $revenu): self
     {
         if (!$this->revenus->contains($revenu)) {
+            $oldValue = null;
+            $newValue = $revenu;
             $this->revenus->add($revenu);
             $revenu->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -249,7 +277,11 @@ class Cotation implements IndicateursJS
         if ($this->revenus->removeElement($revenu)) {
             // set the owning side to null (unless already changed)
             if ($revenu->getCotation() === $this) {
+                $oldValue = $revenu;
+                $newValue = null;
                 $revenu->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -279,8 +311,12 @@ class Cotation implements IndicateursJS
     public function addChargement(Chargement $chargement): self
     {
         if (!$this->chargements->contains($chargement)) {
+            $oldValue = null;
+            $newValue = $chargement;
             $this->chargements->add($chargement);
             $chargement->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -291,7 +327,11 @@ class Cotation implements IndicateursJS
         if ($this->chargements->removeElement($chargement)) {
             // set the owning side to null (unless already changed)
             if ($chargement->getCotation() === $this) {
+                $oldValue = null;
+                $newValue = $chargement;
                 $chargement->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -303,6 +343,7 @@ class Cotation implements IndicateursJS
      */
     public function getPrimeTotale()
     {
+
         $this->primeTotale = 0;
         /** @var Tranche */
         foreach ($this->getTranches() as $tranche) {
@@ -319,7 +360,11 @@ class Cotation implements IndicateursJS
      */
     public function setPrimeTotale($primeTotale)
     {
+        $oldValue = $this->getPrimeTotale();
+        $newValue = $primeTotale;
         $this->primeTotale = $primeTotale;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Prime", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -335,8 +380,12 @@ class Cotation implements IndicateursJS
     public function addTranch(Tranche $tranch): self
     {
         if (!$this->tranches->contains($tranch)) {
+            $oldValue = null;
+            $newValue = $tranch;
             $this->tranches->add($tranch);
             $tranch->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -347,7 +396,11 @@ class Cotation implements IndicateursJS
         if ($this->tranches->removeElement($tranch)) {
             // set the owning side to null (unless already changed)
             if ($tranch->getCotation() === $this) {
+                $oldValue = $tranch;
+                $newValue = null;
                 $tranch->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -361,7 +414,11 @@ class Cotation implements IndicateursJS
 
     public function setDureeCouverture(int $dureeCouverture): self
     {
+        $oldValue = $this->getDureeCouverture();
+        $newValue = $dureeCouverture;
         $this->dureeCouverture = $dureeCouverture;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Duré de couverture", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -373,7 +430,11 @@ class Cotation implements IndicateursJS
 
     public function setValidated(bool $validated): self
     {
+        $oldValue = $this->isValidated();
+        $newValue = $validated;
         $this->validated = $validated;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Validé?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -396,7 +457,11 @@ class Cotation implements IndicateursJS
      */
     public function setTaxes($taxes)
     {
+        $oldValue = null;
+        $newValue = $taxes;
         $this->taxes = $taxes;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -454,7 +519,11 @@ class Cotation implements IndicateursJS
 
     public function setTauxretrocompartenaire(?float $tauxretrocompartenaire): self
     {
+        $oldValue = $this->getTauxretrocompartenaire();
+        $newValue = $tauxretrocompartenaire;
         $this->tauxretrocompartenaire = $tauxretrocompartenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux retrocom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -532,8 +601,12 @@ class Cotation implements IndicateursJS
     public function addPolice(Police $police): self
     {
         if (!$this->polices->contains($police)) {
+            $oldValue = null;
+            $newValue = $police;
             $this->polices->add($police);
             $police->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -544,7 +617,11 @@ class Cotation implements IndicateursJS
         if ($this->polices->removeElement($police)) {
             // set the owning side to null (unless already changed)
             if ($police->getCotation() === $this) {
+                $oldValue = $police;
+                $newValue = null;
                 $police->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -562,8 +639,12 @@ class Cotation implements IndicateursJS
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setCotation($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -574,7 +655,11 @@ class Cotation implements IndicateursJS
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getCotation() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setCotation(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
         return $this;
@@ -619,7 +704,11 @@ class Cotation implements IndicateursJS
      */
     public function setPolice($police)
     {
+        $oldValue = $this->getPolice();
+        $newValue = $police;
         $this->police = $police;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -642,7 +731,11 @@ class Cotation implements IndicateursJS
      */
     public function setPartenaire($partenaire)
     {
+        $oldValue = $this->getPartenaire();
+        $newValue = $partenaire;
         $this->partenaire = $partenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -662,7 +755,11 @@ class Cotation implements IndicateursJS
      */
     public function setClient($client)
     {
+        $oldValue = $this->getClient();
+        $newValue = $client;
         $this->client = $client;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -682,7 +779,11 @@ class Cotation implements IndicateursJS
      */
     public function setProduit($produit)
     {
+        $oldValue = $this->getProduit();
+        $newValue = $produit;
         $this->produit = $produit;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -702,7 +803,11 @@ class Cotation implements IndicateursJS
      */
     public function setDateEffet($dateEffet)
     {
+        $oldValue = $this->getDateEffet();
+        $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -722,7 +827,11 @@ class Cotation implements IndicateursJS
      */
     public function setDateExpiration($dateExpiration)
     {
+        $oldValue = $this->getDateExpiration();
+        $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -742,7 +851,11 @@ class Cotation implements IndicateursJS
      */
     public function setDateOperation($dateOperation)
     {
+        $oldValue = $this->getDateOperation();
+        $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -763,7 +876,11 @@ class Cotation implements IndicateursJS
      */
     public function setDateEmition($dateEmition)
     {
+        $oldValue = $this->getDateEmition();
+        $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'édition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -801,7 +918,11 @@ class Cotation implements IndicateursJS
      */
     public function setGestionnaire($gestionnaire)
     {
+        $oldValue = $this->getGestionnaire();
+        $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -821,7 +942,11 @@ class Cotation implements IndicateursJS
      */
     public function setAssistant($assistant)
     {
+        $oldValue = $this->getAssistant();
+        $newValue = $assistant;
         $this->assistant = $assistant;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -1090,5 +1215,67 @@ class Cotation implements IndicateursJS
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
     {
         return round($this->getIndicaRevenuPartageable($typeRevenu) - $this->getIndicaPartenaireRetrocom($typeRevenu));
+    }
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

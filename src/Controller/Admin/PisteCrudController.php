@@ -129,7 +129,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
     {
         // dd("On est ici!");
         $objet = new Piste();
-        $objet->setNom("Piste du " . (new DateTimeImmutable())->getTimestamp());
+        $objet->setNom("PISTE N" . (new DateTimeImmutable())->getTimestamp());
         $objet->setEtape(PisteCrudController::TAB_ETAPES[PisteCrudController::ETAPE_CREATION]);
         $objet->setTypeavenant(PoliceCrudController::TAB_POLICE_TYPE_AVENANT[PoliceCrudController::AVENANT_TYPE_SOUSCRIPTION]);
         $objet->setExpiredAt(new DateTimeImmutable("+30 day"));

@@ -3,14 +3,21 @@
 namespace App\Entity;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-class Client
+class Client implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -57,7 +64,7 @@ class Client
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
-    
+
     #[ORM\ManyToOne]
     private ?Utilisateur $utilisateur = null;
 
@@ -78,13 +85,17 @@ class Client
     #[ORM\Column(nullable: true)]
     private ?bool $exoneree = null;
 
-    
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
 
     public function __construct()
     {
         //$this->police = new ArrayCollection();
         $this->cotations = new ArrayCollection();
         $this->pistes = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,7 +110,11 @@ class Client
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -111,7 +126,11 @@ class Client
 
     public function setAdresse(?string $adresse): self
     {
+        $oldValue = $this->getAdresse();
+        $newValue = $adresse;
         $this->adresse = $adresse;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -123,7 +142,11 @@ class Client
 
     public function setTelephone(?string $telephone): self
     {
+        $oldValue = $this->getTelephone();
+        $newValue = $telephone;
         $this->telephone = $telephone;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro de téléphone", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -135,7 +158,11 @@ class Client
 
     public function setEmail(?string $email): self
     {
+        $oldValue = $this->getEmail();
+        $newValue = $email;
         $this->email = $email;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse mail", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -147,7 +174,11 @@ class Client
 
     public function setSiteweb(?string $siteweb): self
     {
+        $oldValue = $this->getSiteweb();
+        $newValue = $siteweb;
         $this->siteweb = $siteweb;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Site Internet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -159,7 +190,11 @@ class Client
 
     public function setIspersonnemorale(bool $ispersonnemorale): self
     {
+        $oldValue = $this->isIspersonnemorale();
+        $newValue = $ispersonnemorale;
         $this->ispersonnemorale = $ispersonnemorale;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Si Personne morale", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -171,7 +206,11 @@ class Client
 
     public function setRccm(?string $rccm): self
     {
+        $oldValue = $this->getRccm();
+        $newValue = $rccm;
         $this->rccm = $rccm;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Registre de commercer (RCCM)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -183,7 +222,11 @@ class Client
 
     public function setIdnat(?string $idnat): self
     {
+        $oldValue = $this->getIdnat();
+        $newValue = $idnat;
         $this->idnat = $idnat;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro d'Identification Nationale (idNat)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -195,7 +238,11 @@ class Client
 
     public function setNumipot(?string $numipot): self
     {
+        $oldValue = $this->getNumipot();
+        $newValue = $numipot;
         $this->numipot = $numipot;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro d'Identification Fiscale (NumImpôt)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -219,7 +266,11 @@ class Client
 
     public function setSecteur(int $secteur): self
     {
+        $oldValue = $this->getSecteur();
+        $newValue = $secteur;
         $this->secteur = $secteur;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Code - Secteur d'activité", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -228,18 +279,18 @@ class Client
     {
         $txtExoneree = "";
         $tx = "taxe";
-        if($this->isExoneree()){
-            if($this->getEntreprise()){
-                if($this->getEntreprise()->getTaxes()){
+        if ($this->isExoneree()) {
+            if ($this->getEntreprise()) {
+                if ($this->getEntreprise()->getTaxes()) {
                     foreach ($this->getEntreprise()->getTaxes() as $taxe) {
-                        if($taxe->isPayableparcourtier() == false){
+                        if ($taxe->isPayableparcourtier() == false) {
                             $tx = "" . $taxe->getNom();
                             break;
                         }
                     }
                 }
             }
-            $txtExoneree = " (exoneré de la ". $tx .")";
+            $txtExoneree = " (exoneré de la " . $tx . ")";
         }
         return "" . $this->nom . "" . $txtExoneree;
     }
@@ -291,8 +342,12 @@ class Client
     public function addPiste(Piste $piste): self
     {
         if (!$this->pistes->contains($piste)) {
+            $oldValue = null;
+            $newValue = $piste;
             $this->pistes->add($piste);
             $piste->setClient($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -303,7 +358,11 @@ class Client
         if ($this->pistes->removeElement($piste)) {
             // set the owning side to null (unless already changed)
             if ($piste->getClient() === $this) {
+                $oldValue = $piste;
+                $newValue = null;
                 $piste->setClient(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -317,7 +376,11 @@ class Client
 
     public function setPiste(?Piste $piste): self
     {
+        $oldValue = $this->getPiste();
+        $newValue = $piste;
         $this->piste = $piste;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -329,14 +392,18 @@ class Client
 
     public function setExoneree(?bool $exoneree): self
     {
+        $oldValue = $this->isExoneree();
+        $newValue = $exoneree;
         $this->exoneree = $exoneree;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Exoneré des taxes?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
     /**
      * Get the value of cotations
-     */ 
+     */
     public function getCotations()
     {
         /**
@@ -345,7 +412,7 @@ class Client
          */
         //dd(count($this->getPistes()[0]->getCotations()));
         $tab = new ArrayCollection();
-        if($this->getPistes()){
+        if ($this->getPistes()) {
             foreach ($this->getPistes() as $piste) {
                 foreach ($piste->getCotations() as $cotation) {
                     $tab->add($cotation);
@@ -358,5 +425,66 @@ class Client
         //dd($tab);
         $this->cotations = $tab;
         return $this->cotations;
+    }
+
+
+    
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

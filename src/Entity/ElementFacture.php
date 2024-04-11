@@ -482,7 +482,7 @@ class ElementFacture extends JSAbstractFinances implements Sujet, CommandeExecut
     public function setIncludePrime($includePrime)
     {
         $this->includePrime = $includePrime;
-    
+
         return $this;
     }
 
@@ -733,6 +733,9 @@ class ElementFacture extends JSAbstractFinances implements Sujet, CommandeExecut
 
         return $this;
     }
+
+
+
 
     /**
      * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS

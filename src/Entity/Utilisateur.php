@@ -6,14 +6,21 @@ use App\Entity\ActionCRM;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -64,17 +71,20 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Piste::class)]
     private Collection $pistes;
 
-/* 
-    #[ORM\OneToMany(mappedBy: 'attributedTo', targetEntity: ActionCRM::class)]
-    private Collection $actionCRMs;
 
- */
+
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
+
     public function __construct()
     {
         //$this->actionCRMs = new ArrayCollection();
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
         $this->pistes = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -89,7 +99,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmail(string $email): self
     {
+        $oldValue = $this->getEmail();
+        $newValue = $email;
         $this->email = $email;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse mail", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -118,7 +132,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setRoles(array $roles): self
     {
+        $oldValue = $this->getRoles();
+        $newValue = $roles;
         $this->roles = $roles;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Rôle", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -138,14 +156,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPlainPassword(string $password): self
     {
+        $oldValue = $this->getPassword();
+        $newValue = $password;
         $this->plainPassword = $password;
-        
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Mot de passe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+
         return $this;
     }
 
     public function setPassword(string $password): self
     {
+        $oldValue = $this->getPassword();
+        $newValue = $password;
         $this->password = $password;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Mot de passe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -166,7 +192,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -354,5 +384,67 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

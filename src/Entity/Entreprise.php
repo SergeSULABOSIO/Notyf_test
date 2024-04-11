@@ -3,29 +3,37 @@
 namespace App\Entity;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EntrepriseRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use Doctrine\ORM\Query\Expr\Func;
 
 #[ORM\Entity(repositoryClass: EntrepriseRepository::class)]
-class Entreprise
+class Entreprise implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"Veuillez fournir le nom de l'entreprise.")]
+    #[Assert\NotBlank(message: "Veuillez fournir le nom de l'entreprise.")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Assert\NotBlank(message:"Veuillez fournir l'adresse'.")]
+    #[Assert\NotBlank(message: "Veuillez fournir l'adresse'.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
 
-    #[Assert\NotBlank(message:"Veuillez fournir le numéro de téléphone.")]
+    #[Assert\NotBlank(message: "Veuillez fournir le numéro de téléphone.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
@@ -34,11 +42,11 @@ class Entreprise
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $idnat = null;
-    
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $numimpot = null;
 
-    #[Assert\NotBlank(message:"Veuillez préciser le domaine d'activité.")]
+    #[Assert\NotBlank(message: "Veuillez préciser le domaine d'activité.")]
     #[ORM\Column(nullable: true)]
     private ?int $secteur = null;
 
@@ -66,6 +74,10 @@ class Entreprise
     #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Monnaie::class)]
     private Collection $monnaies;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
@@ -73,9 +85,10 @@ class Entreprise
         $this->compteBancaires = new ArrayCollection();
         $this->taxes = new ArrayCollection();
         $this->monnaies = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,7 +101,11 @@ class Entreprise
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -100,7 +117,11 @@ class Entreprise
 
     public function setAdresse(?string $adresse): self
     {
+        $oldValue = $this->getAdresse();
+        $newValue = $adresse;
         $this->adresse = $adresse;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -112,7 +133,11 @@ class Entreprise
 
     public function setTelephone(?string $telephone): self
     {
+        $oldValue = $this->getTelephone();
+        $newValue = $telephone;
         $this->telephone = $telephone;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro de téléphone", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -124,7 +149,11 @@ class Entreprise
 
     public function setRccm(?string $rccm): self
     {
+        $oldValue = $this->getRccm();
+        $newValue = $rccm;
         $this->rccm = $rccm;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro du registre de commerce (RCCM)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -136,7 +165,11 @@ class Entreprise
 
     public function setIdnat(?string $idnat): self
     {
+        $oldValue = $this->getIdnat();
+        $newValue = $idnat;
         $this->idnat = $idnat;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro d'identification nationale (IDNAT)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -148,12 +181,16 @@ class Entreprise
 
     public function setNumimpot(?string $numimpot): self
     {
+        $oldValue = $this->getNumimpot();
+        $newValue = $numimpot;
         $this->numimpot = $numimpot;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro Impôt", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
-    public function __toString() :string
+    public function __toString(): string
     {
         return $this->nom;
     }
@@ -165,7 +202,11 @@ class Entreprise
 
     public function setSecteur(?int $secteur): self
     {
+        $oldValue = $this->getSecteur();
+        $newValue = $secteur;
         $this->secteur = $secteur;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Code du secteur", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -217,8 +258,12 @@ class Entreprise
     public function addUtilisateur(Utilisateur $utilisateur): self
     {
         if (!$this->utilisateurs->contains($utilisateur)) {
+            $oldValue = null;
+            $newValue = $utilisateur;
             $this->utilisateurs->add($utilisateur);
             $utilisateur->setEntreprise($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Utilisateur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -229,7 +274,11 @@ class Entreprise
         if ($this->utilisateurs->removeElement($utilisateur)) {
             // set the owning side to null (unless already changed)
             if ($utilisateur->getEntreprise() === $this) {
+                $oldValue = $utilisateur;
+                $newValue = null;
                 $utilisateur->setEntreprise(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Utilisateur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -247,8 +296,12 @@ class Entreprise
     public function addPaiement(Paiement $paiement): self
     {
         if (!$this->paiements->contains($paiement)) {
+            $oldValue = null;
+            $newValue = $paiement;
             $this->paiements->add($paiement);
             $paiement->setEntreprise($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -259,7 +312,11 @@ class Entreprise
         if ($this->paiements->removeElement($paiement)) {
             // set the owning side to null (unless already changed)
             if ($paiement->getEntreprise() === $this) {
+                $oldValue = $paiement;
+                $newValue = null;
                 $paiement->setEntreprise(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -277,8 +334,12 @@ class Entreprise
     public function addCompteBancaire(CompteBancaire $compteBancaire): self
     {
         if (!$this->compteBancaires->contains($compteBancaire)) {
+            $oldValue = null;
+            $newValue = $compteBancaire;
             $this->compteBancaires->add($compteBancaire);
             $compteBancaire->setEntreprise($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -289,7 +350,11 @@ class Entreprise
         if ($this->compteBancaires->removeElement($compteBancaire)) {
             // set the owning side to null (unless already changed)
             if ($compteBancaire->getEntreprise() === $this) {
+                $oldValue = $compteBancaire;
+                $newValue = null;
                 $compteBancaire->setEntreprise(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -307,8 +372,12 @@ class Entreprise
     public function addTax(Taxe $tax): self
     {
         if (!$this->taxes->contains($tax)) {
+            $oldValue = null;
+            $newValue = $tax;
             $this->taxes->add($tax);
             $tax->setEntreprise($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -319,7 +388,11 @@ class Entreprise
         if ($this->taxes->removeElement($tax)) {
             // set the owning side to null (unless already changed)
             if ($tax->getEntreprise() === $this) {
+                $oldValue = $tax;
+                $newValue = null;
                 $tax->setEntreprise(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -337,8 +410,12 @@ class Entreprise
     public function addMonnaie(Monnaie $monnaie): self
     {
         if (!$this->monnaies->contains($monnaie)) {
+            $oldValue = null;
+            $newValue = $monnaie;
             $this->monnaies->add($monnaie);
             $monnaie->setEntreprise($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Monnaie", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -349,10 +426,86 @@ class Entreprise
         if ($this->monnaies->removeElement($monnaie)) {
             // set the owning side to null (unless already changed)
             if ($monnaie->getEntreprise() === $this) {
+                $oldValue = $monnaie;
+                $newValue = null;
                 $monnaie->setEntreprise(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Monnaie", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
         return $this;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise)
+    {
+        //Rien à signaler car on n'utilisera jamais cette fonction.
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this;
+    }
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

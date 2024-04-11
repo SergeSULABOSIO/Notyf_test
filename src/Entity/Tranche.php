@@ -19,6 +19,8 @@ use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
+use function PHPSTORM_META\override;
+
 #[ORM\Entity(repositoryClass: TrancheRepository::class)]
 class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, CommandeExecuteur
 {
@@ -300,7 +302,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -313,7 +319,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
 
     public function setCotation(?Cotation $cotation): self
     {
+        $oldValue = $this->getCotation();
+        $newValue = $cotation;
         $this->cotation = $cotation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -336,7 +346,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
 
     public function setDuree(int $duree): self
     {
+        $oldValue = $this->getDuree();
+        $newValue = $duree;
         $this->duree = $duree;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Durée de la couverture", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -519,7 +533,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setStartedAt($startedAt)
     {
+        $oldValue = $this->getStartedAt();
+        $newValue = $startedAt;
         $this->startedAt = $startedAt;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet de la tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -539,7 +557,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setEndedAt($endedAt)
     {
+        $oldValue = $this->getEndedAt();
+        $newValue = $endedAt;
         $this->endedAt = $endedAt;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'échéance de la tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -559,7 +581,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setDateEffet($dateEffet)
     {
+        $oldValue = $this->getDateEffet();
+        $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -579,7 +605,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setDateExpiration($dateExpiration)
     {
+        $oldValue = $this->getDateExpiration();
+        $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -599,7 +629,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setDateOperation($dateOperation)
     {
+        $oldValue = $this->getDateOperation();
+        $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date de l'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -619,7 +653,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
      */
     public function setDateEmition($dateEmition)
     {
+        $oldValue = $this->getDateEmition();
+        $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'émition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -646,8 +684,12 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
     public function addElementFacture(ElementFacture $elementFacture): self
     {
         if (!$this->elementFactures->contains($elementFacture)) {
+            $oldValue = null;
+            $newValue = $elementFacture;
             $this->elementFactures->add($elementFacture);
             $elementFacture->setTranche($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -658,7 +700,11 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
         if ($this->elementFactures->removeElement($elementFacture)) {
             // set the owning side to null (unless already changed)
             if ($elementFacture->getTranche() === $this) {
+                $oldValue = $elementFacture;
+                $newValue = null;
                 $elementFacture->setTranche(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
         return $this;

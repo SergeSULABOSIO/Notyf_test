@@ -208,7 +208,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
 
     public function setPseudo(string $pseudo): self
     {
+        $oldValue = $this->getPseudo();
+        $newValue = $pseudo;
         $this->pseudo = $pseudo;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Pseudo code", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -277,8 +281,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function addActionCRM(ActionCRM $actionCRM): self
     {
         if (!$this->actionCRMs->contains($actionCRM)) {
+            $oldValue = null;
+            $newValue = $actionCRM;
             $this->actionCRMs->add($actionCRM);
             $actionCRM->setAttributedTo($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -289,7 +297,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         if ($this->actionCRMs->removeElement($actionCRM)) {
             // set the owning side to null (unless already changed)
             if ($actionCRM->getAttributedTo() === $this) {
+                $oldValue = $actionCRM;
+                $newValue = null;
                 $actionCRM->setAttributedTo(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -307,8 +319,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function addPaiement(Paiement $paiement): self
     {
         if (!$this->paiements->contains($paiement)) {
+            $oldValue = null;
+            $newValue = $paiement;
             $this->paiements->add($paiement);
             $paiement->setUtilisateur($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -319,7 +335,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         if ($this->paiements->removeElement($paiement)) {
             // set the owning side to null (unless already changed)
             if ($paiement->getUtilisateur() === $this) {
+                $oldValue = $paiement;
+                $newValue = null;
                 $paiement->setUtilisateur(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -337,8 +357,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function addCompteBancaire(CompteBancaire $compteBancaire): self
     {
         if (!$this->compteBancaires->contains($compteBancaire)) {
+            $oldValue = null;
+            $newValue = $compteBancaire;
             $this->compteBancaires->add($compteBancaire);
             $compteBancaire->setUtilisateur($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Compte bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -349,7 +373,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         if ($this->compteBancaires->removeElement($compteBancaire)) {
             // set the owning side to null (unless already changed)
             if ($compteBancaire->getUtilisateur() === $this) {
+                $oldValue = $compteBancaire;
+                $newValue = null;
                 $compteBancaire->setUtilisateur(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Compte bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -367,8 +395,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function addPiste(Piste $piste): self
     {
         if (!$this->pistes->contains($piste)) {
+            $oldValue = null;
+            $newValue = $piste;
             $this->pistes->add($piste);
             $piste->setGestionnaire($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -379,7 +411,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface, 
         if ($this->pistes->removeElement($piste)) {
             // set the owning side to null (unless already changed)
             if ($piste->getGestionnaire() === $this) {
+                $oldValue = $piste;
+                $newValue = null;
                 $piste->setGestionnaire(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 

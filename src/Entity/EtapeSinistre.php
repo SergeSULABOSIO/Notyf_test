@@ -2,14 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\EtapeSinistreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EtapeSinistreRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: EtapeSinistreRepository::class)]
-class EtapeSinistre
+class EtapeSinistre implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,9 +48,14 @@ class EtapeSinistre
     #[ORM\OneToMany(mappedBy: 'etape', targetEntity: Sinistre::class)]
     private Collection $sinistres;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
     public function __construct()
     {
         $this->sinistres = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,7 +70,11 @@ class EtapeSinistre
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -70,7 +86,11 @@ class EtapeSinistre
 
     public function setDescription(string $description): self
     {
+        $oldValue = $this->getDescription();
+        $newValue = $description;
         $this->description = $description;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -123,7 +143,11 @@ class EtapeSinistre
 
     public function setIndice(?int $indice): self
     {
+        $oldValue = $this->getIndice();
+        $newValue = $indice;
         $this->indice = $indice;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Indice", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -151,8 +175,12 @@ class EtapeSinistre
     public function addSinistre(Sinistre $sinistre): self
     {
         if (!$this->sinistres->contains($sinistre)) {
+            $oldValue = null;
+            $newValue = $sinistre;
             $this->sinistres->add($sinistre);
             $sinistre->setEtape($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Sinistre", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -163,10 +191,76 @@ class EtapeSinistre
         if ($this->sinistres->removeElement($sinistre)) {
             // set the owning side to null (unless already changed)
             if ($sinistre->getEtape() === $this) {
+                $oldValue = $sinistre;
+                $newValue = null;
                 $sinistre->setEtape(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Sinistre", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
         return $this;
+    }
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

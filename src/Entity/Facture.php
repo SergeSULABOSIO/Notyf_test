@@ -343,8 +343,14 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
     public function addElementFacture(ElementFacture $elementFacture): self
     {
         if (!$this->elementFactures->contains($elementFacture)) {
+            $oldValue = null;
+            $newValue = $elementFacture;
+
             $this->elementFactures->add($elementFacture);
             $elementFacture->setFacture($this);
+
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -355,7 +361,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         if ($this->elementFactures->removeElement($elementFacture)) {
             // set the owning side to null (unless already changed)
             if ($elementFacture->getFacture() === $this) {
+                $oldValue = $elementFacture;
+                $newValue = null;
                 $elementFacture->setFacture(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -369,7 +379,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function setAutreTiers(?string $autreTiers): self
     {
+        $oldValue = $this->getAutreTiers();
+        $newValue = $autreTiers;
         $this->autreTiers = $autreTiers;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Autre tiers", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -386,8 +400,12 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
     public function addPaiement(Paiement $paiement): self
     {
         if (!$this->paiements->contains($paiement)) {
+            $oldValue = null;
+            $newValue = $paiement;
             $this->paiements->add($paiement);
             $paiement->setFacture($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -398,7 +416,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         if ($this->paiements->removeElement($paiement)) {
             // set the owning side to null (unless already changed)
             if ($paiement->getFacture() === $this) {
+                $oldValue = $paiement;
+                $newValue = null;
                 $paiement->setFacture(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -416,7 +438,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
     public function addCompteBancaire(CompteBancaire $compteBancaire): self
     {
         if (!$this->compteBancaires->contains($compteBancaire)) {
+            $oldValue = null;
+            $newValue = $compteBancaire;
             $this->compteBancaires->add($compteBancaire);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -424,7 +450,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function removeCompteBancaire(CompteBancaire $compteBancaire): self
     {
+        $oldValue = $compteBancaire;
+        $newValue = null;
         $this->compteBancaires->removeElement($compteBancaire);
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -436,7 +466,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function setSignedBy(?string $signedBy): self
     {
+        $oldValue = $this->getSignedBy();
+        $newValue = $signedBy;
         $this->signedBy = $signedBy;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -448,7 +482,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function setPosteSignedBy(?string $posteSignedBy): self
     {
+        $oldValue = $this->getPosteSignedBy();
+        $newValue = $posteSignedBy;
         $this->posteSignedBy = $posteSignedBy;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Poste du signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -461,7 +499,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function setTotalSolde(?float $totalSolde): self
     {
+        $oldValue = $this->getTotalSolde();
+        $newValue = $totalSolde;
         $this->totalSolde = $totalSolde;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Solde total", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -481,7 +523,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 
     public function setStatus(?int $status): self
     {
+        $oldValue = $this->getStatus();
+        $newValue = $status;
         $this->status = $status;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Status", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }

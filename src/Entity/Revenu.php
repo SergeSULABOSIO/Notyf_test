@@ -2,16 +2,23 @@
 
 namespace App\Entity;
 
+use App\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RevenuRepository;
-use App\Entity\Client;
 use App\Controller\Admin\RevenuCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
-class Revenu implements IndicateursJS
+class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -86,7 +93,14 @@ class Revenu implements IndicateursJS
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
 
+
+    public function __construct()
+    {
+        $this->listeObservateurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -100,8 +114,12 @@ class Revenu implements IndicateursJS
 
     public function setType(int $type): self
     {
+        $oldValue = $this->getType();
+        $newValue = $type;
         $this->type = $type;
-
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        
         return $this;
     }
 
@@ -748,7 +766,7 @@ class Revenu implements IndicateursJS
 
         if ($client->isExoneree() === false) {
             if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
-                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeAssureur()->getTauxIARD() : $this->getCotation()->getTaxeAssureur()->getTauxVIE() ;
+                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeAssureur()->getTauxIARD() : $this->getCotation()->getTaxeAssureur()->getTauxVIE();
                 $tot = $tauxTaxe * $this->getIndicaRevenuNet();
             }
         }
@@ -765,7 +783,7 @@ class Revenu implements IndicateursJS
 
         if ($client->isExoneree() === false) {
             if ($this->getTaxable() === RevenuCrudController::TAB_TAXABLE[RevenuCrudController::TAXABLE_OUI]) {
-                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeCourtier()->getTauxIARD() : $this->getCotation()->getTaxeCourtier()->getTauxVIE() ;
+                $tauxTaxe = ($produit->isIard() === true) ? $this->getCotation()->getTaxeCourtier()->getTauxIARD() : $this->getCotation()->getTaxeCourtier()->getTauxVIE();
                 $tot = $tauxTaxe * $this->getIndicaRevenuNet();
             }
         }
@@ -790,17 +808,77 @@ class Revenu implements IndicateursJS
     public function getIndicaPartenaireRetrocom(?int $typeRevenu = null): ?float
     {
         $tauxPartenaire = 0;
-        if($this->getCotation()->getTauxretrocompartenaire() != 0){
+        if ($this->getCotation()->getTauxretrocompartenaire() != 0) {
             $tauxPartenaire = $this->getCotation()->getTauxretrocompartenaire();
-        }else{
+        } else {
             $tauxPartenaire = $this->getCotation()->getPiste()->getPartenaire()->getPart();
         }
         return round($tauxPartenaire * $this->getIndicaRevenuPartageable());
-        
     }
 
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
     {
         return round($this->getIndicaRevenuPartageable() - $this->getIndicaPartenaireRetrocom());
+    }
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

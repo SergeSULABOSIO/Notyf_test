@@ -300,7 +300,7 @@ class Paiement extends JSAbstractFinances implements Sujet, CommandeExecuteur
     }
 
     /**
-     * Get the value of type
+     * Get the value of type.
      */
     public function getType()
     {

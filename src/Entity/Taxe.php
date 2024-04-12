@@ -2,12 +2,18 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\TaxeRepository;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TaxeRepository;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: TaxeRepository::class)]
 class Taxe implements Sujet, CommandeExecuteur
@@ -17,23 +23,23 @@ class Taxe implements Sujet, CommandeExecuteur
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $tauxIARD = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $tauxVIE = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $organisation = null;
 
@@ -52,9 +58,14 @@ class Taxe implements Sujet, CommandeExecuteur
     #[ORM\ManyToOne(inversedBy: 'taxes')]
     private ?Entreprise $entreprise = null;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
 
     public function __construct()
     {
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,7 +80,11 @@ class Taxe implements Sujet, CommandeExecuteur
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -81,7 +96,11 @@ class Taxe implements Sujet, CommandeExecuteur
 
     public function setDescription(string $description): self
     {
+        $oldValue = $this->getDescription();
+        $newValue = $description;
         $this->description = $description;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -93,27 +112,19 @@ class Taxe implements Sujet, CommandeExecuteur
 
     public function setOrganisation(string $organisation): self
     {
+        $oldValue = $this->getOrganisation();
+        $newValue = $organisation;
         $this->organisation = $organisation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Organisation", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
-    // public function getEntreprise(): ?Entreprise
-    // {
-    //     return $this->entreprise;
-    // }
-
-    // public function setEntreprise(?Entreprise $entreprise): self
-    // {
-    //     $this->entreprise = $entreprise;
-
-    //     return $this;
-    // }
-
     public function __toString()
     {
         $txt = " (" . $this->tauxIARD * 100 . "%@IARD & " . $this->tauxVIE * 100 . "%@VIE)";
-        if($this->tauxIARD == $this->tauxVIE){
+        if ($this->tauxIARD == $this->tauxVIE) {
             $txt = " (" . $this->tauxIARD * 100 . "%)";
         }
         return $this->nom . $txt;
@@ -181,7 +192,7 @@ class Taxe implements Sujet, CommandeExecuteur
 
     /**
      * Get the value of tauxIARD
-     */ 
+     */
     public function getTauxIARD()
     {
         return $this->tauxIARD;
@@ -191,7 +202,7 @@ class Taxe implements Sujet, CommandeExecuteur
      * Set the value of tauxIARD
      *
      * @return  self
-     */ 
+     */
     public function setTauxIARD($tauxIARD)
     {
         $this->tauxIARD = $tauxIARD;
@@ -201,7 +212,7 @@ class Taxe implements Sujet, CommandeExecuteur
 
     /**
      * Get the value of tauxVIE
-     */ 
+     */
     public function getTauxVIE()
     {
         return $this->tauxVIE;
@@ -211,7 +222,7 @@ class Taxe implements Sujet, CommandeExecuteur
      * Set the value of tauxVIE
      *
      * @return  self
-     */ 
+     */
     public function setTauxVIE($tauxVIE)
     {
         $this->tauxVIE = $tauxVIE;
@@ -221,63 +232,63 @@ class Taxe implements Sujet, CommandeExecuteur
 
 
 
-    
+
     /**
      * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
      */
 
 
-     public function ajouterObservateur(?Observateur $observateur)
-     {
-         // Ajout observateur
-         $this->initListeObservateurs();
-         if (!$this->listeObservateurs->contains($observateur)) {
-             $this->listeObservateurs->add($observateur);
-         }
-     }
- 
-     public function retirerObservateur(?Observateur $observateur)
-     {
-         $this->initListeObservateurs();
-         if ($this->listeObservateurs->contains($observateur)) {
-             $this->listeObservateurs->removeElement($observateur);
-         }
-     }
- 
-     public function viderListeObservateurs()
-     {
-         $this->initListeObservateurs();
-         if (!$this->listeObservateurs->isEmpty()) {
-             $this->listeObservateurs = new ArrayCollection([]);
-         }
-     }
- 
-     public function getListeObservateurs(): ?ArrayCollection
-     {
-         return $this->listeObservateurs;
-     }
- 
-     public function setListeObservateurs(ArrayCollection $listeObservateurs)
-     {
-         $this->listeObservateurs = $listeObservateurs;
-     }
- 
-     public function notifierLesObservateurs(?Evenement $evenement)
-     {
-         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-     }
- 
-     public function initListeObservateurs()
-     {
-         if ($this->listeObservateurs == null) {
-             $this->listeObservateurs = new ArrayCollection();
-         }
-     }
- 
-     public function executer(?Commande $commande)
-     {
-         if ($commande != null) {
-             $commande->executer();
-         }
-     }
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
+    }
 }

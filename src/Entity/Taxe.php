@@ -137,7 +137,11 @@ class Taxe implements Sujet, CommandeExecuteur
 
     public function setPayableparcourtier(bool $payableparcourtier): self
     {
+        $oldValue = $this->isPayableparcourtier();
+        $newValue = $payableparcourtier;
         $this->payableparcourtier = $payableparcourtier;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Payable par le courtier? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -205,7 +209,11 @@ class Taxe implements Sujet, CommandeExecuteur
      */
     public function setTauxIARD($tauxIARD)
     {
+        $oldValue = $this->getTauxIARD();
+        $newValue = $tauxIARD;
         $this->tauxIARD = $tauxIARD;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux IARD", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -225,7 +233,11 @@ class Taxe implements Sujet, CommandeExecuteur
      */
     public function setTauxVIE($tauxVIE)
     {
+        $oldValue = $this->getTauxVIE();
+        $newValue = $tauxVIE;
         $this->tauxVIE = $tauxVIE;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux VIE", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }

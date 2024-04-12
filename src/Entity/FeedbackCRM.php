@@ -2,11 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\FeedbackCRMRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FeedbackCRMRepository;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: FeedbackCRMRepository::class)]
-class FeedbackCRM
+class FeedbackCRM implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,11 +46,16 @@ class FeedbackCRM
 
     private ?string $status = null;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
+
     public function __construct()
     {
-        
+        $this->listeObservateurs = new ArrayCollection();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,7 +68,11 @@ class FeedbackCRM
 
     public function setMessage(string $message): self
     {
+        $oldValue = $this->getMessage();
+        $newValue = $message;
         $this->message = $message;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Message", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -84,11 +101,11 @@ class FeedbackCRM
         return $this;
     }
 
-    public function __toString():string
+    public function __toString(): string
     {
         $user = $this->utilisateur != null ? $this->utilisateur->getNom() : " Utilisateur Inconnu";
-        $createAt = $this->getCreatedAt() != null ? " le ".(($this->getCreatedAt())->format('d/m/Y à H:m:s')) : " Date de création inconnue";
-        return "[" . $this->getMessage() . "], ". $user . $createAt;
+        $createAt = $this->getCreatedAt() != null ? " le " . (($this->getCreatedAt())->format('d/m/Y à H:m:s')) : " Date de création inconnue";
+        return "[" . $this->getMessage() . "], " . $user . $createAt;
     }
 
     public function getUtilisateur(): ?Utilisateur
@@ -122,7 +139,11 @@ class FeedbackCRM
 
     public function setActionCRM(?ActionCRM $actionCRM): self
     {
+        $oldValue = $this->getActionCRM();
+        $newValue = $actionCRM;
         $this->actionCRM = $actionCRM;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -134,21 +155,86 @@ class FeedbackCRM
 
     public function setClosed(?bool $closed): self
     {
+        $oldValue = $this->isClosed();
+        $newValue = $closed;
         $this->closed = $closed;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Cloturé", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
-        if($this->isClosed()){
+        if ($this->isClosed()) {
             $this->status = "Achevé.";
-        }else{
+        } else {
             $this->status = "Encours.";
         }
         return $this->status;
+    }
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

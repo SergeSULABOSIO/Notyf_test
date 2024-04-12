@@ -10,14 +10,21 @@ use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PoliceCrudController;
 use App\Controller\Admin\MonnaieCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: PoliceRepository::class)]
-class Police extends JSAbstractFinances implements IndicateursJS
+class Police extends JSAbstractFinances implements Sujet, IndicateursJS, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -94,10 +101,14 @@ class Police extends JSAbstractFinances implements IndicateursJS
     #[ORM\OneToMany(mappedBy: 'police', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
 
     public function __construct()
     {
         $this->documents = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getMontantInvoicedPerDestination(?int $destination)
@@ -132,7 +143,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setReference(string $reference): self
     {
+        $oldValue = $this->getReference();
+        $newValue = $reference;
         $this->reference = $reference;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Référence", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -197,7 +212,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setGestionnaire(?Utilisateur $gestionnaire): self
     {
+        $oldValue = $this->getGestionnaire();
+        $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -239,7 +258,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setPiste(?Piste $piste): self
     {
+        $oldValue = $this->getPiste();
+        $newValue = $piste;
         $this->piste = $piste;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -251,7 +274,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setCotation(?Cotation $cotation): self
     {
+        $oldValue = $this->getCotation();
+        $newValue = $cotation;
         $this->cotation = $cotation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -271,7 +298,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setDateexpiration(\DateTimeInterface $dateexpiration): self
     {
+        $oldValue = $this->getDateexpiration();
+        $newValue = $dateexpiration;
         $this->dateexpiration = $dateexpiration;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -283,7 +314,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setIdAvenant(int $idAvenant): self
     {
+        $oldValue = $this->getIdAvenant();
+        $newValue = $idAvenant;
         $this->idAvenant = $idAvenant;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Avenant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -569,7 +604,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function setDateeffet(?\DateTimeImmutable $dateeffet): self
     {
+        $oldValue = $this->getDateeffet();
+        $newValue = $dateeffet;
         $this->dateeffet = $dateeffet;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -585,8 +624,12 @@ class Police extends JSAbstractFinances implements IndicateursJS
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setPolice($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -597,7 +640,11 @@ class Police extends JSAbstractFinances implements IndicateursJS
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getPolice() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setPolice(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -704,7 +751,7 @@ class Police extends JSAbstractFinances implements IndicateursJS
 
     public function getIndicaRisqueTaxeAssureur(): ?float
     {
-        return $this->getCotation()->getIndicaRevenuTaxeAssureur();  
+        return $this->getCotation()->getIndicaRevenuTaxeAssureur();
     }
 
     public function getIndicaRisqueFronting(): ?float
@@ -750,5 +797,69 @@ class Police extends JSAbstractFinances implements IndicateursJS
     public function getIndicaRevenuReserve(?int $typeRevenu = null): ?float
     {
         return $this->getCotation()->getIndicaRevenuReserve();
+    }
+
+
+
+
+    
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

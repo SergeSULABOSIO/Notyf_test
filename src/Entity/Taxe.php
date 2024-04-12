@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\TaxeRepository;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaxeRepository::class)]
-class Taxe
+class Taxe implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -216,4 +218,66 @@ class Taxe
 
         return $this;
     }
+
+
+
+    
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+     public function ajouterObservateur(?Observateur $observateur)
+     {
+         // Ajout observateur
+         $this->initListeObservateurs();
+         if (!$this->listeObservateurs->contains($observateur)) {
+             $this->listeObservateurs->add($observateur);
+         }
+     }
+ 
+     public function retirerObservateur(?Observateur $observateur)
+     {
+         $this->initListeObservateurs();
+         if ($this->listeObservateurs->contains($observateur)) {
+             $this->listeObservateurs->removeElement($observateur);
+         }
+     }
+ 
+     public function viderListeObservateurs()
+     {
+         $this->initListeObservateurs();
+         if (!$this->listeObservateurs->isEmpty()) {
+             $this->listeObservateurs = new ArrayCollection([]);
+         }
+     }
+ 
+     public function getListeObservateurs(): ?ArrayCollection
+     {
+         return $this->listeObservateurs;
+     }
+ 
+     public function setListeObservateurs(ArrayCollection $listeObservateurs)
+     {
+         $this->listeObservateurs = $listeObservateurs;
+     }
+ 
+     public function notifierLesObservateurs(?Evenement $evenement)
+     {
+         $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+     }
+ 
+     public function initListeObservateurs()
+     {
+         if ($this->listeObservateurs == null) {
+             $this->listeObservateurs = new ArrayCollection();
+         }
+     }
+ 
+     public function executer(?Commande $commande)
+     {
+         if ($commande != null) {
+             $commande->executer();
+         }
+     }
 }

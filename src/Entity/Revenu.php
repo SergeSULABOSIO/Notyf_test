@@ -119,7 +119,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $this->type = $type;
         //Ecouteur d'action
         $this->executer(new CommandeDetecterChangementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
-        
+
         return $this;
     }
 
@@ -178,7 +178,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setPartageable(int $partageable): self
     {
+        $oldValue = $this->getPartageable();
+        $newValue = $partageable;
         $this->partageable = $partageable;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Partageable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -190,7 +194,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setTaxable(int $taxable): self
     {
+        $oldValue = $this->getTaxable();
+        $newValue = $taxable;
         $this->taxable = $taxable;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taxable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -202,7 +210,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setBase(int $base): self
     {
+        $oldValue = $this->getBase();
+        $newValue = $base;
         $this->base = $base;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Base", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -214,7 +226,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setTaux(float $taux): self
     {
+        $oldValue = $this->getTaux();
+        $newValue = $taux;
         $this->taux = $taux;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -226,7 +242,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setCotation(?Cotation $cotation): self
     {
+        $oldValue = $this->getCotation();
+        $newValue = $cotation;
         $this->cotation = $cotation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -259,7 +279,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setIsparttranche(bool $isparttranche): self
     {
+        $oldValue = $this->isIsparttranche();
+        $newValue = $isparttranche;
         $this->isparttranche = $isparttranche;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Par tranches? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -271,7 +295,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function setIspartclient(?bool $ispartclient): self
     {
+        $oldValue = $this->isIspartclient();
+        $newValue = $ispartclient;
         $this->ispartclient = $ispartclient;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Payabale par client? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -373,7 +401,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setMontantFlat($montantFlat)
     {
+        $oldValue = $this->getMontantFlat();
+        $newValue = $montantFlat;
         $this->montantFlat = $montantFlat;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant flat", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -459,7 +491,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateEffet($dateEffet)
     {
+        $oldValue = $this->getDateEffet();
+        $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -479,7 +515,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateExpiration($dateExpiration)
     {
+        $oldValue = $this->getDateExpiration();
+        $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -499,7 +539,11 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateOperation($dateOperation)
     {
+        $oldValue = $this->getDateOperation();
+        $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -519,7 +563,12 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
      */
     public function setDateEmition($dateEmition)
     {
+        $oldValue = $this->getDateEmition();
+        $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'émition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+
         return $this;
     }
 

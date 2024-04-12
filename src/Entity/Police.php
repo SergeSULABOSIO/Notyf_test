@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PoliceRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PoliceCrudController;
-use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -802,7 +801,7 @@ class Police extends JSAbstractFinances implements Sujet, IndicateursJS, Command
 
 
 
-    
+
 
     /**
      * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS

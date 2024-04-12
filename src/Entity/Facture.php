@@ -543,8 +543,12 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
     public function addDocument(DocPiece $document): self
     {
         if (!$this->documents->contains($document)) {
+            $oldValue = null;
+            $newValue = $document;
             $this->documents->add($document);
             $document->setFacture($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -555,7 +559,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
             if ($document->getFacture() === $this) {
+                $oldValue = $document;
+                $newValue = null;
                 $document->setFacture(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -591,7 +599,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setDestination($destination)
     {
+        $oldValue = $this->getDestination();
+        $newValue = $destination;
         $this->destination = $destination;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Destination", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -664,7 +676,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setArticlesNDClientOuAssureur($notesElementsFacturesND)
     {
+        $oldValue = $this->getArticlesNDClientOuAssureur();
+        $newValue = $notesElementsFacturesND;
         $this->articlesNDClientOuAssureur = $notesElementsFacturesND;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes des articles", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -687,7 +703,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setSynthseNCPartenaire($synthseNCPartenaire)
     {
+        $oldValue = $this->getSynthseNCPartenaire();
+        $newValue = $synthseNCPartenaire;
         $this->synthseNCPartenaire = $synthseNCPartenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC du Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -708,7 +728,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setSynthseNDClientOuAssureur($synthseNDClientOuAssureur)
     {
+        $oldValue = $this->getSynthseNDClientOuAssureur();
+        $newValue = $synthseNDClientOuAssureur;
         $this->synthseNDClientOuAssureur = $synthseNDClientOuAssureur;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse ND du Client ou de l'Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -731,7 +755,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setSynthseNCArca($synthseNCArca)
     {
+        $oldValue = $this->getSynthseNCArca();
+        $newValue = $synthseNCArca;
         $this->synthseNCArca = $synthseNCArca;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -754,7 +782,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setSynthseNCDgi($synthseNCDgi)
     {
+        $oldValue = $this->getSynthseNCDgi();
+        $newValue = $synthseNCDgi;
         $this->synthseNCDgi = $synthseNCDgi;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -776,7 +808,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setNotesElementsNCDgi($notesElementsNCDgi)
     {
+        $oldValue = $this->getNotesElementsNCDgi();
+        $newValue = $notesElementsNCDgi;
         $this->notesElementsNCDgi = $notesElementsNCDgi;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -797,7 +833,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setNotesElementsNCArca($notesElementsNCArca)
     {
+        $oldValue = $this->getNotesElementsNCArca();
+        $newValue = $notesElementsNCArca;
         $this->notesElementsNCArca = $notesElementsNCArca;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -818,7 +858,11 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
      */
     public function setNotesElementsNCPartenaire($notesElementsNCPartenaire)
     {
+        $oldValue = $this->getNotesElementsNCPartenaire();
+        $newValue = $notesElementsNCPartenaire;
         $this->notesElementsNCPartenaire = $notesElementsNCPartenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }

@@ -2,16 +2,23 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ProduitCrudController;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
-use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\Admin\ProduitCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-class Produit
+class Produit implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,15 +28,15 @@ class Produit
     #[ORM\Column(length: 4)]
     private ?string $code = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[Assert\NotBlank(message:"Ce champ ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Ce champ ne peut pas être vide.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $tauxarca = null;
 
@@ -60,10 +67,15 @@ class Produit
     private ?bool $iard = null;
     private ?string $iardTxt;
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
+
 
     public function __construct()
     {
         $this->pistes = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,7 +90,11 @@ class Produit
 
     public function setNom(string $nom): self
     {
+        $oldValue = $this->getNom();
+        $newValue = $nom;
         $this->nom = $nom;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -90,7 +106,11 @@ class Produit
 
     public function setDescription(string $description): self
     {
+        $oldValue = $this->getDescription();
+        $newValue = $description;
         $this->description = $description;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -102,7 +122,11 @@ class Produit
 
     public function setTauxarca(string $tauxarca): self
     {
+        $oldValue = $this->getTauxarca();
+        $newValue = $tauxarca;
         $this->tauxarca = $tauxarca;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -121,7 +145,7 @@ class Produit
 
     public function __toString()
     {
-        return  "[" . ($this->tauxarca * 100). "%] " . " - " . $this->getCode() . " - " . $this->nom;
+        return  "[" . ($this->tauxarca * 100) . "%] " . " - " . $this->getCode() . " - " . $this->nom;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -155,7 +179,11 @@ class Produit
 
     public function setCode(string $code): self
     {
+        $oldValue = $this->getCode();
+        $newValue = $code;
         $this->code = $code;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Code", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -183,8 +211,12 @@ class Produit
     public function addPiste(Piste $piste): self
     {
         if (!$this->pistes->contains($piste)) {
+            $oldValue = null;
+            $newValue = $piste;
             $this->pistes->add($piste);
             $piste->setProduit($this);
+            //Ecouteur d'action
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         }
 
         return $this;
@@ -195,7 +227,11 @@ class Produit
         if ($this->pistes->removeElement($piste)) {
             // set the owning side to null (unless already changed)
             if ($piste->getProduit() === $this) {
+                $oldValue = $piste;
+                $newValue = null;
                 $piste->setProduit(null);
+                //Ecouteur d'action
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
             }
         }
 
@@ -209,7 +245,11 @@ class Produit
 
     public function setAbonnement(bool $abonnement): self
     {
+        $oldValue = $this->isAbonnement();
+        $newValue = $abonnement;
         $this->abonnement = $abonnement;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Par abonnement? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -221,7 +261,11 @@ class Produit
 
     public function setObligatoire(bool $obligatoire): self
     {
+        $oldValue = $this->isObligatoire();
+        $newValue = $obligatoire;
         $this->obligatoire = $obligatoire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Obligatoire? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -233,19 +277,23 @@ class Produit
 
     public function setIard(bool $iard): self
     {
+        $oldValue = $this->isIard();
+        $newValue = $iard;
         $this->iard = $iard;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "IARD? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
     /**
      * Get the value of iardTxt
-     */ 
+     */
     public function getIardTxt()
     {
-        if($this->isIard() == true){
+        if ($this->isIard() == true) {
             $this->iardTxt = "Branche: IARD";
-        }else{
+        } else {
             $this->iardTxt = "Branche: VIE";
         }
         return $this->iardTxt;
@@ -253,14 +301,80 @@ class Produit
 
     /**
      * Get the value of obligatoireTxt
-     */ 
+     */
     public function getObligatoireTxt()
     {
-        if($this->isObligatoire() == true){
+        if ($this->isObligatoire() == true) {
             $this->obligatoireTxt = "Couverture Obligatoire";
-        }else{
+        } else {
             $this->obligatoireTxt = "Couverture Non Obligatoire";
         }
         return $this->obligatoireTxt;
+    }
+
+
+
+    
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

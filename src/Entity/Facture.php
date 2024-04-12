@@ -6,21 +6,26 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FactureRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\FactureCrudController;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheDgi;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClient;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
+use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesClientOuAssureur;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperSelonNotes;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
-use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
-use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClient;
-use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClientOuAssureur;
-use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheDgi;
-use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSynthePartenaire;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
-class Facture extends JSAbstractFinances implements CommandeExecuteur
+class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -106,6 +111,9 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
     private ?array $synthseNCDgi = [];
     private ?array $notesElementsNCDgi = [];
 
+    //Evenements
+    private ?ArrayCollection $listeObservateurs = null;
+
 
     public function __construct()
     {
@@ -113,6 +121,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
         $this->paiements = new ArrayCollection();
         $this->compteBancaires = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function initEntreprise(): ?Entreprise
@@ -145,7 +154,11 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setReference(string $reference): self
     {
+        $oldValue = $this->getReference();
+        $newValue = $reference;
         $this->reference = $reference;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Référence", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -198,17 +211,6 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
         return $this;
     }
 
-    // public function getType(): ?int
-    // {
-    //     return $this->type;
-    // }
-
-    // public function setType(int $type): self
-    // {
-    //     $this->type = $type;
-
-    //     return $this;
-    // }
 
     public function getPartenaire(): ?Partenaire
     {
@@ -217,7 +219,11 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setPartenaire(?Partenaire $partenaire): self
     {
+        $oldValue = $this->getPartenaire();
+        $newValue = $partenaire;
         $this->partenaire = $partenaire;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -229,7 +235,11 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setAssureur(?Assureur $assureur): self
     {
+        $oldValue = $this->getAssureur();
+        $newValue = $assureur;
         $this->assureur = $assureur;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -241,7 +251,11 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setDescription(?string $description): self
     {
+        $oldValue = $this->getDescription();
+        $newValue = $description;
         $this->description = $description;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -253,7 +267,11 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setPiece(?DocPiece $piece): self
     {
+        $oldValue = $this->getPiece();
+        $newValue = $piece;
         $this->piece = $piece;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -279,7 +297,12 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     public function setTotalRecu(?float $totalRecu): self
     {
+        $oldValue = $this->getTotalRecu();
+        $newValue = $totalRecu;
         $this->totalRecu = $totalRecu;
+        //Ecouteur d'action
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Total reçu", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+
         return $this;
     }
 
@@ -690,16 +713,9 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
         return $this;
     }
 
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
-    }
-
     /**
      * Get the value of notesElementsNCDgi
-     */ 
+     */
     public function getNotesElementsNCDgi()
     {
         $this->executer(new CommandeProduireSyntheDgi($this, CommandeProduireSyntheDgi::MODE_BORDEREAU));
@@ -711,7 +727,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      * Set the value of notesElementsNCDgi
      *
      * @return  self
-     */ 
+     */
     public function setNotesElementsNCDgi($notesElementsNCDgi)
     {
         $this->notesElementsNCDgi = $notesElementsNCDgi;
@@ -721,7 +737,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     /**
      * Get the value of notesElementsNCArca
-     */ 
+     */
     public function getNotesElementsNCArca()
     {
         $this->executer(new CommandeProduireSyntheArca($this, CommandeProduireSyntheArca::MODE_BORDEREAU));
@@ -732,7 +748,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      * Set the value of notesElementsNCArca
      *
      * @return  self
-     */ 
+     */
     public function setNotesElementsNCArca($notesElementsNCArca)
     {
         $this->notesElementsNCArca = $notesElementsNCArca;
@@ -742,7 +758,7 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
 
     /**
      * Get the value of notesElementsNCPartenaire
-     */ 
+     */
     public function getNotesElementsNCPartenaire()
     {
         $this->executer(new CommandeProduireSynthePartenaire($this, CommandeProduireSynthePartenaire::MODE_BORDEREAU));
@@ -753,11 +769,76 @@ class Facture extends JSAbstractFinances implements CommandeExecuteur
      * Set the value of notesElementsNCPartenaire
      *
      * @return  self
-     */ 
+     */
     public function setNotesElementsNCPartenaire($notesElementsNCPartenaire)
     {
         $this->notesElementsNCPartenaire = $notesElementsNCPartenaire;
 
         return $this;
+    }
+
+
+
+
+
+
+
+    /**
+     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
+     */
+
+
+    public function ajouterObservateur(?Observateur $observateur)
+    {
+        // Ajout observateur
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->add($observateur);
+        }
+    }
+
+    public function retirerObservateur(?Observateur $observateur)
+    {
+        $this->initListeObservateurs();
+        if ($this->listeObservateurs->contains($observateur)) {
+            $this->listeObservateurs->removeElement($observateur);
+        }
+    }
+
+    public function viderListeObservateurs()
+    {
+        $this->initListeObservateurs();
+        if (!$this->listeObservateurs->isEmpty()) {
+            $this->listeObservateurs = new ArrayCollection([]);
+        }
+    }
+
+    public function getListeObservateurs(): ?ArrayCollection
+    {
+        return $this->listeObservateurs;
+    }
+
+    public function setListeObservateurs(ArrayCollection $listeObservateurs)
+    {
+        $this->listeObservateurs = $listeObservateurs;
+    }
+
+    public function notifierLesObservateurs(?Evenement $evenement)
+    {
+        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
+    }
+
+    public function initListeObservateurs()
+    {
+        if ($this->listeObservateurs == null) {
+            $this->listeObservateurs = new ArrayCollection();
+        }
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

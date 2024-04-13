@@ -30,13 +30,6 @@ class CommandePisteDefinirObservateursEvenements implements Commande
             $this->piste->ajouterObservateur(new ObservateurPisteChargement($this->serviceEntreprise, $this->serviceDates));
             $this->piste->ajouterObservateur(new ObservateurPisteEdition($this->serviceEntreprise, $this->serviceDates));
             $this->piste->ajouterObservateur(new ObservateurPisteSuppression($this->serviceEntreprise, $this->serviceDates));
-
-            //On doit aussi écouter les Actions/Tâches de la piste
-            if (count($this->piste->getActionsCRMs()) != 0) {
-                foreach ($this->piste->getActionsCRMs() as $tache) {
-                    $tache->setListeObservateurs($this->piste->getListeObservateurs());
-                }
-            }
             // dd("Piste:", $this->piste);
         }
     }

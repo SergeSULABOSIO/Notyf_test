@@ -13,6 +13,7 @@ use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauClient;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauContact;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauCotation;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouvelleTache;
 use DateTimeImmutable;
 
@@ -60,6 +61,13 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
          * Commande d'ajout d'éventuels Actions / Tâches
          */
         $this->executer(new CommandePisteAjouterNouvelleTache(
+            $this->entityManager,
+            $evenement
+        ));
+        /**
+         * Commande d'ajout d'éventuels Cotation
+         */
+        $this->executer(new CommandePisteAjouterNouveauCotation(
             $this->entityManager,
             $evenement
         ));

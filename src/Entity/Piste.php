@@ -674,6 +674,7 @@ class Piste implements Sujet, CommandeExecuteur
      */
     public function getChargements()
     {
+        $this->chargements = new ArrayCollection();
         if ($this->getPolices()) {
             if ($this->getPolices()[0]) {
                 $this->chargements = $this->getPolices()[0]->getChargements();
@@ -797,6 +798,46 @@ class Piste implements Sujet, CommandeExecuteur
         $this->initListeObservateurs();
         if (!$this->listeObservateurs->contains($observateur)) {
             $this->listeObservateurs->add($observateur);
+        }
+
+        /**
+         * TRANSFER DE L'OBSERVATEUR
+         */
+        //Transfer de l'observateur chez Tâche/ActionCRM
+        if (count($this->getActionsCRMs()) != 0) {
+            foreach ($this->getActionsCRMs() as $tache) {
+                $tache->ajouterObservateur($observateur);
+            }
+        }
+        //Transfère de l'observateur chez Chargement
+        if (count($this->getChargements()) != 0) {
+            foreach ($this->getChargements() as $chargement) {
+                $chargement->ajouterObservateur($observateur);
+            }
+        }
+        //Transfère de l'observateur chez Contact
+        if (count($this->getContacts()) != 0) {
+            foreach ($this->getContacts() as $contacts) {
+                $contacts->ajouterObservateur($observateur);
+            }
+        }
+        //Transfère de l'observateur chez Cotation
+        if (count($this->getCotations()) != 0) {
+            foreach ($this->getCotations() as $cotation) {
+                $cotation->ajouterObservateur($observateur);
+            }
+        }
+        //Transfère de l'observateur chez Documents
+        if (count($this->getDocuments()) != 0) {
+            foreach ($this->getDocuments() as $document) {
+                $document->ajouterObservateur($observateur);
+            }
+        }
+        //Transfère de l'observateur chez Police
+        if (count($this->getPolices()) != 0) {
+            foreach ($this->getPolices() as $police) {
+                $police->ajouterObservateur($observateur);
+            }
         }
     }
 

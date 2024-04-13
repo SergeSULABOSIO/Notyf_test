@@ -4694,6 +4694,7 @@ class ServicePreferences
             ->onlyOnForms();
         $tabAttributs[] = TextEditorField::new('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
             //->setFormType(CKEditorType::class)
+            ->setRequired(false)
             ->onlyOnForms()
             ->setColumns(12);
 

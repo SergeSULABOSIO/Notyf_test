@@ -371,10 +371,11 @@ class Piste implements Sujet, CommandeExecuteur
     {
         if (!$this->actionsCRMs->contains($actionsCRM)) {
             $oldValue = null;
+            $newValue = $actionsCRM;
             $this->actionsCRMs->add($actionsCRM);
             $actionsCRM->setPiste($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste d'actions", $oldValue, $actionsCRM, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterChangementAttribut($this, "Liste d'actions", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;

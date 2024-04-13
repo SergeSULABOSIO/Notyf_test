@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\RefactoringJS\Commandes\Piste;
 
 use App\Entity\Facture;
@@ -13,15 +14,16 @@ class CommandePisteNotifierEvenement implements Commande
 {
     public function __construct(private ?ArrayCollection $tabObservateurs, private ?Evenement $evenement)
     {
-
     }
 
     public function executer()
     {
-        /** @var Observateur */
-        foreach ($this->tabObservateurs as $observateur) {
-            if ($observateur->getType() == $this->evenement->getType()) {
-                $observateur->ecouter($this->evenement);
+        if ($this->tabObservateurs != null) {
+            /** @var Observateur */
+            foreach ($this->tabObservateurs as $observateur) {
+                if ($observateur->getType() == $this->evenement->getType()) {
+                    $observateur->ecouter($this->evenement);
+                }
             }
         }
     }

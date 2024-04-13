@@ -30,39 +30,46 @@ class CommandeDetecterChangementAttribut implements Commande
         }
         if ($this->newValue instanceof DateTimeImmutable) {
             $this->newValue = $this->newValue->format("d/m/Y");
-        }        
+        }
 
         //Création des évènements
         if ($this->oldValue == null && $this->newValue != null) {
+            //AJOUT
             $eAjout = new EvenementConcretAjout();
             $eAjout->setValueFormat($this->formatValue);
             $eAjout->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,
                 Evenement::CHAMP_NEW_VALUE => $this->newValue,
-                Evenement::CHAMP_MESSAGE => "Définition de l'attribut " . $this->nomAttribut . " [" . $this->newValue."]",
+                Evenement::CHAMP_MESSAGE => "Définition de l'attribut " . $this->nomAttribut . " [" . $this->newValue . "]",
             ]);
+            //On transfère les observateurs au nouveau Sujet
             $this->objetEcoute->notifierLesObservateurs($eAjout);
+            // dd($eAjout);
         } else if ($this->oldValue != null && $this->newValue != null && $this->oldValue != $this->newValue) {
+            //EDITION
             $eEdition = new EvenementConcretEdition();
             $eEdition->setValueFormat($this->formatValue);
             $eEdition->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,
                 Evenement::CHAMP_NEW_VALUE => $this->newValue,
-                Evenement::CHAMP_MESSAGE => "Modification de l'attribut " . $this->nomAttribut . " [" . $this->oldValue . " => " . $this->newValue ."]",
+                Evenement::CHAMP_MESSAGE => "Modification de l'attribut " . $this->nomAttribut . " [" . $this->oldValue . " => " . $this->newValue . "]",
             ]);
             $this->objetEcoute->notifierLesObservateurs($eEdition);
+            // dd($eEdition);
         } else if (($this->oldValue != null) && $this->newValue === null || $this->newValue === "") {
+            //SUPPRESSION
             $eSuppression = new EvenementConcretSuppression();
             $eSuppression->setValueFormat($this->formatValue);
             $eSuppression->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,
                 Evenement::CHAMP_OLD_VALUE => $this->oldValue,
                 Evenement::CHAMP_NEW_VALUE => $this->newValue,
-                Evenement::CHAMP_MESSAGE => "Suppression de l'attribut " . $this->nomAttribut . " [" . $this->newValue."]",
+                Evenement::CHAMP_MESSAGE => "Suppression de l'attribut " . $this->nomAttribut . " [" . $this->newValue . "]",
             ]);
             $this->objetEcoute->notifierLesObservateurs($eSuppression);
+            // dd($eSuppression);
         }
     }
 }

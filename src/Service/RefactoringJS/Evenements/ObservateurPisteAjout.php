@@ -34,15 +34,22 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
         $donnees[Evenement::CHAMP_UTILISATEUR] = $this->serviceEntreprise->getUtilisateur();
         $donnees[Evenement::CHAMP_DATE] = $this->serviceDates->aujourdhui();
         $evenement->setDonnees($donnees);
+
+
         /**
          * Définition de l'entreprise, l'utilisateur et les dates
          */
-        $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
-            $evenement->getValueFormat(),
-            $donnees[Evenement::CHAMP_NEW_VALUE],
-            $this->serviceEntreprise,
-            $this->serviceDates
-        ));
+        dd($evenement, $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
+        if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
+            $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+                $evenement->getValueFormat(),
+                $donnees[Evenement::CHAMP_NEW_VALUE],
+                $this->serviceEntreprise,
+                $this->serviceDates
+            ));
+        }
+
+
         /**
          * Commande d'ajout d'éventuel nouveau client
          */

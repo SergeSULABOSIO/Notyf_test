@@ -26,16 +26,20 @@ class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExe
         $donnees[Evenement::CHAMP_DATE] = $this->serviceDates->aujourdhui();
         $evenement->setDonnees($donnees);
 
+
         /**
          * On définit directement l'entreprise, 
          * l'utilisateur, la date de créaton, et celle de modification
          */
-        $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
-            $evenement->getValueFormat(),
-            $donnees[Evenement::CHAMP_NEW_VALUE],
-            $this->serviceEntreprise,
-            $this->serviceDates
-        ));
+        dd($evenement, $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
+        if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
+            $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+                $evenement->getValueFormat(),
+                $donnees[Evenement::CHAMP_NEW_VALUE],
+                $this->serviceEntreprise,
+                $this->serviceDates
+            ));
+        }
         // dd("Evenement Edition:", $evenement);
     }
 

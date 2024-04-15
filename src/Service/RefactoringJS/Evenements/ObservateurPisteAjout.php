@@ -39,7 +39,7 @@ class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecu
         /**
          * Définition de l'entreprise, l'utilisateur et les dates
          */
-        dd($evenement, $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
+        dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
             $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
                 $evenement->getValueFormat(),

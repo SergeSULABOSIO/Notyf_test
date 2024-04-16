@@ -125,15 +125,15 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
-        //Executer - Définition de l'entreprise, l'utilisateur et dates
-        $this->executer(
-            new CommandeDefinirEseUserDateCreationEtModification(
-                Evenement::FORMAT_VALUE_ENTITY,
-                $objet,
-                $this->serviceEntreprise,
-                $this->serviceDates
-            )
-        );
+        // //Executer - Définition de l'entreprise, l'utilisateur et dates
+        // $this->executer(
+        //     new CommandeDefinirEseUserDateCreationEtModification(
+        //         Evenement::FORMAT_VALUE_ENTITY,
+        //         $objet,
+        //         $this->serviceEntreprise,
+        //         $this->serviceDates
+        //     )
+        // );
         //Exécuter - Ecouteurs d'évènements
         $this->executer(new CommandePisteDefinirObservateursEvenements(
             $this->entityManager,

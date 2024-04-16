@@ -890,7 +890,7 @@ class Piste implements Sujet, CommandeExecuteur
     #[ORM\PrePersist]
     public function prePersist(): void
     {
-        dd("Pre persist est appellé !!!!!", $this);
+        // dd("Pre persist est appellé !!!!!", $this);
         $oldValue = null;
         $newValue = $this;
         $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));

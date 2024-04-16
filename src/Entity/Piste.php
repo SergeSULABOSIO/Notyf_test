@@ -895,5 +895,34 @@ class Piste implements Sujet, CommandeExecuteur
         $newValue = $this;
         $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
     }
+
+    #[ORM\PreRemove]
+    public function preRemove(): void
+    {
+        dd("PreRemove est appellé !!!!!", $this);
+    }
+
+    #[ORM\PostLoad]
+    public function postLoad(): void
+    {
+        dd("PostLoad est appellé !!!!!", $this);
+    }
+
+    #[ORM\PostPersist]
+    public function postPersist(): void
+    {
+        dd("PostLoad est appellé !!!!!", $this);
+    }
+
+    #[ORM\PostRemove]
+    public function postRemove(): void
+    {
+        dd("PostRemove est appellé !!!!!", $this);
+    }
     
+    #[ORM\PostUpdate]
+    public function postUpdate(): void
+    {
+        dd("PostUpdate est appellé !!!!!", $this);
+    }
 }

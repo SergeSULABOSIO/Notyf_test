@@ -911,18 +911,12 @@ class Piste implements Sujet, CommandeExecuteur
     #[ORM\PostPersist]
     public function postPersist(): void
     {
-        dd("PostLoad est appellé !!!!!", $this);
+        dd("PostPersist est appellé !!!!!", $this);
     }
 
     #[ORM\PostRemove]
     public function postRemove(): void
     {
         dd("PostRemove est appellé !!!!!", $this);
-    }
-    
-    #[ORM\PostUpdate]
-    public function postUpdate(): void
-    {
-        dd("PostUpdate est appellé !!!!!", $this);
     }
 }

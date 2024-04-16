@@ -25,6 +25,7 @@ use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Piste implements Sujet, CommandeExecuteur
 {
     #[ORM\Id]
@@ -885,4 +886,14 @@ class Piste implements Sujet, CommandeExecuteur
     {
         $this->listeObservateurs = $listeObservateurs;
     }
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        dd("Pre persist est appellé !!!!!", $this);
+        $oldValue = null;
+        $newValue = $this;
+        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+    }
+    
 }

@@ -895,8 +895,9 @@ class Piste implements Sujet, CommandeExecuteur
      */
 
     #[ORM\PrePersist]
-    public function prePersist(): void
+    public function onPrePersist(): void
     {
+        //Avant modification
         // dd("Pre persist est appellé !!!!!", $this);
         $oldValue = null;
         $newValue = $this;
@@ -904,9 +905,17 @@ class Piste implements Sujet, CommandeExecuteur
     }
 
     #[ORM\PreRemove]
-    public function preRemove(): void
+    public function onPreRemove(): void
     {
+        //Avant supprission
         dd("PreRemove est appellé !!!!!", $this);
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        //Avant mise à jour
+        dd("PreUpdate est appellé !!!!!", $this);
     }
 
 
@@ -915,20 +924,30 @@ class Piste implements Sujet, CommandeExecuteur
      */
 
     #[ORM\PostLoad]
-    public function postLoad(): void
+    public function onPostLoad(): void
     {
+        //Après Chargement
         dd("PostLoad est appellé !!!!!", $this);
     }
 
     #[ORM\PostPersist]
-    public function postPersist(): void
+    public function onPostPersist(): void
     {
+        //Après enregistrement
         dd("PostPersist est appellé !!!!!", $this);
     }
 
     #[ORM\PostRemove]
-    public function postRemove(): void
+    public function onPostRemove(): void
     {
+        //Après suppression
         dd("PostRemove est appellé !!!!!", $this);
+    }
+
+    #[ORM\PostUpdate]
+    public function onPostUpdate(): void
+    {
+        //Après mise à jour
+        dd("PostUpdate est appellé !!!!!", $this);
     }
 }

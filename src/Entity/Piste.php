@@ -887,6 +887,13 @@ class Piste implements Sujet, CommandeExecuteur
         $this->listeObservateurs = $listeObservateurs;
     }
 
+
+
+
+    /**
+     * LES PRES
+     */
+
     #[ORM\PrePersist]
     public function prePersist(): void
     {
@@ -901,6 +908,11 @@ class Piste implements Sujet, CommandeExecuteur
     {
         dd("PreRemove est appellé !!!!!", $this);
     }
+
+
+    /**
+     * LES POSTS
+     */
 
     #[ORM\PostLoad]
     public function postLoad(): void

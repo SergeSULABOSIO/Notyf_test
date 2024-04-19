@@ -23,11 +23,14 @@ use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
+use App\Traits\TraitJSB;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Piste implements Sujet, CommandeExecuteur
 {
+    // use TraitJSB;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -889,7 +892,6 @@ class Piste implements Sujet, CommandeExecuteur
 
 
 
-
     /**
      * LES PRES
      */
@@ -927,14 +929,14 @@ class Piste implements Sujet, CommandeExecuteur
     public function onPostLoad(): void
     {
         //Après Chargement
-        dd("PostLoad est appellé !!!!!", $this);
+        // dd("PostLoad est appellé !!!!!", $this);
     }
 
     #[ORM\PostPersist]
     public function onPostPersist(): void
     {
         //Après enregistrement
-        dd("PostPersist est appellé !!!!!", $this);
+        // dd("PostPersist est appellé !!!!!", $this);
     }
 
     #[ORM\PostRemove]

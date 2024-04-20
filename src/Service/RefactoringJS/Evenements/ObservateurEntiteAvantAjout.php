@@ -2,20 +2,12 @@
 
 namespace App\Service\RefactoringJS\Evenements;
 
-use App\Controller\Admin\ClientCrudController;
-use App\Entity\Piste;
-use App\Entity\Client;
 use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauClient;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauContact;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauCotation;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouvelleTache;
-use DateTimeImmutable;
 
 class ObservateurEntiteAvantAjout extends ObservateurAbstract implements CommandeExecuteur
 {

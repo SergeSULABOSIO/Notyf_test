@@ -14,6 +14,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
@@ -21,6 +22,8 @@ use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAtt
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
 class ActionCRM implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -77,9 +80,6 @@ class ActionCRM implements Sujet, CommandeExecuteur
 
     private ?string $status;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
 
     public function __construct()
     {
@@ -105,7 +105,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $mission;
         $this->mission = $mission;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche/Mission", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Tâche/Mission", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -120,7 +120,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $objectif;
         $this->objectif = $objectif;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Objectif", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Objectif", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -135,7 +135,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $startedAt;
         $this->startedAt = $startedAt;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -150,7 +150,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $endedAt;
         $this->endedAt = $endedAt;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -219,7 +219,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $attributedTo;
         $this->attributedTo = $attributedTo;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Attribué à", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Attribué à", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         return $this;
     }
 
@@ -234,7 +234,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $piste;
         $this->piste = $piste;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         return $this;
     }
 
@@ -254,7 +254,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
             $this->documents->add($document);
             $document->setActionCRM($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -269,7 +269,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $document->setActionCRM(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -293,7 +293,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
             $this->feedbacks->add($feedback);
             $feedback->setActionCRM($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new CommandeDetecterEvenementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -308,7 +308,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $feedback->setActionCRM(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterEvenementAttribut($this, "Feedback", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -341,7 +341,7 @@ class ActionCRM implements Sujet, CommandeExecuteur
         $newValue = $closed;
         $this->closed = $closed;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "is Closed?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new CommandeDetecterEvenementAttribut($this, "is Closed?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 

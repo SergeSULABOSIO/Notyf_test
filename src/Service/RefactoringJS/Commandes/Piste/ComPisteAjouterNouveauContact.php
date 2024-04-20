@@ -2,14 +2,13 @@
 
 namespace App\Service\RefactoringJS\Commandes\Piste;
 
-use App\Entity\ActionCRM;
 use App\Entity\Piste;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Contact;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 
-class CommandePisteAjouterNouvelleTache implements Commande
+class ComPisteAjouterNouveauContact implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -20,13 +19,13 @@ class CommandePisteAjouterNouvelleTache implements Commande
 
     public function executer()
     {
-        if ($this->evenement->getDonnees()[Evenement::CHAMP_DONNEE] instanceof Piste && $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE] instanceof ActionCRM) {
+        if ($this->evenement->getDonnees()[Evenement::CHAMP_DONNEE] instanceof Piste && $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE] instanceof Contact) {
             /** @var Piste */
             $piste = $this->evenement->getDonnees()[Evenement::CHAMP_DONNEE];
-            /** @var ActionCRM */
-            $action = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
+            /** @var Contact */
+            $contact = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
             //ici il faut actualiser la base de données
-            $this->entityManager->persist($action);
+            $this->entityManager->persist($contact);
             $this->entityManager->flush();
         }
     }

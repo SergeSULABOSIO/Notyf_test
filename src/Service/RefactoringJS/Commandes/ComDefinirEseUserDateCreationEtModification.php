@@ -9,7 +9,7 @@ use App\Service\RefactoringJS\Evenements\Sujet;
 use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 
-class CommandeDefinirEseUserDateCreationEtModification implements Commande
+class ComDefinirEseUserDateCreationEtModification implements Commande
 {
     public function __construct(
         private ?string $valueFormat,

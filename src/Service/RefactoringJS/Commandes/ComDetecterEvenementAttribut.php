@@ -14,7 +14,7 @@ use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use DateTimeImmutable;
 
-class CommandeDetecterEvenementAttribut implements Commande
+class ComDetecterEvenementAttribut implements Commande
 {
     public function __construct(
         private ?Sujet $objetEcoute,

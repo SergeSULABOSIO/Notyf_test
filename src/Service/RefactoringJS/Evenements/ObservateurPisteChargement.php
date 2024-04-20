@@ -6,6 +6,7 @@ use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
 class ObservateurPisteChargement extends ObservateurAbstract implements CommandeExecuteur
@@ -29,7 +30,7 @@ class ObservateurPisteChargement extends ObservateurAbstract implements Commande
          * On définit directement l'entreprise, 
          * l'utilisateur, la date de créaton, et celle de modification
          */
-        $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+        $this->executer(new ComDefinirEseUserDateCreationEtModification(
             $evenement->getValueFormat(),
             $donnees[Evenement::CHAMP_NEW_VALUE],
             $this->serviceEntreprise,

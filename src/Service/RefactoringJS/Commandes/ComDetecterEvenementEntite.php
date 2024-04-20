@@ -10,7 +10,7 @@ use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresEdition;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresSuppression;
 use App\Service\RefactoringJS\Evenements\Sujet;
 
-class CommandeDetecterEvenementEntite implements Commande
+class ComDetecterEvenementEntite implements Commande
 {
     public function __construct(
         private ?Sujet $objetEcoute,

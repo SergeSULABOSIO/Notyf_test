@@ -10,7 +10,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class CommandePisteNotifierEvenement implements Commande
+class ComPisteNotifierEvenement implements Commande
 {
     public function __construct(private ?ArrayCollection $tabObservateurs, private ?Evenement $evenement)
     {

@@ -7,6 +7,7 @@ use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
 class ObservateurEntiteAvantEdition extends ObservateurAbstract implements CommandeExecuteur
@@ -32,7 +33,7 @@ class ObservateurEntiteAvantEdition extends ObservateurAbstract implements Comma
 
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($evenement->getType() == Evenement::TYPE_ENTITE_AVANT_EDITION) {
-            $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+            $this->executer(new ComDefinirEseUserDateCreationEtModification(
                 $evenement->getValueFormat(),
                 $donnees[Evenement::CHAMP_NEW_VALUE],
                 $this->serviceEntreprise,

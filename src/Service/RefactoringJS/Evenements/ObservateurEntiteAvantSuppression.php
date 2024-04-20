@@ -7,7 +7,6 @@ use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
 class ObservateurEntiteAvantSuppression extends ObservateurAbstract implements CommandeExecuteur
 {

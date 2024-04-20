@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-
+use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AssureurRepository;
 use Doctrine\Common\Collections\Collection;
@@ -13,14 +13,17 @@ use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 use function PHPSTORM_META\override;
 
 #[ORM\Entity(repositoryClass: AssureurRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Assureur implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -75,9 +78,6 @@ class Assureur implements Sujet, CommandeExecuteur
     #[ORM\OneToMany(mappedBy: 'assureur', targetEntity: Facture::class)]
     private Collection $factures;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
 
     public function __construct()
     {
@@ -102,7 +102,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $nom;
         $this->nom = $nom;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -117,7 +117,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $adresse;
         $this->adresse = $adresse;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Adresse", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -132,7 +132,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $telephone;
         $this->telephone = $telephone;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro de téléphone", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Numéro de téléphone", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         return $this;
     }
 
@@ -147,7 +147,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $email;
         $this->email = $email;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Adresse mail", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Adresse mail", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -163,7 +163,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $siteweb;
         $this->siteweb = $siteweb;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Site Internet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Site Internet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -179,7 +179,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $rccm;
         $this->rccm = $rccm;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Registre de commerce (RCCM)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Registre de commerce (RCCM)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -195,7 +195,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $idnat;
         $this->idnat = $idnat;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro d'Identification Nationale (idNat)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Numéro d'Identification Nationale (idNat)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -211,7 +211,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $licence;
         $this->licence = $licence;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Licence / Agrement du marché", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Licence / Agrement du marché", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -227,7 +227,7 @@ class Assureur implements Sujet, CommandeExecuteur
         $newValue = $numimpot;
         $this->numimpot = $numimpot;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro d'Intentité Fiscale", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Numéro d'Intentité Fiscale", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -301,7 +301,7 @@ class Assureur implements Sujet, CommandeExecuteur
             $this->cotations->add($cotation);
             $cotation->setAssureur($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -316,7 +316,7 @@ class Assureur implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $cotation->setAssureur(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -339,7 +339,7 @@ class Assureur implements Sujet, CommandeExecuteur
             $this->factures->add($facture);
             $facture->setAssureur($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -354,70 +354,16 @@ class Assureur implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $facture->setAssureur(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
         return $this;
     }
 
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Fonction non encore définie");
     }
 }

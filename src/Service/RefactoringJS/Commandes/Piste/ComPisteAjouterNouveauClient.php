@@ -9,7 +9,7 @@ use App\Controller\Admin\ClientCrudController;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 
-class CommandePisteAjouterNouveauClient implements Commande
+class ComPisteAjouterNouveauClient implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

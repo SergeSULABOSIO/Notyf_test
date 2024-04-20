@@ -10,7 +10,7 @@ use App\Entity\Cotation;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 
-class CommandePisteAjouterNouveauCotation implements Commande
+class ComPisteAjouterNouveauCotation implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

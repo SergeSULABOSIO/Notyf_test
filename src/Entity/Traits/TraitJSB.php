@@ -1,12 +1,10 @@
 <?php
+namespace App\Entity\Traits;
 
-namespace App\Traits;
-
-use ORM;
+use Doctrine\ORM\Mapping as ORM;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 
-#[ORM\HasLifecycleCallbacks]
 trait TraitJSB
 {
 

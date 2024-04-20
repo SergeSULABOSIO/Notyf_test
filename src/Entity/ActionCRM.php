@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ActionRepository;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -20,10 +21,11 @@ use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ActionCRM implements Sujet, CommandeExecuteur
 {
     use TraitEcouteurEvenements;
-
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -384,64 +386,13 @@ class ActionCRM implements Sujet, CommandeExecuteur
         return $this->status;
     }
 
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
+        //Transfer de l'observateur chez Feedback
+        if (count($this->getFeedbacks()) != 0) {
+            foreach ($this->getFeedbacks() as $feedback) {
+                $feedback->ajouterObservateur($observateur);
+            }
         }
     }
 }

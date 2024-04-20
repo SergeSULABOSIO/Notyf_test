@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
+use App\Entity\Traits\TraitJSB;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
 use Sabberworm\CSS\CSSList\Document;
@@ -23,7 +24,6 @@ use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
-use App\Traits\TraitJSB;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 #[ORM\HasLifecycleCallbacks]

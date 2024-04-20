@@ -37,7 +37,6 @@ trait TraitJSB
         dd("PreUpdate est appellé !!!!!", $this);
     }
 
-
     /**
      * LES POSTS
      */
@@ -46,7 +45,7 @@ trait TraitJSB
     public function onPostLoad(): void
     {
         //Après Chargement
-        dd("PostLoad est appellé !!!!!", $this);
+        dd("PostLoad est appellé SERGE SULA BOSIO!!!!!", $this);
     }
 
     #[ORM\PostPersist]

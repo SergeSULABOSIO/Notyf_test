@@ -2,34 +2,24 @@
 
 namespace App\Entity;
 
-use DateTimeImmutable;
-use App\Entity\Traits\TraitJSB;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
-use Sabberworm\CSS\CSSList\Document;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Contracts\EventDispatcher\Event;
 use App\Controller\Admin\PisteCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
-use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
-use App\Service\RefactoringJS\Evenements\EvenementConcretChargement;
-use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDetecterChangementAttribut;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Piste implements Sujet, CommandeExecuteur
 {
-    use TraitJSB;
+    use TraitEcouteurEvenements;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -120,8 +110,7 @@ class Piste implements Sujet, CommandeExecuteur
     private ?float $duree = null;
     private ?Monnaie $monnaie_Affichage;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
+
 
 
 
@@ -287,10 +276,11 @@ class Piste implements Sujet, CommandeExecuteur
         if ($this->cotations->removeElement($cotation)) {
             // set the owning side to null (unless already changed)
             if ($cotation->getPiste() === $this) {
-                $oldValue = $this->$cotation;
+                $oldValue = $cotation;
+                $newValue = null;
                 $cotation->setPiste(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des cotations", $oldValue, null, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new CommandeDetecterChangementAttribut($this, "Liste des cotations", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -791,22 +781,8 @@ class Piste implements Sujet, CommandeExecuteur
     }
 
 
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-
-        /**
-         * TRANSFER DE L'OBSERVATEUR
-         */
         //Transfer de l'observateur chez Tâche/ActionCRM
         if (count($this->getActionsCRMs()) != 0) {
             foreach ($this->getActionsCRMs() as $tache) {
@@ -844,112 +820,4 @@ class Piste implements Sujet, CommandeExecuteur
             }
         }
     }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-
-
-    // /**
-    //  * LES PRES
-    //  */
-
-    // #[ORM\PrePersist]
-    // public function onPrePersist(): void
-    // {
-    //     //Avant modification
-    //     // dd("Pre persist est appellé !!!!!", $this);
-    //     $oldValue = null;
-    //     $newValue = $this;
-    //     $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
-    // }
-
-    // #[ORM\PreRemove]
-    // public function onPreRemove(): void
-    // {
-    //     //Avant supprission
-    //     dd("PreRemove est appellé !!!!!", $this);
-    // }
-
-    // #[ORM\PreUpdate]
-    // public function onPreUpdate(): void
-    // {
-    //     //Avant mise à jour
-    //     dd("PreUpdate est appellé !!!!!", $this);
-    // }
-
-
-    // /**
-    //  * LES POSTS
-    //  */
-
-    // #[ORM\PostLoad]
-    // public function onPostLoad(): void
-    // {
-    //     //Après Chargement
-    //     // dd("PostLoad est appellé !!!!!", $this);
-    // }
-
-    // #[ORM\PostPersist]
-    // public function onPostPersist(): void
-    // {
-    //     //Après enregistrement
-    //     // dd("PostPersist est appellé !!!!!", $this);
-    // }
-
-    // #[ORM\PostRemove]
-    // public function onPostRemove(): void
-    // {
-    //     //Après suppression
-    //     dd("PostRemove est appellé !!!!!", $this);
-    // }
-
-    // #[ORM\PostUpdate]
-    // public function onPostUpdate(): void
-    // {
-    //     //Après mise à jour
-    //     dd("PostUpdate est appellé !!!!!", $this);
-    // }
 }

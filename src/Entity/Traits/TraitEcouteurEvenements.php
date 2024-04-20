@@ -8,6 +8,7 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\CommandeDetecterEvenementEntite;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 trait TraitEcouteurEvenements
@@ -97,9 +98,7 @@ trait TraitEcouteurEvenements
     {
         //Avant modification
         // dd("Pre persist est appellé !!!!!", $this);
-        $oldValue = null;
-        $newValue = $this;
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_AVANT_ENREGISTREMENT));
     }
 
     #[ORM\PreRemove]
@@ -107,6 +106,7 @@ trait TraitEcouteurEvenements
     {
         //Avant supprission
         // dd("PreRemove est appellé !!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_AVANT_SUPPRESSION));
     }
 
     #[ORM\PreUpdate]
@@ -114,6 +114,7 @@ trait TraitEcouteurEvenements
     {
         //Avant mise à jour
         // dd("PreUpdate est appellé !!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_AVANT_EDITION));
     }
 
 
@@ -132,6 +133,7 @@ trait TraitEcouteurEvenements
     {
         //Après Chargement
         // dd("PostLoad est appellé SERGE SULA BOSIO!!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_APRES_CHARGEMENT));
     }
 
     #[ORM\PostPersist]
@@ -139,6 +141,7 @@ trait TraitEcouteurEvenements
     {
         //Après enregistrement
         // dd("PostPersist est appellé !!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_APRES_ENREGISTREMENT));
     }
 
     #[ORM\PostRemove]
@@ -146,6 +149,7 @@ trait TraitEcouteurEvenements
     {
         //Après suppression
         // dd("PostRemove est appellé !!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_APRES_SUPPRESSION));
     }
 
     #[ORM\PostUpdate]
@@ -153,5 +157,6 @@ trait TraitEcouteurEvenements
     {
         //Après mise à jour
         // dd("PostUpdate est appellé !!!!!", $this);
+        $this->executer(new CommandeDetecterEvenementEntite($this, Evenement::TYPE_ENTITE_APRES_EDITION));
     }
 }

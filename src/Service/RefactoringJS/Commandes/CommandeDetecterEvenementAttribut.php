@@ -6,12 +6,15 @@ use App\Entity\Piste;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\EvenementConcretAjout;
+use App\Service\RefactoringJS\Evenements\EvenementConcretAttributAjout;
+use App\Service\RefactoringJS\Evenements\EvenementConcretAttributEdition;
+use App\Service\RefactoringJS\Evenements\EvenementConcretAttributSuppression;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEdition;
 use App\Service\RefactoringJS\Evenements\EvenementConcretSuppression;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use DateTimeImmutable;
 
-class CommandeDetecterChangementAttribut implements Commande
+class CommandeDetecterEvenementAttribut implements Commande
 {
     public function __construct(
         private ?Sujet $objetEcoute,
@@ -35,7 +38,7 @@ class CommandeDetecterChangementAttribut implements Commande
         //Création des évènements
         if ($this->oldValue == null && $this->newValue != null) {
             //AJOUT
-            $eAjout = new EvenementConcretAjout();
+            $eAjout = new EvenementConcretAttributAjout();
             $eAjout->setValueFormat($this->formatValue);
             $eAjout->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,
@@ -43,12 +46,11 @@ class CommandeDetecterChangementAttribut implements Commande
                 Evenement::CHAMP_NEW_VALUE => $this->newValue,
                 Evenement::CHAMP_MESSAGE => "Définition de l'attribut " . $this->nomAttribut . " [" . $this->newValue . "]",
             ]);
-            //On transfère les observateurs au nouveau Sujet
             $this->objetEcoute->notifierLesObservateurs($eAjout);
             // dd($eAjout);
         } else if ($this->oldValue != null && $this->newValue != null && $this->oldValue != $this->newValue) {
             //EDITION
-            $eEdition = new EvenementConcretEdition();
+            $eEdition = new EvenementConcretAttributEdition();
             $eEdition->setValueFormat($this->formatValue);
             $eEdition->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,
@@ -60,7 +62,7 @@ class CommandeDetecterChangementAttribut implements Commande
             // dd($eEdition);
         } else if (($this->oldValue != null) && $this->newValue === null || $this->newValue === "") {
             //SUPPRESSION
-            $eSuppression = new EvenementConcretSuppression();
+            $eSuppression = new EvenementConcretAttributSuppression();
             $eSuppression->setValueFormat($this->formatValue);
             $eSuppression->setDonnees([
                 Evenement::CHAMP_DONNEE => $this->objetEcoute,

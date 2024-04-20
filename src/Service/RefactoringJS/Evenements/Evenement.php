@@ -6,10 +6,19 @@ use DateTimeImmutable;
 
 interface Evenement
 {
-    public const TYPE_AJOUT = 0;
-    public const TYPE_EDITION = 1;
-    public const TYPE_SUPPRESSION = 2;
-    public const TYPE_CHARGEMENT = 3;
+    //Type d'évènement pour attributs des entités
+    public const TYPE_ATTRIBUT_AJOUT = 0;
+    public const TYPE_ATTRIBUT_EDITION = 1;
+    public const TYPE_ATTRIBUT_SUPPRESSION = 2;
+    //Type d'évènement pour entités elles-mêmes
+    public const TYPE_ENTITE_AVANT_ENREGISTREMENT = 3;
+    public const TYPE_ENTITE_AVANT_EDITION = 4;
+    public const TYPE_ENTITE_AVANT_SUPPRESSION = 5;
+    public const TYPE_ENTITE_APRES_ENREGISTREMENT = 3;
+    public const TYPE_ENTITE_APRES_EDITION = 4;
+    public const TYPE_ENTITE_APRES_SUPPRESSION = 5;
+    public const TYPE_ENTITE_APRES_CHARGEMENT = 6;
+
     //Champs données
     public const CHAMP_DATE = "Date";
     public const CHAMP_UTILISATEUR = "Utilisateur";

@@ -3,11 +3,6 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Piste;
-use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
-use App\Service\RefactoringJS\Evenements\Evenement;
 use DateTimeImmutable;
 use App\Service\ServiceDates;
 use Doctrine\ORM\QueryBuilder;
@@ -17,18 +12,24 @@ use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use App\Service\RefactoringJS\Evenements\Evenement;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Commandes\Piste\ComDefinirObservateursEvenements;
+use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
+use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
 
 class PisteCrudController extends AbstractCrudController implements CommandeExecuteur
 {
@@ -125,17 +126,9 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
-        // //Executer - Définition de l'entreprise, l'utilisateur et dates
-        // $this->executer(
-        //     new CommandeDefinirEseUserDateCreationEtModification(
-        //         Evenement::FORMAT_VALUE_ENTITY,
-        //         $objet,
-        //         $this->serviceEntreprise,
-        //         $this->serviceDates
-        //     )
-        // );
+        
         //Exécuter - Ecouteurs d'évènements
-        $this->executer(new CommandePisteDefinirObservateursEvenements(
+        $this->executer(new ComDefinirObservateursEvenements(
             $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,
@@ -149,7 +142,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
-        $this->executer(new CommandePisteDefinirObservateursEvenements(
+        $this->executer(new ComDefinirObservateursEvenements(
             $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,

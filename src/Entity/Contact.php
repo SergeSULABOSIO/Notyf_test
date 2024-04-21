@@ -203,6 +203,7 @@ class Contact implements Sujet, CommandeExecuteur
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        dd("Cette fonction n'est pas encore définie");
+        //Rien à transférer
+        // dd("Cette fonction n'est pas encore définie");
     }
 }

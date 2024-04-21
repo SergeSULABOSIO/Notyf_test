@@ -798,6 +798,6 @@ class Police extends JSAbstractFinances implements Sujet, IndicateursJS, Command
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        dd("Fonction non encore définie");
+        // dd("Fonction non encore définie");
     }
 }

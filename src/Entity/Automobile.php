@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AutomobileRepository;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Traits\TraitEcouteurEvenements;
+use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -273,6 +276,6 @@ class Automobile implements Sujet, CommandeExecuteur
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        dd("Cette fonction n'est pas encore définie");
+        // dd("Cette fonction n'est pas encore définie");
     }
 }

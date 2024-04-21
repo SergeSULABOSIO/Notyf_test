@@ -872,6 +872,6 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        dd("Fonction non encore définie");
+        // dd("Fonction non encore définie");
     }
 }

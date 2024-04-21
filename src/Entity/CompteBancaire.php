@@ -278,6 +278,6 @@ class CompteBancaire implements Sujet, CommandeExecuteur
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        dd("Cette fonction n'est pas encore définie");
+        // dd("Cette fonction n'est pas encore définie");
     }
 }

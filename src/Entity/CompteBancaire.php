@@ -6,15 +6,12 @@ use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\CompteBancaireRepository;
-use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: CompteBancaireRepository::class)]
 #[ORM\HasLifecycleCallbacks]

@@ -40,7 +40,7 @@ class ObservateurEntiteAvantEdition extends ObservateurAbstract implements Comma
                 $this->serviceDates
             ));
         }
-        dd("Evenement Avant édition de l'entité", $evenement);
+        // dd("Evenement Avant édition de l'entité", $evenement);
     }
 
     public function executer(?Commande $commande)

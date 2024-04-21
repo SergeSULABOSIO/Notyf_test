@@ -39,7 +39,7 @@ class ObservateurEntiteAvantAjout extends ObservateurAbstract implements Command
                 $this->serviceDates
             ));
         }
-        dd("Evenement Avant Ajout de l'entité", $evenement);
+        // dd("Evenement Avant Ajout de l'entité", $evenement);
     }
 
     public function executer(?Commande $commande)

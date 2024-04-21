@@ -7,6 +7,7 @@ use App\Service\ServiceEntreprise;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
 class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExecuteur
@@ -33,7 +34,7 @@ class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExe
          */
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
-            $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+            $this->executer(new ComDefinirEseUserDateCreationEtModification(
                 $evenement->getValueFormat(),
                 $donnees[Evenement::CHAMP_NEW_VALUE],
                 $this->serviceEntreprise,

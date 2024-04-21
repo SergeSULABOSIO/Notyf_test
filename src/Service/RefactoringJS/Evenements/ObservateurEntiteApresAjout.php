@@ -32,7 +32,7 @@ class ObservateurEntiteApresAjout extends ObservateurAbstract implements Command
 
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($evenement->getType() == Evenement::TYPE_ENTITE_APRES_ENREGISTREMENT) {
-            dd("Evenement Après Ajout de l'entité", $evenement);
+            // dd("Evenement Après Ajout de l'entité", $evenement);
         }
     }
 

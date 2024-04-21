@@ -2,11 +2,12 @@
 
 namespace App\Service\RefactoringJS\Evenements;
 
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
-use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
+use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
+use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
 class ObservateurPisteSuppression extends ObservateurAbstract implements CommandeExecuteur
 {
@@ -29,7 +30,7 @@ class ObservateurPisteSuppression extends ObservateurAbstract implements Command
          * On définit directement l'entreprise, 
          * l'utilisateur, la date de créaton, et celle de modification
          */
-        $this->executer(new CommandeDefinirEseUserDateCreationEtModification(
+        $this->executer(new ComDefinirEseUserDateCreationEtModification(
             $evenement->getValueFormat(),
             $donnees[Evenement::CHAMP_NEW_VALUE],
             $this->serviceEntreprise,

@@ -32,7 +32,7 @@ class ObservateurEntiteApresSuppression extends ObservateurAbstract implements C
 
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($evenement->getType() == Evenement::TYPE_ENTITE_APRES_SUPPRESSION) {
-            dd("Evenement Après Suppression de l'entité", $evenement);
+            // dd("Evenement Après Suppression de l'entité", $evenement);
         }
     }
 

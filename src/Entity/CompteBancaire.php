@@ -57,9 +57,6 @@ class CompteBancaire implements Sujet, CommandeExecuteur
     #[ORM\OneToMany(mappedBy: 'compteBancaire', targetEntity: Paiement::class)]
     private Collection $paiements;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
 
     public function __construct()
     {

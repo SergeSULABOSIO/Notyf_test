@@ -2,13 +2,16 @@
 
 namespace App\Service\RefactoringJS\Commandes;
 
+use App\Service\RefactoringJS\Evenements\Sujet;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresAjout;
-use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresChargement;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteAvantAjout;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresEdition;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteAvantEdition;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresChargement;
 use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteApresSuppression;
-use App\Service\RefactoringJS\Evenements\Sujet;
+use App\Service\RefactoringJS\Evenements\EvenementConcretEntiteAvantSuppression;
 
 class ComDetecterEvenementEntite implements Commande
 {

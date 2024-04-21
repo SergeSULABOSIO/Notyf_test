@@ -5,18 +5,17 @@ namespace App\Service\RefactoringJS\Evenements;
 use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
-class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExecuteur
+class ObservateurAttributSuppression extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
     ) {
-        parent::__construct(Observateur::TYPE_OBSERVATEUR_EDITION);
+        parent::__construct(Observateur::TYPE_OBSERVATEUR_SUPPRESSION);
     }
 
     public function ecouter(?Evenement $evenement)
@@ -27,21 +26,17 @@ class ObservateurPisteEdition extends ObservateurAbstract implements CommandeExe
         $donnees[Evenement::CHAMP_DATE] = $this->serviceDates->aujourdhui();
         $evenement->setDonnees($donnees);
 
-
         /**
          * On définit directement l'entreprise, 
          * l'utilisateur, la date de créaton, et celle de modification
          */
-        // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
-        if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
-            $this->executer(new ComDefinirEseUserDateCreationEtModification(
-                $evenement->getValueFormat(),
-                $donnees[Evenement::CHAMP_NEW_VALUE],
-                $this->serviceEntreprise,
-                $this->serviceDates
-            ));
-        }
-        // dd("Evenement Edition:", $evenement);
+        $this->executer(new ComDefinirEseUserDateCreationEtModification(
+            $evenement->getValueFormat(),
+            $donnees[Evenement::CHAMP_NEW_VALUE],
+            $this->serviceEntreprise,
+            $this->serviceDates
+        ));
+        // dd("Evenement Suppression:", $evenement);
     }
 
     public function executer(?Commande $commande)

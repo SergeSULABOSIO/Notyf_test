@@ -9,7 +9,7 @@ use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
-class ObservateurPisteChargement extends ObservateurAbstract implements CommandeExecuteur
+class ObservateurAttributChargement extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
         private ?ServiceEntreprise $serviceEntreprise,

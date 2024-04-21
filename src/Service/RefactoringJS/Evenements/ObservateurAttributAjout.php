@@ -22,7 +22,7 @@ use App\Service\RefactoringJS\Commandes\Piste\CommandePisteAjouterNouveauCotatio
 use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 
-class ObservateurPisteAjout extends ObservateurAbstract implements CommandeExecuteur
+class ObservateurAttributAjout extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

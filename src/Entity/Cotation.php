@@ -13,16 +13,20 @@ use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -128,9 +132,6 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     #[ORM\OneToMany(mappedBy: 'cotation', targetEntity: DocPiece::class, cascade: ['remove', 'persist', 'refresh'])]
     private Collection $documents;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
 
     public function __construct()
     {
@@ -158,7 +159,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $nom;
         $this->nom = $nom;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -229,7 +230,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $piste;
         $this->piste = $piste;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -245,7 +246,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $assureur;
         $this->assureur = $assureur;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -266,7 +267,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->revenus->add($revenu);
             $revenu->setCotation($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -281,7 +282,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
                 $newValue = null;
                 $revenu->setCotation(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Revenu", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -316,7 +317,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->chargements->add($chargement);
             $chargement->setCotation($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -331,7 +332,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
                 $newValue = $chargement;
                 $chargement->setCotation(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -364,7 +365,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $primeTotale;
         $this->primeTotale = $primeTotale;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Prime", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Prime", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -385,7 +386,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->tranches->add($tranch);
             $tranch->setCotation($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -400,7 +401,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
                 $newValue = null;
                 $tranch->setCotation(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Tranche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -418,7 +419,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dureeCouverture;
         $this->dureeCouverture = $dureeCouverture;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Duré de couverture", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Duré de couverture", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -434,7 +435,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $validated;
         $this->validated = $validated;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Validé?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Validé?", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -461,7 +462,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $taxes;
         $this->taxes = $taxes;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -523,7 +524,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $tauxretrocompartenaire;
         $this->tauxretrocompartenaire = $tauxretrocompartenaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux retrocom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taux retrocom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -606,7 +607,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->polices->add($police);
             $police->setCotation($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -621,7 +622,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
                 $newValue = null;
                 $police->setCotation(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -644,7 +645,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->documents->add($document);
             $document->setCotation($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -659,7 +660,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
                 $newValue = null;
                 $document->setCotation(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
         return $this;
@@ -708,7 +709,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $police;
         $this->police = $police;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -735,7 +736,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $partenaire;
         $this->partenaire = $partenaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -759,7 +760,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $client;
         $this->client = $client;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Client", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -783,7 +784,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $produit;
         $this->produit = $produit;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Produit", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -807,7 +808,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -831,7 +832,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'expiration", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'expiration", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -855,7 +856,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -880,7 +881,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'édition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'édition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -922,7 +923,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $gestionnaire;
         $this->gestionnaire = $gestionnaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Gestionnaire de compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -946,7 +947,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $assistant;
         $this->assistant = $assistant;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Assistant", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -1217,65 +1218,8 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
         return round($this->getIndicaRevenuPartageable($typeRevenu) - $this->getIndicaPartenaireRetrocom($typeRevenu));
     }
 
-
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Cette fonction n'est pas encore définie");
     }
 }

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Controller\Admin\DocPieceCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
@@ -16,13 +17,16 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: DocPieceRepository::class)]
 #[Vich\Uploadable]
+#[ORM\HasLifecycleCallbacks]
 class DocPiece implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -81,12 +85,6 @@ class DocPiece implements Sujet, CommandeExecuteur
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Facture $facture = null;
 
-
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
-
-
     public function __construct()
     {
         $this->listeObservateurs = new ArrayCollection();
@@ -104,7 +102,7 @@ class DocPiece implements Sujet, CommandeExecuteur
             $this->updatedAt = new \DateTimeImmutable();
         }
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
     }
 
     public function getDocument(): ?File
@@ -118,7 +116,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $nomfichier;
         $this->nomfichier = $nomfichier;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom du fichier", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom du fichier", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
     }
 
     public function getNomfichier(): ?string
@@ -133,7 +131,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $taillefichier;
         $this->taillefichier = $taillefichier;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taille du fichier", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taille du fichier", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
     }
 
     public function getTaillefichier(): ?int
@@ -157,7 +155,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $nom;
         $this->nom = $nom;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -247,7 +245,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $type;
         $this->type = $type;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -268,7 +266,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $cotation;
         $this->cotation = $cotation;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -298,7 +296,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $police;
         $this->police = $police;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -321,7 +319,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $piste;
         $this->piste = $piste;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -337,7 +335,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $paiement;
         $this->paiement = $paiement;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -353,7 +351,7 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $actionCRM;
         $this->actionCRM = $actionCRM;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -437,69 +435,13 @@ class DocPiece implements Sujet, CommandeExecuteur
         $newValue = $facture;
         $this->facture = $facture;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
 
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Cette fonction n'est pas encore définie");
     }
 }

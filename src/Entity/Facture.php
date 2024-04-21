@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FactureRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\FactureCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -14,7 +15,7 @@ use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\AutresClasses\JSAbstractFinances;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheDgi;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheArca;
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireSyntheClient;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
@@ -25,8 +26,11 @@ use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireArticlesGrouperS
 use App\Service\RefactoringJS\Commandes\Facture\CommandeProduireBordereauClientOuAssureur;
 
 #[ORM\Entity(repositoryClass: FactureRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -111,10 +115,6 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
     private ?array $synthseNCDgi = [];
     private ?array $notesElementsNCDgi = [];
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
-
     public function __construct()
     {
         $this->elementFactures = new ArrayCollection();
@@ -158,7 +158,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $reference;
         $this->reference = $reference;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Référence", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Référence", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -223,7 +223,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $partenaire;
         $this->partenaire = $partenaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -239,7 +239,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $assureur;
         $this->assureur = $assureur;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -255,7 +255,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $description;
         $this->description = $description;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -271,7 +271,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $piece;
         $this->piece = $piece;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -301,7 +301,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $totalRecu;
         $this->totalRecu = $totalRecu;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Total reçu", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Total reçu", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -350,7 +350,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
             $elementFacture->setFacture($this);
 
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -365,7 +365,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $elementFacture->setFacture(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Article de la facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -383,7 +383,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $autreTiers;
         $this->autreTiers = $autreTiers;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Autre tiers", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Autre tiers", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -405,7 +405,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
             $this->paiements->add($paiement);
             $paiement->setFacture($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -420,7 +420,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $paiement->setFacture(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -442,7 +442,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
             $newValue = $compteBancaire;
             $this->compteBancaires->add($compteBancaire);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -454,7 +454,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = null;
         $this->compteBancaires->removeElement($compteBancaire);
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Compte Bancaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -470,7 +470,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $signedBy;
         $this->signedBy = $signedBy;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -486,7 +486,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $posteSignedBy;
         $this->posteSignedBy = $posteSignedBy;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Poste du signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Poste du signataire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -503,7 +503,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $totalSolde;
         $this->totalSolde = $totalSolde;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Solde total", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Solde total", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -527,7 +527,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $status;
         $this->status = $status;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Status", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Status", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -548,7 +548,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
             $this->documents->add($document);
             $document->setFacture($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -563,7 +563,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $document->setFacture(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -603,7 +603,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $destination;
         $this->destination = $destination;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Destination", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Destination", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -680,7 +680,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $notesElementsFacturesND;
         $this->articlesNDClientOuAssureur = $notesElementsFacturesND;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes des articles", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Notes des articles", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -707,7 +707,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $synthseNCPartenaire;
         $this->synthseNCPartenaire = $synthseNCPartenaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC du Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Synthèse NC du Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -732,7 +732,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $synthseNDClientOuAssureur;
         $this->synthseNDClientOuAssureur = $synthseNDClientOuAssureur;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse ND du Client ou de l'Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Synthèse ND du Client ou de l'Assureur", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -759,7 +759,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $synthseNCArca;
         $this->synthseNCArca = $synthseNCArca;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -786,7 +786,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $synthseNCDgi;
         $this->synthseNCDgi = $synthseNCDgi;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Synthèse NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -812,7 +812,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $notesElementsNCDgi;
         $this->notesElementsNCDgi = $notesElementsNCDgi;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -837,7 +837,7 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $notesElementsNCArca;
         $this->notesElementsNCArca = $notesElementsNCArca;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Notes NC pour taxe", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -862,73 +862,14 @@ class Facture extends JSAbstractFinances implements Sujet, CommandeExecuteur
         $newValue = $notesElementsNCPartenaire;
         $this->notesElementsNCPartenaire = $notesElementsNCPartenaire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Notes NC pour partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Notes NC pour partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
 
 
-
-
-
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Cette fonction n'est pas encore définie");
     }
 }

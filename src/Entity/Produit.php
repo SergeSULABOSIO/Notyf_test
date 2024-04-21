@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\ProduitCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -14,12 +15,15 @@ use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Produit implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -67,11 +71,6 @@ class Produit implements Sujet, CommandeExecuteur
     private ?bool $iard = null;
     private ?string $iardTxt;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
-
-
     public function __construct()
     {
         $this->pistes = new ArrayCollection();
@@ -94,7 +93,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $nom;
         $this->nom = $nom;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -110,7 +109,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $description;
         $this->description = $description;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -126,7 +125,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $tauxarca;
         $this->tauxarca = $tauxarca;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -183,7 +182,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $code;
         $this->code = $code;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Code", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Code", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -216,7 +215,7 @@ class Produit implements Sujet, CommandeExecuteur
             $this->pistes->add($piste);
             $piste->setProduit($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
         }
 
         return $this;
@@ -231,7 +230,7 @@ class Produit implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $piste->setProduit(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Piste", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
             }
         }
 
@@ -249,7 +248,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $abonnement;
         $this->abonnement = $abonnement;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Par abonnement? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Par abonnement? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -265,7 +264,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $obligatoire;
         $this->obligatoire = $obligatoire;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Obligatoire? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Obligatoire? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -281,7 +280,7 @@ class Produit implements Sujet, CommandeExecuteur
         $newValue = $iard;
         $this->iard = $iard;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "IARD? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "IARD? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -312,69 +311,8 @@ class Produit implements Sujet, CommandeExecuteur
         return $this->obligatoireTxt;
     }
 
-
-
-    
-
-
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Fonction non encore définie");
     }
 }

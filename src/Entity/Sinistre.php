@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SinistreRepository;
@@ -12,12 +13,15 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: SinistreRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Sinistre implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -76,10 +80,6 @@ class Sinistre implements Sujet, CommandeExecuteur
     #[ORM\OneToMany(mappedBy: 'sinistre', targetEntity: ActionCRM::class)]
     private Collection $actionCRMs;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
-
     public function __construct()
     {
         $this->experts = new ArrayCollection();
@@ -105,7 +105,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $titre;
         $this->titre = $titre;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Titre", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Titre", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -121,7 +121,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $description;
         $this->description = $description;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -177,7 +177,7 @@ class Sinistre implements Sujet, CommandeExecuteur
             $newValue = $expert;
             $this->experts->add($expert);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Expert", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Expert", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -189,7 +189,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = null;
         $this->experts->removeElement($expert);
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Expert", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Expert", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -205,7 +205,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $cout;
         $this->cout = $cout;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Coût", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Coût", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -233,7 +233,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $montantPaye;
         $this->montantPaye = $montantPaye;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant payé", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Montant payé", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -249,7 +249,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $occuredAt;
         $this->occuredAt = $occuredAt;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date de l'évènement", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date de l'évènement", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -265,7 +265,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $paidAt;
         $this->paidAt = $paidAt;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date de paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date de paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -286,7 +286,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $numero;
         $this->numero = $numero;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Numéro", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -302,7 +302,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $police;
         $this->police = $police;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Police", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -318,7 +318,7 @@ class Sinistre implements Sujet, CommandeExecuteur
         $newValue = $etape;
         $this->etape = $etape;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Etape sinistre", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Etape sinistre", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -339,7 +339,7 @@ class Sinistre implements Sujet, CommandeExecuteur
             $this->victimes->add($victime);
             $victime->setSinistre($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Victime", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Victime", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -354,7 +354,7 @@ class Sinistre implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $victime->setSinistre(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Victime", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Victime", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
@@ -377,7 +377,7 @@ class Sinistre implements Sujet, CommandeExecuteur
             $this->docPieces->add($docPiece);
             // $docPiece->setSinistre($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -390,7 +390,7 @@ class Sinistre implements Sujet, CommandeExecuteur
             $oldValue = $docPiece;
             $newValue = null;
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Document", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -412,7 +412,7 @@ class Sinistre implements Sujet, CommandeExecuteur
             $this->actionCRMs->add($actionCRM);
             // $actionCRM->setSinistre($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -424,74 +424,14 @@ class Sinistre implements Sujet, CommandeExecuteur
             $oldValue = $actionCRM;
             $newValue = null;
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Tâche", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
     }
 
-
-
-
-
-    
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Fonction non encore définie");
     }
 }

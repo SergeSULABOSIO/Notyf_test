@@ -10,16 +10,20 @@ use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -93,10 +97,6 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateEmition = null;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
-
     public function __construct()
     {
         $this->listeObservateurs = new ArrayCollection();
@@ -118,7 +118,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $type;
         $this->type = $type;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -182,7 +182,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $partageable;
         $this->partageable = $partageable;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Partageable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Partageable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -198,7 +198,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $taxable;
         $this->taxable = $taxable;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taxable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taxable? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -214,7 +214,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $base;
         $this->base = $base;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Base", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Base", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -230,7 +230,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $taux;
         $this->taux = $taux;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Taux", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -246,7 +246,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $cotation;
         $this->cotation = $cotation;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -283,7 +283,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $isparttranche;
         $this->isparttranche = $isparttranche;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Par tranches? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Par tranches? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -299,7 +299,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $ispartclient;
         $this->ispartclient = $ispartclient;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Payabale par client? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Payabale par client? (O/N)", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -405,7 +405,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $montantFlat;
         $this->montantFlat = $montantFlat;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant flat", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Montant flat", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -495,7 +495,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateEffet;
         $this->dateEffet = $dateEffet;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'effet", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -519,7 +519,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateExpiration;
         $this->dateExpiration = $dateExpiration;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Echéance", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -543,7 +543,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateOperation;
         $this->dateOperation = $dateOperation;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'opération", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -567,7 +567,7 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         $newValue = $dateEmition;
         $this->dateEmition = $dateEmition;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Date d'émition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Date d'émition", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -870,64 +870,8 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
         return round($this->getIndicaRevenuPartageable() - $this->getIndicaPartenaireRetrocom());
     }
 
-
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Fonction non encore définie");
     }
 }

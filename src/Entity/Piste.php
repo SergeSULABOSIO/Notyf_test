@@ -110,10 +110,7 @@ class Piste implements Sujet, CommandeExecuteur
     private ?float $duree = null;
     private ?Monnaie $monnaie_Affichage;
 
-
-
-
-
+    
     public function __construct()
     {
         $this->cotations = new ArrayCollection();

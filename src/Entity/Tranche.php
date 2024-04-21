@@ -1433,7 +1433,6 @@ class Tranche extends JSAbstractFinances implements IndicateursJS, Sujet, Comman
         return $this->retroCommissionTotaleSolde;
     }
 
-
     public function transfererObservateur(?Observateur $observateur)
     {
         dd("Cette fonction n'est pas encore définie");

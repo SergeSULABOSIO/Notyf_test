@@ -9,7 +9,6 @@ use App\Controller\Admin\RevenuCrudController;
 use App\Controller\Admin\FactureCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
 use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Service\RefactoringJS\Evenements\Evenement;

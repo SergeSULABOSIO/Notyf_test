@@ -2,21 +2,26 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\CompteBancaireRepository;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 #[ORM\Entity(repositoryClass: CompteBancaireRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CompteBancaire implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -82,7 +87,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
         $newValue = $intitule;
         $this->intitule = $intitule;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Intitulé du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Intitulé du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -98,7 +103,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
         $newValue = $numero;
         $this->numero = $numero;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Numéro du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Numéro du compte", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -114,7 +119,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
         $newValue = $banque;
         $this->banque = $banque;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Nom de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Nom de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -130,7 +135,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
         $newValue = $codeSwift;
         $this->codeSwift = $codeSwift;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Code Swift de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Code Swift de la banque", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -199,7 +204,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
         $newValue = $codeMonnaie;
         $this->codeMonnaie = $codeMonnaie;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Code de la monnaie", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Code de la monnaie", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -220,7 +225,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
             $this->factures->add($facture);
             $facture->addCompteBancaire($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -233,7 +238,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
             $newValue = null;
             $facture->removeCompteBancaire($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Facture", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -255,7 +260,7 @@ class CompteBancaire implements Sujet, CommandeExecuteur
             $this->paiements->add($paiement);
             $paiement->setCompteBancaire($this);
             //Ecouteur d'action
-            $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;
@@ -270,70 +275,15 @@ class CompteBancaire implements Sujet, CommandeExecuteur
                 $newValue = null;
                 $paiement->setCompteBancaire(null);
                 //Ecouteur d'action
-                $this->executer(new CommandeDetecterChangementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+                $this->executer(new ComDetecterEvenementAttribut($this, "Paiement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
             }
         }
 
         return $this;
     }
 
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Cette fonction n'est pas encore définie");
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-
+use App\Entity\Traits\TraitEcouteurEvenements;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AutomobileRepository;
@@ -13,8 +13,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 #[ORM\Entity(repositoryClass: AutomobileRepository::class)]
-class Automobile
+#[ORM\HasLifecycleCallbacks]
+class Automobile implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -75,7 +78,7 @@ class Automobile
 
     public function __construct()
     {
-        
+        $this->listeObservateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -266,5 +269,10 @@ class Automobile
         $this->police = $police;
 
         return $this;
+    }
+
+    public function transfererObservateur(?Observateur $observateur)
+    {
+        dd("Cette fonction n'est pas encore définie");
     }
 }

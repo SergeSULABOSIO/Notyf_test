@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ChargementRepository;
+use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,12 +13,14 @@ use App\Controller\Admin\ChargementCrudController;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 
 #[ORM\Entity(repositoryClass: ChargementRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Chargement implements Sujet, CommandeExecuteur
 {
+    use TraitEcouteurEvenements;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -50,9 +53,6 @@ class Chargement implements Sujet, CommandeExecuteur
 
     private ?Monnaie $monnaie_Affichage;
 
-    //Evenements
-    private ?ArrayCollection $listeObservateurs = null;
-
 
     public function __construct()
     {
@@ -75,7 +75,7 @@ class Chargement implements Sujet, CommandeExecuteur
         $newValue = $type;
         $this->type = $type;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Type", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -91,7 +91,7 @@ class Chargement implements Sujet, CommandeExecuteur
         $newValue = $description;
         $this->description = $description;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Description", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -107,7 +107,7 @@ class Chargement implements Sujet, CommandeExecuteur
         $newValue = $montant;
         $this->montant = $montant;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Montant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Montant", $oldValue, $newValue, Evenement::FORMAT_VALUE_PRIMITIVE));
 
         return $this;
     }
@@ -171,7 +171,7 @@ class Chargement implements Sujet, CommandeExecuteur
         $newValue = $cotation;
         $this->cotation = $cotation;
         //Ecouteur d'action
-        $this->executer(new CommandeDetecterChangementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
+        $this->executer(new ComDetecterEvenementAttribut($this, "Cotation", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
 
         return $this;
     }
@@ -198,15 +198,6 @@ class Chargement implements Sujet, CommandeExecuteur
         }
         return $strMonnaie;
     }
-
-    // private function getMonnaie_Affichage()
-    // {
-    //     $monnaieAffichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_SAISIE_ET_AFFICHAGE]);
-    //     if($monnaieAffichage == null){
-    //         $monnaieAffichage = $this->getMonnaie(MonnaieCrudController::TAB_MONNAIE_FONCTIONS[MonnaieCrudController::FONCTION_AFFICHAGE_UNIQUEMENT]);
-    //     }
-    //     return $monnaieAffichage;
-    // }
 
     private function getMonnaie($fonction)
     {
@@ -243,63 +234,9 @@ class Chargement implements Sujet, CommandeExecuteur
         }
         return $this->monnaie_Affichage;
     }
-
-    /**
-     * LES METHODES NECESSAIRES AUX ECOUTEURS D'ACTIONS
-     */
-
-
-    public function ajouterObservateur(?Observateur $observateur)
+    
+    public function transfererObservateur(?Observateur $observateur)
     {
-        // Ajout observateur
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->add($observateur);
-        }
-    }
-
-    public function retirerObservateur(?Observateur $observateur)
-    {
-        $this->initListeObservateurs();
-        if ($this->listeObservateurs->contains($observateur)) {
-            $this->listeObservateurs->removeElement($observateur);
-        }
-    }
-
-    public function viderListeObservateurs()
-    {
-        $this->initListeObservateurs();
-        if (!$this->listeObservateurs->isEmpty()) {
-            $this->listeObservateurs = new ArrayCollection([]);
-        }
-    }
-
-    public function getListeObservateurs(): ?ArrayCollection
-    {
-        return $this->listeObservateurs;
-    }
-
-    public function setListeObservateurs(ArrayCollection $listeObservateurs)
-    {
-        $this->listeObservateurs = $listeObservateurs;
-    }
-
-    public function notifierLesObservateurs(?Evenement $evenement)
-    {
-        $this->executer(new CommandePisteNotifierEvenement($this->listeObservateurs, $evenement));
-    }
-
-    public function initListeObservateurs()
-    {
-        if ($this->listeObservateurs == null) {
-            $this->listeObservateurs = new ArrayCollection();
-        }
-    }
-
-    public function executer(?Commande $commande)
-    {
-        if ($commande != null) {
-            $commande->executer();
-        }
+        dd("Cette fonction n'est pas encore définie");
     }
 }

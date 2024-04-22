@@ -7,11 +7,6 @@ use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauClient;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouvelleTache;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauContact;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauCotation;
-use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModification;
 
 class ObservateurAttributAjout implements CommandeExecuteur, Superviseur
 {

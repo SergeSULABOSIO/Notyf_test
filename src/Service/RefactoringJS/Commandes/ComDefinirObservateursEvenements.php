@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Service\RefactoringJS\Commandes\Piste;
+namespace App\Service\RefactoringJS\Commandes;
 
 use App\Entity\Piste;
 use App\Service\ServiceDates;

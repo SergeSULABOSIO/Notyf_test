@@ -27,7 +27,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use App\Service\RefactoringJS\Commandes\Piste\ComDefinirObservateursEvenements;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
 

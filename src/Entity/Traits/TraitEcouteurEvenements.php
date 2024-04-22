@@ -9,8 +9,6 @@ use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\ComDetecterEvenementEntite;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteNotifierEvenement;
-use App\Service\RefactoringJS\Commandes\CommandeDetecterChangementAttribut;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
 
 trait TraitEcouteurEvenements
 {

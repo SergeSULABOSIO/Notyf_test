@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SuperviseurPiste implements CommandeExecuteur, Superviseur
 {
@@ -16,6 +17,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
     private Collection $historiqueEvenements;
 
     public function __construct(
+        private ?OutputInterface $console,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -105,7 +107,10 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        if ($this->console != null) {
+            $this->console->writeln("Evènement: ". $e);
+        }
     }
 
     public function onEntiteApresSuppression(?Evenement $e)
@@ -114,7 +119,10 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        if ($this->console != null) {
+            $this->console->writeln("Evènement: ". $e);
+        }
     }
 
     public function executer(?Commande $commande)

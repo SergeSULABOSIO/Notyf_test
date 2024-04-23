@@ -86,7 +86,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        dd("Historique d'évènements:", $this->historiqueEvenements);
 
     }
 
@@ -96,7 +96,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function onEntiteApresEdition(?Evenement $e)
@@ -105,7 +105,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function onEntiteApresSuppression(?Evenement $e)
@@ -114,7 +114,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function executer(?Commande $commande)

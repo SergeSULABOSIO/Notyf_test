@@ -5,72 +5,94 @@ namespace App\Service\RefactoringJS\Evenements;
 use App\Service\ServiceDates;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 
 class SuperviseurPiste implements CommandeExecuteur, Superviseur
 {
+
+    private Collection $historiqueEvenements;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
     ) {
+        $this->historiqueEvenements = new ArrayCollection();
     }
 
     public function onAttributAjout(?Evenement $e)
     {
-        dd("onAttributAjout");
+        // dd("onAttributAjout", $e);
+        $this->historiqueEvenements->add($e);
     }
 
 
     public function onAttributChargement(?Evenement $e)
     {
-        dd("onAttributChargement");
+        // dd("onAttributChargement", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onAttributEdition(?Evenement $e)
     {
-        dd("onAttributEdition");
+        // dd("onAttributEdition", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onAttributSuppression(?Evenement $e)
     {
-        dd("onAttributSuppression");
+        // dd("onAttributSuppression", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onEntiteAvantAjout(?Evenement $e)
     {
-        dd("onEntiteAvantAjout");
+        // dd("onEntiteAvantAjout", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
-        dd("onEntiteAvantEdition");
+        // dd("onEntiteAvantEdition", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onEntiteAvantSuppression(?Evenement $e)
     {
-        dd("onEntiteAvantSuppression");
+        // dd("onEntiteAvantSuppression", $e);
+        $this->historiqueEvenements->add($e);
     }
 
     public function onEntiteApresAjout(?Evenement $e)
     {
-        dd("onEntiteApresAjout");
+        // dd("onEntiteApresAjout", $e);
+        $this->historiqueEvenements->add($e);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
+
     }
 
     public function onEntiteApresChargement(?Evenement $e)
     {
-        dd("onEntiteApresChargement");
+        // dd("onEntiteApresChargement", $e);
+        $this->historiqueEvenements->add($e);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
     }
-
+    
     public function onEntiteApresEdition(?Evenement $e)
     {
-        dd("onEntiteApresEdition");
+        // dd("onEntiteApresEdition", $e);
+        $this->historiqueEvenements->add($e);
+        dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function onEntiteApresSuppression(?Evenement $e)
     {
-        dd("onEntiteApresSuppression");
+        // dd("onEntiteApresSuppression", $e);
+        $this->historiqueEvenements->add($e);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function executer(?Commande $commande)

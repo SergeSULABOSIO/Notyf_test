@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\ComDefinirEseUserDateCreationEtModificat
 class ObservateurEntiteAvantAjout extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -40,6 +41,11 @@ class ObservateurEntiteAvantAjout extends ObservateurAbstract implements Command
             ));
         }
         // dd("Evenement Avant Ajout de l'entité", $evenement);
+        
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onEntiteAvantAjout($evenement);
+        }
     }
 
     public function executer(?Commande $commande)

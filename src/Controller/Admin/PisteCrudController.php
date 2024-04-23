@@ -30,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
+use App\Service\RefactoringJS\Evenements\SuperviseurPiste;
 
 class PisteCrudController extends AbstractCrudController implements CommandeExecuteur
 {
@@ -48,6 +49,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
     public ?Crud $crud = null;
 
     public function __construct(
+        private SuperviseurPiste $superviseurPiste,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceDates $serviceDates,
@@ -129,6 +131,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         
         //Exécuter - Ecouteurs d'évènements
         $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurPiste,
             $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,
@@ -143,6 +146,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
         $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurPiste,
             $this->entityManager,
             $this->serviceEntreprise,
             $this->serviceDates,

@@ -25,6 +25,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurAttributAjout extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -84,6 +85,11 @@ class ObservateurAttributAjout extends ObservateurAbstract implements CommandeEx
             $evenement
         ));
         // dd("Evenement Ajout:", $evenement);
+        
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onAttributAjout($evenement);
+        }
     }
 
     public function executer(?Commande $commande)

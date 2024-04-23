@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurAttributChargement extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
     ) {
@@ -37,6 +38,11 @@ class ObservateurAttributChargement extends ObservateurAbstract implements Comma
             $this->serviceDates
         ));
         // dd("Evenement Chargement:", $evenement);
+
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onAttributChargement($evenement);
+        }
     }
 
     public function executer(?Commande $commande)

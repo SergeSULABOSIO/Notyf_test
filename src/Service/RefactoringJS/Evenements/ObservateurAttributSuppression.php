@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurAttributSuppression extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
     ) {
@@ -37,6 +38,11 @@ class ObservateurAttributSuppression extends ObservateurAbstract implements Comm
             $this->serviceDates
         ));
         // dd("Evenement Suppression:", $evenement);
+
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onAttributSuppression($evenement);
+        }
     }
 
     public function executer(?Commande $commande)

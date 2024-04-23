@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\RefactoringJS\Commandes;
 
 use App\Entity\Piste;
@@ -22,36 +23,37 @@ use App\Service\RefactoringJS\Evenements\ObservateurAttributSuppression;
 use App\Service\RefactoringJS\Evenements\ObservateurEntiteApresChargement;
 use App\Service\RefactoringJS\Evenements\ObservateurEntiteApresSuppression;
 use App\Service\RefactoringJS\Evenements\ObservateurEntiteAvantSuppression;
+use App\Service\RefactoringJS\Evenements\SuperviseurPiste;
 
 class ComDefinirObservateursEvenements implements Commande
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private ?SuperviseurPiste $superviseurPiste,
+        private ?EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates,
         private ?Sujet $sujet
     ) {
-        
     }
 
     public function executer()
     {
         if ($this->sujet != null) {
             //les observateurs des évènements sur les attributs du sujet
-            $this->sujet->ajouterObservateur(new ObservateurAttributAjout($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurAttributChargement($this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurAttributEdition($this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurAttributSuppression($this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurAttributAjout($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurAttributChargement($this->superviseurPiste, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurAttributEdition($this->superviseurPiste, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurAttributSuppression($this->superviseurPiste, $this->serviceEntreprise, $this->serviceDates));
             //les obervateurs des évènements sur le sujet lui-même - AVANT
-            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantAjout($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantEdition($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantSuppression($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantAjout($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantEdition($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteAvantSuppression($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
             //les obervateurs des évènements sur le sujet lui-même - APRES
-            $this->sujet->ajouterObservateur(new ObservateurEntiteApresAjout($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurEntiteApresChargement($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurEntiteApresEdition($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            $this->sujet->ajouterObservateur(new ObservateurEntiteApresSuppression($this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            
+            $this->sujet->ajouterObservateur(new ObservateurEntiteApresAjout($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteApresChargement($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteApresEdition($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            $this->sujet->ajouterObservateur(new ObservateurEntiteApresSuppression($this->superviseurPiste, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+
             // dd("Piste:", $this->piste);
         }
     }

@@ -13,6 +13,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurAttributEdition extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
     ) {
@@ -42,6 +43,11 @@ class ObservateurAttributEdition extends ObservateurAbstract implements Commande
             ));
         }
         // dd("Evenement Edition:", $evenement);
+
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onAttributEdition($evenement);
+        }
     }
 
     public function executer(?Commande $commande)

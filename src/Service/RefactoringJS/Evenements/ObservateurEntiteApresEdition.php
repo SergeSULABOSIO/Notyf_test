@@ -12,6 +12,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurEntiteApresEdition extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
+        private ?SuperviseurPiste $superviseurPiste,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -31,8 +32,10 @@ class ObservateurEntiteApresEdition extends ObservateurAbstract implements Comma
         $evenement->setDonnees($donnees);
 
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
-        if ($evenement->getType() == Evenement::TYPE_ENTITE_APRES_EDITION) {
-            // dd("Evenement Après Edition de l'entité", $evenement);
+        
+        //On notifie le superviseur
+        if($this->superviseurPiste != null){
+            $this->superviseurPiste->onEntiteApresEdition($evenement);
         }
     }
 

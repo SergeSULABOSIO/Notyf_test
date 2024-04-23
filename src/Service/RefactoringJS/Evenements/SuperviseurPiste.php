@@ -26,50 +26,66 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
     public function onAttributAjout(?Evenement $e)
     {
         // dd("onAttributAjout", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
 
     public function onAttributChargement(?Evenement $e)
     {
         // dd("onAttributChargement", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onAttributEdition(?Evenement $e)
     {
         // dd("onAttributEdition", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onAttributSuppression(?Evenement $e)
     {
         // dd("onAttributSuppression", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onEntiteAvantAjout(?Evenement $e)
     {
         // dd("onEntiteAvantAjout", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
         // dd("onEntiteAvantEdition", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onEntiteAvantSuppression(?Evenement $e)
     {
         // dd("onEntiteAvantSuppression", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
     }
 
     public function onEntiteApresAjout(?Evenement $e)
     {
         // dd("onEntiteApresAjout", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
         // dd("Historique d'évènements:", $this->historiqueEvenements);
 
     }
@@ -77,22 +93,28 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
     public function onEntiteApresChargement(?Evenement $e)
     {
         // dd("onEntiteApresChargement", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
         // dd("Historique d'évènements:", $this->historiqueEvenements);
     }
     
     public function onEntiteApresEdition(?Evenement $e)
     {
         // dd("onEntiteApresEdition", $e);
-        $this->historiqueEvenements->add($e);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
         dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function onEntiteApresSuppression(?Evenement $e)
     {
         // dd("onEntiteApresSuppression", $e);
-        $this->historiqueEvenements->add($e);
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        if (!$this->historiqueEvenements->contains($e)) {
+            $this->historiqueEvenements->add($e);
+        }
+        dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function executer(?Commande $commande)

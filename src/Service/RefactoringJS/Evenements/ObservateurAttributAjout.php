@@ -25,7 +25,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurAttributAjout extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
-        private ?SuperviseurPiste $superviseurPiste,
+        private ?SuperviseurSujet $superviseurSujet,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -56,39 +56,39 @@ class ObservateurAttributAjout extends ObservateurAbstract implements CommandeEx
         }
 
 
-        /**
-         * Commande d'ajout d'éventuel nouveau client
-         */
-        $this->executer(new ComPisteAjouterNouveauClient(
-            $this->entityManager,
-            $evenement
-        ));
-        /**
-         * Commande d'ajout d'éventuels contacts
-         */
-        $this->executer(new ComPisteAjouterNouveauContact(
-            $this->entityManager,
-            $evenement
-        ));
-        /**
-         * Commande d'ajout d'éventuels Actions / Tâches
-         */
-        $this->executer(new ComPisteAjouterNouvelleTache(
-            $this->entityManager,
-            $evenement
-        ));
-        /**
-         * Commande d'ajout d'éventuels Cotation
-         */
-        $this->executer(new ComPisteAjouterNouveauCotation(
-            $this->entityManager,
-            $evenement
-        ));
-        // dd("Evenement Ajout:", $evenement);
+        // /**
+        //  * Commande d'ajout d'éventuel nouveau client
+        //  */
+        // $this->executer(new ComPisteAjouterNouveauClient(
+        //     $this->entityManager,
+        //     $evenement
+        // ));
+        // /**
+        //  * Commande d'ajout d'éventuels contacts
+        //  */
+        // $this->executer(new ComPisteAjouterNouveauContact(
+        //     $this->entityManager,
+        //     $evenement
+        // ));
+        // /**
+        //  * Commande d'ajout d'éventuels Actions / Tâches
+        //  */
+        // $this->executer(new ComPisteAjouterNouvelleTache(
+        //     $this->entityManager,
+        //     $evenement
+        // ));
+        // /**
+        //  * Commande d'ajout d'éventuels Cotation
+        //  */
+        // $this->executer(new ComPisteAjouterNouveauCotation(
+        //     $this->entityManager,
+        //     $evenement
+        // ));
+        // // dd("Evenement Ajout:", $evenement);
         
         //On notifie le superviseur
-        if($this->superviseurPiste != null){
-            $this->superviseurPiste->onAttributAjout($evenement);
+        if($this->superviseurSujet != null){
+            $this->superviseurSujet->onAttributAjout($evenement);
         }
     }
 

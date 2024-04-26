@@ -9,8 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauClient;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouvelleTache;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauContact;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauCotation;
 
-class SuperviseurPiste implements CommandeExecuteur, Superviseur
+class SuperviseurSujet implements CommandeExecuteur, Superviseur
 {
 
     private Collection $historiqueEvenements;
@@ -25,7 +29,43 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onAttributAjout(?Evenement $e)
     {
-        // dd("onAttributAjout", $e);
+        dd("onAttributAjout", $e);
+
+
+        /**
+         * Commande d'ajout d'éventuel nouveau client
+         */
+        $this->executer(new ComPisteAjouterNouveauClient(
+            $this->entityManager,
+            $e
+        ));
+        /**
+         * Commande d'ajout d'éventuels contacts
+         */
+        $this->executer(new ComPisteAjouterNouveauContact(
+            $this->entityManager,
+            $e
+        ));
+        /**
+         * Commande d'ajout d'éventuels Actions / Tâches
+         */
+        $this->executer(new ComPisteAjouterNouvelleTache(
+            $this->entityManager,
+            $e
+        ));
+        /**
+         * Commande d'ajout d'éventuels Cotation
+         */
+        $this->executer(new ComPisteAjouterNouveauCotation(
+            $this->entityManager,
+            $e
+        ));
+        // dd("Evenement Ajout:", $evenement);
+
+
+
+
+
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -34,7 +74,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onAttributChargement(?Evenement $e)
     {
-        // dd("onAttributChargement", $e);
+        dd("onAttributChargement", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -42,7 +82,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onAttributEdition(?Evenement $e)
     {
-        // dd("onAttributEdition", $e);
+        dd("onAttributEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -50,7 +90,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onAttributSuppression(?Evenement $e)
     {
-        // dd("onAttributSuppression", $e);
+        dd("onAttributSuppression", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -58,7 +98,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteAvantAjout(?Evenement $e)
     {
-        // dd("onEntiteAvantAjout", $e);
+        dd("onEntiteAvantAjout", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -66,7 +106,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
-        // dd("onEntiteAvantEdition", $e);
+        dd("onEntiteAvantEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -74,7 +114,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteAvantSuppression(?Evenement $e)
     {
-        // dd("onEntiteAvantSuppression", $e);
+        dd("onEntiteAvantSuppression", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -82,17 +122,16 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteApresAjout(?Evenement $e)
     {
-        // dd("onEntiteApresAjout", $e);
+        dd("onEntiteApresAjout", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
         dd("Historique d'évènements:", $this->historiqueEvenements);
-
     }
 
     public function onEntiteApresChargement(?Evenement $e)
     {
-        // dd("onEntiteApresChargement", $e);
+        dd("onEntiteApresChargement", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -101,7 +140,7 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteApresEdition(?Evenement $e)
     {
-        // dd("onEntiteApresEdition", $e);
+        dd("onEntiteApresEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -110,13 +149,16 @@ class SuperviseurPiste implements CommandeExecuteur, Superviseur
 
     public function onEntiteApresSuppression(?Evenement $e)
     {
-        // dd("onEntiteApresSuppression", $e);
+        dd("onEntiteApresSuppression", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
         dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
+
+
+    
     public function executer(?Commande $commande)
     {
         if ($commande != null) {

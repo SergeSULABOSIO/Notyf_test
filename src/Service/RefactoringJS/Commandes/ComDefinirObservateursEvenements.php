@@ -41,9 +41,9 @@ class ComDefinirObservateursEvenements implements Commande
         if ($this->sujet != null) {
             //les observateurs des évènements sur les attributs du sujet
             $this->sujet->ajouterObservateur(new ObservateurAttributAjout($this->superviseurSujet, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
-            dd("J'affiche certaines données:", $this->sujet);
             $this->sujet->ajouterObservateur(new ObservateurAttributChargement($this->superviseurSujet, $this->serviceEntreprise, $this->serviceDates));
             $this->sujet->ajouterObservateur(new ObservateurAttributEdition($this->superviseurSujet, $this->serviceEntreprise, $this->serviceDates));
+            dd("Observation de la modification d'une piste", $this->sujet);
             $this->sujet->ajouterObservateur(new ObservateurAttributSuppression($this->superviseurSujet, $this->serviceEntreprise, $this->serviceDates));
             //les obervateurs des évènements sur le sujet lui-même - AVANT
             $this->sujet->ajouterObservateur(new ObservateurEntiteAvantAjout($this->superviseurSujet, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));

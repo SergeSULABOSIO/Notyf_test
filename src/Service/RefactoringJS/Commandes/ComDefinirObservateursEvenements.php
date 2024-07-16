@@ -53,6 +53,7 @@ class ComDefinirObservateursEvenements implements Commande
             $this->sujet->ajouterObservateur(new ObservateurEntiteApresChargement($this->superviseurSujet, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
             $this->sujet->ajouterObservateur(new ObservateurEntiteApresEdition($this->superviseurSujet, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
             $this->sujet->ajouterObservateur(new ObservateurEntiteApresSuppression($this->superviseurSujet, $this->entityManager, $this->serviceEntreprise, $this->serviceDates));
+            dd("Observation du sujet - Je suis ici:", $this->sujet);
 
             // dd("Piste:", $this->piste);
         }

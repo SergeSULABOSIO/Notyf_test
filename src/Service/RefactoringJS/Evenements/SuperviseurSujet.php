@@ -29,9 +29,6 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onAttributAjout(?Evenement $e)
     {
-        dd("onAttributAjout", $e);
-
-
         /**
          * Commande d'ajout d'éventuel nouveau client
          */
@@ -61,99 +58,79 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
             $e
         ));
         // dd("Evenement Ajout:", $evenement);
-
-
-
-
-
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onAttributAjout", $e);
     }
-
-
+    
+    
     public function onAttributChargement(?Evenement $e)
     {
-        dd("onAttributChargement", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onAttributChargement", $e);
     }
 
     public function onAttributEdition(?Evenement $e)
     {
-        //dd("onAttributEdition", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onAttributEdition", $e);
     }
 
     public function onAttributSuppression(?Evenement $e)
     {
-        dd("onAttributSuppression", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onAttributSuppression", $e);
     }
 
     public function onEntiteAvantAjout(?Evenement $e)
     {
-        dd("onEntiteAvantAjout", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteAvantAjout", $e);
     }
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
-        // dd("onEntiteAvantEdition", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteAvantEdition", $e);
     }
 
     public function onEntiteAvantSuppression(?Evenement $e)
     {
-        dd("onEntiteAvantSuppression", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteAvantSuppression", $e);
     }
 
     public function onEntiteApresAjout(?Evenement $e)
     {
-        dd("onEntiteApresAjout", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteApresAjout", $e);
     }
 
     public function onEntiteApresChargement(?Evenement $e)
     {
-        dd("onEntiteApresChargement", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteApresChargement", $e);
     }
 
     public function onEntiteApresEdition(?Evenement $e)
     {
-        // dd("onEntiteApresEdition", $e);
-        if (!$this->historiqueEvenements->contains($e)) {
-            $this->historiqueEvenements->add($e);
-        }
-        // dd("Historique d'évènements:", $this->historiqueEvenements);
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteApresEdition", $e);
     }
 
     public function onEntiteApresSuppression(?Evenement $e)
     {
-        dd("onEntiteApresSuppression", $e);
+        //On peu exécuter d'autres instructions ici
+        $this->updateHistoriqueEvenement("onEntiteApresSuppression", $e);
+    }
+
+
+    private function updateHistoriqueEvenement($message, ?Evenement $e)
+    {
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        dd("Historique d'évènements: " . $message, $this->historiqueEvenements);
     }
 
 

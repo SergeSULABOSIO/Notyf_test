@@ -82,7 +82,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onAttributEdition(?Evenement $e)
     {
-        dd("onAttributEdition", $e);
+        //dd("onAttributEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -106,7 +106,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
-        dd("onEntiteAvantEdition", $e);
+        // dd("onEntiteAvantEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
@@ -140,11 +140,11 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onEntiteApresEdition(?Evenement $e)
     {
-        dd("onEntiteApresEdition", $e);
+        // dd("onEntiteApresEdition", $e);
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        dd("Historique d'évènements:", $this->historiqueEvenements);
+        // dd("Historique d'évènements:", $this->historiqueEvenements);
     }
 
     public function onEntiteApresSuppression(?Evenement $e)

@@ -31,7 +31,9 @@ class ObservateurAttributEdition extends ObservateurAbstract implements Commande
 
         /**
          * On définit directement l'entreprise, 
-         * l'utilisateur, la date de créaton, et celle de modification
+         * l'utilisateur, 
+         * la date de créaton, 
+         * et celle de modification
          */
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
@@ -43,7 +45,6 @@ class ObservateurAttributEdition extends ObservateurAbstract implements Commande
             ));
         }
         // dd("Evenement Edition:", $evenement);
-
         //On notifie le superviseur
         if($this->superviseurSujet != null){
             $this->superviseurSujet->onAttributEdition($evenement);

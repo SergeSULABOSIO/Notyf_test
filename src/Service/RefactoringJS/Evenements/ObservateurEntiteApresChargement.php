@@ -12,7 +12,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 class ObservateurEntiteApresChargement extends ObservateurAbstract implements CommandeExecuteur
 {
     public function __construct(
-        private ?SuperviseurPiste $superviseurPiste,
+        private ?SuperviseurSujet $superviseurSujet,
         private EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
         private ?ServiceDates $serviceDates
@@ -34,8 +34,8 @@ class ObservateurEntiteApresChargement extends ObservateurAbstract implements Co
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         
         //On notifie le superviseur
-        if($this->superviseurPiste != null){
-            $this->superviseurPiste->onEntiteApresChargement($evenement);
+        if($this->superviseurSujet != null){
+            $this->superviseurSujet->onEntiteApresChargement($evenement);
         }
     }
 

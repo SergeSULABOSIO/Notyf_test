@@ -73,7 +73,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onAttributEdition(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
-        dd("Ici", $e);
+        // dd("Ici", $e);
         $this->updateHistoriqueEvenement("onAttributEdition", $e);
     }
 
@@ -94,6 +94,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onEntiteAvantEdition(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
+        // dd("Ici", $e);
         $this->setUpdateTime($e);
         $this->updateHistoriqueEvenement("onEntiteAvantEdition", $e);
     }

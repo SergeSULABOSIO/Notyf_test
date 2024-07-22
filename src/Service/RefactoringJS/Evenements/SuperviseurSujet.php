@@ -58,12 +58,12 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
             $e
         ));
         // dd("Evenement Ajout:", $evenement);
-        
+
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributAjout", $e);
     }
-    
-    
+
+
     public function onAttributChargement(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
@@ -85,12 +85,15 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onEntiteAvantAjout(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
+        $this->setCreateTime($e);
+        $this->setUpdateTime($e);
         $this->updateHistoriqueEvenement("onEntiteAvantAjout", $e);
     }
 
     public function onEntiteAvantEdition(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
+        $this->setUpdateTime($e);
         $this->updateHistoriqueEvenement("onEntiteAvantEdition", $e);
     }
 
@@ -125,17 +128,40 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     }
 
 
+
+
+    
+
+    private function setUpdateTime(?Evenement $e)
+    {
+        /**
+         * @var Sujet $sujetEdite
+         */
+        $sujetEdite = $e->getDonnees()["Données"];
+        $sujetEdite->setUpdatedAt(new \DateTimeImmutable("now"));
+    }
+
+    private function setCreateTime(?Evenement $e)
+    {
+        /**
+         * @var Sujet $sujetEdite
+         */
+        $sujetEdite = $e->getDonnees()["Données"];
+        $sujetEdite->setCreatedAt(new \DateTimeImmutable("now"));
+    }
+
+
     private function updateHistoriqueEvenement($message, ?Evenement $e)
     {
         if (!$this->historiqueEvenements->contains($e)) {
             $this->historiqueEvenements->add($e);
         }
-        dd("Historique d'évènements: " . $message, $this->historiqueEvenements);
+        // dd("Historique d'évènements: " . $message, $this->historiqueEvenements);
     }
 
 
 
-    
+
     public function executer(?Commande $commande)
     {
         if ($commande != null) {

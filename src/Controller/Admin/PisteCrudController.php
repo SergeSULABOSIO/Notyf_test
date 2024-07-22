@@ -97,7 +97,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $this->servicePreferences->appliquerPreferenceTaille(new Piste(), $crud);
 
         $this->crud = $crud
-            ->setDateTimeFormat('dd/MM/yyyy') // HH:mm:ss
+            ->setDateTimeFormat('dd/MM/yyyy HH:mm') // HH:mm:ss
             ->setDateFormat('dd/MM/yyyy')
             //->setPaginatorPageSize(100)
             ->renderContentMaximized()

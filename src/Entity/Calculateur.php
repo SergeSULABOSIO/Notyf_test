@@ -548,7 +548,7 @@ class Calculateur
         $taxe_courtier = $this->getRev_taxe($revenu, true);
 
         $tot = 0;
-        if ($revenu->getPartageable() == true) {
+        if ($revenu->getPartageable() == true && $this->partenaire != null) {
             $taux = $this->cotation->getTauxretrocompartenaire();
             if ($taux == 0) {
                 $taux = $this->partenaire->getPart();

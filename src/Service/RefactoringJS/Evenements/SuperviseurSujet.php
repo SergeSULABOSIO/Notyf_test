@@ -47,7 +47,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
         // Commande de persistance d'une entité dans la base
         $this->executer(new ComPersisterEntite($this->entityManager, $e));
 
-        // Pour les ajustement des paramètres complexes
+        // Pour les ajustement des paramètres complexes pour les PISTE
         // 1. Commande d'ajout d'éventuel nouveau client
         $this->executer(new ComPisteAjusterParamClient($this->entityManager, $e));
         
@@ -69,7 +69,6 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onAttributEdition(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
-        // dd("Ici", $e);
         $this->updateHistoriqueEvenement("onAttributEdition", $e);
     }
 
@@ -90,7 +89,6 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onEntiteAvantEdition(?Evenement $e)
     {
         //On peu exécuter d'autres instructions ici
-        // dd("Ici", $e);
         $this->setUpdateTime($e);
         $this->updateHistoriqueEvenement("onEntiteAvantEdition", $e);
     }

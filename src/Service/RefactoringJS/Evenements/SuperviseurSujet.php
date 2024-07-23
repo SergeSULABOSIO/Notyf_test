@@ -42,15 +42,12 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onAttributAjout(?Evenement $e)
     {
         dd("Event - Piste - Ajout", $e);
+        
         /**
          * Commande d'ajout d'éventuel nouveau client
          */
-        $this->executer(new ComPisteAjouterNouveauClient(
-            $this->entityManager,
-            $e
-        ));
+        $this->executer(new ComPisteAjouterNouveauClient($this->entityManager, $e));
 
-        
         /**
          * Commande d'ajout d'éventuels contacts
          */
@@ -59,17 +56,13 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
         /**
          * Commande d'ajout d'éventuels Actions / Tâches
          */
-        $this->executer(new ComPisteAjouterNouvelleTache(
-            $this->entityManager,
-            $e
-        ));
+        $this->executer(new ComPisteAjouterNouvelleTache($this->entityManager, $e));
+        
         /**
          * Commande d'ajout d'éventuels Cotation
          */
-        $this->executer(new ComPisteAjouterNouveauCotation(
-            $this->entityManager,
-            $e
-        ));
+        $this->executer(new ComPisteAjouterNouveauCotation( $this->entityManager,$e));
+
         // dd("Evenement Ajout:", $evenement);
 
         //On peu exécuter d'autres instructions ici

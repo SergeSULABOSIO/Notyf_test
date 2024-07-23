@@ -44,6 +44,10 @@ class ObservateurAttributAjout extends ObservateurAbstract implements CommandeEx
 
         /**
          * Définition de l'entreprise, l'utilisateur et les dates
+         * 
+         * Quand le nouvel attribut ajouté dans le sujet est de type Entité,
+         * alors il faut rapidement défénir, pour cette nouvelle entité, l'Utilisateur,
+         * l'Entreprise, la date de création ainsi que la date de modification.
          */
         // dd($evenement, "Value :" . $donnees[Evenement::CHAMP_NEW_VALUE], $donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet);
         if ($donnees[Evenement::CHAMP_NEW_VALUE] instanceof Sujet) {
@@ -55,37 +59,6 @@ class ObservateurAttributAjout extends ObservateurAbstract implements CommandeEx
             ));
         }
 
-
-        // /**
-        //  * Commande d'ajout d'éventuel nouveau client
-        //  */
-        // $this->executer(new ComPisteAjouterNouveauClient(
-        //     $this->entityManager,
-        //     $evenement
-        // ));
-        // /**
-        //  * Commande d'ajout d'éventuels contacts
-        //  */
-        // $this->executer(new ComPisteAjouterNouveauContact(
-        //     $this->entityManager,
-        //     $evenement
-        // ));
-        // /**
-        //  * Commande d'ajout d'éventuels Actions / Tâches
-        //  */
-        // $this->executer(new ComPisteAjouterNouvelleTache(
-        //     $this->entityManager,
-        //     $evenement
-        // ));
-        // /**
-        //  * Commande d'ajout d'éventuels Cotation
-        //  */
-        // $this->executer(new ComPisteAjouterNouveauCotation(
-        //     $this->entityManager,
-        //     $evenement
-        // ));
-        // // dd("Evenement Ajout:", $evenement);
-        
         //On notifie le superviseur
         if($this->superviseurSujet != null){
             $this->superviseurSujet->onAttributAjout($evenement);

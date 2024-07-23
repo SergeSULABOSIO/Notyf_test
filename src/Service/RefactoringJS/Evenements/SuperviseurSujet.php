@@ -9,10 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\ComPersisterEntite;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauClient;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouvelleTache;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauContact;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauCotation;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamClient;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamCotation;
 
 class SuperviseurSujet implements CommandeExecuteur, Superviseur
 {
@@ -41,30 +44,18 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
      */
     public function onAttributAjout(?Evenement $e)
     {
-        dd("Event - Piste - Ajout", $e);
         
-        /**
-         * Commande d'ajout d'éventuel nouveau client
-         */
-        $this->executer(new ComPisteAjouterNouveauClient($this->entityManager, $e));
+        // Commande de persistance d'une entité dans la base
+        $this->executer(new ComPersisterEntite($this->entityManager, $e));
 
-        /**
-         * Commande d'ajout d'éventuels contacts
-         */
-        $this->executer(new ComPisteAjouterNouveauContact($this->entityManager, $e));
-
-        /**
-         * Commande d'ajout d'éventuels Actions / Tâches
-         */
-        $this->executer(new ComPisteAjouterNouvelleTache($this->entityManager, $e));
+        // Pour les ajustement des paramètres complexes
+        // 1. Commande d'ajout d'éventuel nouveau client
+        $this->executer(new ComPisteAjusterParamClient($this->entityManager, $e));
         
-        /**
-         * Commande d'ajout d'éventuels Cotation
-         */
-        $this->executer(new ComPisteAjouterNouveauCotation( $this->entityManager,$e));
-
-        // dd("Evenement Ajout:", $evenement);
-
+        // 2. Commande d'ajout d'éventuels Cotation
+        $this->executer(new ComPisteAjusterParamCotation($this->entityManager, $e));
+        
+        // dd("Event - Piste - Ajout", $e);
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributAjout", $e);
     }

@@ -10,7 +10,7 @@ use App\Entity\Cotation;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 
-class ComPisteAjouterNouveauCotation implements Commande
+class ComPisteAjusterParamCotation implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -34,7 +34,12 @@ class ComPisteAjouterNouveauCotation implements Commande
                 $cotation->setTauxretrocompartenaire(0);
             }
             //ici il faut actualiser la base de données
-            $this->entityManager->persist($cotation);
+            if($cotation->getId() == null){
+                $this->entityManager->persist($cotation);
+            }else{
+                $this->entityManager->refresh($cotation);
+            }
+            // $this->entityManager->persist($cotation);
             $this->entityManager->flush();
         }
     }

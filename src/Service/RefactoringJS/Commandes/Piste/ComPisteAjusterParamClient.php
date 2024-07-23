@@ -9,7 +9,7 @@ use App\Controller\Admin\ClientCrudController;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 
-class ComPisteAjouterNouveauClient implements Commande
+class ComPisteAjusterParamClient implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -30,7 +30,11 @@ class ComPisteAjouterNouveauClient implements Commande
                 $client->setSecteur(ClientCrudController::TAB_CLIENT_SECTEUR["Autres Secteurs"]);
             }
             //ici il faut actualiser la base de données
-            $this->entityManager->persist($client);
+            if($client->getId() == null){
+                $this->entityManager->persist($client);
+            }else{
+                $this->entityManager->refresh($client);
+            }
             $this->entityManager->flush();
             $piste->setClient($client);
             

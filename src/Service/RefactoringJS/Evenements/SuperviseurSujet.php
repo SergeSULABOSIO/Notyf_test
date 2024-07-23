@@ -27,8 +27,21 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
         $this->historiqueEvenements = new ArrayCollection();
     }
 
+
+
+
+
+
+    /**
+     * Ici on écoute à chaque fois que l'on ajoute à ce sujet un attribut tout simplement.
+     * Quel que soit le type de cet attribut.
+     *
+     * @param Evenement|null $e
+     * @return void
+     */
     public function onAttributAjout(?Evenement $e)
     {
+        dd("Event - Piste - Ajout", $e);
         /**
          * Commande d'ajout d'éventuel nouveau client
          */
@@ -36,13 +49,13 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
             $this->entityManager,
             $e
         ));
+
+        
         /**
          * Commande d'ajout d'éventuels contacts
          */
-        $this->executer(new ComPisteAjouterNouveauContact(
-            $this->entityManager,
-            $e
-        ));
+        $this->executer(new ComPisteAjouterNouveauContact($this->entityManager, $e));
+
         /**
          * Commande d'ajout d'éventuels Actions / Tâches
          */

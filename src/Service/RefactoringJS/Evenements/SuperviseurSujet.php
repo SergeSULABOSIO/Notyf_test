@@ -44,6 +44,8 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
      */
     public function onAttributAjout(?Evenement $e)
     {
+        // dd("Evenement - Piste - Erreur lors de la création de la nouvelle piste", $e);
+
         // Commande de persistance d'une entité dans la base
         $this->executer(new ComPersisterEntite($this->entityManager, $e));
 

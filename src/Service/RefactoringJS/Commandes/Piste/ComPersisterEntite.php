@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Contact;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Sujet;
 
 class ComPersisterEntite implements Commande
 {
@@ -20,11 +21,15 @@ class ComPersisterEntite implements Commande
     public function executer()
     {
         $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
-        if($newEntityValue != null)
+        if($newEntityValue != null && $newEntityValue instanceof Sujet)
         {
             // dd("Champ new value", $newEntityValue);
             //ici il faut actualiser la base de données
-            $this->entityManager->persist($newEntityValue);
+            if($newEntityValue->getId() == null){
+                $this->entityManager->persist($newEntityValue);
+            }else{
+                $this->entityManager->refresh($newEntityValue);
+            }
             $this->entityManager->flush();
         }
     }

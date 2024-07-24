@@ -426,6 +426,10 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function isValidated(): ?bool
     {
+        //On ne tolère pas le secteur vide
+        if ($this->validated == null) {
+            $this->validated = false;
+        }
         return $this->validated;
     }
 
@@ -515,6 +519,9 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function getTauxretrocompartenaire(): ?float
     {
+        if ($this->tauxretrocompartenaire == null) {
+            $this->tauxretrocompartenaire = 0;
+        }
         return $this->tauxretrocompartenaire;
     }
 

@@ -15,22 +15,22 @@ class ComPersisterEntite implements Commande
         private EntityManagerInterface $entityManager,
         private ?Evenement $evenement
     ) {
-
     }
 
     public function executer()
     {
         $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
-        if($newEntityValue != null && $newEntityValue instanceof Sujet)
-        {
-            // dd("Champ new value", $newEntityValue);
-            //ici il faut actualiser la base de données
-            if($newEntityValue->getId() == null){
-                $this->entityManager->persist($newEntityValue);
-            }else{
-                $this->entityManager->refresh($newEntityValue);
+        if ($newEntityValue != null) {
+            if ($newEntityValue instanceof Sujet) {
+                dd("Champ new value", $newEntityValue);
+                //ici il faut actualiser la base de données
+                if ($newEntityValue->getId() == null) {
+                    $this->entityManager->persist($newEntityValue);
+                } else {
+                    $this->entityManager->refresh($newEntityValue);
+                }
+                $this->entityManager->flush();
             }
-            $this->entityManager->flush();
         }
     }
 }

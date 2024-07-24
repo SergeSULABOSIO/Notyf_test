@@ -54,7 +54,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
         $this->executer(new ComPisteAjusterParamClient($this->entityManager, $e));
         
         // 2. Commande d'ajout d'éventuels Cotation
-        $this->executer(new ComPisteAjusterParamCotation($this->entityManager, $e));
+        //$this->executer(new ComPisteAjusterParamCotation($this->entityManager, $e));
         
         // dd("Event - Piste - Ajout", $e);
         //On peu exécuter d'autres instructions ici

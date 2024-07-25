@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\Admin\PisteCrudController;
+use App\Controller\Admin\ClientCrudController;
 use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
@@ -110,7 +111,7 @@ class Piste implements Sujet, CommandeExecuteur
     private ?float $duree = null;
     private ?Monnaie $monnaie_Affichage;
 
-    
+
     public function __construct()
     {
         $this->cotations = new ArrayCollection();
@@ -259,11 +260,11 @@ class Piste implements Sujet, CommandeExecuteur
     public function addCotation(Cotation $cotation): self
     {
         //Petit ajustement avant d'ajouter la cotation dans la piste
-        if($this->getPartenaire() != null){
+        if ($this->getPartenaire() != null) {
             $cotation->setPartenaire($this->getPartenaire());
             $cotation->setTauxretrocompartenaire($this->getPartenaire()->getPart());
         }
-        if($cotation->isValidated() == null){
+        if ($cotation->isValidated() == null) {
             $cotation->setValidated(false);
         }
         // dd("Cotation", $cotation);
@@ -404,6 +405,20 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function setClient(?Client $client): self
     {
+        //dd($client);
+        //On ne tolère pas le secteur vide chez un client,
+        //on doit en définir un par défaut
+        if ($client->getSecteur() == null) {
+            $client->setSecteur(ClientCrudController::TAB_CLIENT_SECTEUR["Autres Secteurs"]);
+        }
+        //On vide la liste des prospects car elle ne sert plus à rien
+        //Le client est déjà connu/défini.
+        $tabProspect = $this->getProspect();
+        foreach ($tabProspect as $pros) {
+            $this->removeProspect($pros);
+        }
+
+        //On exécute maintenane les codes de la gestion d'écouteurs
         $oldValue = $this->getClient();
         $newValue = $client;
         $this->client = $client;
@@ -425,9 +440,27 @@ class Piste implements Sujet, CommandeExecuteur
     public function addProspect(Client $prospect): self
     {
         if (!$this->prospect->contains($prospect)) {
+            //Si le secteur n'est pas défini,
+            //on doit en définir un par défaut
+            if ($prospect->getSecteur() == null) {
+                $prospect->setSecteur(ClientCrudController::TAB_CLIENT_SECTEUR["Autres Secteurs"]);
+            }
+            //Le prospect devient client
+            $this->setClient($prospect);
+
+
+            // dd("Ici", $prospect);
+
             $oldValue = null;
             $this->prospect->add($prospect);
             $prospect->setPiste($this);
+
+            //On vide la liste des prospects
+            $tabProspect = $this->getProspect();
+            foreach ($tabProspect as $pros) {
+                $this->removeProspect($pros);
+            }
+
             //Ecouteur d'action
             $this->executer(new ComDetecterEvenementAttribut($this, "Liste des prospects", $oldValue, $prospect, Evenement::FORMAT_VALUE_ENTITY));
         }

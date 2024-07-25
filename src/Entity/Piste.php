@@ -258,7 +258,7 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function addCotation(Cotation $cotation): self
     {
-        
+        //Petit ajustement avant d'ajouter la cotation dans la piste
         if($this->getPartenaire() != null){
             $cotation->setPartenaire($this->getPartenaire());
             $cotation->setTauxretrocompartenaire($this->getPartenaire()->getPart());

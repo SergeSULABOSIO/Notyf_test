@@ -101,7 +101,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     private ?int $dureeCouverture = null;
 
     #[ORM\Column]
-    private ?bool $validated = null;
+    private ?bool $validated = false;
     private ?string $status;
 
     //Les champs calculables automatiquement sur base des données existantes

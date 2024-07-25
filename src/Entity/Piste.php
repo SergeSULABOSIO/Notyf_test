@@ -258,6 +258,16 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function addCotation(Cotation $cotation): self
     {
+        
+        if($this->getPartenaire() != null){
+            $cotation->setPartenaire($this->getPartenaire());
+            $cotation->setTauxretrocompartenaire($this->getPartenaire()->getPart());
+        }
+        if($cotation->isValidated() == null){
+            $cotation->setValidated(false);
+        }
+        // dd("Cotation", $cotation);
+
         if (!$this->cotations->contains($cotation)) {
             $oldValue = null;
             $this->cotations->add($cotation);

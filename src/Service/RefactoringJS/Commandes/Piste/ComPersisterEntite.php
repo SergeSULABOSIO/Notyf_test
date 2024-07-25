@@ -22,7 +22,7 @@ class ComPersisterEntite implements Commande
         $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
         if ($newEntityValue != null) {
             if ($newEntityValue instanceof Sujet) {
-                dd("Champ new value", $newEntityValue);
+                // dd("Champ new value", $newEntityValue);
                 //ici il faut actualiser la base de données
                 if ($newEntityValue->getId() == null) {
                     $this->entityManager->persist($newEntityValue);

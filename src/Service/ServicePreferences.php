@@ -2813,7 +2813,7 @@ class ServicePreferences
             ->onlyOnDetail();
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
+        // $tabAttributs = $this->setAttributs_Calculables_details(false, $tabAttributs);
 
         return $tabAttributs;
     }
@@ -2909,7 +2909,7 @@ class ServicePreferences
         }
 
         //LES CHAMPS CALCULABLES
-        $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
+        // $tabAttributs = $this->setAttributs_Calculables_Index(false, $tabAttributs, $tabPreferences, $tabDefaultAttributs);
 
         return $tabAttributs;
     }

@@ -437,23 +437,22 @@ class Piste implements Sujet, CommandeExecuteur
         return $this->prospect;
     }
 
-    public function addProspect(Client $prospect): self
+    public function addProspect(Client $newClient): self
     {
-        if (!$this->prospect->contains($prospect)) {
+        if (!$this->prospect->contains($newClient)) {
             //Si le secteur n'est pas défini,
             //on doit en définir un par défaut
-            if ($prospect->getSecteur() == null) {
-                $prospect->setSecteur(ClientCrudController::TAB_CLIENT_SECTEUR["Autres Secteurs"]);
+            if ($newClient->getSecteur() == null) {
+                $newClient->setSecteur(ClientCrudController::TAB_CLIENT_SECTEUR["Autres Secteurs"]);
             }
             //Le prospect devient client
-            $this->setClient($prospect);
-
+            $this->setClient($newClient);
 
             // dd("Ici", $prospect);
 
             $oldValue = null;
-            $this->prospect->add($prospect);
-            $prospect->setPiste($this);
+            $this->prospect->add($newClient);
+            $newClient->setPiste($this);
 
             //On vide la liste des prospects
             $tabProspect = $this->getProspect();
@@ -462,7 +461,7 @@ class Piste implements Sujet, CommandeExecuteur
             }
 
             //Ecouteur d'action
-            $this->executer(new ComDetecterEvenementAttribut($this, "Liste des prospects", $oldValue, $prospect, Evenement::FORMAT_VALUE_ENTITY));
+            $this->executer(new ComDetecterEvenementAttribut($this, "Liste des prospects", $oldValue, $newClient, Evenement::FORMAT_VALUE_ENTITY));
         }
 
         return $this;

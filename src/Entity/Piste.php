@@ -525,10 +525,18 @@ class Piste implements Sujet, CommandeExecuteur
     public function addNewpartenaire(Partenaire $newpartenaire): self
     {
         if (!$this->newpartenaire->contains($newpartenaire)) {
+            $this->setPartenaire($newpartenaire);
+            // dd("Ici", $prospect);
             $oldValue = null;
             $newValue = $newpartenaire;
             $this->newpartenaire->add($newpartenaire);
             $newpartenaire->setPiste($this);
+
+            //On vide la liste des new partenaires
+            $newpartenaires = $this->getNewpartenaire();
+            foreach ($newpartenaires as $partn) {
+                $this->removeNewpartenaire($partn);
+            }
             //Ecouteur d'action
             $this->executer(new ComDetecterEvenementAttribut($this, "Nouveau Partenaire", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }

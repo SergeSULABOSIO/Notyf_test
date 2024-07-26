@@ -311,11 +311,15 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function addChargement(Chargement $chargement): self
     {
+        // dd($this);
+        //C'est très important de lui fournir l'entreprise car il en aura besoin pour trouver la monnaie utilisée ici
+        $chargement->setEntreprise($this->getPiste()->getEntreprise());
         if (!$this->chargements->contains($chargement)) {
             $oldValue = null;
             $newValue = $chargement;
             $this->chargements->add($chargement);
             $chargement->setCotation($this);
+            // dd("Nouveau chargement", $chargement);
             //Ecouteur d'action
             $this->executer(new ComDetecterEvenementAttribut($this, "Chargement", $oldValue, $newValue, Evenement::FORMAT_VALUE_ENTITY));
         }

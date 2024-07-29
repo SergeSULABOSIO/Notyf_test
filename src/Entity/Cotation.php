@@ -312,8 +312,6 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addChargement(Chargement $chargement): self
     {
         //C'est très important de lui fournir l'entreprise car il en aura besoin pour trouver la monnaie utilisée ici
-        // $chargement->setEntreprise($this->getPiste()->getEntreprise());
-        $chargement->setCotation($this);
         // dd("New Chargement", $chargement);
 
         if (!$this->chargements->contains($chargement)) {

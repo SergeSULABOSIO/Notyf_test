@@ -201,7 +201,7 @@ class Chargement implements Sujet, CommandeExecuteur
 
     private function getMonnaie($fonction)
     {
-        $tabMonnaies = $this->getEntreprise()->getMonnaies();
+        $tabMonnaies = $this->getCotation()->getEntreprise()->getMonnaies();
         foreach ($tabMonnaies as $monnaie) {
             if ($monnaie->getFonction() == $fonction) {
                 return $monnaie;

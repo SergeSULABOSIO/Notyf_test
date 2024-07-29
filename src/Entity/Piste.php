@@ -260,19 +260,39 @@ class Piste implements Sujet, CommandeExecuteur
     public function addCotation(Cotation $cotation): self
     {
         //Petit ajustement avant d'ajouter la cotation dans la piste
+        //On set le partenaire
         if ($this->getPartenaire() != null) {
             $cotation->setPartenaire($this->getPartenaire());
             $cotation->setTauxretrocompartenaire($this->getPartenaire()->getPart());
         }
+        //On set la validité
         if ($cotation->isValidated() == null) {
             $cotation->setValidated(false);
         }
+        //On set l'entreprise
+        if($this->getEntreprise() != null){
+            $cotation->setEntreprise($this->getEntreprise());
+        }
+        //On set le client
+        if($this->getClient() != null){
+            $cotation->setClient($this->getClient());
+        }
+        //On set le produit
+        if($this->getProduit() != null){
+            $cotation->setProduit($this->getProduit());
+        }
+        //On set la police
+        if($this->getPolice() != null){
+            $cotation->setPolice($this->getPolice());
+        }
+        //On set la piste
+        $cotation->setPiste($this);
+
         // dd("Cotation", $cotation);
 
         if (!$this->cotations->contains($cotation)) {
             $oldValue = null;
             $this->cotations->add($cotation);
-            $cotation->setPiste($this);
             //Ecouteur d'action
             $this->executer(new ComDetecterEvenementAttribut($this, "Liste des cotations", $oldValue, $cotation, Evenement::FORMAT_VALUE_ENTITY));
         }

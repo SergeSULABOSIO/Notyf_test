@@ -288,7 +288,7 @@ class Piste implements Sujet, CommandeExecuteur
         //On set la piste
         $cotation->setPiste($this);
 
-        // dd("Cotation", $cotation);
+        // dd("New Cotation", $cotation);
 
         if (!$this->cotations->contains($cotation)) {
             $oldValue = null;

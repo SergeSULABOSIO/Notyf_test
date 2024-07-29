@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\Admin\ChargementCrudController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
 use Doctrine\Common\Collections\Collection;
@@ -288,6 +289,32 @@ class Piste implements Sujet, CommandeExecuteur
         //On set la piste
         $cotation->setPiste($this);
 
+        //Ajout des modules dépendantes par défaut de la cotation
+        //On set les tranches par défaut
+        /** @var Tranche */
+        $tranche = new Tranche();
+        $tranche->setNom("Tranche n°01");
+        $tranche->setTaux(1);
+        $tranche->setEntreprise($this->getEntreprise());
+        $tranche->setDateEffet(new \DateTimeImmutable("now"));
+        $tranche->setCreatedAt(new \DateTimeImmutable("now"));
+        $tranche->setUpdatedAt(new \DateTimeImmutable("now"));
+        $tranche->setDuree(($cotation->getDureeCouverture()));
+        $tranche->setCotation($cotation);
+        $cotation->addTranch($tranche);
+        
+        //On set les chargements
+        /** @var Chargement */
+        $chargement_prime_nette = new Chargement();
+        $chargement_prime_nette->setType(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]);
+        $chargement_prime_nette->setCreatedAt(new \DateTimeImmutable("now"));
+        $chargement_prime_nette->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_prime_nette->setEntreprise($this->getEntreprise());
+        $chargement_prime_nette->setCotation($cotation);
+        $chargement_prime_nette->setMontant(0);
+        $chargement_prime_nette->setDescription("Prime nette");
+        $cotation->addChargement($chargement_prime_nette);
+        
         // dd("New Cotation", $cotation);
 
         if (!$this->cotations->contains($cotation)) {

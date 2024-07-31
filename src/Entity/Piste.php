@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Controller\Admin\ChargementCrudController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PisteRepository;
 use Doctrine\Common\Collections\Collection;
@@ -12,10 +11,14 @@ use App\Entity\Traits\TraitEcouteurEvenements;
 use App\Controller\Admin\MonnaieCrudController;
 use App\Service\RefactoringJS\Evenements\Sujet;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Controller\Admin\ChargementCrudController;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Observateur;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAppliquerEntiteesParDefautCotation;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAppliquerEntiteesParDefautPourCotation;
 
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -261,59 +264,7 @@ class Piste implements Sujet, CommandeExecuteur
     public function addCotation(Cotation $cotation): self
     {
         //Petit ajustement avant d'ajouter la cotation dans la piste
-        //On set le partenaire
-        if ($this->getPartenaire() != null) {
-            $cotation->setPartenaire($this->getPartenaire());
-            $cotation->setTauxretrocompartenaire($this->getPartenaire()->getPart());
-        }
-        //On set la validité
-        if ($cotation->isValidated() == null) {
-            $cotation->setValidated(false);
-        }
-        //On set l'entreprise
-        if($this->getEntreprise() != null){
-            $cotation->setEntreprise($this->getEntreprise());
-        }
-        //On set le client
-        if($this->getClient() != null){
-            $cotation->setClient($this->getClient());
-        }
-        //On set le produit
-        if($this->getProduit() != null){
-            $cotation->setProduit($this->getProduit());
-        }
-        //On set la police
-        if($this->getPolice() != null){
-            $cotation->setPolice($this->getPolice());
-        }
-        //On set la piste
-        $cotation->setPiste($this);
-
-        //Ajout des modules dépendantes par défaut de la cotation
-        //On set les tranches par défaut
-        /** @var Tranche */
-        $tranche = new Tranche();
-        $tranche->setNom("Tranche n°01");
-        $tranche->setTaux(1);
-        $tranche->setEntreprise($this->getEntreprise());
-        $tranche->setDateEffet(new \DateTimeImmutable("now"));
-        $tranche->setCreatedAt(new \DateTimeImmutable("now"));
-        $tranche->setUpdatedAt(new \DateTimeImmutable("now"));
-        $tranche->setDuree(($cotation->getDureeCouverture()));
-        $tranche->setCotation($cotation);
-        $cotation->addTranch($tranche);
-        
-        //On set les chargements
-        /** @var Chargement */
-        $chargement_prime_nette = new Chargement();
-        $chargement_prime_nette->setType(ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]);
-        $chargement_prime_nette->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_prime_nette->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_prime_nette->setEntreprise($this->getEntreprise());
-        $chargement_prime_nette->setCotation($cotation);
-        $chargement_prime_nette->setMontant(0);
-        $chargement_prime_nette->setDescription("Prime nette");
-        $cotation->addChargement($chargement_prime_nette);
+        $this->executer(new ComPisteAppliquerEntiteesParDefautPourCotation($this, $cotation));
         
         // dd("New Cotation", $cotation);
 

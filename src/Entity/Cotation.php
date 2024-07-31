@@ -355,6 +355,7 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
             $this->primeTotale = $this->primeTotale + $tranche->getPrimeTotaleTranche();
         }
         $this->primeTotale = round($this->primeTotale);
+        // dd("Cotation", $this, $this->primeTotale);
         return $this->primeTotale;
     }
 

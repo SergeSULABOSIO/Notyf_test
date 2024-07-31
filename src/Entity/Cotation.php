@@ -1232,6 +1232,11 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
 
     public function transfererObservateur(?Observateur $observateur)
     {
-        // dd("Cette fonction n'est pas encore définie");
+        //Transfère de l'observateur chez Chargement
+        if (count($this->getChargements()) != 0) {
+            foreach ($this->getChargements() as $chargement) {
+                $chargement->ajouterObservateur($observateur);
+            }
+        }
     }
 }

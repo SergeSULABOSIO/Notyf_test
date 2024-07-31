@@ -3,18 +3,14 @@
 namespace App\Service\RefactoringJS\Commandes\Piste;
 
 use App\Entity\Piste;
-use App\Entity\Facture;
 use App\Entity\Tranche;
 use App\Entity\Cotation;
 use App\Entity\Chargement;
-use App\Entity\ElementFacture;
-use App\Controller\Admin\FactureCrudController;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\ChargementCrudController;
 use App\Controller\Admin\RevenuCrudController;
 use App\Entity\Revenu;
-use App\Service\RefactoringJS\Evenements\Evenement;
+use App\Service\RefactoringJS\Evenements\Observateur;
 
 class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
 {
@@ -39,24 +35,33 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
 
     private function genererRevenus()
     {
+
         //COMMISSION DE REASSURANCE
-        /** @var Revenu */
-        $revenue_ri = new Revenu();
-        $revenue_ri->setType(
-            RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_REA]
-        );
-        $revenue_ri->setPartageable(true);
-        $revenue_ri->setTaxable(true);
-        $revenue_ri->setIsparttranche(true);
-        $revenue_ri->setIspartclient(false);
-        $revenue_ri->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
-        $revenue_ri->setTaux(0);
-        $revenue_ri->setMontantFlat(0);
-        $revenue_ri->setCreatedAt(new \DateTimeImmutable("now"));
-        $revenue_ri->setUpdatedAt(new \DateTimeImmutable("now"));
-        $revenue_ri->setEntreprise($this->piste->getEntreprise());
-        $revenue_ri->setCotation($this->cotation);
-        $this->cotation->addRevenu($revenue_ri);
+        foreach (RevenuCrudController::TAB_TYPE as $typeRevenu) {
+            // dd("RAS", $typeRevenu);
+            /** @var Revenu */
+            $brokerage = new Revenu();
+            $brokerage->setType($typeRevenu);
+            $brokerage->setPartageable(true);
+            $brokerage->setTaxable(true);
+            $brokerage->setIsparttranche(true);
+            $brokerage->setIspartclient(false);
+            if($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_REA] || $typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]){
+                $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
+            }else if($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_FRONTING]){
+                $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_FRONTING]);
+            }else{
+                $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_MONTANT_FIXE]);
+            }
+            $brokerage->setTaux(0);
+            $brokerage->setMontantFlat(0);
+            $brokerage->setCreatedAt(new \DateTimeImmutable("now"));
+            $brokerage->setUpdatedAt(new \DateTimeImmutable("now"));
+            $brokerage->setUtilisateur($this->piste->getUtilisateur());
+            $brokerage->setEntreprise($this->piste->getEntreprise());
+            $brokerage->setCotation($this->cotation);
+            $this->cotation->addRevenu($brokerage);
+        }
     }
 
     private function genererChargements()
@@ -70,6 +75,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         );
         $chargement_prime_nette->setCreatedAt(new \DateTimeImmutable("now"));
         $chargement_prime_nette->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_prime_nette->setUtilisateur($this->piste->getUtilisateur());
         $chargement_prime_nette->setEntreprise($this->piste->getEntreprise());
         $chargement_prime_nette->setCotation($this->cotation);
         $chargement_prime_nette->setMontant(0);
@@ -85,6 +91,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         );
         $chargement_fronting->setCreatedAt(new \DateTimeImmutable("now"));
         $chargement_fronting->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_fronting->setUtilisateur($this->piste->getUtilisateur());
         $chargement_fronting->setEntreprise($this->piste->getEntreprise());
         $chargement_fronting->setCotation($this->cotation);
         $chargement_fronting->setMontant(0);
@@ -99,6 +106,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         );
         $chargement_accessoire->setCreatedAt(new \DateTimeImmutable("now"));
         $chargement_accessoire->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_accessoire->setUtilisateur($this->piste->getUtilisateur());
         $chargement_accessoire->setEntreprise($this->piste->getEntreprise());
         $chargement_accessoire->setCotation($this->cotation);
         $chargement_accessoire->setMontant(0);
@@ -113,6 +121,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         );
         $chargement_arca->setCreatedAt(new \DateTimeImmutable("now"));
         $chargement_arca->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_arca->setUtilisateur($this->piste->getUtilisateur());
         $chargement_arca->setEntreprise($this->piste->getEntreprise());
         $chargement_arca->setCotation($this->cotation);
         $chargement_arca->setMontant(0);
@@ -127,6 +136,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         );
         $chargement_tva->setCreatedAt(new \DateTimeImmutable("now"));
         $chargement_tva->setUpdatedAt(new \DateTimeImmutable("now"));
+        $chargement_tva->setUtilisateur($this->piste->getUtilisateur());
         $chargement_tva->setEntreprise($this->piste->getEntreprise());
         $chargement_tva->setCotation($this->cotation);
         $chargement_tva->setMontant(0);
@@ -141,6 +151,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         $tranche = new Tranche();
         $tranche->setNom("Tranche n°01");
         $tranche->setTaux(1);
+        $tranche->setUtilisateur($this->piste->getUtilisateur());
         $tranche->setEntreprise($this->piste->getEntreprise());
         $tranche->setDateEffet(new \DateTimeImmutable("now"));
         $tranche->setDateExpiration(new \DateTimeImmutable("+364 days"));

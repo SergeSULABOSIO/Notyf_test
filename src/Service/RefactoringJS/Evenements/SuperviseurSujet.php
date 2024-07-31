@@ -44,7 +44,6 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
      */
     public function onAttributAjout(?Evenement $e)
     {
-        dd("Event", $e);
         // Commande de persistance d'une entité dans la base
         $this->executer(new ComPersisterEntite($this->entityManager, $e));
 

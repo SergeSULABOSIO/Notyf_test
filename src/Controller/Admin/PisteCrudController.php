@@ -32,6 +32,7 @@ use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModi
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
 use App\Service\RefactoringJS\Evenements\SuperviseurPiste;
 use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
+use App\Service\ServiceAvenant;
 
 class PisteCrudController extends AbstractCrudController implements CommandeExecuteur
 {
@@ -53,6 +54,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         private SuperviseurSujet $superviseurSujet,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
+        private ServiceAvenant $serviceAvenant,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
@@ -138,6 +140,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $this->serviceDates,
             $objet
         ));
+        $idAvenant = $this->serviceAvenant->generateIdAvenantByReference("0145787878787-2024");
+        dd("IdAvenant", $idAvenant);
         return $objet;
     }
 

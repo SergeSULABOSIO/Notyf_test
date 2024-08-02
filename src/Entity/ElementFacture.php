@@ -253,28 +253,32 @@ class ElementFacture extends JSAbstractFinances implements Sujet, CommandeExecut
     public function __toString()
     {
         $str = "";
-        $nom = $this->getTranche()->getNom();
-        $produit = $this->getTranche()->getPolice()->getProduit()->getCode();
-        $assureur = $this->getTranche()->getPolice()->getAssureur()->getNom();
-        $client = $this->getTranche()->getPolice()->getClient()->getNom();
-        $reference = $this->getTranche()->getPolice()->getReference();
-        if ($this->getFacture() != null) {
-            $destination = $this->getFacture()->getDestination();
-            if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
-                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeCourtierTotale());
-                $str = "Montant " . ucfirst($this->getNomTaxeCourtier()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ARCA;
-            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
-                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeAssureurTotale());
-                $str = "Montant " . ucfirst($this->getNomTaxeAssureur()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_DGI;
-            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
-                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getCommissionTotale());
-                $str = "Totale Commission dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ASSUREUR;
-            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
-                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getFraisGestionTotale() + $this->getPrimeTotale());
-                $str = "Totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_CLIENT;
-            } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
-                $mntantDu = $this->getMontantEnMonnaieAffichage($this->getRetroCommissionTotale());
-                $str = $this->getTranche()->getPolice()->getPartenaire() . " / Rétro-com. totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_PARTENAIRE;
+        $nom = "";
+        // dd("ICi", $this);
+        if ($this->getTranche()) {
+            $nom = $this->getTranche()->getNom();
+            $produit = $this->getTranche()->getPolice()->getProduit()->getCode();
+            $assureur = $this->getTranche()->getPolice()->getAssureur()->getNom();
+            $client = $this->getTranche()->getPolice()->getClient()->getNom();
+            $reference = $this->getTranche()->getPolice()->getReference();
+            if ($this->getFacture() != null) {
+                $destination = $this->getFacture()->getDestination();
+                if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ARCA]) {
+                    $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeCourtierTotale());
+                    $str = "Montant " . ucfirst($this->getNomTaxeCourtier()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ARCA;
+                } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_DGI]) {
+                    $mntantDu = $this->getMontantEnMonnaieAffichage($this->getTaxeAssureurTotale());
+                    $str = "Montant " . ucfirst($this->getNomTaxeAssureur()) . " dû: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_DGI;
+                } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_ASSUREUR]) {
+                    $mntantDu = $this->getMontantEnMonnaieAffichage($this->getCommissionTotale());
+                    $str = "Totale Commission dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_ASSUREUR;
+                } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_CLIENT]) {
+                    $mntantDu = $this->getMontantEnMonnaieAffichage($this->getFraisGestionTotale() + $this->getPrimeTotale());
+                    $str = "Totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_CLIENT;
+                } else if ($destination == FactureCrudController::TAB_DESTINATION[FactureCrudController::DESTINATION_PARTENAIRE]) {
+                    $mntantDu = $this->getMontantEnMonnaieAffichage($this->getRetroCommissionTotale());
+                    $str = $this->getTranche()->getPolice()->getPartenaire() . " / Rétro-com. totale dûe: " . $mntantDu . " :: " . FactureCrudController::DESTINATION_PARTENAIRE;
+                }
             }
         }
         return $nom . "@" . $reference . " / " . $produit . " / " . $client . " / " . $assureur . " / " . $str;

@@ -211,41 +211,59 @@ class ServiceAvenant
         return $entite;
     }
 
-    public function generateIdAvenant(Police $police): int
+    public function generateIdAvenantByReference($reference)
     {
         $id = -100;
         if ($this->serviceEntreprise->getEntreprise()) {
-            if ($police) {
-                $nbAvenantPolice = count($this->entityManager->getRepository(Police::class)->findBy(
-                    [
-                        'reference' => $police->getReference(),
-                        'entreprise' => $this->serviceEntreprise->getEntreprise()
-                    ]
-                ));
-
-                $elementsFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
-                    [
-                        // 'police' => $police,
-                        'entreprise' => $this->serviceEntreprise->getEntreprise()
-                    ]
-                );
-                $nbAvenantElementFacture = 0;
-                /** @var ElementFacture */
-                foreach ($elementsFactures as $ef) {
-                    if($ef->getTranche() != null){
-                        if($ef->getTranche()->getPolice() != null){
-                            if($police->getReference() == $ef->getTranche()->getPolice()->getReference()){
-                                $nbAvenantElementFacture = $nbAvenantElementFacture + 1;
-                            }
-                        }
-                    }
-                }
-                $id = $nbAvenantElementFacture + $nbAvenantPolice;
+            if (isset($reference)) {
+                $id = $this->processAvenant($reference);
             } else {
                 $id = 0;
             }
         }
         return $id;
+    }
+
+    public function generateIdAvenant(?Police $police): int
+    {
+        $id = -100;
+        if ($this->serviceEntreprise->getEntreprise()) {
+            if ($police) {
+                $id = $this->processAvenant($police->getReference());
+            } else {
+                $id = 0;
+            }
+        }
+        return $id;
+    }
+
+    private function processAvenant($reference)
+    {
+        $nbAvenantPolice = count($this->entityManager->getRepository(Police::class)->findBy(
+            [
+                'reference' => $reference,
+                'entreprise' => $this->serviceEntreprise->getEntreprise()
+            ]
+        ));
+
+        $elementsFactures = $this->entityManager->getRepository(ElementFacture::class)->findBy(
+            [
+                // 'police' => $police,
+                'entreprise' => $this->serviceEntreprise->getEntreprise()
+            ]
+        );
+        $nbAvenantElementFacture = 0;
+        /** @var ElementFacture */
+        foreach ($elementsFactures as $ef) {
+            if ($ef->getTranche() != null) {
+                if ($ef->getTranche()->getPolice() != null) {
+                    if ($reference == $ef->getTranche()->getPolice()->getReference()) {
+                        $nbAvenantElementFacture = $nbAvenantElementFacture + 1;
+                    }
+                }
+            }
+        }
+        return $nbAvenantElementFacture + $nbAvenantPolice;
     }
 
     public function setAutresModifications($entite, array $avenant_data, AdminUrlGenerator $adminUrlGenerator)

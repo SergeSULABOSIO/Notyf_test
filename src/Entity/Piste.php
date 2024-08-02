@@ -600,6 +600,18 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function addPolice(Police $police): self
     {
+        if($police->getDateeffet() == null){
+            $police->setDateeffet(new \DateTimeImmutable("now"));
+        }
+        if($police->getDateemission() == null){
+            $police->setDateemission(new \DateTimeImmutable("now"));
+        }
+        if($police->getDateoperation() == null){
+            $police->setDateoperation(new \DateTimeImmutable("now"));
+        }
+        $police->setIdAvenant(-1);
+        dd("Adding a policy", $police);
+
         if (!$this->polices->contains($police)) {
             $oldValue = null;
             $newValue = $police;

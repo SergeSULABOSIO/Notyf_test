@@ -35,7 +35,6 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
 
     private function genererRevenus()
     {
-
         //COMMISSION DE REASSURANCE
         foreach (RevenuCrudController::TAB_TYPE as $typeRevenu) {
             // dd("RAS", $typeRevenu);
@@ -46,11 +45,11 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
             $brokerage->setTaxable(true);
             $brokerage->setIsparttranche(true);
             $brokerage->setIspartclient(false);
-            if($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_REA] || $typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]){
+            if ($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_REA] || $typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_LOCALE]) {
                 $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_PRIME_NETTE]);
-            }else if($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_FRONTING]){
+            } else if ($typeRevenu == RevenuCrudController::TAB_TYPE[RevenuCrudController::TYPE_COM_FRONTING]) {
                 $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_FRONTING]);
-            }else{
+            } else {
                 $brokerage->setBase(RevenuCrudController::TAB_BASE[RevenuCrudController::BASE_MONTANT_FIXE]);
             }
             $brokerage->setTaux(0);
@@ -67,81 +66,31 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
     private function genererChargements()
     {
         //On set les chargements par defaut.
-        //PRIME NETTE
-        /** @var Chargement */
-        $chargement_prime_nette = new Chargement();
-        $chargement_prime_nette->setType(
-            ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]
-        );
-        $chargement_prime_nette->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_prime_nette->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_prime_nette->setUtilisateur($this->piste->getUtilisateur());
-        $chargement_prime_nette->setEntreprise($this->piste->getEntreprise());
-        $chargement_prime_nette->setCotation($this->cotation);
-        $chargement_prime_nette->setMontant(0);
-        $chargement_prime_nette->setDescription("Prime nette");
-        $this->cotation->addChargement($chargement_prime_nette);
-
-
-        //FRONTING
-        /** @var Chargement */
-        $chargement_fronting = new Chargement();
-        $chargement_fronting->setType(
-            ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]
-        );
-        $chargement_fronting->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_fronting->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_fronting->setUtilisateur($this->piste->getUtilisateur());
-        $chargement_fronting->setEntreprise($this->piste->getEntreprise());
-        $chargement_fronting->setCotation($this->cotation);
-        $chargement_fronting->setMontant(0);
-        $chargement_fronting->setDescription("Frais fronting (frais de cession)");
-        $this->cotation->addChargement($chargement_fronting);
-
-        //ACCESSOIRES
-        /** @var Chargement */
-        $chargement_accessoire = new Chargement();
-        $chargement_accessoire->setType(
-            ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_ACCESSOIRES]
-        );
-        $chargement_accessoire->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_accessoire->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_accessoire->setUtilisateur($this->piste->getUtilisateur());
-        $chargement_accessoire->setEntreprise($this->piste->getEntreprise());
-        $chargement_accessoire->setCotation($this->cotation);
-        $chargement_accessoire->setMontant(0);
-        $chargement_accessoire->setDescription("Frais administratifs");
-        $this->cotation->addChargement($chargement_accessoire);
-
-        //ARCA ou Frais de surveillance
-        /** @var Chargement */
-        $chargement_arca = new Chargement();
-        $chargement_arca->setType(
-            ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRAIS_DE_SURVEILLANCE_ARCA]
-        );
-        $chargement_arca->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_arca->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_arca->setUtilisateur($this->piste->getUtilisateur());
-        $chargement_arca->setEntreprise($this->piste->getEntreprise());
-        $chargement_arca->setCotation($this->cotation);
-        $chargement_arca->setMontant(0);
-        $chargement_arca->setDescription("Frais de surveillance / Autorité");
-        $this->cotation->addChargement($chargement_arca);
-
-        //TVA
-        /** @var Chargement */
-        $chargement_tva = new Chargement();
-        $chargement_tva->setType(
-            ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_TVA]
-        );
-        $chargement_tva->setCreatedAt(new \DateTimeImmutable("now"));
-        $chargement_tva->setUpdatedAt(new \DateTimeImmutable("now"));
-        $chargement_tva->setUtilisateur($this->piste->getUtilisateur());
-        $chargement_tva->setEntreprise($this->piste->getEntreprise());
-        $chargement_tva->setCotation($this->cotation);
-        $chargement_tva->setMontant(0);
-        $chargement_tva->setDescription("TVA / Autorité");
-        $this->cotation->addChargement($chargement_tva);
+        foreach (ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE as $typeChargement) {
+            /** @var Chargement */
+            $chargement = new Chargement();
+            $chargement->setType($typeChargement);
+            $chargement->setCreatedAt(new \DateTimeImmutable("now"));
+            $chargement->setUpdatedAt(new \DateTimeImmutable("now"));
+            $chargement->setUtilisateur($this->piste->getUtilisateur());
+            $chargement->setEntreprise($this->piste->getEntreprise());
+            $chargement->setCotation($this->cotation);
+            $chargement->setMontant(0);
+            if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_PRIME_NETTE]) {
+                $chargement->setDescription("Prime nette");
+            } else if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRONTING]) {
+                $chargement->setDescription("Frais fronting (frais de cession)");
+            } else if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_FRAIS_DE_SURVEILLANCE_ARCA]) {
+                $chargement->setDescription("Frais de surveillance / Autorité");
+            } else if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_TVA]) {
+                $chargement->setDescription("TVA / Autorité");
+            } else if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_ACCESSOIRES]) {
+                $chargement->setDescription("Frais administratifs");
+            }else{
+                $chargement->setDescription("Autre chargement");
+            }
+            $this->cotation->addChargement($chargement);
+        }
     }
 
     private function genererTranches()

@@ -20,6 +20,8 @@ use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAppliquerEntiteesParDefautCotation;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAppliquerEntiteesParDefautPourCotation;
 
+use function PHPUnit\Framework\isEmpty;
+
 #[ORM\Entity(repositoryClass: PisteRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Piste implements Sujet, CommandeExecuteur
@@ -610,7 +612,7 @@ class Piste implements Sujet, CommandeExecuteur
             $police->setDateoperation(new \DateTimeImmutable("now"));
         }
         $police->setIdAvenant(-1);
-        dd("Adding a policy", $police);
+        // dd("Adding a policy", $police);
 
         if (!$this->polices->contains($police)) {
             $oldValue = null;
@@ -726,7 +728,8 @@ class Piste implements Sujet, CommandeExecuteur
     public function getChargements()
     {
         $this->chargements = new ArrayCollection();
-        if ($this->getPolices()) {
+        // dd("Liste des polices :", $this->getPolices());
+        if (!isEmpty($this->getPolices())) {
             if ($this->getPolices()[0]) {
                 $this->chargements = $this->getPolices()[0]->getChargements();
             }

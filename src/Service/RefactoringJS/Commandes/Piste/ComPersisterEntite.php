@@ -5,14 +5,17 @@ namespace App\Service\RefactoringJS\Commandes\Piste;
 use App\Entity\Piste;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Contact;
+use App\Entity\Police;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
 use App\Service\RefactoringJS\Evenements\Sujet;
+use App\Service\ServiceAvenant;
 
 class ComPersisterEntite implements Commande
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private ServiceAvenant $serviceAvenant,
         private ?Evenement $evenement
     ) {
     }
@@ -22,7 +25,13 @@ class ComPersisterEntite implements Commande
         $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
         if ($newEntityValue != null) {
             if ($newEntityValue instanceof Sujet) {
-                // dd("Ici", $newEntityValue);
+                
+                //Si c'est l'instance de la police, il faudra lui donner une idAvenant
+                if ($newEntityValue instanceof Police) {
+                    $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($newEntityValue->getReference()));
+                    // dd("Ici", $newEntityValue);
+                }
+
                 //ici il faut actualiser la base de données
                 if ($newEntityValue->getId() == null) {
                     $this->entityManager->persist($newEntityValue);

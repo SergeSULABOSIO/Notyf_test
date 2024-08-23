@@ -16,6 +16,7 @@ use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauContact;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauCotation;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamClient;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamCotation;
+use App\Service\ServiceAvenant;
 
 class SuperviseurSujet implements CommandeExecuteur, Superviseur
 {
@@ -25,6 +26,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function __construct(
         private ?EntityManagerInterface $entityManager,
         private ?ServiceEntreprise $serviceEntreprise,
+        private ?ServiceAvenant $serviceAvenant,
         private ?ServiceDates $serviceDates
     ) {
         $this->historiqueEvenements = new ArrayCollection();
@@ -45,7 +47,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     public function onAttributAjout(?Evenement $e)
     {
         // Commande de persistance d'une entité dans la base
-        $this->executer(new ComPersisterEntite($this->entityManager, $e));
+        $this->executer(new ComPersisterEntite($this->entityManager, $this->serviceAvenant, $e));
 
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributAjout", $e);

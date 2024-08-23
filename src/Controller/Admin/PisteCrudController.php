@@ -140,8 +140,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $this->serviceDates,
             $objet
         ));
-        $idAvenant = $this->serviceAvenant->generateIdAvenantByReference("0145787878787-2024");
-        dd("IdAvenant", $idAvenant);
+        // $idAvenant = $this->serviceAvenant->generateIdAvenantByReference("0145787878787-2024");
+        // dd("IdAvenant", $idAvenant);
         return $objet;
     }
 

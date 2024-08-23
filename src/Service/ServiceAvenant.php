@@ -213,12 +213,10 @@ class ServiceAvenant
 
     public function generateIdAvenantByReference($reference)
     {
-        $id = -100;
+        $id = 0;
         if ($this->serviceEntreprise->getEntreprise()) {
             if (isset($reference)) {
                 $id = $this->processAvenant($reference);
-            } else {
-                $id = 0;
             }
         }
         return $id;

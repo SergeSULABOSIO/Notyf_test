@@ -25,11 +25,19 @@ class ComPersisterEntite implements Commande
         $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_NEW_VALUE];
         if ($newEntityValue != null) {
             if ($newEntityValue instanceof Sujet) {
-                
+
                 //Si c'est l'instance de la police, il faudra lui donner une idAvenant
                 if ($newEntityValue instanceof Police) {
-                    $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($newEntityValue->getReference()));
-                    // dd("Ici", $newEntityValue);
+
+                    /** @var Police */
+                    $existingPolice = $newEntityValue->getCotation()->getPiste()->getPolice();
+                    if ($existingPolice != null) {
+                        $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($existingPolice->getReference()));
+                    } else {
+                        // dd("Ici", $newEntityValue->getCotation()->getPiste()->getPolice());
+                        $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($newEntityValue->getReference()));
+                        $newEntityValue->getCotation()->getPiste()->setPolice($newEntityValue);
+                    }
                 }
 
                 //ici il faut actualiser la base de données

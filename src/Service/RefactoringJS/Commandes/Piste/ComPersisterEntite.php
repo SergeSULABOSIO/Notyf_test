@@ -34,13 +34,13 @@ class ComPersisterEntite implements Commande
                     if ($existingPolice != null) {
                         $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($existingPolice->getReference()));
                     } else {
-                        // dd("Ici", $newEntityValue->getCotation()->getPiste()->getPolice());
                         $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($newEntityValue->getReference()));
                         $newEntityValue->getCotation()->getPiste()->setPolice($newEntityValue);
                     }
                 }
-
+                
                 //ici il faut actualiser la base de données
+                // dd("Ici", $newEntityValue);
                 if ($newEntityValue->getId() == null) {
                     $this->entityManager->persist($newEntityValue);
                 } else {

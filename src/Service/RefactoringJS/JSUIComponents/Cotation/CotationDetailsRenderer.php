@@ -2,11 +2,13 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Cotation;
 
+use App\Entity\Cotation;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Controller\Admin\CotationCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
@@ -49,11 +51,10 @@ class CotationDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createTexte("id", "Identifiant")
+                ->createTexte("id", PreferenceCrudController::PREF_CRM_COTATION_ID)
                 ->setColumns(10)
                 ->getChamp()
         );
-
         //validated
         $this->addChamp(
             (new JSChamp())
@@ -62,7 +63,74 @@ class CotationDetailsRenderer extends JSPanelRenderer
                 ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT)
                 ->getChamp()
         );
-
+        //polices
+        $this->addChamp(
+            (new JSChamp())
+                ->createTableau("polices", "Polices")
+                ->setTemplatePath('admin/segment/view_polices.html.twig')
+                ->getChamp()
+        );
+        //Nom
+        $this->addChamp(
+            (new JSChamp())
+                ->createTexte("nom", PreferenceCrudController::PREF_CRM_COTATION_NOM)
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Durée de la couverture
+        $this->addChamp(
+            (new JSChamp())
+                ->createNombre("dureeCouverture", PreferenceCrudController::PREF_CRM_COTATION_DUREE)
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, Cotation $entity) {
+                        return $value . " mois.";
+                    }
+                )
+                ->getChamp()
+        );
+        //Client
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('client', "Client")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Assureur
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('assureur', "Assureur")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Piste
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('piste', "Piste")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Partenaire
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('partenaire', "Partenaire")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Revenus
+        $this->addChamp(
+            (new JSChamp())
+                ->createTableau('revenus', "Revenus de courtage")
+                ->setTemplatePath('admin/segment/view_revenus.html.twig')
+                ->getChamp()
+        );
+        //Chargements
+        $this->addChamp(
+            (new JSChamp())
+                ->createTableau('chargements', "Chargement")
+                ->setTemplatePath('admin/segment/view_chargements.html.twig')
+                ->getChamp()
+        );
 
 
 

@@ -4970,7 +4970,7 @@ class ServicePreferences
     {
         $tabAttributs[] = FormField::addPanel("Section principale")
             ->setIcon("fas fa-location-crosshairs")
-            ->setColumns(10)
+            ->setColumns(10)  
             ->onlyOnForms(); //fa-solid fa-paperclip
         $tabAttributs[] = ChoiceField::new('etape', PreferenceCrudController::PREF_CRM_PISTE_ETAPE)
             ->setChoices(PisteCrudController::TAB_ETAPES)
@@ -5174,9 +5174,10 @@ class ServicePreferences
 
     public function getChamps($objetInstance, ?Crud $crud, AdminUrlGenerator $adminUrlGenerator)
     {
+        
         //définition des attributs des pages
         $preference = $this->chargerPreference($this->serviceEntreprise->getUtilisateur(), $this->serviceEntreprise->getEntreprise());
-
+        
         return $this->definirAttributsPages($objetInstance, $preference, $crud, $adminUrlGenerator);
     }
 

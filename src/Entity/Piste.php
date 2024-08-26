@@ -312,6 +312,7 @@ class Piste implements Sujet, CommandeExecuteur
 
     public function getPolice(): ?Police
     {
+        // dd("Je suis ici: ", $this->police);
         return $this->police;
     }
 

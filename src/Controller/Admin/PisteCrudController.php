@@ -150,6 +150,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
+
+        
         $this->executer(new ComDefinirObservateursEvenements(
             $this->superviseurSujet,
             $this->entityManager,
@@ -158,8 +160,9 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $piste
         ));
 
+        
         // dd("Ici", $pageName, $piste);
-
+        
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);

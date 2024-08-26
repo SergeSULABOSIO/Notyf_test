@@ -4328,6 +4328,7 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel("Détails relatifs aux termes de paiement.")
             ->setIcon("fa-solid fa-cash-register")
             ->onlyOnForms();
+        //je suis ici
         $tabAttributs[] = CollectionField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)
             ->setHelp("Vous avez la possibilité d'ajouter des données à volonté.")
             ->useEntryCrudForm(TrancheCrudController::class)
@@ -4529,12 +4530,12 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
-            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE)
+        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnDetail();
-            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnDetail();
-            //Je suis ici
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnDetail();
+        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnDetail();
+        //Je suis ici
         return $tabAttributs;
     }
 

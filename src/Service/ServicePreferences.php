@@ -4512,7 +4512,6 @@ class ServicePreferences
         $tabAttributs[] = ArrayField::new('chargements', PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT)
             ->setTemplatePath('admin/segment/view_chargements.html.twig')
             ->onlyOnDetail();
-        //Je suis ici
         $tabAttributs[] = MoneyField::new('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
             ->formatValue(function ($value, Cotation $entity) {
                 return $this->serviceMonnaie->getMonantEnMonnaieAffichage($entity->getPrimeTotale());
@@ -4530,12 +4529,12 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_CRM_COTATION_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
-        $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE)
+            $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_CRM_COTATION_ENTREPRISE)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnDetail();
-        $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnDetail();
-
+            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnDetail();
+            $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnDetail();
+            //Je suis ici
         return $tabAttributs;
     }
 

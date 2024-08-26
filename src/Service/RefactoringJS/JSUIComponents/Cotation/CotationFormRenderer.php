@@ -15,7 +15,8 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class CotationDetailsRenderer extends JSPanelRenderer
+
+class CotationFormRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -29,8 +30,22 @@ class CotationDetailsRenderer extends JSPanelRenderer
         parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
+    private function isIard(): bool
+    {
+        $rep = false;
+        if ($this->adminUrlGenerator->get("isIard")) {
+            $rep = $this->adminUrlGenerator->get("isIard");
+        }
+        //dd($this->adminUrlGenerator);
+        //dd($rep);
+        return $rep;
+    }
+
     public function design()
     {
+        $tauxArca = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
+        $tauxTva = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), false);
+        
         //Id
         $this->addChamp(
             (new JSChamp())

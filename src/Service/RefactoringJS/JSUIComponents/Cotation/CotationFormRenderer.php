@@ -29,7 +29,7 @@ class CotationFormRenderer extends JSPanelRenderer
         private $crud,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     private function isIard(): bool

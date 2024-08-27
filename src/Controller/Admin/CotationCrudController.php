@@ -4,13 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Entity\Cotation;
 use App\Entity\Piste;
+use App\Service\RefactoringJS\JSUIComponents\Cotation\CotationUIBuilder;
 use App\Service\ServiceAvenant;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
+use App\Service\ServiceTaxes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,6 +48,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 class CotationCrudController extends AbstractCrudController
 {
     public ?Crud $crud = null;
+    public ?CotationUIBuilder $uiBuilder = null;
 
     public const TYPE_RESULTAT_VALIDE = "Validée";
     public const TYPE_RESULTAT_NON_VALIDEE = "Non Validée";
@@ -55,6 +59,8 @@ class CotationCrudController extends AbstractCrudController
 
 
     public function __construct(
+        private ServiceTaxes $serviceTaxes,
+        private ServiceMonnaie $serviceMonnaie,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -63,6 +69,7 @@ class CotationCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new CotationUIBuilder($this->serviceEntreprise);
     }
 
 
@@ -166,7 +173,16 @@ class CotationCrudController extends AbstractCrudController
                 }
             }
         }
-        return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
+        // return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
 

@@ -4484,7 +4484,7 @@ class ServicePreferences
         $tabAttributs[] = TextField::new('gestionnaire', "Gestionnaire")->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_CREATION)->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_COTATION_DATE_MODIFICATION)->onlyOnIndex();
-
+        //je suis ici
         return $tabAttributs;
     }
 

@@ -4328,7 +4328,6 @@ class ServicePreferences
         $tabAttributs[] = FormField::addPanel("Détails relatifs aux termes de paiement.")
             ->setIcon("fa-solid fa-cash-register")
             ->onlyOnForms();
-        //je suis ici
         $tabAttributs[] = CollectionField::new('tranches', PreferenceCrudController::PREF_CRM_COTATION_TRANCHES)
             ->setHelp("Vous avez la possibilité d'ajouter des données à volonté.")
             ->useEntryCrudForm(TrancheCrudController::class)
@@ -4435,6 +4434,7 @@ class ServicePreferences
             ->onlyOnForms()
             ->setColumns(12);
 
+        //je suis ici
         //return $tabAttributs;
         return $this->appliquerCanDesable($this->appliquerCanHide($tabAttributs));
     }

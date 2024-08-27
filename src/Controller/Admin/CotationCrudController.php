@@ -152,15 +152,6 @@ class CotationCrudController extends AbstractCrudController
         if ($this->crud != null) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
         }
-        // $this->adminUrlGenerator->set("champsACacher", [
-        //PreferenceCrudController::PREF_CRM_COTATION_REVENUS,
-        //PreferenceCrudController::PREF_CRM_COTATION_CHARGEMENT,
-        //PreferenceCrudController::PREF_CRM_COTATION_MISSIONS,
-        //PreferenceCrudController::PREF_CRM_MISSION_SINISTRE,
-        //PreferenceCrudController::PREF_CRM_MISSION_STATUS,
-        //PreferenceCrudController::PREF_CRM_MISSION_PISTE,
-        // ]);
-
         if ($instance != null) {
             if ($instance instanceof Piste) {
                 //On envoie ces paramètres à tous les formulaires

@@ -4,6 +4,7 @@ namespace App\Service\RefactoringJS\Commandes\Piste;
 
 use App\Entity\ActionCRM;
 use App\Entity\Chargement;
+use App\Entity\Contact;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
@@ -75,9 +76,14 @@ class ComDeleterEntite implements Commande
                     //ici il faut actualiser la base de données
                     $this->updateBase($oldEntityValue);
                 }else if ($oldEntityValue instanceof FeedbackCRM) {
+                    // dd("Je suis ici", $oldEntityValue);
                     //ici il faut actualiser la base de données
                     $this->updateBase($oldEntityValue);
                 }else if ($oldEntityValue instanceof DocPiece) {
+                    //ici il faut actualiser la base de données
+                    $this->updateBase($oldEntityValue);
+                }else if ($oldEntityValue instanceof Contact) {
+                    $oldEntityValue->setPiste(null);
                     //ici il faut actualiser la base de données
                     $this->updateBase($oldEntityValue);
                 }else if ($oldEntityValue instanceof ActionCRM) {

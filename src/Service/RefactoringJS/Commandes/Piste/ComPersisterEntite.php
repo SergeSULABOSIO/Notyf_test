@@ -44,8 +44,7 @@ class ComPersisterEntite implements Commande
                     //ici il faut actualiser la base de données
                     //ici il faut actualiser la base de données
                     $this->updateBase($newEntityValue);
-                }
-                if ($newEntityValue instanceof Cotation) {
+                }else if ($newEntityValue instanceof Cotation) {
                     $newEntityValue->setGestionnaire($newEntityValue->getGestionnaire());
                     //ici il faut actualiser la base de données
                     $this->updateBase($newEntityValue);

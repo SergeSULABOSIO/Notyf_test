@@ -22,26 +22,23 @@ class ComDeleterEntite implements Commande
 
     public function executer()
     {
-        $newEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_OLD_VALUE];
-        dd("Je suis ici", $newEntityValue, $this->evenement);
-        if ($newEntityValue != null) {
-            if ($newEntityValue instanceof Sujet) {
-
-                //Si c'est l'instance de la police, il faudra lui donner une idAvenant
-                if ($newEntityValue instanceof Police) {
-                    //La cotation doit savoir qu'elle a été invalidée et donc déttachée de sa police/avenant
+        $oldEntityValue = $this->evenement->getDonnees()[Evenement::CHAMP_OLD_VALUE];
+        if ($oldEntityValue != null) {
+            if ($oldEntityValue instanceof Sujet) {
+                //Si l'on a supprimé la police
+                if ($oldEntityValue instanceof Police) {
+                    dd("Old Value: ", $oldEntityValue);
+                    
                     /** @var Cotation */
-                    $exisitingQuote = $newEntityValue->getCotation();
+                    $exisitingQuote = $oldEntityValue->getCotation();
                     $exisitingQuote->setValidated(false);
-                    $newEntityValue->getCotation()->getPiste()->setPolice(null);
-                    $newEntityValue->setCotation(null);
-                    $newEntityValue->setEntreprise(null);
-                    $newEntityValue->setUtilisateur(null);
-                }
+                    $exisitingQuote->setPolice(null);
+                    $exisitingQuote->getPiste()->setPolice(null);
 
-                //ici il faut actualiser la base de données
-                $this->entityManager->remove($newEntityValue);
-                $this->entityManager->flush();
+                    //ici il faut actualiser la base de données
+                    $this->entityManager->remove($oldEntityValue);
+                    $this->entityManager->flush();
+                }
             }
         }
     }

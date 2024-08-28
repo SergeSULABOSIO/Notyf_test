@@ -199,6 +199,7 @@ class ServiceSuppression
                 break;
 
             case self::CRM_COTATION:
+
                 $this->supprimerEntiteSingleton($entityObject);
                 break;
 
@@ -230,6 +231,7 @@ class ServiceSuppression
             $this->entityManager->remove($entityInstance);
             $this->entityManager->flush();
         } catch (\Throwable $th) {
+            // dd("Erreur:", $th);
             $message = $this->serviceEntreprise->getUtilisateur()->getNom() . ", Il n'est pas possible de supprimer cet enregistrement car il est déjà utilisé dans une ou plusières rubriques. Cette suppression violeraît les restrictions relatives à la sécurité des données.";
             $this->afficherFlashMessage("danger", $message);
         }

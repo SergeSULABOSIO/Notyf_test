@@ -116,7 +116,41 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_PISTE);
+        /** @var Piste */
+        $pisteToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $pisteToDelete
+        ));
+        //destruction des polices
+        foreach ($pisteToDelete->getPolices() as $police) {
+            $pisteToDelete->removePolice($police);
+        }
+        //destruction des cotations
+        foreach ($pisteToDelete->getCotations() as $cotation) {
+            $pisteToDelete->removeCotation($cotation);
+        }
+        //destruction des contacts
+        foreach ($pisteToDelete->getContacts() as $contact) {
+            $pisteToDelete->removeContact($contact);
+        }
+        //destruction des actions
+        foreach ($pisteToDelete->getActionsCRMs() as $action) {
+            foreach ($action->getFeedbacks() as $feedback) {
+                $action->removeFeedback($feedback);
+            }
+            $pisteToDelete->removeActionsCRM($action);
+        }
+        //destruction définitive de la piste
+        $this->entityManager->remove($pisteToDelete);
+        $this->entityManager->flush();
+
+        // // dd("Suppression...", $entityInstance);
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_PISTE);
     }
 
 
@@ -131,7 +165,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $objet = $this->serviceCrossCanal->crossCanal_Etape_setEtape($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Piste_setPolice($objet, $this->adminUrlGenerator);
         $objet->setObjectif("Pour plus d'infos, voire les tâches à exécuter.");
-        
+
         //Exécuter - Ecouteurs d'évènements
         $this->executer(new ComDefinirObservateursEvenements(
             $this->superviseurSujet,
@@ -151,7 +185,6 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         $piste = $this->getContext()->getEntity()->getInstance();
         //Ecouteurs
 
-        
         $this->executer(new ComDefinirObservateursEvenements(
             $this->superviseurSujet,
             $this->entityManager,
@@ -160,9 +193,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $piste
         ));
 
-        
         // dd("Ici", $pageName, $piste);
-        
+
         //dd($piste->getClient()->isExoneree());
         $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);
@@ -216,7 +248,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER_ET_CONTINUER);
             })
-            
+
             ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
                 return $action->setIcon('fa-solid fa-floppy-disk')->setLabel(DashboardController::ACTION_ENREGISTRER); //<i class="fa-solid fa-floppy-disk"></i>
             })
@@ -238,8 +270,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             ->setPermission(Action::SAVE_AND_ADD_ANOTHER, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_CONTINUE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
             ->setPermission(Action::SAVE_AND_RETURN, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION])
-        ;
+            ->setPermission(DashboardController::ACTION_DUPLICATE, UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::ACTION_EDITION]);
     }
 
     public function cross_canal_ajouterMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)

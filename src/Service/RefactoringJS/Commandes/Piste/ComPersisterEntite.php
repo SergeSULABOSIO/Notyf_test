@@ -41,20 +41,26 @@ class ComPersisterEntite implements Commande
                     /** @var Cotation */
                     $exisitingQuote = $newEntityValue->getCotation();
                     $exisitingQuote->setValidated(true);
+                    //ici il faut actualiser la base de données
+                    //ici il faut actualiser la base de données
+                    $this->updateBase($newEntityValue);
                 }
-
-                if($newEntityValue instanceof Cotation){
+                if ($newEntityValue instanceof Cotation) {
                     $newEntityValue->setGestionnaire($newEntityValue->getGestionnaire());
+                    //ici il faut actualiser la base de données
+                    $this->updateBase($newEntityValue);
                 }
-                //ici il faut actualiser la base de données
-                // dd("Ici", $newEntityValue);
-                if ($newEntityValue->getId() == null) {
-                    $this->entityManager->persist($newEntityValue);
-                } else {
-                    $this->entityManager->refresh($newEntityValue);
-                }
-                $this->entityManager->flush();
             }
         }
+    }
+
+    private function updateBase($objet)
+    {
+        if ($objet->getId() == null) {
+            $this->entityManager->persist($objet);
+        } else {
+            $this->entityManager->refresh($objet);
+        }
+        $this->entityManager->flush();
     }
 }

@@ -126,6 +126,10 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
             $this->serviceDates,
             $pisteToDelete
         ));
+        //destruction des documents
+        foreach ($pisteToDelete->getDocuments() as $docu) {
+            $pisteToDelete->removeDocument($docu);
+        }
         //destruction des polices
         foreach ($pisteToDelete->getPolices() as $police) {
             $pisteToDelete->removePolice($police);

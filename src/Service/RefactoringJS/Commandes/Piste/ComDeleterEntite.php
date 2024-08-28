@@ -100,9 +100,6 @@ class ComDeleterEntite implements Commande
                     //ici il faut actualiser la base de données
                     $this->updateBase($oldEntityValue);
                 }
-                // else if($oldEntityValue instanceof Piste){
-                //     dd("Je suis ici", $oldEntityValue);
-                // }
             }
         }
     }

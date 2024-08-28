@@ -64,7 +64,7 @@ class CotationFormRenderer extends JSPanelRenderer
         if ($this->objetInstance instanceof Cotation) {
             $column = 10;
         }
-        // dd("Obj;et instance:", $this->objetInstance);
+        /** @var Cotation */
         // dd("Je suis ici:", $this->pageName, $this->objetInstance);
 
         $tauxArca = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);

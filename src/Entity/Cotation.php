@@ -349,12 +349,12 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function getPrimeTotale()
     {
 
-        $this->primeTotale = 0;
+        $primeTotale = 0;
         /** @var Tranche */
         foreach ($this->getTranches() as $tranche) {
-            $this->primeTotale = $this->primeTotale + $tranche->getPrimeTotaleTranche();
+            $primeTotale += $tranche->getPrimeTotaleTranche();
         }
-        $this->primeTotale = round($this->primeTotale);
+        $this->primeTotale = round($primeTotale);
         // dd("Cotation", $this, $this->primeTotale);
         return $this->primeTotale;
     }

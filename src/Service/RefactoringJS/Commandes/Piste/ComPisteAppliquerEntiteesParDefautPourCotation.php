@@ -23,14 +23,23 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         //Génération autres attributs par défaut
         $this->genererAutresAttibuts();
 
-        //Génération des tranches par défaut
-        $this->genererTranches();
+        //Si et seulement si la cotation n'a âs de tranches
+        if (count($this->cotation->getTranches()) == 0) {
+            //Génération des tranches par défaut
+            $this->genererTranches();
+        }
 
-        //Génération des chargements par défaut
-        $this->genererChargements();
+        //Si et seulement si la cotation n'a pas de chargements
+        if (count($this->cotation->getChargements()) == 0) {
+            //Génération des chargements par défaut
+            $this->genererChargements();
+        }
 
-        //Génération des revenus par défaut
-        $this->genererRevenus();
+        //Si et seulement si la cotation n'a pas de revenu
+        if (count($this->cotation->getRevenus()) == 0) {
+            //Génération des revenus par défaut
+            $this->genererRevenus();
+        }
     }
 
     private function genererRevenus()
@@ -86,7 +95,7 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
                 $chargement->setDescription("TVA / Autorité");
             } else if ($typeChargement == ChargementCrudController::TAB_TYPE_CHARGEMENT_ORDINAIRE[ChargementCrudController::TYPE_ACCESSOIRES]) {
                 $chargement->setDescription("Frais administratifs");
-            }else{
+            } else {
                 $chargement->setDescription("Autre chargement");
             }
             $this->cotation->addChargement($chargement);

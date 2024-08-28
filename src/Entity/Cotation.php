@@ -20,6 +20,8 @@ use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use DateTimeImmutable;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: CotationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -312,6 +314,9 @@ class Cotation implements IndicateursJS, Sujet, CommandeExecuteur
     public function addChargement(Chargement $chargement): self
     {
         //C'est très important de lui fournir l'entreprise car il en aura besoin pour trouver la monnaie utilisée ici
+        $chargement->setCreatedAt(new DateTimeImmutable("now"));
+        $chargement->setUpdatedAt(new DateTimeImmutable("now"));
+        $chargement->setEntreprise($this->getEntreprise());
         // dd("New Chargement", $chargement);
 
         if (!$this->chargements->contains($chargement)) {

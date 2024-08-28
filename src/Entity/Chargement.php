@@ -201,12 +201,28 @@ class Chargement implements Sujet, CommandeExecuteur
 
     private function getMonnaie($fonction)
     {
-        $tabMonnaies = $this->getCotation()->getEntreprise()->getMonnaies();
-        foreach ($tabMonnaies as $monnaie) {
-            if ($monnaie->getFonction() == $fonction) {
-                return $monnaie;
+        /** @var Cotation */
+        $quote = $this->getCotation();
+        if ($quote) {
+            /** @var Entreprise */
+            $ese = $quote->getEntreprise();
+            if ($ese) {
+                /** @var Monnaie */
+                $currencies = $ese->getMonnaies();
+                foreach ($currencies as $monnaie) {
+                    if ($monnaie->getFonction() == $fonction) {
+                        return $monnaie;
+                    }
+                }
             }
         }
+
+        // $tabMonnaies = $this->getCotation()->getEntreprise()->getMonnaies();
+        // foreach ($tabMonnaies as $monnaie) {
+        //     if ($monnaie->getFonction() == $fonction) {
+        //         return $monnaie;
+        //     }
+        // }
         return null;
     }
 
@@ -234,7 +250,7 @@ class Chargement implements Sujet, CommandeExecuteur
         }
         return $this->monnaie_Affichage;
     }
-    
+
     public function transfererObservateur(?Observateur $observateur)
     {
         //Rien à transférer

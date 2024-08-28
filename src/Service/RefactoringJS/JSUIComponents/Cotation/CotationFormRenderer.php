@@ -54,7 +54,7 @@ class CotationFormRenderer extends JSPanelRenderer
                 $deployer = false;
             }
         }
-        // dd("canDeployer", $deployer, $this->objetInstance);
+        // dd("canDeployer", $deployer, $this->objetInstance, $this->pageName);
         return $deployer;
     }
 
@@ -64,7 +64,6 @@ class CotationFormRenderer extends JSPanelRenderer
         if ($this->objetInstance instanceof Cotation) {
             $column = 10;
         }
-        /** @var Cotation */
         // dd("Je suis ici:", $this->pageName, $this->objetInstance);
 
         $tauxArca = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);

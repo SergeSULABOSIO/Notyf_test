@@ -17,6 +17,7 @@ use App\Service\RefactoringJS\AutresClasses\IndicateursJS;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\Commandes\ComDetecterEvenementAttribut;
 use App\Service\RefactoringJS\Commandes\Piste\CommandePisteNotifierEvenement;
+use SebastianBergmann\Complexity\Calculator;
 
 #[ORM\Entity(repositoryClass: RevenuRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -263,7 +264,13 @@ class Revenu implements IndicateursJS, Sujet, CommandeExecuteur
 
     private function getCodeMonnaieAffichage(): string
     {
-        $strMonnaie = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
+        $strMonnaie = "Um";
+        $calc = new Calculateur();
+        if($this->getCotation() != null){
+            $calc->setCotation($this->getCotation());
+            $strMonnaie = $calc->getCodeMonnaie();
+        }
+        // $strMonnaie = (new Calculateur())->setCotation($this->getCotation())->getCodeMonnaie();
         return $strMonnaie;
     }
 

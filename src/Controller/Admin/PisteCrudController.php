@@ -148,9 +148,6 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         //destruction définitive de la piste
         $this->entityManager->remove($pisteToDelete);
         $this->entityManager->flush();
-
-        // // dd("Suppression...", $entityInstance);
-        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_PISTE);
     }
 
 

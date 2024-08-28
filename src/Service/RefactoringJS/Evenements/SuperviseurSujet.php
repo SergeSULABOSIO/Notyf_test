@@ -70,6 +70,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onAttributSuppression(?Evenement $e)
     {
+        dd("Je suis en train de supprimer! ", $e);
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributSuppression", $e);
     }

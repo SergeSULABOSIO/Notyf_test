@@ -21,7 +21,7 @@
                             <td scope="row">{{ i }}</td>
                             <th>{{tranche.nom}}</td>
                             <td>{{tranche.description}}</td>
-                            <td>{{(tranche.montant / 100)|format_currency(tranche.monnaie_Affichage.code)}}</td>
+                            <td>{{(tranche.primeTotaleTranche / 100)|format_currency(tranche.monnaie_Affichage.code)}}</td>
                         </tr>
                         {% set i = i + 1 %}
                     {% endfor %}

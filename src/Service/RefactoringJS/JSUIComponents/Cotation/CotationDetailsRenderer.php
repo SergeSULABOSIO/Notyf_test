@@ -34,14 +34,14 @@ class CotationDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createTexte("id", PreferenceCrudController::PREF_CRM_COTATION_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_CRM_COTATION_ID)
                 ->setColumns(10)
                 ->getChamp()
         );
         //validated
         $this->addChamp(
             (new JSChamp())
-                ->createTexte("validated", "Status")
+                ->createChoix("validated", "Status")
                 ->setColumns(10)
                 ->setChoices(CotationCrudController::TAB_TYPE_RESULTAT)
                 ->getChamp()

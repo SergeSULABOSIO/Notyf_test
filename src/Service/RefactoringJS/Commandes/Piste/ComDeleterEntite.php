@@ -27,7 +27,7 @@ class ComDeleterEntite implements Commande
             if ($oldEntityValue instanceof Sujet) {
                 //Si l'on a supprimé la police
                 if ($oldEntityValue instanceof Police) {
-                    dd("Old Value: ", $oldEntityValue);
+                    // dd("Old Value: ", $oldEntityValue);
                     
                     /** @var Cotation */
                     $exisitingQuote = $oldEntityValue->getCotation();

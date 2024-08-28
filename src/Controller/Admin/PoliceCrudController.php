@@ -213,11 +213,13 @@ class PoliceCrudController extends AbstractCrudController
             } else if ($instance instanceof Police) {
                 //On envoie ces paramètres à tous les formulaires
                 /** @var Piste */
-                if ($instance->getPiste()->getProduit()) {
-                    $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
-                }
-                if ($instance->getPiste()->getClient()) {
-                    $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                if ($instance->getPiste() != null) {
+                    if ($instance->getPiste()->getProduit()) {
+                        $this->adminUrlGenerator->set("isIard", $instance->getProduit()->isIard());
+                    }
+                    if ($instance->getPiste()->getClient()) {
+                        $this->adminUrlGenerator->set("isExoneree", $instance->getClient()->isExoneree());
+                    }
                 }
             }
         }

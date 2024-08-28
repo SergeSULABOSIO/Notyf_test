@@ -3,20 +3,21 @@
 namespace App\Service\RefactoringJS\Evenements;
 
 use App\Service\ServiceDates;
+use App\Service\ServiceAvenant;
 use App\Service\ServiceEntreprise;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Commandes\Piste\ComDeleterEntite;
 use App\Service\RefactoringJS\Commandes\Piste\ComPersisterEntite;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamClient;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauClient;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouvelleTache;
+use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamCotation;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauContact;
 use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjouterNouveauCotation;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamClient;
-use App\Service\RefactoringJS\Commandes\Piste\ComPisteAjusterParamCotation;
-use App\Service\ServiceAvenant;
 
 class SuperviseurSujet implements CommandeExecuteur, Superviseur
 {
@@ -70,7 +71,9 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onAttributSuppression(?Evenement $e)
     {
-        dd("Je suis en train de supprimer! ", $e);
+        // Commande de suppression d'une entité dans la base
+        $this->executer(new ComDeleterEntite($this->entityManager, $this->serviceAvenant, $e));
+        
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributSuppression", $e);
     }

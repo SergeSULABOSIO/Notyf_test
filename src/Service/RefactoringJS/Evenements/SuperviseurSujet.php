@@ -62,6 +62,8 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
 
     public function onAttributEdition(?Evenement $e)
     {
+        // Commande de persistance d'une entité dans la base
+        // dd("Edition", $e);
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributEdition", $e);
     }

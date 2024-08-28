@@ -42,6 +42,10 @@ class ComPersisterEntite implements Commande
                     $exisitingQuote = $newEntityValue->getCotation();
                     $exisitingQuote->setValidated(true);
                 }
+
+                if($newEntityValue instanceof Cotation){
+                    $newEntityValue->setGestionnaire($newEntityValue->getGestionnaire());
+                }
                 
                 //ici il faut actualiser la base de données
                 // dd("Ici", $newEntityValue);

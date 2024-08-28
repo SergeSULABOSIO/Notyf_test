@@ -5,6 +5,7 @@ namespace App\Service\RefactoringJS\Commandes\Piste;
 use App\Entity\Piste;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Contact;
+use App\Entity\Cotation;
 use App\Entity\Police;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Evenements\Evenement;
@@ -28,7 +29,6 @@ class ComPersisterEntite implements Commande
 
                 //Si c'est l'instance de la police, il faudra lui donner une idAvenant
                 if ($newEntityValue instanceof Police) {
-
                     /** @var Police */
                     $existingPolice = $newEntityValue->getCotation()->getPiste()->getPolice();
                     if ($existingPolice != null) {
@@ -37,6 +37,10 @@ class ComPersisterEntite implements Commande
                         $newEntityValue->setIdAvenant($this->serviceAvenant->generateIdAvenantByReference($newEntityValue->getReference()));
                         $newEntityValue->getCotation()->getPiste()->setPolice($newEntityValue);
                     }
+                    //La cotation doit savoir qu'elle a été validée et donc attachée à une police/avenant
+                    /** @var Cotation */
+                    $exisitingQuote = $newEntityValue->getCotation();
+                    $exisitingQuote->setValidated(true);
                 }
                 
                 //ici il faut actualiser la base de données

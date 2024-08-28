@@ -48,7 +48,7 @@ class SuperviseurSujet implements CommandeExecuteur, Superviseur
     {
         // Commande de persistance d'une entité dans la base
         $this->executer(new ComPersisterEntite($this->entityManager, $this->serviceAvenant, $e));
-
+        
         //On peu exécuter d'autres instructions ici
         $this->updateHistoriqueEvenement("onAttributAjout", $e);
     }

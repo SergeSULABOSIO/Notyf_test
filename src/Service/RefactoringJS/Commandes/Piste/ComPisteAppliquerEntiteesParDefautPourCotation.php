@@ -147,6 +147,10 @@ class ComPisteAppliquerEntiteesParDefautPourCotation implements Commande
         if ($this->piste->getPolice() != null) {
             $this->cotation->setPolice($this->piste->getPolice());
         }
+        //On set aussi le gestionnaire de compte
+        if ($this->piste->getGestionnaire() != null) {
+            $this->cotation->setGestionnaire($this->piste->getGestionnaire());
+        }
         //On set la piste
         $this->cotation->setPiste($this->piste);
     }

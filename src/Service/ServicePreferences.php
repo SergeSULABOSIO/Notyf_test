@@ -1963,6 +1963,7 @@ class ServicePreferences
 
     public function setCRM_Fields_Polices_form($tabAttributs)
     {
+        // dd($this->entityInstance);
         $tauxAssureur = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), false);
         $tauxCourtier = $this->serviceTaxes->getTauxTaxeBranche($this->isIard(), true);
         //dd($taux);

@@ -3518,7 +3518,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CONTACT_ENTREPRISE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CONTACT_DATE_DE_MODIFICATION)->onlyOnDetail();
-
+        //je suis ici
         return $tabAttributs;
     }
 

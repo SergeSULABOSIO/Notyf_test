@@ -2,23 +2,16 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Contact;
 
-use App\Entity\Piste;
 use App\Entity\Cotation;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use App\Service\ServiceEntreprise;
-use Doctrine\ORM\EntityRepository;
-use App\Controller\Admin\RevenuCrudController;
-use App\Controller\Admin\TrancheCrudController;
-use App\Controller\Admin\DocPieceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Controller\Admin\ChargementCrudController;
 use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
-use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
 class ContactFormRenderer extends JSPanelRenderer
 {

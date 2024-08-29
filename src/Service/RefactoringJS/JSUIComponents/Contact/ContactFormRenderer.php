@@ -28,15 +28,6 @@ class ContactFormRenderer extends JSPanelRenderer
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
-    private function isIard(): bool
-    {
-        $rep = false;
-        if ($this->adminUrlGenerator->get("isIard")) {
-            $rep = $this->adminUrlGenerator->get("isIard");
-        }
-        return $rep;
-    }
-
     public function design()
     {
         $column = 12;

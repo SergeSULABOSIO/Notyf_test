@@ -184,8 +184,8 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
     {
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
+        
         //Ecouteurs
-
         $this->executer(new ComDefinirObservateursEvenements(
             $this->superviseurSujet,
             $this->entityManager,

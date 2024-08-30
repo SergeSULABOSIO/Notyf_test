@@ -3,50 +3,45 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Piste;
-use DateTimeImmutable;
-use App\Entity\ActionCRM;
 use App\Entity\FeedbackCRM;
 use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
-use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\JSUIComponents\Feedback\FeedbackUIBuilder;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 
-class FeedbackCRMCrudController extends AbstractCrudController
+class FeedbackCRMCrudController extends AbstractCrudController implements CommandeExecuteur
 {
-
     public ?Crud $crud = null;
+    public ?FeedbackUIBuilder $uiBuilder = null;
+
 
     public function __construct(
+        private SuperviseurSujet $superviseurSujet,
         private ServiceDates $serviceDates,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
@@ -54,6 +49,7 @@ class FeedbackCRMCrudController extends AbstractCrudController
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal
     ) {
+        $this->uiBuilder = new FeedbackUIBuilder($this->serviceEntreprise);
     }
 
     public static function getEntityFqcn(): string
@@ -110,7 +106,23 @@ class FeedbackCRMCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_FEEDBACK);
+        /** @var FeedbackCRM */
+        $feedbackToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $feedbackToDelete
+        ));
+        //déconnexion à la tache
+        $feedbackToDelete->setActionCRM(null);
+
+        //destruction définitive de la piste
+        $this->entityManager->remove($feedbackToDelete);
+        $this->entityManager->flush();
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_FEEDBACK);
     }
 
 
@@ -121,16 +133,33 @@ class FeedbackCRMCrudController extends AbstractCrudController
         $objet->setUpdatedAt($this->serviceDates->aujourdhui());
         $objet->setUtilisateur($this->serviceEntreprise->getUtilisateur());
         $objet->setEntreprise($this->serviceEntreprise->getEntreprise());
-        
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 
     public function configureFields(string $pageName): iterable
     {
         $instance = $this->getContext()->getEntity()->getInstance();
-        if($this->crud){
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
         }
+
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
         if ($instance != null) {
             if ($instance instanceof Piste) {
                 //On envoie ces paramètres à tous les formulaires
@@ -143,7 +172,16 @@ class FeedbackCRMCrudController extends AbstractCrudController
                 }
             }
         }
-        return $this->servicePreferences->getChamps(new FeedbackCRM(), $this->crud, $this->adminUrlGenerator);
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
+        // return $this->servicePreferences->getChamps(new FeedbackCRM(), $this->crud, $this->adminUrlGenerator);
     }
 
 
@@ -269,5 +307,12 @@ class FeedbackCRMCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

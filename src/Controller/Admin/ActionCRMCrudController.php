@@ -137,7 +137,25 @@ class ActionCRMCrudController extends AbstractCrudController implements Commande
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_ACTION);
+        /** @var ActionCRM */
+        $actionToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $actionToDelete
+        ));
+        //destruction des feedbacks
+        foreach ($actionToDelete->getFeedbacks() as $feedback) {
+            $actionToDelete->removeFeedback($feedback);
+        }
+        //destruction définitive de la piste
+        $this->entityManager->remove($actionToDelete);
+        $this->entityManager->flush();
+
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_ACTION);
     }
 
 

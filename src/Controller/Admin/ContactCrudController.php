@@ -39,7 +39,7 @@ class ContactCrudController extends AbstractCrudController implements CommandeEx
         private SuperviseurSujet $superviseurSujet,
         private EntityManagerInterface $entityManager,
         private ServiceMonnaie $serviceMonnaie,
-        private ServiceTaxes $serviceTaxes, 
+        private ServiceTaxes $serviceTaxes,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceSuppression $serviceSuppression,
@@ -105,7 +105,20 @@ class ContactCrudController extends AbstractCrudController implements CommandeEx
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CONTACT);
+        /** @var Contact */
+        $contactToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $contactToDelete
+        ));
+        //destruction définitive de la piste
+        $this->entityManager->remove($contactToDelete);
+        $this->entityManager->flush();
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CONTACT);
     }
 
 
@@ -285,7 +298,7 @@ class ContactCrudController extends AbstractCrudController implements CommandeEx
 
         return $this->redirect($batchActionDto->getReferrerUrl());
     }
-    
+
     public function executer(?Commande $commande)
     {
         if ($commande != null) {

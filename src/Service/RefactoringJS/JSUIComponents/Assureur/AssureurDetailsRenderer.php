@@ -5,7 +5,9 @@ use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Controller\Admin\PreferenceCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
 class AssureurDetailsRenderer extends JSPanelRenderer
@@ -25,13 +27,21 @@ class AssureurDetailsRenderer extends JSPanelRenderer
     public function design()
     {
 
-        // //Id
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createNombre("id", PreferenceCrudController::PREF_PRO_CONTACT_ID)
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
+        //Id
+        $this->addChamp(
+            (new JSChamp())
+                ->createNombre("id", PreferenceCrudController::PREF_PRO_ASSUREUR_ID)
+                ->setColumns(10)
+                ->getChamp()
+        );
+
+
+
+
+
+
+
+        
         // //Nom
         // $this->addChamp(
         //     (new JSChamp())

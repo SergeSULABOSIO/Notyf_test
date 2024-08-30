@@ -3727,6 +3727,7 @@ class ServicePreferences
     public function setCRM_Fields_Assureur_Details($tabAttributs)
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_PRO_ASSUREUR_ID)->onlyOnDetail();
+        //je suis ici
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_PRO_ASSUREUR_NOM)->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_PRO_ASSUREUR_COTATIONS)
             ->setTemplatePath('admin/segment/view_cotations.html.twig')

@@ -4621,6 +4621,7 @@ class ServicePreferences
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE]);
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_CRM_MISSION_CREATED_AT)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT)->onlyOnDetail();
+        //Je suis ici
         return $tabAttributs;
     }
 
@@ -4651,7 +4652,7 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_CRM_MISSION_UPDATED_AT)
             ->onlyOnIndex();
-
+        //je suis ici
         return $tabAttributs;
     }
 
@@ -4714,7 +4715,7 @@ class ServicePreferences
             ->setRequired(false)
             ->setColumns(12)
             ->onlyOnForms();
-
+        //Je suis ici
         return $tabAttributs;
     }
 

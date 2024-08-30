@@ -7,16 +7,20 @@ use DateTimeImmutable;
 use Faker\Core\DateTime;
 //use Doctrine\ORM\QueryBuilder;
 use App\Entity\ActionCRM;
-use App\Service\ServiceCrossCanal;
+use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceMonnaie;
+use Doctrine\ORM\Query\Expr\Func;
+use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Func;
 use Symfony\Bundle\SecurityBundle\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -30,14 +34,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Tache\TacheUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 
-class ActionCRMCrudController extends AbstractCrudController
+class ActionCRMCrudController extends AbstractCrudController implements CommandeExecuteur
 {
     public const ACTION_ACHEVER_MISSION = "Achever cette mission";
     public const MISSION_ACHEVEE = "Achevée";
@@ -48,8 +56,14 @@ class ActionCRMCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
+    public ?TacheUIBuilder $uiBuilder = null;
+
 
     public function __construct(
+        private ServiceDates $serviceDates,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
+        private SuperviseurSujet $superviseurSujet,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private Security $security,
@@ -58,6 +72,7 @@ class ActionCRMCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new TacheUIBuilder($this->serviceEntreprise);
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -98,7 +113,7 @@ class ActionCRMCrudController extends AbstractCrudController
             //->add('sinistre')
             //->add('clos')
             //->add('attributedTo')
-            ;
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -136,14 +151,25 @@ class ActionCRMCrudController extends AbstractCrudController
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setPolice($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setCotation($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Mission_setSinistre($objet, $this->adminUrlGenerator);
+        
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
+        
         return $objet;
     }
 
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->getContext()->getEntity()->getInstance();
         if ($this->crud != null) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
-        }else{
+        } else {
             $this->adminUrlGenerator->set("champsACacher", [
                 PreferenceCrudController::PREF_CRM_MISSION_POLICE,
                 PreferenceCrudController::PREF_CRM_MISSION_COTATION,
@@ -152,7 +178,27 @@ class ActionCRMCrudController extends AbstractCrudController
                 PreferenceCrudController::PREF_CRM_MISSION_PISTE,
             ]);
         }
-        return $this->servicePreferences->getChamps(new ActionCRM(), $this->crud, $this->adminUrlGenerator);
+        // return $this->servicePreferences->getChamps(new ActionCRM(), $this->crud, $this->adminUrlGenerator);
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
+        //dd($this->adminUrlGenerator);
+        // return $this->servicePreferences->getChamps(new Contact(), $this->crud, $this->adminUrlGenerator);
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
 
@@ -332,5 +378,12 @@ class ActionCRMCrudController extends AbstractCrudController
             ->generateUrl();
 
         return $this->redirect($url);
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

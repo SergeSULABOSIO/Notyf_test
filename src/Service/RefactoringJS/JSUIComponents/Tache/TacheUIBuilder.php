@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Service\RefactoringJS\JSUIComponents\Contact;
+namespace App\Service\RefactoringJS\JSUIComponents\Tache;
 
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
@@ -12,7 +11,7 @@ use App\Service\RefactoringJS\JSUIComponents\Tache\TacheListeRenderer;
 use App\Service\RefactoringJS\JSUIComponents\Tache\TacheDetailsRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
 
-class ContactUIBuilder extends JSPanelBuilder
+class TacheUIBuilder extends JSPanelBuilder
 {
     private ?TacheListeRenderer $listeRendere = null;
     private ?TacheDetailsRenderer $detailsRendere = null;

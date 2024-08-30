@@ -54,7 +54,7 @@ class FeedbackFormRenderer extends JSPanelRenderer
         //Message
         $this->addChamp(
             (new JSChamp())
-                ->createTexte('Message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
+                ->createTexte('message', PreferenceCrudController::PREF_CRM_FEEDBACK_MESAGE)
                 ->setColumns($column)
                 ->getChamp()
         );

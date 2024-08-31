@@ -3350,7 +3350,6 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_PRO_CLIENT_ENTREPRISE)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_CREATION)->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION)->onlyOnDetail();
-
         return $tabAttributs;
     }
 
@@ -3378,7 +3377,7 @@ class ServicePreferences
             ->setChoices(ClientCrudController::TAB_CLIENT_SECTEUR);
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_CLIENT_DATE_DE_MODIFICATION)
             ->onlyOnIndex();
-
+        //je suis ici
         return $tabAttributs;
     }
 
@@ -3421,6 +3420,7 @@ class ServicePreferences
             //->setColumns(6)
             ->setColumns(12)
             ->onlyOnForms();
+        //Je suis ici
         $tabAttributs[] = TextField::new('numipot', PreferenceCrudController::PREF_PRO_CLIENT_NUM_IMPOT)
             //->setColumns(6)
             ->setColumns(12)

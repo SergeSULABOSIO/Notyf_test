@@ -151,15 +151,6 @@ class FeedbackCRMCrudController extends AbstractCrudController implements Comman
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $instance);
         }
 
-        //Exécuter - Ecouteurs d'évènements
-        $this->executer(new ComDefinirObservateursEvenements(
-            $this->superviseurSujet,
-            $this->entityManager,
-            $this->serviceEntreprise,
-            $this->serviceDates,
-            $instance
-        ));
-
         if ($instance != null) {
             if ($instance instanceof Piste) {
                 //On envoie ces paramètres à tous les formulaires
@@ -172,7 +163,16 @@ class FeedbackCRMCrudController extends AbstractCrudController implements Comman
                 }
             }
         }
-        
+
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
         return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,

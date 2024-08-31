@@ -3,7 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Client;
+use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServiceCalculateur;
@@ -11,6 +14,7 @@ use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -19,12 +23,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Client\ClientUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 
-class ClientCrudController extends AbstractCrudController
+class ClientCrudController extends AbstractCrudController implements CommandeExecuteur
 {
     public const TAB_CLIENT_SECTEUR = [
         'Agroalimentaire' => 0,
@@ -57,8 +65,13 @@ class ClientCrudController extends AbstractCrudController
     ];
 
     public ?Crud $crud = null;
+    public ?ClientUIBuilder $uiBuilder = null;
 
     public function __construct(
+        private SuperviseurSujet $superviseurSujet,
+        private ServiceDates $serviceDates,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
@@ -66,6 +79,7 @@ class ClientCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new ClientUIBuilder();
     }
 
 
@@ -120,7 +134,21 @@ class ClientCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CLIENT);
+        /** @var Client */
+        $clientToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $clientToDelete
+        ));
+
+        //destruction définitive de la piste
+        $this->entityManager->remove($clientToDelete);
+        $this->entityManager->flush();
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_CLIENT);
     }
 
 
@@ -128,12 +156,21 @@ class ClientCrudController extends AbstractCrudController
     {
         $objet = new Client();
         $objet = $this->serviceCrossCanal->crossCanal_Client_setCotation($objet, $this->adminUrlGenerator);
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 
 
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->getContext()->getEntity()->getInstance();
         if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         } else {
@@ -147,8 +184,25 @@ class ClientCrudController extends AbstractCrudController
             ]);
         }
 
-        //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Client(), $this->crud, $this->adminUrlGenerator);
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
+        // return $this->servicePreferences->getChamps(new Client(), $this->crud, $this->adminUrlGenerator);
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
     public function configureActions(Actions $actions): Actions
@@ -306,5 +360,12 @@ class ClientCrudController extends AbstractCrudController
     public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Client_listerCotation($context, $adminUrlGenerator));
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

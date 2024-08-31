@@ -172,6 +172,7 @@ class FeedbackCRMCrudController extends AbstractCrudController implements Comman
                 }
             }
         }
+        
         return $this->uiBuilder->render(
             $this->entityManager,
             $this->serviceMonnaie,

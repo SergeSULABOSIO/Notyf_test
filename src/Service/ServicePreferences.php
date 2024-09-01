@@ -2684,6 +2684,7 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = EmailField::new('email', PreferenceCrudController::PREF_SIN_EXPERT_EMAIL)
             ->onlyOnDetail();
+        //je suis ici
         $tabAttributs[] = UrlField::new('siteweb', PreferenceCrudController::PREF_SIN_EXPERT_SITE_INTERNET)
             ->onlyOnDetail();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_EXPERT_TELEPHONE)

@@ -16,7 +16,7 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class ExpertSinistreDetailsRenderer extends JSPanelRenderer
+class ExpertSinistreListeRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -27,7 +27,7 @@ class ExpertSinistreDetailsRenderer extends JSPanelRenderer
         private $crud,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()

@@ -49,7 +49,7 @@ class ExpertSinistreListeRenderer extends JSPanelRenderer
         //Sinistres
         $this->addChamp(
             (new JSChamp())
-                ->createTableau('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
+                ->createAssociation('sinistres', PreferenceCrudController::PREF_SIN_EXPERT_SINISTRES)
                 ->setColumns(10)
                 ->getChamp()
         );

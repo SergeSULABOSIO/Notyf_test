@@ -3124,7 +3124,7 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
             ->onlyOnDetail();
-
+        //Je suis ici
         return $tabAttributs;
     }
 
@@ -3135,6 +3135,7 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_BIB_DOCUMENT_NOM)
             ->onlyOnIndex();
+        //Je suis ici
         $tabAttributs[] = TextField::new('nomType', "Type")
             ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('piste', "Piste")

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use App\Service\ServiceEntreprise;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Controller\Admin\PreferenceCrudController;
+use App\Entity\Contact;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
@@ -31,7 +32,7 @@ class ContactFormRenderer extends JSPanelRenderer
     public function design()
     {
         $column = 12;
-        if ($this->objetInstance instanceof Cotation) {
+        if ($this->objetInstance instanceof Contact) {
             $column = 10;
         }
 

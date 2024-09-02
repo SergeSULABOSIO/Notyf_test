@@ -2920,6 +2920,7 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_VICTIME_ID)
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
@@ -3143,11 +3144,11 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = AssociationField::new('police', "Police")
             ->onlyOnIndex();
-            $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_DOCUMENT_UTILISATEUR)
+        $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_BIB_DOCUMENT_UTILISATEUR)
             ->onlyOnIndex();
-            $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_DOCUMENT_DATE_DE_CREATION)
+        $tabAttributs[] = DateTimeField::new('createdAt', PreferenceCrudController::PREF_BIB_DOCUMENT_DATE_DE_CREATION)
             ->onlyOnIndex();
-            //Je suis ici
+        //Je suis ici
         return $tabAttributs;
     }
 

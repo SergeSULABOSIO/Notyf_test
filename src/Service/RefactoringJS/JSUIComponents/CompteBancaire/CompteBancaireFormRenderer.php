@@ -19,7 +19,7 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
         private ServiceMonnaie $serviceMonnaie,
         private ServiceTaxes $serviceTaxes,
         string $pageName,
-        $objetInstance,
+        private $objetInstance,
         $crud,
         AdminUrlGenerator $adminUrlGenerator
     ) {
@@ -28,11 +28,24 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
 
     public function design()
     {
+        $column = 12;
+        if ($this->objetInstance instanceof CompteBancaire) {
+            $column = 10;
+        }
+        //Section - Principale
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection(' Informations générales')
+                ->setIcon('fa-solid fa-piggy-bank') //<i class="fa-solid fa-piggy-bank"></i>
+                ->setHelp("Votre compte bancaire tout simplement.")
+                ->setColumns($column)
+                ->getChamp()
+        );
         //Intitulé du compte
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("intitule", "Intitulé")
-                ->setColumns(6)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, CompteBancaire $objet) {
                         /** @var JSCssHtmlDecoration */
@@ -49,7 +62,7 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("numero", "Numéro du compte")
-                ->setColumns(6)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, CompteBancaire $objet) {
                         /** @var JSCssHtmlDecoration */
@@ -66,7 +79,7 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("banque", "Banque")
-                ->setColumns(3)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, CompteBancaire $objet) {
                         /** @var JSCssHtmlDecoration */
@@ -83,7 +96,7 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("codeSwift", "Code Swift")
-                ->setColumns(3)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, CompteBancaire $objet) {
                         /** @var JSCssHtmlDecoration */
@@ -95,12 +108,12 @@ class CompteBancaireFormRenderer extends JSPanelRenderer
                 )
                 ->getChamp()
         );
-        
+
         //Code monnaie
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("codeMonnaie", "Devise")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, CompteBancaire $objet) {
                         /** @var JSCssHtmlDecoration */

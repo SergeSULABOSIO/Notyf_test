@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\Tranche;
 
+use App\Entity\Tranche;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
@@ -16,39 +17,54 @@ class TrancheFormRenderer extends JSPanelRenderer
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceTaxes $serviceTaxes,
-        string $pageName,
-        $objetInstance,
-        $crud,
-        AdminUrlGenerator $adminUrlGenerator
+        private string $pageName,
+        private $objetInstance,
+        private $crud,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
+        $column = 12;
+        if ($this->objetInstance instanceof Tranche) {
+            $column = 10;
+        }
+
+        //Section - Principale
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Informations générales")
+                ->setIcon('fa-solid fa-layer-group') //<i class="fa-solid fa-layer-group"></i>
+                ->setHelp("Portion de la prime totale valide et payable pour une période bien déterminée conformément aux termes de paiement.")
+                ->setColumns($column)
+                ->getChamp()
+        );
+
         //Nom
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("nom", "Intitulé")
                 ->setRequired(true)
-                ->setColumns(12)
+                ->setColumns($column)
                 ->getChamp()
         );
 
         //Durée
         $this->addChamp(
             (new JSChamp())
-            ->createNombre("duree", "Durée (en mois)")
-            ->setColumns(12)
-            ->setRequired(true)
-            ->getChamp()
+                ->createNombre("duree", "Durée (en mois)")
+                ->setColumns($column)
+                ->setRequired(true)
+                ->getChamp()
         );
 
         //Taux
         $this->addChamp(
             (new JSChamp())
                 ->createPourcentage("taux", "Portion")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->getChamp()
         );
     }

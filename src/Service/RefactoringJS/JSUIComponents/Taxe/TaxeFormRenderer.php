@@ -22,21 +22,36 @@ class TaxeFormRenderer extends JSPanelRenderer
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceTaxes $serviceTaxes,
-        string $pageName,
-        $objetInstance,
-        $crud,
-        AdminUrlGenerator $adminUrlGenerator
+        private string $pageName,
+        private $objetInstance,
+        private $crud,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
+        $column = 12;
+        if ($this->objetInstance instanceof Taxe) {
+            $column = 10;
+        }
+
+        //Section - Principale
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Informations générales")
+                ->setIcon('fa-solid fa-cash-register') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setHelp("Veuillez saisir les informations relatives au paiement.")
+                ->setColumns($column)
+                ->getChamp()
+        );
+
         //Nom
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("nom", "Intitulé")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -44,7 +59,7 @@ class TaxeFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createPourcentage("tauxIARD", "Taux (IARD/Non-Vie)")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -52,6 +67,7 @@ class TaxeFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createPourcentage("tauxVIE", "Taux (IARD/Non-Vie)")
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -59,15 +75,15 @@ class TaxeFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createEditeurTexte("description", "Description")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->getChamp()
         );
-        
+
         //Payable par courtier?
         $this->addChamp(
             (new JSChamp())
                 ->createChoix("payableparcourtier", "Par courtier?")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->setChoices(TaxeCrudController::TAB_TAXE_PAYABLE_PAR_COURTIER)
                 ->getChamp()
         );

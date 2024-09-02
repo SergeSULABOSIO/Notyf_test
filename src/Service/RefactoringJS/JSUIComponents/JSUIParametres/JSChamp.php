@@ -2,6 +2,7 @@
 
 namespace App\Service\RefactoringJS\JSUIComponents\JSUIParametres;
 
+use Vich\UploaderBundle\Form\Type\VichFileType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -27,7 +28,8 @@ class JSChamp
     {
     }
 
-    public function reset(){
+    public function reset()
+    {
         $this->champ = null;
     }
 
@@ -84,6 +86,20 @@ class JSChamp
     {
         /** @var FormField */
         $this->champ->setFormTypeOption('query_builder', $formTypeOption);
+        return $this;
+    }
+
+    public function setFormType(string $formTypeFqcn)
+    {
+        /** @var FormField */
+        $this->champ->setFormType($formTypeFqcn);
+        return $this;
+    }
+
+    public function setFormTypeOptions(string $optionName, $optionValue)
+    {
+        /** @var FormField */
+        $this->champ->setFormTypeOption($optionName, $optionValue);
         return $this;
     }
 

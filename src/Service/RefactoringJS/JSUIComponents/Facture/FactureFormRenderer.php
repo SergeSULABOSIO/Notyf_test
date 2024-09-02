@@ -22,16 +22,21 @@ class FactureFormRenderer extends JSPanelRenderer
         private EntityManager $entityManager,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceTaxes $serviceTaxes,
-        string $pageName,
-        $objetInstance,
-        $crud,
-        AdminUrlGenerator $adminUrlGenerator
+        private string $pageName,
+        private $objetInstance,
+        private $crud,
+        private AdminUrlGenerator $adminUrlGenerator
     ) {
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
+        $column = 12;
+        if ($this->objetInstance instanceof Facture) {
+            $column = 10;
+        }
+
         //Onglet Article
         $this->addChamp(
             (new JSChamp())
@@ -41,12 +46,22 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->getChamp()
         );
 
+        //Section - Principale
+        $this->addChamp(
+            (new JSChamp())
+                ->createSection("Informations générales")
+                ->setIcon('fa-solid fa-receipt') //<i class="fa-sharp fa-solid fa-address-book"></i>
+                ->setHelp("Facture / Note de débit / Note de percetion pertant de collecter des fonds. Ceci n'est qu'une représentation virtuelle de la copie réelle que vous devez attacher ici dès que possible.")
+                ->setColumns($column)
+                ->getChamp()
+        );
+
         //Montant TTC
         $this->addChamp(
             (new JSChamp())
                 ->createArgent("totalSolde", "Solde à payer")
                 ->setDisabled(true)
-                ->setColumns(10)
+                ->setColumns($column)
                 ->setCurrency($this->serviceMonnaie->getCodeAffichage())
                 ->setFormatValue(
                     function ($value, Facture $objet) {
@@ -66,7 +81,7 @@ class FactureFormRenderer extends JSPanelRenderer
                 ->createSection("Articles facturés")
                 ->setIcon("fa-solid fa-layer-group")
                 ->setHelp("Elements constitutifs de la facture ou de la note de débit/crédit.")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -74,7 +89,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createCollection("elementFactures", "Eléments facturés")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->useEntryCrudForm(ElementFactureCrudController::class)
                 ->allowAdd(true)
                 ->allowDelete(true)
@@ -85,6 +100,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createOnglet(" Autres générales")
+                ->setColumns($column)
                 ->setIcon("fas fa-handshake")
                 ->setHelp("Les articles de la facture.")
                 ->getChamp()
@@ -95,6 +111,7 @@ class FactureFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createSection("Section principale")
                 ->setIcon("fas fa-location-crosshairs")
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -102,7 +119,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createChoix("destination", "Destination")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->setChoices(FactureCrudController::TAB_DESTINATION)
                 ->getChamp()
         );
@@ -135,7 +152,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("reference", "Référence")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->setFormatValue(
                     function ($value, Facture $objet) {
                         /** @var JSCssHtmlDecoration */
@@ -153,7 +170,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createEditeurTexte("description", "Description")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -161,7 +178,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createAssociation("compteBancaires", "Comptes bancaires")
-                ->setColumns(10)
+                ->setColumns($column)
                 ->getChamp()
         );
 
@@ -188,6 +205,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createOnglet("Documents ou pièces jointes")
+                ->setColumns($column)
                 ->setIcon("fa-solid fa-paperclip")
                 ->setHelp("Merci d'attacher vos pièces justificatives par ici.")
                 ->getChamp()
@@ -197,7 +215,7 @@ class FactureFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createCollection("documents", "Documents")
-                ->setColumns(12)
+                ->setColumns($column)
                 ->useEntryCrudForm(DocPieceCrudController::class)
                 ->allowAdd(true)
                 ->allowDelete(true)

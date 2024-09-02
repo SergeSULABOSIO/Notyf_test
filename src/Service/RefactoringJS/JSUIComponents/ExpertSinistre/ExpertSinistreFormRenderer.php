@@ -33,7 +33,7 @@ class ExpertSinistreFormRenderer extends JSPanelRenderer
     public function design()
     {
         $column = 12;
-        if ($this->objetInstance instanceof EtapeSinistre) {
+        if ($this->objetInstance instanceof Expert) {
             $column = 10;
         }
 

@@ -52,90 +52,51 @@ class DocumentListeRenderer extends JSPanelRenderer
                 ->setColumns(10)
                 ->getChamp()
         );
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // //Id
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createNombre("id", PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
-        
-        
-        // //Cotation
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createAssociation('cotation', "Proposition")
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
-        // //Piste
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createAssociation('piste', "Piste")
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
-        // //Utilisateur
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createAssociation("utilisateur", PreferenceCrudController::PREF_BIB_CLASSEUR_UTILISATEUR)
-        //         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
-        // //Date de création
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createDate("createdAt", PreferenceCrudController::PREF_BIB_CLASSEUR_DATE_DE_CREATION)
-        //         ->setColumns(10)
-        //         ->setFormatValue(
-        //             function ($value, DocPiece $objet) {
-        //                 /** @var JSCssHtmlDecoration */
-        //                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //                     ->outputHtml();
-        //                 return $formatedHtml;
-        //             }
-        //         )
-        //         ->getChamp()
-        // );
-        // //Dernière modification
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createDate("updatedAt", PreferenceCrudController::PREF_BIB_CLASSEUR_DERNIRE_MODIFICATION)
-        //         ->setColumns(10)
-        //         ->setFormatValue(
-        //             function ($value, DocPiece $objet) {
-        //                 /** @var JSCssHtmlDecoration */
-        //                 $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-        //                     ->ajouterClasseCss($this->css_class_bage_ordinaire)
-        //                     ->outputHtml();
-        //                 return $formatedHtml;
-        //             }
-        //         )
-        //         ->getChamp()
-        // );
-        // //Entreprise
-        // $this->addChamp(
-        //     (new JSChamp())
-        //         ->createAssociation("entreprise", PreferenceCrudController::PREF_BIB_CLASSEUR_ENTREPRISE)
-        //         ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-        //         ->setColumns(10)
-        //         ->getChamp()
-        // );
+        //Piste
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('piste', "Piste")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Cotation
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('cotation', "Proposition")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Piste
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation('police', "Police")
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Utilisateur
+        $this->addChamp(
+            (new JSChamp())
+                ->createAssociation("utilisateur", PreferenceCrudController::PREF_BIB_DOCUMENT_UTILISATEUR)
+                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
+                ->setColumns(10)
+                ->getChamp()
+        );
+        //Date de création
+        $this->addChamp(
+            (new JSChamp())
+                ->createDate("createdAt", PreferenceCrudController::PREF_BIB_DOCUMENT_DATE_DE_CREATION)
+                ->setColumns(10)
+                ->setFormatValue(
+                    function ($value, DocPiece $objet) {
+                        /** @var JSCssHtmlDecoration */
+                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                            ->outputHtml();
+                        return $formatedHtml;
+                    }
+                )
+                ->getChamp()
+        );
     }
 
     public function batchActions(?array $champs, ?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null): ?array

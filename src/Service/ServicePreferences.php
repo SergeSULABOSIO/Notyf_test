@@ -2920,7 +2920,6 @@ class ServicePreferences
     {
         $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_VICTIME_ID)
             ->onlyOnDetail();
-        //Je suis ici
         $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('sinistre', PreferenceCrudController::PREF_SIN_VICTIME_SINISTRE)
@@ -2931,6 +2930,7 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = TelephoneField::new('telephone', PreferenceCrudController::PREF_SIN_VICTIME_TELEPHONE)
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] =  AssociationField::new('utilisateur', PreferenceCrudController::PREF_SIN_VICTIME_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -2947,8 +2947,9 @@ class ServicePreferences
     {
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_ID])) {
             $tabAttributs[] = NumberField::new('id', PreferenceCrudController::PREF_SIN_VICTIME_ID)
-                ->onlyOnIndex();
+            ->onlyOnIndex();
         }
+        //Je suis ici
         if ($this->canShow($tabPreferences, $tabDefaultAttributs[PreferenceCrudController::PREF_SIN_VICTIME_NOM])) {
             $tabAttributs[] = TextField::new('nom', PreferenceCrudController::PREF_SIN_VICTIME_NOM)
                 ->onlyOnIndex();

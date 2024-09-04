@@ -25,18 +25,11 @@ class PartenaireListeRenderer extends JSPanelRenderer
         private $crud,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
     {
-        //Id
-        $this->addChamp(
-            (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_PRO_PARTENAIRE_ID)
-                ->setColumns(10)
-                ->getChamp()
-        );
         //Nom
         $this->addChamp(
             (new JSChamp())
@@ -70,75 +63,6 @@ class PartenaireListeRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createTexte('siteweb', PreferenceCrudController::PREF_PRO_PARTENAIRE_SITEWEB)
                 ->setColumns(10)
-                ->getChamp()
-        );
-        //RCCM
-        $this->addChamp(
-            (new JSChamp())
-                ->createTexte('rccm', PreferenceCrudController::PREF_PRO_PARTENAIRE_RCCM)
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Idnat
-        $this->addChamp(
-            (new JSChamp())
-                ->createTexte('idnat', PreferenceCrudController::PREF_PRO_PARTENAIRE_IDNAT)
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Num Impot
-        $this->addChamp(
-            (new JSChamp())
-                ->createTexte('numimpot', PreferenceCrudController::PREF_PRO_PARTENAIRE_NUM_IMPOT)
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Piste
-        $this->addChamp(
-            (new JSChamp())
-                ->createAssociation('pistes', "Pistes")
-                ->setTemplatePath('admin/segment/view_pistes.html.twig')
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Polices
-        $this->addChamp(
-            (new JSChamp())
-                ->createTableau('polices', "Polices")
-                ->setTemplatePath('admin/segment/view_polices.html.twig')
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Utilisateur
-        $this->addChamp(
-            (new JSChamp())
-                ->createAssociation("utilisateur", PreferenceCrudController::PREF_PRO_PARTENAIRE_UTILISATEUR)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Entreprise
-        $this->addChamp(
-            (new JSChamp())
-                ->createAssociation("entreprise", PreferenceCrudController::PREF_PRO_PARTENAIRE_ENTREPRISE)
-                ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Date de création
-        $this->addChamp(
-            (new JSChamp())
-                ->createDate("createdAt", PreferenceCrudController::PREF_PRO_PARTENAIRE_DATE_DE_CREATION)
-                ->setColumns(10)
-                ->setFormatValue(
-                    function ($value, Partenaire $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
                 ->getChamp()
         );
         //Dernière modification

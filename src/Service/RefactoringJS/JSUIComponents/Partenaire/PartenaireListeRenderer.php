@@ -14,7 +14,7 @@ use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class PartenaireDetailsRenderer extends JSPanelRenderer
+class PartenaireListeRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,

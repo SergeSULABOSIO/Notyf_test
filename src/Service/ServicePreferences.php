@@ -1857,7 +1857,6 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
             ->setChoices(["IARD (Non Vie)" => 1, "VIE" => 0])
             ->onlyOnDetail();
-        //Je suis ici
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -1894,7 +1893,6 @@ class ServicePreferences
             ->onlyOnIndex();
         $tabAttributs[] = DateTimeField::new('updatedAt', PreferenceCrudController::PREF_PRO_PRODUIT_DATE_DE_MODIFICATION)
             ->onlyOnIndex();
-
         return $tabAttributs;
     }
 
@@ -2252,7 +2250,6 @@ class ServicePreferences
         $tabAttributs[] = TextEditorField::new('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
             ->setColumns(12)
             ->onlyOnForms();
-
         return $tabAttributs;
     }
 

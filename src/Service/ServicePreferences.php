@@ -2622,7 +2622,7 @@ class ServicePreferences
             ->onlyOnDetail();
         $tabAttributs[] = AssociationField::new('entreprise', PreferenceCrudController::PREF_SIN_ETAPE_ENTREPRISE)
             ->onlyOnDetail();
-
+        //je suis ici
         return $tabAttributs;
     }
 

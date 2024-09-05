@@ -4,13 +4,17 @@ namespace App\Controller\Admin;
 
 use App\Entity\Partenaire;
 
+use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
-use App\Service\ServiceEntreprise;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
+use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -18,23 +22,33 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
+use App\Service\RefactoringJS\JSUIComponents\Partenaire\PartenaireUIBuilder;
 
-class PartenaireCrudController extends AbstractCrudController
+class PartenaireCrudController extends AbstractCrudController implements CommandeExecuteur
 {
+    public ?PartenaireUIBuilder $uiBuilder = null;
     private ?Crud $crud = null;
 
     public function __construct(
+        private SuperviseurSujet $superviseurSujet,
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceEntreprise $serviceEntreprise,
+        private ServiceDates $serviceDates,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new PartenaireUIBuilder();
     }
 
     public static function getEntityFqcn(): string
@@ -86,7 +100,21 @@ class PartenaireCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_PARTENAIRE);
+        /** @var Partenaire */
+        $partenaireToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $partenaireToDelete
+        ));
+
+        //destruction définitive de la piste
+        $this->entityManager->remove($partenaireToDelete);
+        $this->entityManager->flush();
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_PARTENAIRE);
     }
 
 
@@ -96,17 +124,45 @@ class PartenaireCrudController extends AbstractCrudController
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 
 
     public function configureFields(string $pageName): iterable
     {
-        if($this->crud){
+        $instance = $this->getContext()->getEntity()->getInstance();
+        if ($this->crud) {
             $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $this->getContext()->getEntity()->getInstance());
         }
+
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
         //Actualisation des attributs calculables - Merci Seigneur Jésus !
-        return $this->servicePreferences->getChamps(new Partenaire(), $this->crud, $this->adminUrlGenerator);
+        // return $this->servicePreferences->getChamps(new Partenaire(), $this->crud, $this->adminUrlGenerator);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -254,5 +310,12 @@ class PartenaireCrudController extends AbstractCrudController
     public function cross_canal_listerPOPRetrocom(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Partenaire_listerPOPRetroComm($context, $adminUrlGenerator));
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelBuilder;
 
-class PartenaireUIBuilder extends JSPanelBuilder
+class ProduitUIBuilder extends JSPanelBuilder
 {
     private ?ProduitListeRenderer $listeRendere = null;
     private ?ProduitDetailsRenderer $detailsRendere = null;

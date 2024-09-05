@@ -11,6 +11,7 @@ use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -19,12 +20,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Produit\ProduitUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class ProduitCrudController extends AbstractCrudController
+class ProduitCrudController extends AbstractCrudController implements CommandeExecuteur
 {
     public const TAB_PRODUIT_OUI_NON = [
         'Non' => 0,
@@ -36,6 +39,7 @@ class ProduitCrudController extends AbstractCrudController
         'VIE' => 0
     ];
 
+    public ?ProduitUIBuilder $uiBuilder = null;
     private ?Crud $crud = null;
 
     public function __construct(
@@ -46,6 +50,7 @@ class ProduitCrudController extends AbstractCrudController
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
+        $this->uiBuilder = new ProduitUIBuilder($this->serviceEntreprise);
     }
 
     public static function getEntityFqcn(): string
@@ -279,5 +284,12 @@ class ProduitCrudController extends AbstractCrudController
     public function cross_canal_listerCotation(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Produit_listerCotation($context, $adminUrlGenerator));
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

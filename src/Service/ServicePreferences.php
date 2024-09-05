@@ -1857,6 +1857,7 @@ class ServicePreferences
         $tabAttributs[] = ChoiceField::new('iard', PreferenceCrudController::PREF_PRO_PRODUIT_IARD)
             ->setChoices(["IARD (Non Vie)" => 1, "VIE" => 0])
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] = AssociationField::new('utilisateur', PreferenceCrudController::PREF_PRO_PRODUIT_UTILISATEUR)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();

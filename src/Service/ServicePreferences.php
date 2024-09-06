@@ -2069,6 +2069,7 @@ class ServicePreferences
                     ->setDisabled(true)
                     ->setColumns(12);
 
+                //Je suis ici
                 //Section - Primes d'assurance
                 $tabAttributs[] = FormField::addPanel("Prime d'assurance")
                     ->setIcon("fa-solid fa-cash-register")

@@ -2770,9 +2770,9 @@ class ServicePreferences
                 return $value;
             })
             ->onlyOnDetail();
-        //Je suis ici
         $tabAttributs[] = AssociationField::new('etape', PreferenceCrudController::PREF_SIN_SINISTRE_ETAPE)
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] = ArrayField::new('victimes', PreferenceCrudController::PREF_SIN_SINISTRE_VICTIMES)
             ->onlyOnDetail();
         $tabAttributs[] = ArrayField::new('experts', PreferenceCrudController::PREF_SIN_SINISTRE_EXPERT)

@@ -2443,6 +2443,7 @@ class ServicePreferences
             ->setColumns(2)
             ->onlyWhenUpdating();
         if ($this->canHide($this->adminUrlGenerator, PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)) {
+            //Je suis ici
             $tabAttributs[] = AssociationField::new('docPieces', PreferenceCrudController::PREF_SIN_SINISTRE_DOCUMENTS)
                 ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository

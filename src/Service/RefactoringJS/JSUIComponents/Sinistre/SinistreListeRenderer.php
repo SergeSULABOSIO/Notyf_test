@@ -6,20 +6,18 @@ use App\Entity\Sinistre;
 use App\Service\ServiceTaxes;
 use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
-use App\Service\ServiceCrossCanal;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\PreferenceCrudController;
 use App\Controller\Admin\UtilisateurCrudController;
-use App\Controller\Admin\EtapeSinistreCrudController;
+use App\Service\RefactoringJS\Commandes\ComGenerateTitreReportingSinistre;
+use App\Service\RefactoringJS\Commandes\Commande;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
-use App\Service\RefactoringJS\Commandes\ComGenerateTitreReportingSinistre;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 
-class SinistreDetailsRenderer extends JSPanelRenderer implements CommandeExecuteur
+class SinistreListeRenderer extends JSPanelRenderer implements CommandeExecuteur
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -30,7 +28,7 @@ class SinistreDetailsRenderer extends JSPanelRenderer implements CommandeExecute
         private $crud,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
     public function design()
@@ -59,7 +57,7 @@ class SinistreDetailsRenderer extends JSPanelRenderer implements CommandeExecute
                         $this->serviceMonnaie,
                         $this->adminUrlGenerator,
                         $sinistre
-                    ));                    
+                    ));
                     return $value;
                 })
                 ->setColumns(10)

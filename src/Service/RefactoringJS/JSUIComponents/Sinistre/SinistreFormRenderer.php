@@ -8,15 +8,10 @@ use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use App\Service\RefactoringJS\Commandes\Commande;
 use App\Controller\Admin\PreferenceCrudController;
-use App\Controller\Admin\UtilisateurCrudController;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
-use App\Service\RefactoringJS\Commandes\ComGenerateTitreReportingSinistre;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
-use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSCssHtmlDecoration;
 use App\Service\ServiceEntreprise;
 
 class SinistreFormRenderer extends JSPanelRenderer
@@ -92,15 +87,6 @@ class SinistreFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createDate('occuredAt', PreferenceCrudController::PREF_SIN_SINISTRE_DATE_OCCURENCE)
                 ->setColumns($column)
-                ->setFormatValue(
-                    function ($value, Sinistre $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
                 ->getChamp()
         );
         //Experts

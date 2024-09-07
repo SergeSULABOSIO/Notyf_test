@@ -271,9 +271,9 @@ class PoliceFormRenderer extends JSPanelRenderer
                 //Section - Termes de paiement
                 $this->addChamp(
                     (new JSChamp())
-                        ->createSection("Prime d'assurance")
+                        ->createSection("Termes de paiement de la prime")
                         ->setIcon("fa-solid fa-cash-register")
-                        ->setHelp("Structure de la prime d'assurance résultant de la mise en place de l'avenant.")
+                        ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
                         ->getChamp()
                 );
             }

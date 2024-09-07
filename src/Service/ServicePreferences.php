@@ -4423,7 +4423,6 @@ class ServicePreferences
             ->renderAsHtml()
             ->onlyOnDetail();
         $tabAttributs[] = DateTimeField::new('expiredAt', PreferenceCrudController::PREF_CRM_PISTE_DATE_EXPIRATION)->onlyOnDetail();
-
         $tabAttributs[] = ArrayField::new('cotations', PreferenceCrudController::PREF_CRM_PISTE_COTATION)
             ->setTemplatePath('admin/segment/view_cotations.html.twig')
             ->onlyOnDetail();
@@ -4452,6 +4451,7 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();

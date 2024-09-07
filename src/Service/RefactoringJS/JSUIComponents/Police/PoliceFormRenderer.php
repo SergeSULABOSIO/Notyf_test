@@ -62,6 +62,7 @@ class PoliceFormRenderer extends JSPanelRenderer
         if ($this->objetInstance instanceof Police) {
             $column = 10;
         }
+        //**************************************************************** */
         //Section - Principale
         $this->addChamp(
             (new JSChamp())
@@ -196,7 +197,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->setDisabled(true)
                         ->getChamp()
                 );
-
+                //******************************************************* */
                 //Section - Document
                 $this->addChamp(
                     (new JSChamp())
@@ -215,7 +216,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->setColumns($column)
                         ->getChamp()
                 );
-
+                //****************************************************** */
                 //Section - Contact
                 $this->addChamp(
                     (new JSChamp())
@@ -230,6 +231,49 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createCollection('contacts', "Contacts")
                         ->setRequired(true)
                         ->setColumns($column)
+                        ->getChamp()
+                );
+                //******************************************************* */
+                //Section - Primes d'assurance
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createSection("Prime d'assurance")
+                        ->setIcon("fa-solid fa-cash-register")
+                        ->setHelp("Structure de la prime d'assurance résultant de la mise en place de l'avenant.")
+                        ->getChamp()
+                );
+                //Chargements
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createCollection('chargements', "Structure")
+                        ->setRequired(true)
+                        ->setColumns($column)
+                        ->getChamp()
+                );
+                //Prime totale
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
+                        ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                        ->setFormatValue(
+                            function ($value, Police $objet) {
+                                /** @var JSCssHtmlDecoration */
+                                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
+                                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
+                                    ->outputHtml();
+                                return $formatedHtml;
+                            }
+                        )
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //******************************************************* */
+                //Section - Termes de paiement
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createSection("Prime d'assurance")
+                        ->setIcon("fa-solid fa-cash-register")
+                        ->setHelp("Structure de la prime d'assurance résultant de la mise en place de l'avenant.")
                         ->getChamp()
                 );
             }
@@ -399,22 +443,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                 ->setTemplatePath('admin/segment/view_chargements.html.twig')
                 ->getChamp()
         );
-        //Prime totale
-        $this->addChamp(
-            (new JSChamp())
-                ->createArgent('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setFormatValue(
-                    function ($value, Police $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
-                ->getChamp()
-        );
+
 
         //Panel Termes de paiement
         $this->addChamp(

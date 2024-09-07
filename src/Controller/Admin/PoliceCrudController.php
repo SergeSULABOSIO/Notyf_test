@@ -4,19 +4,19 @@ namespace App\Controller\Admin;
 
 use App\Entity\Piste;
 use App\Entity\Police;
-use DateTimeImmutable;
+use App\Service\ServiceDates;
 use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\ServiceAvenant;
 use App\Service\ServiceFacture;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
-use App\Service\ServiceCalculateur;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use PhpParser\Node\Expr\Cast\Array_;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -24,17 +24,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Police\PoliceUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 
-class PoliceCrudController extends AbstractCrudController
+class PoliceCrudController extends AbstractCrudController implements CommandeExecuteur
 {
     public ?Crud $crud = null;
+    public ?PoliceUIBuilder $uiBuilder = null;
 
     public const TAB_POLICE_REPONSES_OUI_NON = [
         'Non' => 0,
@@ -84,6 +87,9 @@ class PoliceCrudController extends AbstractCrudController
     //private $codeReporting = -100;
 
     public function __construct(
+        private SuperviseurSujet $superviseurSujet,
+        private ServiceDates $serviceDates,
+        private ServiceMonnaie $serviceMonnaie,
         private ServiceFacture $serviceFacture,
         private ServiceAvenant $serviceAvenant,
         private ServiceSuppression $serviceSuppression,
@@ -94,6 +100,7 @@ class PoliceCrudController extends AbstractCrudController
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceTaxes $serviceTaxes
     ) {
+        $this->uiBuilder = new PoliceUIBuilder($this->serviceEntreprise);
         //AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em
     }
 
@@ -177,7 +184,21 @@ class PoliceCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_POLICE);
+        /** @var Police */
+        $policeToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $policeToDelete
+        ));
+
+        //destruction définitive de la piste
+        $this->entityManager->remove($policeToDelete);
+        $this->entityManager->flush();
+        // $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::PRODUCTION_POLICE);
     }
 
     public function createEntity(string $entityFqcn)
@@ -185,6 +206,14 @@ class PoliceCrudController extends AbstractCrudController
         $objet = new Police();
         $objet = $this->serviceAvenant->setAvenant($objet, $this->adminUrlGenerator);
         $objet = $this->serviceCrossCanal->crossCanal_Police_setCotation($objet, $this->adminUrlGenerator);
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 
@@ -223,9 +252,27 @@ class PoliceCrudController extends AbstractCrudController
                 }
             }
         }
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $instance,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
         //dd($this->adminUrlGenerator->get("isIard"));
-        $this->servicePreferences->setEntite($pageName, $instance);
-        return $this->servicePreferences->getChamps(new Police(), $this->crud, $this->adminUrlGenerator);
+        // $this->servicePreferences->setEntite($pageName, $instance);
+        // return $this->servicePreferences->getChamps(new Police(), $this->crud, $this->adminUrlGenerator);
     }
 
 
@@ -800,5 +847,12 @@ class PoliceCrudController extends AbstractCrudController
             ->generateUrl();
         $this->addFlash("success", "Salut " . $this->serviceEntreprise->getUtilisateur()->getNom() . ". La police " . $police .  " vient d'être enregistrée avec succès. Vous pouvez maintenant y ajouter d'autres informations.");
         return $this->redirect($url);
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

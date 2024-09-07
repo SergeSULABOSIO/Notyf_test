@@ -2167,7 +2167,6 @@ class ServicePreferences
                     ->onlyOnForms()
                     ->setDisabled(true)
                     ->setColumns(12);
-                //Je suis ici
                 $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net (partageable)")
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()

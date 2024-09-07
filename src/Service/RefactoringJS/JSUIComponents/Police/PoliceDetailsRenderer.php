@@ -45,7 +45,7 @@ class PoliceDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre('id', PreferenceCrudController::PREF_PRO_POLICE_ID)
+                ->createNombre('id', PreferenceCrudController::PREF_PRO_POLICE_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

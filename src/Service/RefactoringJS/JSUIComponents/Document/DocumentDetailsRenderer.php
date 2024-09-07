@@ -34,7 +34,7 @@ class DocumentDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_BIB_DOCUMENT_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_BIB_DOCUMENT_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

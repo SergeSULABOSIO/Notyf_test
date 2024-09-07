@@ -33,7 +33,7 @@ class ContactDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_PRO_CONTACT_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_PRO_CONTACT_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

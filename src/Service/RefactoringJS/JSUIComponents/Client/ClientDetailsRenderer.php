@@ -35,7 +35,7 @@ class ClientDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_PRO_CLIENT_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_PRO_CLIENT_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

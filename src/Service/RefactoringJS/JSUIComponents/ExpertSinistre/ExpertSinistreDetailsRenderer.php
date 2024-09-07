@@ -35,7 +35,7 @@ class ExpertSinistreDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_SIN_EXPERT_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_SIN_EXPERT_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

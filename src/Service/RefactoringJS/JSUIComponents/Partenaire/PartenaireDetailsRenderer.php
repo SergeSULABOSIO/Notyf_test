@@ -33,7 +33,7 @@ class PartenaireDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_PRO_PARTENAIRE_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_PRO_PARTENAIRE_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

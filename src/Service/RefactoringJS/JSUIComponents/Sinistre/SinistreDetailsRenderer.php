@@ -36,7 +36,7 @@ class SinistreDetailsRenderer extends JSPanelRenderer implements CommandeExecute
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_SIN_SINISTRE_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_SIN_SINISTRE_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

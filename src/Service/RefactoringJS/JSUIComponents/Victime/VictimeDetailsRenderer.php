@@ -33,7 +33,7 @@ class VictimeDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_SIN_VICTIME_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_SIN_VICTIME_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

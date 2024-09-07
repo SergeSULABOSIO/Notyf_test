@@ -35,7 +35,7 @@ class ProduitDetailsRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_PRO_PRODUIT_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_PRO_PRODUIT_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );

@@ -92,7 +92,7 @@ class ProduitFormRenderer extends JSPanelRenderer
         //Description
         $this->addChamp(
             (new JSChamp())
-                ->createZonneTexte('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
+                ->createEditeurTexte('description', PreferenceCrudController::PREF_PRO_PRODUIT_DESCRIPTION)
                 ->setColumns($column)
                 ->getChamp()
         );

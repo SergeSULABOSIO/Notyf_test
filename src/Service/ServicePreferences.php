@@ -2148,13 +2148,12 @@ class ServicePreferences
                     ->onlyOnForms()
                     ->setDisabled(true)
                     ->setColumns(12);
-                    $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
+                $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
                     ->setColumns(12)
                     ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
                     ->setDisabled(true)
                     ->setNumDecimals(2)
                     ->onlyOnForms();
-                    //Je suis ici
                 $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu HT (partageable)")
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()
@@ -2168,6 +2167,7 @@ class ServicePreferences
                     ->onlyOnForms()
                     ->setDisabled(true)
                     ->setColumns(12);
+                //Je suis ici
                 $tabAttributs[] = MoneyField::new('revenuNetTotalPartageable', "Revenu net (partageable)")
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()

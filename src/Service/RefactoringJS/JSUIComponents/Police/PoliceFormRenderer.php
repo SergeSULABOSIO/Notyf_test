@@ -384,8 +384,17 @@ class PoliceFormRenderer extends JSPanelRenderer
                 $this->addChamp(
                     (new JSChamp())
                         ->createArgent('revenuTotalHTPartageable', "Revenu HT (partageable)")
-                        ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                         ->setHelp("Revenu hors taxe faisant l'objet du partage.")
+                        ->setColumns($column)
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Taxe courtier total partageable
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('taxeCourtierTotalePartageable', "Frais " . ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                         ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()

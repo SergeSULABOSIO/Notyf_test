@@ -213,6 +213,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createSection("Documents ou pièces jointes")
                         ->setIcon("fa-solid fa-paperclip")
+                        ->setColumns($column)
                         ->getChamp()
                 );
                 //Document
@@ -220,10 +221,10 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createCollection('documents', PreferenceCrudController::PREF_CRM_COTATION_DOCUMENTS)
                         ->useEntryCrudForm(DocPieceCrudController::class)
-                        ->allowAdd(true)
-                        ->allowDelete(true)
-                        ->setRequired(false)
                         ->setColumns($column)
+                        ->setRequired(false)
+                        ->allowDelete(true)
+                        ->allowAdd(true)
                         ->getChamp()
                 );
                 //****************************************************** */
@@ -233,14 +234,15 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createSection("Contacts")
                         ->setIcon("fas fa-address-book")
                         ->setHelp("Personnes impliquées dans les échanges.")
+                        ->setColumns($column)
                         ->getChamp()
                 );
                 //Contact
                 $this->addChamp(
                     (new JSChamp())
                         ->createCollection('contacts', "Contacts")
-                        ->setRequired(true)
                         ->setColumns($column)
+                        ->setRequired(true)
                         ->getChamp()
                 );
                 //******************************************************* */
@@ -250,14 +252,15 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createSection("Prime d'assurance")
                         ->setIcon("fa-solid fa-cash-register")
                         ->setHelp("Structure de la prime d'assurance résultant de la mise en place de l'avenant.")
+                        ->setColumns($column)
                         ->getChamp()
                 );
                 //Chargements
                 $this->addChamp(
                     (new JSChamp())
                         ->createCollection('chargements', "Structure")
-                        ->setRequired(true)
                         ->setColumns($column)
+                        ->setRequired(true)
                         ->getChamp()
                 );
                 //Prime totale
@@ -265,6 +268,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createArgent('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
                         ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -275,14 +279,15 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createSection("Termes de paiement de la prime")
                         ->setIcon("fa-solid fa-cash-register")
                         ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
+                        ->setColumns($column)
                         ->getChamp()
                 );
                 //Tranches
                 $this->addChamp(
                     (new JSChamp())
                         ->createCollection('tranches', "Structure")
-                        ->setRequired(true)
                         ->setColumns($column)
+                        ->setRequired(true)
                         ->getChamp()
                 );
                 //******************************************************* */
@@ -292,14 +297,15 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createSection("Commission de courtage")
                         ->setIcon("fa-solid fa-cash-register")
                         ->setHelp("Les différents revenus du courtier d'assurance.")
+                        ->setColumns($column)
                         ->getChamp()
                 );
                 //Revenus
                 $this->addChamp(
                     (new JSChamp())
                         ->createCollection('revenus', "Structure")
-                        ->setRequired(true)
                         ->setColumns($column)
+                        ->setRequired(true)
                         ->getChamp()
                 );
                 //Revenu Net Total
@@ -307,6 +313,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createArgent('revenuNetTotal', "Revenu pure")
                         ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -315,6 +322,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createArgent('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
                         ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -323,6 +331,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createArgent('commissionTotaleHT', "Revenu hors taxe")
                         ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -331,6 +340,53 @@ class PoliceFormRenderer extends JSPanelRenderer
                     (new JSChamp())
                         ->createArgent('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
                         ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Commission totale ttc
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('commissionTotaleTTC', "Revenu totale")
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setColumns($column)
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //******************************************************* */
+                //Section - Partenaire
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createSection("Retrocommission")
+                        ->setIcon("fas fa-handshake")
+                        ->setHelp("Détails sur la commission à rétrocéder au partenaire.")
+                        ->setColumns($column)
+                        ->getChamp()
+                );
+                //Partenaire
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createTexte('partenaire', "Partenaire")
+                        ->setColumns($column)
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Taux retrocommission partenaire
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createPourcentage('tauxretrocompartenaire', "Taux exceptionnel")
+                        ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
+                        ->setColumns($column)
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Retrocommission partenaire
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('revenuTotalHTPartageable', "Revenu HT (partageable)")
+                        ->setCurrency($this->serviceMonnaie->getCodeAffichage())
+                        ->setHelp("Revenu hors taxe faisant l'objet du partage.")
+                        ->setColumns($column)
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -641,29 +697,6 @@ class PoliceFormRenderer extends JSPanelRenderer
             (new JSChamp())
                 ->createTexte('partenaire', "Partenaire")
                 ->setColumns(10)
-                ->getChamp()
-        );
-        //Taux retrocommission partenaire
-        $this->addChamp(
-            (new JSChamp())
-                ->createPourcentage('tauxretrocompartenaire', "Taux exceptionnel")
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Retrocommission partenaire
-        $this->addChamp(
-            (new JSChamp())
-                ->createArgent('retroComPartenaire', "Rétrocommission")
-                ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                ->setFormatValue(
-                    function ($value, Police $objet) {
-                        /** @var JSCssHtmlDecoration */
-                        $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                            ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                            ->outputHtml();
-                        return $formatedHtml;
-                    }
-                )
                 ->getChamp()
         );
     }

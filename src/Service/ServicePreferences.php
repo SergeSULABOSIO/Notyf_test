@@ -2126,7 +2126,6 @@ class ServicePreferences
                     ->setColumns(12)
                     ->setDisabled(true)
                     ->onlyOnForms();
-                //Je suis ici
                 $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()
@@ -2149,12 +2148,13 @@ class ServicePreferences
                     ->onlyOnForms()
                     ->setDisabled(true)
                     ->setColumns(12);
-                $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
+                    $tabAttributs[] = PercentField::new('tauxretrocompartenaire', PreferenceCrudController::PREF_CRM_COTATION_TAUX_RETROCOM)
                     ->setColumns(12)
                     ->setHelp("Si différent de 0%, alors c'est le taux ci-dessus qui est appliqué pour la retrocommission.")
                     ->setDisabled(true)
                     ->setNumDecimals(2)
                     ->onlyOnForms();
+                    //Je suis ici
                 $tabAttributs[] = MoneyField::new('revenuTotalHTPartageable', "Revenu HT (partageable)")
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()

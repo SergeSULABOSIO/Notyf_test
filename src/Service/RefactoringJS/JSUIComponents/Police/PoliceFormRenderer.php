@@ -33,6 +33,16 @@ class PoliceFormRenderer extends JSPanelRenderer
         parent::__construct(self::TYPE_FORMULAIRE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
 
+    private function isExoneree(): bool
+    {
+        //dd($this->adminUrlGenerator->get("isExoneree"));
+        $rep = false;
+        if ($this->adminUrlGenerator->get("isExoneree")) {
+            $rep = $this->adminUrlGenerator->get("isExoneree");
+        }
+        return $rep;
+    }
+
     private function isIard(): bool
     {
         $rep = false;
@@ -254,16 +264,7 @@ class PoliceFormRenderer extends JSPanelRenderer
                 $this->addChamp(
                     (new JSChamp())
                         ->createArgent('primeTotale', PreferenceCrudController::PREF_CRM_COTATION_PRIME_TTC)
-                        ->setCurrency($this->serviceMonnaie->getCodeAffichage())
-                        ->setFormatValue(
-                            function ($value, Police $objet) {
-                                /** @var JSCssHtmlDecoration */
-                                $formatedHtml = (new JSCssHtmlDecoration("span", $value))
-                                    ->ajouterClasseCss($this->css_class_bage_ordinaire)
-                                    ->outputHtml();
-                                return $formatedHtml;
-                            }
-                        )
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                         ->setDisabled(true)
                         ->getChamp()
                 );
@@ -274,6 +275,63 @@ class PoliceFormRenderer extends JSPanelRenderer
                         ->createSection("Termes de paiement de la prime")
                         ->setIcon("fa-solid fa-cash-register")
                         ->setHelp("La manière dont la prime d'assurance devra être versée par le client.")
+                        ->getChamp()
+                );
+                //Tranches
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createCollection('tranches', "Structure")
+                        ->setRequired(true)
+                        ->setColumns($column)
+                        ->getChamp()
+                );
+                //******************************************************* */
+                //Section - Commission de courtage
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createSection("Commission de courtage")
+                        ->setIcon("fa-solid fa-cash-register")
+                        ->setHelp("Les différents revenus du courtier d'assurance.")
+                        ->getChamp()
+                );
+                //Revenus
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createCollection('revenus', "Structure")
+                        ->setRequired(true)
+                        ->setColumns($column)
+                        ->getChamp()
+                );
+                //Revenu Net Total
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('revenuNetTotal', "Revenu pure")
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Taxe courtier totale
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('taxeCourtierTotale', ucfirst($this->serviceTaxes->getNomTaxeCourtier() . " (" . ($tauxCourtier * 100) . "%)"))
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Commission totale ht
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('commissionTotaleHT', "Revenu hors taxe")
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setDisabled(true)
+                        ->getChamp()
+                );
+                //Taxe Assureur
+                $this->addChamp(
+                    (new JSChamp())
+                        ->createArgent('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
+                        ->setCurrency($this->serviceMonnaie->getCodeSaisie())
+                        ->setDisabled(true)
                         ->getChamp()
                 );
             }

@@ -2085,7 +2085,6 @@ class ServicePreferences
                     ->setDisabled(true)
                     ->onlyOnForms();
 
-                //Je suis ici
                 //Section - Termes de paiement
                 $tabAttributs[] = FormField::addPanel("Termes de paiement de la prime")
                     ->setIcon("fa-solid fa-cash-register")
@@ -2100,7 +2099,7 @@ class ServicePreferences
                     ->setColumns(12)
                     ->setDisabled(true);
 
-                //Section - Commissiob de courtage
+                //Section - Commission de courtage
                 $tabAttributs[] = FormField::addPanel("Commission de courtage")
                     ->setIcon("fa-solid fa-cash-register")
                     ->setHelp("Les différents revenus du courtier d'assurance.")
@@ -2127,6 +2126,7 @@ class ServicePreferences
                     ->setColumns(12)
                     ->setDisabled(true)
                     ->onlyOnForms();
+                //Je suis ici
                 $tabAttributs[] = MoneyField::new('taxeAssureur', ucfirst($this->serviceTaxes->getNomTaxeAssureur() . " (" . ($this->isExoneree() == true ? 0 : ($tauxAssureur * 100)) . "%)"))
                     ->setCurrency($this->serviceMonnaie->getCodeSaisie())
                     ->setStoredAsCents()

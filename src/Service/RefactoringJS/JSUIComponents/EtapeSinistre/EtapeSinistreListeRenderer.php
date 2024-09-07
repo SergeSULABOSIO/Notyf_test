@@ -33,7 +33,7 @@ class EtapeSinistreListeRenderer extends JSPanelRenderer
         //Id
         $this->addChamp(
             (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_CRM_ETAPES_ID)
+                ->createNombre("id", PreferenceCrudController::PREF_CRM_ETAPES_ID, 0)
                 ->setColumns(10)
                 ->getChamp()
         );
@@ -41,13 +41,6 @@ class EtapeSinistreListeRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createTexte("nom", PreferenceCrudController::PREF_CRM_ETAPES_NOM)
-                ->setColumns(10)
-                ->getChamp()
-        );
-        //Piste
-        $this->addChamp(
-            (new JSChamp())
-                ->createAssociation('pistes', PreferenceCrudController::PREF_CRM_ETAPES_PISTES)
                 ->setColumns(10)
                 ->getChamp()
         );

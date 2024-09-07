@@ -64,7 +64,7 @@ class DocumentFormRenderer extends JSPanelRenderer
         //Document
         $this->addChamp(
             (new JSChamp())
-                ->createAssociation('document', "Pièce jointe")
+                ->createTexte('document', "Pièce jointe")
                 ->setFormType(VichFileType::class)
                 ->setFormTypeOptions("download_label", "Ouvrir le fichier")
                 ->setFormTypeOptions("delete_label", "Supprimer")

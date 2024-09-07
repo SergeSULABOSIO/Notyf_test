@@ -51,7 +51,7 @@ class TacheFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createBoolean('closed', "La tâche est cloturée avec succès.")
-                ->setFormTypeOption('disabled', 'disabled')
+                ->setFormTypeOptions('disabled', 'disabled')
                 ->renderAsSwitch(false)
                 ->setColumns($column)
                 ->getChamp()
@@ -67,7 +67,7 @@ class TacheFormRenderer extends JSPanelRenderer
         $this->addChamp(
             (new JSChamp())
                 ->createAssociation('attributedTo', PreferenceCrudController::PREF_CRM_MISSION_ATTRIBUE_A)
-                ->setFormTypeOption('query_builder', function (EntityRepository $entityRepository) {
+                ->setFormTypeOptions('query_builder', function (EntityRepository $entityRepository) {
                     return $entityRepository
                         ->createQueryBuilder('e')
                         ->Where('e.entreprise = :ese')
@@ -146,7 +146,7 @@ class TacheFormRenderer extends JSPanelRenderer
         //Feedback
         $this->addChamp(
             (new JSChamp())
-                ->createAssociation('feedbacks', "Feedbacks")
+                ->createCollection('feedbacks', "Feedbacks")
                 ->useEntryCrudForm(FeedbackCRMCrudController::class)
                 ->allowAdd(true)
                 ->allowDelete(true)

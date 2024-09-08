@@ -4451,7 +4451,6 @@ class ServicePreferences
         $tabAttributs[] = AssociationField::new('gestionnaire', PreferenceCrudController::PREF_CRM_PISTE_GESTIONNAIRE)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
-        //Je suis ici
         $tabAttributs[] = AssociationField::new('assistant', PreferenceCrudController::PREF_CRM_PISTE_ASSISTANT)
             ->setPermission(UtilisateurCrudController::TAB_ROLES[UtilisateurCrudController::VISION_GLOBALE])
             ->onlyOnDetail();
@@ -4503,6 +4502,7 @@ class ServicePreferences
             ->setCurrency($this->serviceMonnaie->getCodeAffichage())
             ->setStoredAsCents()
             ->onlyOnDetail();
+        //Je suis ici
         $tabAttributs[] = ArrayField::new('tranches', "Termes de paiement")
             ->setTemplatePath('admin/segment/view_tranches.html.twig')
             ->onlyOnDetail();

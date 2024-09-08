@@ -4716,7 +4716,7 @@ class ServicePreferences
             ->setColumns(10)
             ->onlyOnForms();
 
-        //Onglet Cotations
+        //Onglet Tache
         $tabAttributs[] = FormField::addTab(' Tâches')
             ->setIcon('fas fa-paper-plane')
             ->setHelp("Les missions ou actions à exécuter qui ont été assignées aux utilisateur pour cette piste.")
@@ -4746,6 +4746,7 @@ class ServicePreferences
             ->setColumns(10)
             ->onlyOnForms();
 
+        //je suis ici
         //Onglet Polices
         $tabAttributs[] = FormField::addTab(' Couverture en place')
             ->setIcon('fas fa-file-shield')

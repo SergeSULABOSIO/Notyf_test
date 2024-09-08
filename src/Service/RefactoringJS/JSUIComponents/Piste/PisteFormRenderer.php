@@ -47,7 +47,7 @@ class PisteFormRenderer extends JSPanelRenderer
         //Section - Principale
         $this->addChamp(
             (new JSChamp())
-                ->createSection(' Informations générales')
+                ->createOnglet(' Informations générales')
                 ->setIcon('fas fa-location-crosshairs') //<i class="fa-sharp fa-solid fa-address-book"></i>
                 ->setHelp("Une piste est un prospect (ou client potientiel) à suivre stratégiquement afin de lui convertir en client.")
                 ->setColumns($column)

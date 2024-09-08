@@ -5,7 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\Piste;
 use DateTimeImmutable;
 use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -16,23 +19,19 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
-use App\Service\RefactoringJS\Evenements\Evenement;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use App\Service\RefactoringJS\JSUIComponents\Piste\PisteUIBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
-use App\Service\RefactoringJS\Commandes\CommandeDefinirEseUserDateCreationEtModification;
-use App\Service\RefactoringJS\Commandes\Piste\CommandePisteDefinirObservateursEvenements;
-use App\Service\RefactoringJS\Evenements\SuperviseurPiste;
-use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
-use App\Service\ServiceAvenant;
 
 class PisteCrudController extends AbstractCrudController implements CommandeExecuteur
 {
@@ -48,6 +47,7 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         self::ETAPE_CONCLUSION => 4,
     ];
 
+    public ?PisteUIBuilder $uiBuilder = null;
     public ?Crud $crud = null;
 
     public function __construct(
@@ -55,13 +55,15 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         private ServiceSuppression $serviceSuppression,
         private EntityManagerInterface $entityManager,
         private ServiceAvenant $serviceAvenant,
+        private ServiceMonnaie $serviceMonnaie,
+        private ServiceTaxes $serviceTaxes,
         private ServiceDates $serviceDates,
         private ServiceEntreprise $serviceEntreprise,
         private ServicePreferences $servicePreferences,
         private ServiceCrossCanal $serviceCrossCanal,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        // dd("Hi there,", "On vient de lancer la rubrique Piste"); //C'est ici qu'il faut mettre l'observateur de chargement
+        $this->uiBuilder = new PisteUIBuilder($this->serviceEntreprise);
     }
 
     public static function getEntityFqcn(): string
@@ -184,7 +186,10 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
     {
         /** @var Piste */
         $piste = $this->getContext()->getEntity()->getInstance();
-        
+        if ($this->crud) {
+            $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
+        }
+
         //Ecouteurs
         $this->executer(new ComDefinirObservateursEvenements(
             $this->superviseurSujet,
@@ -195,12 +200,21 @@ class PisteCrudController extends AbstractCrudController implements CommandeExec
         ));
 
         // dd("Ici", $pageName, $piste);
-
         //dd($piste->getClient()->isExoneree());
-        $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
+        // $this->crud = $this->serviceCrossCanal->crossCanal_setTitrePage($this->crud, $this->adminUrlGenerator, $piste);
         //dd($this->adminUrlGenerator);
-        $this->servicePreferences->setEntite($pageName, $piste);
-        return $this->servicePreferences->getChamps(new Piste(), $this->crud, $this->adminUrlGenerator);
+        // $this->servicePreferences->setEntite($pageName, $piste);
+        // return $this->servicePreferences->getChamps(new Piste(), $this->crud, $this->adminUrlGenerator);
+
+        return $this->uiBuilder->render(
+            $this->entityManager,
+            $this->serviceMonnaie,
+            $this->serviceTaxes,
+            $pageName,
+            $piste,
+            $this->crud,
+            $this->adminUrlGenerator
+        );
     }
 
 

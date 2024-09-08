@@ -15,7 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSChamp;
 use App\Service\RefactoringJS\JSUIComponents\JSUIParametres\JSPanelRenderer;
 
-class PisteDetailsRenderer extends JSPanelRenderer
+class PisteListeRenderer extends JSPanelRenderer
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -26,8 +26,9 @@ class PisteDetailsRenderer extends JSPanelRenderer
         private $crud,
         private AdminUrlGenerator $adminUrlGenerator
     ) {
-        parent::__construct(self::TYPE_DETAILS, $pageName, $objetInstance, $crud, $adminUrlGenerator);
+        parent::__construct(self::TYPE_LISTE, $pageName, $objetInstance, $crud, $adminUrlGenerator);
     }
+
 
     public function design()
     {

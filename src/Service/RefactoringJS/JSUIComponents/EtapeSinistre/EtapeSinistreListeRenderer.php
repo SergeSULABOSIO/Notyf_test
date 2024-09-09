@@ -30,13 +30,13 @@ class EtapeSinistreListeRenderer extends JSPanelRenderer
 
     public function design()
     {
-        //Id
-        $this->addChamp(
-            (new JSChamp())
-                ->createNombre("id", PreferenceCrudController::PREF_CRM_ETAPES_ID, 0)
-                ->setColumns(10)
-                ->getChamp()
-        );
+        // //Id
+        // $this->addChamp(
+        //     (new JSChamp())
+        //         ->createNombre("id", PreferenceCrudController::PREF_CRM_ETAPES_ID, 0)
+        //         ->setColumns(10)
+        //         ->getChamp()
+        // );
         //Nom
         $this->addChamp(
             (new JSChamp())

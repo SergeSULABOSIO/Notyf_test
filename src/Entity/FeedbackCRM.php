@@ -104,7 +104,7 @@ class FeedbackCRM implements Sujet, CommandeExecuteur
     {
         $user = $this->utilisateur != null ? $this->utilisateur->getNom() : " Utilisateur Inconnu";
         $createAt = $this->getCreatedAt() != null ? " le " . (($this->getCreatedAt())->format('d/m/Y à H:m:s')) : " Date de création inconnue";
-        return "[" . $this->getMessage() . "], " . $user . $createAt;
+        return "[" . strip_tags($this->getMessage()) . "], " . $user . $createAt;
     }
 
     public function getUtilisateur(): ?Utilisateur

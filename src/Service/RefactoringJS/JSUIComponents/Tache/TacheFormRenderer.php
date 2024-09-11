@@ -131,7 +131,7 @@ class TacheFormRenderer extends JSPanelRenderer
         //Objetcif
         $this->addChamp(
             (new JSChamp())
-                ->createZonneTexte('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
+                ->createEditeurTexte('objectif', PreferenceCrudController::PREF_CRM_MISSION_OBJECTIF)
                 ->setRequired(false)
                 ->setColumns($column)
                 ->getChamp()

@@ -8,7 +8,7 @@ interface InterfaceIndicateur
 {
     //Les getters
     public function getTitre(): string;
-    public function getHTMLTexte(): string;
+    public function getTexte(): string;
     public function getDonnees(): Collection;
     public function getBrique(): InterfaceBrique;
     public function getEcouteurActions():InterfaceEcouteurActions;

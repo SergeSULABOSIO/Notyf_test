@@ -15,7 +15,8 @@ interface InterfaceIndicateur
     public function setTitre(string $titre): InterfaceIndicateur;
     public function setDonnees(Collection $donnees): InterfaceIndicateur;
     //Autres fonctions
-    public function addDonnee($donnees):InterfaceIndicateur;
-    public function removeDonnee():InterfaceIndicateur;
+    public function addDonnee($donnee):InterfaceIndicateur;
+    public function removeDonnee($donnee):InterfaceIndicateur;
     public function removeAllDonnees():InterfaceIndicateur;
+    public function toString():string;
 }

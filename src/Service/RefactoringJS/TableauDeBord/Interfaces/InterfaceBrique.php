@@ -2,17 +2,12 @@
 
 namespace App\Service\RefactoringJS\TableauDeBord\Interfaces;
 
+use Doctrine\Common\Collections\Collection;
 
 interface InterfaceBrique
 {
-    // public const TYPE_LISTE = 0;
-    // public const TYPE_DETAILS = 1;
-    // public const TYPE_FORMULAIRE = 2;
-
-    // public function init();
-    // public function render();
-    // public function addChampToRemove(?string $nomAttribut);
-    // public function addChampToDeactivate(?string $nomAttribut, ?int $columns = null);
-    // public function getChamps():?array;
-    // public function runBatchActions(?string $type = null, ?string $pageName = null, $objetInstance = null, ?Crud $crud = null, ?AdminUrlGenerator $adminUrlGenerator = null):?array;
+    public function addIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique;
+    public function removeIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique;
+    public function removeAllIndicateurs(): InterfaceBrique;
+    public function getIndicateurs(): Collection;
 }

@@ -1,5 +1,6 @@
 <?php
-namespace App\Service\RefactoringJS\TableauDeBord;
+
+namespace App\Service\RefactoringJS\TableauDeBord\Interfaces;
 
 
 interface InterfaceBrique

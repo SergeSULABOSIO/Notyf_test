@@ -10,4 +10,6 @@ interface InterfaceBrique
     public function removeIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique;
     public function removeAllIndicateurs(): InterfaceBrique;
     public function getIndicateurs(): Collection;
+    public function getType(): int;
+    public function setType(int $type): InterfaceBrique;
 }

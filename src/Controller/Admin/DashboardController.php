@@ -51,6 +51,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\TableauDeBord\Commandes\ComCreerTableauDeBord;
 use App\Service\RefactoringJS\TableauDeBord\Concrets\Brique;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -119,34 +120,11 @@ class DashboardController extends AbstractDashboardController implements Command
         if ($this->serviceEntreprise->hasEntreprise() == true) {
             $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
 
+
+
             //Construction du tableau de bord ici
+            $this->executer(new ComCreerTableauDeBord());
 
-            //*** INDICATEUR */
-            $indic01 = new Indicateur();
-            $indic01->setTitre("Polices");
-            $indic01->setDonnees(new ArrayCollection([
-                "Primes bruttes = 100 USD",
-                "Fronting = 17.65 USD",
-                "Commissions = 10 USD",
-                "Retrocoms = 2 USD",
-                "Nombre totale d'avenants = 152"
-            ]));
-            $indic01->addDonnee("Primes de réassurance = 35 USD");
-
-            //** ECOUTEUR */
-            $ecouteur = new EcouteurActions();
-            $indic01->setEcouteurActions($ecouteur);
-
-            //** BRIQUE */
-            $brique_titre = new Brique(InterfaceBrique::TYPE_BRIQUE_DE_TITRE);
-            $brique_titre->addIndicateur($indic01);
-
-            //** TABLEAU DE BORD */
-            $tableauDeBord = (new TableauDeBord())
-                ->addBrique($brique_titre)
-                ->build();
-
-            dd("Tableau de bord", $tableauDeBord);
 
 
             return $this->render('admin/dashboard.html.twig');

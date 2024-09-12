@@ -3,6 +3,7 @@
 namespace App\Service\RefactoringJS\TableauDeBord\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\Indicateur;
 
 interface InterfaceIndicateur
 {

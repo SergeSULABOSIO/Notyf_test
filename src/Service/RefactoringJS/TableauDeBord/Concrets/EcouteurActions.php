@@ -13,7 +13,7 @@ class EcouteurActions implements InterfaceEcouteurActions
 
     public function onAfterUpdate(callable $callback)
     {
-        call_user_func($callback());
+        call_user_func($callback(), "Executée avec succès.", "100 % fait.");
         //$callback();
         dd("onAfterUpdate");
     }

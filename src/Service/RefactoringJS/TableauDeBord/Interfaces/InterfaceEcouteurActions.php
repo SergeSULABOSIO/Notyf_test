@@ -6,9 +6,10 @@ use App\Service\RefactoringJS\TableauDeBord\Concrets\EvenementIndicateur;
 
 interface InterfaceEcouteurActions
 {
-    public function onAfterUpdate(callable $callback);
-    public function onBeforeUpdated(callable $callback);
-    public function onUpdating(callable $callback);
+    public function onAfterUpdate(EvenementIndicateur $event);
+    public function onBeforeUpdated(EvenementIndicateur $event);
+    public function onUpdating(EvenementIndicateur $event);
+    public function onError(EvenementIndicateur $event);
     public function setIndicateur(InterfaceIndicateur $indicateur);
     public function getIndicateur():InterfaceIndicateur;
 }

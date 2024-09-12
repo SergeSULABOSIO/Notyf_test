@@ -56,7 +56,19 @@ class Indicateur implements InterfaceIndicateur
 
     public function setDonnees(Collection $donnees): InterfaceIndicateur
     {
+        //Ecouteur
+        if($this->ecouteur != null){
+            $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation du transfert des données..."));
+            $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Transfert..."));
+        }
+
         $this->donnees = $donnees;
+
+        //Ecouteur
+        if($this->ecouteur != null){
+            $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Transfert effectué."));
+        }
+
         return $this;
     }
 
@@ -70,7 +82,23 @@ class Indicateur implements InterfaceIndicateur
     public function addDonnee($donnee): InterfaceIndicateur
     {
         if ($this->donnees->contains($donnee) == false) {
+            //Ecouteur
+            if($this->ecouteur != null){
+                $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de l'ajout de " . $donnee . "..."));
+                $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Ajout..."));
+            }
+
             $this->donnees->add($donnee);
+
+            //Ecouteur
+            if($this->ecouteur != null){
+                $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Ajout de la donnée effectué."));
+            }
+        }else{
+            //Ecouteur erreur
+            if($this->ecouteur != null){
+                $this->ecouteur->onError(new EvenementIndicateur($this, "La donnée " . $donnee . " existe déjà."));
+            }
         }
         return $this;
     }
@@ -78,14 +106,36 @@ class Indicateur implements InterfaceIndicateur
     public function removeDonnee($donnee): InterfaceIndicateur
     {
         if ($this->donnees->contains($donnee) == true) {
+            //Ecouteur
+            if($this->ecouteur != null){
+                $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de la suppression de " . $donnee . "..."));
+                $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Destruction..."));
+            }
+
             $this->donnees->removeElement($donnee);
+
+            //Ecouteur
+            if($this->ecouteur != null){
+                $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Retrait de la donnée effectué."));
+            }
         }
         return $this;
     }
 
     public function removeAllDonnees(): InterfaceIndicateur
     {
+        //Ecouteur
+        if($this->ecouteur != null){
+            $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de la destruction de toutes les données..."));
+            $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Destruction..."));
+        }
+
         $this->donnees = new ArrayCollection();
+
+        //Ecouteur
+        if($this->ecouteur != null){
+            $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Destruction effectuée."));
+        }
         return $this;
     }
 

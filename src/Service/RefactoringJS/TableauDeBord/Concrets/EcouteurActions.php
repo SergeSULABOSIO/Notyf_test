@@ -11,25 +11,30 @@ class EcouteurActions implements InterfaceEcouteurActions
 
     public function __construct() {}
 
-    public function onAfterUpdate(callable $callback)
+    public function onAfterUpdate(EvenementIndicateur $event)
     {
-        call_user_func($callback(), "Executée avec succès.", "100 % fait.");
+        // call_user_func($callback(), "Executée avec succès.", "100 % fait.");
         //$callback();
-        dd("onAfterUpdate");
+        dd("onAfterUpdate", $event);
     }
 
-    public function onBeforeUpdated(callable $callback)
+    public function onBeforeUpdated(EvenementIndicateur $event)
     {
-        call_user_func($callback());
+        // call_user_func($callback());
         //$callback();
-        dd("onBeforeUpdated");
+        dd("onBeforeUpdated", $event);
     }
 
-    public function onUpdating(callable $callback)
+    public function onUpdating(EvenementIndicateur $event)
     {
-        call_user_func($callback());
+        // call_user_func($callback());
         //$callback();
-        dd("onUpdating");
+        dd("onUpdating", $event);
+    }
+
+    public function onError(EvenementIndicateur $event)
+    {
+        dd("OnError", $event);
     }
 
     public function setIndicateur(InterfaceIndicateur $indicateur)

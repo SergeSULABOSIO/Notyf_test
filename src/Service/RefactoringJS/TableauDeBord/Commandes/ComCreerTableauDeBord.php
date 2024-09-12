@@ -16,7 +16,7 @@ class ComCreerTableauDeBord implements Commande
 
     public function executer()
     {
-        //*** INDICATEUR */
+        //*** INDICATEUR : qui contient les informations stats qui s'affichent*/
         $indic01 = new Indicateur();
         $indic01->setTitre("Polices");
         $indic01->setDonnees(new ArrayCollection([
@@ -28,15 +28,15 @@ class ComCreerTableauDeBord implements Commande
         ]));
         $indic01->addDonnee("Primes de réassurance = 35 USD");
 
-        //** ECOUTEUR */
+        //** ECOUTEUR DE L'INDICATEUR: qui permet au système d'être notifié de tout ce qui se passe dans l'indicateur */
         $ecouteur = new EcouteurActions();
         $indic01->setEcouteurActions($ecouteur);
 
-        //** BRIQUE */
+        //** BRIQUE: qui est composée d'un groupe d'indicateur */
         $brique_titre = new Brique(InterfaceBrique::TYPE_BRIQUE_DE_TITRE);
         $brique_titre->addIndicateur($indic01);
 
-        //** TABLEAU DE BORD */
+        //** TABLEAU DE BORD: qui coomposé d'un ensemble des briques */
         $tableauDeBord = (new TableauDeBord())
             ->addBrique($brique_titre)
             ->build();

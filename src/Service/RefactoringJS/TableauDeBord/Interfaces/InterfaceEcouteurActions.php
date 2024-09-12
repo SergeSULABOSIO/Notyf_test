@@ -9,4 +9,6 @@ interface InterfaceEcouteurActions
     public function onAfterUpdate(callable $callback);
     public function onBeforeUpdated(callable $callback);
     public function onUpdating(callable $callback);
+    public function setIndicateur(InterfaceIndicateur $indicateur);
+    public function getIndicateur():InterfaceIndicateur;
 }

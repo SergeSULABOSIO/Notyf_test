@@ -5,16 +5,17 @@ namespace App\Service\RefactoringJS\TableauDeBord\Concrets;
 use Doctrine\Common\Collections\Collection;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Brique implements InterfaceBrique
 {
-    private int $type;
-    private Collection $indicateurs;
+    private ?int $type;
+    private ?Collection $indicateurs;
 
     public function __construct(int $type)
     {
         $this->type = $type;
-        $this->indicateurs = new Collection();
+        $this->indicateurs = new ArrayCollection();
     }
 
     public function addIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique
@@ -56,11 +57,11 @@ class Brique implements InterfaceBrique
 
     public function build()
     {
-        dd("Construction de la brique " . $this->type);
+        // dd("Construction de la brique " . $this->type);
         /** @var Indicateur */
         foreach ($this->indicateurs as $indicateur) {
             $indicateur->build();
         }
-        dd("Fin de la construction de la brique " . $this->type);
+        // dd("Fin de la construction de la brique " . $this->type);
     }
 }

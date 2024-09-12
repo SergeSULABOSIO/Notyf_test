@@ -10,5 +10,5 @@ interface InterfaceTableauDeBord
     public function removeBrique(InterfaceBrique $brique): InterfaceTableauDeBord;
     public function removeAllBriques(): InterfaceTableauDeBord;
     public function getBriques(): Collection;
-    public function build();
+    public function build(): InterfaceTableauDeBord;
 }

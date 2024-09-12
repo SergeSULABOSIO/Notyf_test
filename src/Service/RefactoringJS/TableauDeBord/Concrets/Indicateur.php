@@ -153,6 +153,6 @@ class Indicateur implements InterfaceIndicateur
 
     public function build()
     {
-        dd("** Construction de l'indicateur " . $this->titre);
+        // dd("** Construction de l'indicateur " . $this->titre);
     }
 }

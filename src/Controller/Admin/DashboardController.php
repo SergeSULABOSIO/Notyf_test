@@ -7,20 +7,25 @@ use App\Entity\Piste;
 use App\Entity\Client;
 use App\Entity\Expert;
 use App\Entity\Police;
+use App\Entity\Revenu;
 use App\Entity\Article;
 use App\Entity\Contact;
+use App\Entity\Facture;
 use App\Entity\Monnaie;
 use App\Entity\Produit;
+use App\Entity\Tranche;
 use App\Entity\Victime;
 use App\Entity\Assureur;
 use App\Entity\Cotation;
 use App\Entity\DocPiece;
 use App\Entity\EtapeCrm;
+use App\Entity\Paiement;
 use App\Entity\Sinistre;
 use App\Entity\ActionCRM;
 use App\Entity\Automobile;
 use App\Entity\Entreprise;
 use App\Entity\Partenaire;
+use App\Entity\Preference;
 use App\Entity\DocClasseur;
 use App\Entity\EntreeStock;
 use App\Entity\FeedbackCRM;
@@ -28,37 +33,34 @@ use App\Entity\Utilisateur;
 use App\Entity\DocCategorie;
 use App\Entity\PaiementTaxe;
 use App\Entity\EtapeSinistre;
+use App\Entity\CompteBancaire;
 use App\Entity\PaiementCommission;
 use App\Entity\PaiementPartenaire;
-use App\Entity\CommentaireSinistre;
-use App\Entity\CompteBancaire;
-use App\Entity\Facture;
-use App\Entity\Paiement;
-use App\Entity\Preference;
-use App\Entity\Revenu;
-use App\Entity\Tranche;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\Brique;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\EcouteurActions;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\Indicateur;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBord;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
+use App\Entity\CommentaireSinistre;
 use App\Service\ServicePreferences;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\RefactoringJS\Commandes\Commande;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\Brique;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\Indicateur;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBord;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\EcouteurActions;
+use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
-class DashboardController extends AbstractDashboardController
+class DashboardController extends AbstractDashboardController implements CommandeExecuteur
 {
     public const ACTION_AJOUTER = "Ajouter";
     public const ACTION_OPEN = "Voire les détails";
@@ -329,5 +331,12 @@ class DashboardController extends AbstractDashboardController
             ->setEntityId($this->serviceEntreprise->getUtilisateur()->getId());
         yield MenuItem::linkToLogout("DECONNEXION", "fa-solid fa-right-from-bracket");
         //}
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

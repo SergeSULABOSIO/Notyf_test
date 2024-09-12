@@ -2,22 +2,23 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Cotation;
 use App\Entity\Piste;
-use App\Service\RefactoringJS\JSUIComponents\Cotation\CotationUIBuilder;
-use App\Service\ServiceAvenant;
+use App\Entity\Cotation;
+use App\Service\ServiceDates;
+use App\Service\ServiceTaxes;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\ServiceAvenant;
+use App\Service\ServiceMonnaie;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
-use App\Service\ServiceMonnaie;
 use Doctrine\ORM\EntityRepository;
 use App\Service\ServicePreferences;
 use App\Service\ServiceSuppression;
-use App\Service\ServiceTaxes;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -37,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use App\Service\RefactoringJS\Evenements\SuperviseurSujet;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -44,6 +46,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use App\Service\RefactoringJS\JSUIComponents\Cotation\CotationUIBuilder;
+use App\Service\RefactoringJS\Commandes\ComDefinirObservateursEvenements;
 
 class CotationCrudController extends AbstractCrudController
 {
@@ -59,6 +63,8 @@ class CotationCrudController extends AbstractCrudController
 
 
     public function __construct(
+        private ServiceDates $serviceDates,
+        private SuperviseurSujet $superviseurSujet,
         private ServiceTaxes $serviceTaxes,
         private ServiceMonnaie $serviceMonnaie,
         private ServiceAvenant $serviceAvenant,
@@ -128,6 +134,20 @@ class CotationCrudController extends AbstractCrudController
 
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $cotationToDelete = $entityInstance;
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $cotationToDelete
+        ));
+
+        //destruction définitive de la piste
+        $this->entityManager->remove($cotationToDelete);
+        $this->entityManager->flush();
+
         //C'est dans cette méthode qu'il faut préalablement supprimer les enregistrements fils/déscendant de cette instance pour éviter l'erreur due à la contrainte d'intégrité
         //dd($entityInstance);
         $this->serviceSuppression->supprimer($entityInstance, ServiceSuppression::CRM_COTATION);
@@ -143,6 +163,15 @@ class CotationCrudController extends AbstractCrudController
         //$objet->setStartedAt(new DateTimeImmutable("+1 day"));
         //$objet->setEndedAt(new DateTimeImmutable("+7 day"));
         //$objet->setClos(0);
+
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $objet
+        ));
         return $objet;
     }
 
@@ -164,6 +193,16 @@ class CotationCrudController extends AbstractCrudController
                 }
             }
         }
+
+        //Exécuter - Ecouteurs d'évènements
+        $this->executer(new ComDefinirObservateursEvenements(
+            $this->superviseurSujet,
+            $this->entityManager,
+            $this->serviceEntreprise,
+            $this->serviceDates,
+            $instance
+        ));
+
         // return $this->servicePreferences->getChamps(new Cotation(), $this->crud, $this->adminUrlGenerator);
         return $this->uiBuilder->render(
             $this->entityManager,
@@ -431,5 +470,12 @@ class CotationCrudController extends AbstractCrudController
     public function cross_canal_listerMission(AdminContext $context, AdminUrlGenerator $adminUrlGenerator, EntityManagerInterface $em)
     {
         return $this->redirect($this->serviceCrossCanal->crossCanal_Cotation_listerMission($context, $adminUrlGenerator));
+    }
+
+    public function executer(?Commande $commande)
+    {
+        if ($commande != null) {
+            $commande->executer();
+        }
     }
 }

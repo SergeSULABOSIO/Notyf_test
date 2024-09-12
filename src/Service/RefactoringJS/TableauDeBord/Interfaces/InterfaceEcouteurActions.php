@@ -2,10 +2,11 @@
 
 namespace App\Service\RefactoringJS\TableauDeBord\Interfaces;
 
+use App\Service\RefactoringJS\TableauDeBord\Concrets\EvenementIndicateur;
 
 interface InterfaceEcouteurActions
 {
-    public function onAfterUpdate();
-    public function onBeforeUpdated();
-    public function onUpdating();
+    public function onAfterUpdate(callable $callback);
+    public function onBeforeUpdated(callable $callback);
+    public function onUpdating(callable $callback);
 }

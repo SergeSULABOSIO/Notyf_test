@@ -48,7 +48,6 @@ class Brique implements InterfaceBrique
 
     public function setType(int $type): InterfaceBrique
     {
-        
         $this->type = $type;
         return $this;
     }

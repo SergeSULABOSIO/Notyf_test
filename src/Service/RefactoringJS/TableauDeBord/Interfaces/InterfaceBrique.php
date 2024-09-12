@@ -17,4 +17,5 @@ interface InterfaceBrique
     public function getIndicateurs(): Collection;
     public function getType(): int;
     public function setType(int $type): InterfaceBrique;
+    public function build();
 }

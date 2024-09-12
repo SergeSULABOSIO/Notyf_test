@@ -32,4 +32,14 @@ class TableauDeBord implements InterfaceTableauDeBord
     {
         return $this->briques;
     }
+
+    public function build()
+    {
+        dd("Construction du tableau de bord...");
+        /** @var Brique */
+        foreach ($this->briques as $brique) {
+            $brique->build();
+        }
+        dd("Tableau de bord prêt.");
+    }
 }

@@ -21,12 +21,14 @@ class Brique implements InterfaceBrique
     {
         if ($this->indicateurs->contains($newIndicateur) == false) {
             $this->indicateurs->add($newIndicateur);
+            $newIndicateur->setBrique($this);
         }
         return $this;
     }
 
     public function removeIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique
     {
+        $newIndicateur->setBrique(null);
         $this->indicateurs->removeElement($newIndicateur);
         return $this;
     }
@@ -50,5 +52,15 @@ class Brique implements InterfaceBrique
     {
         $this->type = $type;
         return $this;
+    }
+
+    public function build()
+    {
+        dd("Construction de la brique " . $this->type);
+        /** @var Indicateur */
+        foreach ($this->indicateurs as $indicateur) {
+            $indicateur->build();
+        }
+        dd("Fin de la construction de la brique " . $this->type);
     }
 }

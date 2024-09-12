@@ -37,9 +37,11 @@ use App\Entity\Paiement;
 use App\Entity\Preference;
 use App\Entity\Revenu;
 use App\Entity\Tranche;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\Indicateur;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -80,8 +82,7 @@ class DashboardController extends AbstractDashboardController
         private AdminUrlGenerator $adminUrlGenerator,
         private ServiceEntreprise $serviceEntreprise,
         private ServiceCrossCanal $serviceCrossCanal
-    ) {
-    }
+    ) {}
 
     #[Route('/admin', name: 'admin')]
     //#[IsGranted("ROLE_ADMIN")]
@@ -111,6 +112,23 @@ class DashboardController extends AbstractDashboardController
 
         if ($this->serviceEntreprise->hasEntreprise() == true) {
             $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
+
+            //Construction du tableau de bord ici
+
+            /** @var Indicateur */
+            $indic01 = new Indicateur();
+            $indic01->setTitre("Polices");
+            $indic01->setDonnees(new ArrayCollection([
+                "Primes bruttes" => "100 USD",
+                "Fronting" => "17.65 USD",
+                "Commissions" => "10 USD",
+                "Retrocoms" => "2 USD",
+                "Nombre totale d'avenants" => "152"
+            ]));
+            
+            dd("Tableau de bord", $indic01);
+
+
             return $this->render('admin/dashboard.html.twig');
         } else {
             if ($this->serviceEntreprise->isAdministrateur() == true) {
@@ -120,9 +138,6 @@ class DashboardController extends AbstractDashboardController
                 return $this->redirectToRoute('security.login');
             }
         }
-        //dd($connected_entreprise);
-        //dd($connected_utilisateur);
-        //dd($this->serviceEntreprise);
 
         //return $this->render('admin/dashboard.html.twig');
         //return $this->redirect($this->adminUrlGenerator->setController(ArticleCrudController::class)->generateUrl());

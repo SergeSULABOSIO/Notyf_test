@@ -18,7 +18,7 @@ class ComCreerTableauDeBord implements Commande
     {
         //*** INDICATEUR : qui contient les informations stats qui s'affichent*/
         $indic01 = (new Indicateur())
-            ->setTitre("Polices")
+            ->setTitre("Avenants")
             ->setDonnees(new ArrayCollection([
                 "Primes bruttes = 100 USD",
                 "Fronting = 17.65 USD",

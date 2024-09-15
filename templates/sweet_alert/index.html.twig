@@ -6,17 +6,18 @@
 {% block body %}
 	{% include 'segments/_mainheader.html.twig' %}
 	<div class="example-wrapper">
-		Test - SweetAlert - <a href="{{path('security.logout')}}">Deconnexion</a>
+		{{ render_chart(chart) }}
+		Test - SweetAlert -
+		<a href="{{path('security.logout')}}">Deconnexion</a>
 		<div>
 			<a id="bt1" class="btn btn-success">Info</a>
 			<a id="bt2" class="btn btn-danger">Delete</a>
 			<a id="bt3" class="btn btn-warning">Warning</a>
 			<a id="bt4" class="btn btn-danger">Error</a>
 		</div>
-
 		<div class="card card-gray mt-3">
 			<div class="card-header">
-				<h3 class="card-title">Bien venue Serge,</h3>								
+				<h3 class="card-title">Bien venue Serge,</h3>
 			</div>
 
 			<div class="card-body">
@@ -25,7 +26,7 @@
 				</p>
 				<p>
 					Voici, ci-dessous, les informations de connexion à votre compte et merci de bien les garder confidentielles. 
-					Notez que vous pouvez toujours les modifier quand cela vous arrangera.
+																				Notez que vous pouvez toujours les modifier quand cela vous arrangera.
 				</p>
 
 				<strong>
@@ -36,15 +37,15 @@
 					sulabosiog@gmail.com
 				</p>
 				<hr>
-					<strong>
+				<strong>
 					<i class="fas fa-solid fa-lock mr-1"></i>
 					Mot de passe:
-					</strong>
-					<p class="text-muted">
-						adorer
-					</p>
+				</strong>
+				<p class="text-muted">
+					adorer
+				</p>
 				<hr>
-				
+
 				<p class="text-muted">
 					<a href="{{path('security.login')}}">Pour se connecter à votre compte, cliquez ici.</a>
 				</p>
@@ -59,7 +60,6 @@
 				© 2023 JS Brokers, Inc.
 			</div>
 		</div>
-
 
 
 	</div>

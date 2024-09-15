@@ -30,6 +30,7 @@ use App\Entity\CompteBancaire;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
+use Symfony\UX\Chartjs\Model\Chart;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,10 +38,12 @@ use App\Service\RefactoringJS\Commandes\Commande;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\TableauDeBord\Commandes\ComCreerTableauDeBord;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use App\Service\RefactoringJS\TableauDeBord\Commandes\ComCreerTableauDeBord;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 class DashboardController extends AbstractDashboardController implements CommandeExecuteur
 {
@@ -102,6 +105,7 @@ class DashboardController extends AbstractDashboardController implements Command
             $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
 
 
+            
 
             //Construction du tableau de bord ici
             // $this->executer(new ComCreerTableauDeBord());
@@ -109,6 +113,7 @@ class DashboardController extends AbstractDashboardController implements Command
 
 
             return $this->render('admin/dashboard.html.twig');
+            // return $this->redirectToRoute("app_sweet_alert");
         } else {
             if ($this->serviceEntreprise->isAdministrateur() == true) {
                 //$this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");
@@ -298,4 +303,13 @@ class DashboardController extends AbstractDashboardController implements Command
             $commande->executer();
         }
     }
+
+    // public function configureAssets(): Assets
+    // {
+    //     $assets = parent::configureAssets();
+
+    //     $assets->addWebpackEncoreEntry('app');
+
+    //     return $assets;
+    // }
 }

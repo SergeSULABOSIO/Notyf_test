@@ -104,7 +104,7 @@ class DashboardController extends AbstractDashboardController implements Command
 
 
             //Construction du tableau de bord ici
-            $this->executer(new ComCreerTableauDeBord());
+            // $this->executer(new ComCreerTableauDeBord());
 
 
 

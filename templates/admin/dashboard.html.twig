@@ -1,24 +1,26 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content_title %}Construction du tableau de bord de JS Brokers.{% endblock %}
+{% block content_title %}Construction du tableau de bord de JS Brokers.
+{% endblock %}
 {% block page_actions %}
-    <a class="btn btn-primary" href="...">Bouton pour action</a>
+	<a class="btn btn-primary" href="...">Bouton pour action</a>
 {% endblock %}
 
 {% block main %}
-    Section - Main
-    <table class="datagrid">
-        <thead>
-            <tr>
-                <td>Some Column</td>
-                <td>Another Column</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>XXXXX</td>
-                <td>YYYYY</td>
-            </tr>
-        </tbody>
-    </table>
+	{# {{ component('Alert', {message: 'Hello Twig Components!'}) }} #}
+	Section - Main
+	<table class="datagrid">
+		<thead>
+			<tr>
+				<td>Some Column</td>
+				<td>Another Column</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>XXXXX</td>
+				<td>YYYYY</td>
+			</tr>
+		</tbody>
+	</table>
 {% endblock %}

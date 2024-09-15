@@ -82,7 +82,7 @@ class SecurityController extends AbstractDashboardController //AbstractControlle
         $last_username = $this->authenticationUtils->getLastUsername();
 
         $error = $this->authenticationUtils->getLastAuthenticationError();
-
+        
         //dd($error);
         /* if ($error != null) {
             $this->addFlash("error", "Vos identifiants sont incorrects");

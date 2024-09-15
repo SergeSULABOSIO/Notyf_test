@@ -68,6 +68,7 @@ class DashboardController extends AbstractDashboardController implements Command
 
 
     public function __construct(
+        private ChartBuilderInterface $chartBuilder,
         private ServicePreferences $servicePreferences,
         private EntityManagerInterface $entityManager,
         private AdminUrlGenerator $adminUrlGenerator,
@@ -105,14 +106,39 @@ class DashboardController extends AbstractDashboardController implements Command
             $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
 
 
-            
+
 
             //Construction du tableau de bord ici
             // $this->executer(new ComCreerTableauDeBord());
 
+            $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
+            $chart->setData([
+                'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                'datasets' => [
+                    [
+                        'label' => 'My First dataset',
+                        'backgroundColor' => 'rgb(255, 99, 132)',
+                        'borderColor' => 'rgb(255, 99, 132)',
+                        'data' => [0, 10, 5, 2, 20, 30, 45],
+                    ],
+                ],
+            ]);
 
-            return $this->render('admin/dashboard.html.twig');
+            $chart->setOptions([
+                'scales' => [
+                    'y' => [
+                        'suggestedMin' => 0,
+                        'suggestedMax' => 100,
+                    ],
+                ],
+            ]);
+
+            return $this->render('admin/dashboard.html.twig', [
+                'controller_name' => 'SweetAlertController',
+                'chart' => $chart,
+            ]);
+            // return $this->render('admin/dashboard.html.twig');
             // return $this->redirectToRoute("app_sweet_alert");
         } else {
             if ($this->serviceEntreprise->isAdministrateur() == true) {

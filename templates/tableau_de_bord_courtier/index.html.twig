@@ -30,12 +30,12 @@
 			{{ controller_name }}!
 		</h1>
 		TABLEAU DE BORD ICI
-		{{ render_chart(chart) }}
 		<a href="{{path('security.logout')}}">Deconnexion</a>
 		<div>
 			<a id="bt1" class="btn btn-success">Info</a>
 			<a id="bt2" class="btn btn-danger">Delete</a>
 		</div>
+		{{ render_chart(chart) }}
 		<div class="card card-gray mt-3">
 			<div class="card-header">
 				<h3 class="card-title">Bien venue Serge,</h3>

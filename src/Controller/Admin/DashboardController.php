@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\TableauDeBordCourtierController;
 use App\Entity\Taxe;
 use App\Entity\Piste;
 use App\Entity\Client;
@@ -103,7 +104,7 @@ class DashboardController extends AbstractDashboardController implements Command
         $connected_utilisateur = $this->serviceEntreprise->getUtilisateur();
 
         if ($this->serviceEntreprise->hasEntreprise() == true) {
-            $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
+            // $this->addFlash("success", "Bien venue " . $connected_utilisateur->getNom() . "! Vous êtes connecté à " . $connected_entreprise->getNom());
 
 
 
@@ -139,7 +140,10 @@ class DashboardController extends AbstractDashboardController implements Command
             //     'chart' => $chart,
             // ]);
             // return $this->render('admin/dashboard.html.twig');
-            // return $this->redirectToRoute("app_sweet_alert");
+
+            // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
+            // return $this->redirect($this->adminUrlGenerator->setController(TableauDeBordCourtierController::class)->generateUrl());
+            return $this->redirectToRoute("app_tableau_de_bord_courtier");
         } else {
             if ($this->serviceEntreprise->isAdministrateur() == true) {
                 //$this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");

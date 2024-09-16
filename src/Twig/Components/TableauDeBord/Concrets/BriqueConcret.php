@@ -1,10 +1,9 @@
 <?php
+namespace App\Twig\Components\TableauDeBord\Concrets;
 
-namespace App\Service\RefactoringJS\TableauDeBord\Concrets;
-
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceBrique;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceIndicateur;
 use Doctrine\Common\Collections\Collection;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class BriqueConcret implements InterfaceBrique

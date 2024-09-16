@@ -1,13 +1,11 @@
 <?php
 namespace App\Twig\Components;
 
-use App\Entity\Utilisateur;
 use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
-use App\Service\RefactoringJS\TableauDeBord\Commandes\ComCreerTableauDeBordConcret;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBordConcret;
-use App\Service\ServiceEntreprise;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
+use App\Twig\Components\TableauDeBord\Commandes\ComCreerTableauDeBordConcret;
+use App\Twig\Components\TableauDeBord\Concrets\TableauDeBordConcret;
 
 #[AsTwigComponent]
 class TableauDeBordCourtier implements CommandeExecuteur
@@ -18,9 +16,8 @@ class TableauDeBordCourtier implements CommandeExecuteur
 
     }
 
-    public function getTableauDeBord(): ?TableauDeBordConcret
+    public function getTableauDeBord():TableauDeBordConcret
     {
-        
         /** @var TableauDeBordConcret */
         $tableau = new TableauDeBordConcret();
         $this->executer(new ComCreerTableauDeBordConcret($tableau));

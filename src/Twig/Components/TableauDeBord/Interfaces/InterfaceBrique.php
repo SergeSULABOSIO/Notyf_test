@@ -1,6 +1,6 @@
 <?php
+namespace App\Twig\Components\TableauDeBord\Interfaces;
 
-namespace App\Service\RefactoringJS\TableauDeBord\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
 
@@ -11,11 +11,11 @@ interface InterfaceBrique
     public const TYPE_BRIQUE_DE_GAUCHE = 2;
     public const TYPE_BRIQUE_DE_DROITE = 3;
 
-    public function addIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique;
-    public function removeIndicateur(InterfaceIndicateur $newIndicateur): InterfaceBrique;
-    public function removeAllIndicateurs(): InterfaceBrique;
+    public function addIndicateur(InterfaceIndicateur $newIndicateur): self;
+    public function removeIndicateur(InterfaceIndicateur $newIndicateur): self;
+    public function removeAllIndicateurs(): self;
     public function getIndicateurs(): Collection;
     public function getType(): int;
-    public function setType(int $type): InterfaceBrique;
+    public function setType(int $type): self;
     public function build();
 }

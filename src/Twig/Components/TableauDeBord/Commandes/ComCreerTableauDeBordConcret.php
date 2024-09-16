@@ -1,13 +1,13 @@
 <?php
+namespace App\Twig\Components\TableauDeBord\Commandes;
 
-namespace App\Service\RefactoringJS\TableauDeBord\Commandes;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\BriqueConcret;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\IndicateurConcret;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBordConcret;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
+use App\Twig\Components\TableauDeBord\Concrets\BriqueConcret;
+use App\Twig\Components\TableauDeBord\Concrets\IndicateurConcret;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceBrique;
+use App\Twig\Components\TableauDeBord\Concrets\TableauDeBordConcret;
 
 class ComCreerTableauDeBordConcret implements Commande
 {

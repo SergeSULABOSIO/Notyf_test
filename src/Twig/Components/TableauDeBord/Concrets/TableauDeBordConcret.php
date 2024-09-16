@@ -1,11 +1,11 @@
 <?php
+namespace App\Twig\Components\TableauDeBord\Concrets;
 
-namespace App\Service\RefactoringJS\TableauDeBord\Concrets;
 
 use Doctrine\Common\Collections\Collection;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceTableauDeBord;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceBrique;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceTableauDeBord;
 
 class TableauDeBordConcret implements InterfaceTableauDeBord
 {
@@ -16,21 +16,21 @@ class TableauDeBordConcret implements InterfaceTableauDeBord
         $this->briques = new ArrayCollection();
     }
 
-    public function addBrique(InterfaceBrique $newBrique): InterfaceTableauDeBord
+    public function addBrique(InterfaceBrique $newBrique): self
     {
         if ($this->briques->contains($newBrique) == false) {
             $this->briques->add($newBrique);
         }
         return $this;
     }
-    public function removeBrique(InterfaceBrique $brique): InterfaceTableauDeBord
+    public function removeBrique(InterfaceBrique $brique): self
     {
         if ($this->briques->contains($brique) == true) {
             $this->briques->removeElement($brique);
         }
         return $this;
     }
-    public function removeAllBriques(): InterfaceTableauDeBord
+    public function removeAllBriques(): self
     {
         $this->briques = new ArrayCollection();
         return $this;
@@ -40,7 +40,7 @@ class TableauDeBordConcret implements InterfaceTableauDeBord
         return $this->briques;
     }
 
-    public function build(): InterfaceTableauDeBord
+    public function build(): self
     {
         // dd("Construction du tableau de bord...");
         /** @var Brique */

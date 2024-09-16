@@ -1,11 +1,11 @@
 <?php
-
-namespace App\Service\RefactoringJS\TableauDeBord\Concrets;
+namespace App\Twig\Components\TableauDeBord\Concrets;
 
 use Doctrine\Common\Collections\Collection;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
-use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceBrique;
+use App\Twig\Components\TableauDeBord\Interfaces\InterfaceIndicateur;
+
 
 class IndicateurConcret implements InterfaceIndicateur
 {
@@ -39,28 +39,28 @@ class IndicateurConcret implements InterfaceIndicateur
         return $this->brique;
     }
 
-    public function setBrique(?InterfaceBrique $brique): InterfaceIndicateur
+    public function setBrique(?InterfaceBrique $brique): self
     {
         $this->brique = $brique;
         return $this;
     }
 
     //Les setters
-    public function setTitre(string $titre): InterfaceIndicateur
+    public function setTitre(string $titre): self
     {
         $this->titre = $titre;
         return $this;
     }
 
 
-    public function setDonnees(?Collection $donnees): InterfaceIndicateur
+    public function setDonnees(?Collection $donnees): self
     {
         $this->donnees = $donnees;
         return $this;
     }
 
     //Autres fonctions
-    public function addDonnee($donnee): InterfaceIndicateur
+    public function addDonnee($donnee): self
     {
         if ($this->donnees->contains($donnee) == false) {
             $this->donnees->add($donnee);
@@ -68,7 +68,7 @@ class IndicateurConcret implements InterfaceIndicateur
         return $this;
     }
 
-    public function removeDonnee($donnee): InterfaceIndicateur
+    public function removeDonnee($donnee): self
     {
         if ($this->donnees->contains($donnee) == true) {
             $this->donnees->removeElement($donnee);
@@ -76,7 +76,7 @@ class IndicateurConcret implements InterfaceIndicateur
         return $this;
     }
 
-    public function removeAllDonnees(): InterfaceIndicateur
+    public function removeAllDonnees(): self
     {
         $this->donnees = new ArrayCollection();
         return $this;

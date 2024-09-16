@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Twig\Components\TableauDeBord\Commandes;
 
 
@@ -11,9 +12,9 @@ use App\Twig\Components\TableauDeBord\Concrets\TableauDeBordConcret;
 
 class ComCreerTableauDeBordConcret implements Commande
 {
-    public function __construct(
-        private ?TableauDeBordConcret $tableauDeBord
-    ) {}
+    private ?TableauDeBordConcret $tableauDeBord = null;
+
+    public function __construct() {}
 
     public function executer()
     {
@@ -33,11 +34,17 @@ class ComCreerTableauDeBordConcret implements Commande
         $brique_titre = (new BriqueConcret(InterfaceBrique::TYPE_BRIQUE_DE_TITRE))
             ->addIndicateur($indic01);
 
+
         //** TABLEAU DE BORD: qui coomposé d'un ensemble des briques */
         $this->tableauDeBord = (new TableauDeBordConcret())
             ->addBrique($brique_titre)
             ->build();
 
         // dd("Tableau de bord", $this->tableauDeBord);
+    }
+
+    public function getTableauDeBord()
+    {
+        return $this->tableauDeBord;
     }
 }

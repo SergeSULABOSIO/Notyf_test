@@ -18,11 +18,10 @@ class TableauDeBordCourtier implements CommandeExecuteur
 
     public function getTableauDeBord():TableauDeBordConcret
     {
-        /** @var TableauDeBordConcret */
-        $tableau = new TableauDeBordConcret();
-        $this->executer(new ComCreerTableauDeBordConcret($tableau));
-        dd($tableau);
-        return $tableau;
+        $com = new ComCreerTableauDeBordConcret();
+        $this->executer($com);
+        // dd($com->getTableauDeBord());
+        return $com->getTableauDeBord();
     }
 
     public function executer(?Commande $commande)

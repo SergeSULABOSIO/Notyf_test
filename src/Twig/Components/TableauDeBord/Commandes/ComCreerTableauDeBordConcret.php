@@ -11,7 +11,9 @@ use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 
 class ComCreerTableauDeBordConcret implements Commande
 {
-    public function __construct() {}
+    public function __construct(
+        private ?TableauDeBordConcret $tableauDeBord
+    ) {}
 
     public function executer()
     {
@@ -32,10 +34,10 @@ class ComCreerTableauDeBordConcret implements Commande
             ->addIndicateur($indic01);
 
         //** TABLEAU DE BORD: qui coomposé d'un ensemble des briques */
-        $tableauDeBord = (new TableauDeBordConcret())
+        $this->tableauDeBord = (new TableauDeBordConcret())
             ->addBrique($brique_titre)
             ->build();
 
-        dd("Tableau de bord", $tableauDeBord);
+        // dd("Tableau de bord", $this->tableauDeBord);
     }
 }

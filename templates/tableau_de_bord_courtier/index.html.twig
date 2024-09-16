@@ -4,40 +4,44 @@
 {% endblock %}
 
 {% block body %}
-	<div class="example-wrapper">
-        Bienvenu {{user.nom}}!
-		<h1>
-			{{ controller_name }}!
-		</h1>
-		TABLEAU DE BORD ICI
-		
-        
-        
-        {{ component('Autres:Alert', {message: 'Twig Components fonctionne sur JS Brokers!', titre:'Félicitation'}) }}
-		
-        
-        
-        <a href="{{path('security.logout')}}">Deconnexion</a>
-		<div>
-			<a id="bt1" class="btn btn-success">Info</a>
-			<a id="bt2" class="btn btn-danger">Delete</a>
-		</div>
 
-		<a href="http://127.0.0.1:8000/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CPisteCrudController">
-			Afficher la liste des pistes
-		</a>
 
-		{{ render_chart(chart) }}
+	{{ component("TableauDeBord:TableauDeBordCourtier") }}
 
-		<div class="card card-gray mt-3">
-			<div class="card-header">
-				<h3 class="card-title">Bien venue Serge,</h3>
+
+	{# <div class="example-wrapper">
+			Bienvenu
+			{{user.nom}}!
+			<h1>
+				{{ controller_name }}!
+			</h1>
+			TABLEAU DE BORD ICI
+	
+	
+			{{ component('Autres:Alert', {message: 'Twig Components fonctionne sur JS Brokers!', titre:'Félicitation'}) }}
+	
+	
+			<a href="{{path('security.logout')}}">Deconnexion</a>
+			<div>
+				<a id="bt1" class="btn btn-success">Info</a>
+				<a id="bt2" class="btn btn-danger">Delete</a>
 			</div>
-
-			<div class="card-body"></div>
-			<div class="card-footer">
-				© 2023 JS Brokers, Inc.
+	
+			<a href="http://127.0.0.1:8000/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CPisteCrudController">
+				Afficher la liste des pistes
+			</a>
+	
+			{{ render_chart(chart) }}
+	
+			<div class="card card-gray mt-3">
+				<div class="card-header">
+					<h3 class="card-title">Bien venue Serge,</h3>
+				</div>
+	
+				<div class="card-body"></div>
+				<div class="card-footer">
+					© 2023 JS Brokers, Inc.
+				</div>
 			</div>
-		</div>
-	</div>
+		</div> #}
 {% endblock %}

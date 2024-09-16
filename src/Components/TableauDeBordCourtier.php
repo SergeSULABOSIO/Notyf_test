@@ -1,5 +1,5 @@
 <?php
-namespace App\Twig\Components;
+namespace App\Components;
 
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;

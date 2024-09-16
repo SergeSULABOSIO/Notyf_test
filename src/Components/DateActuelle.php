@@ -1,5 +1,5 @@
 <?php
-namespace App\twig\Components;
+namespace App\Components;
 
 use App\Repository\PisteRepository;
 use DateTimeImmutable;

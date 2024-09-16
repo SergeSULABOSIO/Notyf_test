@@ -13,9 +13,9 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class TableauDeBordCourtier implements CommandeExecuteur
 {
     public string $nom = "Tableau de bord du courtier";
-    public Utilisateur $utilisateur;
     
     public function __construct() {
+
     }
 
     public function getTableauDeBord(): ?TableauDeBordConcret

@@ -1,3 +1,7 @@
-<div class="alert alert-{{ type }}">
-	Voici le message :'{{ message }}'
+<div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+  <strong>{{ titre }}: </strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+   {{ message }}.
 </div>

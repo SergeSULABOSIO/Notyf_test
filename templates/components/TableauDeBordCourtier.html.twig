@@ -2,7 +2,11 @@
 	{{this.nom}}
 	{% for rubrique in this.tableauDeBord.briques %}
 		{% for indicateur in rubrique.indicateurs %}
-			***{{indicateur.titre}}
+			<hr/>
+			{{indicateur.titre}}<br/>
+			{% for donnee in indicateur.donnees %}
+				*****{{donnee}}<br/>
+			{% endfor %}
 		{% endfor %}
 	{% endfor %}
 </div>

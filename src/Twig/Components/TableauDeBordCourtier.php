@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Twig\Components;
 
 use App\Service\RefactoringJS\Commandes\Commande;
@@ -11,6 +10,8 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 class TableauDeBordCourtier implements CommandeExecuteur
 {
+    public string $nom = "Bosio";
+    
     public function __construct() {}
 
     public function getTableauDeBord(): ?TableauDeBordConcret

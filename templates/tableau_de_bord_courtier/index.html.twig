@@ -6,10 +6,10 @@
 {% block body %}
 
 
-	{{ component("TableauDeBord:TableauDeBordCourtier") }}
+	{# {{ component("TableauDeBordCourtier") }} #}
 
 
-	{# <div class="example-wrapper">
+	<div class="example-wrapper">
 			Bienvenu
 			{{user.nom}}!
 			<h1>
@@ -18,7 +18,7 @@
 			TABLEAU DE BORD ICI
 	
 	
-			{{ component('Autres:Alert', {message: 'Twig Components fonctionne sur JS Brokers!', titre:'Félicitation'}) }}
+			{{ component('Alert', {message: 'Twig Components fonctionne sur JS Brokers!', titre:'Félicitation'}) }}
 	
 	
 			<a href="{{path('security.logout')}}">Deconnexion</a>
@@ -43,5 +43,5 @@
 					© 2023 JS Brokers, Inc.
 				</div>
 			</div>
-		</div> #}
+		</div>
 {% endblock %}

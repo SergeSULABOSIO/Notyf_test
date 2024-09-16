@@ -1,7 +1,15 @@
 <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-  <strong>{{ titre }}: </strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-   {{ message }}.
+	<strong>{{ titre }}:
+	</strong>
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	{{ message }}.
+    <hr/>
+	Liste des pistes:
+	<ol>
+		{% for piste in this.pistes %}
+			<li>{{ piste.nom }}</li>
+		{% endfor %}
+	</ol>
 </div>

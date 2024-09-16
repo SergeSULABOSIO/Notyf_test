@@ -5,11 +5,15 @@
 		<span aria-hidden="true">&times;</span>
 	</button>
 	{{ message }}.
-    <hr/>
-	Liste des pistes ({{ this.nbpistes }}):
+	<hr/>
+	Liste des pistes ({{ this.nbpistes }}) - (Random:
+	{{ this.randomnumber }}):
 	<ol>
 		{% for piste in this.pistes %}
-			<li>{{ piste.nom }} | Par {{ piste.utilisateur.nom }}, le {{ piste.createdAt|date("m/d/Y à h:m") }}</li>
+			<li>{{ piste.nom }}
+				| Par
+				{{ piste.utilisateur.nom }}, le
+				{{ piste.createdAt|date("m/d/Y à h:m") }}</li>
 		{% endfor %}
 	</ol>
 </div>

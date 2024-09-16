@@ -2,11 +2,15 @@
 namespace App\Twig\Components;
 
 use App\Repository\PisteRepository;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
 class Alert
 {
+    use DefaultActionTrait;
+    
     public function __construct(
         private PisteRepository $pisteRepository
     )
@@ -26,5 +30,10 @@ class Alert
     public function getNbPistes():int
     {
         return count($this->pisteRepository->findAll());
+    }
+
+    public function getRandomNumber(): int
+    {
+        return rand(0, 1000);
     }
 }

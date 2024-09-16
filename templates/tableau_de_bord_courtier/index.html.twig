@@ -11,7 +11,14 @@
 			{{ controller_name }}!
 		</h1>
 		TABLEAU DE BORD ICI
-		<a href="{{path('security.logout')}}">Deconnexion</a>
+		
+        
+        
+        {{ component('Alert', {message: 'Hello Twig Components from JS Brokers!'}) }}
+		
+        
+        
+        <a href="{{path('security.logout')}}">Deconnexion</a>
 		<div>
 			<a id="bt1" class="btn btn-success">Info</a>
 			<a id="bt2" class="btn btn-danger">Delete</a>

@@ -1,5 +1,5 @@
 <?php
-namespace App\Components;
+namespace App\Twig\Components;
 
 use App\Repository\PisteRepository;
 use Symfony\UX\LiveComponent\DefaultActionTrait;

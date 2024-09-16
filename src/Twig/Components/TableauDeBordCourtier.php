@@ -1,21 +1,26 @@
 <?php
-namespace App\Components;
+namespace App\Twig\Components;
 
+use App\Entity\Utilisateur;
 use App\Service\RefactoringJS\Commandes\Commande;
 use App\Service\RefactoringJS\Commandes\CommandeExecuteur;
 use App\Service\RefactoringJS\TableauDeBord\Commandes\ComCreerTableauDeBordConcret;
 use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBordConcret;
+use App\Service\ServiceEntreprise;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
 class TableauDeBordCourtier implements CommandeExecuteur
 {
-    public string $nom = "Bosio";
+    public string $nom = "Tableau de bord du courtier";
+    public Utilisateur $utilisateur;
     
-    public function __construct() {}
+    public function __construct() {
+    }
 
     public function getTableauDeBord(): ?TableauDeBordConcret
     {
+        
         /** @var TableauDeBordConcret */
         $tableau = new TableauDeBordConcret();
         $this->executer(new ComCreerTableauDeBordConcret($tableau));

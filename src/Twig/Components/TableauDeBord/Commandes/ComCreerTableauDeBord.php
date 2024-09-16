@@ -4,10 +4,9 @@ namespace App\Service\RefactoringJS\TableauDeBord\Commandes;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\RefactoringJS\Commandes\Commande;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\Brique;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\Indicateur;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBord;
-use App\Service\RefactoringJS\TableauDeBord\Concrets\EcouteurActions;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\BriqueConcret;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\IndicateurConcret;
+use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBordConcret;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 
 class ComCreerTableauDeBord implements Commande
@@ -17,7 +16,7 @@ class ComCreerTableauDeBord implements Commande
     public function executer()
     {
         //*** INDICATEUR : qui contient les informations stats qui s'affichent*/
-        $indic01 = (new Indicateur())
+        $indic01 = (new IndicateurConcret())
             ->setTitre("Avenants")
             ->setDonnees(new ArrayCollection([
                 "Primes bruttes = 100 USD",
@@ -28,16 +27,12 @@ class ComCreerTableauDeBord implements Commande
             ]))
             ->addDonnee("Primes de réassurance = 35 USD");
 
-        //** ECOUTEUR DE L'INDICATEUR: qui permet au système d'être notifié de tout ce qui se passe dans l'indicateur */
-        $ecouteur = (new EcouteurActions());
-        $indic01->setEcouteurActions($ecouteur);
-
         //** BRIQUE: qui est composée d'un groupe d'indicateur */
-        $brique_titre = (new Brique(InterfaceBrique::TYPE_BRIQUE_DE_TITRE))
+        $brique_titre = (new BriqueConcret(InterfaceBrique::TYPE_BRIQUE_DE_TITRE))
             ->addIndicateur($indic01);
 
         //** TABLEAU DE BORD: qui coomposé d'un ensemble des briques */
-        $tableauDeBord = (new TableauDeBord())
+        $tableauDeBord = (new TableauDeBordConcret())
             ->addBrique($brique_titre)
             ->build();
 

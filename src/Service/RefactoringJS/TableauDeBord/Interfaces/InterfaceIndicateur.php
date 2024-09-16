@@ -12,12 +12,10 @@ interface InterfaceIndicateur
     public function getTexte(): string;
     public function getDonnees(): Collection;
     public function getBrique(): InterfaceBrique;
-    public function getEcouteurActions(): InterfaceEcouteurActions;
     //Les setters
     public function setTitre(string $titre): InterfaceIndicateur;
     public function setDonnees(?Collection $donnees): InterfaceIndicateur;
     public function setBrique(?InterfaceBrique $brique): InterfaceIndicateur;
-    public function setEcouteurActions(?InterfaceEcouteurActions $ecouteur): InterfaceIndicateur;
     //Autres fonctions
     public function addDonnee($donnee): InterfaceIndicateur;
     public function removeDonnee($donnee): InterfaceIndicateur;

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
 use App\Service\ServiceCrossCanal;
 use App\Service\ServiceEntreprise;
 use App\Service\ServicePreferences;
@@ -29,6 +30,11 @@ class TableauDeBordCourtierController extends AbstractController
     #[Route('/tableau/de/bord/courtier', name: 'app_tableau_de_bord_courtier')]
     public function index(): Response
     {
+        /** @var Utilisateur */
+        $user = $this->serviceEntreprise->getUtilisateur();
+        
+        // dd($user);
+
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
         $chart->setData([
@@ -52,10 +58,11 @@ class TableauDeBordCourtierController extends AbstractController
             ],
         ]);
 
-        
+
         return $this->render('tableau_de_bord_courtier/index.html.twig', [
             'controller_name' => 'Tableau De Bord Courtier',
             'chart' => $chart,
+            'user' => $user,
         ]);
     }
 }

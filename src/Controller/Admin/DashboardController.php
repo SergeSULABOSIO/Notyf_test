@@ -139,11 +139,11 @@ class DashboardController extends AbstractDashboardController implements Command
             //     'controller_name' => 'SweetAlertController',
             //     'chart' => $chart,
             // ]);
-            // return $this->render('admin/dashboard.html.twig');
+            return $this->render('admin/dashboard.html.twig');
 
             // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
             // return $this->redirect($this->adminUrlGenerator->setController(TableauDeBordCourtierController::class)->generateUrl());
-            return $this->redirectToRoute("app_tableau_de_bord_courtier");
+            // return $this->redirectToRoute("app_tableau_de_bord_courtier");
         } else {
             if ($this->serviceEntreprise->isAdministrateur() == true) {
                 //$this->addFlash("info", "Salut " . $connected_utilisateur->getNom() . ", vous devez maintenant créer votre entreprise (espace de travail).");

@@ -9,7 +9,7 @@
 	Liste des pistes:
 	<ol>
 		{% for piste in this.pistes %}
-			<li>{{ piste.nom }}</li>
+			<li>{{ piste.nom }} | Par {{ piste.utilisateur.nom }}, le {{ piste.createdAt|date("m/d/Y à h:m") }}</li>
 		{% endfor %}
 	</ol>
 </div>

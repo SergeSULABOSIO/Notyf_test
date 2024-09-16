@@ -22,4 +22,9 @@ class Alert
         // dd($this->pisteRepository->findAll());
         return $this->pisteRepository->findAll();
     }
+
+    public function getNbPistes():int
+    {
+        return count($this->pisteRepository->findAll());
+    }
 }

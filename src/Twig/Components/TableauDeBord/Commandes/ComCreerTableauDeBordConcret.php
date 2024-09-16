@@ -9,7 +9,7 @@ use App\Service\RefactoringJS\TableauDeBord\Concrets\IndicateurConcret;
 use App\Service\RefactoringJS\TableauDeBord\Concrets\TableauDeBordConcret;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 
-class ComCreerTableauDeBord implements Commande
+class ComCreerTableauDeBordConcret implements Commande
 {
     public function __construct() {}
 

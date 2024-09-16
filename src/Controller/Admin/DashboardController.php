@@ -111,33 +111,33 @@ class DashboardController extends AbstractDashboardController implements Command
             //Construction du tableau de bord ici
             // $this->executer(new ComCreerTableauDeBord());
 
-            $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+            // $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
-            $chart->setData([
-                'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                'datasets' => [
-                    [
-                        'label' => 'My First dataset',
-                        'backgroundColor' => 'rgb(255, 99, 132)',
-                        'borderColor' => 'rgb(255, 99, 132)',
-                        'data' => [0, 10, 5, 2, 20, 30, 45],
-                    ],
-                ],
-            ]);
+            // $chart->setData([
+            //     'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            //     'datasets' => [
+            //         [
+            //             'label' => 'My First dataset',
+            //             'backgroundColor' => 'rgb(255, 99, 132)',
+            //             'borderColor' => 'rgb(255, 99, 132)',
+            //             'data' => [0, 10, 5, 2, 20, 30, 45],
+            //         ],
+            //     ],
+            // ]);
 
-            $chart->setOptions([
-                'scales' => [
-                    'y' => [
-                        'suggestedMin' => 0,
-                        'suggestedMax' => 100,
-                    ],
-                ],
-            ]);
+            // $chart->setOptions([
+            //     'scales' => [
+            //         'y' => [
+            //             'suggestedMin' => 0,
+            //             'suggestedMax' => 100,
+            //         ],
+            //     ],
+            // ]);
 
-            return $this->render('admin/dashboard.html.twig', [
-                'controller_name' => 'SweetAlertController',
-                'chart' => $chart,
-            ]);
+            // return $this->render('admin/TableauDeBord/Composants/tableaudebord.html.twig', [
+            //     'controller_name' => 'SweetAlertController',
+            //     'chart' => $chart,
+            // ]);
             // return $this->render('admin/dashboard.html.twig');
             // return $this->redirectToRoute("app_sweet_alert");
         } else {

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JS Brokers{% endblock %}
+
+{% block body %}
+	<div class="example-wrapper">
+		TABLEAU DE BORD ICI
+		{{ render_chart(chart) }}
+		Test - SweetAlert -
+		<a href="{{path('security.logout')}}">Deconnexion</a>
+		<div>
+			<a id="bt1" class="btn btn-success">Info</a>
+			<a id="bt2" class="btn btn-danger">Delete</a>
+			<a id="bt3" class="btn btn-warning">Warning</a>
+			<a id="bt4" class="btn btn-danger">Error</a>
+		</div>
+		<div class="card card-gray mt-3">
+			<div class="card-header">
+				<h3 class="card-title">Bien venue Serge,</h3>
+			</div>
+
+			<div class="card-body"></div>
+			<div class="card-footer">
+				© 2023 JS Brokers, Inc.
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

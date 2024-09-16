@@ -1,0 +1,51 @@
+{# {% extends 'base.html.twig' %}
+
+{% block title %}Hello TableauDeBordCourtierController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code><a href="{{ 'C:/Notyf_test/src/Controller/TableauDeBordCourtierController.php'|file_link(0) }}">src/Controller/TableauDeBordCourtierController.php</a></code></li>
+        <li>Your template at <code><a href="{{ 'C:/Notyf_test/templates/tableau_de_bord_courtier/index.html.twig'|file_link(0) }}">templates/tableau_de_bord_courtier/index.html.twig</a></code></li>
+    </ul>
+</div>
+{% endblock %} #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}JS Brokers
+{% endblock %}
+
+{% block body %}
+	<div class="example-wrapper">
+		<h1>
+			{{ controller_name }}!
+		</h1>
+		TABLEAU DE BORD ICI
+		{{ render_chart(chart) }}
+		<a href="{{path('security.logout')}}">Deconnexion</a>
+		<div>
+			<a id="bt1" class="btn btn-success">Info</a>
+			<a id="bt2" class="btn btn-danger">Delete</a>
+		</div>
+		<div class="card card-gray mt-3">
+			<div class="card-header">
+				<h3 class="card-title">Bien venue Serge,</h3>
+			</div>
+
+			<div class="card-body"></div>
+			<div class="card-footer">
+				© 2023 JS Brokers, Inc.
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

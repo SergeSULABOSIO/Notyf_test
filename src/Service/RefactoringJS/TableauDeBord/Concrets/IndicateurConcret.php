@@ -8,7 +8,7 @@ use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceEcouteurActions;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Indicateur implements InterfaceIndicateur
+class IndicateurConcret implements InterfaceIndicateur
 {
     private ?string $titre = null;
     private ?Collection $donnees = null;
@@ -64,15 +64,15 @@ class Indicateur implements InterfaceIndicateur
     {
         //Ecouteur
         if ($this->ecouteur != null) {
-            $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation du transfert des données..."));
-            $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Transfert..."));
+            $this->ecouteur->onBeforeUpdated(new EvenementIndicateurConcret($this, "Préparation du transfert des données..."));
+            $this->ecouteur->onUpdating(new EvenementIndicateurConcret($this, "Transfert..."));
         }
 
         $this->donnees = $donnees;
 
         //Ecouteur
         if ($this->ecouteur != null) {
-            $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Transfert effectué."));
+            $this->ecouteur->onAfterUpdate(new EvenementIndicateurConcret($this, "Transfert effectué."));
         }
 
         return $this;
@@ -90,20 +90,20 @@ class Indicateur implements InterfaceIndicateur
         if ($this->donnees->contains($donnee) == false) {
             //Ecouteur
             if ($this->ecouteur != null) {
-                $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de l'ajout de " . $donnee . "..."));
-                $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Ajout..."));
+                $this->ecouteur->onBeforeUpdated(new EvenementIndicateurConcret($this, "Préparation de l'ajout de " . $donnee . "..."));
+                $this->ecouteur->onUpdating(new EvenementIndicateurConcret($this, "Ajout..."));
             }
 
             $this->donnees->add($donnee);
 
             //Ecouteur
             if ($this->ecouteur != null) {
-                $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Ajout de la donnée effectué."));
+                $this->ecouteur->onAfterUpdate(new EvenementIndicateurConcret($this, "Ajout de la donnée effectué."));
             }
         } else {
             //Ecouteur erreur
             if ($this->ecouteur != null) {
-                $this->ecouteur->onError(new EvenementIndicateur($this, "La donnée " . $donnee . " existe déjà."));
+                $this->ecouteur->onError(new EvenementIndicateurConcret($this, "La donnée " . $donnee . " existe déjà."));
             }
         }
         return $this;
@@ -114,15 +114,15 @@ class Indicateur implements InterfaceIndicateur
         if ($this->donnees->contains($donnee) == true) {
             //Ecouteur
             if ($this->ecouteur != null) {
-                $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de la suppression de " . $donnee . "..."));
-                $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Destruction..."));
+                $this->ecouteur->onBeforeUpdated(new EvenementIndicateurConcret($this, "Préparation de la suppression de " . $donnee . "..."));
+                $this->ecouteur->onUpdating(new EvenementIndicateurConcret($this, "Destruction..."));
             }
 
             $this->donnees->removeElement($donnee);
 
             //Ecouteur
             if ($this->ecouteur != null) {
-                $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Retrait de la donnée effectué."));
+                $this->ecouteur->onAfterUpdate(new EvenementIndicateurConcret($this, "Retrait de la donnée effectué."));
             }
         }
         return $this;
@@ -132,15 +132,15 @@ class Indicateur implements InterfaceIndicateur
     {
         //Ecouteur
         if ($this->ecouteur != null) {
-            $this->ecouteur->onBeforeUpdated(new EvenementIndicateur($this, "Préparation de la destruction de toutes les données..."));
-            $this->ecouteur->onUpdating(new EvenementIndicateur($this, "Destruction..."));
+            $this->ecouteur->onBeforeUpdated(new EvenementIndicateurConcret($this, "Préparation de la destruction de toutes les données..."));
+            $this->ecouteur->onUpdating(new EvenementIndicateurConcret($this, "Destruction..."));
         }
 
         $this->donnees = new ArrayCollection();
 
         //Ecouteur
         if ($this->ecouteur != null) {
-            $this->ecouteur->onAfterUpdate(new EvenementIndicateur($this, "Destruction effectuée."));
+            $this->ecouteur->onAfterUpdate(new EvenementIndicateurConcret($this, "Destruction effectuée."));
         }
         return $this;
     }

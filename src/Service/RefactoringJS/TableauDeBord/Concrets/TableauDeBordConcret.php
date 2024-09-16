@@ -7,7 +7,7 @@ use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceTableauDeBord;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class TableauDeBord implements InterfaceTableauDeBord
+class TableauDeBordConcret implements InterfaceTableauDeBord
 {
     private ?Collection $briques;
 

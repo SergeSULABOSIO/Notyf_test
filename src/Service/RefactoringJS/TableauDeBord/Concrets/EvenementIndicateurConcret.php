@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
 
-class EvenementIndicateur
+class EvenementIndicateurConcret
 {
     public function __construct(private $donnee, private $message) {}
 

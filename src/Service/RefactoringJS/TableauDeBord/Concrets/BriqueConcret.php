@@ -7,7 +7,7 @@ use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceBrique;
 use App\Service\RefactoringJS\TableauDeBord\Interfaces\InterfaceIndicateur;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Brique implements InterfaceBrique
+class BriqueConcret implements InterfaceBrique
 {
     private ?int $type;
     private ?Collection $indicateurs;

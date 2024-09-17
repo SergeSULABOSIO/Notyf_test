@@ -1,16 +1,18 @@
-<div>
-	{{this.nom}}<br>
-	Ici, je construiraire le tableau de bord.
-	{{ component ("Section", { 
-		nom : "Section de haut de page",
-		type : 0
-	})}}
-	{{ component ("Section", { 
-		nom : "Section du centre de la page",
-		type : 1
-	})}}
-	{{ component ("Section", { 
-		nom : "Section du bas de la page",
-		type : 2
-	})}}
+<div class="container">
+	{{this.nom}}
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "BARRE DE TITRE & BARRE D'OUTILS", type : 0})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "BAS DE PAGE POUR REFERENCES", type : 2})}}
+		</div>
+	</div>
 </div>

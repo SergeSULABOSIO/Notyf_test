@@ -1,8 +1,46 @@
-<div class="container">
+{# Cette partie restera figée en haut de la page #}
+<div class="row fixed-top">
+	<div class="col-sm">
+		{{ component ("Section", { nom : "BARRE DE TITRE & BARRE D'OUTILS", type : 0})}}
+	</div>
+</div>
+
+{# La partie qui va scroller si le contenu est vaste #}
+<div class="container" style="margin-top: 60px;">
 	{{this.nom}}
 	<div class="row">
 		<div class="col-sm">
-			{{ component ("Section", { nom : "BARRE DE TITRE & BARRE D'OUTILS", type : 0})}}
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			{{ component ("Section", { nom : "CORPS DE LA PAGE", type : 1})}}
 		</div>
 	</div>
 	<div class="row">

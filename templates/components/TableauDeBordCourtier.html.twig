@@ -1,12 +1,16 @@
 <div>
-	{{this.nom}}
-	{% for rubrique in this.tableauDeBord.briques %}
-		{% for indicateur in rubrique.indicateurs %}
-			<hr/>
-			{{indicateur.titre}}<br/>
-			{% for donnee in indicateur.donnees %}
-				*****{{donnee}}<br/>
-			{% endfor %}
-		{% endfor %}
-	{% endfor %}
+	{{this.nom}}<br>
+	Ici, je construiraire le tableau de bord.
+	{{ component ("Section", { 
+		nom : "Section de haut de page",
+		type : 0
+	})}}
+	{{ component ("Section", { 
+		nom : "Section du centre de la page",
+		type : 1
+	})}}
+	{{ component ("Section", { 
+		nom : "Section du bas de la page",
+		type : 2
+	})}}
 </div>

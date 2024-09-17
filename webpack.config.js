@@ -25,9 +25,6 @@ Encore
     .addEntry('sweetalert2', './assets/SweetAlert2.js')
     .addEntry('adminlte', './assets/adminlte/app.js')
 
-    // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    .enableStimulusBridge('./assets/controllers.json')
-
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

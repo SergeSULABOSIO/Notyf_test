@@ -221,7 +221,7 @@
             "ref": "aff23899c4440dd995907613c1dd709b6f59503f"
         },
         "files": [
-            "config/packages/monolog.yaml"
+            "./config/packages/monolog.yaml"
         ]
     },
     "symfony/notifier": {
